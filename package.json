@@ -2,7 +2,7 @@
   "name": "xkit-rewrite",
   "version": "1.0.0",
   "description": "Rewrite of XKit, the extension framework for Tumblr",
-  "main": "xkit.js",
+  "browser": "xkit.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

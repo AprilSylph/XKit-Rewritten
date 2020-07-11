@@ -1,0 +1,31 @@
+{
+  "name": "xkit-rewrite",
+  "version": "1.0.0",
+  "description": "Rewrite of XKit, the extension framework for Tumblr",
+  "main": "xkit.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AprilSylph/XKit-Rewritten.git"
+  },
+  "keywords": [
+    "tumblr"
+  ],
+  "author": "April Sylph <april@sylph.tech> (https://april.tumblr.com/)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/AprilSylph/XKit-Rewritten/issues"
+  },
+  "homepage": "https://github.com/AprilSylph/XKit-Rewritten#readme",
+  "devDependencies": {
+    "eslint": "^7.4.0",
+    "web-ext": "^4.3.0"
+  },
+  "dependencies": {
+    "browser-polyfill": "^3.20.2",
+    "jquery": "^3.5.1",
+    "moment": "^2.27.0"
+  }
+}

@@ -24,8 +24,8 @@
     "web-ext": "^4.3.0"
   },
   "dependencies": {
-    "browser-polyfill": "^3.20.2",
     "jquery": "^3.5.1",
-    "moment": "^2.27.0"
+    "moment": "^2.27.0",
+    "webextension-polyfill": "^0.6.0"
   }
 }

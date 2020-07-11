@@ -41,14 +41,14 @@ async function onStorageChanged(changes, areaName) {
 }
 
 async function init() {
+  browser.storage.local.onChanged.addEventListener(onStorageChanged);
+
   const {enabledScripts} = await browser.storage.local.get('enabledScripts');
   if (!enabledScripts) {
     return;
   }
   
   enabledScripts.forEach(run_script);
-  
-  browser.storage.local.onChanged.addEventListener(onStorageChanged);
 };
 
 if (redpop) {

@@ -1,5 +1,5 @@
 const {getURL} = browser.runtime;
-const redpop = [...document.scripts].some({src} => src.match('/pop/'));
+const redpop = [...document.scripts].some(({src}) => src.match('/pop/'));
 
 async function run_script(name) {
   const { main, stylesheet } = await import(getURL(`/src/scripts/${name}.js`));
@@ -49,7 +49,7 @@ async function init() {
   }
 
   enabledScripts.forEach(run_script);
-};
+}
 
 if (redpop) {
   init();

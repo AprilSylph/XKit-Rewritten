@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "XKit Rewritten",
+  "description": "Rewrite of XKit, the extension framework for Tumblr",
+  "version": "1.0.0",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.tumblr.com/*"
+      ],
+      "run_at": "document_idle",
+      "js": [
+        "lib/browser-polyfill.min.js",
+        "lib/jquery.min.js",
+        "xkit.js"
+      ]
+    }
+  ]
+}

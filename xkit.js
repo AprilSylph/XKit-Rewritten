@@ -41,7 +41,7 @@ async function onStorageChanged(changes, areaName) {
 }
 
 async function init() {
-  browser.storage.local.onChanged.addEventListener(onStorageChanged);
+  browser.storage.onChanged.addEventListener(onStorageChanged);
 
   const {enabledScripts} = await browser.storage.local.get('enabledScripts');
   if (!enabledScripts) {

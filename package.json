@@ -27,5 +27,8 @@
     "jquery": "^3.5.1",
     "moment": "^2.27.0",
     "webextension-polyfill": "^0.6.0"
+  },
+  "webExt": {
+    "ignoreFiles": [".*", "dev/", "docs/", "LICENSE", "package*.json", "*.md"]
   }
 }

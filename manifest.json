@@ -13,7 +13,7 @@
       "js": [
         "lib/browser-polyfill.min.js",
         "lib/jquery.min.js",
-        "xkit.js"
+        "src/xkit.js"
       ]
     }
   ]

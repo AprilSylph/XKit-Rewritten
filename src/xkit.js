@@ -1,3 +1,5 @@
+'use strict';
+
 const {getURL} = browser.runtime;
 const redpop = [...document.scripts].some(({src}) => src.match('/pop/'));
 
@@ -41,7 +43,7 @@ async function onStorageChanged(changes, areaName) {
 }
 
 async function init() {
-  browser.storage.onChanged.addEventListener(onStorageChanged);
+  browser.storage.onChanged.addListener(onStorageChanged);
 
   const {enabledScripts} = await browser.storage.local.get('enabledScripts');
   if (!enabledScripts) {

@@ -8,3 +8,4 @@ parserOptions:
 rules: {}
 globals:
   browser: false
+  fakeImport: true

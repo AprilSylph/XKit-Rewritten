@@ -1,10 +1,9 @@
 'use strict';
 
-const {getURL} = browser.runtime;
 const redpop = [...document.scripts].some(({src}) => src.match('/pop/'));
 
 async function run_script(name) {
-  const { main, stylesheet } = await import(getURL(`/src/scripts/${name}.js`));
+  const { main, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
 
   main()
   .catch(console.error);
@@ -16,7 +15,7 @@ async function run_script(name) {
 }
 
 async function destroy_script(name) {
-  const { clean, stylesheet } = await import(getURL(`/src/scripts/${name}.js`));
+  const { clean, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
 
   clean()
   .catch(console.error);

@@ -3,7 +3,6 @@
 
   const main = async function() {
     console.log(`Hello, ${hello}!`);
-    debugger;
   }
 
   return { main };

@@ -1,57 +1,59 @@
 'use strict';
 
-const redpop = [...document.scripts].some(({src}) => src.match('/pop/'));
+{
+  const redpop = [...document.scripts].some(({src}) => src.match('/pop/'));
 
-async function run_script(name) {
-  const { main, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
+  const run_script = async function(name) {
+    const { main, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
 
-  main()
-  .catch(console.error);
-
-  if (stylesheet) {
-    browser.tabs.insertCSS({file: stylesheet})
+    main()
     .catch(console.error);
+
+    if (stylesheet) {
+      browser.tabs.insertCSS({file: stylesheet})
+      .catch(console.error);
+    }
   }
-}
 
-async function destroy_script(name) {
-  const { clean, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
+  const destroy_script = async function(name) {
+    const { clean, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
 
-  clean()
-  .catch(console.error);
-
-  if (stylesheet) {
-    browser.tabs.removeCSS({file: stylesheet})
+    clean()
     .catch(console.error);
-  }
-}
 
-async function onStorageChanged(changes, areaName) {
-  const {enabledScripts} = changes;
-  if (!enabledScripts || areaName !== 'local') {
-    return;
+    if (stylesheet) {
+      browser.tabs.removeCSS({file: stylesheet})
+      .catch(console.error);
+    }
   }
 
-  const {oldValue, newValue} = enabledScripts;
+  const onStorageChanged = async function(changes, areaName) {
+    const {enabledScripts} = changes;
+    if (!enabledScripts || areaName !== 'local') {
+      return;
+    }
 
-  const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
-  const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
+    const {oldValue, newValue} = enabledScripts;
 
-  newlyEnabled.forEach(run_script);
-  newlyDisabled.forEach(destroy_script);
-}
+    const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
+    const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
 
-async function init() {
-  browser.storage.onChanged.addListener(onStorageChanged);
-
-  const {enabledScripts} = await browser.storage.local.get('enabledScripts');
-  if (!enabledScripts) {
-    return;
+    newlyEnabled.forEach(run_script);
+    newlyDisabled.forEach(destroy_script);
   }
 
-  enabledScripts.forEach(run_script);
-}
+  const init = async function() {
+    browser.storage.onChanged.addListener(onStorageChanged);
 
-if (redpop) {
-  init();
+    const {enabledScripts} = await browser.storage.local.get('enabledScripts');
+    if (!enabledScripts) {
+      return;
+    }
+
+    enabledScripts.forEach(run_script);
+  }
+
+  if (redpop) {
+    init();
+  }
 }

@@ -7,10 +7,11 @@ let fakeImport;
   const modules = {};
   fakeImport = async function(path) {
     if (!Object.prototype.hasOwnProperty.call(modules, path)) {
-      const file = await fetch(browser.runtime.getURL(path));
+      const url = browser.runtime.getURL(path);
+      const file = await fetch(url);
       const fakeModule = await file.text();
 
-      modules[path] = (new Function(`return ${fakeModule}`))();
+      modules[path] = (new Function(`'use strict'; return ${fakeModule} //# sourceURL=${url}`))();
     }
 
     return modules[path];

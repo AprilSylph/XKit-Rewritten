@@ -1,11 +1,13 @@
 env:
   browser: true
+  webextensions: true
   es2020: true
 extends: 'eslint:recommended'
 parserOptions:
   ecmaVersion: 11
-  sourceType: module
 rules: {}
 globals:
-  browser: false
+  jQuery: false
+  $: false
+  moment: false
   fakeImport: true

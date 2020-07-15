@@ -29,6 +29,7 @@
     "webextension-polyfill": "^0.6.0"
   },
   "webExt": {
-    "ignoreFiles": [".*", "dev/", "docs/", "LICENSE", "package*.json", "*.md"]
+    "ignoreFiles": [".*", "dev/", "docs/", "LICENSE", "package*.json", "*.md"],
+    "build": { "overwriteDest": true }
   }
 }

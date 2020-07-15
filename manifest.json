@@ -1,8 +1,11 @@
 {
   "manifest_version": 2,
   "name": "XKit Rewritten",
+  "short_name": "XKit",
   "description": "Rewrite of XKit, the extension framework for Tumblr",
-  "version": "1.0.0",
+  "version": "0.1.0",
+  "author": "April Sylph",
+  "homepage_url": "https://github.com/AprilSylph/XKit-Rewritten",
   "permissions": [ "storage" ],
   "web_accessible_resources": [ "src/*.js" ],
   "content_scripts": [
@@ -17,5 +20,10 @@
         "src/xkit.js"
       ]
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "strict_min_version": "52.0a2"
+    }
+  }
 }

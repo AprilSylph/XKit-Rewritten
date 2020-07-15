@@ -1,6 +1,7 @@
 'use strict';
 
 {
+  const {getURL} = browser.runtime;
   const redpop = [...document.scripts].some(({src}) => src.match('/pop/'));
 
   const run_script = async function(name) {
@@ -10,8 +11,11 @@
     .catch(console.error);
 
     if (stylesheet) {
-      browser.tabs.insertCSS({file: stylesheet})
-      .catch(console.error);
+      const link = Object.assign(document.createElement('link'), {
+        rel: "stylesheet",
+        href: getURL(stylesheet),
+      });
+      document.documentElement.appendChild(link);
     }
   }
 
@@ -22,8 +26,10 @@
     .catch(console.error);
 
     if (stylesheet) {
-      browser.tabs.removeCSS({file: stylesheet})
-      .catch(console.error);
+      const link = document.querySelector(`link[href="${getURL(stylesheet)}"]`);
+      if (link !== null) {
+        link.parentNode.removeChild(link);
+      }
     }
   }
 

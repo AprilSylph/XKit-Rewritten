@@ -5,5 +5,7 @@
     console.log(`Hello, ${hello}!`);
   }
 
-  return { main };
+  const stylesheet = '/src/scripts/example.css';
+
+  return { main, stylesheet };
 })();

@@ -3,6 +3,8 @@
 {
   const {getURL} = browser.runtime;
   const redpop = [...document.scripts].some(({src}) => src.match('/pop/'));
+  const isReactLoaded = () => document.querySelector('[data-rh]') === null;
+  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
   const run_script = async function(name) {
     const { main, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
@@ -17,7 +19,7 @@
       });
       document.documentElement.appendChild(link);
     }
-  }
+  };
 
   const destroy_script = async function(name) {
     const { clean, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
@@ -31,7 +33,7 @@
         link.parentNode.removeChild(link);
       }
     }
-  }
+  };
 
   const onStorageChanged = async function(changes, areaName) {
     const {enabledScripts} = changes;
@@ -46,7 +48,7 @@
 
     newlyEnabled.forEach(run_script);
     newlyDisabled.forEach(destroy_script);
-  }
+  };
 
   const init = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
@@ -57,9 +59,22 @@
     }
 
     enabledScripts.forEach(run_script);
-  }
+  };
+
+  const waitForReactLoaded = async function() {
+    let tries = 0;
+
+    while (tries < 500) {
+      if (isReactLoaded()) {
+        break;
+      }
+
+      tries++;
+      await sleep(100);
+    }
+  };
 
   if (redpop) {
-    init();
+    waitForReactLoaded().then(init);
   }
 }

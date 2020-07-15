@@ -32,5 +32,5 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: build
+          name: web-ext-artifacts
           path: web-ext-artifacts

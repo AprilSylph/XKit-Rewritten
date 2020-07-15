@@ -7,7 +7,7 @@
   "author": "April Sylph",
   "homepage_url": "https://github.com/AprilSylph/XKit-Rewritten",
   "permissions": [ "storage" ],
-  "web_accessible_resources": [ "src/*.js" ],
+  "web_accessible_resources": [ "src/*.js", "src/*.css" ],
   "content_scripts": [
     {
       "matches": [ "*://www.tumblr.com/*" ],

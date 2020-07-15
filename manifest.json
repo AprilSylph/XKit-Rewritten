@@ -8,6 +8,11 @@
   "homepage_url": "https://github.com/AprilSylph/XKit-Rewritten",
   "permissions": [ "storage" ],
   "web_accessible_resources": [ "src/*.js", "src/*.css" ],
+  "browser_action": {
+    "browser_style": true,
+    "default_title": "XKit",
+    "default_popup": "/src/browser/action.html"
+  },
   "content_scripts": [
     {
       "matches": [ "*://www.tumblr.com/*" ],
@@ -24,7 +29,7 @@
   "minimum_chrome_version": "55",
   "browser_specific_settings": {
     "gecko": {
-      "strict_min_version": "52.0a2"
+      "strict_min_version": "57.0a2"
     }
   }
 }

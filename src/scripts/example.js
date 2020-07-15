@@ -5,7 +5,11 @@
     console.log(`Hello, ${hello}!`);
   }
 
+  const clean = async function() {
+
+  }
+
   const stylesheet = '/src/scripts/example.css';
 
-  return { main, stylesheet };
+  return { main, clean, stylesheet };
 })();

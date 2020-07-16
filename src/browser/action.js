@@ -26,16 +26,30 @@ async function writeEnabled(event) {
 }
 
 async function renderScripts() {
-  const scriptsList = document.getElementById('scripts');
+  const scriptsSection = document.getElementById('scripts');
   const installedScripts = await getInstalledScripts();
   const {enabledScripts} = await browser.storage.local.get('enabledScripts');
 
   installedScripts.forEach(async name => {
     const url = getURL(`/src/scripts/${name}.json`);
     const file = await fetch(url);
-    const {title} = await file.json();
+    const {title, description} = await file.json();
+
+    const fieldset = document.createElement('fieldset');
+
+    const legend = document.createElement('legend');
+    legend.textContent = title;
+    fieldset.appendChild(legend);
+
+    const p = document.createElement('p');
+    p.textContent = description;
+    fieldset.appendChild(p);
+
+    const unorderedList = document.createElement('ul');
+    fieldset.appendChild(unorderedList);
 
     const listItem = document.createElement('li');
+    unorderedList.appendChild(listItem);
 
     const input = document.createElement('input');
     input.id = name;
@@ -46,10 +60,10 @@ async function renderScripts() {
 
     const label = document.createElement('label');
     label.setAttribute('for', name);
-    label.textContent = title;
+    label.textContent = 'Enabled';
     listItem.appendChild(label);
 
-    scriptsList.appendChild(listItem);
+    scriptsSection.appendChild(fieldset);
   });
 }
 

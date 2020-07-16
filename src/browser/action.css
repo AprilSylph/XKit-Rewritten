@@ -7,16 +7,31 @@ main {
 }
 
 #scripts {
+  margin: 1em 0;
+}
+
+#scripts fieldset {
+  margin: 0.5ch 0;
+}
+
+#scripts fieldset p {
+  margin-top: 0;
+  margin-bottom: 0.5ch;
+}
+
+#scripts fieldset ul {
   padding: 0;
+  margin: 0;
   list-style-type: none;
 }
 
-#scripts li {
-  padding: 0.5ch 0;
+#scripts fieldset li {
   display: flex;
   align-items: center;
+  padding: 0.5ch 0;
+
 }
 
-#scripts label {
+#scripts fieldset label {
   padding-left: 1ch;
 }

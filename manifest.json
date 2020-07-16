@@ -1,9 +1,13 @@
 {
   "manifest_version": 2,
   "name": "XKit Rewritten",
-  "short_name": "XKit",
-  "description": "Rewrite of XKit, the extension framework for Tumblr",
   "version": "0.1.0",
+
+  "short_name": "XKit",
+  "author": "April Sylph",
+  "homepage_url": "https://github.com/AprilSylph/XKit-Rewritten",
+
+  "description": "Rewrite of XKit, the extension framework for Tumblr",
   "icons": {
     "16": "img/icon/16.png",
     "32": "img/icon/32.png",
@@ -12,10 +16,7 @@
     "96": "img/icon/96.png",
     "128": "img/icon/128.png"
   },
-  "author": "April Sylph",
-  "homepage_url": "https://github.com/AprilSylph/XKit-Rewritten",
-  "permissions": [ "storage" ],
-  "web_accessible_resources": [ "src/*.js", "src/*.css" ],
+
   "browser_action": {
     "browser_style": true,
     "default_title": "XKit",
@@ -29,6 +30,9 @@
       "128": "img/icon/128.png"
     }
   },
+
+  "permissions": [ "storage" ],
+  "web_accessible_resources": [ "src/*.js", "src/*.css" ],
   "content_scripts": [
     {
       "matches": [ "*://www.tumblr.com/*" ],
@@ -42,6 +46,7 @@
       ]
     }
   ],
+
   "minimum_chrome_version": "55",
   "browser_specific_settings": {
     "gecko": {

@@ -1,0 +1,22 @@
+body {
+  font-size: 100%;
+}
+
+main {
+  padding: 0 20px;
+}
+
+#scripts {
+  padding: 0;
+  list-style-type: none;
+}
+
+#scripts li {
+  padding: 0.5ch 0;
+  display: flex;
+  align-items: center;
+}
+
+#scripts label {
+  padding-left: 1ch;
+}

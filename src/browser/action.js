@@ -26,13 +26,9 @@ async function writeEnabled(event) {
 }
 
 async function renderScripts() {
-  const target = document.getElementById('scripts');
+  const scriptsList = document.getElementById('scripts');
   const installedScripts = await getInstalledScripts();
-  let {enabledScripts} = await browser.storage.local.get('enabledScripts');
-
-  if (!enabledScripts) {
-    enabledScripts = [];
-  }
+  const {enabledScripts} = await browser.storage.local.get('enabledScripts');
 
   installedScripts.forEach(({name, title}) => {
     const listItem = document.createElement('li');
@@ -40,7 +36,7 @@ async function renderScripts() {
     const input = document.createElement('input');
     input.id = name;
     input.setAttribute('type', 'checkbox');
-    input.checked = enabledScripts.includes(name);
+    input.checked = (enabledScripts || []).includes(name);
     input.addEventListener('input', writeEnabled);
     listItem.appendChild(input);
 
@@ -49,7 +45,7 @@ async function renderScripts() {
     label.textContent = title;
     listItem.appendChild(label);
 
-    target.appendChild(listItem);
+    scriptsList.appendChild(listItem);
   });
 }
 

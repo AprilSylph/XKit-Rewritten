@@ -41,7 +41,10 @@
       return;
     }
 
-    const {oldValue, newValue} = enabledScripts;
+    let {oldValue, newValue} = enabledScripts;
+    if (oldValue === undefined) {
+      oldValue = [];
+    }
 
     const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
     const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);

@@ -30,7 +30,11 @@ async function renderScripts() {
   const installedScripts = await getInstalledScripts();
   const {enabledScripts} = await browser.storage.local.get('enabledScripts');
 
-  installedScripts.forEach(({name, title}) => {
+  installedScripts.forEach(async name => {
+    const url = getURL(`/src/scripts/${name}.json`);
+    const file = await fetch(url);
+    const {title} = await file.json();
+
     const listItem = document.createElement('li');
 
     const input = document.createElement('input');

@@ -1,5 +1,7 @@
 body {
   font-size: 100%;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 main {
@@ -29,7 +31,6 @@ main {
   display: flex;
   align-items: center;
   padding: 0.5ch 0;
-
 }
 
 #scripts fieldset label {

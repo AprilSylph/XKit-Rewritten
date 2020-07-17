@@ -10,11 +10,7 @@ async function getInstalledScripts() {
 
 async function writeEnabled(event) {
   const {checked, id} = event.target;
-  let {enabledScripts} = await browser.storage.local.get('enabledScripts');
-
-  if (!enabledScripts) {
-    enabledScripts = [];
-  }
+  let {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
 
   if (checked) {
     enabledScripts.push(id);
@@ -28,7 +24,7 @@ async function writeEnabled(event) {
 async function renderScripts() {
   const scriptsSection = document.getElementById('scripts');
   const installedScripts = await getInstalledScripts();
-  const {enabledScripts} = await browser.storage.local.get('enabledScripts');
+  const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
 
   installedScripts.forEach(async name => {
     const url = getURL(`/src/scripts/${name}.json`);
@@ -54,7 +50,7 @@ async function renderScripts() {
     const input = document.createElement('input');
     input.id = name;
     input.setAttribute('type', 'checkbox');
-    input.checked = (enabledScripts || []).includes(name);
+    input.checked = enabledScripts.includes(name);
     input.addEventListener('input', writeEnabled);
     listItem.appendChild(input);
 

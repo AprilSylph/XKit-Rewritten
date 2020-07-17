@@ -41,10 +41,7 @@
       return;
     }
 
-    let {oldValue, newValue} = enabledScripts;
-    if (oldValue === undefined) {
-      oldValue = [];
-    }
+    const {oldValue = [], newValue = []} = enabledScripts;
 
     const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
     const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
@@ -56,10 +53,7 @@
   const init = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
 
-    const {enabledScripts} = await browser.storage.local.get('enabledScripts');
-    if (!enabledScripts) {
-      return;
-    }
+    const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
 
     enabledScripts.forEach(run_script);
   }

@@ -37,9 +37,11 @@ async function renderScripts() {
     legend.textContent = title;
     fieldset.appendChild(legend);
 
-    const p = document.createElement('p');
-    p.textContent = description;
-    fieldset.appendChild(p);
+    if (description) {
+      const p = document.createElement('p');
+      p.textContent = description;
+      fieldset.appendChild(p);
+    }
 
     const unorderedList = document.createElement('ul');
     fieldset.appendChild(unorderedList);

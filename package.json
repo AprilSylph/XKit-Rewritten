@@ -31,10 +31,9 @@
   },
   "webExt": {
     "ignoreFiles": [
-      ".*",
       "dev/",
       "docs/",
-      "LICENSE",
+      ".*",
       "package*.json",
       "*.md"
     ],

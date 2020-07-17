@@ -1,5 +1,5 @@
 # Modules system
-XKit Rewritten uses a custom modules system, with syntax similar to ES6 modules, and specifically **dynamic imports**, which the project was originally designed to use. However, dynamic imports do not work in content scripts in any major browser yet.
+XKit Rewritten uses a custom modules system, with syntax similar to ES6 modules, and specifically **dynamic imports**, which the project was originally designed to use. However, dynamic imports do not work in content scripts across every major browser yet.
 
 #### `fakeImport()`
 The easiest part of the custom modules system to explain is the `fakeImport()` function. Its syntax is essentially identical to the dynamic `import()` syntax; it returns a `Promise` which resolves with an object of module exports.

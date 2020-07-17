@@ -29,7 +29,7 @@ async function renderScripts() {
   installedScripts.forEach(async name => {
     const url = getURL(`/src/scripts/${name}.json`);
     const file = await fetch(url);
-    const {title, description} = await file.json();
+    const {title = name, description = ''} = await file.json();
 
     const fieldset = document.createElement('fieldset');
 

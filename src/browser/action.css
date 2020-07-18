@@ -1,4 +1,5 @@
 body {
+  min-width: 400px;
   font-size: 100%;
   -webkit-user-select: none;
   user-select: none;

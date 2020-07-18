@@ -27,6 +27,8 @@ jobs:
         run: npx web-ext lint
 
       - name: Build WebExtension
+        env:
+          WEB_EXT_ID: ${{ secrets.WEB_EXT_ID }}
         run: npx web-ext build
 
       - name: Upload Artifacts

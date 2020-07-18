@@ -1,7 +1,7 @@
 const {getURL} = browser.runtime;
 
 async function getInstalledScripts() {
-  const url = getURL('/src/scripts/.index.json');
+  const url = getURL('/src/scripts/_index.json');
   const file = await fetch(url);
   const installedScripts = await file.json();
 

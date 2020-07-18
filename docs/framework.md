@@ -43,3 +43,7 @@ Human-readable title for this script. Defaults to the script's filename if not p
 - Required: No
 
 Human-readable description for this script. Defaults to an empty string if not provided.
+
+# Scripts index
+
+Since WebExtensions cannot natively read the contents of a directory, there is a file (`src/scripts/_index.json`) which lists the relative filename (without file extensions) of each installed script. If you build a new script, it will not be recognised until its name is added to this file.

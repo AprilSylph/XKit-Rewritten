@@ -21,6 +21,26 @@ async function writeEnabled(event) {
   browser.storage.local.set({enabledScripts});
 }
 
+async function writePreference(event) {
+  const {id, tagName, type} = event.target;
+  const [scriptName, preferenceName] = id.split('.');
+  const storageKey = `${scriptName}.preferences`;
+  const {[storageKey]: savedPreferences = {}} = await browser.storage.local.get(storageKey);
+
+  if (tagName === 'INPUT') {
+    switch (type) {
+      case 'checkbox':
+        savedPreferences[preferenceName] = event.target.checked;
+        break;
+      case 'text':
+        savedPreferences[preferenceName] = event.target.value;
+        break;
+    }
+  }
+
+  browser.storage.local.set({[storageKey]: savedPreferences});
+}
+
 async function renderScripts() {
   const scriptsSection = document.getElementById('scripts');
   const installedScripts = await getInstalledScripts();
@@ -29,7 +49,7 @@ async function renderScripts() {
   installedScripts.forEach(async name => {
     const url = getURL(`/src/scripts/${name}.json`);
     const file = await fetch(url);
-    const {title = name, description = ''} = await file.json();
+    const {title = name, description = '', preferences = {}} = await file.json();
 
     const fieldset = document.createElement('fieldset');
 
@@ -51,7 +71,7 @@ async function renderScripts() {
 
     const input = document.createElement('input');
     input.id = name;
-    input.setAttribute('type', 'checkbox');
+    input.type = 'checkbox';
     input.checked = enabledScripts.includes(name);
     input.addEventListener('input', writeEnabled);
     listItem.appendChild(input);
@@ -60,6 +80,45 @@ async function renderScripts() {
     label.setAttribute('for', name);
     label.textContent = 'Enabled';
     listItem.appendChild(label);
+
+    if (Object.keys(preferences).length !== 0) {
+      const storageKey = `${name}.preferences`;
+      const {[storageKey]: savedPreferences = {}} = await browser.storage.local.get(storageKey);
+
+      Object.keys(preferences).forEach(x => {
+        const preference = preferences[x];
+        const savedPreference = savedPreferences[x] !== undefined ? savedPreferences[x] : preference.default;
+
+        const preferenceListItem = document.createElement('li');
+
+        if (['checkbox', 'text'].includes(preference.type)) {
+          const preferenceInput = document.createElement('input');
+          preferenceInput.id = `${name}.${x}`;
+          preferenceInput.type = preference.type;
+          preferenceInput.addEventListener('input', writePreference);
+
+          const preferenceLabel = document.createElement('label');
+          preferenceLabel.setAttribute('for', `${name}.${x}`);
+          preferenceLabel.textContent = preference.label;
+
+          switch (preference.type) {
+            case 'checkbox':
+              preferenceInput.checked = savedPreference;
+              preferenceListItem.appendChild(preferenceInput);
+              preferenceListItem.appendChild(preferenceLabel);
+              break;
+            case 'text':
+              preferenceInput.value = savedPreference;
+              preferenceLabel.style.display = 'block';
+              preferenceListItem.appendChild(preferenceLabel);
+              preferenceListItem.appendChild(preferenceInput);
+              break;
+          }
+        }
+
+        unorderedList.appendChild(preferenceListItem);
+      });
+    }
 
     scriptsSection.appendChild(fieldset);
   });

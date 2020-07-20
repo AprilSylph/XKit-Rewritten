@@ -1,4 +1,16 @@
 {
   "title": "Example Script",
-  "description": "This doesn't do anything useful."
+  "description": "This doesn't do anything useful.",
+  "preferences": {
+    "log": {
+      "type": "checkbox",
+      "label": "Log to console",
+      "default": true
+    },
+    "whatToLog": {
+      "type": "text",
+      "label": "What to say?",
+      "default": "world"
+    }
+  }
 }

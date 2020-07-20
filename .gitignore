@@ -1,3 +1,4 @@
 node_modules/
 web-ext-artifacts/
 .web-extension-id
+release-notes.md

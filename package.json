@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/AprilSylph/XKit-Rewritten#readme",
   "devDependencies": {
-    "eslint": "^7.4.0",
+    "eslint": "^7.5.0",
     "npx": "^10.2.2",
     "web-ext": "^4.3.0"
   },

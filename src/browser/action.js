@@ -57,26 +57,27 @@ async function renderScripts() {
     legend.textContent = title;
     fieldset.appendChild(legend);
 
+    const metaDiv = document.createElement('div');
+    metaDiv.classList.add('meta');
+    fieldset.appendChild(metaDiv);
+
+    if (description) {
+      const p = document.createElement('p');
+      p.textContent = description;
+      metaDiv.appendChild(p);
+    }
+
     if (icon.class_name !== undefined) {
       const iconDiv = document.createElement('div');
-      iconDiv.classList.add('ext-icon');
+      iconDiv.classList.add('icon');
       iconDiv.style.backgroundColor = icon.background_color || '#ffffff';
-      
+
       const iconInner = document.createElement('i');
       iconInner.classList.add(icon.class_name, 'ri-fw');
       iconInner.style.color = icon.color || '#000000';
       iconDiv.appendChild(iconInner);
 
-      fieldset.appendChild(iconDiv);
-    }
-
-    if (description) {
-      const p = document.createElement('p');
-      p.textContent = description;
-      if (icon.class_name !== undefined) {
-        p.classList.add('avoid-icon');
-      }
-      fieldset.appendChild(p);
+      metaDiv.appendChild(iconDiv);
     }
 
     const unorderedList = document.createElement('ul');

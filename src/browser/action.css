@@ -17,13 +17,27 @@ main {
   margin: 0.5ch 0;
 }
 
-#scripts fieldset p {
-  margin-top: 0;
+#scripts fieldset .meta:not(:empty) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 0.5ch;
 }
 
-#scripts fieldset p.avoid-icon {
-  padding-right: 2.6em;
+#scripts fieldset .meta .icon {
+  align-self: flex-start;
+  width: 32px;
+  height: 32px;
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  margin-left: 0.5ch;
+}
+
+#scripts fieldset .meta p {
+  margin: 0;
 }
 
 #scripts fieldset ul {
@@ -50,17 +64,4 @@ main {
 #scripts fieldset input + label,
 #scripts fieldset label + input {
   margin-left: 1ch;
-}
-
-#scripts fieldset .ext-icon {
-  position: absolute;
-  right: 2.5rem;
-  border: 0px solid;
-  border-radius: 5px;
-  width: 30px;
-  height: 30px;
-  font-size: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

@@ -30,7 +30,7 @@ This path is automatically fed into `browser.runtime.getURL()`, so should start 
 
 ## Metadata files
 
-Each module should be accompanied by a `.json` file of matching name; i.e. `example.js` should be accompanied by `example.json` in the same directory level. Right now, only two keys are supported; expect more to be added in future.
+Each module should be accompanied by a `.json` file of matching name, i.e. `example.js` should be accompanied by `example.json` in the same directory level. Right now, four keys are supported.
 
 #### `"title"`
 - Type: String
@@ -43,6 +43,30 @@ Human-readable title for this script. Defaults to the script's filename if not p
 - Required: No
 
 Human-readable description for this script. Defaults to an empty string if not provided.
+
+#### `"icon"`
+- Type: Object
+- Required: No
+
+Object with three supported keys:
+
+#### `"icon"`: `"class_name"`
+- Type: String
+- Required: Yes
+
+[Remix Icon](https://remixicon.com/) class of the icon for the script. If not provided, an icon is not generated.
+
+#### `"icon"`: `"color"`
+- Type: String
+- Required: No
+
+The foreground colour of the script icon. Defaults to pure black (`#000000`) if not provided.
+
+#### `"icon"`: `"background_color"`
+- Type: String
+- Required: No
+
+The background colour of the script icon. Defaults to pure white (`#ffffff`) if not provided.
 
 # Scripts index
 

@@ -1,6 +1,11 @@
 {
   "title": "Example Script",
   "description": "This doesn't do anything useful.",
+  "icon": {
+    "class_name": "ri-terminal-line",
+    "color": "#33ff00",
+    "background_color": "#000000"
+  },
   "preferences": {
     "log": {
       "type": "checkbox",

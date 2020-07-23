@@ -49,7 +49,7 @@ async function renderScripts() {
   installedScripts.forEach(async name => {
     const url = getURL(`/src/scripts/${name}.json`);
     const file = await fetch(url);
-    const {title = name, description = '', preferences = {}} = await file.json();
+    const {title = name, description = '', icon = {}, preferences = {}} = await file.json();
 
     const fieldset = document.createElement('fieldset');
 
@@ -57,9 +57,25 @@ async function renderScripts() {
     legend.textContent = title;
     fieldset.appendChild(legend);
 
+    if (icon.class_name !== undefined) {
+      const iconDiv = document.createElement('div');
+      iconDiv.classList.add('ext-icon');
+      iconDiv.style.backgroundColor = icon.background_color || '#ffffff';
+      
+      const iconInner = document.createElement('i');
+      iconInner.classList.add(icon.class_name, 'ri-fw');
+      iconInner.style.color = icon.color || '#000000';
+      iconDiv.appendChild(iconInner);
+
+      fieldset.appendChild(iconDiv);
+    }
+
     if (description) {
       const p = document.createElement('p');
       p.textContent = description;
+      if (icon.class_name !== undefined) {
+        p.classList.add('avoid-icon');
+      }
       fieldset.appendChild(p);
     }
 

@@ -1,6 +1,6 @@
 {
   "name": "xkit-rewrite",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "Rewrite of XKit, the extension framework for Tumblr",
   "browser": "xkit.js",
   "scripts": {

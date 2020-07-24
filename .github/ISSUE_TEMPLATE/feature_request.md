@@ -8,12 +8,12 @@ assignees: ''
 ---
 
 #### Feature description
-> Outline how you imagine your idea working:
+Outline how you imagine your idea working:
 
 
 #### Use case explanation
-> Explain how this feature would benefit you:
+Explain how this feature would benefit you:
 
 
-**Additional comments**
-> (Optional) Add any further comments or relevant information:
+#### Additional comments
+(Optional) Add any further comments or relevant information:

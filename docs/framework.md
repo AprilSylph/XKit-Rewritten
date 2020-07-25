@@ -74,22 +74,22 @@ The background colour of the script icon. Defaults to pure white (`#ffffff`) if 
 
 Object with 1 or more custom keys; each key is used internally as a preference's name.
 
-#### `"preferences"`: <preference name>
+#### `"preferences"`: \<preference name>
 - Type: Object
 
-#### `"preferences"`: <preference name>: `"type"`
+#### `"preferences"`: \<preference name>: `"type"`
 - Type: String
 - Required: Yes
 
 Type of preference. Supported values: `"checkbox"`, `"text"`
 
-#### `"preferences"`: <preference name>: `"label"`
+#### `"preferences"`: \<preference name>: `"label"`
 - Type: String
 - Required: Yes
 
 Label displayed to the user to describe the preference.
 
-#### `"preferences"`: <preference name> `"default"`
+#### `"preferences"`: \<preference name> `"default"`
 - Type: (Varies)
 - Required: Yes
 

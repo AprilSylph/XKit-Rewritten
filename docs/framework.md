@@ -30,7 +30,7 @@ This path is automatically fed into `browser.runtime.getURL()`, so should start 
 
 ## Metadata files
 
-Each module should be accompanied by a `.json` file of matching name, i.e. `example.js` should be accompanied by `example.json` in the same directory level. Right now, four keys are supported.
+Each module should be accompanied by a `.json` file of matching name, i.e. `example.js` should be accompanied by `example.json` in the same directory level. Four keys are currently supported.
 
 #### `"title"`
 - Type: String
@@ -67,6 +67,36 @@ The foreground colour of the script icon. Defaults to pure black (`#000000`) if 
 - Required: No
 
 The background colour of the script icon. Defaults to pure white (`#ffffff`) if not provided.
+
+#### `"preferences"`
+- Type: Object
+- Required: No
+
+Object with 1 or more custom keys; each key is used internally as a preference's name.
+
+#### `"preferences"`: <preference name>
+- Type: Object
+
+#### `"preferences"`: <preference name>: `"type"`
+- Type: String
+- Required: Yes
+
+Type of preference. Supported values: `"checkbox"`, `"text"`
+
+#### `"preferences"`: <preference name>: `"label"`
+- Type: String
+- Required: Yes
+
+Label displayed to the user to describe the preference.
+
+#### `"preferences"`: <preference name> `"default"`
+- Type: (Varies)
+- Required: Yes
+
+Default value of the preference to display to the user. This does not automatically set the default value of the preference in storage; scripts should ensure to use the same defaults as they display.
+
+If the preference `type` is `"checkbox"`, this value should be a boolean.  
+If the preference `type` is `"text"`, this value should be a string.
 
 # Scripts index
 

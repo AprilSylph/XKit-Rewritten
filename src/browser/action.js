@@ -36,6 +36,8 @@ async function writePreference(event) {
         savedPreferences[preferenceName] = event.target.value;
         break;
     }
+  } else if (tagName === 'SELECT') {
+    savedPreferences[preferenceName] = event.target.value;
   }
 
   browser.storage.local.set({[storageKey]: savedPreferences});
@@ -102,39 +104,55 @@ async function renderScripts() {
       const storageKey = `${name}.preferences`;
       const {[storageKey]: savedPreferences = {}} = await browser.storage.local.get(storageKey);
 
-      Object.keys(preferences).forEach(x => {
-        const preference = preferences[x];
-        const savedPreference = savedPreferences[x] !== undefined ? savedPreferences[x] : preference.default;
+      for (const [key, preference] of Object.entries(preferences)) {
+        const savedPreference = savedPreferences[key] !== undefined ? savedPreferences[key] : preference.default;
 
         const preferenceListItem = document.createElement('li');
 
-        if (['checkbox', 'text'].includes(preference.type)) {
-          const preferenceInput = document.createElement('input');
-          preferenceInput.id = `${name}.${x}`;
+        const inputType = {
+          checkbox: 'input',
+          text: 'input',
+          select: 'select'
+        }[preference.type];
+
+        const preferenceInput = document.createElement(inputType);
+        preferenceInput.id = `${name}.${key}`;
+        preferenceInput.addEventListener('input', writePreference);
+
+        if (inputType === 'input') {
           preferenceInput.type = preference.type;
-          preferenceInput.addEventListener('input', writePreference);
+        }
 
-          const preferenceLabel = document.createElement('label');
-          preferenceLabel.setAttribute('for', `${name}.${x}`);
-          preferenceLabel.textContent = preference.label;
+        const preferenceLabel = document.createElement('label');
+        preferenceLabel.setAttribute('for', `${name}.${key}`);
+        preferenceLabel.textContent = preference.label;
 
-          switch (preference.type) {
-            case 'checkbox':
-              preferenceInput.checked = savedPreference;
-              preferenceListItem.appendChild(preferenceInput);
-              preferenceListItem.appendChild(preferenceLabel);
-              break;
-            case 'text':
-              preferenceInput.value = savedPreference;
-              preferenceLabel.style.display = 'block';
-              preferenceListItem.appendChild(preferenceLabel);
-              preferenceListItem.appendChild(preferenceInput);
-              break;
-          }
+        switch (preference.type) {
+          case 'checkbox':
+            preferenceInput.checked = savedPreference;
+            preferenceListItem.appendChild(preferenceInput);
+            preferenceListItem.appendChild(preferenceLabel);
+            break;
+          case 'text':
+            preferenceInput.value = savedPreference;
+            preferenceListItem.appendChild(preferenceLabel);
+            preferenceListItem.appendChild(preferenceInput);
+            break;
+          case 'select':
+            for (const [value, text] of Object.entries(preference.options)) {
+              const option = document.createElement('option');
+              option.value = value;
+              option.textContent = text;
+              option.selected = (value === savedPreference);
+              preferenceInput.appendChild(option);
+            }
+            preferenceListItem.appendChild(preferenceLabel);
+            preferenceListItem.appendChild(preferenceInput);
+            break;
         }
 
         unorderedList.appendChild(preferenceListItem);
-      });
+      }
     }
 
     scriptsSection.appendChild(fieldset);

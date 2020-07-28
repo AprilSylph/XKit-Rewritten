@@ -74,22 +74,28 @@ The background colour of the script icon. Defaults to pure white (`#ffffff`) if 
 
 Object with 1 or more custom keys; each key is used internally as a preference's name.
 
-#### `"preferences"`: \<preference name>
+#### `"preferences"`: \<preference name\>
 - Type: Object
 
-#### `"preferences"`: \<preference name>: `"type"`
+#### `"preferences"`: \<preference name\>: `"type"`
 - Type: String
 - Required: Yes
 
-Type of preference. Supported values: `"checkbox"`, `"text"`
+Type of preference. Supported values: `"checkbox"`, `"text"`, `"select"`
 
-#### `"preferences"`: \<preference name>: `"label"`
+#### `"preferences"`: \<preference name\>: `"label"`
 - Type: String
 - Required: Yes
 
 Label displayed to the user to describe the preference.
 
-#### `"preferences"`: \<preference name> `"default"`
+#### `"preferences"`: \<preference name\>: `"options"`
+- Type: Object
+- Required: Yes, if `type` is `"select"`
+
+For `"select"`-type preferences, an object of value/label entries. Unused for other preference types.
+
+#### `"preferences"`: \<preference name\> `"default"`
 - Type: (Varies)
 - Required: Yes
 
@@ -97,6 +103,7 @@ Default value of the preference to display to the user. This does not automatica
 
 If the preference `type` is `"checkbox"`, this value should be a boolean.  
 If the preference `type` is `"text"`, this value should be a string.
+If the preference `type` is `"select"`, this value should be a string that matches one of the keys in `options`.
 
 # Scripts index
 

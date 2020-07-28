@@ -16,6 +16,18 @@
       "type": "text",
       "label": "What to say?",
       "default": "world"
+    },
+    "level": {
+      "type": "select",
+      "label": "Console output type",
+      "options": {
+        "debug": "Debug",
+        "error": "Error",
+        "info": "Info",
+        "log": "Log",
+        "warn": "Warn"
+      },
+      "default": "log"
     }
   }
 }

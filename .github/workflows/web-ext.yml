@@ -2,10 +2,8 @@ name: WebExt
 
 on:
   push:
-    branches:
-      - master
-    paths:
-      - 'manifest.json'
+    branches: [ master ]
+    paths: [ 'manifest.json' ]
 
 jobs:
   build:

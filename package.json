@@ -22,7 +22,7 @@
   "devDependencies": {
     "eslint": "^7.5.0",
     "npx": "^10.2.2",
-    "web-ext": "^4.3.0"
+    "web-ext": "^5.0.0"
   },
   "dependencies": {
     "jquery": "^3.5.1",

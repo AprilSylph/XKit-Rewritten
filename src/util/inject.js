@@ -1,7 +1,7 @@
 (function() {
   let nonce;
 
-  const inject = (async_func, args) => new Promise((resolve, reject) => {
+  const inject = (async_func, args = []) => new Promise((resolve, reject) => {
     if (!nonce) {
       const scriptWithNonce = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
       nonce = scriptWithNonce.nonce || scriptWithNonce.getAttribute('nonce');

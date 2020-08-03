@@ -16,7 +16,7 @@
         const { result, exception } = event.data;
 
         if (exception === undefined) {
-          resolve(result);
+          resolve(JSON.parse(result));
         } else {
           reject(Object.assign(new Error(), JSON.parse(exception)));
         }
@@ -30,7 +30,7 @@
       (${async_func.toString()})(...${JSON.stringify(args)})
       .then(result => window.postMessage({
         xkitCallbackNonce: ${callbackNonce},
-        result,
+        result: JSON.stringify(result),
       }, '${location.protocol}//${location.host}'))
       .catch(exception => window.postMessage({
         xkitCallbackNonce: ${callbackNonce},

@@ -3,9 +3,11 @@
     $('audio > source[src]:not(.audio_downloader_done)').each(function() {
       const $source = $(this).addClass('audio_downloader_done');
       const src = $source.attr('src');
+      const div = document.createElement('div');
       const downloadButton = document.createElement('button');
 
-      downloadButton.className = 'audio_downloader_button';
+      div.className = 'audio_downloader';
+
       downloadButton.textContent = '(Download)';
       downloadButton.setAttribute('data-src', src);
       downloadButton.onclick = function(event) {
@@ -31,7 +33,8 @@
         })
       };
 
-      $source.parents()[4].appendChild(downloadButton);
+      div.appendChild(downloadButton);
+      $source.parents()[4].appendChild(div);
     });
   }
 

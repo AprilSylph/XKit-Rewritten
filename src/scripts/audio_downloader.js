@@ -28,7 +28,7 @@
 
           document.body.appendChild(download_link);
           download_link.click();
-          download_link.parentElement.removeChild(download_link);
+          download_link.parentNode.removeChild(download_link);
           window.URL.revokeObjectURL(blob_url);
         })
       };
@@ -48,7 +48,7 @@
     const { newPostListener } = await fakeImport('/src/util/mutations.js');
     newPostListener.removeListener(process);
     $('.audio_downloader_done').removeClass('audio_downloader_done');
-    $('.audio_downloader_button').remove();
+    $('.audio_downloader').remove();
   }
 
   const stylesheet = '/src/scripts/audio_downloader.css';

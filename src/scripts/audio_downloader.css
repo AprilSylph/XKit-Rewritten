@@ -1,0 +1,8 @@
+.audio_downloader_button {
+  display: block;
+  height: 1em;
+  line-height: 1em;
+  color: var(--purple);
+  text-decoration: underline;
+  padding: var(--post-header-vertical-padding) var(--post-padding);
+}

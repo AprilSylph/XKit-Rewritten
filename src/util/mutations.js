@@ -32,10 +32,6 @@
     }
   };
 
-  Object.freeze(newPostListener);
-  Object.freeze(mutatedPostListener);
-  Object.freeze(baseContainerListener);
-
   const observer = new MutationObserver(mutations => {
     if (newPostListener.listeners.length !== 0) {
       const newPosts = mutations.some(({addedNodes}) =>

@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "XKit Rewritten",
-  "version": "0.0.3",
+  "version": "0.0.4",
 
   "short_name": "XKit",
   "author": "April Sylph",
@@ -31,7 +31,7 @@
     }
   },
 
-  "permissions": [ "storage" ],
+  "permissions": [ "storage", "*://*.tumblr.com/*" ],
   "web_accessible_resources": [ "src/*.js", "src/*.css" ],
   "content_scripts": [
     {

@@ -1,4 +1,6 @@
 (function() {
+  let audioBlockSelector;
+
   const process = function() {
     $('audio > source[src]:not(.audio_downloader_done)').each(function() {
       const $source = $(this).addClass('audio_downloader_done');
@@ -34,12 +36,14 @@
       };
 
       div.appendChild(downloadButton);
-      $source.parents()[4].appendChild(div);
+      $source.parents(audioBlockSelector).append(div);
     });
   }
 
   const main = async function() {
     const { newPostListener } = await fakeImport('/src/util/mutations.js');
+    const { keyToCss } = await fakeImport('/src/util/css-map.js');
+    audioBlockSelector = await keyToCss('audioBlock');
     newPostListener.addListener(process);
     process();
   }

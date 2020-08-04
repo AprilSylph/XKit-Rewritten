@@ -36,7 +36,7 @@
       };
 
       div.appendChild(downloadButton);
-      $source.parents(audioBlockSelector).append(div);
+      $source.parents(audioBlockSelector).after(div);
     });
   }
 

@@ -2,14 +2,15 @@
   let audioBlockSelector;
 
   const process = function() {
-    $('audio > source[src]:not(.audio_downloader_done)').each(function() {
-      const $source = $(this).addClass('audio_downloader_done');
-      const src = $source.attr('src');
-      const div = document.createElement('div');
-      const downloadButton = document.createElement('button');
+    [...document.querySelectorAll('audio > source[src]:not(.audio_downloader_done)')]
+    .forEach(source => {
+      source.classList.add('audio_downloader_done');
+      const src = source.getAttribute('src');
 
+      const div = document.createElement('div');
       div.className = 'audio_downloader';
 
+      const downloadButton = document.createElement('button');
       downloadButton.textContent = '(Download)';
       downloadButton.setAttribute('data-src', src);
       downloadButton.onclick = function(event) {
@@ -36,7 +37,7 @@
       };
 
       div.appendChild(downloadButton);
-      $source.parents(audioBlockSelector).after(div);
+      $(source).parents(audioBlockSelector).after(div);
     });
   }
 

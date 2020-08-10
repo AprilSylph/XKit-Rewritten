@@ -8,5 +8,4 @@ parserOptions:
   ecmaVersion: 11
 rules: {}
 globals:
-  moment: readonly
   fakeImport: readonly

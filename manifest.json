@@ -40,7 +40,6 @@
       "js": [
         "lib/browser-polyfill.min.js",
         "lib/jquery.min.js",
-        "lib/moment.min.js",
         "src/fake-import.js",
         "src/xkit.js"
       ]

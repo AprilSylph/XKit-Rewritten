@@ -30,12 +30,14 @@
       postElement.classList.add('xkit_timestamps_done');
 
       const post_id = postElement.dataset.id;
-      const {timestamp} = await timelineObject(post_id);
+      const {timestamp, postUrl} = await timelineObject(post_id);
 
       const noteCountElement = postElement.querySelector(noteCountSelector);
 
-      const timestampElement = document.createElement('div');
+      const timestampElement = document.createElement('a');
       timestampElement.className = 'xkit_timestamp';
+      timestampElement.href = postUrl;
+      timestampElement.target = '_blank';
       timestampElement.textContent = constructTimeString(timestamp);
 
       $(noteCountElement).after(timestampElement);

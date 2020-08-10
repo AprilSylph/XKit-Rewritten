@@ -2,6 +2,7 @@
   let noteCountSelector;
 
   const constructTimeString = function(unixTime) {
+    const locale = document.documentElement.lang;
     const date = new Date(unixTime * 1000);
     const now = new Date();
 
@@ -9,12 +10,12 @@
     const sameYear = date.getFullYear() === now.getFullYear();
 
     if (sameDate) {
-      return date.toLocaleTimeString(undefined, {
+      return date.toLocaleTimeString(locale, {
         hour: 'numeric',
         minute: 'numeric',
       });
     } else {
-      return date.toLocaleDateString(undefined, {
+      return date.toLocaleDateString(locale, {
         day: 'numeric',
         month: 'short',
         year: sameYear ? undefined : 'numeric',

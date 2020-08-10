@@ -17,7 +17,7 @@ main {
   margin: 0.5ch 0;
 }
 
-#scripts fieldset .meta:not(:empty) {
+#scripts fieldset .meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -26,9 +26,10 @@ main {
 
 #scripts fieldset .meta .icon {
   align-self: flex-start;
+  flex-shrink: 0;
   width: 32px;
   height: 32px;
-  font-size: 25px;
+  font-size: 26px;
   display: flex;
   justify-content: center;
   align-items: center;

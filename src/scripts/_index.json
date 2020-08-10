@@ -1,5 +1,6 @@
 [
   "audio_downloader",
   "disable_gifs",
-  "timestamps"
+  "timestamps",
+  "painter"
 ]

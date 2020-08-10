@@ -1,0 +1,27 @@
+{
+  "title": "Painter",
+  "description": "Add colour to your dashboard posts",
+  "icon": {
+    "class_name": "ri-brush-line",
+    "color": "white",
+    "background_color": "#4bb51b"
+  },
+  "preferences": {
+    "own": {
+      "type": "text",
+      "label": "Own post colour"
+    },
+    "original": {
+      "type": "text",
+      "label": "Original post colour"
+    },
+    "reblog": {
+      "type": "text",
+      "label": "Reblogged post colour"
+    },
+    "liked": {
+      "type": "text",
+      "label": "Liked post colour"
+    }
+  }
+}

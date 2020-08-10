@@ -1,0 +1,9 @@
+{
+  "title": "Timestamps",
+  "description": "See when a post was made",
+  "icon": {
+    "class_name": "ri-time-line",
+    "color": "white",
+    "background_color": "#d2196d"
+  }
+}

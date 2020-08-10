@@ -1,0 +1,8 @@
+.xkit_timestamp {
+  font-weight: normal;
+  margin-right: auto;
+}
+
+:not(:empty) + .xkit_timestamp {
+  margin-left: var(--post-padding);
+}

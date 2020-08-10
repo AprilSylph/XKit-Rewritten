@@ -5,18 +5,16 @@
     [...document.querySelectorAll('audio > source[src]:not(.audio_downloader_done)')]
     .forEach(source => {
       source.classList.add('audio_downloader_done');
-      const src = source.getAttribute('src');
+      const {src} = source;
 
       const div = document.createElement('div');
       div.className = 'audio_downloader';
 
       const downloadButton = document.createElement('button');
       downloadButton.textContent = '(Download)';
-      downloadButton.setAttribute('data-src', src);
       downloadButton.onclick = function(event) {
         event.stopPropagation();
 
-        const src = this.getAttribute('data-src');
         const filename = (new URL(src)).pathname.replace('/', '');
 
         fetch(src)

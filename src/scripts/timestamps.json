@@ -5,5 +5,17 @@
     "class_name": "ri-time-line",
     "color": "white",
     "background_color": "#d2196d"
+  },
+  "preferences": {
+    "reblog_timestamps": {
+      "type": "select",
+      "label": "Reblog Timestamps",
+      "options": {
+        "none": "None",
+        "op": "Only on original post",
+        "all": "On all reblog items"
+      },
+      "default": "op"
+    }
   }
 }

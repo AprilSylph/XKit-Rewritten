@@ -7,3 +7,10 @@
 :not(:empty) + .xkit_timestamp {
   margin-left: var(--post-padding);
 }
+
+.xkit_reblog_timestamp {
+  align-self: center;
+  font-weight: normal;
+  color: var(--gray-65);
+  margin-left: auto;
+}

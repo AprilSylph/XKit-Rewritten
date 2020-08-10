@@ -2,17 +2,7 @@
   const baseContainerNode = document.getElementById('base-container');
   const postSelector = '[data-id]';
 
-  const newPostListener = {
-    listeners: [],
-    addListener(callback) {
-      this.listeners.push(callback);
-    },
-    removeListener(callback) {
-      this.listeners = this.listeners.filter(x => x !== callback);
-    }
-  };
-
-  const mutatedPostListener = {
+  const postListener = {
     listeners: [],
     addListener(callback) {
       this.listeners.push(callback);
@@ -33,23 +23,17 @@
   };
 
   const observer = new MutationObserver(mutations => {
-    if (newPostListener.listeners.length !== 0) {
+    if (postListener.listeners.length !== 0) {
       const newPosts = mutations.some(({addedNodes}) =>
         [...addedNodes]
         .filter(addedNode => addedNode instanceof HTMLElement)
         .some(addedNode => addedNode.matches(postSelector))
       );
 
-      if (newPosts) {
-        newPostListener.listeners.forEach(callback => callback());
-      }
-    }
-
-    if (mutatedPostListener.listeners.length !== 0) {
       const mutatedPosts = mutations.some(({target}) => target.matches(`${postSelector} ${target.tagName.toLowerCase()}`));
 
-      if (mutatedPosts) {
-        mutatedPostListener.listeners.forEach(callback => callback());
+      if (newPosts || mutatedPosts) {
+        postListener.listeners.forEach(callback => callback());
       }
     }
 
@@ -68,6 +52,6 @@
     subtree: true,
   });
 
-  return { newPostListener, mutatedPostListener, baseContainerListener };
+  return { postListener, baseContainerListener };
 
 })();

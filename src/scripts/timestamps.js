@@ -45,17 +45,17 @@
   }
 
   const main = async function() {
-    const { newPostListener } = await fakeImport('/src/util/mutations.js');
+    const { postListener } = await fakeImport('/src/util/mutations.js');
     const { keyToCss } = await fakeImport('/src/util/css-map.js');
     noteCountSelector = await keyToCss('noteCount');
 
-    newPostListener.addListener(addPostTimestamps);
+    postListener.addListener(addPostTimestamps);
     addPostTimestamps();
   }
 
   const clean = async function() {
-    const { newPostListener } = await fakeImport('/src/util/mutations.js');
-    newPostListener.removeListener(addPostTimestamps);
+    const { postListener } = await fakeImport('/src/util/mutations.js');
+    postListener.removeListener(addPostTimestamps);
     $('.xkit_timestamp').remove();
     $('.xkit_timestamps_done').removeClass('xkit_timestamps_done');
   }

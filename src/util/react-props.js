@@ -1,4 +1,8 @@
 (function() {
+  /**
+   * @param {String} post_id - The post ID of an on-screen post
+   * @return {Object} - The post's buried timelineObject property
+   */
   const timelineObject = async function(post_id) {
     const { inject } = await fakeImport('/src/util/inject.js');
     return await inject(async id => {

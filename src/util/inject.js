@@ -1,6 +1,11 @@
 (function() {
   let nonce;
 
+  /**
+   * @param {Function} async_func - Asynchronous function to run in the page context
+   * @param {Object[]} args - Arguments to pass to the function (via spread)
+   * @return {Promise} - A promise which resolves to the return value of the async function, or rejects with the caught exception
+   */
   const inject = (async_func, args = []) => new Promise((resolve, reject) => {
     if (!nonce) {
       const scriptWithNonce = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));

@@ -12,7 +12,7 @@
       postElement.classList.add('xkit_painter_painted');
 
       const post_id = postElement.dataset.id;
-      const { canDelete, liked, rebloggedFromId } = await timelineObject(post_id);
+      const {canDelete, liked, rebloggedFromId} = await timelineObject(post_id);
 
       let coloursToApply = [];
       if (canDelete && ownColour) {
@@ -37,9 +37,9 @@
 
       const step = 100/coloursToApply.length;
       let borderImage = 'linear-gradient(to right';
-      for (let i = 0; i < coloursToApply.length; i++) {
-        borderImage += `, ${coloursToApply[i]} ${step*i}% ${step*(i+1)}%`;
-      }
+      coloursToApply.forEach((colour, i) => 
+        borderImage += `, ${colour} ${step*i}% ${step*(i+1)}%`
+      );
       borderImage += ')';
 
       const articleElement = postElement.querySelector('article');
@@ -64,11 +64,12 @@
   const clean = async function() {
     const { postListener } = await fakeImport('/src/util/mutations.js');
     postListener.removeListener(paint);
-    $('.xkit_painter_painted article').css('border-top', '').css('border-image-source', '').css('border-image-slice', '');
+    $('.xkit_painter_painted article')
+    .css('border-top', '')
+    .css('border-image-source', '')
+    .css('border-image-slice', '');
     $('.xkit_painter_painted').removeClass('xkit_painter_painted');
   }
 
-  const stylesheet = '/src/scripts/painter.css';
-
-  return { main, clean, stylesheet };
+  return { main, clean };
 })();

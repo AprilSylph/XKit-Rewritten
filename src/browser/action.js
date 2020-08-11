@@ -33,6 +33,7 @@ async function writePreference(event) {
         savedPreferences[preferenceName] = event.target.checked;
         break;
       case 'text':
+      case 'color':
         savedPreferences[preferenceName] = event.target.value;
         break;
     }
@@ -112,6 +113,7 @@ async function renderScripts() {
         const inputType = {
           checkbox: 'input',
           text: 'input',
+          color: 'input',
           select: 'select'
         }[preference.type];
 
@@ -137,6 +139,11 @@ async function renderScripts() {
             preferenceInput.value = savedPreference;
             preferenceListItem.appendChild(preferenceLabel);
             preferenceListItem.appendChild(preferenceInput);
+            break;
+          case 'color':
+            preferenceInput.value = savedPreference;
+            preferenceListItem.appendChild(preferenceInput);
+            preferenceListItem.appendChild(preferenceLabel);
             break;
           case 'select':
             for (const [value, text] of Object.entries(preference.options)) {

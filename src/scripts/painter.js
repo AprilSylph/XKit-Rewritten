@@ -4,8 +4,6 @@
   let reblogColour;
   let likedColour;
 
-  const colourRegex = /^[A-F0-9]{6}$/i;
-
   const paint = async function() {
     const { timelineObject } = await fakeImport('/src/util/react-props.js');
 
@@ -17,18 +15,18 @@
       const {canDelete, liked, rebloggedFromId} = await timelineObject(post_id);
 
       let coloursToApply = [];
-      if (canDelete && ownColour && colourRegex.test(ownColour)) {
+      if (canDelete && ownColour) {
         coloursToApply.push(ownColour);
       }
-      if (liked && likedColour && colourRegex.test(likedColour)) {
+      if (liked && likedColour) {
         coloursToApply.push(likedColour);
       }
       if (rebloggedFromId) {
-        if (reblogColour && colourRegex.test(reblogColour)) {
+        if (reblogColour) {
           coloursToApply.push(reblogColour);
         }
       } else {
-        if (originalColour && colourRegex.test(originalColour)) {
+        if (originalColour) {
           coloursToApply.push(originalColour);
         }
       }
@@ -40,7 +38,7 @@
       const step = 100/coloursToApply.length;
       let borderImage = 'linear-gradient(to right';
       coloursToApply.forEach((colour, i) =>
-        borderImage += `, #${colour} ${step*i}% ${step*(i+1)}%`
+        borderImage += `, ${colour} ${step*i}% ${step*(i+1)}%`
       );
       borderImage += ')';
 

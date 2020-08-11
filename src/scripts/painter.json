@@ -8,24 +8,24 @@
   },
   "preferences": {
     "own": {
-      "type": "text",
-      "label": "Own post colour  #",
-      "default": ""
+      "type": "color",
+      "label": "Own post colour",
+      "default": "#ffffff"
     },
     "original": {
-      "type": "text",
-      "label": "Original post colour  #",
-      "default": ""
+      "type": "color",
+      "label": "Original post colour",
+      "default": "#ffffff"
     },
     "reblog": {
-      "type": "text",
-      "label": "Reblogged post colour  #",
-      "default": ""
+      "type": "color",
+      "label": "Reblogged post colour",
+      "default": "#ffffff"
     },
     "liked": {
-      "type": "text",
-      "label": "Liked post colour  #",
-      "default": ""
+      "type": "color",
+      "label": "Liked post colour",
+      "default": "#ffffff"
     }
   }
 }

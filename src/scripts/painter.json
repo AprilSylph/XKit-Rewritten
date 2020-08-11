@@ -9,22 +9,22 @@
   "preferences": {
     "own": {
       "type": "text",
-      "label": "Own post colour",
+      "label": "Own post colour  #",
       "default": ""
     },
     "original": {
       "type": "text",
-      "label": "Original post colour",
+      "label": "Original post colour  #",
       "default": ""
     },
     "reblog": {
       "type": "text",
-      "label": "Reblogged post colour",
+      "label": "Reblogged post colour  #",
       "default": ""
     },
     "liked": {
       "type": "text",
-      "label": "Liked post colour",
+      "label": "Liked post colour  #",
       "default": ""
     }
   }

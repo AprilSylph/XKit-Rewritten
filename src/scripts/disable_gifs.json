@@ -1,0 +1,9 @@
+{
+  "title": "Disable GIFs",
+  "description": "Pause GIFs until you hover over them",
+  "icon": {
+    "class_name": "ri-video-line",
+    "color": "white",
+    "background_color": "#ff492f"
+  }
+}

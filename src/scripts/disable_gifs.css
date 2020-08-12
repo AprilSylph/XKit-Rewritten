@@ -1,0 +1,22 @@
+.xkit-gif-label {
+  z-index: 2;
+  position: absolute;
+  top: 0.5ch;
+  left: 0.5ch;
+  height: 1em;
+  line-height: 1em;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  padding: 0.5ch;
+  border-radius: 2ch;
+}
+
+.xkit-gif-label::before {
+  content: "GIF";
+}
+
+figure:hover .xkit-paused-gif,
+figure:hover .xkit-gif-label {
+  display: none;
+}

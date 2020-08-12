@@ -19,5 +19,13 @@
     return inject(async () => await window.tumblr.getCssMap());
   }
 
-  return { apiFetch, getCssMap };
+  /**
+   * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#languagedata}
+   */
+  const getLanguageData = async function() {
+    const { inject } = await fakeImport('/src/util/inject.js');
+    return await inject(async () => window.tumblr.languageData);
+  }
+
+  return { apiFetch, getCssMap, getLanguageData };
 })();

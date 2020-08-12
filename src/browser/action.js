@@ -112,6 +112,7 @@ async function renderScripts() {
         const inputType = {
           checkbox: 'input',
           text: 'input',
+          color: 'input',
           select: 'select'
         }[preference.type];
 

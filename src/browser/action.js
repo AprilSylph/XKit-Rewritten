@@ -144,6 +144,11 @@ async function renderScripts() {
             preferenceListItem.appendChild(preferenceLabel);
             preferenceListItem.appendChild(preferenceInput);
             break;
+          case 'color':
+            preferenceInput.value = savedPreference;
+            preferenceListItem.appendChild(preferenceInput);
+            preferenceListItem.appendChild(preferenceLabel);
+            break;
           case 'select':
             for (const [value, text] of Object.entries(preference.options)) {
               const option = document.createElement('option');

@@ -53,10 +53,6 @@
   }
 
   const addReblogTimestamps = async function() {
-    if (reblogTimestampsSetting === 'none') {
-      return;
-    }
-
     const { timelineObject } = await fakeImport('/src/util/react-props.js');
     const { apiFetch } = await fakeImport('/src/util/tumblr-helpers.js');
 
@@ -97,18 +93,24 @@
     $('.xkit_reblog_timestamps_done').removeClass('xkit_reblog_timestamps_done');
   }
 
-  const onStorageChanged = function(changes, areaName) {
+  const onStorageChanged = async function(changes, areaName) {
     const {'timestamps.preferences': preferences} = changes;
     if (!preferences || areaName !== 'local') {
       return;
     }
 
-    const {newValue} = preferences;
-    const {reblog_timestamps} = newValue;
+    const {newValue: {reblog_timestamps}} = preferences;
     reblogTimestampsSetting = reblog_timestamps;
 
+    const { postListener } = await fakeImport('/src/util/mutations.js');
+
+    postListener.removeListener(addReblogTimestamps);
     removeReblogTimestamps();
-    addReblogTimestamps();
+
+    if (reblog_timestamps !== 'none') {
+      postListener.addListener(addReblogTimestamps);
+      addReblogTimestamps();
+    }
   }
 
   const main = async function() {
@@ -116,6 +118,7 @@
     const { postListener } = await fakeImport('/src/util/mutations.js');
     const { keyToCss } = await fakeImport('/src/util/css-map.js');
     noteCountSelector = await keyToCss('noteCount');
+    reblogHeaderSelector = await keyToCss('reblogHeader');
 
     postListener.addListener(addPostTimestamps);
     addPostTimestamps();
@@ -124,7 +127,6 @@
     const {reblog_timestamps = 'op'} = preferences;
 
     if (reblog_timestamps !== 'none') {
-      reblogHeaderSelector = await keyToCss('reblogHeader');
       reblogTimestampsSetting = reblog_timestamps;
       postListener.addListener(addReblogTimestamps);
       addReblogTimestamps();

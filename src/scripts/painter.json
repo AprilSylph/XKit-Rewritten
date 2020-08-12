@@ -10,22 +10,22 @@
     "own": {
       "type": "color",
       "label": "Own post colour",
-      "default": "#ffffff"
+      "default": ""
     },
     "original": {
       "type": "color",
       "label": "Original post colour",
-      "default": "#ffffff"
+      "default": ""
     },
     "reblog": {
       "type": "color",
       "label": "Reblogged post colour",
-      "default": "#ffffff"
+      "default": ""
     },
     "liked": {
       "type": "color",
       "label": "Liked post colour",
-      "default": "#ffffff"
+      "default": ""
     }
   }
 }

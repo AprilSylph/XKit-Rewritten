@@ -120,7 +120,12 @@ async function renderScripts() {
         preferenceInput.addEventListener('input', writePreference);
 
         if (inputType === 'input') {
-          preferenceInput.type = preference.type;
+          if (preference.type === 'color') {
+            preferenceInput.type = 'text';
+            preferenceInput.classList.add('makeSpectrum');
+          } else {
+            preferenceInput.type = preference.type;
+          }
         }
 
         const preferenceLabel = document.createElement('label');
@@ -156,6 +161,16 @@ async function renderScripts() {
     }
 
     scriptsSection.appendChild(fieldset);
+
+    $(fieldset).find('.makeSpectrum').spectrum({
+      preferredFormat: "hex",
+      showInput: true,
+      showButtons: false,
+      allowEmpty: true
+    });
+    $(fieldset).find('.makeSpectrum').on('change.spectrum', (e) => {
+      writePreference(e);
+    })
   });
 }
 

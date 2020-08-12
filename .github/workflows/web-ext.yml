@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install npx
+        run: npm install npx
+
       - name: Lint WebExtension
         run: npx web-ext lint
 

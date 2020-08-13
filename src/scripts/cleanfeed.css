@@ -9,7 +9,8 @@
   width: 100%;
   z-index: 3;
   background-color: var(--white);
-  color: var(--black);
+  background-image: linear-gradient(var(--gray-7), var(--gray-7));
+  color: var(--gray-65);
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,6 +1,11 @@
 {
   "title": "CleanFeed",
   "description": "Browse safely in public",
+  "icon": {
+    "class_name": "ri-eye-off-line",
+    "color": "white",
+    "background_color": "#ff567e"
+  },
   "preferences": {
     "blocking_mode": {
       "label": "Hide media from",

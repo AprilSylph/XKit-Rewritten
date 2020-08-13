@@ -1,0 +1,16 @@
+.xkit-cleanfeed-hidden figure:not(:hover) > div::before,
+.xkit-cleanfeed-hidden [role="application"]:not(:hover) > div::before {
+  content: "Hidden by CleanFeed";
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  z-index: 3;
+  background-color: var(--white);
+  color: var(--black);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

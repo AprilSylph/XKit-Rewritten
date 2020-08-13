@@ -1,0 +1,15 @@
+{
+  "title": "CleanFeed",
+  "description": "Browse safely in public",
+  "preferences": {
+    "blocking_mode": {
+      "label": "Hide media from",
+      "type": "select",
+      "options": {
+        "smart": "flagged blogs only",
+        "all": "all blogs"
+      },
+      "default": "smart"
+    }
+  }
+}

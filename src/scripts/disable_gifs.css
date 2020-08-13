@@ -1,15 +1,15 @@
 .xkit-gif-label {
   z-index: 2;
   position: absolute;
-  top: 0.5ch;
-  left: 0.5ch;
+  top: 1ch;
+  right: 1ch;
   height: 1em;
   line-height: 1em;
-  background-color: black;
-  color: white;
+  background-color: var(--black);
+  color: var(--white);
   font-weight: bold;
-  padding: 0.5ch;
-  border-radius: 2ch;
+  padding: 5px;
+  border-radius: 3px;
 }
 
 .xkit-gif-label::before {

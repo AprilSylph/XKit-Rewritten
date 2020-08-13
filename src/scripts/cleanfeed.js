@@ -27,6 +27,10 @@
       const reblogs = postElement.querySelectorAll(reblogSelector);
       const {trail} = postTimelineObject;
       trail.forEach((trailItem, i) => {
+        if (trailItem.blog === undefined) {
+          return;
+        }
+
         const {blog: {isAdult}} = trailItem;
         if (isAdult) {
           reblogs[i].classList.add('xkit-cleanfeed-hidden');

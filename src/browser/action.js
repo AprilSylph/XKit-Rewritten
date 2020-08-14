@@ -168,15 +168,17 @@ async function renderScripts() {
 
     scriptsSection.appendChild(fieldset);
 
-    $(fieldset).find('.makeSpectrum').spectrum({
-      preferredFormat: "hex",
+    const $makeSpectrum = $(fieldset).find('.makeSpectrum');
+    
+    $makeSpectrum.spectrum({
+      preferredFormat: 'hex',
       showInput: true,
       showButtons: false,
       allowEmpty: true
     });
-    $(fieldset).find('.makeSpectrum').on('change.spectrum', (e) => {
+    $makeSpectrum.on('change.spectrum', (e) => {
       writePreference(e);
-    })
+    });
   });
 }
 

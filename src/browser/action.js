@@ -176,9 +176,7 @@ async function renderScripts() {
       showButtons: false,
       allowEmpty: true
     });
-    $makeSpectrum.on('change.spectrum', (e) => {
-      writePreference(e);
-    });
+    $makeSpectrum.on('change.spectrum', writePreference);
   });
 }
 

@@ -26,6 +26,7 @@
   "dependencies": {
     "jquery": "^3.5.1",
     "remixicon": "^2.5.0",
+    "spectrum-colorpicker": "^1.8.1",
     "webextension-polyfill": "^0.6.0"
   },
   "webExt": {

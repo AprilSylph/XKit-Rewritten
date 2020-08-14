@@ -2,5 +2,6 @@
   "audio_downloader",
   "cleanfeed",
   "disable_gifs",
-  "timestamps"
+  "timestamps",
+  "painter"
 ]

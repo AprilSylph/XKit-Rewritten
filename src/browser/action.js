@@ -112,6 +112,7 @@ async function renderScripts() {
         const inputType = {
           checkbox: 'input',
           text: 'input',
+          color: 'input',
           select: 'select'
         }[preference.type];
 
@@ -120,7 +121,12 @@ async function renderScripts() {
         preferenceInput.addEventListener('input', writePreference);
 
         if (inputType === 'input') {
-          preferenceInput.type = preference.type;
+          if (preference.type === 'color') {
+            preferenceInput.type = 'text';
+            preferenceInput.classList.add('makeSpectrum');
+          } else {
+            preferenceInput.type = preference.type;
+          }
         }
 
         const preferenceLabel = document.createElement('label');
@@ -137,6 +143,11 @@ async function renderScripts() {
             preferenceInput.value = savedPreference;
             preferenceListItem.appendChild(preferenceLabel);
             preferenceListItem.appendChild(preferenceInput);
+            break;
+          case 'color':
+            preferenceInput.value = savedPreference;
+            preferenceListItem.appendChild(preferenceInput);
+            preferenceListItem.appendChild(preferenceLabel);
             break;
           case 'select':
             for (const [value, text] of Object.entries(preference.options)) {
@@ -156,6 +167,16 @@ async function renderScripts() {
     }
 
     scriptsSection.appendChild(fieldset);
+
+    const $makeSpectrum = $(fieldset).find('.makeSpectrum');
+    
+    $makeSpectrum.spectrum({
+      preferredFormat: 'hex',
+      showInput: true,
+      showButtons: false,
+      allowEmpty: true
+    });
+    $makeSpectrum.on('change.spectrum', writePreference);
   });
 }
 

@@ -173,7 +173,7 @@ async function renderScripts() {
     $makeSpectrum.spectrum({
       preferredFormat: 'hex',
       showInput: true,
-      showButtons: false,
+      showInitial: true,
       allowEmpty: true
     });
     $makeSpectrum.on('change.spectrum', writePreference);

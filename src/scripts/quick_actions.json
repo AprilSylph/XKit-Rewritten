@@ -1,0 +1,21 @@
+{
+  "title": "Quick Actions",
+  "description": "Add buttons to quickly queue or draft posts",
+  "icon": {
+    "class_name": "ri-flashlight-line",
+    "color": "white",
+    "background_color": "#b820f9"
+  },
+  "preferences": {
+    "show_queue": {
+      "type": "checkbox",
+      "label": "Show quick queue button",
+      "default": true
+    },
+    "show_draft": {
+      "type": "checkbox",
+      "label": "Show quick draft button",
+      "default": true
+    }
+  }
+}

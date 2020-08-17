@@ -12,10 +12,13 @@
 
     const { apiFetch } = await fakeImport('/src/util/tumblr-helpers.js');
     const { timelineObject } = await fakeImport('/src/util/react-props.js');
+    const { fetchDefaultBlog } = await fakeImport('/src/util/user-blogs.js');
+
+    const defaultBlog = await fetchDefaultBlog();
 
     const {blog, content, layout, reblogKey} = await timelineObject(post_id);
     try {
-      let response = await apiFetch('/v2/blog/invalidcards.tumblr.com/posts', {method: 'POST', body: {
+      let response = await apiFetch(`/v2/blog/${defaultBlog}.tumblr.com/posts`, {method: 'POST', body: {
         content: content,
         layout: layout,
         state: "queue",
@@ -32,7 +35,7 @@
       if (e.status === 400) {
         event.target.setAttribute("fill", "var(--blue)")
         try {
-          let draftResponse = await apiFetch('/v2/blog/invalidcards.tumblr.com/posts', {method: 'POST', body: {
+          let draftResponse = await apiFetch(`/v2/blog/${defaultBlog}.tumblr.com/posts`, {method: 'POST', body: {
             content: content,
             layout: layout,
             state: "draft",
@@ -47,11 +50,11 @@
           }
         } catch(e) {
           event.target.setAttribute("fill", "var(--red)");
-          console.error(e);
+          console.error(e.body);
         }
       } else {
         event.target.setAttribute("fill", "var(--red)");
-        console.error(e);
+        console.error(e.body);
       }
     }
   }

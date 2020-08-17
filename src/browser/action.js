@@ -48,7 +48,7 @@ async function renderScripts() {
   const installedScripts = await getInstalledScripts();
   const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
 
-  installedScripts.forEach(async name => {
+  for (const name of installedScripts) {
     const url = getURL(`/src/scripts/${name}.json`);
     const file = await fetch(url);
     const {title = name, description = '', icon = {}, preferences = {}} = await file.json();
@@ -169,7 +169,7 @@ async function renderScripts() {
     scriptsSection.appendChild(fieldset);
 
     const $makeSpectrum = $(fieldset).find('.makeSpectrum');
-    
+
     $makeSpectrum.spectrum({
       preferredFormat: 'hex',
       showInput: true,
@@ -177,7 +177,7 @@ async function renderScripts() {
       allowEmpty: true
     });
     $makeSpectrum.on('change.spectrum', writePreference);
-  });
+  }
 }
 
 renderScripts();

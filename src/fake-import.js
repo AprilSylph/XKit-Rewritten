@@ -1,5 +1,6 @@
-// adapted from https://stackoverflow.com/a/50764428
-
+// Adapted from https://stackoverflow.com/a/50764428
+/* eslint-disable no-implicit-globals */
+/* eslint-disable no-new-func */
 {
   const modules = {};
   fakeImport = async function(path) { // eslint-disable-line no-global-assign
@@ -8,7 +9,7 @@
       const file = await fetch(url);
       const fakeModule = await file.text();
 
-      modules[path] = (new Function(`'use strict'; return ${fakeModule} //# sourceURL=${url}`))();
+      modules[path] = new Function(`'use strict'; return ${fakeModule} //# sourceURL=${url}`)();
     }
 
     return modules[path];

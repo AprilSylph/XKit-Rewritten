@@ -37,12 +37,12 @@
         }
       });
     });
-  }
+  };
 
   const unProcessPosts = function() {
     $('.xkit-cleanfeed-processed').removeClass('xkit-cleanfeed-processed');
     $('.xkit-cleanfeed-hidden').removeClass('xkit-cleanfeed-hidden');
-  }
+  };
 
   const onStorageChanged = function(changes, areaName) {
     const {'cleanfeed.preferences': preferences} = changes;
@@ -55,7 +55,7 @@
 
     unProcessPosts();
     processPosts();
-  }
+  };
 
   const main = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
@@ -69,14 +69,14 @@
 
     postListener.addListener(processPosts);
     processPosts();
-  }
+  };
 
   const clean = async function() {
     browser.storage.onChanged.removeListener(onStorageChanged);
     const { postListener } = await fakeImport('/src/util/mutations.js');
     postListener.removeListener(processPosts);
     unProcessPosts();
-  }
+  };
 
   const stylesheet = '/src/scripts/cleanfeed.css';
 

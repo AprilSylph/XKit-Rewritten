@@ -12,7 +12,7 @@
     }
 
     return cssMap[key];
-  }
+  };
 
   /**
    * @param {String} key - The source name of an element
@@ -20,10 +20,8 @@
    */
   const keyToCss = async function(key) {
     const classes = await keyToClasses(key);
-    if (classes !== undefined) {
-      return classes.map(className => `.${className}`).join(', ');
-    }
-  }
+    return classes.map(className => `.${className}`).join(', ');
+  };
 
   /**
    * Constructs a descendant selector which accounts for all possible
@@ -40,15 +38,17 @@
    */
   const descendantSelector = async function(...keys) {
     const { cartesian } = await fakeImport('/src/util/misc.js');
-    let sets = [];
+    const sets = [];
 
     for (const key of keys) {
       const set = await keyToClasses(key);
       sets.push(set.map(className => `.${className}`));
     }
 
-    return cartesian(...sets).map(selectors => selectors.join(' ')).join(', ');
-  }
+    return cartesian(...sets)
+      .map(selectors => selectors.join(' '))
+      .join(', ');
+  };
 
   return { keyToClasses, keyToCss, descendantSelector };
 })();

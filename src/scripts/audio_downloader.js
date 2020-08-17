@@ -15,7 +15,7 @@
       downloadButton.onclick = function(event) {
         event.stopPropagation();
 
-        const filename = (new URL(src)).pathname.replace('/', '');
+        const filename = new URL(src).pathname.replace('/', '');
 
         fetch(src)
         .then(response => response.blob())
@@ -31,13 +31,13 @@
           download_link.click();
           download_link.parentNode.removeChild(download_link);
           window.URL.revokeObjectURL(blob_url);
-        })
+        });
       };
 
       div.appendChild(downloadButton);
       $(source).parents(audioBlockSelector).after(div);
     });
-  }
+  };
 
   const main = async function() {
     const { postListener } = await fakeImport('/src/util/mutations.js');
@@ -45,14 +45,14 @@
     audioBlockSelector = await keyToCss('audioBlock');
     postListener.addListener(process);
     process();
-  }
+  };
 
   const clean = async function() {
     const { postListener } = await fakeImport('/src/util/mutations.js');
     postListener.removeListener(process);
     $('.audio_downloader_done').removeClass('audio_downloader_done');
     $('.audio_downloader').remove();
-  }
+  };
 
   const stylesheet = '/src/scripts/audio_downloader.css';
 

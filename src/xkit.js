@@ -14,12 +14,12 @@
 
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
-        rel: "stylesheet",
+        rel: 'stylesheet',
         href: getURL(stylesheet),
       });
       document.documentElement.appendChild(link);
     }
-  }
+  };
 
   const destroy_script = async function(name) {
     const { clean, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
@@ -33,7 +33,7 @@
         link.parentNode.removeChild(link);
       }
     }
-  }
+  };
 
   const onStorageChanged = async function(changes, areaName) {
     const {enabledScripts} = changes;
@@ -48,7 +48,7 @@
 
     newlyEnabled.forEach(run_script);
     newlyDisabled.forEach(destroy_script);
-  }
+  };
 
   const init = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
@@ -56,7 +56,7 @@
     const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
 
     enabledScripts.forEach(run_script);
-  }
+  };
 
   const waitForReactLoaded = async function() {
     let tries = 0;
@@ -69,7 +69,7 @@
       tries++;
       await sleep(100);
     }
-  }
+  };
 
   if (redpop) {
     waitForReactLoaded().then(init);

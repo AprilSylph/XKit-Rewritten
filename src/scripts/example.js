@@ -9,11 +9,11 @@
     if (log === true) {
       console[level](`Hello, ${whatToLog}!`);
     }
-  }
+  };
 
   const clean = async function() {
-
-  }
+    // Nothing to undo here.
+  };
 
   const stylesheet = '/src/scripts/example.css';
 

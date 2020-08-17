@@ -1,14 +1,14 @@
 const {getURL} = browser.runtime;
 
-async function getInstalledScripts() {
+const getInstalledScripts = async function() {
   const url = getURL('/src/scripts/_index.json');
   const file = await fetch(url);
   const installedScripts = await file.json();
 
   return installedScripts;
-}
+};
 
-async function writeEnabled(event) {
+const writeEnabled = async function(event) {
   const {checked, id} = event.target;
   let {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
 
@@ -19,9 +19,9 @@ async function writeEnabled(event) {
   }
 
   browser.storage.local.set({enabledScripts});
-}
+};
 
-async function writePreference(event) {
+const writePreference = async function(event) {
   const {id, tagName, type} = event.target;
   const [scriptName, preferenceName] = id.split('.');
   const storageKey = `${scriptName}.preferences`;
@@ -41,9 +41,9 @@ async function writePreference(event) {
   }
 
   browser.storage.local.set({[storageKey]: savedPreferences});
-}
+};
 
-async function renderScripts() {
+const renderScripts = async function() {
   const scriptsSection = document.getElementById('scripts');
   const installedScripts = await getInstalledScripts();
   const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
@@ -105,7 +105,7 @@ async function renderScripts() {
       const {[storageKey]: savedPreferences = {}} = await browser.storage.local.get(storageKey);
 
       for (const [key, preference] of Object.entries(preferences)) {
-        const savedPreference = savedPreferences[key] !== undefined ? savedPreferences[key] : preference.default;
+        const savedPreference = savedPreferences[key] === undefined ? preference.default : savedPreferences[key];
 
         const preferenceListItem = document.createElement('li');
 
@@ -113,7 +113,7 @@ async function renderScripts() {
           checkbox: 'input',
           text: 'input',
           color: 'input',
-          select: 'select'
+          select: 'select',
         }[preference.type];
 
         const preferenceInput = document.createElement(inputType);
@@ -154,7 +154,7 @@ async function renderScripts() {
               const option = document.createElement('option');
               option.value = value;
               option.textContent = text;
-              option.selected = (value === savedPreference);
+              option.selected = value === savedPreference;
               preferenceInput.appendChild(option);
             }
             preferenceListItem.appendChild(preferenceLabel);
@@ -174,10 +174,10 @@ async function renderScripts() {
       preferredFormat: 'hex',
       showInput: true,
       showInitial: true,
-      allowEmpty: true
+      allowEmpty: true,
     });
     $makeSpectrum.on('change.spectrum', writePreference);
   }
-}
+};
 
 renderScripts();

@@ -16,14 +16,14 @@
         hour: 'numeric',
         minute: 'numeric',
       });
-    } else {
-      return date.toLocaleDateString(locale, {
-        day: 'numeric',
-        month: 'short',
-        year: sameYear ? undefined : 'numeric',
-      });
     }
-  }
+
+    return date.toLocaleDateString(locale, {
+      day: 'numeric',
+      month: 'short',
+      year: sameYear ? undefined : 'numeric',
+    });
+  };
 
   const addPostTimestamps = async function() {
     const { timelineObject } = await fakeImport('/src/util/react-props.js');
@@ -45,12 +45,12 @@
 
       $(noteCountElement).after(timestampElement);
     });
-  }
+  };
 
   const removePostTimestamps = function() {
     $('.xkit_timestamp').remove();
     $('.xkit_timestamps_done').removeClass('xkit_timestamps_done');
-  }
+  };
 
   const addReblogTimestamps = async function() {
     const { timelineObject } = await fakeImport('/src/util/react-props.js');
@@ -86,12 +86,12 @@
         reblogHeaders[i].appendChild(timestampElement);
       });
     });
-  }
+  };
 
   const removeReblogTimestamps = function() {
     $('.xkit_reblog_timestamp').remove();
     $('.xkit_reblog_timestamps_done').removeClass('xkit_reblog_timestamps_done');
-  }
+  };
 
   const onStorageChanged = async function(changes, areaName) {
     const {'timestamps.preferences': preferences} = changes;
@@ -111,7 +111,7 @@
       postListener.addListener(addReblogTimestamps);
       addReblogTimestamps();
     }
-  }
+  };
 
   const main = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
@@ -131,7 +131,7 @@
       postListener.addListener(addReblogTimestamps);
       addReblogTimestamps();
     }
-  }
+  };
 
   const clean = async function() {
     browser.storage.onChanged.removeListener(onStorageChanged);
@@ -140,7 +140,7 @@
     postListener.removeListener(addReblogTimestamps);
     removePostTimestamps();
     removeReblogTimestamps();
-  }
+  };
 
   const stylesheet = '/src/scripts/timestamps.css';
 

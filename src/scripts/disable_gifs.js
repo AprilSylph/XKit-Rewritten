@@ -1,4 +1,4 @@
-(function () {
+(function() {
   const pauseGif = function(gifElement) {
     const image = new Image();
     image.src = gifElement.currentSrc;
@@ -16,8 +16,8 @@
 
       gifElement.parentNode.appendChild(canvas);
       gifElement.parentNode.appendChild(gifLabel);
-    }
-  }
+    };
+  };
 
   const processGifs = function() {
     [...document.querySelectorAll('figure img[srcset*=".gif"]:not(.xkit-disable-gifs-done)')]
@@ -34,20 +34,20 @@
         gifElement.onload = () => pauseGif(gifElement);
       }
     });
-  }
+  };
 
   const main = async function() {
     const { postListener } = await fakeImport('/src/util/mutations.js');
     postListener.addListener(processGifs);
     processGifs();
-  }
+  };
 
   const clean = async function() {
     const { postListener } = await fakeImport('/src/util/mutations.js');
     postListener.removeListener(processGifs);
     $('.xkit-paused-gif, .xkit-gif-label').remove();
     $('.xkit-disable-gifs-done').removeClass('xkit-disable-gifs-done');
-  }
+  };
 
   const stylesheet = '/src/scripts/disable_gifs.css';
 

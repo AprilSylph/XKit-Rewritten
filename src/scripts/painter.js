@@ -14,7 +14,7 @@
       const post_id = postElement.dataset.id;
       const {canDelete, liked, rebloggedFromId} = await timelineObject(post_id);
 
-      let coloursToApply = [];
+      const coloursToApply = [];
       if (canDelete && ownColour) {
         coloursToApply.push(ownColour);
       }
@@ -25,21 +25,19 @@
         if (reblogColour) {
           coloursToApply.push(reblogColour);
         }
-      } else {
-        if (originalColour) {
-          coloursToApply.push(originalColour);
-        }
+      } else if (originalColour) {
+        coloursToApply.push(originalColour);
       }
 
       if (!coloursToApply.length) {
         return;
       }
 
-      const step = 100/coloursToApply.length;
+      const step = 100 / coloursToApply.length;
       let borderImage = 'linear-gradient(to right';
-      coloursToApply.forEach((colour, i) =>
-        borderImage += `, ${colour} ${step*i}% ${step*(i+1)}%`
-      );
+      coloursToApply.forEach((colour, i) => {
+        borderImage += `, ${colour} ${step * i}% ${step * (i + 1)}%`;
+      });
       borderImage += ')';
 
       const articleElement = postElement.querySelector('article');
@@ -47,7 +45,7 @@
       articleElement.style.borderImageSource = borderImage;
       articleElement.style.borderImageSlice = 1;
     });
-  }
+  };
 
   const strip = function() {
     $('.xkit_painter_painted article')
@@ -55,11 +53,11 @@
     .css('border-image-source', '')
     .css('border-image-slice', '');
     $('.xkit_painter_painted').removeClass('xkit_painter_painted');
-  }
+  };
 
-  const fallback = function(value, fallback) {
-    return typeof value !== undefined ? value : fallback;
-  }
+  const fallback = function(value, fallbackValue) {
+    return typeof value === undefined ? fallbackValue : value;
+  };
 
   const onStorageChanged = function(changes, areaName) {
     const {'painter.preferences': preferences} = changes;
@@ -75,7 +73,7 @@
 
     strip();
     paint();
-  }
+  };
 
   const main = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
@@ -88,13 +86,13 @@
     const { postListener } = await fakeImport('/src/util/mutations.js');
     postListener.addListener(paint);
     paint();
-  }
+  };
 
   const clean = async function() {
     const { postListener } = await fakeImport('/src/util/mutations.js');
     postListener.removeListener(paint);
     strip();
-  }
+  };
 
   return { main, clean };
 })();

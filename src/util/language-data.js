@@ -1,4 +1,4 @@
-(function () {
+(function() {
   let languageData;
 
   /**
@@ -12,7 +12,7 @@
     }
 
     return languageData.translations[rootString] || rootString;
-  }
+  };
 
   return { translate };
 })();

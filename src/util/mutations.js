@@ -9,7 +9,7 @@
     },
     removeListener(callback) {
       this.listeners = this.listeners.filter(x => x !== callback);
-    }
+    },
   };
 
   const baseContainerListener = {
@@ -19,16 +19,14 @@
     },
     removeListener(callback) {
       this.listeners = this.listeners.filter(x => x !== callback);
-    }
+    },
   };
 
   const observer = new MutationObserver(mutations => {
     if (postListener.listeners.length !== 0) {
-      const newPosts = mutations.some(({addedNodes}) =>
-        [...addedNodes]
+      const newPosts = mutations.some(({addedNodes}) => [...addedNodes]
         .filter(addedNode => addedNode instanceof HTMLElement)
-        .some(addedNode => addedNode.matches(postSelector))
-      );
+        .some(addedNode => addedNode.matches(postSelector)));
 
       const mutatedPosts = mutations.some(({target}) => target.matches(`${postSelector} ${target.tagName.toLowerCase()}`));
 
@@ -53,5 +51,4 @@
   });
 
   return { postListener, baseContainerListener };
-
 })();

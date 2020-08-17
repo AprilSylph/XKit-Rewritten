@@ -1,20 +1,49 @@
 body {
-  min-width: 400px;
   font-size: 100%;
   -webkit-user-select: none;
   user-select: none;
+  margin: 0;
+  padding: 0 1ch;
 }
 
 main {
-  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
-#scripts {
-  margin: 1em 0;
+h1 {
+  text-align: center;
+  padding: 0 0.67em;
+}
+
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+nav a {
+  margin: 0 1ch;
+}
+
+section:not(:target) {
+  display: none;
+}
+
+section h2 {
+  text-align: center;
 }
 
 #scripts fieldset {
   margin: 0.5ch 0;
+}
+
+#scripts fieldset:last-child {
+  margin-bottom: 1ch;
 }
 
 #scripts fieldset .meta {
@@ -62,8 +91,8 @@ main {
   padding-top: 1ch;
 }
 
-#scripts fieldset input + label,
-#scripts fieldset label + input,
-#scripts fieldset label + select {
+#scripts fieldset label:not(:first-child),
+#scripts fieldset input:not(:first-child),
+#scripts fieldset select:not(:first-child) {
   margin-left: 1ch;
 }

@@ -6,13 +6,6 @@ body {
   padding: 0 1ch;
 }
 
-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-}
-
 h1 {
   text-align: center;
   padding: 0 0.67em;
@@ -27,10 +20,21 @@ nav {
 }
 
 nav a {
+  color: #7c5cff;
+  line-height: 1em;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 1ch;
+  border-radius: 1ch;
   margin: 0 1ch;
 }
 
-section:not(:target) {
+nav a:active, nav a.selected {
+  color: white;
+  background-color: #7c5cff;
+}
+
+section:not(.open) {
   display: none;
 }
 

@@ -180,4 +180,12 @@ const renderScripts = async function() {
   }
 };
 
+$('nav a').click(event => {
+  event.preventDefault();
+  $('nav .selected').removeClass('selected');
+  $(event.target).addClass('selected');
+  $('section.open').removeClass('open');
+  $(`section${event.target.getAttribute('href')}`).addClass('open');
+});
+
 renderScripts();

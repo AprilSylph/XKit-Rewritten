@@ -1,5 +1,5 @@
 (function() {
-let userBlogs;
+  let userBlogs;
 
   /**
    * @return {Object[]} - An array of blog objects the current user has post access to
@@ -14,7 +14,7 @@ let userBlogs;
     }
 
     return userBlogs;
-  }
+  };
 
   /**
    * @return {String[]} - An array of blog names the current user has post access to
@@ -22,7 +22,7 @@ let userBlogs;
   const fetchUserBlogNames = async function() {
     const blogs = await fetchUserBlogs();
     return blogs.map(blog => blog.name);
-  }
+  };
 
   /**
    * @return {String} - The default ("main") blog for the user
@@ -30,7 +30,7 @@ let userBlogs;
   const fetchDefaultBlog = async function() {
     const blogs = await fetchUserBlogs();
     return blogs.filter(blog => blog.primary === true)[0];
-  }
+  };
 
   return { fetchUserBlogs, fetchUserBlogNames, fetchDefaultBlog };
 })();

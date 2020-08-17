@@ -2,12 +2,12 @@
   let controlsSelector;
 
   const quickQueue = async function(event) {
-    let postElement = event.target.closest('div[data-id]');
+    const postElement = event.target.closest('div[data-id]');
     if (!postElement) {
-      event.target.setAttribute("fill", "var(--red)");
+      event.target.setAttribute('fill', 'var(--red)');
       return;
     }
-    event.target.setAttribute("fill", "var(--pink)");
+    event.target.setAttribute('fill', 'var(--pink)');
     const post_id = postElement.dataset.id;
 
     const { apiFetch } = await fakeImport('/src/util/tumblr-helpers.js');
@@ -18,46 +18,48 @@
 
     const {blog, content, layout, reblogKey} = await timelineObject(post_id);
     try {
-      let response = await apiFetch(`/v2/blog/${defaultBlog}.tumblr.com/posts`, {method: 'POST', body: {
-        content: content,
-        layout: layout,
-        state: "queue",
-        parent_tumblelog_uuid: blog.uuid,
-        parent_post_id: post_id,
-        reblog_key: reblogKey
-      }});
+      const response = await apiFetch(`/v2/blog/${defaultBlog}.tumblr.com/posts`, {method: 'POST',
+        body: {
+          content,
+          layout,
+          state: 'queue',
+          parent_tumblelog_uuid: blog.uuid,
+          parent_post_id: post_id,
+          reblog_key: reblogKey,
+        }});
       if ([200, 201].includes(response.meta.status)) {
-        event.target.setAttribute("fill", "var(--purple)");
+        event.target.setAttribute('fill', 'var(--purple)');
       } else {
-        event.target.setAttribute("fill", "var(--red)");
+        event.target.setAttribute('fill', 'var(--red)');
       }
-    } catch(e) {
+    } catch (e) {
       if (e.status === 400) {
-        event.target.setAttribute("fill", "var(--blue)")
+        event.target.setAttribute('fill', 'var(--blue)');
         try {
-          let draftResponse = await apiFetch(`/v2/blog/${defaultBlog}.tumblr.com/posts`, {method: 'POST', body: {
-            content: content,
-            layout: layout,
-            state: "draft",
-            parent_tumblelog_uuid: blog.uuid,
-            parent_post_id: post_id,
-            reblog_key: reblogKey
-          }});
+          const draftResponse = await apiFetch(`/v2/blog/${defaultBlog}.tumblr.com/posts`, {method: 'POST',
+            body: {
+              content,
+              layout,
+              state: 'draft',
+              parent_tumblelog_uuid: blog.uuid,
+              parent_post_id: post_id,
+              reblog_key: reblogKey,
+            }});
           if ([200, 201].includes(draftResponse.meta.status)) {
-            event.target.setAttribute("fill", "var(--green)");
+            event.target.setAttribute('fill', 'var(--green)');
           } else {
-            event.target.setAttribute("fill", "var(--red)");
+            event.target.setAttribute('fill', 'var(--red)');
           }
-        } catch(e) {
-          event.target.setAttribute("fill", "var(--red)");
-          console.error(e.body);
+        } catch (err) {
+          event.target.setAttribute('fill', 'var(--red)');
+          console.error(err.body);
         }
       } else {
-        event.target.setAttribute("fill", "var(--red)");
+        event.target.setAttribute('fill', 'var(--red)');
         console.error(e.body);
       }
     }
-  }
+  };
 
   const addButtons = async function() {
     const { timelineObject } = await fakeImport('/src/util/react-props.js');
@@ -72,18 +74,18 @@
       if (canReblog) {
         const controls = postElement.querySelector(controlsSelector);
 
-        var queueButtonContainer = document.createElement('div');
+        const queueButtonContainer = document.createElement('div');
         queueButtonContainer.classList.add('xkit_quick_actions_container');
 
-        var queueButtonContainerSpan = document.createElement('span');
+        const queueButtonContainerSpan = document.createElement('span');
         queueButtonContainerSpan.classList.add('xkit_quick_actions_container_span');
 
-        var queueButton = document.createElement('button');
+        const queueButton = document.createElement('button');
         queueButton.classList.add('xkit_quick_actions_button');
         queueButton.addEventListener('click', quickQueue);
         queueButton.tabIndex = 0;
 
-        var queueButtonInner = document.createElement('span');
+        const queueButtonInner = document.createElement('span');
         queueButtonInner.classList.add('xkit_quick_actions_button_inner');
         queueButtonInner.tabIndex = -1;
         queueButtonInner.innerHTML = '<svg viewBox="2 2 20 20" width="21" height="21" fill="var(--gray-65)"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm1-8h4v2h-6V7h2v5z"></path></svg>';
@@ -94,7 +96,7 @@
         controls.insertBefore(queueButtonContainer, controls.firstChild);
       }
     });
-  }
+  };
 
   const main = async function() {
     const { postListener } = await fakeImport('/src/util/mutations.js');
@@ -103,13 +105,13 @@
 
     postListener.addListener(addButtons);
     addButtons();
-  }
+  };
 
   const clean = async function() {
     const { postListener } = await fakeImport('/src/util/mutations.js');
     postListener.removeListener(addButtons);
     $('.xkit_quick_actions_container').remove();
-  }
+  };
 
   const stylesheet = 'src/scripts/quick_actions.css';
 

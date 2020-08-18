@@ -14,7 +14,7 @@
     const { timelineObject } = await fakeImport('/src/util/react-props.js');
     const { fetchDefaultBlog } = await fakeImport('/src/util/user-blogs.js');
 
-    const defaultBlog = await fetchDefaultBlog();
+    const {name: defaultBlog = ''} = await fetchDefaultBlog();
 
     const {blog, content, layout, reblogKey} = await timelineObject(post_id);
     try {

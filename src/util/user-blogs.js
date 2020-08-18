@@ -9,7 +9,7 @@
       const { apiFetch } = await fakeImport('/src/util/tumblr-helpers.js');
       const response = await apiFetch('/v2/user/info');
       if (response.meta.status === 200) {
-        userBlogs = response.response.body.user.blogs;
+        userBlogs = response.response.user.blogs;
       }
     }
 

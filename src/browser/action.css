@@ -57,6 +57,10 @@ section h2 {
   margin: 0.5ch 0;
 }
 
+#scripts fieldset.hidden > :not(legend) {
+  display: none;
+}
+
 #scripts fieldset:last-child {
   margin-bottom: 1ch;
 }

@@ -29,6 +29,22 @@ const writeEnabled = async function(event) {
   browser.storage.local.set({enabledScripts});
 };
 
+const writeHidden = async function(event) {
+  const {classList} = event.target.parentNode;
+  const {id} = event.target.parentNode.querySelector('input');
+  let {hiddenScripts = []} = await browser.storage.local.get('hiddenScripts');
+
+  if (classList.contains('hidden')) {
+    classList.remove('hidden');
+    hiddenScripts = hiddenScripts.filter(x => x !== id);
+  } else {
+    classList.add('hidden');
+    hiddenScripts.push(id);
+  }
+
+  browser.storage.local.set({hiddenScripts});
+};
+
 const writeEnabledTweak = async function(event) {
   const {checked, id} = event.target;
   let {enabledTweaks = []} = await browser.storage.local.get('enabledTweaks');
@@ -68,6 +84,7 @@ const renderScripts = async function() {
   const scriptsSection = document.getElementById('scripts');
   const installedScripts = await getInstalledScripts();
   const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
+  const {hiddenScripts = []} = await browser.storage.local.get('hiddenScripts');
 
   for (const name of installedScripts) {
     const url = getURL(`/src/scripts/${name}.json`);
@@ -75,9 +92,13 @@ const renderScripts = async function() {
     const {title = name, description = '', icon = {}, preferences = {}} = await file.json();
 
     const fieldset = document.createElement('fieldset');
+    if (hiddenScripts.includes(name)) {
+      fieldset.classList.add('hidden');
+    }
 
     const legend = document.createElement('legend');
     legend.textContent = title;
+    legend.addEventListener('click', writeHidden);
     fieldset.appendChild(legend);
 
     const metaDiv = document.createElement('div');

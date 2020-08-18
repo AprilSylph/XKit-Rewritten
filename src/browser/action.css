@@ -38,6 +38,17 @@ section:not(.open) {
   display: none;
 }
 
+section.open:empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1em 0;
+}
+
+section.open:empty::before {
+  content: "No one's around to help.";
+}
+
 section h2 {
   text-align: center;
 }

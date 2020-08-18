@@ -35,27 +35,52 @@
     }
   };
 
+  const run_tweak = async function(name) {
+    const { main } = await fakeImport(`/src/tweaks/${name}.js`);
+    main().catch(console.error);
+  };
+
+  const destroy_tweak = async function(name) {
+    const { clean } = await fakeImport(`/src/tweaks/${name}.js`);
+    clean().catch(console.error);
+  };
+
   const onStorageChanged = async function(changes, areaName) {
-    const {enabledScripts} = changes;
-    if (!enabledScripts || areaName !== 'local') {
+    if (areaName !== 'local') {
       return;
     }
 
-    const {oldValue = [], newValue = []} = enabledScripts;
+    const {enabledScripts, enabledTweaks} = changes;
 
-    const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
-    const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
+    if (enabledScripts) {
+      const {oldValue = [], newValue = []} = enabledScripts;
 
-    newlyEnabled.forEach(run_script);
-    newlyDisabled.forEach(destroy_script);
+      const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
+      const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
+
+      newlyEnabled.forEach(run_script);
+      newlyDisabled.forEach(destroy_script);
+    }
+
+    if (enabledTweaks) {
+      const {oldValue = [], newValue = []} = enabledTweaks;
+
+      const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
+      const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
+
+      newlyEnabled.forEach(run_tweak);
+      newlyDisabled.forEach(destroy_tweak);
+    }
   };
 
   const init = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
 
     const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
+    const {enabledTweaks = []} = await browser.storage.local.get('enabledTweaks');
 
     enabledScripts.forEach(run_script);
+    enabledTweaks.forEach(run_tweak);
   };
 
   const waitForReactLoaded = async function() {

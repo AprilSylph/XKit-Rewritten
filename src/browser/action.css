@@ -74,13 +74,15 @@ section h2 {
   margin: 0;
 }
 
-#scripts fieldset ul {
+#scripts fieldset ul,
+#tweaks ul {
   padding: 0;
   margin: 0;
   list-style-type: none;
 }
 
-#scripts fieldset li {
+#scripts fieldset li,
+#tweaks li {
   display: flex;
   align-items: center;
   padding: 0.5ch 0;
@@ -95,8 +97,13 @@ section h2 {
   padding-top: 1ch;
 }
 
-#scripts fieldset label:not(:first-child),
-#scripts fieldset input:not(:first-child),
-#scripts fieldset select:not(:first-child) {
+#tweaks {
+  margin: 1em 0;
+  padding: 0 1em;
+}
+
+label:not(:first-child),
+input:not(:first-child),
+select:not(:first-child) {
   margin-left: 1ch;
 }

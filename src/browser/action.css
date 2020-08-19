@@ -119,6 +119,10 @@ section h2 {
   padding: 0 1em;
 }
 
+#other h3 {
+  display: inline;
+}
+
 #other ul {
   padding-left: 1em;
 }

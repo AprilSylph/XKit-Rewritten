@@ -32,7 +32,7 @@
     }
   `;
 
-  const main = async function() {
+  const run = async function() {
     const { keyToClasses } = await fakeImport('/src/util/css-map.js');
     const { addStyle } = await fakeImport('/src/util/misc.js');
 
@@ -41,10 +41,10 @@
     addStyle(css);
   };
 
-  const clean = async function() {
+  const destroy = async function() {
     const { removeStyle } = await fakeImport('/src/util/misc.js');
     removeStyle(css);
   };
 
-  return { main, clean };
+  return { run, destroy };
 })();

@@ -8,14 +8,6 @@ const getInstalledScripts = async function() {
   return installedScripts;
 };
 
-const getInstalledTweaks = async function() {
-  const url = getURL('/src/tweaks/_gallery.json');
-  const file = await fetch(url);
-  const installedTweaks = await file.json();
-
-  return installedTweaks;
-};
-
 const writeEnabled = async function(event) {
   const {checked, id} = event.target;
   let {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
@@ -43,19 +35,6 @@ const writeHidden = async function(event) {
   }
 
   browser.storage.local.set({hiddenScripts});
-};
-
-const writeEnabledTweak = async function(event) {
-  const {checked, id} = event.target;
-  let {enabledTweaks = []} = await browser.storage.local.get('enabledTweaks');
-
-  if (checked) {
-    enabledTweaks.push(id);
-  } else {
-    enabledTweaks = enabledTweaks.filter(x => x !== id);
-  }
-
-  browser.storage.local.set({enabledTweaks});
 };
 
 const writePreference = async function(event) {
@@ -222,34 +201,6 @@ const renderScripts = async function() {
   }
 };
 
-const renderTweaks = async function() {
-  const tweaksSection = document.getElementById('tweaks');
-  const installedTweaks = await getInstalledTweaks();
-  const {enabledTweaks = []} = await browser.storage.local.get('enabledTweaks');
-
-  const unorderedList = document.createElement('ul');
-
-  for (const [name, labelText] of installedTweaks) {
-    const listItem = document.createElement('li');
-
-    const input = document.createElement('input');
-    input.id = name;
-    input.type = 'checkbox';
-    input.checked = enabledTweaks.includes(name);
-    input.addEventListener('input', writeEnabledTweak);
-    listItem.appendChild(input);
-
-    const label = document.createElement('label');
-    label.setAttribute('for', name);
-    label.textContent = labelText;
-    listItem.appendChild(label);
-
-    unorderedList.appendChild(listItem);
-  }
-
-  tweaksSection.appendChild(unorderedList);
-};
-
 $('nav a').click(event => {
   event.preventDefault();
   $('nav .selected').removeClass('selected');
@@ -259,4 +210,3 @@ $('nav a').click(event => {
 });
 
 renderScripts();
-renderTweaks();

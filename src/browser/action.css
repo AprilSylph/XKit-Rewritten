@@ -89,15 +89,13 @@ section h2 {
   margin: 0;
 }
 
-#scripts fieldset ul,
-#tweaks ul {
+#scripts fieldset ul {
   padding: 0;
   margin: 0;
   list-style-type: none;
 }
 
-#scripts fieldset li,
-#tweaks li {
+#scripts fieldset li {
   display: flex;
   align-items: center;
   padding: 0.5ch 0;
@@ -112,7 +110,7 @@ section h2 {
   padding-top: 1ch;
 }
 
-#tweaks, #other {
+#other {
   margin: 1em 0;
   padding: 0 1em;
 }

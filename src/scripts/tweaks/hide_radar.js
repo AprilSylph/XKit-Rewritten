@@ -12,7 +12,7 @@
     .forEach(h1 => h1.parentNode.classList.add('xkit-tweaks-radar-hidden'));
   };
 
-  const main = async function() {
+  const run = async function() {
     const { baseContainerListener } = await fakeImport('/src/util/mutations.js');
     const { translate } = await fakeImport('/src/util/language-data.js');
     const { addStyle } = await fakeImport('/src/util/misc.js');
@@ -23,7 +23,7 @@
     addStyle(css);
   };
 
-  const clean = async function() {
+  const destroy = async function() {
     const { baseContainerListener } = await fakeImport('/src/util/mutations.js');
     const { removeStyle } = await fakeImport('/src/util/misc.js');
 
@@ -33,5 +33,5 @@
     $('.xkit-tweaks-radar-hidden').removeClass('xkit-tweaks-radar-hidden');
   };
 
-  return { main, clean };
+  return { run, destroy };
 })();

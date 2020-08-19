@@ -119,6 +119,14 @@ section h2 {
   padding: 0 1em;
 }
 
+#other ul {
+  padding-left: 1em;
+}
+
+#other li {
+  margin-bottom: 1ch;
+}
+
 label:not(:first-child),
 input:not(:first-child),
 select:not(:first-child) {

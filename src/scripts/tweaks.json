@@ -21,6 +21,11 @@
       "type": "checkbox",
       "label": "Use a slim layout for filtered posts",
       "default": false
+    },
+    "subtle_follow": {
+      "type": "checkbox",
+      "label": "Make posts' mini-follow buttons more subtle",
+      "default": false
     }
   }
 }

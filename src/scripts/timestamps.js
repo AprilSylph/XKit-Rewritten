@@ -123,12 +123,11 @@
     postListener.addListener(addPostTimestamps);
     addPostTimestamps();
 
-    const {'timestamps.preferences': preferences = {
-      reblog_timestamps: 'op',
-    }} = await browser.storage.local.get('timestamps.preferences');
+    const {'timestamps.preferences': preferences = {}} = await browser.storage.local.get('timestamps.preferences');
+    const {reblog_timestamps = 'op'} = preferences;
 
-    if (preferences.reblog_timestamps !== 'none') {
-      reblogTimestampsSetting = preferences.reblog_timestamps;
+    if (reblog_timestamps !== 'none') {
+      reblogTimestampsSetting = reblog_timestamps;
       postListener.addListener(addReblogTimestamps);
       addReblogTimestamps();
     }

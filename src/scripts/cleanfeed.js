@@ -63,10 +63,9 @@
     const { keyToCss } = await fakeImport('/src/util/css-map.js');
     reblogSelector = await keyToCss('reblog');
 
-    const {'cleanfeed.preferences': preferences = {
-      blocking_mode: 'smart',
-    }} = await browser.storage.local.get('cleanfeed.preferences');
-    blockingMode = preferences.blocking_mode;
+    const {'cleanfeed.preferences': preferences = {}} = await browser.storage.local.get('cleanfeed.preferences');
+    const {blocking_mode = 'smart'} = preferences;
+    blockingMode = blocking_mode;
 
     postListener.addListener(processPosts);
     processPosts();

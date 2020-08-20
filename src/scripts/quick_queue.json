@@ -1,0 +1,9 @@
+{
+  "title": "Quick Queue",
+  "description": "Add a button to quickly queue posts, or draft them if your queue is full",
+  "icon": {
+    "class_name": "ri-flashlight-line",
+    "color": "white",
+    "background_color": "#b820f9"
+  }
+}

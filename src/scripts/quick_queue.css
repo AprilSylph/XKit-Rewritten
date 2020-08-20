@@ -1,4 +1,4 @@
-.xkit_quick_actions_container {
+.xkit_quick_queue_container {
   font-family: var(--font-family);
   font-size: 1rem;
   font-weight: 700;
@@ -7,18 +7,18 @@
   line-height: 1;
 }
 
-.xkit_quick_actions_container_span {
+.xkit_quick_queue_container_span {
   vertical-align: top;
   display: inline-block;
   width: inherit;
 }
 
-.xkit_quick_actions_button {
+.xkit_quick_queue_button {
   color: inherit;
   font: inherit;
 }
 
-.xkit_quick_action_button_inner {
+.xkit_quick_queue_button_inner {
   display: block;
   color: inherit;
   font: inherit;

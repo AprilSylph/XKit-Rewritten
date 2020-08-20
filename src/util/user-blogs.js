@@ -29,7 +29,7 @@
    */
   const fetchDefaultBlog = async function() {
     const blogs = await fetchUserBlogs();
-    return blogs.filter(blog => blog.primary === true)[0];
+    return blogs.find(blog => blog.primary === true);
   };
 
   return { fetchUserBlogs, fetchUserBlogNames, fetchDefaultBlog };

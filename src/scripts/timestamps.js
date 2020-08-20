@@ -2,6 +2,7 @@
   let noteCountSelector;
   let reblogHeaderSelector;
   let reblogTimestampsSetting;
+  let alwaysShowYearSetting;
 
   const constructTimeString = function(unixTime) {
     const locale = document.documentElement.lang;
@@ -21,7 +22,7 @@
     return date.toLocaleDateString(locale, {
       day: 'numeric',
       month: 'short',
-      year: sameYear ? undefined : 'numeric',
+      year: sameYear && !alwaysShowYearSetting ? undefined : 'numeric',
     });
   };
 
@@ -99,10 +100,21 @@
       return;
     }
 
-    const {newValue: {reblog_timestamps}} = preferences;
-    reblogTimestampsSetting = reblog_timestamps;
+    const {newValue: {always_show_year, reblog_timestamps}} = preferences;
 
     const { postListener } = await fakeImport('/src/util/mutations.js');
+
+    if (always_show_year !== alwaysShowYearSetting) {
+      alwaysShowYearSetting = always_show_year;
+
+      postListener.removeListener(addPostTimestamps);
+      removePostTimestamps();
+
+      postListener.addListener(addPostTimestamps);
+      addPostTimestamps();
+    }
+
+    reblogTimestampsSetting = reblog_timestamps;
 
     postListener.removeListener(addReblogTimestamps);
     removeReblogTimestamps();
@@ -124,7 +136,10 @@
     addPostTimestamps();
 
     const {'timestamps.preferences': preferences = {}} = await browser.storage.local.get('timestamps.preferences');
+    const {always_show_year = false} = preferences;
     const {reblog_timestamps = 'op'} = preferences;
+
+    alwaysShowYearSetting = always_show_year;
 
     if (reblog_timestamps !== 'none') {
       reblogTimestampsSetting = reblog_timestamps;

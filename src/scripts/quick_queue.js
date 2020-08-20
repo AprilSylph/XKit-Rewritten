@@ -1,25 +1,29 @@
 (function() {
   let controlsSelector;
+  const queuePath = '<path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm1-8h4v2h-6V7h2v5z"/>';
+  const crossPath = '<path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/>';
+  const loadPath = '<path d="M5.463 4.433A9.961 9.961 0 0 1 12 2c5.523 0 10 4.477 10 10 0 2.136-.67 4.116-1.81 5.74L17 12h3A8 8 0 0 0 6.46 6.228l-.997-1.795zm13.074 15.134A9.961 9.961 0 0 1 12 22C6.477 22 2 17.523 2 12c0-2.136.67-4.116 1.81-5.74L7 12H4a8 8 0 0 0 13.54 5.772l.997 1.795z"/>';
+  const draftPath = '<path d="M21 8v12.993A1 1 0 0 1 20.007 22H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8zm-2 1h-5V4H5v16h14V9z"/>';
 
   const quickQueue = async function(event) {
     const postElement = event.target.closest('div[data-id]');
     if (!postElement) {
-      event.target.innerHTML = '<path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/>';
+      event.target.innerHTML = crossPath;
       event.target.setAttribute('fill', 'var(--red)');
       return;
     }
-    event.target.innerHTML = '<path d="M5.463 4.433A9.961 9.961 0 0 1 12 2c5.523 0 10 4.477 10 10 0 2.136-.67 4.116-1.81 5.74L17 12h3A8 8 0 0 0 6.46 6.228l-.997-1.795zm13.074 15.134A9.961 9.961 0 0 1 12 22C6.477 22 2 17.523 2 12c0-2.136.67-4.116 1.81-5.74L7 12H4a8 8 0 0 0 13.54 5.772l.997 1.795z"/>';
+    event.target.innerHTML = loadPath;
     const post_id = postElement.dataset.id;
 
     const { apiFetch } = await fakeImport('/src/util/tumblr-helpers.js');
     const { timelineObject } = await fakeImport('/src/util/react-props.js');
     const { fetchDefaultBlog } = await fakeImport('/src/util/user-blogs.js');
 
-    const {name: defaultBlog = ''} = await fetchDefaultBlog();
+    const {uuid: defaultBlogUuid = ''} = await fetchDefaultBlog();
 
     const {blog, content, layout, reblogKey} = await timelineObject(post_id);
     try {
-      const response = await apiFetch(`/v2/blog/${defaultBlog}.tumblr.com/posts`, {method: 'POST',
+      const response = await apiFetch(`/v2/blog/${defaultBlogUuid}/posts`, {method: 'POST',
         body: {
           content,
           layout,
@@ -29,16 +33,16 @@
           reblog_key: reblogKey,
         }});
       if ([200, 201].includes(response.meta.status)) {
-        event.target.innerHTML = '<path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm1-8h4v2h-6V7h2v5z"/>';
+        event.target.innerHTML = queuePath;
         event.target.setAttribute('fill', 'var(--green)');
       } else {
-        event.target.innerHTML = '<path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/>';
+        event.target.innerHTML = crossPath;
         event.target.setAttribute('fill', 'var(--red)');
       }
     } catch (e) {
       if (e.status === 400) {
         try {
-          const draftResponse = await apiFetch(`/v2/blog/${defaultBlog}.tumblr.com/posts`, {method: 'POST',
+          const draftResponse = await apiFetch(`/v2/blog/${defaultBlogUuid}/posts`, {method: 'POST',
             body: {
               content,
               layout,
@@ -48,19 +52,19 @@
               reblog_key: reblogKey,
             }});
           if ([200, 201].includes(draftResponse.meta.status)) {
-            event.target.innerHTML = '<path d="M21 8v12.993A1 1 0 0 1 20.007 22H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8zm-2 1h-5V4H5v16h14V9z"/>';
+            event.target.innerHTML = draftPath;
             event.target.setAttribute('fill', 'var(--green)');
           } else {
-            event.target.innerHTML = '<path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/>';
+            event.target.innerHTML = crossPath;
             event.target.setAttribute('fill', 'var(--red)');
           }
         } catch (err) {
-          event.target.innerHTML = '<path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/>';
+          event.target.innerHTML = crossPath;
           event.target.setAttribute('fill', 'var(--red)');
           console.error(err.body);
         }
       } else {
-        event.target.innerHTML = '<path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/>';
+        event.target.innerHTML = crossPath;
         event.target.setAttribute('fill', 'var(--red)');
         console.error(e.body);
       }
@@ -69,6 +73,9 @@
 
   const addButtons = async function() {
     const { timelineObject } = await fakeImport('/src/util/react-props.js');
+    const { translate } = await fakeImport('/src/util/language-data.js');
+
+    const reblogButtonAriaLabel = await translate('Reblog');
 
     [...document.querySelectorAll('[data-id]:not(.xkit_quick_queue_done)')]
     .forEach(async postElement => {
@@ -94,12 +101,14 @@
         const queueButtonInner = document.createElement('span');
         queueButtonInner.classList.add('xkit_quick_queue_button_inner');
         queueButtonInner.tabIndex = -1;
-        queueButtonInner.innerHTML = '<svg viewBox="2 2 20 20" width="21" height="21" fill="var(--gray-65)"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm1-8h4v2h-6V7h2v5z"></path></svg>';
+        queueButtonInner.innerHTML = `<svg viewBox="2 2 20 20" width="21" height="21" fill="var(--gray-65)">${queuePath}</svg>`;
 
         queueButton.appendChild(queueButtonInner);
         queueButtonContainerSpan.appendChild(queueButton);
         queueButtonContainer.appendChild(queueButtonContainerSpan);
-        controls.insertBefore(queueButtonContainer, controls.firstChild);
+
+        const reblogButton = postElement.querySelector(`[aria-label="${reblogButtonAriaLabel}"]`).parentElement;
+        controls.insertBefore(queueButtonContainer, reblogButton);
       }
     });
   };

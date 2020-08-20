@@ -36,18 +36,21 @@
   };
 
   const onStorageChanged = async function(changes, areaName) {
-    const {enabledScripts} = changes;
-    if (!enabledScripts || areaName !== 'local') {
+    if (areaName !== 'local') {
       return;
     }
 
-    const {oldValue = [], newValue = []} = enabledScripts;
+    const {enabledScripts} = changes;
 
-    const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
-    const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
+    if (enabledScripts) {
+      const {oldValue = [], newValue = []} = enabledScripts;
 
-    newlyEnabled.forEach(run_script);
-    newlyDisabled.forEach(destroy_script);
+      const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
+      const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
+
+      newlyEnabled.forEach(run_script);
+      newlyDisabled.forEach(destroy_script);
+    }
   };
 
   const init = async function() {

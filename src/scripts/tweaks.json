@@ -1,0 +1,31 @@
+{
+  "title": "Tweaks",
+  "description": "Miscellaneous dashboard options",
+  "icon": {
+    "class_name": "ri-settings-5-line",
+    "color": "white",
+    "background_color": "#ecc84b"
+  },
+  "preferences": {
+    "hide_recommended_blogs": {
+      "type": "checkbox",
+      "label": "Hide recommended blogs in the sidebar",
+      "default": false
+    },
+    "hide_radar": {
+      "type": "checkbox",
+      "label": "Hide the Tumblr Radar",
+      "default": false
+    },
+    "slim_filtered_screens": {
+      "type": "checkbox",
+      "label": "Use a slim layout for filtered posts",
+      "default": false
+    },
+    "subtle_follow": {
+      "type": "checkbox",
+      "label": "Make posts' mini-follow buttons more subtle",
+      "default": false
+    }
+  }
+}

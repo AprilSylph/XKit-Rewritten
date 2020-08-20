@@ -6,13 +6,6 @@ body {
   padding: 0 1ch;
 }
 
-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-}
-
 h1 {
   text-align: center;
   padding: 0 0.67em;
@@ -27,11 +20,37 @@ nav {
 }
 
 nav a {
+  color: #7c5cff;
+  line-height: 1em;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 1ch;
+  border-radius: 1ch;
   margin: 0 1ch;
 }
 
-section:not(:target) {
+nav a:active, nav a.selected {
+  color: white;
+  background-color: #7c5cff;
+}
+
+section {
+  min-width: 350px;
+}
+
+section:not(.open) {
   display: none;
+}
+
+section.open:empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1em 0;
+}
+
+section.open:empty::before {
+  content: "No one's around to help.";
 }
 
 section h2 {
@@ -40,6 +59,10 @@ section h2 {
 
 #scripts fieldset {
   margin: 0.5ch 0;
+}
+
+#scripts fieldset.hidden > :not(legend) {
+  display: none;
 }
 
 #scripts fieldset:last-child {
@@ -91,8 +114,25 @@ section h2 {
   padding-top: 1ch;
 }
 
-#scripts fieldset label:not(:first-child),
-#scripts fieldset input:not(:first-child),
-#scripts fieldset select:not(:first-child) {
+#other {
+  margin: 1em 0;
+  padding: 0 1em;
+}
+
+#other h3 {
+  display: inline;
+}
+
+#other ul {
+  padding-left: 1em;
+}
+
+#other li {
+  margin-bottom: 1ch;
+}
+
+label:not(:first-child),
+input:not(:first-child),
+select:not(:first-child) {
   margin-left: 1ch;
 }

@@ -2,7 +2,8 @@
   "audio_downloader",
   "cleanfeed",
   "disable_gifs",
-  "timestamps",
   "painter",
-  "quick_actions"
+  "quick_queue",
+  "timestamps",
+  "tweaks"
 ]

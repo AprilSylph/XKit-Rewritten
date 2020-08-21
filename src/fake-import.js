@@ -8,8 +8,9 @@
       const url = browser.runtime.getURL(path);
       const file = await fetch(url);
       const fakeModule = await file.text();
+      const returnedFakeModule = new Function(`'use strict'; return ${fakeModule} //# sourceURL=${url}`)();
 
-      modules[path] = new Function(`'use strict'; return ${fakeModule} //# sourceURL=${url}`)();
+      modules[path] = modules[path] || returnedFakeModule;
     }
 
     return modules[path];

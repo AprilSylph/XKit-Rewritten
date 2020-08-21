@@ -119,8 +119,8 @@ section h2 {
   padding: 0 1em;
 }
 
-#news:empty::before {
-  content: "I heard that someone's rewriting XKit.";
+#news h2 {
+  text-align: left;
 }
 
 #links ul {

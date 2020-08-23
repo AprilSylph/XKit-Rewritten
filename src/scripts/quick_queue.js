@@ -21,12 +21,10 @@
 
     const {uuid: defaultBlogUuid = ''} = await fetchDefaultBlog();
 
-    const {blog, content, layout, reblogKey} = await timelineObject(post_id);
+    const {blog, reblogKey} = await timelineObject(post_id);
     try {
       const response = await apiFetch(`/v2/blog/${defaultBlogUuid}/posts`, {method: 'POST',
         body: {
-          content,
-          layout,
           state: 'queue',
           parent_tumblelog_uuid: blog.uuid,
           parent_post_id: post_id,
@@ -44,8 +42,6 @@
         try {
           const draftResponse = await apiFetch(`/v2/blog/${defaultBlogUuid}/posts`, {method: 'POST',
             body: {
-              content,
-              layout,
               state: 'draft',
               parent_tumblelog_uuid: blog.uuid,
               parent_post_id: post_id,

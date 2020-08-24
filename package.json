@@ -2,7 +2,7 @@
   "name": "xkit-rewrite",
   "version": "0.0.7",
   "description": "Rewrite of XKit, the extension framework for Tumblr",
-  "browser": "xkit.js",
+  "browser": "src/xkit.js",
   "scripts": {
     "test": "eslint . && web-ext lint"
   },

@@ -64,7 +64,7 @@
   const waitForReactLoaded = async function() {
     let tries = 0;
 
-    while (tries < 500) {
+    while (tries < 300) {
       if (isReactLoaded()) {
         break;
       }

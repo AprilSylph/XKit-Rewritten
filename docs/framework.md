@@ -81,7 +81,7 @@ Object with 1 or more custom keys; each key is used internally as a preference's
 - Type: String
 - Required: Yes
 
-Type of preference. Supported values: `"checkbox"`, `"text"`, `"select"`
+Type of preference. Supported values: `"checkbox"`, `"text"`, `"color"`, `"select"`
 
 #### `"preferences"`: \<preference name\>: `"label"`
 - Type: String
@@ -103,6 +103,7 @@ Default value of the preference to display to the user. This does not automatica
 
 If the preference `type` is `"checkbox"`, this value should be a boolean.  
 If the preference `type` is `"text"`, this value should be a string.  
+If the preference `type` is `"color"`, this value should either be a string representing a hexadecimal colour code (i.e. `"#1a2b3c"`) or an empty string.  
 If the preference `type` is `"select"`, this value should be a string that matches one of the keys in `options`.
 
 # Scripts index

@@ -1,0 +1,16 @@
+{
+  "title": "No Recommended",
+  "description": "Remove recommended posts",
+  "icon": {
+    "class_name": "ri-close-circle-line",
+    "color": "white",
+    "background_color": "#00cf35"
+  },
+  "preferences": {
+    "show_searches": {
+      "type": "checkbox",
+      "label": "Don't hide posts from followed tags",
+      "default": false
+    }
+  }
+}

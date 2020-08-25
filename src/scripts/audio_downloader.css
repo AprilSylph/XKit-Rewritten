@@ -1,11 +1,11 @@
 .audio_downloader {
-  height: 1em;
-  line-height: 1em;
   padding: 0 var(--post-padding);
   margin: var(--post-header-vertical-padding) 0;
 }
 .audio_downloader button {
   font-size: 1em;
+  height: 1em;
+  line-height: 1em;
   color: var(--purple);
   text-decoration: underline;
 }

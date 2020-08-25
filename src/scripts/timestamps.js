@@ -78,11 +78,15 @@
         const {uuid} = trailItem.blog;
         const {id} = trailItem.post;
 
-        const {response: {timestamp}} = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
-
         const timestampElement = document.createElement('div');
         timestampElement.className = 'xkit_reblog_timestamp';
-        timestampElement.textContent = constructTimeString(timestamp);
+
+        try {
+          const {response: {timestamp}} = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
+          timestampElement.textContent = constructTimeString(timestamp);
+        } catch (exception) {
+          timestampElement.textContent = exception.body.meta.msg;
+        }
 
         reblogHeaders[i].appendChild(timestampElement);
       });

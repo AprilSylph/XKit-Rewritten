@@ -85,7 +85,11 @@
           const {response: {timestamp}} = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
           timestampElement.textContent = constructTimeString(timestamp);
         } catch (exception) {
-          timestampElement.textContent = exception.body.meta.msg;
+          if (Object.keys(exception).includes('body')) {
+            timestampElement.textContent = exception.body.meta.msg;
+          } else {
+            timestampElement.textContent = exception.message;
+          }
         }
 
         reblogHeaders[i].appendChild(timestampElement);

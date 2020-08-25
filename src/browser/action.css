@@ -3,7 +3,15 @@ body {
   -webkit-user-select: none;
   user-select: none;
   margin: 0;
-  padding: 0 1ch;
+  padding: 0;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: #dddddd;
+  margin-bottom: 1em;
 }
 
 h1 {
@@ -14,28 +22,29 @@ h1 {
 nav {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 1em;
 }
 
 nav a {
-  color: #7c5cff;
+  flex-grow: 1;
+  text-align: center;
+  color: #444444;
   line-height: 1em;
   font-weight: bold;
   text-decoration: none;
   padding: 1ch;
-  border-radius: 1ch;
-  margin: 0 1ch;
+  border-radius: 5px 5px 0 0;
 }
 
 nav a:active, nav a.selected {
-  color: white;
-  background-color: #7c5cff;
+  color: black;
+  background-color: white;
 }
 
 section {
   min-width: 350px;
+  padding: 0 1ch;
 }
 
 section:not(.open) {

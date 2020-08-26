@@ -34,6 +34,55 @@
         </ul>
       </section>
     </main>
+
+    <template id="script">
+      <details class="script">
+        <summary>
+          <div class="icon">
+            <i class="ri-fw"></i>
+          </div>
+          <div class="meta">
+            <h4 class="title"></h4>
+            <p class="description"></p>
+          </div>
+        </summary>
+        <ul>
+          <li>
+            <input type="checkbox">
+            <label>Enabled</label>
+          </li>
+        </ul>
+      </details>
+    </template>
+
+    <template id="checkbox-preference">
+      <li>
+        <input type="checkbox">
+        <label></label>
+      </li>
+    </template>
+
+    <template id="text-preference">
+      <li>
+        <label></label>
+        <input type="text">
+      </li>
+    </template>
+
+    <template id="select-preference">
+      <li>
+        <label></label>
+        <select></select>
+      </li>
+    </template>
+
+    <template id="color-preference">
+      <li>
+        <input type="text" class="makeSpectrum">
+        <label></label>
+      </li>
+    </template>
+
     <script src="/lib/browser-polyfill.min.js"></script>
     <script src="/lib/jquery.min.js"></script>
     <script src="/lib/spectrum.js"></script>

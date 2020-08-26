@@ -21,22 +21,6 @@ const writeEnabled = async function(event) {
   browser.storage.local.set({enabledScripts});
 };
 
-const writeHidden = async function(event) {
-  const {classList} = event.target.parentNode;
-  const {id} = event.target.parentNode.querySelector('input');
-  let {hiddenScripts = []} = await browser.storage.local.get('hiddenScripts');
-
-  if (classList.contains('hidden')) {
-    classList.remove('hidden');
-    hiddenScripts = hiddenScripts.filter(x => x !== id);
-  } else {
-    classList.add('hidden');
-    hiddenScripts.push(id);
-  }
-
-  browser.storage.local.set({hiddenScripts});
-};
-
 const writePreference = async function(event) {
   const {id, tagName, type} = event.target;
   const [scriptName, preferenceName] = id.split('.');
@@ -63,142 +47,97 @@ const renderScripts = async function() {
   const scriptsSection = document.getElementById('scripts');
   const installedScripts = await getInstalledScripts();
   const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
-  const {hiddenScripts = []} = await browser.storage.local.get('hiddenScripts');
 
   for (const name of installedScripts) {
     const url = getURL(`/src/scripts/${name}.json`);
     const file = await fetch(url);
     const {title = name, description = '', icon = {}, preferences = {}} = await file.json();
 
-    const fieldset = document.createElement('fieldset');
-    if (hiddenScripts.includes(name)) {
-      fieldset.classList.add('hidden');
-    }
-
-    const legend = document.createElement('legend');
-    legend.textContent = title;
-    legend.addEventListener('click', writeHidden);
-    fieldset.appendChild(legend);
-
-    const metaDiv = document.createElement('div');
-    metaDiv.classList.add('meta');
-    fieldset.appendChild(metaDiv);
-
-    if (description) {
-      const p = document.createElement('p');
-      p.textContent = description;
-      metaDiv.appendChild(p);
-    }
+    const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 
     if (icon.class_name !== undefined) {
-      const iconDiv = document.createElement('div');
-      iconDiv.classList.add('icon');
+      const iconDiv = scriptTemplateClone.querySelector('div.icon');
       iconDiv.style.backgroundColor = icon.background_color || '#ffffff';
 
-      const iconInner = document.createElement('i');
-      iconInner.classList.add(icon.class_name, 'ri-fw');
+      const iconInner = iconDiv.querySelector('i');
+      iconInner.classList.add(icon.class_name);
       iconInner.style.color = icon.color || '#000000';
-      iconDiv.appendChild(iconInner);
-
-      metaDiv.appendChild(iconDiv);
     }
 
-    const unorderedList = document.createElement('ul');
-    fieldset.appendChild(unorderedList);
+    const titleHeading = scriptTemplateClone.querySelector('h4.title');
+    titleHeading.textContent = title;
 
-    const listItem = document.createElement('li');
-    unorderedList.appendChild(listItem);
+    if (description !== '') {
+      const descriptionParagraph = scriptTemplateClone.querySelector('p.description');
+      descriptionParagraph.textContent = description;
+    }
 
-    const input = document.createElement('input');
-    input.id = name;
-    input.type = 'checkbox';
-    input.checked = enabledScripts.includes(name);
-    input.addEventListener('input', writeEnabled);
-    listItem.appendChild(input);
+    const unorderedList = scriptTemplateClone.querySelector('ul');
 
-    const label = document.createElement('label');
-    label.setAttribute('for', name);
-    label.textContent = 'Enabled';
-    listItem.appendChild(label);
+    const enabledInput = unorderedList.querySelector('input');
+    enabledInput.id = name;
+    enabledInput.checked = enabledScripts.includes(name);
+    enabledInput.addEventListener('input', writeEnabled);
 
-    if (Object.keys(preferences).length !== 0) {
-      const storageKey = `${name}.preferences`;
-      const {[storageKey]: savedPreferences = {}} = await browser.storage.local.get(storageKey);
+    const enabledLabel = unorderedList.querySelector('label');
+    enabledLabel.setAttribute('for', name);
 
-      for (const [key, preference] of Object.entries(preferences)) {
-        const savedPreference = savedPreferences[key] === undefined ? preference.default : savedPreferences[key];
+    const storageKey = `${name}.preferences`;
+    const {[storageKey]: savedPreferences = {}} = await browser.storage.local.get(storageKey);
 
-        const preferenceListItem = document.createElement('li');
+    for (const [key, preference] of Object.entries(preferences)) {
+      const savedPreference = savedPreferences[key] === undefined ? preference.default : savedPreferences[key];
+      const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
 
-        const inputType = {
-          checkbox: 'input',
-          text: 'input',
-          color: 'input',
-          select: 'select',
-        }[preference.type];
+      const preferenceLabel = preferenceTemplateClone.querySelector('label');
+      preferenceLabel.textContent = preference.label;
+      preferenceLabel.setAttribute('for', `${name}.${key}`);
 
-        const preferenceInput = document.createElement(inputType);
-        preferenceInput.id = `${name}.${key}`;
-        preferenceInput.addEventListener('input', writePreference);
+      const inputType = {
+        checkbox: 'input',
+        text: 'input',
+        color: 'input',
+        select: 'select',
+      }[preference.type];
 
-        if (inputType === 'input') {
-          if (preference.type === 'color') {
-            preferenceInput.type = 'text';
-            preferenceInput.classList.add('makeSpectrum');
-          } else {
-            preferenceInput.type = preference.type;
+      const preferenceInput = preferenceTemplateClone.querySelector(inputType);
+      preferenceInput.id = `${name}.${key}`;
+      preferenceInput.addEventListener('input', writePreference);
+
+      switch (preference.type) {
+        case 'checkbox':
+          preferenceInput.checked = savedPreference;
+          break;
+        case 'text':
+        case 'color':
+          preferenceInput.value = savedPreference;
+          break;
+        case 'select':
+          for (const [value, text] of Object.entries(preference.options)) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = text;
+            option.selected = value === savedPreference;
+            preferenceInput.appendChild(option);
           }
-        }
-
-        const preferenceLabel = document.createElement('label');
-        preferenceLabel.setAttribute('for', `${name}.${key}`);
-        preferenceLabel.textContent = preference.label;
-
-        switch (preference.type) {
-          case 'checkbox':
-            preferenceInput.checked = savedPreference;
-            preferenceListItem.appendChild(preferenceInput);
-            preferenceListItem.appendChild(preferenceLabel);
-            break;
-          case 'text':
-            preferenceInput.value = savedPreference;
-            preferenceListItem.appendChild(preferenceLabel);
-            preferenceListItem.appendChild(preferenceInput);
-            break;
-          case 'color':
-            preferenceInput.value = savedPreference;
-            preferenceListItem.appendChild(preferenceInput);
-            preferenceListItem.appendChild(preferenceLabel);
-            break;
-          case 'select':
-            for (const [value, text] of Object.entries(preference.options)) {
-              const option = document.createElement('option');
-              option.value = value;
-              option.textContent = text;
-              option.selected = value === savedPreference;
-              preferenceInput.appendChild(option);
-            }
-            preferenceListItem.appendChild(preferenceLabel);
-            preferenceListItem.appendChild(preferenceInput);
-            break;
-        }
-
-        unorderedList.appendChild(preferenceListItem);
+          break;
       }
+
+      unorderedList.appendChild(preferenceTemplateClone);
     }
 
-    scriptsSection.appendChild(fieldset);
-
-    const $makeSpectrum = $(fieldset).find('.makeSpectrum');
-
-    $makeSpectrum.spectrum({
-      preferredFormat: 'hex',
-      showInput: true,
-      showInitial: true,
-      allowEmpty: true,
-    });
-    $makeSpectrum.on('change.spectrum', writePreference);
+    scriptsSection.appendChild(scriptTemplateClone);
   }
+
+  const $makeSpectrum = $(scriptsSection).find('.makeSpectrum');
+
+  $makeSpectrum.spectrum({
+    preferredFormat: 'hex',
+    showInput: true,
+    showInitial: true,
+    allowEmpty: true,
+  });
+  $makeSpectrum.on('change.spectrum', writePreference);
 };
 
 $('nav a').click(event => {

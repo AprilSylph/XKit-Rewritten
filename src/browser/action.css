@@ -4,6 +4,11 @@ body {
   user-select: none;
   margin: 0;
   padding: 0;
+  overflow-y: scroll;
+}
+
+main {
+  min-width: 350px;
 }
 
 header {
@@ -11,7 +16,6 @@ header {
   flex-direction: column;
   align-items: stretch;
   background-color: #dddddd;
-  margin-bottom: 1em;
 }
 
 h1 {
@@ -42,11 +46,6 @@ nav a:active, nav a.selected {
   background-color: white;
 }
 
-section {
-  min-width: 350px;
-  padding: 0 1ch;
-}
-
 section:not(.open) {
   display: none;
 }
@@ -66,27 +65,32 @@ section h2 {
   text-align: center;
 }
 
-#scripts fieldset {
-  margin: 0.5ch 0;
+.script + .script {
+  border-top: 1px dotted #444444;
 }
 
-#scripts fieldset.hidden > :not(legend) {
+.script summary {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1ch;
+}
+
+.script summary::-webkit-details-marker {
   display: none;
 }
 
-#scripts fieldset:last-child {
-  margin-bottom: 1ch;
+.script:hover:not([open]) summary {
+  background-color: #efefef;
 }
 
-#scripts fieldset .meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.5ch;
+.script[open] summary {
+  background-color: #d9eefc;
 }
 
-#scripts fieldset .meta .icon {
-  align-self: flex-start;
+.script .icon {
   flex-shrink: 0;
   width: 32px;
   height: 32px;
@@ -95,32 +99,36 @@ section h2 {
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  margin-left: 0.5ch;
 }
 
-#scripts fieldset .meta p {
+.script .meta {
+  margin-left: 1ch;
+}
+
+.script .title,
+.script .description {
   margin: 0;
 }
 
-#scripts fieldset ul {
-  padding: 0;
-  margin: 0;
+.script ul {
+  padding: 0 1ch;
+  margin: 1ch 0;
   list-style-type: none;
 }
 
-#scripts fieldset li {
+.script li {
   display: flex;
   align-items: center;
   padding: 0.5ch 0;
 }
 
-#scripts fieldset li:first-child:not(:last-child) {
-  padding-bottom: 1ch;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+.script li:first-child:not(:last-child) {
+  padding-bottom: 1.5ch;
+  border-bottom: 1px solid #dddddd;
 }
 
-#scripts fieldset li:first-child + li {
-  padding-top: 1ch;
+.script li:first-child + li {
+  padding-top: 1.5ch;
 }
 
 #news, #links {

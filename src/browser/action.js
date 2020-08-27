@@ -44,7 +44,7 @@ const writePreference = async function(event) {
 };
 
 const renderScripts = async function() {
-  const scriptsSection = document.getElementById('scripts');
+  const configSection = document.getElementById('configuration');
   const installedScripts = await getInstalledScripts();
   const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
 
@@ -126,10 +126,10 @@ const renderScripts = async function() {
       unorderedList.appendChild(preferenceTemplateClone);
     }
 
-    scriptsSection.appendChild(scriptTemplateClone);
+    configSection.appendChild(scriptTemplateClone);
   }
 
-  const $makeSpectrum = $(scriptsSection).find('.makeSpectrum');
+  const $makeSpectrum = $(configSection).find('.makeSpectrum');
 
   $makeSpectrum.spectrum({
     preferredFormat: 'hex',

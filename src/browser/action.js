@@ -10,12 +10,15 @@ const getInstalledScripts = async function() {
 
 const writeEnabled = async function(event) {
   const {checked, id} = event.target;
+  const {parentNode: {parentNode: {parentNode: detailsElement}}} = event.target;
   let {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
 
   if (checked) {
     enabledScripts.push(id);
+    detailsElement.classList.remove('disabled');
   } else {
     enabledScripts = enabledScripts.filter(x => x !== id);
+    detailsElement.classList.add('disabled');
   }
 
   browser.storage.local.set({enabledScripts});
@@ -54,6 +57,11 @@ const renderScripts = async function() {
     const {title = name, description = '', icon = {}, preferences = {}} = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
+
+    if (enabledScripts.includes(name) === false) {
+      const detailsElement = scriptTemplateClone.querySelector('details.script');
+      detailsElement.classList.add('disabled');
+    }
 
     if (icon.class_name !== undefined) {
       const iconDiv = scriptTemplateClone.querySelector('div.icon');

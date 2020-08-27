@@ -82,6 +82,10 @@ section h2 {
   display: none;
 }
 
+.script.disabled summary {
+  color: #444444;
+}
+
 .script:hover:not([open]) summary {
   background-color: #efefef;
 }
@@ -108,6 +112,12 @@ section h2 {
 .script .title,
 .script .description {
   margin: 0;
+}
+
+.script.disabled .title::after {
+  content: "(disabled)";
+  margin-left: 0.5ch;
+  font-weight: normal;
 }
 
 .script ul {

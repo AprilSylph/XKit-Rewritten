@@ -106,8 +106,8 @@ section h2 {
   display: none;
 }
 
-.script + .script {
-  border-top: 1px dotted #444444;
+.script:not(:last-child) {
+  border-bottom: 1px dotted #444444;
 }
 
 .script summary {

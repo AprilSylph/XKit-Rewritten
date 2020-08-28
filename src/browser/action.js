@@ -148,12 +148,35 @@ const renderScripts = async function() {
   $makeSpectrum.on('change.spectrum', writePreference);
 };
 
+const checkForNoResults = function() {
+  const nothingFound =
+    [...document.querySelectorAll('details.script')]
+    .every(detailsElement => detailsElement.classList.contains('search-hidden') || detailsElement.classList.contains('filter-hidden'));
+
+  document.querySelector('.no-results').style.display = nothingFound ? 'flex' : 'none';
+};
+
 $('nav a').click(event => {
   event.preventDefault();
   $('nav .selected').removeClass('selected');
   $(event.target).addClass('selected');
   $('section.open').removeClass('open');
   $(`section${event.target.getAttribute('href')}`).addClass('open');
+});
+
+document.getElementById('search').addEventListener('input', event => {
+  const query = event.target.value.toLowerCase();
+
+  [...document.querySelectorAll('details.script')]
+  .forEach(detailsElement => {
+    if (detailsElement.textContent.toLowerCase().includes(query)) {
+      detailsElement.classList.remove('search-hidden');
+    } else {
+      detailsElement.classList.add('search-hidden');
+    }
+  });
+
+  checkForNoResults();
 });
 
 document.getElementById('filter').addEventListener('input', event => {
@@ -173,11 +196,10 @@ document.getElementById('filter').addEventListener('input', event => {
 
   $('.script[open].filter-hidden').removeAttr('open');
 
-  const noResultsFound =
-    [...document.querySelectorAll('details.script')]
-    .every(detailsElement => detailsElement.classList.contains('filter-hidden'));
-
-  document.querySelector('.no-results').style.display = noResultsFound ? 'flex' : 'none';
+  checkForNoResults();
 });
 
 renderScripts();
+
+const main = document.querySelector('main');
+main.style.minWidth = `${main.getBoundingClientRect().width}px`;

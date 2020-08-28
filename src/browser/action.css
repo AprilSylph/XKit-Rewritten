@@ -68,15 +68,27 @@ section h2 {
 .finder {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   padding: 1ch;
 }
 
 .finder div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.finder div:first-child {
   flex-grow: 1;
 }
 
 .finder div + div {
   margin-left: 1ch;
+}
+
+#search {
+  width: 175px;
+  min-width: calc(100% - 16px);
 }
 
 .no-results {
@@ -85,6 +97,7 @@ section h2 {
   align-items: center;
 }
 
+.script.search-hidden,
 .script.filter-hidden {
   display: none;
 }

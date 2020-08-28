@@ -65,7 +65,31 @@ section h2 {
   text-align: center;
 }
 
-.script + .script {
+.finder {
+  display: flex;
+  flex-direction: row;
+  padding: 1ch;
+}
+
+.finder div {
+  flex-grow: 1;
+}
+
+.finder div + div {
+  margin-left: 1ch;
+}
+
+.no-results {
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.script.filter-hidden {
+  display: none;
+}
+
+.script {
   border-top: 1px dotted #444444;
 }
 

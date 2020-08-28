@@ -156,4 +156,28 @@ $('nav a').click(event => {
   $(`section${event.target.getAttribute('href')}`).addClass('open');
 });
 
+document.getElementById('filter').addEventListener('input', event => {
+  switch (event.target.value) {
+    case 'all':
+      $('.script.filter-hidden').removeClass('filter-hidden');
+      break;
+    case 'enabled':
+      $('.script.disabled').addClass('filter-hidden');
+      $('.script:not(.disabled)').removeClass('filter-hidden');
+      break;
+    case 'disabled':
+      $('.script:not(.disabled)').addClass('filter-hidden');
+      $('.script.disabled').removeClass('filter-hidden');
+      break;
+  }
+
+  $('.script[open].filter-hidden').removeAttr('open');
+
+  const noResultsFound =
+    [...document.querySelectorAll('details.script')]
+    .every(detailsElement => detailsElement.classList.contains('filter-hidden'));
+
+  document.querySelector('.no-results').style.display = noResultsFound ? 'flex' : 'none';
+});
+
 renderScripts();

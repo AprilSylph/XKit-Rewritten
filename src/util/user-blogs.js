@@ -25,7 +25,7 @@
   };
 
   /**
-   * @return {String} - The default ("main") blog for the user
+   * @return {Object} - The default ("main") blog for the user
    */
   const fetchDefaultBlog = async function() {
     const blogs = await fetchUserBlogs();

@@ -47,6 +47,18 @@
     },
   });
 
+  const debounce = (callback, ms) => {
+    let timeoutID;
+    return (...args) => {
+      clearTimeout(timeoutID);
+      timeoutID = setTimeout(() => callback(...args), ms);
+    };
+  };
+
+  const runOnNewPosts = debounce(() => onNewPosts.listeners.forEach(callback => callback()), 100);
+  const runOnPostsMutated = debounce(() => onPostsMutated.listeners.forEach(callback => callback()), 100);
+  const runOnBaseContainerMutated = debounce(() => onBaseContainerMutated.listeners.forEach(callback => callback()), 100);
+
   const observer = new MutationObserver(mutations => {
     if (onNewPosts.listeners.length !== 0 || onPostsMutated.listeners.length !== 0) {
       const newPosts = mutations.some(({addedNodes}) => [...addedNodes]
@@ -54,12 +66,12 @@
         .some(addedNode => addedNode.matches(postSelector) || addedNode.querySelector(postSelector) !== null));
 
       if (newPosts) {
-        onNewPosts.listeners.forEach(callback => callback());
-        onPostsMutated.listeners.forEach(callback => callback());
+        runOnNewPosts();
+        runOnPostsMutated();
       } else {
         const mutatedPosts = mutations.some(({target}) => target.matches(`${postSelector} ${target.tagName.toLowerCase()}`));
         if (mutatedPosts) {
-          onPostsMutated.listeners.forEach(callback => callback());
+          runOnPostsMutated();
         }
       }
     }
@@ -69,7 +81,7 @@
       const baseContainerMutations = mutations.some(({target}) => baseContainerNode.contains(target));
 
       if (baseContainerMutated || baseContainerMutations) {
-        onBaseContainerMutated.listeners.forEach(callback => callback());
+        runOnBaseContainerMutated();
       }
     }
   });

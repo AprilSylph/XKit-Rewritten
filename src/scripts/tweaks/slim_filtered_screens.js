@@ -8,6 +8,7 @@
       height: auto;
       padding-top: var(--post-header-vertical-padding);
       padding-bottom: var(--post-header-vertical-padding);
+      overflow-x: auto;
     }
 
     .${filteredScreen} > p {

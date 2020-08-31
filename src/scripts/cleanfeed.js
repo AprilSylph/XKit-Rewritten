@@ -59,7 +59,7 @@
 
   const main = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
-    const { postListener } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     const { keyToCss } = await fakeImport('/src/util/css-map.js');
     reblogSelector = await keyToCss('reblog');
 
@@ -67,14 +67,14 @@
     const {blocking_mode = 'smart'} = preferences;
     blockingMode = blocking_mode;
 
-    postListener.addListener(processPosts);
+    onNewPosts.addListener(processPosts);
     processPosts();
   };
 
   const clean = async function() {
     browser.storage.onChanged.removeListener(onStorageChanged);
-    const { postListener } = await fakeImport('/src/util/mutations.js');
-    postListener.removeListener(processPosts);
+    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    onNewPosts.removeListener(processPosts);
     unProcessPosts();
   };
 

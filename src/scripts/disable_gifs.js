@@ -37,14 +37,14 @@
   };
 
   const main = async function() {
-    const { postListener } = await fakeImport('/src/util/mutations.js');
-    postListener.addListener(processGifs);
+    const { onPostsMutated } = await fakeImport('/src/util/mutations.js');
+    onPostsMutated.addListener(processGifs);
     processGifs();
   };
 
   const clean = async function() {
-    const { postListener } = await fakeImport('/src/util/mutations.js');
-    postListener.removeListener(processGifs);
+    const { onPostsMutated } = await fakeImport('/src/util/mutations.js');
+    onPostsMutated.removeListener(processGifs);
     $('.xkit-paused-gif, .xkit-gif-label').remove();
     $('.xkit-disable-gifs-done').removeClass('xkit-disable-gifs-done');
   };

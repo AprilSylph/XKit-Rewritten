@@ -13,21 +13,21 @@
   };
 
   const run = async function() {
-    const { baseContainerListener } = await fakeImport('/src/util/mutations.js');
+    const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
     const { translate } = await fakeImport('/src/util/language-data.js');
     const { addStyle } = await fakeImport('/src/util/misc.js');
 
     recommendedBlogsLabel = await translate('Recommended Blogs');
-    baseContainerListener.addListener(checkForRecommendedBlogs);
+    onBaseContainerMutated.addListener(checkForRecommendedBlogs);
     checkForRecommendedBlogs();
     addStyle(css);
   };
 
   const destroy = async function() {
-    const { baseContainerListener } = await fakeImport('/src/util/mutations.js');
+    const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
     const { removeStyle } = await fakeImport('/src/util/misc.js');
 
-    baseContainerListener.removeListener(checkForRecommendedBlogs);
+    onBaseContainerMutated.removeListener(checkForRecommendedBlogs);
     removeStyle(css);
     $('.xkit-tweaks-recblogs-processed').removeClass('xkit-tweaks-recblogs-processed');
     $('.xkit-tweaks-recblogs-hidden').removeClass('xkit-tweaks-recblogs-hidden');

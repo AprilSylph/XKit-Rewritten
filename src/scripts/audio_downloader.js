@@ -40,16 +40,16 @@
   };
 
   const main = async function() {
-    const { postListener } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     const { keyToCss } = await fakeImport('/src/util/css-map.js');
     audioBlockSelector = await keyToCss('audioBlock');
-    postListener.addListener(process);
+    onNewPosts.addListener(process);
     process();
   };
 
   const clean = async function() {
-    const { postListener } = await fakeImport('/src/util/mutations.js');
-    postListener.removeListener(process);
+    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    onNewPosts.removeListener(process);
     $('.audio_downloader_done').removeClass('audio_downloader_done');
     $('.audio_downloader').remove();
   };

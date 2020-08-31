@@ -83,14 +83,14 @@
     reblogColour = preferences.reblog;
     likedColour = preferences.liked;
 
-    const { postListener } = await fakeImport('/src/util/mutations.js');
-    postListener.addListener(paint);
+    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    onNewPosts.addListener(paint);
     paint();
   };
 
   const clean = async function() {
-    const { postListener } = await fakeImport('/src/util/mutations.js');
-    postListener.removeListener(paint);
+    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    onNewPosts.removeListener(paint);
     strip();
   };
 

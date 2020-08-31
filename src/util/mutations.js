@@ -2,45 +2,74 @@
   const baseContainerNode = document.getElementById('base-container');
   const postSelector = '[data-id]';
 
-  const postListener = {
+  const onNewPosts = Object.freeze({
     listeners: [],
     addListener(callback) {
-      this.listeners.push(callback);
+      if (this.listeners.includes(callback) === false) {
+        this.listeners.push(callback);
+      }
     },
     removeListener(callback) {
-      this.listeners = this.listeners.filter(x => x !== callback);
+      const index = this.listeners.indexOf(callback);
+      if (index !== -1) {
+        this.listeners.splice(index, 1);
+      }
     },
-  };
+  });
 
-  const baseContainerListener = {
+  const onPostsMutated = Object.freeze({
     listeners: [],
     addListener(callback) {
-      this.listeners.push(callback);
+      if (this.listeners.includes(callback) === false) {
+        this.listeners.push(callback);
+      }
     },
     removeListener(callback) {
-      this.listeners = this.listeners.filter(x => x !== callback);
+      const index = this.listeners.indexOf(callback);
+      if (index !== -1) {
+        this.listeners.splice(index, 1);
+      }
     },
-  };
+  });
+
+  const onBaseContainerMutated = Object.freeze({
+    listeners: [],
+    addListener(callback) {
+      if (this.listeners.includes(callback) === false) {
+        this.listeners.push(callback);
+      }
+    },
+    removeListener(callback) {
+      const index = this.listeners.indexOf(callback);
+      if (index !== -1) {
+        this.listeners.splice(index, 1);
+      }
+    },
+  });
 
   const observer = new MutationObserver(mutations => {
-    if (postListener.listeners.length !== 0) {
+    if (onNewPosts.listeners.length !== 0 || onPostsMutated.listeners.length !== 0) {
       const newPosts = mutations.some(({addedNodes}) => [...addedNodes]
         .filter(addedNode => addedNode instanceof HTMLElement)
-        .some(addedNode => addedNode.matches(postSelector)));
+        .some(addedNode => addedNode.matches(postSelector) || addedNode.querySelector(postSelector) !== null));
 
-      const mutatedPosts = mutations.some(({target}) => target.matches(`${postSelector} ${target.tagName.toLowerCase()}`));
-
-      if (newPosts || mutatedPosts) {
-        postListener.listeners.forEach(callback => callback());
+      if (newPosts) {
+        onNewPosts.listeners.forEach(callback => callback());
+        onPostsMutated.listeners.forEach(callback => callback());
+      } else {
+        const mutatedPosts = mutations.some(({target}) => target.matches(`${postSelector} ${target.tagName.toLowerCase()}`));
+        if (mutatedPosts) {
+          onPostsMutated.listeners.forEach(callback => callback());
+        }
       }
     }
 
-    if (baseContainerListener.listeners.length !== 0) {
+    if (onBaseContainerMutated.listeners.length !== 0) {
       const baseContainerMutated = mutations.some(({target}) => target === baseContainerNode);
       const baseContainerMutations = mutations.some(({target}) => baseContainerNode.contains(target));
 
       if (baseContainerMutated || baseContainerMutations) {
-        baseContainerListener.listeners.forEach(callback => callback());
+        onBaseContainerMutated.listeners.forEach(callback => callback());
       }
     }
   });
@@ -50,5 +79,5 @@
     subtree: true,
   });
 
-  return { postListener, baseContainerListener };
+  return { onNewPosts, onPostsMutated, onBaseContainerMutated };
 })();

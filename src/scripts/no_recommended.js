@@ -45,15 +45,15 @@
     const {show_searches = false} = preferences;
     showSearchesSetting = show_searches;
 
-    const { postListener } = await fakeImport('/src/util/mutations.js');
-    postListener.addListener(removeRecommended);
+    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    onNewPosts.addListener(removeRecommended);
     removeRecommended();
   };
 
   const clean = async function() {
     browser.storage.onChanged.removeListener(onStorageChanged);
-    const { postListener } = await fakeImport('/src/util/mutations.js');
-    postListener.removeListener(removeRecommended);
+    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    onNewPosts.removeListener(removeRecommended);
 
     $('.xkit-no-recommended-hidden, .xkit-no-recommended-done')
     .removeClass('xkit-no-recommended-hidden')

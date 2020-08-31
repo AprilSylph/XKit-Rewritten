@@ -13,21 +13,21 @@
   };
 
   const run = async function() {
-    const { baseContainerListener } = await fakeImport('/src/util/mutations.js');
+    const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
     const { translate } = await fakeImport('/src/util/language-data.js');
     const { addStyle } = await fakeImport('/src/util/misc.js');
 
     radarLabel = await translate('Radar');
-    baseContainerListener.addListener(checkForRadar);
+    onBaseContainerMutated.addListener(checkForRadar);
     checkForRadar();
     addStyle(css);
   };
 
   const destroy = async function() {
-    const { baseContainerListener } = await fakeImport('/src/util/mutations.js');
+    const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
     const { removeStyle } = await fakeImport('/src/util/misc.js');
 
-    baseContainerListener.removeListener(checkForRadar);
+    onBaseContainerMutated.removeListener(checkForRadar);
     removeStyle(css);
     $('.xkit-tweaks-radar-processed').removeClass('xkit-tweaks-radar-processed');
     $('.xkit-tweaks-radar-hidden').removeClass('xkit-tweaks-radar-hidden');

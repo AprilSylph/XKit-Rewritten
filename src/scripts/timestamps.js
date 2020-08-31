@@ -106,37 +106,37 @@
 
     const {newValue: {always_show_year, reblog_timestamps}} = preferences;
 
-    const { postListener } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
 
     if (always_show_year !== alwaysShowYearSetting) {
       alwaysShowYearSetting = always_show_year;
 
-      postListener.removeListener(addPostTimestamps);
+      onNewPosts.removeListener(addPostTimestamps);
       removePostTimestamps();
 
-      postListener.addListener(addPostTimestamps);
+      onNewPosts.addListener(addPostTimestamps);
       addPostTimestamps();
     }
 
     reblogTimestampsSetting = reblog_timestamps;
 
-    postListener.removeListener(addReblogTimestamps);
+    onNewPosts.removeListener(addReblogTimestamps);
     removeReblogTimestamps();
 
     if (reblog_timestamps !== 'none') {
-      postListener.addListener(addReblogTimestamps);
+      onNewPosts.addListener(addReblogTimestamps);
       addReblogTimestamps();
     }
   };
 
   const main = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
-    const { postListener } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     const { keyToCss } = await fakeImport('/src/util/css-map.js');
     noteCountSelector = await keyToCss('noteCount');
     reblogHeaderSelector = await keyToCss('reblogHeader');
 
-    postListener.addListener(addPostTimestamps);
+    onNewPosts.addListener(addPostTimestamps);
     addPostTimestamps();
 
     const {'timestamps.preferences': preferences = {}} = await browser.storage.local.get('timestamps.preferences');
@@ -147,16 +147,16 @@
 
     if (reblog_timestamps !== 'none') {
       reblogTimestampsSetting = reblog_timestamps;
-      postListener.addListener(addReblogTimestamps);
+      onNewPosts.addListener(addReblogTimestamps);
       addReblogTimestamps();
     }
   };
 
   const clean = async function() {
     browser.storage.onChanged.removeListener(onStorageChanged);
-    const { postListener } = await fakeImport('/src/util/mutations.js');
-    postListener.removeListener(addPostTimestamps);
-    postListener.removeListener(addReblogTimestamps);
+    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    onNewPosts.removeListener(addPostTimestamps);
+    onNewPosts.removeListener(addReblogTimestamps);
     removePostTimestamps();
     removeReblogTimestamps();
   };

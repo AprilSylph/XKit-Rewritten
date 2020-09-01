@@ -10,7 +10,7 @@ const getInstalledScripts = async function() {
 
 const writeEnabled = async function(event) {
   const {checked, id} = event.target;
-  const {parentNode: {parentNode: {parentNode: detailsElement}}} = event.target;
+  const {parentNode: {parentNode: detailsElement}} = event.target;
   let {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
 
   if (checked) {
@@ -82,13 +82,10 @@ const renderScripts = async function() {
 
     const unorderedList = scriptTemplateClone.querySelector('ul');
 
-    const enabledInput = unorderedList.querySelector('input');
+    const enabledInput = scriptTemplateClone.querySelector('input.toggle-button');
     enabledInput.id = name;
     enabledInput.checked = enabledScripts.includes(name);
     enabledInput.addEventListener('input', writeEnabled);
-
-    const enabledLabel = unorderedList.querySelector('label');
-    enabledLabel.setAttribute('for', name);
 
     const storageKey = `${name}.preferences`;
     const {[storageKey]: savedPreferences = {}} = await browser.storage.local.get(storageKey);

@@ -2,7 +2,7 @@
   let css;
 
   const cssTemplate = filteredScreen => `
-    .${filteredScreen} {
+    [data-id] .${filteredScreen} {
       flex-direction: row;
       justify-content: space-between;
       height: auto;
@@ -11,11 +11,11 @@
       overflow-x: auto;
     }
 
-    .${filteredScreen} > p {
+    [data-id] .${filteredScreen} > p {
         flex-shrink: 0;
     }
 
-    .${filteredScreen} > a {
+    [data-id] .${filteredScreen} > a {
         margin-right: auto;
         margin-left: 1ch;
         white-space: nowrap;
@@ -23,12 +23,12 @@
         text-overflow: ellipsis;
     }
 
-    .${filteredScreen} > button {
+    [data-id] .${filteredScreen} > button {
         flex-shrink: 0;
         margin-left: 1ch;
     }
 
-    .${filteredScreen} > button > span {
+    [data-id] .${filteredScreen} > button > span {
         margin-top: 0;
     }
   `;

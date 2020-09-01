@@ -117,7 +117,7 @@ section h2 {
   display: none;
 }
 
-.script:not(:last-child) {
+.script {
   border-bottom: 1px dotted #444444;
 }
 
@@ -150,15 +150,24 @@ section h2 {
   flex-shrink: 0;
   width: 32px;
   height: 32px;
-  font-size: 26px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
 }
 
+.script .icon i {
+  font-size: 26px;
+}
+
+.script .icon,
 .script .meta {
-  margin-left: 1ch;
+  margin-right: 1ch;
+}
+
+.script .icon,
+.script .toggle-button {
+  flex-shrink: 0;
 }
 
 .script .title,

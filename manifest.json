@@ -1,13 +1,13 @@
 {
   "manifest_version": 2,
   "name": "XKit Rewritten",
-  "version": "0.0.8",
+  "version": "0.0.9",
 
   "short_name": "XKit",
   "author": "April Sylph",
   "homepage_url": "https://github.com/AprilSylph/XKit-Rewritten",
 
-  "description": "Rewrite of XKit, the extension framework for Tumblr",
+  "description": "The enhancement suite for Tumblr's new web interface",
   "icons": {
     "16": "img/icon/16.png",
     "32": "img/icon/32.png",

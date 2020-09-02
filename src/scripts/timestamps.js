@@ -29,9 +29,9 @@
   const addPostTimestamps = async function() {
     const { timelineObject } = await fakeImport('/src/util/react-props.js');
 
-    [...document.querySelectorAll('[data-id]:not(.xkit_timestamps_done)')]
+    [...document.querySelectorAll('[data-id]:not(.xkit-timestamps-done)')]
     .forEach(async postElement => {
-      postElement.classList.add('xkit_timestamps_done');
+      postElement.classList.add('xkit-timestamps-done');
 
       const post_id = postElement.dataset.id;
       const {timestamp, postUrl} = await timelineObject(post_id);
@@ -39,7 +39,7 @@
       const noteCountElement = postElement.querySelector(noteCountSelector);
 
       const timestampElement = document.createElement('a');
-      timestampElement.className = 'xkit_timestamp';
+      timestampElement.className = 'xkit-timestamp';
       timestampElement.href = postUrl;
       timestampElement.target = '_blank';
       timestampElement.textContent = constructTimeString(timestamp);
@@ -49,17 +49,17 @@
   };
 
   const removePostTimestamps = function() {
-    $('.xkit_timestamp').remove();
-    $('.xkit_timestamps_done').removeClass('xkit_timestamps_done');
+    $('.xkit-timestamp').remove();
+    $('.xkit-timestamps-done').removeClass('xkit-timestamps-done');
   };
 
   const addReblogTimestamps = async function() {
     const { timelineObject } = await fakeImport('/src/util/react-props.js');
     const { apiFetch } = await fakeImport('/src/util/tumblr-helpers.js');
 
-    [...document.querySelectorAll('[data-id]:not(.xkit_reblog_timestamps_done)')]
+    [...document.querySelectorAll('[data-id]:not(.xkit-reblog-timestamps-done)')]
     .forEach(async postElement => {
-      postElement.classList.add('xkit_reblog_timestamps_done');
+      postElement.classList.add('xkit-reblog-timestamps-done');
 
       const post_id = postElement.dataset.id;
       let {trail} = await timelineObject(post_id);
@@ -79,7 +79,7 @@
         const {id} = trailItem.post;
 
         const timestampElement = document.createElement('div');
-        timestampElement.className = 'xkit_reblog_timestamp';
+        timestampElement.className = 'xkit-reblog-timestamp';
 
         try {
           const {response: {timestamp}} = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
@@ -94,8 +94,8 @@
   };
 
   const removeReblogTimestamps = function() {
-    $('.xkit_reblog_timestamp').remove();
-    $('.xkit_reblog_timestamps_done').removeClass('xkit_reblog_timestamps_done');
+    $('.xkit-reblog-timestamp').remove();
+    $('.xkit-reblog-timestamps-done').removeClass('xkit-reblog-timestamps-done');
   };
 
   const onStorageChanged = async function(changes, areaName) {

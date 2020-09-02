@@ -1,8 +1,8 @@
-.audio_downloader {
+.audio-downloader {
   padding: 0 var(--post-padding);
   margin: var(--post-header-vertical-padding) 0;
 }
-.audio_downloader button {
+.audio-downloader button {
   font-size: 1em;
   height: 1em;
   line-height: 1em;

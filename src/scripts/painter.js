@@ -7,9 +7,9 @@
   const paint = async function() {
     const { timelineObject } = await fakeImport('/src/util/react-props.js');
 
-    [...document.querySelectorAll('[data-id]:not(.xkit_painter_painted)')]
+    [...document.querySelectorAll('[data-id]:not(.xkit-painter-painted)')]
     .forEach(async postElement => {
-      postElement.classList.add('xkit_painter_painted');
+      postElement.classList.add('xkit-painter-painted');
 
       const post_id = postElement.dataset.id;
       const {canDelete, liked, rebloggedFromId} = await timelineObject(post_id);
@@ -48,11 +48,11 @@
   };
 
   const strip = function() {
-    $('.xkit_painter_painted article')
+    $('.xkit-painter-painted article')
     .css('border-top', '')
     .css('border-image-source', '')
     .css('border-image-slice', '');
-    $('.xkit_painter_painted').removeClass('xkit_painter_painted');
+    $('.xkit-painter-painted').removeClass('xkit-painter-painted');
   };
 
   const fallback = function(value, fallbackValue) {

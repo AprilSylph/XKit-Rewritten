@@ -1,14 +1,14 @@
-.xkit_timestamp {
+.xkit-timestamp {
   font-weight: normal;
   text-decoration: none;
   margin-right: auto;
 }
 
-:not(:empty) + .xkit_timestamp {
+:not(:empty) + .xkit-timestamp {
   margin-left: var(--post-padding);
 }
 
-.xkit_reblog_timestamp {
+.xkit-reblog-timestamp {
   align-self: center;
   font-weight: normal;
   color: var(--gray-65);

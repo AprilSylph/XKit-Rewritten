@@ -34,7 +34,7 @@
   `;
 
   const run = async function() {
-    const { keyToClasses } = await fakeImport('/src/util/css-map.js');
+    const { keyToClasses } = await fakeImport('/src/util/css_map.js');
     const { addStyle } = await fakeImport('/src/util/misc.js');
 
     const [filteredScreen] = await keyToClasses('filteredScreen');

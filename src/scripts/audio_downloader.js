@@ -41,7 +41,7 @@
 
   const main = async function() {
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
-    const { keyToCss } = await fakeImport('/src/util/css-map.js');
+    const { keyToCss } = await fakeImport('/src/util/css_map.js');
     audioBlockSelector = await keyToCss('audioBlock');
     onNewPosts.addListener(process);
     process();

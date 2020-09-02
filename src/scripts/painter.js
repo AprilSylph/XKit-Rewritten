@@ -5,7 +5,7 @@
   let likedColour;
 
   const paint = async function() {
-    const { timelineObject } = await fakeImport('/src/util/react-props.js');
+    const { timelineObject } = await fakeImport('/src/util/react_props.js');
 
     [...document.querySelectorAll('[data-id]:not(.xkit-painter-painted)')]
     .forEach(async postElement => {

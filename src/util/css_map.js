@@ -7,7 +7,7 @@
    */
   const keyToClasses = async function(key) {
     if (cssMap === undefined) {
-      const { getCssMap } = await fakeImport('/src/util/tumblr-helpers.js');
+      const { getCssMap } = await fakeImport('/src/util/tumblr_helpers.js');
       cssMap = await getCssMap();
     }
 

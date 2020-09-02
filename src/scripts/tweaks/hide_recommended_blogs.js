@@ -14,7 +14,7 @@
 
   const run = async function() {
     const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
-    const { translate } = await fakeImport('/src/util/language-data.js');
+    const { translate } = await fakeImport('/src/util/language_data.js');
     const { addStyle } = await fakeImport('/src/util/misc.js');
 
     recommendedBlogsLabel = await translate('Recommended Blogs');

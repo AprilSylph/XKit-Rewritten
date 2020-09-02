@@ -3,7 +3,7 @@
   let reblogSelector;
 
   const processPosts = async function() {
-    const { timelineObject } = await fakeImport('/src/util/react-props.js');
+    const { timelineObject } = await fakeImport('/src/util/react_props.js');
 
     [...document.querySelectorAll('[data-id]:not(.xkit-cleanfeed-processed)')]
     .forEach(async postElement => {
@@ -60,7 +60,7 @@
   const main = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
-    const { keyToCss } = await fakeImport('/src/util/css-map.js');
+    const { keyToCss } = await fakeImport('/src/util/css_map.js');
     reblogSelector = await keyToCss('reblog');
 
     const {'cleanfeed.preferences': preferences = {}} = await browser.storage.local.get('cleanfeed.preferences');

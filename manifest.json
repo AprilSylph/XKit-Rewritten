@@ -20,7 +20,7 @@
   "browser_action": {
     "browser_style": true,
     "default_title": "XKit",
-    "default_popup": "src/browser/action.html",
+    "default_popup": "src/browser_action/popup.html",
     "default_icon": {
       "16": "img/icon/16.png",
       "32": "img/icon/32.png",

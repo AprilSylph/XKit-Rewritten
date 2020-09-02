@@ -12,7 +12,7 @@
     .forEach(h1 => h1.parentNode.classList.add('xkit-tweaks-recblogs-hidden'));
   };
 
-  const run = async function() {
+  const main = async function() {
     const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
     const { translate } = await fakeImport('/src/util/language_data.js');
     const { addStyle } = await fakeImport('/src/util/misc.js');
@@ -23,7 +23,7 @@
     addStyle(css);
   };
 
-  const destroy = async function() {
+  const clean = async function() {
     const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
     const { removeStyle } = await fakeImport('/src/util/misc.js');
 
@@ -33,5 +33,5 @@
     $('.xkit-tweaks-recblogs-hidden').removeClass('xkit-tweaks-recblogs-hidden');
   };
 
-  return { run, destroy };
+  return { main, clean };
 })();

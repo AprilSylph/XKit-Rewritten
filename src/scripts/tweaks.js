@@ -2,12 +2,12 @@
   let enabledTweaks;
 
   const runTweak = async function(name) {
-    const { run } = await fakeImport(`/src/scripts/tweaks/${name}.js`);
+    const { main: run } = await fakeImport(`/src/scripts/tweaks/${name}.js`);
     run().catch(console.error);
   };
 
   const destroyTweak = async function(name) {
-    const { destroy } = await fakeImport(`/src/scripts/tweaks/${name}.js`);
+    const { clean: destroy } = await fakeImport(`/src/scripts/tweaks/${name}.js`);
     destroy().catch(console.error);
   };
 

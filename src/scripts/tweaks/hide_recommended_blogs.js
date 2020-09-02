@@ -4,9 +4,9 @@
   const css = '.xkit-tweaks-recblogs-hidden { display: none; }';
 
   const checkForRecommendedBlogs = function() {
-    [...document.querySelectorAll('aside > div > h1:not(.xkit-tweaks-recblogs-processed)')]
+    [...document.querySelectorAll('aside > div > h1:not(.xkit-tweaks-recblogs-done)')]
     .filter(h1 => {
-      h1.classList.add('xkit-tweaks-recblogs-processed');
+      h1.classList.add('xkit-tweaks-recblogs-done');
       return h1.textContent === recommendedBlogsLabel;
     })
     .forEach(h1 => h1.parentNode.classList.add('xkit-tweaks-recblogs-hidden'));
@@ -29,7 +29,7 @@
 
     onBaseContainerMutated.removeListener(checkForRecommendedBlogs);
     removeStyle(css);
-    $('.xkit-tweaks-recblogs-processed').removeClass('xkit-tweaks-recblogs-processed');
+    $('.xkit-tweaks-recblogs-done').removeClass('xkit-tweaks-recblogs-done');
     $('.xkit-tweaks-recblogs-hidden').removeClass('xkit-tweaks-recblogs-hidden');
   };
 

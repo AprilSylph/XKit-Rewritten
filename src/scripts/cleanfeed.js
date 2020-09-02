@@ -5,9 +5,9 @@
   const processPosts = async function() {
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
 
-    [...document.querySelectorAll('[data-id]:not(.xkit-cleanfeed-processed)')]
+    [...document.querySelectorAll('[data-id]:not(.xkit-cleanfeed-done)')]
     .forEach(async postElement => {
-      postElement.classList.add('xkit-cleanfeed-processed');
+      postElement.classList.add('xkit-cleanfeed-done');
 
       if (blockingMode === 'all') {
         postElement.classList.add('xkit-cleanfeed-hidden');
@@ -40,7 +40,7 @@
   };
 
   const unProcessPosts = function() {
-    $('.xkit-cleanfeed-processed').removeClass('xkit-cleanfeed-processed');
+    $('.xkit-cleanfeed-done').removeClass('xkit-cleanfeed-done');
     $('.xkit-cleanfeed-hidden').removeClass('xkit-cleanfeed-hidden');
   };
 

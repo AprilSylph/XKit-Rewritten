@@ -4,9 +4,9 @@
   const css = '.xkit-tweaks-radar-hidden { display: none; }';
 
   const checkForRadar = function() {
-    [...document.querySelectorAll('aside > div > h1:not(.xkit-tweaks-radar-processed)')]
+    [...document.querySelectorAll('aside > div > h1:not(.xkit-tweaks-radar-done)')]
     .filter(h1 => {
-      h1.classList.add('xkit-tweaks-radar-processed');
+      h1.classList.add('xkit-tweaks-radar-done');
       return h1.textContent === radarLabel;
     })
     .forEach(h1 => h1.parentNode.classList.add('xkit-tweaks-radar-hidden'));
@@ -29,7 +29,7 @@
 
     onBaseContainerMutated.removeListener(checkForRadar);
     removeStyle(css);
-    $('.xkit-tweaks-radar-processed').removeClass('xkit-tweaks-radar-processed');
+    $('.xkit-tweaks-radar-done').removeClass('xkit-tweaks-radar-done');
     $('.xkit-tweaks-radar-hidden').removeClass('xkit-tweaks-radar-hidden');
   };
 

@@ -2,9 +2,9 @@
   let audioBlockSelector;
 
   const process = function() {
-    [...document.querySelectorAll('audio > source[src]:not(.audio-downloader-done)')]
+    [...document.querySelectorAll('audio > source[src]:not(.xkit-audio-downloader-done)')]
     .forEach(source => {
-      source.classList.add('audio-downloader-done');
+      source.classList.add('xkit-audio-downloader-done');
       const {src} = source;
 
       const div = document.createElement('div');
@@ -50,7 +50,7 @@
   const clean = async function() {
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     onNewPosts.removeListener(process);
-    $('.audio-downloader-done').removeClass('audio-downloader-done');
+    $('.xkit-audio-downloader-done').removeClass('xkit-audio-downloader-done');
     $('.audio-downloader').remove();
   };
 

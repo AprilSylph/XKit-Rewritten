@@ -1,5 +1,5 @@
 (function() {
-  let showSearchesSetting;
+  let showSearches;
 
   const removeRecommended = async function() {
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
@@ -18,7 +18,7 @@
       const isSearch = loggingReason.startsWith('search:');
       const isPinned = loggingReason.startsWith('pin:');
 
-      if (isSearch && showSearchesSetting === true) {
+      if (isSearch && showSearches === true) {
         return;
       }
 
@@ -42,8 +42,7 @@
   const main = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
     const {'no_recommended.preferences': preferences = {}} = await browser.storage.local.get('no_recommended.preferences');
-    const {show_searches = false} = preferences;
-    showSearchesSetting = show_searches;
+    ({showSearches = false} = preferences);
 
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     onNewPosts.addListener(removeRecommended);

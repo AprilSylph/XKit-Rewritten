@@ -114,7 +114,9 @@ rules:
     - warn
     - 1tbs
     - allowSingleLine: true
-  camelcase: off
+  camelcase:
+    - warn
+    - properties: never
   capitalized-comments: warn
   comma-dangle:
     - warn

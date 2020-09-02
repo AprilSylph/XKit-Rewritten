@@ -74,6 +74,8 @@ The background colour of the script icon. Defaults to pure white (`#ffffff`) if 
 
 Object with 1 or more custom keys; each key is used internally as a preference's name.
 
+It is recommended to use camelCase for each preference name, so that the script can destructure each preference without renaming it.
+
 #### `"preferences"`: \<preference name\>
 - Type: Object
 

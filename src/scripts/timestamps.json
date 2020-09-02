@@ -7,12 +7,12 @@
     "background_color": "#d2196d"
   },
   "preferences": {
-    "always_show_year": {
+    "alwaysShowYear": {
       "type": "checkbox",
       "label": "Show the year on current-year datestamps",
       "default": false
     },
-    "reblog_timestamps": {
+    "reblogTimestamps": {
       "type": "select",
       "label": "Reblog Timestamps",
       "options": {

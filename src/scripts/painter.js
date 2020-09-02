@@ -11,8 +11,7 @@
     .forEach(async postElement => {
       postElement.classList.add('xkit-painter-painted');
 
-      const post_id = postElement.dataset.id;
-      const {canDelete, liked, rebloggedFromId} = await timelineObject(post_id);
+      const {canDelete, liked, rebloggedFromId} = await timelineObject(postElement.dataset.id);
 
       const coloursToApply = [];
       if (canDelete && ownColour) {

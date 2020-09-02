@@ -2,11 +2,11 @@
   let nonce;
 
   /**
-   * @param {Function} async_func - Asynchronous function to run in the page context
-   * @param {Object[]} args - Arguments to pass to the function (via spread)
+   * @param {Function} asyncFunc - Asynchronous function to run in the page context
+   * @param {Object[]} args - Array of arguments to pass to the function via spread
    * @return {Promise} - A promise which resolves to the return value of the async function, or rejects with the caught exception
    */
-  const inject = (async_func, args = []) => new Promise((resolve, reject) => {
+  const inject = (asyncFunc, args = []) => new Promise((resolve, reject) => {
     if (!nonce) {
       const scriptWithNonce = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
       nonce = scriptWithNonce.nonce || scriptWithNonce.getAttribute('nonce');
@@ -32,7 +32,7 @@
 
     script.setAttribute('nonce', nonce);
     script.textContent = `{
-      (${async_func.toString()})(...${JSON.stringify(args)})
+      (${asyncFunc.toString()})(...${JSON.stringify(args)})
       .then(result => window.postMessage({
         xkitCallbackNonce: ${callbackNonce},
         result: JSON.stringify(result),

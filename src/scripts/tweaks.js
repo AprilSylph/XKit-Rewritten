@@ -1,12 +1,12 @@
 (function() {
   let enabledTweaks;
 
-  const run_tweak = async function(name) {
+  const runTweak = async function(name) {
     const { run } = await fakeImport(`/src/scripts/tweaks/${name}.js`);
     run().catch(console.error);
   };
 
-  const destroy_tweak = async function(name) {
+  const destroyTweak = async function(name) {
     const { destroy } = await fakeImport(`/src/scripts/tweaks/${name}.js`);
     destroy().catch(console.error);
   };
@@ -26,19 +26,19 @@
     const newlyEnabled = newTweaks.filter(x => oldTweaks.includes(x) === false);
     const newlyDisabled = oldTweaks.filter(x => newTweaks.includes(x) === false);
 
-    newlyEnabled.forEach(run_tweak);
-    newlyDisabled.forEach(destroy_tweak);
+    newlyEnabled.forEach(runTweak);
+    newlyDisabled.forEach(destroyTweak);
   };
 
   const main = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
     const {'tweaks.preferences': preferences = {}} = await browser.storage.local.get('tweaks.preferences');
     enabledTweaks = Object.keys(preferences).filter(key => preferences[key] === true);
-    enabledTweaks.forEach(run_tweak);
+    enabledTweaks.forEach(runTweak);
   };
 
   const clean = async function() {
-    enabledTweaks.forEach(destroy_tweak);
+    enabledTweaks.forEach(destroyTweak);
   };
 
   return { main, clean };

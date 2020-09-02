@@ -50,8 +50,7 @@
       return;
     }
 
-    const {newValue: {blocking_mode}} = preferences;
-    blockingMode = blocking_mode;
+    ({newValue: {blockingMode}} = preferences);
 
     unProcessPosts();
     processPosts();
@@ -64,8 +63,7 @@
     reblogSelector = await keyToCss('reblog');
 
     const {'cleanfeed.preferences': preferences = {}} = await browser.storage.local.get('cleanfeed.preferences');
-    const {blocking_mode = 'smart'} = preferences;
-    blockingMode = blocking_mode;
+    ({blockingMode = 'smart'} = preferences);
 
     onNewPosts.addListener(processPosts);
     processPosts();

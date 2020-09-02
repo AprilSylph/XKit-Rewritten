@@ -7,7 +7,7 @@
     "background_color": "#00cf35"
   },
   "preferences": {
-    "show_searches": {
+    "showSearches": {
       "type": "checkbox",
       "label": "Don't hide posts from followed tags",
       "default": false

@@ -7,7 +7,7 @@
     "background_color": "#ff567e"
   },
   "preferences": {
-    "blocking_mode": {
+    "blockingMode": {
       "label": "Hide media from",
       "type": "select",
       "options": {

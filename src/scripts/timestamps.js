@@ -1,8 +1,8 @@
 (function() {
   let noteCountSelector;
   let reblogHeaderSelector;
-  let reblogTimestampsSetting;
-  let alwaysShowYearSetting;
+  let reblogTimestamps;
+  let alwaysShowYear;
 
   const constructTimeString = function(unixTime) {
     const locale = document.documentElement.lang;
@@ -22,7 +22,7 @@
     return date.toLocaleDateString(locale, {
       day: 'numeric',
       month: 'short',
-      year: sameYear && !alwaysShowYearSetting ? undefined : 'numeric',
+      year: sameYear && !alwaysShowYear ? undefined : 'numeric',
     });
   };
 
@@ -33,8 +33,7 @@
     .forEach(async postElement => {
       postElement.classList.add('xkit-timestamps-done');
 
-      const post_id = postElement.dataset.id;
-      const {timestamp, postUrl} = await timelineObject(post_id);
+      const {timestamp, postUrl} = await timelineObject(postElement.dataset.id);
 
       const noteCountElement = postElement.querySelector(noteCountSelector);
 
@@ -61,12 +60,11 @@
     .forEach(async postElement => {
       postElement.classList.add('xkit-reblog-timestamps-done');
 
-      const post_id = postElement.dataset.id;
-      let {trail} = await timelineObject(post_id);
+      let {trail} = await timelineObject(postElement.dataset.id);
 
       const reblogHeaders = postElement.querySelectorAll(reblogHeaderSelector);
 
-      if (reblogTimestampsSetting === 'op') {
+      if (reblogTimestamps === 'op') {
         trail = [trail[0]];
       }
 
@@ -104,13 +102,17 @@
       return;
     }
 
-    const {newValue: {always_show_year, reblog_timestamps}} = preferences;
+    const oldAlwaysShowYear = alwaysShowYear;
+
+    const {newValue} = preferences;
+    ({alwaysShowYear = alwaysShowYear} = newValue);
+    ({reblogTimestamps = reblogTimestamps} = newValue);
+
+    const alwaysShowYearChanged = alwaysShowYear !== oldAlwaysShowYear;
 
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
 
-    if (always_show_year !== alwaysShowYearSetting) {
-      alwaysShowYearSetting = always_show_year;
-
+    if (alwaysShowYearChanged) {
       onNewPosts.removeListener(addPostTimestamps);
       removePostTimestamps();
 
@@ -118,12 +120,10 @@
       addPostTimestamps();
     }
 
-    reblogTimestampsSetting = reblog_timestamps;
-
     onNewPosts.removeListener(addReblogTimestamps);
     removeReblogTimestamps();
 
-    if (reblog_timestamps !== 'none') {
+    if (reblogTimestamps !== 'none') {
       onNewPosts.addListener(addReblogTimestamps);
       addReblogTimestamps();
     }
@@ -140,13 +140,10 @@
     addPostTimestamps();
 
     const {'timestamps.preferences': preferences = {}} = await browser.storage.local.get('timestamps.preferences');
-    const {always_show_year = false} = preferences;
-    const {reblog_timestamps = 'op'} = preferences;
+    ({alwaysShowYear = false} = preferences);
+    ({reblogTimestamps = 'op'} = preferences);
 
-    alwaysShowYearSetting = always_show_year;
-
-    if (reblog_timestamps !== 'none') {
-      reblogTimestampsSetting = reblog_timestamps;
+    if (reblogTimestamps !== 'none') {
       onNewPosts.addListener(addReblogTimestamps);
       addReblogTimestamps();
     }

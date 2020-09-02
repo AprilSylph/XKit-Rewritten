@@ -6,7 +6,7 @@
   const isReactLoaded = () => document.querySelector('[data-rh]') === null;
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-  const run_script = async function(name) {
+  const runScript = async function(name) {
     const { main, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
 
     main()
@@ -21,7 +21,7 @@
     }
   };
 
-  const destroy_script = async function(name) {
+  const destroyScript = async function(name) {
     const { clean, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
 
     clean()
@@ -48,8 +48,8 @@
       const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
       const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
 
-      newlyEnabled.forEach(run_script);
-      newlyDisabled.forEach(destroy_script);
+      newlyEnabled.forEach(runScript);
+      newlyDisabled.forEach(destroyScript);
     }
   };
 
@@ -58,7 +58,7 @@
 
     const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
 
-    enabledScripts.forEach(run_script);
+    enabledScripts.forEach(runScript);
   };
 
   const waitForReactLoaded = async function() {

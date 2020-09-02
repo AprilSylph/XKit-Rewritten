@@ -20,17 +20,17 @@
         fetch(src)
         .then(response => response.blob())
         .then(blob => {
-          const blob_url = window.URL.createObjectURL(blob);
-          const download_link = Object.assign(document.createElement('a'), {
+          const blobURL = window.URL.createObjectURL(blob);
+          const downloadLink = Object.assign(document.createElement('a'), {
             style: { display: 'none' },
-            href: blob_url,
+            href: blobURL,
             download: filename,
           });
 
-          document.body.appendChild(download_link);
-          download_link.click();
-          download_link.parentNode.removeChild(download_link);
-          window.URL.revokeObjectURL(blob_url);
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          downloadLink.parentNode.removeChild(downloadLink);
+          window.URL.revokeObjectURL(blobURL);
         });
       };
 

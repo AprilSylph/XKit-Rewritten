@@ -1,0 +1,16 @@
+{
+  "title": "Mutual Checker",
+  "description": "See who follows you back",
+  "icon": {
+    "class_name": "ri-contacts-line",
+    "color": "white",
+    "background_color": "#777777"
+  },
+  "preferences": {
+    "iconAfter": {
+      "type": "checkbox",
+      "label": "Place mutual icons after usernames",
+      "default": false
+    }
+  }
+}

@@ -4,7 +4,7 @@
   const removeRecommended = async function() {
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
 
-    [...document.querySelectorAll('[data-id]:not(.xkit-no-recommended-done)')]
+    [...document.querySelectorAll('#base-container [data-id]:not(.xkit-no-recommended-done)')]
     .forEach(async postElement => {
       postElement.classList.add('xkit-no-recommended-done');
 

@@ -97,51 +97,64 @@
   };
 
   const onStorageChanged = async function(changes, areaName) {
-    const {'timestamps.preferences': preferences} = changes;
-    if (!preferences || areaName !== 'local') {
+    if (areaName !== 'local') {
       return;
     }
 
-    const oldAlwaysShowYear = alwaysShowYear;
+    const {
+      'timestamps.preferences.alwaysShowYear': alwaysShowYearChanges,
+      'timestamps.preferences.reblogTimestamps': reblogTimestampsChanges,
+    } = changes;
 
-    const {newValue} = preferences;
-    ({alwaysShowYear = alwaysShowYear} = newValue);
-    ({reblogTimestamps = reblogTimestamps} = newValue);
-
-    const alwaysShowYearChanged = alwaysShowYear !== oldAlwaysShowYear;
+    if (!alwaysShowYearChanges && !reblogTimestampsChanges) {
+      return;
+    }
 
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
 
-    if (alwaysShowYearChanged) {
+    if (alwaysShowYearChanges) {
+      ({newValue: alwaysShowYear} = alwaysShowYearChanges);
+
       onNewPosts.removeListener(addPostTimestamps);
+      onNewPosts.removeListener(addReblogTimestamps);
       removePostTimestamps();
+      removeReblogTimestamps();
 
       onNewPosts.addListener(addPostTimestamps);
       addPostTimestamps();
+
+      if (reblogTimestamps !== 'none') {
+        onNewPosts.addListener(addReblogTimestamps);
+        addReblogTimestamps();
+      }
     }
 
-    onNewPosts.removeListener(addReblogTimestamps);
-    removeReblogTimestamps();
+    if (reblogTimestampsChanges) {
+      ({newValue: reblogTimestamps} = reblogTimestampsChanges);
 
-    if (reblogTimestamps !== 'none') {
-      onNewPosts.addListener(addReblogTimestamps);
-      addReblogTimestamps();
+      onNewPosts.removeListener(addReblogTimestamps);
+      removeReblogTimestamps();
+
+      if (reblogTimestamps !== 'none') {
+        onNewPosts.addListener(addReblogTimestamps);
+        addReblogTimestamps();
+      }
     }
   };
 
   const main = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
+    const { getPreferences } = await fakeImport('/src/util/preferences.js');
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     const { keyToCss } = await fakeImport('/src/util/css_map.js');
+
+    ({alwaysShowYear, reblogTimestamps} = await getPreferences('timestamps'));
+
     noteCountSelector = await keyToCss('noteCount');
     reblogHeaderSelector = await keyToCss('reblogHeader');
 
     onNewPosts.addListener(addPostTimestamps);
     addPostTimestamps();
-
-    const {'timestamps.preferences': preferences = {}} = await browser.storage.local.get('timestamps.preferences');
-    ({alwaysShowYear = false} = preferences);
-    ({reblogTimestamps = 'op'} = preferences);
 
     if (reblogTimestamps !== 'none') {
       onNewPosts.addListener(addReblogTimestamps);

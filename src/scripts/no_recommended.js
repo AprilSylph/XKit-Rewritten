@@ -30,21 +30,36 @@
     });
   };
 
+  const showRecommended = function() {
+    $('.xkit-no-recommended-hidden, .xkit-no-recommended-done')
+    .removeClass('xkit-no-recommended-hidden')
+    .removeClass('xkit-no-recommended-done');
+  };
+
   const onStorageChanged = function(changes, areaName) {
-    const {'no_recommended.preferences': preferences} = changes;
-    if (!preferences || areaName !== 'local') {
+    if (areaName !== 'local') {
       return;
     }
 
-    clean().then(main); // eslint-disable-line no-use-before-define
+    const {
+      'no_recommended.preferences.showSearches': showSearchesChanges,
+    } = changes;
+
+    if (showSearchesChanges) {
+      ({newValue: showSearches} = showSearchesChanges);
+
+      showRecommended();
+      removeRecommended();
+    }
   };
 
   const main = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
-    const {'no_recommended.preferences': preferences = {}} = await browser.storage.local.get('no_recommended.preferences');
-    ({showSearches = false} = preferences);
-
+    const { getPreferences } = await fakeImport('/src/util/preferences.js');
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+
+    ({showSearches} = await getPreferences('no_recommended'));
+
     onNewPosts.addListener(removeRecommended);
     removeRecommended();
   };
@@ -53,10 +68,7 @@
     browser.storage.onChanged.removeListener(onStorageChanged);
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     onNewPosts.removeListener(removeRecommended);
-
-    $('.xkit-no-recommended-hidden, .xkit-no-recommended-done')
-    .removeClass('xkit-no-recommended-hidden')
-    .removeClass('xkit-no-recommended-done');
+    showRecommended();
   };
 
   const stylesheet = '/src/scripts/no_recommended.css';

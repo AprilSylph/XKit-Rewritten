@@ -1,5 +1,23 @@
 (function() {
   /**
+   * @param {Object} options
+   * @param {String} options.excludeClass - Classname to exclude and add
+   * @param {Boolean} options.noPeepr - Whether to only return posts in #base-container (optional)
+   * @return {Array} - Array of post elements matching the query options
+   */
+  const getPostElements = function({excludeClass, noPeepr = false}) {
+    if (!excludeClass) {
+      return [];
+    }
+
+    const selector = `${noPeepr ? '#base-container' : ''} [data-id]:not(.${excludeClass})`;
+    const postElements = [...document.querySelectorAll(selector)];
+    postElements.forEach(postElement => postElement.classList.add(excludeClass));
+
+    return postElements;
+  };
+
+  /**
    * @param {String} css - CSS rules to be applied to the page
    */
   const addStyle = css => {
@@ -19,5 +37,5 @@
     .forEach(style => style.parentNode.removeChild(style));
   };
 
-  return { addStyle, removeStyle };
+  return { getPostElements, addStyle, removeStyle };
 })();

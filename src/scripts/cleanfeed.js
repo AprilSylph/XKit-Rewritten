@@ -45,25 +45,31 @@
   };
 
   const onStorageChanged = function(changes, areaName) {
-    const {'cleanfeed.preferences': preferences} = changes;
-    if (!preferences || areaName !== 'local') {
+    if (areaName !== 'local') {
       return;
     }
 
-    ({newValue: {blockingMode}} = preferences);
+    const {
+      'cleanfeed.preferences.blockingMode': blockingModeChanges,
+    } = changes;
 
-    unProcessPosts();
-    processPosts();
+    if (blockingModeChanges) {
+      ({newValue: blockingMode} = blockingModeChanges);
+
+      unProcessPosts();
+      processPosts();
+    }
   };
 
   const main = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
+    const { getPreferences } = await fakeImport('/src/util/preferences.js');
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     const { keyToCss } = await fakeImport('/src/util/css_map.js');
+
     reblogSelector = await keyToCss('reblog');
 
-    const {'cleanfeed.preferences': preferences = {}} = await browser.storage.local.get('cleanfeed.preferences');
-    ({blockingMode = 'smart'} = preferences);
+    ({blockingMode} = await getPreferences('cleanfeed'));
 
     onNewPosts.addListener(processPosts);
     processPosts();

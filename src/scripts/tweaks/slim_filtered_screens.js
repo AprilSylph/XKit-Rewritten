@@ -35,7 +35,7 @@
 
   const main = async function() {
     const { keyToClasses } = await fakeImport('/src/util/css_map.js');
-    const { addStyle } = await fakeImport('/src/util/misc.js');
+    const { addStyle } = await fakeImport('/src/util/interface.js');
 
     const [filteredScreen] = await keyToClasses('filteredScreen');
     css = cssTemplate(filteredScreen);
@@ -43,7 +43,7 @@
   };
 
   const clean = async function() {
-    const { removeStyle } = await fakeImport('/src/util/misc.js');
+    const { removeStyle } = await fakeImport('/src/util/interface.js');
     removeStyle(css);
   };
 

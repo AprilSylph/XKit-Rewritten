@@ -15,6 +15,7 @@
   ],
   "author": "April Sylph <april@sylph.tech> (https://april.tumblr.com/)",
   "license": "GPL-3.0",
+  "private": true,
   "bugs": {
     "url": "https://github.com/AprilSylph/XKit-Rewritten/issues"
   },

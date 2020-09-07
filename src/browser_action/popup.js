@@ -25,25 +25,20 @@ const writeEnabled = async function(event) {
 };
 
 const writePreference = async function(event) {
-  const {id, tagName, type} = event.target;
-  const [scriptName, preferenceName] = id.split('.');
-  const storageKey = `${scriptName}.preferences`;
-  const {[storageKey]: savedPreferences = {}} = await browser.storage.local.get(storageKey);
+  const {id} = event.target;
+  const [scriptName, preferenceType, preferenceName] = id.split('.');
+  const storageKey = `${scriptName}.preferences.${preferenceName}`;
 
-  if (tagName === 'INPUT') {
-    switch (type) {
-      case 'checkbox':
-        savedPreferences[preferenceName] = event.target.checked;
-        break;
-      case 'text':
-        savedPreferences[preferenceName] = event.target.value;
-        break;
-    }
-  } else if (tagName === 'SELECT') {
-    savedPreferences[preferenceName] = event.target.value;
+  switch (preferenceType) {
+    case 'checkbox':
+      browser.storage.local.set({[storageKey]: event.target.checked});
+      break;
+    case 'text':
+    case 'color':
+    case 'select':
+      browser.storage.local.set({[storageKey]: event.target.value});
+      break;
   }
-
-  browser.storage.local.set({[storageKey]: savedPreferences});
 };
 
 const renderScripts = async function() {
@@ -51,14 +46,14 @@ const renderScripts = async function() {
   const installedScripts = await getInstalledScripts();
   const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
 
-  for (const name of installedScripts) {
-    const url = getURL(`/src/scripts/${name}.json`);
+  for (const scriptName of installedScripts) {
+    const url = getURL(`/src/scripts/${scriptName}.json`);
     const file = await fetch(url);
-    const {title = name, description = '', icon = {}, preferences = {}} = await file.json();
+    const {title = scriptName, description = '', icon = {}, preferences = {}} = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 
-    if (enabledScripts.includes(name) === false) {
+    if (enabledScripts.includes(scriptName) === false) {
       const detailsElement = scriptTemplateClone.querySelector('details.script');
       detailsElement.classList.add('disabled');
     }
@@ -83,20 +78,20 @@ const renderScripts = async function() {
     const unorderedList = scriptTemplateClone.querySelector('ul');
 
     const enabledInput = scriptTemplateClone.querySelector('input.toggle-button');
-    enabledInput.id = name;
-    enabledInput.checked = enabledScripts.includes(name);
+    enabledInput.id = scriptName;
+    enabledInput.checked = enabledScripts.includes(scriptName);
     enabledInput.addEventListener('input', writeEnabled);
 
-    const storageKey = `${name}.preferences`;
-    const {[storageKey]: savedPreferences = {}} = await browser.storage.local.get(storageKey);
-
     for (const [key, preference] of Object.entries(preferences)) {
-      const savedPreference = savedPreferences[key] === undefined ? preference.default : savedPreferences[key];
+      const storageKey = `${scriptName}.preferences.${key}`;
+      const {[storageKey]: savedPreference} = await browser.storage.local.get(storageKey);
+      preference.value = savedPreference === undefined ? preference.default : savedPreference;
+
       const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
 
       const preferenceLabel = preferenceTemplateClone.querySelector('label');
       preferenceLabel.textContent = preference.label;
-      preferenceLabel.setAttribute('for', `${name}.${key}`);
+      preferenceLabel.setAttribute('for', `${scriptName}.${preference.type}.${key}`);
 
       const inputType = {
         checkbox: 'input',
@@ -106,23 +101,23 @@ const renderScripts = async function() {
       }[preference.type];
 
       const preferenceInput = preferenceTemplateClone.querySelector(inputType);
-      preferenceInput.id = `${name}.${key}`;
+      preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
       preferenceInput.addEventListener('input', writePreference);
 
       switch (preference.type) {
         case 'checkbox':
-          preferenceInput.checked = savedPreference;
+          preferenceInput.checked = preference.value;
           break;
         case 'text':
         case 'color':
-          preferenceInput.value = savedPreference;
+          preferenceInput.value = preference.value;
           break;
         case 'select':
           for (const [value, text] of Object.entries(preference.options)) {
             const option = document.createElement('option');
             option.value = value;
             option.textContent = text;
-            option.selected = value === savedPreference;
+            option.selected = value === preference.value;
             preferenceInput.appendChild(option);
           }
           break;

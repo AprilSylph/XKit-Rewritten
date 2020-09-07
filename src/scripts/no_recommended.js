@@ -1,13 +1,13 @@
 (function() {
   let showSearches;
 
+  const excludeClass = 'xkit-no-recommended-done';
+
   const removeRecommended = async function() {
+    const { getPostElements } = await fakeImport('/src/util/interface.js');
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
 
-    [...document.querySelectorAll('#base-container [data-id]:not(.xkit-no-recommended-done)')]
-    .forEach(async postElement => {
-      postElement.classList.add('xkit-no-recommended-done');
-
+    getPostElements({excludeClass, noPeepr: true}).forEach(async postElement => {
       const {recommendationReason} = await timelineObject(postElement.dataset.id);
 
       if (!recommendationReason || !Object.keys(recommendationReason).includes('loggingReason')) {
@@ -31,9 +31,8 @@
   };
 
   const showRecommended = function() {
-    $('.xkit-no-recommended-hidden, .xkit-no-recommended-done')
-    .removeClass('xkit-no-recommended-hidden')
-    .removeClass('xkit-no-recommended-done');
+    $(`.${excludeClass}`).removeClass(excludeClass);
+    $('.xkit-no-recommended-hidden').removeClass('xkit-no-recommended-hidden');
   };
 
   const onStorageChanged = function(changes, areaName) {

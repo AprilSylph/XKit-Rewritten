@@ -27,12 +27,10 @@
   };
 
   const addPostTimestamps = async function() {
+    const { getPostElements } = await fakeImport('/src/util/interface.js');
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
 
-    [...document.querySelectorAll('[data-id]:not(.xkit-timestamps-done)')]
-    .forEach(async postElement => {
-      postElement.classList.add('xkit-timestamps-done');
-
+    getPostElements({excludeClass: 'xkit-timestamps-done'}).forEach(async postElement => {
       const {timestamp, postUrl} = await timelineObject(postElement.dataset.id);
 
       const noteCountElement = postElement.querySelector(noteCountSelector);
@@ -53,13 +51,11 @@
   };
 
   const addReblogTimestamps = async function() {
+    const { getPostElements } = await fakeImport('/src/util/interface.js');
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
     const { apiFetch } = await fakeImport('/src/util/tumblr_helpers.js');
 
-    [...document.querySelectorAll('[data-id]:not(.xkit-reblog-timestamps-done)')]
-    .forEach(async postElement => {
-      postElement.classList.add('xkit-reblog-timestamps-done');
-
+    getPostElements({excludeClass: 'xkit-reblog-timestamps-done'}).forEach(async postElement => {
       let {trail} = await timelineObject(postElement.dataset.id);
 
       const reblogHeaders = postElement.querySelectorAll(reblogHeaderSelector);

@@ -4,13 +4,13 @@
   let reblogColour;
   let likedColour;
 
+  const excludeClass = 'xkit-painter-done';
+
   const paint = async function() {
+    const { getPostElements } = await fakeImport('/src/util/interface.js');
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
 
-    [...document.querySelectorAll('[data-id]:not(.xkit-painter-done)')]
-    .forEach(async postElement => {
-      postElement.classList.add('xkit-painter-done');
-
+    getPostElements({excludeClass}).forEach(async postElement => {
       const {canDelete, liked, rebloggedFromId} = await timelineObject(postElement.dataset.id);
 
       const coloursToApply = [];
@@ -47,11 +47,11 @@
   };
 
   const strip = function() {
-    $('.xkit-painter-done article')
+    $(`.${excludeClass} article`)
     .css('border-top', '')
     .css('border-image-source', '')
     .css('border-image-slice', '');
-    $('.xkit-painter-done').removeClass('xkit-painter-done');
+    $(`.${excludeClass}`).removeClass(excludeClass);
   };
 
   const onStorageChanged = async function(changes, areaName) {

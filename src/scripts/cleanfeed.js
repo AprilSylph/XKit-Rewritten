@@ -2,13 +2,13 @@
   let blockingMode;
   let reblogSelector;
 
+  const excludeClass = 'xkit-cleanfeed-done';
+
   const processPosts = async function() {
+    const { getPostElements } = await fakeImport('/src/util/interface.js');
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
 
-    [...document.querySelectorAll('[data-id]:not(.xkit-cleanfeed-done)')]
-    .forEach(async postElement => {
-      postElement.classList.add('xkit-cleanfeed-done');
-
+    getPostElements({excludeClass}).forEach(async postElement => {
       if (blockingMode === 'all') {
         postElement.classList.add('xkit-cleanfeed-hidden');
         return;
@@ -40,7 +40,7 @@
   };
 
   const unProcessPosts = function() {
-    $('.xkit-cleanfeed-done').removeClass('xkit-cleanfeed-done');
+    $(`.${excludeClass}`).removeClass(excludeClass);
     $('.xkit-cleanfeed-hidden').removeClass('xkit-cleanfeed-hidden');
   };
 

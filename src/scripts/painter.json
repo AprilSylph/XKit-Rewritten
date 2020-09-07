@@ -7,22 +7,22 @@
     "background_color": "#4bb51b"
   },
   "preferences": {
-    "own": {
+    "ownColour": {
       "type": "color",
       "label": "Own post colour",
       "default": ""
     },
-    "original": {
+    "originalColour": {
       "type": "color",
       "label": "Original post colour",
       "default": ""
     },
-    "reblog": {
+    "reblogColour": {
       "type": "color",
       "label": "Reblogged post colour",
       "default": ""
     },
-    "liked": {
+    "likedColour": {
       "type": "color",
       "label": "Liked post colour",
       "default": ""

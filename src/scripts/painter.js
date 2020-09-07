@@ -54,40 +54,34 @@
     $('.xkit-painter-done').removeClass('xkit-painter-done');
   };
 
-  const fallback = function(value, fallbackValue) {
-    return typeof value === undefined ? fallbackValue : value;
-  };
-
-  const onStorageChanged = function(changes, areaName) {
-    const {'painter.preferences': preferences} = changes;
-    if (!preferences || areaName !== 'local') {
+  const onStorageChanged = async function(changes, areaName) {
+    if (areaName !== 'local') {
       return;
     }
 
-    const {newValue} = preferences;
-    ownColour = fallback(newValue.own, ownColour);
-    originalColour = fallback(newValue.original, originalColour);
-    reblogColour = fallback(newValue.reblog, reblogColour);
-    likedColour = fallback(newValue.liked, likedColour);
+    if (Object.keys(changes).some(key => key.startsWith('painter'))) {
+      const { getPreferences } = await fakeImport('/src/util/preferences.js');
 
-    strip();
-    paint();
+      ({ownColour, originalColour, reblogColour, likedColour} = await getPreferences('painter'));
+
+      strip();
+      paint();
+    }
   };
 
   const main = async function() {
     browser.storage.onChanged.addListener(onStorageChanged);
-    const {'painter.preferences': preferences = {}} = await browser.storage.local.get('painter.preferences');
-    ownColour = preferences.own;
-    originalColour = preferences.original;
-    reblogColour = preferences.reblog;
-    likedColour = preferences.liked;
-
+    const { getPreferences } = await fakeImport('/src/util/preferences.js');
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+
+    ({ownColour, originalColour, reblogColour, likedColour} = await getPreferences('painter'));
+
     onNewPosts.addListener(paint);
     paint();
   };
 
   const clean = async function() {
+    browser.storage.onChanged.removeListener(onStorageChanged);
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     onNewPosts.removeListener(paint);
     strip();

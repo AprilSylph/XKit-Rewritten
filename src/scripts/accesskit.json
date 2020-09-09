@@ -1,0 +1,21 @@
+{
+  "title": "AccessKit",
+  "description": "Accessibility options for Tumblr",
+  "icon": {
+    "class_name": "ri-open-arm-line",
+    "color": "white",
+    "background_color": "#df46f6"
+  },
+  "preferences": {
+    "blueLinks": {
+      "type": "checkbox",
+      "label": "Make links in posts blue",
+      "default": false
+    },
+    "noUserColours": {
+      "type": "checkbox",
+      "label": "Remove user-set colours from text in posts",
+      "default": true
+    }
+  }
+}

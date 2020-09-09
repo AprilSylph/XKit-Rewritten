@@ -1,0 +1,16 @@
+{
+  "title": "Classic Search",
+  "description": "Go to tagged pages easily",
+  "icon": {
+    "class_name": "ri-price-tag-3-line",
+    "color": "white",
+    "background_color": "#f7650d"
+  },
+  "preferences": {
+    "newTab": {
+      "type": "checkbox",
+      "label": "Open tagged pages in a new tab",
+      "default": false
+    }
+  }
+}

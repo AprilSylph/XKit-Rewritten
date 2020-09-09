@@ -70,7 +70,5 @@
     showRecommended();
   };
 
-  const stylesheet = '/src/scripts/no_recommended.css';
-
-  return { main, clean, stylesheet };
+  return { main, clean, stylesheet: true };
 })();

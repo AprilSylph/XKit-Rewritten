@@ -15,7 +15,7 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: getURL(stylesheet),
+        href: getURL(`/src/scripts/${name}.css`),
       });
       document.documentElement.appendChild(link);
     }
@@ -28,7 +28,7 @@
     .catch(console.error);
 
     if (stylesheet) {
-      const link = document.querySelector(`link[href="${getURL(stylesheet)}"]`);
+      const link = document.querySelector(`link[href="${getURL(`/src/scripts/${name}.css`)}"]`);
       if (link !== null) {
         link.parentNode.removeChild(link);
       }

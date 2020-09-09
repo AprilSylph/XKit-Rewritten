@@ -82,7 +82,5 @@
     unProcessPosts();
   };
 
-  const stylesheet = '/src/scripts/cleanfeed.css';
-
-  return { main, clean, stylesheet };
+  return { main, clean, stylesheet: true };
 })();

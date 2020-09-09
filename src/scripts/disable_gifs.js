@@ -49,7 +49,5 @@
     $('.xkit-disable-gifs-done').removeClass('xkit-disable-gifs-done');
   };
 
-  const stylesheet = '/src/scripts/disable_gifs.css';
-
-  return { main, clean, stylesheet };
+  return { main, clean, stylesheet: true };
 })();

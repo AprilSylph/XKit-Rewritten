@@ -54,7 +54,5 @@
     $('.audio-downloader').remove();
   };
 
-  const stylesheet = '/src/scripts/audio_downloader.css';
-
-  return { main, clean, stylesheet };
+  return { main, clean, stylesheet: true };
 })();

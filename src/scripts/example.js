@@ -15,7 +15,5 @@
     // Nothing to undo here.
   };
 
-  const stylesheet = '/src/scripts/example.css';
-
-  return { main, clean, stylesheet };
+  return { main, clean, stylesheet: true };
 })();

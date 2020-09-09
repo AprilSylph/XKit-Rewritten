@@ -167,7 +167,5 @@
     removeReblogTimestamps();
   };
 
-  const stylesheet = '/src/scripts/timestamps.css';
-
-  return { main, clean, stylesheet };
+  return { main, clean, stylesheet: true };
 })();

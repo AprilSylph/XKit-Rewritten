@@ -1,0 +1,86 @@
+.one-click-postage-popup {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: 100%;
+  transform: translate(-20px, -50%);
+  box-shadow: 0 0 15px 0 rgba(0,0,0,.5);
+  border: 1px solid var(--gray-13);
+  border-radius: 3px;
+  overflow: hidden;
+  color: var(--black);
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+}
+
+.one-click-postage-popup.working::before {
+  content: "Working...";
+  font-weight: bold;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  color: inherit;
+  background-color: rgba(var(--rgb-white), 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.one-click-postage-popup select {
+  border: none;
+  font-weight: bold;
+}
+
+.one-click-postage-popup input {
+  border-top: 1px solid var(--gray-13);
+  border-bottom: 1px solid var(--gray-13);
+  border-left: none;
+  border-right: none;
+}
+
+.one-click-postage-popup select,
+.one-click-postage-popup input {
+  border-radius: 0;
+  color: inherit;
+  background-color: inherit;
+  padding: 1ch;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.one-click-postage-popup .action-buttons {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--gray-13);
+}
+
+.one-click-postage-popup .action-buttons button {
+  flex-grow: 1;
+  font-weight: bold;
+  padding: 1ch;
+  background-color: var(--white);
+}
+
+.one-click-postage-popup .action-buttons button:hover {
+  background-color: var(--secondary-accent);
+}
+
+.one-click-postage-popup .action-buttons button + button {
+  margin-left: 1px;
+}
+
+.one-click-postage-popup button[data-state="published"] {
+  color: var(--blue);
+}
+
+.one-click-postage-popup button[data-state="queue"] {
+  color: var(--pink);
+}
+
+.one-click-postage-popup button[data-state="draft"] {
+  color: var(--orange);
+}

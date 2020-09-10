@@ -1,0 +1,9 @@
+{
+  "title": "One-Click Postage",
+  "description": "Reblog posts quickly",
+  "icon": {
+    "class_name": "ri-share-forward-2-fill",
+    "color": "white",
+    "background_color": "#acd53a"
+  }
+}

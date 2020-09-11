@@ -1,9 +1,9 @@
 .one-click-postage-popup {
   position: absolute;
   z-index: 2;
-  top: 50%;
-  right: 100%;
-  transform: translate(-20px, -50%);
+  top: 100%;
+  right: 50%;
+  transform: translate(50%, 12px);
   box-shadow: 0 0 15px 0 rgba(0,0,0,.5);
   border: 1px solid var(--gray-13);
   border-radius: 3px;

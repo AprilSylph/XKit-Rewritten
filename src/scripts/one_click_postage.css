@@ -34,19 +34,13 @@
 }
 
 .one-click-postage-popup select {
-  border: none;
   font-weight: bold;
-}
-
-.one-click-postage-popup input {
-  border-top: 1px solid var(--gray-13);
-  border-bottom: 1px solid var(--gray-13);
-  border-left: none;
-  border-right: none;
 }
 
 .one-click-postage-popup select,
 .one-click-postage-popup input {
+  border: none;
+  border-bottom: 1px solid var(--gray-13);
   border-radius: 0;
   color: inherit;
   background-color: inherit;

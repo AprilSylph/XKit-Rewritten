@@ -15,9 +15,10 @@
   max-width: 300px;
 }
 
-.one-click-postage-popup.working::before {
-  content: "Working...";
-  font-weight: bold;
+.one-click-postage-popup .message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 0;
   left: 0;
@@ -25,9 +26,11 @@
   width: 100%;
   color: inherit;
   background-color: rgba(var(--rgb-white), 0.9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-weight: bold;
+}
+
+.one-click-postage-popup .message:empty {
+  display: none;
 }
 
 .one-click-postage-popup select {
@@ -83,4 +86,16 @@
 
 .one-click-postage-popup button[data-state="draft"] {
   color: var(--orange);
+}
+
+.published svg[fill="var(--gray-65)"] {
+  fill: var(--green);
+}
+
+.queue svg[fill="var(--gray-65)"] {
+  fill: var(--purple);
+}
+
+.draft svg[fill="var(--gray-65)"] {
+  fill: var(--red);
 }

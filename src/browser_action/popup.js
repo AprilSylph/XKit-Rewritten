@@ -45,8 +45,9 @@ const renderScripts = async function() {
   const configSection = document.getElementById('configuration');
   const installedScripts = await getInstalledScripts();
   const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
+  const disabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName) === false);
 
-  for (const scriptName of installedScripts) {
+  for (const scriptName of [...enabledScripts, ...disabledScripts]) {
     const url = getURL(`/src/scripts/${scriptName}.json`);
     const file = await fetch(url);
     const {title = scriptName, description = '', icon = {}, preferences = {}} = await file.json();

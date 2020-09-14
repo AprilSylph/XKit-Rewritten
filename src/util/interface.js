@@ -62,7 +62,7 @@
     const [dropdownItemClass] = await keyToClasses('dropdownItem');
 
     onPostsMutated.addListener(() => {
-      const meatballMenu = document.querySelector(meatballMenuSelector);
+      const meatballMenu = document.querySelector(`[data-id] ${meatballMenuSelector}`);
 
       if (!meatballMenu || meatballMenu.classList.contains('xkit-done')) { return; }
       meatballMenu.classList.add('xkit-done');

@@ -1,8 +1,8 @@
-(function() {
+(function () {
   let popupElement;
   let lastPostID;
 
-  const showPopupOnHover = ({target}) => {
+  const showPopupOnHover = ({ target }) => {
     const messageDialog = popupElement.querySelector('.message');
     if (messageDialog.textContent === 'Working...') {
       return;
@@ -23,7 +23,7 @@
     lastPostID = thisPostID;
   };
 
-  const removePopupOnClick = ({target}) => {
+  const removePopupOnClick = ({ target }) => {
     if (popupElement.contains(target)) {
       return;
     }
@@ -35,12 +35,12 @@
     popupElement.parentNode.removeChild(popupElement);
   };
 
-  const makeButtonReblogged = ({buttonDiv, state}) => {
+  const makeButtonReblogged = ({ buttonDiv, state }) => {
     ['published', 'queue', 'draft'].forEach(className => buttonDiv.classList.remove(className));
     buttonDiv.classList.add(state);
   };
 
-  const reblogPost = async function(event) {
+  const reblogPost = async function (event) {
     const messageDialog = popupElement.querySelector('.message');
     messageDialog.textContent = 'Working...';
 
@@ -50,11 +50,11 @@
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
     const { apiFetch } = await fakeImport('/src/util/tumblr_helpers.js');
 
-    const {state} = event.target.dataset;
+    const { state } = event.target.dataset;
 
     const blog = popupElement.querySelector('#blog').value;
     const tags = popupElement.querySelector('#tags').value;
-    const {blog: {uuid: parentTumblelogUUID}, reblogKey} = await timelineObject(postID);
+    const { blog: { uuid: parentTumblelogUUID }, reblogKey } = await timelineObject(postID);
 
     const requestPath = `/v2/blog/${blog}/posts`;
 
@@ -68,9 +68,9 @@
     };
 
     try {
-      const {meta, response} = await apiFetch(requestPath, { method: 'POST', body: requestBody });
+      const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
       if (meta.status === 201) {
-        makeButtonReblogged({buttonDiv: popupElement.parentNode, state});
+        makeButtonReblogged({ buttonDiv: popupElement.parentNode, state });
         messageDialog.textContent = response.displayText;
         setTimeout(() => popupElement.parentNode.removeChild(popupElement), 2000);
       }
@@ -79,13 +79,13 @@
     }
   };
 
-  const main = async function() {
+  const main = async function () {
     const { fetchUserBlogs } = await fakeImport('/src/util/user_blogs.js');
 
     const blogSelector = document.createElement('select');
     blogSelector.id = 'blog';
     const userBlogs = await fetchUserBlogs();
-    for (const {name, uuid} of userBlogs) {
+    for (const { name, uuid } of userBlogs) {
       const option = document.createElement('option');
       option.value = uuid;
       option.textContent = name;
@@ -129,7 +129,7 @@
     document.body.addEventListener('click', removePopupOnClick);
   };
 
-  const clean = async function() {
+  const clean = async function () {
     $(document.body).off('mouseover', '[data-id] a[href^="https://www.tumblr.com/reblog/"]', showPopupOnHover);
     document.body.removeEventListener('click', removePopupOnClick);
     popupElement.parentNode.removeChild(popupElement);

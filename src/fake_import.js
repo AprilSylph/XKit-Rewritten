@@ -3,7 +3,7 @@
 /* eslint-disable no-new-func */
 {
   const modules = {};
-  fakeImport = async function(path) { // eslint-disable-line no-global-assign
+  fakeImport = async function (path) { // eslint-disable-line no-global-assign
     if (!Object.prototype.hasOwnProperty.call(modules, path)) {
       const url = browser.runtime.getURL(path);
       const file = await fetch(url);

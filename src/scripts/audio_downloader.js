@@ -1,18 +1,18 @@
-(function() {
+(function () {
   let audioBlockSelector;
 
-  const process = function() {
+  const process = function () {
     [...document.querySelectorAll('audio > source[src]:not(.xkit-audio-downloader-done)')]
     .forEach(source => {
       source.classList.add('xkit-audio-downloader-done');
-      const {src} = source;
+      const { src } = source;
 
       const div = document.createElement('div');
       div.className = 'audio-downloader';
 
       const downloadButton = document.createElement('button');
       downloadButton.textContent = '(Download)';
-      downloadButton.onclick = function(event) {
+      downloadButton.onclick = function (event) {
         event.stopPropagation();
 
         const filename = new URL(src).pathname.replace('/', '');
@@ -39,7 +39,7 @@
     });
   };
 
-  const main = async function() {
+  const main = async function () {
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     const { keyToCss } = await fakeImport('/src/util/css_map.js');
     audioBlockSelector = await keyToCss('audioBlock');
@@ -47,7 +47,7 @@
     process();
   };
 
-  const clean = async function() {
+  const clean = async function () {
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     onNewPosts.removeListener(process);
     $('.xkit-audio-downloader-done').removeClass('xkit-audio-downloader-done');

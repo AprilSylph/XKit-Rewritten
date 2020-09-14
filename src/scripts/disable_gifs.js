@@ -1,5 +1,5 @@
-(function() {
-  const pauseGif = function(gifElement) {
+(function () {
+  const pauseGif = function (gifElement) {
     const image = new Image();
     image.src = gifElement.currentSrc;
     image.onload = () => {
@@ -19,7 +19,7 @@
     };
   };
 
-  const processGifs = function() {
+  const processGifs = function () {
     [...document.querySelectorAll('figure img[srcset*=".gif"]:not(.xkit-disable-gifs-done)')]
     .forEach(gifElement => {
       gifElement.classList.add('xkit-disable-gifs-done');
@@ -36,13 +36,13 @@
     });
   };
 
-  const main = async function() {
+  const main = async function () {
     const { onPostsMutated } = await fakeImport('/src/util/mutations.js');
     onPostsMutated.addListener(processGifs);
     processGifs();
   };
 
-  const clean = async function() {
+  const clean = async function () {
     const { onPostsMutated } = await fakeImport('/src/util/mutations.js');
     onPostsMutated.removeListener(processGifs);
     $('.xkit-paused-gif, .xkit-gif-label').remove();

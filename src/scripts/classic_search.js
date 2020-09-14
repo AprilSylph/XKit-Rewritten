@@ -1,10 +1,10 @@
-(function() {
+(function () {
   let newTab;
 
   let searchInputElement;
   let searchInputParent;
 
-  const replaceSearchForm = function() {
+  const replaceSearchForm = function () {
     const searchFormElement = document.querySelector('form[role="search"][action="//www.tumblr.com/search"]:not(.classic-search):not(.xkit-classic-search-done)');
 
     if (!searchFormElement) {
@@ -40,7 +40,7 @@
     searchFormElement.parentNode.prepend(searchFormElementClone);
   };
 
-  const onStorageChanged = function(changes, areaName) {
+  const onStorageChanged = function (changes, areaName) {
     if (areaName !== 'local') {
       return;
     }
@@ -54,18 +54,18 @@
     }
   };
 
-  const main = async function() {
+  const main = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
     const { getPreferences } = await fakeImport('/src/util/preferences.js');
     const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
 
-    ({newTab} = await getPreferences('classic_search'));
+    ({ newTab } = await getPreferences('classic_search'));
 
     onBaseContainerMutated.addListener(replaceSearchForm);
     replaceSearchForm();
   };
 
-  const clean = async function() {
+  const clean = async function () {
     browser.storage.onChanged.removeListener(onStorageChanged);
     const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
     onBaseContainerMutated.removeListener(replaceSearchForm);

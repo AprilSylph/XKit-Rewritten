@@ -1,4 +1,4 @@
-(function() {
+(function () {
   /**
    * @param {...Object[]} arrays - one or more arrays
    * @return {Object[]} The Cartesian product of the arrays

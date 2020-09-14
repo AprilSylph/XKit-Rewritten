@@ -1,10 +1,10 @@
-(function() {
+(function () {
   let noteCountSelector;
   let reblogHeaderSelector;
   let reblogTimestamps;
   let alwaysShowYear;
 
-  const constructTimeString = function(unixTime) {
+  const constructTimeString = function (unixTime) {
     const locale = document.documentElement.lang;
     const date = new Date(unixTime * 1000);
     const now = new Date();
@@ -26,12 +26,12 @@
     });
   };
 
-  const addPostTimestamps = async function() {
+  const addPostTimestamps = async function () {
     const { getPostElements } = await fakeImport('/src/util/interface.js');
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
 
-    getPostElements({excludeClass: 'xkit-timestamps-done'}).forEach(async postElement => {
-      const {timestamp, postUrl} = await timelineObject(postElement.dataset.id);
+    getPostElements({ excludeClass: 'xkit-timestamps-done' }).forEach(async postElement => {
+      const { timestamp, postUrl } = await timelineObject(postElement.dataset.id);
 
       const noteCountElement = postElement.querySelector(noteCountSelector);
 
@@ -45,18 +45,18 @@
     });
   };
 
-  const removePostTimestamps = function() {
+  const removePostTimestamps = function () {
     $('.xkit-timestamp').remove();
     $('.xkit-timestamps-done').removeClass('xkit-timestamps-done');
   };
 
-  const addReblogTimestamps = async function() {
+  const addReblogTimestamps = async function () {
     const { getPostElements } = await fakeImport('/src/util/interface.js');
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
     const { apiFetch } = await fakeImport('/src/util/tumblr_helpers.js');
 
-    getPostElements({excludeClass: 'xkit-reblog-timestamps-done'}).forEach(async postElement => {
-      let {trail} = await timelineObject(postElement.dataset.id);
+    getPostElements({ excludeClass: 'xkit-reblog-timestamps-done' }).forEach(async postElement => {
+      let { trail } = await timelineObject(postElement.dataset.id);
 
       const reblogHeaders = postElement.querySelectorAll(reblogHeaderSelector);
 
@@ -69,14 +69,14 @@
           return;
         }
 
-        const {uuid} = trailItem.blog;
-        const {id} = trailItem.post;
+        const { uuid } = trailItem.blog;
+        const { id } = trailItem.post;
 
         const timestampElement = document.createElement('div');
         timestampElement.className = 'xkit-reblog-timestamp';
 
         try {
-          const {response: {timestamp}} = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
+          const { response: { timestamp } } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
           timestampElement.textContent = constructTimeString(timestamp);
         } catch (exception) {
           timestampElement.textContent = exception.body.meta.msg;
@@ -87,12 +87,12 @@
     });
   };
 
-  const removeReblogTimestamps = function() {
+  const removeReblogTimestamps = function () {
     $('.xkit-reblog-timestamp').remove();
     $('.xkit-reblog-timestamps-done').removeClass('xkit-reblog-timestamps-done');
   };
 
-  const onStorageChanged = async function(changes, areaName) {
+  const onStorageChanged = async function (changes, areaName) {
     if (areaName !== 'local') {
       return;
     }
@@ -109,7 +109,7 @@
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
 
     if (alwaysShowYearChanges) {
-      ({newValue: alwaysShowYear} = alwaysShowYearChanges);
+      ({ newValue: alwaysShowYear } = alwaysShowYearChanges);
 
       onNewPosts.removeListener(addPostTimestamps);
       onNewPosts.removeListener(addReblogTimestamps);
@@ -126,7 +126,7 @@
     }
 
     if (reblogTimestampsChanges) {
-      ({newValue: reblogTimestamps} = reblogTimestampsChanges);
+      ({ newValue: reblogTimestamps } = reblogTimestampsChanges);
 
       onNewPosts.removeListener(addReblogTimestamps);
       removeReblogTimestamps();
@@ -138,13 +138,13 @@
     }
   };
 
-  const main = async function() {
+  const main = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
     const { getPreferences } = await fakeImport('/src/util/preferences.js');
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     const { keyToCss } = await fakeImport('/src/util/css_map.js');
 
-    ({alwaysShowYear, reblogTimestamps} = await getPreferences('timestamps'));
+    ({ alwaysShowYear, reblogTimestamps } = await getPreferences('timestamps'));
 
     noteCountSelector = await keyToCss('noteCount');
     reblogHeaderSelector = await keyToCss('reblogHeader');
@@ -158,7 +158,7 @@
     }
   };
 
-  const clean = async function() {
+  const clean = async function () {
     browser.storage.onChanged.removeListener(onStorageChanged);
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     onNewPosts.removeListener(addPostTimestamps);

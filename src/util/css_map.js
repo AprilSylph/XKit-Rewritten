@@ -1,11 +1,11 @@
-(function() {
+(function () {
   let cssMap;
 
   /**
    * @param {String} key - The source name of an element
    * @return {Object[]} - An array of generated classnames from the CSS map
    */
-  const keyToClasses = async function(key) {
+  const keyToClasses = async function (key) {
     if (cssMap === undefined) {
       const { getCssMap } = await fakeImport('/src/util/tumblr_helpers.js');
       cssMap = await getCssMap();
@@ -18,7 +18,7 @@
    * @param {String} key - The source name of an element
    * @return {String} - A CSS selector which targets all elements with that source name
    */
-  const keyToCss = async function(key) {
+  const keyToCss = async function (key) {
     const classes = await keyToClasses(key);
     return classes.map(className => `.${className}`).join(', ');
   };
@@ -36,7 +36,7 @@
    * @param {...String} keys - One or more element source names
    * @return {String} - A CSS selector
    */
-  const descendantSelector = async function(...keys) {
+  const descendantSelector = async function (...keys) {
     const { cartesian } = await fakeImport('/src/util/misc.js');
     const sets = [];
 

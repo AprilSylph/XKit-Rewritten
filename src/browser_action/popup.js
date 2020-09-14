@@ -1,6 +1,6 @@
-const {getURL} = browser.runtime;
+const { getURL } = browser.runtime;
 
-const getInstalledScripts = async function() {
+const getInstalledScripts = async function () {
   const url = getURL('/src/scripts/_index.json');
   const file = await fetch(url);
   const installedScripts = await file.json();
@@ -8,10 +8,10 @@ const getInstalledScripts = async function() {
   return installedScripts;
 };
 
-const writeEnabled = async function(event) {
-  const {checked, id} = event.target;
-  const {parentNode: {parentNode: detailsElement}} = event.target;
-  let {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
+const writeEnabled = async function (event) {
+  const { checked, id } = event.target;
+  const { parentNode: { parentNode: detailsElement } } = event.target;
+  let { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
   if (checked) {
     enabledScripts.push(id);
@@ -21,36 +21,36 @@ const writeEnabled = async function(event) {
     detailsElement.classList.add('disabled');
   }
 
-  browser.storage.local.set({enabledScripts});
+  browser.storage.local.set({ enabledScripts });
 };
 
-const writePreference = async function(event) {
-  const {id} = event.target;
+const writePreference = async function (event) {
+  const { id } = event.target;
   const [scriptName, preferenceType, preferenceName] = id.split('.');
   const storageKey = `${scriptName}.preferences.${preferenceName}`;
 
   switch (preferenceType) {
     case 'checkbox':
-      browser.storage.local.set({[storageKey]: event.target.checked});
+      browser.storage.local.set({ [storageKey]: event.target.checked });
       break;
     case 'text':
     case 'color':
     case 'select':
-      browser.storage.local.set({[storageKey]: event.target.value});
+      browser.storage.local.set({ [storageKey]: event.target.value });
       break;
   }
 };
 
-const renderScripts = async function() {
+const renderScripts = async function () {
   const configSection = document.getElementById('configuration');
   const installedScripts = await getInstalledScripts();
-  const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
+  const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
   const disabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName) === false);
 
   for (const scriptName of [...enabledScripts, ...disabledScripts]) {
     const url = getURL(`/src/scripts/${scriptName}.json`);
     const file = await fetch(url);
-    const {title = scriptName, description = '', icon = {}, preferences = {}} = await file.json();
+    const { title = scriptName, description = '', icon = {}, preferences = {} } = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 
@@ -85,7 +85,7 @@ const renderScripts = async function() {
 
     for (const [key, preference] of Object.entries(preferences)) {
       const storageKey = `${scriptName}.preferences.${key}`;
-      const {[storageKey]: savedPreference} = await browser.storage.local.get(storageKey);
+      const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
       preference.value = savedPreference === undefined ? preference.default : savedPreference;
 
       const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
@@ -141,7 +141,7 @@ const renderScripts = async function() {
   $makeSpectrum.on('change.spectrum', writePreference);
 };
 
-const checkForNoResults = function() {
+const checkForNoResults = function () {
   const nothingFound =
     [...document.querySelectorAll('details.script')]
     .every(detailsElement => detailsElement.classList.contains('search-hidden') || detailsElement.classList.contains('filter-hidden'));

@@ -1,9 +1,9 @@
-(function() {
+(function () {
   let radarLabel;
 
   const css = '.xkit-tweaks-radar-hidden { display: none; }';
 
-  const checkForRadar = function() {
+  const checkForRadar = function () {
     [...document.querySelectorAll('aside > div > h1:not(.xkit-tweaks-radar-done)')]
     .filter(h1 => {
       h1.classList.add('xkit-tweaks-radar-done');
@@ -12,7 +12,7 @@
     .forEach(h1 => h1.parentNode.classList.add('xkit-tweaks-radar-hidden'));
   };
 
-  const main = async function() {
+  const main = async function () {
     const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
     const { translate } = await fakeImport('/src/util/language_data.js');
     const { addStyle } = await fakeImport('/src/util/interface.js');
@@ -23,7 +23,7 @@
     addStyle(css);
   };
 
-  const clean = async function() {
+  const clean = async function () {
     const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
     const { removeStyle } = await fakeImport('/src/util/interface.js');
 

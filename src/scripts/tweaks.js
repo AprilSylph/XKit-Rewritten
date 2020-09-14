@@ -1,17 +1,17 @@
-(function() {
+(function () {
   let enabledTweaks;
 
-  const runTweak = async function(name) {
+  const runTweak = async function (name) {
     const { main: run } = await fakeImport(`/src/scripts/tweaks/${name}.js`);
     run().catch(console.error);
   };
 
-  const destroyTweak = async function(name) {
+  const destroyTweak = async function (name) {
     const { clean: destroy } = await fakeImport(`/src/scripts/tweaks/${name}.js`);
     destroy().catch(console.error);
   };
 
-  const onStorageChanged = async function(changes, areaName) {
+  const onStorageChanged = async function (changes, areaName) {
     if (areaName !== 'local') {
       return;
     }
@@ -32,7 +32,7 @@
     }
   };
 
-  const main = async function() {
+  const main = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
     const { getPreferences } = await fakeImport('/src/util/preferences.js');
 
@@ -42,7 +42,7 @@
     enabledTweaks.forEach(runTweak);
   };
 
-  const clean = async function() {
+  const clean = async function () {
     enabledTweaks.forEach(destroyTweak);
   };
 

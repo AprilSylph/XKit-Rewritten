@@ -1,7 +1,7 @@
-(function() {
+(function () {
   let css;
 
-  const main = async function() {
+  const main = async function () {
     const { descendantSelector } = await fakeImport('/src/util/css_map.js');
     const { addStyle } = await fakeImport('/src/util/interface.js');
 
@@ -10,7 +10,7 @@
     addStyle(css);
   };
 
-  const clean = async function() {
+  const clean = async function () {
     const { removeStyle } = await fakeImport('/src/util/interface.js');
     removeStyle(css);
   };

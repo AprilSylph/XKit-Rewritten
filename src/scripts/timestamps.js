@@ -57,6 +57,9 @@
 
     getPostElements({ excludeClass: 'xkit-reblog-timestamps-done' }).forEach(async postElement => {
       let { trail } = await timelineObject(postElement.dataset.id);
+      if (!trail.length) {
+        return;
+      }
 
       const reblogHeaders = postElement.querySelectorAll(reblogHeaderSelector);
 

@@ -37,5 +37,46 @@
     .forEach(style => style.parentNode.removeChild(style));
   };
 
-  return { getPostElements, addStyle, removeStyle };
+  const meatballItems = {};
+
+  /**
+   * Add a custom button to posts' meatball menus.
+   *
+   * @param {string} label - Button text to display
+   * @param {Function} callback - Button click listener function
+   */
+  const registerMeatballItem = function (label, callback) {
+    if (meatballItems[label] === undefined) {
+      meatballItems[label] = callback;
+    }
+  };
+
+  const unregisterMeatballItem = label => delete meatballItems[label];
+
+  (async function () {
+    const { keyToClasses, keyToCss } = await fakeImport('/src/util/css_map.js');
+    const { onPostsMutated } = await fakeImport('/src/util/mutations.js');
+
+    const meatballMenuSelector = await keyToCss('meatballMenu');
+    const [meatballItemClass] = await keyToClasses('meatballItem');
+    const [dropdownItemClass] = await keyToClasses('dropdownItem');
+
+    onPostsMutated.addListener(() => {
+      const meatballMenu = document.querySelector(meatballMenuSelector);
+
+      if (!meatballMenu || meatballMenu.classList.contains('xkit-done')) { return; }
+      meatballMenu.classList.add('xkit-done');
+
+      Object.keys(meatballItems).sort().forEach(label => {
+        const meatballItemButton = document.createElement('button');
+        meatballItemButton.classList.add(meatballItemClass, dropdownItemClass);
+        meatballItemButton.textContent = label;
+        meatballItemButton.addEventListener('click', meatballItems[label]);
+
+        meatballMenu.appendChild(meatballItemButton);
+      });
+    });
+  })();
+
+  return { getPostElements, addStyle, removeStyle, registerMeatballItem, unregisterMeatballItem };
 })();

@@ -65,7 +65,7 @@
       }
 
       trail.forEach(async (trailItem, i) => {
-        if (trailItem.blog === undefined || trailItem.blog.active === false) {
+        if (trailItem.blog === undefined || trailItem.blog.active === false || !reblogHeaders[i]) {
           return;
         }
 

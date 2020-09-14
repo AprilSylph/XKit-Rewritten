@@ -32,7 +32,9 @@
       return;
     }
 
-    popupElement.parentNode.removeChild(popupElement);
+    if (popupElement.parentNode) {
+      popupElement.parentNode.removeChild(popupElement);
+    }
   };
 
   const makeButtonReblogged = ({ buttonDiv, state }) => {

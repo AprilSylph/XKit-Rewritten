@@ -76,12 +76,12 @@ const renderScripts = async function() {
       descriptionParagraph.textContent = description;
     }
 
-    const unorderedList = scriptTemplateClone.querySelector('ul');
-
     const enabledInput = scriptTemplateClone.querySelector('input.toggle-button');
     enabledInput.id = scriptName;
     enabledInput.checked = enabledScripts.includes(scriptName);
     enabledInput.addEventListener('input', writeEnabled);
+
+    const preferenceList = scriptTemplateClone.querySelector('.preferences');
 
     for (const [key, preference] of Object.entries(preferences)) {
       const storageKey = `${scriptName}.preferences.${key}`;
@@ -124,7 +124,7 @@ const renderScripts = async function() {
           break;
       }
 
-      unorderedList.appendChild(preferenceTemplateClone);
+      preferenceList.appendChild(preferenceTemplateClone);
     }
 
     configSection.appendChild(scriptTemplateClone);

@@ -6,7 +6,8 @@
     "jquery": true
   },
   "extends": [
-    "standard"
+    "standard",
+    "plugin:jsdoc/recommended"
   ],
   "parserOptions": {
     "ecmaVersion": 12

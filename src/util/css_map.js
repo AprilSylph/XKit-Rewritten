@@ -2,8 +2,8 @@
   let cssMap;
 
   /**
-   * @param {String} key - The source name of an element
-   * @return {Object[]} - An array of generated classnames from the CSS map
+   * @param {string} key - The source name of an element
+   * @returns {object[]} - An array of generated classnames from the CSS map
    */
   const keyToClasses = async function (key) {
     if (cssMap === undefined) {
@@ -15,8 +15,8 @@
   };
 
   /**
-   * @param {String} key - The source name of an element
-   * @return {String} - A CSS selector which targets all elements with that source name
+   * @param {string} key - The source name of an element
+   * @returns {string} - A CSS selector which targets all elements with that source name
    */
   const keyToCss = async function (key) {
     const classes = await keyToClasses(key);
@@ -33,8 +33,8 @@
    * "._2U2YY .cfpPU, ._2U2YY ._3ItS, ._27pa2 .cfpPU, ._27pa2 ._3ItSq"
    * which targets any 'timeline' contained in any 'main'.
    *
-   * @param {...String} keys - One or more element source names
-   * @return {String} - A CSS selector
+   * @param {...string} keys - One or more element source names
+   * @returns {string} - A CSS selector
    */
   const descendantSelector = async function (...keys) {
     const { cartesian } = await fakeImport('/src/util/misc.js');

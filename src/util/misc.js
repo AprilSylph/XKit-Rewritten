@@ -1,7 +1,7 @@
 (function () {
   /**
-   * @param {...Object[]} arrays - one or more arrays
-   * @return {Object[]} The Cartesian product of the arrays
+   * @param {...object[]} arrays - one or more arrays
+   * @returns {object[]} The Cartesian product of the arrays
    */
   const cartesian = (...arrays) => {
     let product = arrays.shift().map(x => [x]);

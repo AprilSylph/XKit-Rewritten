@@ -15,6 +15,20 @@
   max-width: 300px;
 }
 
+#glass-container .one-click-postage-popup {
+  top: 50%;
+  right: 100%;
+  transform: translate(-20px, -50%);
+}
+
+@media only screen and (max-width: 716px) {
+  .one-click-postage-popup {
+    top: 50%;
+    right: 100%;
+    transform: translate(-20px, -50%);
+  }
+}
+
 .one-click-postage-popup .message {
   display: flex;
   justify-content: center;

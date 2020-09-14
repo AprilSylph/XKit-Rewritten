@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/AprilSylph/XKit-Rewritten#readme",
   "devDependencies": {
-    "eslint": "^7.8.1",
+    "eslint": "^7.9.0",
     "web-ext": "^5.0.0"
   },
   "dependencies": {

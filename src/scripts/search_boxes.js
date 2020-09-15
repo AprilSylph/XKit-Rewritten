@@ -9,11 +9,17 @@
   let endlessScrollingDisabled;
   let searchingCss;
 
-  const onStorageChanged = function (changes, areaName) {
-    if (areaName !== 'local') {
-    return;
+  const onStorageChanged = async function (changes, areaName) {
+    if (areaName !== 'local') { return; }
+
+    const {
+      'search_boxes.preferences.maxResults': maxResultsChanges,
+    } = changes;
+
+    if (maxResultsChanges) {
+      maxResults = parseInt(maxResultsChanges.newValue);
+      maxResults = !isNaN(maxResults) && maxResults > 0 ? maxResults : 200;
     }
-    // I have absolutely no idea, to be 100% honest with you
   };
 
   const main = async function () {
@@ -359,7 +365,6 @@
   // TODO:
   // don't run literally everywhere lmao
   // handle soft refresh/navigation
-  // handle preference change
   // handle clean
   // mark.js
   // use mark.js instead of actually searching manually

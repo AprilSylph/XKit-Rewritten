@@ -48,15 +48,15 @@
     const $sidebarContainer = $(await keyToCss('sidebar')).find('> aside');
 
     const searchBoxHtml =
-      `<div id='search-likes-box'>
-        <input type='text' placeholder='Search Posts...' id='search-likes-input'>
+      `<div id='xkit-search-box'>
+        <input type='text' placeholder='Search Posts...' id='xkit-search-input'>
       </div>`;
     $($sidebarContainer).prepend(searchBoxHtml);
-    $('#search-likes-input').keydown(event => event.stopPropagation());
-    $('#search-likes-input').click(newSearchTerm);
+    $('#xkit-search-input').keydown(event => event.stopPropagation());
+    $('#xkit-search-input').click(newSearchTerm);
 
     const newSearchDebounced = debounce(newSearchTerm, 500);
-		$('#search-likes-input').keyup(newSearchDebounced);
+		$('#xkit-search-input').keyup(newSearchDebounced);
   };
 
   // Stolen from mutations.js
@@ -96,15 +96,15 @@
       console.log(`new search term: ${newTerm}`);
       term = newTerm;
       results = 0;
-      const $allPosts = $('#search-likes-timeline [data-id]');
+      const $allPosts = $('#xkit-search-timeline [data-id]');
       postsLoaded = $allPosts.length;
       updateStatusBar(`Searching for <b>"${term}"</b>, please wait...`);
 
       waitForRender().then(() => {
         //add: unmark
         $allPosts
-          .removeClass('search-likes-done')
-          .removeClass('search-likes-shown');
+          .removeClass('xkit-search-done')
+          .removeClass('xkit-search-shown');
         filterPosts(term);
       });
     }
@@ -116,20 +116,20 @@
     const { keyToCss, descendantSelector } = await fakeImport('/src/util/css_map.js');
     const { addStyle } = await fakeImport('/src/util/interface.js');
     onNewPosts.addListener(processNewPosts);
-    $(await keyToCss('timeline')).attr('id', 'search-likes-timeline');
-    $(await descendantSelector('timeline', 'loader')).attr('id', 'search-likes-loader');
-    $('#search-likes-timeline').after(`<div id='prevent-load'></div>`);
+    $(await keyToCss('timeline')).attr('id', 'xkit-search-timeline');
+    $(await descendantSelector('timeline', 'loader')).attr('id', 'xkit-search-loader');
+    $('#xkit-search-timeline').after(`<div id='prevent-load'></div>`);
 
     updateStatusBar(`Searching for <b>"${term}"</b>`);
     waitForRender().then(() => {
       searchingCss =
-        `#search-likes-timeline {
-          min-height: calc(100vh - ${$('#search-likes-timeline').offset().top - 10}px);
+        `#xkit-search-timeline {
+          min-height: calc(100vh - ${$('#xkit-search-timeline').offset().top - 10}px);
         }
-        #search-likes-timeline article {
+        #xkit-search-timeline article {
           display: none;
         }
-        #search-likes-timeline .search-likes-shown article {
+        #xkit-search-timeline .xkit-search-shown article {
           display: block;
         }`;
         addStyle(searchingCss);
@@ -142,13 +142,13 @@
     onNewPosts.removeListener(processNewPosts);
 
     term = null;
-    $('#search-likes-input').val('');
-    $('#search-likes-timeline [data-id]')
-      .removeClass('search-likes-done')
-      .removeClass('search-likes-shown');
-    $('.search-likes-status-bar').remove();
+    $('#xkit-search-input').val('');
+    $('#xkit-search-timeline [data-id]')
+      .removeClass('xkit-search-done')
+      .removeClass('xkit-search-shown');
+    $('.xkit-search-status-bar').remove();
     $('#prevent-load').remove();
-    $('#search-likes-timeline').removeAttr('id');
+    $('#xkit-search-timeline').removeAttr('id');
 
     const { removeStyle } = await fakeImport('/src/util/interface.js');
     removeStyle(searchingCss);
@@ -157,7 +157,7 @@
   const processNewPosts = async function() {
     if (!searching) { return; }
     // add: don't run on the dashboard
-    const $allPosts = $('#search-likes-timeline [data-id]');
+    const $allPosts = $('#xkit-search-timeline [data-id]');
     if ($allPosts.length <= postsLoaded) { return; }
     postsLoaded = $allPosts.length;
     if (!term) {
@@ -176,15 +176,15 @@
       return;
     }
 
-    const $posts = $('#search-likes-timeline [data-id]:not(.search-likes-done)')
-      .addClass('search-likes-done');
+    const $posts = $('#xkit-search-timeline [data-id]:not(.xkit-search-done)')
+      .addClass('xkit-search-done');
 
     updateStatusBar(`Searching for <b>"${term}"</b>, please wait...`);
 
     let renderChunkSize = 3;
     const render = function() {
       for (const postToShow of postsToShow) {
-        postToShow.classList.add('search-likes-shown');
+        postToShow.classList.add('xkit-search-shown');
         //add: mark
       }
       postsToShow = [];
@@ -306,12 +306,12 @@
     if (results >= maxResults) {
       statusHtml = status +
         `<br/>Showing the first ${maxResults} results found out of ${postsLoaded} loaded posts.<br/>
-        Increase the maximum result count in Search Likes' preferences.<br/>
+        Increase the maximum result count in Search My Stuff's preferences.<br/>
         <a class='destroy-button'>Exit search and show all posts</a>`;
 
     } else if (endlessScrollingDisabled) {
       `<br/>${results} results on this page.<br/>
-        Enabling endless scrolling is recommended with the Search Likes extension.<br/>
+        Enabling endless scrolling is recommended with the Search My Stuff extension.<br/>
         <a class='destroy-button'>Exit search and show all posts</a>`;
     } else {
       statusHtml = status +
@@ -321,21 +321,21 @@
     }
 
     if (results > 0) {
-      if ($('#search-likes-status-bar-top').length > 0) {
-        $('#search-likes-status-bar-top').html(statusHtml);
+      if ($('#xkit-search-status-bar-top').length > 0) {
+        $('#xkit-search-status-bar-top').html(statusHtml);
        } else {
-        $('#search-likes-timeline').before(`<div id='search-likes-status-bar-top' class='search-likes-status-bar'>${statusHtml}</div>`);
-        $('#search-likes-status-bar-top').on('click', '.destroy-button', searchEnd);
+        $('#xkit-search-timeline').before(`<div id='xkit-search-status-bar-top' class='xkit-search-status-bar'>${statusHtml}</div>`);
+        $('#xkit-search-status-bar-top').on('click', '.destroy-button', searchEnd);
       }
     } else {
-      $('#search-likes-status-bar-top').remove();
+      $('#xkit-search-status-bar-top').remove();
     }
 
-    if ($('#search-likes-status-bar-bottom').length > 0) {
-      $('#search-likes-status-bar-bottom').html(statusHtml);
+    if ($('#xkit-search-status-bar-bottom').length > 0) {
+      $('#xkit-search-status-bar-bottom').html(statusHtml);
      } else {
-      $('#search-likes-loader').prepend(`<div id='search-likes-status-bar-bottom' class='search-likes-status-bar'>${statusHtml}</div>`);
-      $('#search-likes-status-bar-bottom').on('click', '.destroy-button', searchEnd);
+      $('#xkit-search-loader').prepend(`<div id='xkit-search-status-bar-bottom' class='xkit-search-status-bar'>${statusHtml}</div>`);
+      $('#xkit-search-status-bar-bottom').on('click', '.destroy-button', searchEnd);
     }
   };
 

@@ -40,22 +40,7 @@
     searchFormElement.parentNode.prepend(searchFormElementClone);
   };
 
-  const onStorageChanged = function (changes, areaName) {
-    if (areaName !== 'local') {
-      return;
-    }
-
-    const {
-      'classic_search.preferences.newTab': newTabChanges,
-    } = changes;
-
-    if (newTabChanges) {
-      clean().then(main);
-    }
-  };
-
   const main = async function () {
-    browser.storage.onChanged.addListener(onStorageChanged);
     const { getPreferences } = await fakeImport('/src/util/preferences.js');
     const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
 
@@ -66,7 +51,6 @@
   };
 
   const clean = async function () {
-    browser.storage.onChanged.removeListener(onStorageChanged);
     const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
     onBaseContainerMutated.removeListener(replaceSearchForm);
 
@@ -75,5 +59,5 @@
     $('.xkit-classic-search-done').removeClass('xkit-classic-search-done');
   };
 
-  return { main, clean, stylesheet: true };
+  return { main, clean, stylesheet: true, autoRestart: true };
 })();

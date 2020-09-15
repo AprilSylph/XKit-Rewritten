@@ -6,8 +6,10 @@
   const isReactLoaded = () => document.querySelector('[data-rh]') === null;
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+  const restartListeners = {};
+
   const runScript = async function (name) {
-    const { main, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
+    const { main, clean, stylesheet, autoRestart } = await fakeImport(`/src/scripts/${name}.js`);
 
     main()
     .catch(console.error);
@@ -19,10 +21,24 @@
       });
       document.documentElement.appendChild(link);
     }
+
+    if (autoRestart) {
+      restartListeners[name] = function (changes, areaName) {
+        if (areaName !== 'local') {
+          return;
+        }
+
+        if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`))) {
+          clean().then(main);
+        }
+      };
+
+      browser.storage.onChanged.addListener(restartListeners[name]);
+    }
   };
 
   const destroyScript = async function (name) {
-    const { clean, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
+    const { clean, stylesheet, autoRestart } = await fakeImport(`/src/scripts/${name}.js`);
 
     clean()
     .catch(console.error);
@@ -32,6 +48,10 @@
       if (link !== null) {
         link.parentNode.removeChild(link);
       }
+    }
+
+    if (autoRestart) {
+      browser.storage.onChanged.removeListener(restartListeners[name]);
     }
   };
 

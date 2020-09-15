@@ -1,18 +1,7 @@
 (function () {
   let addedStyles = [];
 
-  const onStorageChanged = function (changes, areaName) {
-    if (areaName !== 'local') {
-      return;
-    }
-
-    if (Object.keys(changes).some(key => key.startsWith('hide_avatars'))) {
-      clean().then(main);
-    }
-  };
-
   const main = async function () {
-    browser.storage.onChanged.addListener(onStorageChanged);
     const { getPreferences } = await fakeImport('/src/util/preferences.js');
     const { translate } = await fakeImport('/src/util/language_data.js');
     const { addStyle } = await fakeImport('/src/util/interface.js');
@@ -33,5 +22,5 @@
     addedStyles = [];
   };
 
-  return { main, clean };
+  return { main, clean, autoRestart: true };
 })();

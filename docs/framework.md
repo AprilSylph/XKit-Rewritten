@@ -26,6 +26,12 @@ The cleanup function of the script. Called whenever the user disables the script
 
 Whether the script has a stylesheet. If true, there should be a `.css` file of matching name in the same directory level. The stylesheet is automatically added and removed during the script's lifecycle.
 
+#### `autoRestart`
+- Type: Boolean
+- Required: No
+
+Whether the script should automatically restart on preference changes. If true, the script's `clean()` and then `main()` functions are called whenever its preferences are modified. If false, the script must build its own preference changes handling code (assuming it has preferences at all).
+
 ## Metadata files
 
 Each module should be accompanied by a `.json` file of matching name, i.e. `example.js` should be accompanied by `example.json` in the same directory level. Four keys are currently supported.

@@ -56,7 +56,7 @@
     $('#xkit-search-input').click(newSearchTerm);
 
     const newSearchDebounced = debounce(newSearchTerm, 500);
-		$('#xkit-search-input').keyup(newSearchDebounced);
+    $('#xkit-search-input').keyup(newSearchDebounced);
   };
 
   // Stolen from mutations.js
@@ -69,27 +69,27 @@
   // };
 
   // Stolen from xkit 7
-  const debounce = function(func, wait) {
-    var timeout_id;
-    return function() {
-      var last_context = this;
-      var last_args = arguments;
+  const debounce = function (func, wait) {
+    var timeoutID;
+    return function () {
+      var lastContext = this;
+      var lastArgs = arguments;
 
-      var exec = function() {
-        timeout_id = null;
-        func.apply(last_context, last_args);
+      var exec = function () {
+        timeoutID = null;
+        func.apply(lastContext, lastArgs);
       };
-      clearTimeout(timeout_id);
-      timeout_id = setTimeout(exec, wait);
+      clearTimeout(timeoutID);
+      timeoutID = setTimeout(exec, wait);
     };
   };
 
-  const newSearchTerm = async function() {
+  const newSearchTerm = async function () {
     var newTerm = $(this).val().toLowerCase().trim();
     if (newTerm.length < 2) {
       newTerm = '';
     }
-    if (term != newTerm) {
+    if (term !== newTerm) {
       if (!searching) {
         await searchStart();
       }
@@ -100,7 +100,7 @@
       updateStatusBar(`Searching for <b>"${term}"</b>, please wait...`);
 
       waitForRender().then(() => {
-        //add: unmark
+        // add: unmark
         $allPosts
           .removeClass('xkit-search-done')
           .removeClass('xkit-search-shown');
@@ -109,7 +109,7 @@
     }
   };
 
-  const searchStart = async function() {
+  const searchStart = async function () {
     searching = true;
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     const { keyToCss, descendantSelector } = await fakeImport('/src/util/css_map.js');
@@ -117,7 +117,7 @@
     onNewPosts.addListener(processNewPosts);
     $(await keyToCss('timeline')).attr('id', 'xkit-search-timeline');
     $(await descendantSelector('timeline', 'loader')).attr('id', 'xkit-search-loader');
-    $('#xkit-search-timeline').after(`<div id='prevent-load'></div>`);
+    $('#xkit-search-timeline').after('<div id=\'prevent-load\'></div>');
 
     updateStatusBar(`Searching for <b>"${term}"</b>`);
     waitForRender().then(() => {
@@ -131,11 +131,11 @@
         #xkit-search-timeline .xkit-search-shown article {
           display: block;
         }`;
-        addStyle(searchingCss);
+      addStyle(searchingCss);
     });
   };
 
-  const searchEnd = async function() {
+  const searchEnd = async function () {
     searching = false;
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     onNewPosts.removeListener(processNewPosts);
@@ -153,7 +153,7 @@
     removeStyle(searchingCss);
   };
 
-  const processNewPosts = async function() {
+  const processNewPosts = async function () {
     if (!searching) { return; }
     // add: don't run on the dashboard
     const $allPosts = $('#xkit-search-timeline [data-id]');
@@ -168,9 +168,9 @@
     });
   };
 
-  const filterPosts = async function(term) {
+  const filterPosts = async function (newTerm) {
     var postsToShow = [];
-    if (!term) {
+    if (!newTerm) {
       updateStatusBar('...');
       return;
     }
@@ -178,36 +178,36 @@
     const $posts = $('#xkit-search-timeline [data-id]:not(.xkit-search-done)')
       .addClass('xkit-search-done');
 
-    updateStatusBar(`Searching for <b>"${term}"</b>, please wait...`);
+    updateStatusBar(`Searching for <b>"${newTerm}"</b>, please wait...`);
 
     let renderChunkSize = 3;
-    const render = function() {
+    const render = function () {
       for (const postToShow of postsToShow) {
         postToShow.classList.add('xkit-search-shown');
-        //add: mark
+        // add: mark
       }
       postsToShow = [];
-      updateStatusBar(`Searching for <b>"${term}"</b>, please wait...`);
+      updateStatusBar(`Searching for <b>"${newTerm}"</b>, please wait...`);
     };
 
     for (const post of $posts) {
-      if (term != term) { return; }
+      if (newTerm !== term) { return; }
       if (results >= maxResults) {
-        updateStatusBar(`Searching for <b>"${term}"</b>`);
+        updateStatusBar(`Searching for <b>"${newTerm}"</b>`);
         break;
       }
 
       // gonna just replace this with mark.js probably
-      let text = await getPostText(post);
+      const text = await getPostText(post);
       console.log(text);
 
-      if (text.toLowerCase().indexOf(term) > -1) {
+      if (text.toLowerCase().indexOf(newTerm) > -1) {
         postsToShow.push(post);
         results++;
 
         if (postsToShow.length >= renderChunkSize) {
-          if (term != term) {
-            //search term has changed while we were processing
+          if (newTerm !== term) {
+            // search term has changed while we were processing
             return;
           }
           renderChunkSize = 13;
@@ -217,97 +217,96 @@
       }
     }
     render();
-    updateStatusBar(`Searching for <b>"${term}"</b>`);
+    updateStatusBar(`Searching for <b>"${newTerm}"</b>`);
   };
 
   // gonna just replace this with mark.js probably
-  const getPostText = async function(post) {
+  const getPostText = async function (post) {
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
-		var text = [];
-		const {blogName, rebloggedFromName, rebloggedRootname, sourceTitle, askingName, content, trail, postAuthor, tags} =
-			await timelineObject(post.getAttribute('data-id'));
-		text.push(blogName, rebloggedFromName, rebloggedRootname);
-		if (askingName) {
-			text.push(askingName + ' asked:');
-		}
+    var text = [];
+    const { blogName, rebloggedFromName, rebloggedRootname, sourceTitle, askingName, content, trail, postAuthor, tags } =
+      await timelineObject(post.getAttribute('data-id'));
+    text.push(blogName, rebloggedFromName, rebloggedRootname);
+    if (askingName) {
+      text.push(askingName + ' asked:');
+    }
 
-		const processContent = function(input) {
-			for (let block of input) {
-				if (block.attribution) {
-					text.push(block.attribution.appName, block.attribution.displayText, block.attribution.url);
-				}
-				if (block.description) {
-					text.push(block.description);
-				}
-				if (block.displayUrl) {
-					text.push(block.displayUrl);
-				}
-				if (block.title) {
-					text.push(block.title);
-				}
-				if (block.artist) {
-					text.push(block.artist);
-				}
-				if (block.artist) {
-					text.push(block.album);
-				}
-				if (block.text) {
-					text.push(block.text);
-				}
-				if (block.formatting) {
-					for (let formatblock of block.formatting) {
-						if (formatblock.url) {
-							// Follow tumblr-redirected URLs
-							if (formatblock.url.indexOf('t.umblr.com/redirect') > -1) {
-								text.push(new URL(formatblock.url).searchParams.get('z'));
-							} else {
-								text.push(formatblock.url);
-							}
-						}
-					}
-				}
-			}
-		};
+    const processContent = function (input) {
+      for (const block of input) {
+        if (block.attribution) {
+          text.push(block.attribution.appName, block.attribution.displayText, block.attribution.url);
+        }
+        if (block.description) {
+          text.push(block.description);
+        }
+        if (block.displayUrl) {
+          text.push(block.displayUrl);
+        }
+        if (block.title) {
+          text.push(block.title);
+        }
+        if (block.artist) {
+          text.push(block.artist);
+        }
+        if (block.artist) {
+          text.push(block.album);
+        }
+        if (block.text) {
+          text.push(block.text);
+        }
+        if (block.formatting) {
+          for (const formatblock of block.formatting) {
+            if (formatblock.url) {
+              // Follow tumblr-redirected URLs
+              if (formatblock.url.indexOf('t.umblr.com/redirect') > -1) {
+                text.push(new URL(formatblock.url).searchParams.get('z'));
+              } else {
+                text.push(formatblock.url);
+              }
+            }
+          }
+        }
+      }
+    };
 
-		if (trail) {
-			for (let reblog of trail) {
-				if (reblog.blog) {
-					text.push(reblog.blog.name);
-				}
-				if (reblog.brokenBlog) {
-					text.push(reblog.brokenBlog.name);
-				}
-				if (reblog.content) {
-					processContent(reblog.content);
-				}
-			}
-		}
-		if (content) {
-			processContent(content);
-		}
+    if (trail) {
+      for (const reblog of trail) {
+        if (reblog.blog) {
+          text.push(reblog.blog.name);
+        }
+        if (reblog.brokenBlog) {
+          text.push(reblog.brokenBlog.name);
+        }
+        if (reblog.content) {
+          processContent(reblog.content);
+        }
+      }
+    }
+    if (content) {
+      processContent(content);
+    }
 
-		if (sourceTitle) {
-			text.push("source: " + sourceTitle);
-		}
-		if (postAuthor) {
-			text.push("submitted by: " + postAuthor);
-		}
-		if (tags) {
-			for (let tag of tags) {
-				text.push('#' + tag);
-			}
-		}
-		return text.join('\n');
-	};
+    if (sourceTitle) {
+      text.push('source: ' + sourceTitle);
+    }
+    if (postAuthor) {
+      text.push('submitted by: ' + postAuthor);
+    }
+    if (tags) {
+      for (const tag of tags) {
+        text.push('#' + tag);
+      }
+    }
+    return text.join('\n');
+  };
 
-  const updateStatusBar = function(status) {
+  const updateStatusBar = function (status) {
     let statusHtml;
     if (results >= maxResults) {
       statusHtml = status +
         `<br/>Showing the first ${maxResults} results found out of ${postsLoaded} loaded posts.<br/>
         Increase the maximum result count in Search My Stuff's preferences.<br/>
         <a class='destroy-button'>Exit search and show all posts</a>`;
-
     } else if (endlessScrollingDisabled) {
       statusHtml = status +
         `<br/>${results} results on this page.<br/>
@@ -323,7 +322,7 @@
     if (results > 0 || endlessScrollingDisabled) {
       if ($('#xkit-search-status-bar-top').length > 0) {
         $('#xkit-search-status-bar-top').html(statusHtml);
-       } else {
+      } else {
         $('#xkit-search-timeline').before(`<div id='xkit-search-status-bar-top' class='xkit-search-status-bar'>${statusHtml}</div>`);
         $('#xkit-search-status-bar-top').on('click', '.destroy-button', searchEnd);
       }
@@ -333,19 +332,17 @@
 
     if ($('#xkit-search-status-bar-bottom').length > 0) {
       $('#xkit-search-status-bar-bottom').html(statusHtml);
-     } else {
+    } else {
       $('#xkit-search-loader').prepend(`<div id='xkit-search-status-bar-bottom' class='xkit-search-status-bar'>${statusHtml}</div>`);
       $('#xkit-search-status-bar-bottom').on('click', '.destroy-button', searchEnd);
     }
   };
 
   /**
-   * Returns a promise that resolves only once any changes previously made to the DOM have been
-   * rendered on the page.
-   *
-   * @return {Promise}
+   * @returns {Promise} Promise that resolves only once any changes previously made to the DOM have
+   *  been rendered on the page.
    */
-  const waitForRender = function() {
+  const waitForRender = function () {
     return new Promise((resolve) => {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -369,4 +366,4 @@
   // double check all asynchronous logic
 
   return { main, clean, stylesheet: true };
-  })();
+})();

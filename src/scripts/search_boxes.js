@@ -93,7 +93,6 @@
       if (!searching) {
         await searchStart();
       }
-      console.log(`new search term: ${newTerm}`);
       term = newTerm;
       results = 0;
       const $allPosts = $('#xkit-search-timeline [data-id]');
@@ -221,7 +220,7 @@
     updateStatusBar(`Searching for <b>"${term}"</b>`);
   };
 
-  // gonna just replace this with mark.js probably (if not, use real version from xkit 7)
+  // gonna just replace this with mark.js probably
   const getPostText = async function(post) {
     const { timelineObject } = await fakeImport('/src/util/react_props.js');
 		var text = [];
@@ -310,8 +309,9 @@
         <a class='destroy-button'>Exit search and show all posts</a>`;
 
     } else if (endlessScrollingDisabled) {
-      `<br/>${results} results on this page.<br/>
-        Enabling endless scrolling is recommended with the Search My Stuff extension.<br/>
+      statusHtml = status +
+        `<br/>${results} results on this page.<br/>
+        Endless scrolling is recommended with the Search My Stuff extension.<br/>
         <a class='destroy-button'>Exit search and show all posts</a>`;
     } else {
       statusHtml = status +
@@ -320,7 +320,7 @@
         <a class='destroy-button'>Exit search and show all posts</a>`;
     }
 
-    if (results > 0) {
+    if (results > 0 || endlessScrollingDisabled) {
       if ($('#xkit-search-status-bar-top').length > 0) {
         $('#xkit-search-status-bar-top').html(statusHtml);
        } else {
@@ -362,11 +362,10 @@
   };
 
   // TODO:
-  // don't run literally everywhere lmao
-  // handle soft refresh/navigation
+  // don't run literally everywhere lmao (handle soft refresh/navigation)
   // mark.js
-  // use mark.js instead of actually searching manually
-  // use sidebar function
+  // use mark.js instead of actually searching manually?
+  // use sidebar function when availible
   // double check all asynchronous logic
 
   return { main, clean, stylesheet: true };

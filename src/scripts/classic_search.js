@@ -50,7 +50,7 @@
     } = changes;
 
     if (newTabChanges) {
-      clean().then(main); // eslint-disable-line no-use-before-define
+      clean().then(main);
     }
   };
 

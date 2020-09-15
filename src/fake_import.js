@@ -1,5 +1,4 @@
 // Adapted from https://stackoverflow.com/a/50764428
-/* eslint-disable no-implicit-globals */
 /* eslint-disable no-new-func */
 {
   const modules = {};

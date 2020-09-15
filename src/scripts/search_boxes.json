@@ -1,0 +1,16 @@
+{
+	"title": "Search My Stuff",
+	"description": "Search posted, liked, queued, and drafted posts",
+	"icon": {
+	  "class_name": "ri-search-line",
+	  "color": "white",
+	  "background_color": "#FE6E0B"
+	},
+	"preferences": {
+	  "maxResults": {
+		"type": "text",
+		"label": "Maximum search results (default: 200)",
+		"default": "200"
+	  }
+	}
+}

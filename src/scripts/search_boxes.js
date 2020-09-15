@@ -356,16 +356,14 @@
   };
 
   const clean = async function () {
-    // browser.storage.onChanged.removeListener(onStorageChanged);
-    // const { onNewPosts } = await fakeImport('/src/util/mutations.js');
-    // onNewPosts.removeListener(removeRecommended);
-    // showRecommended();
+    browser.storage.onChanged.removeListener(onStorageChanged);
+    await searchEnd();
+    $('#xkit-search-box').remove();
   };
 
   // TODO:
   // don't run literally everywhere lmao
   // handle soft refresh/navigation
-  // handle clean
   // mark.js
   // use mark.js instead of actually searching manually
   // use sidebar function

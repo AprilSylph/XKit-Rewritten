@@ -12,7 +12,7 @@
   background-color: var(--white);
   display: flex;
   flex-direction: column;
-  max-width: 300px;
+  max-width: 250px;
 }
 
 #glass-container .one-click-postage-popup {

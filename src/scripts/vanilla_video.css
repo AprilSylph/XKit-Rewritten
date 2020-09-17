@@ -1,0 +1,7 @@
+.xkit-vanilla-video-done video {
+  cursor: default;
+}
+
+.xkit-vanilla-video-done video ~ * {
+  display: none !important;
+}

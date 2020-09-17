@@ -1,0 +1,9 @@
+{
+  "title": "Vanilla Video",
+  "description": "Use the browser's controls for video posts",
+  "icon": {
+    "class_name": "ri-movie-line",
+    "color": "white",
+    "background_color": "#ff62ce"
+  }
+}

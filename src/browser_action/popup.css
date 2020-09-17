@@ -82,6 +82,7 @@ section h2 {
   justify-content: space-between;
   position: sticky;
   top: 0;
+  z-index: 1;
   background-color: white;
   padding: 1ch;
   border-bottom: 1px solid #cccccc;

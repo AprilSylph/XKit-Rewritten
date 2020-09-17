@@ -6,7 +6,7 @@
 
   const processPosts = async function () {
     const { getPostElements } = await fakeImport('/src/util/interface.js');
-    const { timelineObject } = await fakeImport('/src/util/react_props.js');
+    const { timelineObjectMemoized } = await fakeImport('/src/util/react_props.js');
 
     getPostElements({ excludeClass }).forEach(async postElement => {
       if (blockingMode === 'all') {
@@ -14,7 +14,7 @@
         return;
       }
 
-      const postTimelineObject = await timelineObject(postElement.dataset.id);
+      const postTimelineObject = await timelineObjectMemoized(postElement.dataset.id);
 
       {
         const { blog: { isAdult } } = postTimelineObject;

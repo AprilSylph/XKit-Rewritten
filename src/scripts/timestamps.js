@@ -28,10 +28,10 @@
 
   const addPostTimestamps = async function () {
     const { getPostElements } = await fakeImport('/src/util/interface.js');
-    const { timelineObject } = await fakeImport('/src/util/react_props.js');
+    const { timelineObjectMemoized } = await fakeImport('/src/util/react_props.js');
 
     getPostElements({ excludeClass: 'xkit-timestamps-done' }).forEach(async postElement => {
-      const { timestamp, postUrl } = await timelineObject(postElement.dataset.id);
+      const { timestamp, postUrl } = await timelineObjectMemoized(postElement.dataset.id);
 
       const noteCountElement = postElement.querySelector(noteCountSelector);
 
@@ -52,11 +52,11 @@
 
   const addReblogTimestamps = async function () {
     const { getPostElements } = await fakeImport('/src/util/interface.js');
-    const { timelineObject } = await fakeImport('/src/util/react_props.js');
+    const { timelineObjectMemoized } = await fakeImport('/src/util/react_props.js');
     const { apiFetch } = await fakeImport('/src/util/tumblr_helpers.js');
 
     getPostElements({ excludeClass: 'xkit-reblog-timestamps-done' }).forEach(async postElement => {
-      let { trail } = await timelineObject(postElement.dataset.id);
+      let { trail } = await timelineObjectMemoized(postElement.dataset.id);
       if (!trail.length) {
         return;
       }

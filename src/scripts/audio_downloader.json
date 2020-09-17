@@ -1,9 +1,0 @@
-{
-  "title": "Audio Downloader",
-  "description": "Download Tumblr-hosted audio",
-  "icon": {
-    "class_name": "ri-file-download-line",
-    "color": "white",
-    "background_color": "#7c5cff"
-  }
-}

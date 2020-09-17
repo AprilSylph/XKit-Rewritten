@@ -1,6 +1,5 @@
 [
   "accesskit",
-  "audio_downloader",
   "classic_search",
   "cleanfeed",
   "disable_gifs",
@@ -11,5 +10,6 @@
   "open_in_tabs",
   "painter",
   "timestamps",
-  "tweaks"
+  "tweaks",
+  "vanilla_audio"
 ]

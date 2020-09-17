@@ -1,0 +1,9 @@
+{
+  "title": "Vanilla Audio",
+  "description": "Use the browser's controls for audio posts",
+  "icon": {
+    "class_name": "ri-file-music-line",
+    "color": "white",
+    "background_color": "#7c5cff"
+  }
+}

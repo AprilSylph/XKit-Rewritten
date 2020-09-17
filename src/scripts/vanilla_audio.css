@@ -1,0 +1,12 @@
+.xkit-vanilla-audio-done [role="slider"],
+.xkit-vanilla-audio-done [role="button"] {
+  display: none;
+}
+
+.xkit-vanilla-audio-done .trackInfo {
+  padding-left: 20px;
+}
+
+.xkit-vanilla-audio-done + audio[controls] {
+  width: 100%;
+}

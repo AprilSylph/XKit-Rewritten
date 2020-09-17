@@ -19,14 +19,25 @@
     });
   };
 
+  const stopVideoAutoplay = async function () {
+    [...document.querySelectorAll(`.${excludeClass} video[autoplay]`)]
+    .forEach(video => {
+      video.autoplay = false;
+      video.pause();
+      video.currentTime = 0;
+    });
+  };
+
   const main = async function () {
     const { keyToCss } = await fakeImport('/src/util/css_map.js');
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts, onPostsMutated } = await fakeImport('/src/util/mutations.js');
 
     videoPlayerSelector = await keyToCss('videoPlayer');
 
     onNewPosts.addListener(addVideoControls);
     addVideoControls();
+
+    onPostsMutated.addListener(stopVideoAutoplay);
   };
 
   const clean = async function () {

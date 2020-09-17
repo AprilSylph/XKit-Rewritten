@@ -1,16 +1,7 @@
 (function () {
-  let videoPlayerSelector;
-
-  const excludeClass = 'xkit-vanilla-video-done';
-
   const addVideoControls = async function () {
-    [...document.querySelectorAll(`${videoPlayerSelector}:not(.${excludeClass}`)]
-    .forEach(videoPlayer => {
-      videoPlayer.classList.add(excludeClass);
-
-      const video = videoPlayer.querySelector('video');
-      if (!video) { return; }
-
+    [...document.querySelectorAll('video:not([controls])')]
+    .forEach(video => {
       video.controls = true;
       video.loop = false;
       video.autoplay = false;
@@ -20,7 +11,7 @@
   };
 
   const stopVideoAutoplay = async function () {
-    [...document.querySelectorAll(`.${excludeClass} video[autoplay]`)]
+    [...document.querySelectorAll('video[controls][autoplay]')]
     .forEach(video => {
       video.autoplay = false;
       video.pause();
@@ -29,21 +20,22 @@
   };
 
   const main = async function () {
-    const { keyToCss } = await fakeImport('/src/util/css_map.js');
     const { onNewPosts, onPostsMutated } = await fakeImport('/src/util/mutations.js');
 
-    videoPlayerSelector = await keyToCss('videoPlayer');
-
     onNewPosts.addListener(addVideoControls);
-    addVideoControls();
-
     onPostsMutated.addListener(stopVideoAutoplay);
+
+    addVideoControls();
   };
 
   const clean = async function () {
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts, onPostsMutated } = await fakeImport('/src/util/mutations.js');
 
     onNewPosts.removeListener(addVideoControls);
+    onPostsMutated.removeListener(stopVideoAutoplay);
+
+    [...document.querySelectorAll('video[controls]')]
+    .forEach(video => { video.controls = false; });
   };
 
   return { main, clean, stylesheet: true };

@@ -1,4 +1,4 @@
-.one-click-postage-popup {
+.quick-reblog {
   position: absolute;
   z-index: 2;
   top: 100%;
@@ -15,21 +15,21 @@
   max-width: 250px;
 }
 
-#glass-container .one-click-postage-popup {
+#glass-container .quick-reblog {
   top: 50%;
   right: 100%;
   transform: translate(-20px, -50%);
 }
 
 @media only screen and (max-width: 716px) {
-  .one-click-postage-popup {
+  .quick-reblog {
     top: 50%;
     right: 100%;
     transform: translate(-20px, -50%);
   }
 }
 
-.one-click-postage-popup .message {
+.quick-reblog .message {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,16 +43,16 @@
   font-weight: bold;
 }
 
-.one-click-postage-popup .message:empty {
+.quick-reblog .message:empty {
   display: none;
 }
 
-.one-click-postage-popup select {
+.quick-reblog select {
   font-weight: bold;
 }
 
-.one-click-postage-popup select,
-.one-click-postage-popup input {
+.quick-reblog select,
+.quick-reblog input {
   border: none;
   border-bottom: 1px solid var(--gray-13);
   border-radius: 0;
@@ -63,36 +63,36 @@
   -moz-appearance: none;
 }
 
-.one-click-postage-popup .action-buttons {
+.quick-reblog .action-buttons {
   display: flex;
   flex-direction: row;
   background-color: var(--gray-13);
 }
 
-.one-click-postage-popup .action-buttons button {
+.quick-reblog .action-buttons button {
   flex-grow: 1;
   font-weight: bold;
   padding: 1ch;
   background-color: var(--white);
 }
 
-.one-click-postage-popup .action-buttons button:hover {
+.quick-reblog .action-buttons button:hover {
   background-color: var(--secondary-accent);
 }
 
-.one-click-postage-popup .action-buttons button + button {
+.quick-reblog .action-buttons button + button {
   margin-left: 1px;
 }
 
-.one-click-postage-popup button[data-state="published"] {
+.quick-reblog button[data-state="published"] {
   color: var(--blue);
 }
 
-.one-click-postage-popup button[data-state="queue"] {
+.quick-reblog button[data-state="queue"] {
   color: var(--pink);
 }
 
-.one-click-postage-popup button[data-state="draft"] {
+.quick-reblog button[data-state="draft"] {
   color: var(--orange);
 }
 

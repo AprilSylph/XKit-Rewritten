@@ -124,7 +124,7 @@
     messageDialog.classList.add('message');
 
     popupElement = document.createElement('div');
-    popupElement.classList.add('one-click-postage-popup');
+    popupElement.classList.add('quick-reblog');
     [messageDialog, blogSelector, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
 
     $(document.body).on('mouseover', '[data-id] a[href^="https://www.tumblr.com/reblog/"]', showPopupOnHover);

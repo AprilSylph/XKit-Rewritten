@@ -1,3 +1,26 @@
+.xkit-gif-label {
+  z-index: 2;
+  position: absolute;
+  top: 1ch;
+  right: 1ch;
+  height: 1em;
+  line-height: 1em;
+  background-color: var(--black);
+  color: var(--white);
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.xkit-gif-label::before {
+  content: "GIF";
+}
+
+figure:hover .xkit-paused-gif,
+figure:hover .xkit-gif-label {
+  display: none;
+}
+
 .accesskit-blue-links article a[target="_blank"][href^="https://t.umblr.com/redirect"] {
   color: var(--accent);
 }

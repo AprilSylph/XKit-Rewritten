@@ -7,6 +7,11 @@
     "background_color": "#df46f6"
   },
   "preferences": {
+    "disableGifs": {
+      "type": "checkbox",
+      "label": "Pause GIFs until they are hovered over",
+      "default": true
+    },
     "blueLinks": {
       "type": "checkbox",
       "label": "Make links in posts blue",

@@ -1,9 +1,0 @@
-{
-  "title": "Old Blue",
-  "description": "True low-contrast classic",
-  "icon": {
-    "class_name": "ri-dashboard-line",
-    "color": "white",
-    "background_color": "#36465d"
-  }
-}

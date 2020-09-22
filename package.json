@@ -28,7 +28,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "web-ext": "^5.0.0"
+    "web-ext": "^5.1.0"
   },
   "dependencies": {
     "jquery": "^3.5.1",

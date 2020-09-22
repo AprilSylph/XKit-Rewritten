@@ -24,7 +24,22 @@
     });
   };
 
+  const onStorageChanged = async function (changes, areaName) {
+    if (areaName !== 'local') {
+      return;
+    }
+
+    const {
+      'vanilla_audio.preferences.defaultVolume': defaultVolumeChanges,
+    } = changes;
+
+    if (defaultVolumeChanges) {
+      ({ newValue: defaultVolume } = defaultVolumeChanges);
+    }
+  };
+
   const main = async function () {
+    browser.storage.onChanged.addListener(onStorageChanged);
     const { keyToCss } = await fakeImport('/src/util/css_map.js');
     const { getPreferences } = await fakeImport('/src/util/preferences.js');
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
@@ -39,6 +54,7 @@
   };
 
   const clean = async function () {
+    browser.storage.onChanged.removeListener(onStorageChanged);
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
 
     onNewPosts.removeListener(addAudioControls);

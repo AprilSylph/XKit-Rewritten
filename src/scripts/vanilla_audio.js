@@ -2,6 +2,8 @@
   let nativePlayerSelector;
   let trackInfoSelector;
 
+  let defaultVolume;
+
   const excludeClass = 'xkit-vanilla-audio-done';
 
   const addAudioControls = async function () {
@@ -17,16 +19,20 @@
 
       const audioClone = audio.cloneNode(true);
       audioClone.controls = true;
+      audioClone.volume = defaultVolume / 100;
       nativePlayer.parentNode.appendChild(audioClone);
     });
   };
 
   const main = async function () {
     const { keyToCss } = await fakeImport('/src/util/css_map.js');
+    const { getPreferences } = await fakeImport('/src/util/preferences.js');
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
 
     nativePlayerSelector = await keyToCss('nativePlayer');
     trackInfoSelector = await keyToCss('trackInfo');
+
+    ({ defaultVolume } = await getPreferences('vanilla_audio'));
 
     onNewPosts.addListener(addAudioControls);
     addAudioControls();

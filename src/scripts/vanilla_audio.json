@@ -5,5 +5,19 @@
     "class_name": "ri-file-music-line",
     "color": "white",
     "background_color": "#7c5cff"
+  },
+  "preferences": {
+    "defaultVolume": {
+      "type": "select",
+      "label": "Default Volume",
+      "options": {
+        "0": "Muted",
+        "25": "25%",
+        "50": "50%",
+        "75": "75%",
+        "100": "100%"
+      },
+      "default": "100"
+    }
   }
 }

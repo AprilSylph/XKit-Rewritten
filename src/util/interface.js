@@ -10,7 +10,7 @@
       return [];
     }
 
-    const selector = `${noPeepr ? '#base-container' : ''} [data-id]:not(.${excludeClass})`;
+    const selector = `${noPeepr ? '#base-container > :not(#glass-container)' : ''} [data-id]:not(.${excludeClass})`;
     const postElements = [...document.querySelectorAll(selector)];
     postElements.forEach(postElement => postElement.classList.add(excludeClass));
 

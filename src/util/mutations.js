@@ -2,50 +2,26 @@
   const baseContainerNode = document.getElementById('base-container');
   const postSelector = '[data-id]';
 
-  const onNewPosts = Object.freeze({
-    listeners: [],
-    addListener (callback) {
-      if (this.listeners.includes(callback) === false) {
-        this.listeners.push(callback);
-      }
-    },
-    removeListener (callback) {
-      const index = this.listeners.indexOf(callback);
-      if (index !== -1) {
-        this.listeners.splice(index, 1);
-      }
-    },
-  });
+  const ListenerTracker = function () {
+    this.listeners = [];
 
-  const onPostsMutated = Object.freeze({
-    listeners: [],
-    addListener (callback) {
+    this.addListener = function (callback) {
       if (this.listeners.includes(callback) === false) {
         this.listeners.push(callback);
       }
-    },
-    removeListener (callback) {
-      const index = this.listeners.indexOf(callback);
-      if (index !== -1) {
-        this.listeners.splice(index, 1);
-      }
-    },
-  });
+    };
 
-  const onBaseContainerMutated = Object.freeze({
-    listeners: [],
-    addListener (callback) {
-      if (this.listeners.includes(callback) === false) {
-        this.listeners.push(callback);
-      }
-    },
-    removeListener (callback) {
+    this.removeListener = function (callback) {
       const index = this.listeners.indexOf(callback);
       if (index !== -1) {
         this.listeners.splice(index, 1);
       }
-    },
-  });
+    };
+  };
+
+  const onNewPosts = Object.freeze(new ListenerTracker());
+  const onPostsMutated = Object.freeze(new ListenerTracker());
+  const onBaseContainerMutated = Object.freeze(new ListenerTracker());
 
   const debounce = (callback, ms) => {
     let timeoutID;

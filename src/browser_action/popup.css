@@ -208,13 +208,33 @@ section h2 {
   padding: 0.5ch 0;
 }
 
-#news, #links {
-  margin: 1em 0;
-  padding: 0 1em;
+#backup {
+  margin: 1ch 0;
+  padding: 0 1ch;
 }
 
-#news h2 {
-  text-align: left;
+.storage-areas div {
+  display: flex;
+  flex-direction: column;
+  padding: 1ch;
+}
+
+.storage-areas h4 {
+  text-transform: capitalize;
+}
+
+.storage-areas h4,
+.storage-areas p {
+  margin: 0;
+}
+
+.storage-areas p {
+  margin-top: 0.5ch;
+}
+
+#links {
+  margin: 1em 0;
+  padding: 0 1em;
 }
 
 #links ul {

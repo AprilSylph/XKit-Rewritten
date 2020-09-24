@@ -243,8 +243,17 @@ section h2 {
   align-items: stretch;
 }
 
+.if-sync-supported button {
+  width: 100%;
+}
+
 .if-sync-supported button + button {
   margin-left: 1ch;
+}
+
+.local button {
+  width: 100%;
+  text-align: center;
 }
 
 #links {

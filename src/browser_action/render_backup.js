@@ -18,6 +18,22 @@ const downloadData = async function () {
   document.querySelector('a[href="#configuration"]').classList.add('outdated');
 };
 
+const downloadToFile = async function () {
+  const storageLocal = await browser.storage.local.get();
+  const stringifiedStorage = JSON.stringify(storageLocal);
+  const storageBlob = new Blob([stringifiedStorage], { type: 'application/json' });
+  const blobUrl = URL.createObjectURL(storageBlob);
+
+  const tempLink = document.createElement('a');
+  tempLink.href = blobUrl;
+  tempLink.download = 'XKit Export.json';
+
+  document.documentElement.appendChild(tempLink);
+  tempLink.click();
+  tempLink.parentNode.removeChild(tempLink);
+  URL.revokeObjectURL(blobUrl);
+};
+
 const renderBackup = async function () {
   for (const storageArea of ['local', 'sync']) {
     const div = document.createElement('div');
@@ -60,6 +76,9 @@ const renderBackup = async function () {
     uploadButton.addEventListener('click', uploadData);
     downloadButton.addEventListener('click', downloadData);
   }
+
+  const localDownloadButton = document.getElementById('download-to-file');
+  localDownloadButton.addEventListener('click', downloadToFile);
 };
 
 renderBackup();

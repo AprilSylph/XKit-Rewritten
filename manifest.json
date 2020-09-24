@@ -33,6 +33,10 @@
 
   "permissions": [ "storage", "*://*.tumblr.com/*" ],
   "web_accessible_resources": [ "src/*.js", "src/*.json", "src/*.css" ],
+  "background": {
+    "scripts": [ "lib/browser-polyfill.min.js", "src/background.js" ],
+    "persistent": false
+  },
   "content_scripts": [
     {
       "matches": [ "*://www.tumblr.com/*" ],

@@ -1,3 +1,7 @@
+const configSection = document.getElementById('configuration');
+const configSectionLink = document.querySelector('a[href="#configuration"]');
+const scriptsDiv = configSection.querySelector('.scripts');
+
 const { getURL } = browser.runtime;
 
 const getInstalledScripts = async function () {
@@ -42,9 +46,9 @@ const writePreference = async function (event) {
 };
 
 const renderScripts = async function () {
-  const configSection = document.getElementById('configuration');
   const installedScripts = await getInstalledScripts();
   const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
+
   const orderedEnabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName));
   const disabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName) === false);
 
@@ -128,10 +132,10 @@ const renderScripts = async function () {
       preferenceList.appendChild(preferenceTemplateClone);
     }
 
-    configSection.appendChild(scriptTemplateClone);
+    scriptsDiv.appendChild(scriptTemplateClone);
   }
 
-  const $makeSpectrum = $(configSection).find('.makeSpectrum');
+  const $makeSpectrum = $(scriptsDiv).find('.makeSpectrum');
 
   $makeSpectrum.spectrum({
     preferredFormat: 'hex',
@@ -143,3 +147,11 @@ const renderScripts = async function () {
 };
 
 renderScripts();
+
+configSectionLink.addEventListener('click', ({ target }) => {
+  if (target.classList.contains('outdated')) {
+    target.classList.remove('outdated');
+    scriptsDiv.textContent = '';
+    renderScripts();
+  }
+});

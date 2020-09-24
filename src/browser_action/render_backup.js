@@ -1,6 +1,22 @@
 const backupSection = document.getElementById('backup');
-const storageAreasDiv = backupSection.querySelector('.storage-areas');
 const backupSectionLink = document.querySelector('a[href="#backup"]');
+const storageAreasDiv = backupSection.querySelector('.storage-areas');
+
+let syncSupported = false;
+
+const uploadData = async function () {
+  const storageLocal = await browser.storage.local.get();
+  await browser.storage.sync.set(storageLocal);
+  backupSectionLink.click();
+};
+
+const downloadData = async function () {
+  const storageSync = await browser.storage.sync.get();
+  await browser.storage.local.set(storageSync);
+  backupSectionLink.click();
+
+  document.querySelector('a[href="#configuration"]').classList.add('outdated');
+};
 
 const renderBackup = async function () {
   for (const storageArea of ['local', 'sync']) {
@@ -18,6 +34,10 @@ const renderBackup = async function () {
     try {
       const { storageLastModified } = await browser.storage[storageArea].get('storageLastModified');
 
+      if (storageArea === 'sync') {
+        syncSupported = true;
+      }
+
       if (storageLastModified) {
         const date = new Date(storageLastModified);
         const dateString = date.toLocaleString();
@@ -28,6 +48,17 @@ const renderBackup = async function () {
     } catch (exception) {
       p.textContent = 'Not supported by this browser';
     }
+  }
+
+  if (syncSupported) {
+    const ifSyncSupportedDiv = backupSection.querySelector('.if-sync-supported');
+    ifSyncSupportedDiv.classList.add('sync-supported');
+
+    const uploadButton = ifSyncSupportedDiv.querySelector('#upload');
+    const downloadButton = ifSyncSupportedDiv.querySelector('#download');
+
+    uploadButton.addEventListener('click', uploadData);
+    downloadButton.addEventListener('click', downloadData);
   }
 };
 

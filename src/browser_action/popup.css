@@ -232,6 +232,21 @@ section h2 {
   margin-top: 0.5ch;
 }
 
+.if-sync-supported:not(.sync-supported) {
+  display: none;
+}
+
+.if-sync-supported .controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.if-sync-supported button + button {
+  margin-left: 1ch;
+}
+
 #links {
   margin: 1em 0;
   padding: 0 1em;

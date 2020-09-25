@@ -2,16 +2,22 @@
   /**
    * @param {object} options - Arguments object (destructured, not used directly)
    * @param {string} options.excludeClass - Classname to exclude and add
-   * @param {boolean} options.noPeepr - Whether to only return posts in #base-container (optional)
+   * @param {boolean} options.noPeepr - Whether to exclude posts in #glass-container (optional)
+   * @param {boolean} options.includeFiltered - Whether to include filtered posts (optional)
    * @returns {Array} - Array of post elements matching the query options
    */
-  const getPostElements = function ({ excludeClass, noPeepr = false }) {
+  const getPostElements = function ({ excludeClass, noPeepr = false, includeFiltered = false }) {
     if (!excludeClass) {
       return [];
     }
 
     const selector = `${noPeepr ? '#base-container > :not(#glass-container)' : ''} [data-id]:not(.${excludeClass})`;
-    const postElements = [...document.querySelectorAll(selector)];
+    let postElements = [...document.querySelectorAll(selector)];
+
+    if (!includeFiltered) {
+      postElements = postElements.filter(postElement => postElement.querySelector('article footer') !== null);
+    }
+
     postElements.forEach(postElement => postElement.classList.add(excludeClass));
 
     return postElements;

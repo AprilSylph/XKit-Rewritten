@@ -39,7 +39,7 @@
     if (onNewPosts.listeners.length !== 0 || onPostsMutated.listeners.length !== 0) {
       const newPosts = mutations.some(({ addedNodes }) => [...addedNodes]
         .filter(addedNode => addedNode instanceof HTMLElement)
-        .some(addedNode => addedNode.matches(postSelector) || addedNode.matches(`${postSelector} article`) || addedNode.querySelector(postSelector) !== null));
+        .some(addedNode => addedNode.matches(postSelector) || addedNode.matches(`${postSelector} > div`) || addedNode.matches(`${postSelector} article`) || addedNode.querySelector(postSelector) !== null));
 
       if (newPosts) {
         runOnNewPosts();

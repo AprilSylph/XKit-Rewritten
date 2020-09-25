@@ -96,7 +96,7 @@ const renderScripts = async function () {
       const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
 
       const preferenceLabel = preferenceTemplateClone.querySelector('label');
-      preferenceLabel.textContent = preference.label;
+      preferenceLabel.textContent = preference.label || key;
       preferenceLabel.setAttribute('for', `${scriptName}.${preference.type}.${key}`);
 
       const inputType = {

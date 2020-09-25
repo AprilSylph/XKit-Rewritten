@@ -27,6 +27,11 @@
       "label": "Make posts' mini-follow buttons more subtle",
       "default": false
     },
+    "boring_tag_chiclets": {
+      "type": "checkbox",
+      "label": "Make the tag chiclet carousel boring",
+      "default": false
+    },
     "no_where_were_we": {
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",

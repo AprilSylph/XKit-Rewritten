@@ -6,7 +6,7 @@
     const { addStyle } = await fakeImport('/src/util/interface.js');
 
     const tagChicletWrapperSelector = await keyToCss('tagChicletWrapper');
-    css = `${tagChicletWrapperSelector} { background-image: none !important; background-color: var(--secondary-accent); }`;
+    css = `${tagChicletWrapperSelector} { background-image: none !important; color: var(--black); background-color: var(--secondary-accent); }`;
 
     addStyle(css);
   };

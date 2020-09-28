@@ -5,12 +5,43 @@ const storageAreasDiv = backupSection.querySelector('.storage-areas');
 let syncSupported = false;
 
 const uploadData = async function () {
+  const errorsDisplay = document.querySelector('.if-sync-supported .errors');
+  errorsDisplay.textContent = '';
+
   const storageLocal = await browser.storage.local.get();
+  const keys = Object.keys(storageLocal);
+
+  if (keys.length > 512) {
+    errorsDisplay.textContent += 'ERROR: More than 512 storage keys; cannot upload.';
+    return;
+  }
+
+  const encoder = new TextEncoder();
+
+  for (const key of keys) {
+    const stringToMeasure = key + JSON.stringify(storageLocal[key]);
+    const byteStream = encoder.encode(stringToMeasure);
+    if (byteStream.length > 8192) {
+      errorsDisplay.textContent += `WARNING: Dropped ${key} for exceeding quota.\n  (${byteStream.length} of 8192 bytes used)\n`;
+      delete storageLocal[key];
+    }
+  }
+
+  const stringifiedStorage = JSON.stringify(storageLocal);
+  const storageByteStream = encoder.encode(stringifiedStorage);
+  if (storageByteStream.length > 102400) {
+    errorsDisplay.textContent += `ERROR: Storage too large to upload.\n  (${storageByteStream.length} of 102400 bytes used)\n`;
+    return;
+  }
+
   await browser.storage.sync.set(storageLocal);
   backupSectionLink.click();
 };
 
 const downloadData = async function () {
+  const errorsDisplay = document.querySelector('.if-sync-supported .errors');
+  errorsDisplay.textContent = '';
+
   const storageSync = await browser.storage.sync.get();
   await browser.storage.local.set(storageSync);
   backupSectionLink.click();

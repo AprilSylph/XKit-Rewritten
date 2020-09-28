@@ -6,7 +6,6 @@
   --in-content-primary-button-background: #0060df;
   --in-content-primary-button-background-hover: #003eaa;
   --in-content-primary-button-background-active: #002275;
-
 }
 
 body {
@@ -249,6 +248,11 @@ section h2 {
 
 .if-sync-supported button + button {
   margin-left: 1ch;
+}
+
+.if-sync-supported .errors {
+  font-size: 12px;
+  white-space: pre-wrap;
 }
 
 .local button {

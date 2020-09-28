@@ -8,7 +8,6 @@
       canvas.height = image.naturalHeight;
       canvas.className = gifElement.className;
       canvas.classList.add('xkit-paused-gif');
-      canvas.style.zIndex = 1;
       canvas.getContext('2d').drawImage(image, 0, 0);
 
       const gifLabel = document.createElement('p');

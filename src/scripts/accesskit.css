@@ -1,5 +1,4 @@
 .xkit-gif-label {
-  z-index: 2;
   position: absolute;
   top: 1ch;
   right: 1ch;
@@ -14,6 +13,10 @@
 
 .xkit-gif-label::before {
   content: "GIF";
+}
+
+figure:not(:hover) img[srcset*=".gif"] {
+  display: none;
 }
 
 figure:hover .xkit-paused-gif,

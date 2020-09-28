@@ -46,6 +46,9 @@
         "lib/jquery.min.js",
         "src/fake_import.js",
         "src/xkit.js"
+      ],
+      "css": [
+        "src/sidebar.css"
       ]
     }
   ],

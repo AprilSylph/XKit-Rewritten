@@ -1,0 +1,12 @@
+#links {
+  margin: 1em 0;
+  padding: 0 1em;
+}
+
+#links ul {
+  padding-left: 1em;
+}
+
+#links li {
+  margin-bottom: 1ch;
+}

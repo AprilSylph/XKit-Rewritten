@@ -40,6 +40,7 @@ const writePreference = async function (event) {
     case 'text':
     case 'color':
     case 'select':
+    case 'textarea':
       browser.storage.local.set({ [storageKey]: event.target.value });
       break;
   }
@@ -104,6 +105,7 @@ const renderScripts = async function () {
         text: 'input',
         color: 'input',
         select: 'select',
+        textarea: 'textarea',
       }[preference.type];
 
       const preferenceInput = preferenceTemplateClone.querySelector(inputType);
@@ -116,6 +118,7 @@ const renderScripts = async function () {
           break;
         case 'text':
         case 'color':
+        case 'textarea':
           preferenceInput.value = preference.value;
           break;
         case 'select':

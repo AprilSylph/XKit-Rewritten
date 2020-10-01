@@ -1,0 +1,25 @@
+.xkit-post-button-container {
+  font-family: var(--font-family);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-left: 20px;
+  position: relative;
+  line-height: 1;
+}
+
+.xkit-post-button-container-span {
+  vertical-align: top;
+  display: inline-block;
+  width: inherit;
+}
+
+.xkit-post-button {
+  color: inherit;
+  font: inherit;
+}
+
+.xkit-post-button-inner {
+  display: block;
+  color: inherit;
+  font: inherit;
+}

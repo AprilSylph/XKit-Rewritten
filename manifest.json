@@ -48,7 +48,8 @@
         "src/xkit.js"
       ],
       "css": [
-        "src/sidebar.css"
+        "src/sidebar.css",
+        "src/footer-button.css"
       ]
     }
   ],

@@ -84,5 +84,65 @@
     });
   })();
 
-  return { getPostElements, addStyle, removeStyle, registerMeatballItem, unregisterMeatballItem };
+  /**
+   * Fetch the SVG belonging to a specific RemixIcon.
+   *
+   * @param {string} cssClass The RemixIcon class of the requested icon
+   * @returns {string} The SVG path of the associated RemixIcon, or undefined if there is no icon with the requested class
+   */
+  const getIconPath = async function (cssClass) {
+    const url = browser.runtime.getURL('/src/util/remixicon-svg.json');
+    const file = await fetch(url);
+    const icons = await file.json();
+
+    if (Object.prototype.hasOwnProperty.call(icons, cssClass)) {
+      return `<path d="${icons[cssClass]}"/>`;
+    }
+  };
+
+  /**
+   * Create a button template that can be cloned with cloneFooterButton() for inserting into the controls of a post.
+   *
+   * @param {string} iconClass The RemixIcon class of the requested icon
+   * @param {string} buttonClass An extra class to identify the extension that added the button
+   * @returns {HTMLDivElement} A button that can be cloned with cloneFooterButton()
+   */
+  const getPostFooterButton = async function (iconClass, buttonClass) {
+    const queueButtonContainer = document.createElement('div');
+    queueButtonContainer.classList.add('xkit-post-button-container', buttonClass);
+
+    const queueButtonContainerSpan = document.createElement('span');
+    queueButtonContainerSpan.classList.add('xkit-post-button-container-span');
+
+    const queueButton = document.createElement('button');
+    queueButton.classList.add('xkit-post-button');
+    queueButton.tabIndex = 0;
+
+    const queueButtonInner = document.createElement('span');
+    queueButtonInner.classList.add('xkit-post-button-inner');
+    queueButtonInner.tabIndex = -1;
+    const iconPath = await getIconPath(iconClass);
+    queueButtonInner.innerHTML = `<svg viewBox="2 2 20 20" width="21" height="21" fill="var(--gray-65)">${iconPath}</svg>`;
+
+    queueButton.appendChild(queueButtonInner);
+    queueButtonContainerSpan.appendChild(queueButton);
+    queueButtonContainer.appendChild(queueButtonContainerSpan);
+
+    return queueButtonContainer;
+  };
+
+  /**
+   * Create a deep-level clone of a button template that is ready to add to the page
+   *
+   * @param {HTMLDivElement} template A button template as returned by getPostFooterButton()
+   * @param {Function} callback A function to run when the button is clicked
+   * @returns {HTMLDivElement} A clone of the template with a click handler attached
+   */
+  const cloneFooterButton = function (template, callback) {
+    const newButton = template.cloneNode(true);
+    newButton.querySelector('button').addEventListener('click', callback);
+    return newButton;
+  };
+
+  return { getPostElements, addStyle, removeStyle, registerMeatballItem, unregisterMeatballItem, getIconPath, getPostFooterButton, cloneFooterButton };
 })();

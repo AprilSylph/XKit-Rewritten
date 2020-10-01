@@ -7,7 +7,7 @@
   },
   "preferences": {
     "hiddenAvatars": {
-      "type": "text",
+      "type": "textarea",
       "label": "Usernames (comma-separated)",
       "default": ""
     }

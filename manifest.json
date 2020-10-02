@@ -49,7 +49,7 @@
       ],
       "css": [
         "src/sidebar.css",
-        "src/footer-button.css"
+        "src/control_buttons.css"
       ]
     }
   ],

@@ -28,7 +28,15 @@ const writeEnabled = async function (event) {
   browser.storage.local.set({ enabledScripts });
 };
 
-const writePreference = async function (event) {
+const debounce = (callback, ms) => {
+  let timeoutID;
+  return (...args) => {
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(() => callback(...args), ms);
+  };
+};
+
+const writePreference = debounce(async function (event) {
   const { id } = event.target;
   const [scriptName, preferenceType, preferenceName] = id.split('.');
   const storageKey = `${scriptName}.preferences.${preferenceName}`;
@@ -44,7 +52,7 @@ const writePreference = async function (event) {
       browser.storage.local.set({ [storageKey]: event.target.value });
       break;
   }
-};
+}, 500);
 
 const renderScripts = async function () {
   const installedScripts = await getInstalledScripts();

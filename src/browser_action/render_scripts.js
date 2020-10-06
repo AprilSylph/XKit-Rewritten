@@ -36,7 +36,7 @@ const debounce = (callback, ms) => {
   };
 };
 
-const writePreference = debounce(async function (event) {
+const writePreference = async function (event) {
   const { id } = event.target;
   const [scriptName, preferenceType, preferenceName] = id.split('.');
   const storageKey = `${scriptName}.preferences.${preferenceName}`;
@@ -52,7 +52,7 @@ const writePreference = debounce(async function (event) {
       browser.storage.local.set({ [storageKey]: event.target.value });
       break;
   }
-}, 500);
+};
 
 const renderScripts = async function () {
   const installedScripts = await getInstalledScripts();
@@ -118,7 +118,7 @@ const renderScripts = async function () {
 
       const preferenceInput = preferenceTemplateClone.querySelector(inputType);
       preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
-      preferenceInput.addEventListener('input', writePreference);
+      preferenceInput.addEventListener('input', debounce(writePreference, 500));
 
       switch (preference.type) {
         case 'checkbox':

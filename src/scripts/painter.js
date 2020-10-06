@@ -44,7 +44,7 @@
             break;
           }
         }
-        if (!tagColourFound && colourSourceTags) {
+        if (!tagColourFound && colourSourceTags && rebloggedRootId && rebloggedRootUuid) {
           try {
             const sourcePost = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts?id=${rebloggedRootId}`);
             for (const sourceTag of sourcePost.response.posts[0].tags) {

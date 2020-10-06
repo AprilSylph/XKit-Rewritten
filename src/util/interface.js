@@ -88,10 +88,10 @@
    * Fetch the SVG belonging to a specific RemixIcon.
    *
    * @param {string} cssClass The RemixIcon class of the requested icon
-   * @returns {string} The SVG path of the associated RemixIcon, or undefined if there is no icon with the requested class
+   * @returns {string|undefined} The SVG path of the associated RemixIcon if it exists
    */
   const getIconPath = async function (cssClass) {
-    const url = browser.runtime.getURL('/src/util/remixicon-svg.json');
+    const url = browser.runtime.getURL('/src/lib/remixicon-svg.json');
     const file = await fetch(url);
     const icons = await file.json();
 

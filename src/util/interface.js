@@ -87,7 +87,7 @@
   /**
    * Fetch the SVG belonging to a specific RemixIcon.
    *
-   * @param {string} cssClass The RemixIcon class of the requested icon
+   * @param {string} cssClass - The RemixIcon class of the requested icon
    * @returns {string|undefined} The SVG path of the associated RemixIcon if it exists
    */
   const getIconPath = async function (cssClass) {
@@ -103,8 +103,8 @@
   /**
    * Create a button template that can be cloned with cloneControlButton() for inserting into the controls of a post.
    *
-   * @param {string} iconClass The RemixIcon class of the requested icon
-   * @param {string} buttonClass An extra class to identify the extension that added the button
+   * @param {string} iconClass - The RemixIcon class of the requested icon
+   * @param {string} buttonClass - An extra class to identify the extension that added the button
    * @returns {HTMLDivElement} A button that can be cloned with cloneControlButton()
    */
   const createControlButtonTemplate = async function (iconClass, buttonClass) {
@@ -134,8 +134,8 @@
   /**
    * Create a deep-level clone of a button template that is ready to add to the page
    *
-   * @param {HTMLDivElement} template A button template as returned by createControlButtonTemplate()
-   * @param {Function} callback A function to run when the button is clicked
+   * @param {HTMLDivElement} template - A button template as returned by createControlButtonTemplate()
+   * @param {Function} callback - A function to run when the button is clicked
    * @returns {HTMLDivElement} A clone of the template with a click handler attached
    */
   const cloneControlButton = function (template, callback) {

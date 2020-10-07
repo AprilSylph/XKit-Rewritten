@@ -16,7 +16,8 @@
     "comma-dangle": [ "error", "always-multiline" ],
     "indent": [ "error", 2, { "SwitchCase": 1, "MemberExpression": "off" } ],
     "semi": [ "error", "always" ],
-    "standard/no-callback-literal": "off"
+    "standard/no-callback-literal": "off",
+    "jsdoc/require-hyphen-before-param-description": [ "error", "always" ]
   },
   "ignorePatterns": [
     "lib/"

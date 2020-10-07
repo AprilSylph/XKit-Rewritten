@@ -118,7 +118,7 @@ const renderScripts = async function () {
 
       const preferenceInput = preferenceTemplateClone.querySelector(inputType);
       preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
-      preferenceInput.addEventListener('input', debounce(writePreference, 500));
+      preferenceInput.addEventListener('input', ['text', 'textarea'].includes(preference.type) ? debounce(writePreference, 500) : writePreference);
 
       switch (preference.type) {
         case 'checkbox':

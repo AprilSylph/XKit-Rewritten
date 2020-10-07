@@ -109,17 +109,17 @@
    */
   const createControlButtonTemplate = async function (iconClass, buttonClass) {
     const controlButtonContainer = document.createElement('div');
-    controlButtonContainer.classList.add('xkit-post-button-container', buttonClass);
+    controlButtonContainer.classList.add('xkit-control-button-container', buttonClass);
 
     const controlButtonContainerSpan = document.createElement('span');
-    controlButtonContainerSpan.classList.add('xkit-post-button-container-span');
+    controlButtonContainerSpan.classList.add('xkit-control-button-container-span');
 
     const controlButton = document.createElement('button');
-    controlButton.classList.add('xkit-post-button');
+    controlButton.classList.add('xkit-control-button');
     controlButton.tabIndex = 0;
 
     const controlButtonInner = document.createElement('span');
-    controlButtonInner.classList.add('xkit-post-button-inner');
+    controlButtonInner.classList.add('xkit-control-button-inner');
     controlButtonInner.tabIndex = -1;
     const iconPath = await getIconPath(iconClass);
     controlButtonInner.innerHTML = `<svg viewBox="2 2 20 20" width="21" height="21" fill="var(--gray-65)">${iconPath}</svg>`;

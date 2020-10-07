@@ -80,3 +80,8 @@ input:not(:first-child),
 select:not(:first-child) {
   margin-left: 1ch;
 }
+
+textarea {
+  resize: none;
+  width: 100%;
+}

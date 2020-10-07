@@ -24,12 +24,12 @@
     "eslint": "^7.10.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsdoc": "^30.6.2",
+    "eslint-plugin-jsdoc": "^30.6.3",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "fast-xml-parser": "^3.17.4",
-    "web-ext": "^5.1.0"
+    "web-ext": "^5.2.0"
   },
   "dependencies": {
     "jquery": "^3.5.1",

@@ -1,0 +1,9 @@
+{
+  "title": "Seen Posts",
+  "description": "Dim the posts you've seen already",
+  "icon": {
+    "class_name": "ri-eye-line",
+    "color": "white",
+    "background_color": "#849baf"
+  }
+}

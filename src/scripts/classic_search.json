@@ -2,7 +2,7 @@
   "title": "Classic Search",
   "description": "Go to tagged pages easily",
   "icon": {
-    "class_name": "ri-price-tag-3-line",
+    "class_name": "ri-search-line",
     "color": "white",
     "background_color": "#f7650d"
   },

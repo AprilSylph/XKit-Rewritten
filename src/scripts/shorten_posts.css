@@ -1,0 +1,24 @@
+.xkit-shorten-posts-shortened {
+  position: relative;
+}
+
+.xkit-shorten-posts-shortened article {
+  max-height: calc(100vh - 54px - 40px);
+  overflow-y: clip;
+}
+
+.xkit-shorten-posts-shortened::after {
+  content: "Expand";
+  cursor: pointer;
+  background-color: var(--white);
+  color: var(--black);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: var(--post-header-vertical-padding);
+  padding-bottom: var(--post-header-vertical-padding);
+  border-top: 1px solid var(--gray-13);
+}

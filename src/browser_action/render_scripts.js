@@ -28,6 +28,14 @@ const writeEnabled = async function (event) {
   browser.storage.local.set({ enabledScripts });
 };
 
+const debounce = (callback, ms) => {
+  let timeoutID;
+  return (...args) => {
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(() => callback(...args), ms);
+  };
+};
+
 const writePreference = async function (event) {
   const { id } = event.target;
   const [scriptName, preferenceType, preferenceName] = id.split('.');
@@ -110,7 +118,7 @@ const renderScripts = async function () {
 
       const preferenceInput = preferenceTemplateClone.querySelector(inputType);
       preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
-      preferenceInput.addEventListener('input', writePreference);
+      preferenceInput.addEventListener('input', ['text', 'textarea'].includes(preference.type) ? debounce(writePreference, 500) : writePreference);
 
       switch (preference.type) {
         case 'checkbox':

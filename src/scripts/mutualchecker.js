@@ -77,6 +77,7 @@
     const { getPreferences } = await fakeImport('/src/util/preferences.js');
     ({ selectedBlog } = await getPreferences('no_recommended'));
 
+    mutuals = {};
     const { fetchDefaultBlog, fetchUserBlogNames } = await fakeImport('/src/util/user_blogs.js');
     const allBlogs = await fetchUserBlogNames();
     if (allBlogs.includes(selectedBlog)) {

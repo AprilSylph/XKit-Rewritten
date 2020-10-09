@@ -11,6 +11,11 @@
       "type": "checkbox",
       "label": "Place mutual icons after usernames",
       "default": false
+    },
+    "selectedBlog": {
+      "type": "text",
+      "label": "Blog to check, if not your main",
+      "default": ""
     }
   }
 }

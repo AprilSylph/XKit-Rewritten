@@ -1,7 +1,8 @@
 (function () {
-  /* eslint-disable no-use-before-define */
   let myBlog;
   let iconAfter;
+
+  const excludeClass = 'xkit-mutualchecker-done';
 
   let postAttributionSel;
   const mutuals = {};
@@ -9,10 +10,8 @@
   const aprilFoolsIcon = '<svg class="xkit-mutual-icon" fill="#00b8ff"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="M858 352q-6-14-8-35-2-12-4-38-3-38-6-54-7-28-22-43t-43-22q-16-3-54-6-26-2-38-4-21-2-34.5-8T619 124q-9-7-28-24-29-25-44-34-24-16-47-16t-47 16q-15 9-44 34-19 17-28 24-16 12-29.5 18t-34.5 8q-12 2-38 4-38 3-54 6-28 7-43 22t-22 43q-3 16-6 54-2 26-4 38-2 21-8 34.5T124 381q-7 9-24 28-25 29-34 44-16 24-16 47t16 47q9 15 34 44 17 19 24 28 12 16 18 29.5t8 34.5q2 12 4 38 3 38 6 54 7 28 22 43t43 22q16 3 54 6 26 2 38 4 21 2 34.5 8t29.5 18q9 7 28 24 29 25 44 34 24 16 47 16t47-16q15-9 44-34 19-17 28-24 16-12 29.5-18t34.5-8q12-2 38-4 38-3 54-6 28-7 43-22t22-43q3-16 6-54 2-26 4-38 2-21 8-34.5t18-29.5q7-9 24-28 25-29 34-44 16-24 16-47t-16-47q-9-15-34-44-17-19-24-28-12-16-18-29zm-119 62L550 706q-10 17-26.5 27T488 745l-11 1q-34 0-59-24L271 584q-26-25-27-60.5t23.5-61.5 60.5-27.5 62 23.5l71 67 132-204q20-30 55-38t65 11.5 37.5 54.5-11.5 65z"/></svg>';
 
   const addIcons = async function () {
-    [...document.querySelectorAll('[data-id]:not(.xkit-mutualchecker-done)')]
-    .forEach(async postElement => {
-      postElement.classList.add('xkit-mutualchecker-done');
-
+    const { getPostElements } = await fakeImport('/src/util/interface.js');
+    getPostElements({ excludeClass, noPeepr: true }).forEach(async postElement => {
       const $link = $(postElement).find(postAttributionSel);
       const blogName = $link.text();
       if (blogName.length) {
@@ -85,13 +84,11 @@
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     onNewPosts.removeListener(addIcons);
 
-    $('.xkit-mutualchecker-done')
-    .removeClass('xkit-mutualchecker-done')
+    $(`.${excludeClass}`)
+    .removeClass(excludeClass)
     .removeClass('from-mutual');
     $('.xkit-mutual-icon').remove();
   };
 
-  const stylesheet = '/src/scripts/mutualchecker.css';
-
-  return { main, clean, stylesheet };
+  return { main, clean, stylesheet: true };
 })();

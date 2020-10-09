@@ -20,6 +20,13 @@
     });
   };
 
+  const removeIcons = function () {
+    $(`.${excludeClass}`)
+    .removeClass(excludeClass)
+    .removeClass('from-mutual');
+    $('.xkit-mutual-icon').remove();
+  };
+
   const check = async function ($link, blogName) {
     if (typeof mutuals[blogName] === 'undefined') {
       mutuals[blogName] = isFollowedBy(myBlog, blogName)
@@ -49,18 +56,27 @@
   };
 
   const onStorageChanged = function (changes, areaName) {
-    const { 'mutualchecker.preferences': preferences } = changes;
-    if (!preferences || areaName !== 'local') {
+    if (areaName !== 'local') {
       return;
     }
 
-    clean().then(main);
+    const {
+      'mutualchecker.preferences.iconAfter': iconAfterChanges,
+    } = changes;
+
+    if (iconAfterChanges) {
+      ({ newValue: iconAfter } = iconAfterChanges);
+
+      removeIcons();
+      addIcons();
+    }
   };
 
   const main = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
-    const { 'mutualchecker.preferences': preferences = {} } = await browser.storage.local.get('mutualchecker.preferences');
-    ({ iconAfter = false } = preferences);
+
+    const { getPreferences } = await fakeImport('/src/util/preferences.js');
+    ({ iconAfter } = await getPreferences('no_recommended'));
 
     // No blog picker currently implemented; only supporting main blogs
     const { fetchDefaultBlog } = await fakeImport('/src/util/user_blogs.js');
@@ -84,10 +100,7 @@
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     onNewPosts.removeListener(addIcons);
 
-    $(`.${excludeClass}`)
-    .removeClass(excludeClass)
-    .removeClass('from-mutual');
-    $('.xkit-mutual-icon').remove();
+    removeIcons();
   };
 
   return { main, clean, stylesheet: true };

@@ -8,7 +8,7 @@
 
     const { getPostElements } = await fakeImport('/src/util/interface.js');
 
-    getPostElements({ excludeClass, noPeepr: true }).forEach(postElement => {
+    getPostElements({ excludeClass, noPeepr: true, includeFiltered: true }).forEach(postElement => {
       const { id } = postElement.dataset;
 
       if (seenPosts.includes(id)) {

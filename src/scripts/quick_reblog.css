@@ -1,0 +1,109 @@
+.quick-reblog {
+  position: absolute;
+  z-index: 2;
+  top: 100%;
+  right: 50%;
+  transform: translate(50%, 12px);
+  box-shadow: 0 0 15px 0 rgba(0,0,0,.5);
+  border: 1px solid var(--gray-13);
+  border-radius: 3px;
+  overflow: hidden;
+  color: var(--black);
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  max-width: 250px;
+}
+
+#glass-container .quick-reblog {
+  top: 50%;
+  right: 100%;
+  transform: translate(-20px, -50%);
+}
+
+@media only screen and (max-width: 716px) {
+  .quick-reblog {
+    top: 50%;
+    right: 100%;
+    transform: translate(-20px, -50%);
+  }
+}
+
+.quick-reblog .message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  color: inherit;
+  background-color: rgba(var(--rgb-white), 0.9);
+  font-weight: bold;
+}
+
+.quick-reblog .message:empty {
+  display: none;
+}
+
+.quick-reblog select {
+  font-weight: bold;
+}
+
+.quick-reblog select,
+.quick-reblog input {
+  border: none;
+  border-bottom: 1px solid var(--gray-13);
+  border-radius: 0;
+  color: inherit;
+  background-color: inherit;
+  padding: 1ch;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.quick-reblog .action-buttons {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--gray-13);
+}
+
+.quick-reblog .action-buttons button {
+  flex-grow: 1;
+  font-weight: bold;
+  padding: 1ch;
+  background-color: var(--white);
+}
+
+.quick-reblog .action-buttons button:hover {
+  background-color: var(--secondary-accent);
+}
+
+.quick-reblog .action-buttons button + button {
+  margin-left: 1px;
+}
+
+.quick-reblog button[data-state="published"] {
+  color: var(--blue);
+}
+
+.quick-reblog button[data-state="queue"] {
+  color: var(--pink);
+}
+
+.quick-reblog button[data-state="draft"] {
+  color: var(--orange);
+}
+
+.published svg[fill="var(--gray-65)"] {
+  fill: var(--green);
+}
+
+.queue svg[fill="var(--gray-65)"] {
+  fill: var(--purple);
+}
+
+.draft svg[fill="var(--gray-65)"] {
+  fill: var(--red);
+}

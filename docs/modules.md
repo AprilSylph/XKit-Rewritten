@@ -7,7 +7,7 @@ The easiest part of the custom modules system to explain is the `fakeImport()` f
 Example usage:
 
 ```js
-const { main } = await fakeImport(`/src/scripts/${name}.js`);
+const { getPostElements } = await fakeImport('/src/util/interface.js');
 ```
 
 Note: the argument path is automatically fed into `browser.runtime.getURL()` to retrieve the URL starting at the extension's root. This means it is impossible to use externally-hosted modules with this function, even if they follow the same custom module syntax.
@@ -16,20 +16,18 @@ Note: the argument path is automatically fed into `browser.runtime.getURL()` to 
 Since `import()` is unavailable in content scripts, the modules themselves cannot use `export`, and so their exports must be returned in a different way. The magic here is that `fakeImport()` actually fetches and evaluates any modules it hasn't yet fetched and evaluated (using the more secure `new Function()` syntax, rather than `eval()`). So, all the module file needs to be is an IIFE that returns an object of exports when evaluated:
 
 ```js
-(function() {
+(function () {
   const hello = "world";
 
-  const main = async function() {
+  const main = async function () {
     console.log(`Hello, ${hello}!`);
-  }
+  };
 
-  const clean = async function() {
+  const clean = async function () {
+    // Nothing to undo here
+  };
 
-  }
-
-  const stylesheet = '/src/scripts/example.css';
-
-  return { main, clean, stylesheet };
+  return { main, clean, stylesheet: true };
 })();
 ```
 

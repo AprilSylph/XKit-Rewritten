@@ -1,5 +1,5 @@
-.xkit-cleanfeed-hidden figure:not(:hover) > div::before,
-.xkit-cleanfeed-hidden [role="application"]:not(:hover) > div::before {
+.xkit-cleanfeed-hidden figure:not(:hover) > div::after,
+.xkit-cleanfeed-hidden [role="application"]:not(:hover) > div::after {
   content: "Hidden by CleanFeed";
   position: absolute;
   top: 0;
@@ -7,7 +7,6 @@
   object-fit: cover;
   height: 100%;
   width: 100%;
-  z-index: 3;
   background-color: var(--white);
   background-image: linear-gradient(var(--gray-7), var(--gray-7));
   color: var(--gray-65);

@@ -1,4 +1,4 @@
-# XKit Rewritten ![CI](https://github.com/AprilSylph/XKit-Rewritten/workflows/CI/badge.svg)
+# XKit Rewritten [![CI](https://github.com/AprilSylph/XKit-Rewritten/workflows/CI/badge.svg)](https://github.com/AprilSylph/XKit-Rewritten/actions?query=workflow%3ACI)
 The enhancement suite for [Tumblr's new web interface](https://tumblr.zendesk.com/hc/articles/360045642454).
 
 ## Installation

@@ -6,7 +6,6 @@
   --in-content-primary-button-background: #0060df;
   --in-content-primary-button-background-hover: #003eaa;
   --in-content-primary-button-background-active: #002275;
-
 }
 
 body {
@@ -76,156 +75,13 @@ section h2 {
   text-align: center;
 }
 
-.finder {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  background-color: white;
-  padding: 1ch;
-  border-bottom: 1px solid #cccccc;
-}
-
-.finder div {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.finder div:first-child {
-  flex-grow: 1;
-}
-
-.finder div + div {
-  margin-left: 1ch;
-}
-
-#search {
-  width: 175px;
-  min-width: calc(100% - 16px);
-}
-
-.no-results {
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
-
-.script.search-hidden,
-.script.filter-hidden {
-  display: none;
-}
-
-.script {
-  border-bottom: 1px dotted #444444;
-}
-
-.script summary {
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 1ch;
-}
-
-.script summary::-webkit-details-marker {
-  display: none;
-}
-
-.script.disabled summary {
-  color: #444444;
-}
-
-.script:hover:not([open]) summary {
-  background-color: #efefef;
-}
-
-.script[open] summary {
-  background-color: #d9eefc;
-}
-
-.script .icon {
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
-}
-
-.script .icon i {
-  font-size: 26px;
-}
-
-.script .icon,
-.script .meta {
-  margin-right: 1ch;
-}
-
-.script .icon,
-.script .toggle-button {
-  flex-shrink: 0;
-}
-
-.script .title,
-.script .description {
-  margin: 0;
-}
-
-.script.disabled .title::after {
-  content: "(disabled)";
-  margin-left: 0.5ch;
-  font-weight: normal;
-}
-
-.script input[type="checkbox"].toggle-button {
-  margin-left: auto;
-}
-
-.script ul.preferences {
-  padding: 0 1ch;
-  margin: 1ch 0;
-  list-style-type: none;
-}
-
-.script .preferences:empty {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.script .preferences:empty::before {
-  content: "No preferences available for this script.";
-}
-
-.script li {
-  display: flex;
-  align-items: center;
-  padding: 0.5ch 0;
-}
-
-#news, #links {
-  margin: 1em 0;
-  padding: 0 1em;
-}
-
-#news h2 {
-  text-align: left;
-}
-
-#links ul {
-  padding-left: 1em;
-}
-
-#links li {
-  margin-bottom: 1ch;
-}
-
 label:not(:first-child),
 input:not(:first-child),
 select:not(:first-child) {
   margin-left: 1ch;
+}
+
+textarea {
+  resize: none;
+  width: 100%;
 }

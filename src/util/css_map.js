@@ -1,11 +1,11 @@
-(function() {
+(function () {
   let cssMap;
 
   /**
-   * @param {String} key - The source name of an element
-   * @return {Object[]} - An array of generated classnames from the CSS map
+   * @param {string} key - The source name of an element
+   * @returns {object[]} - An array of generated classnames from the CSS map
    */
-  const keyToClasses = async function(key) {
+  const keyToClasses = async function (key) {
     if (cssMap === undefined) {
       const { getCssMap } = await fakeImport('/src/util/tumblr_helpers.js');
       cssMap = await getCssMap();
@@ -15,10 +15,10 @@
   };
 
   /**
-   * @param {String} key - The source name of an element
-   * @return {String} - A CSS selector which targets all elements with that source name
+   * @param {string} key - The source name of an element
+   * @returns {string} - A CSS selector which targets all elements with that source name
    */
-  const keyToCss = async function(key) {
+  const keyToCss = async function (key) {
     const classes = await keyToClasses(key);
     return classes.map(className => `.${className}`).join(', ');
   };
@@ -33,10 +33,10 @@
    * "._2U2YY .cfpPU, ._2U2YY ._3ItS, ._27pa2 .cfpPU, ._27pa2 ._3ItSq"
    * which targets any 'timeline' contained in any 'main'.
    *
-   * @param {...String} keys - One or more element source names
-   * @return {String} - A CSS selector
+   * @param {...string} keys - One or more element source names
+   * @returns {string} - A CSS selector
    */
-  const descendantSelector = async function(...keys) {
+  const descendantSelector = async function (...keys) {
     const { cartesian } = await fakeImport('/src/util/misc.js');
     const sets = [];
 

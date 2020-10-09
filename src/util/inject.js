@@ -1,10 +1,10 @@
-(function() {
+(function () {
   let nonce;
 
   /**
    * @param {Function} asyncFunc - Asynchronous function to run in the page context
-   * @param {Object[]} args - Array of arguments to pass to the function via spread
-   * @return {Promise} - A promise which resolves to the return value of the async function, or rejects with the caught exception
+   * @param {object[]} args - Array of arguments to pass to the function via spread
+   * @returns {Promise} - A promise which resolves to the return value of the async function, or rejects with the caught exception
    */
   const inject = (asyncFunc, args = []) => new Promise((resolve, reject) => {
     if (!nonce) {

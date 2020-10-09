@@ -1,0 +1,28 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "webextensions": true,
+    "jquery": true
+  },
+  "extends": [
+    "standard",
+    "plugin:jsdoc/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12
+  },
+  "rules": {
+    "comma-dangle": [ "error", "always-multiline" ],
+    "indent": [ "error", 2, { "SwitchCase": 1, "MemberExpression": "off" } ],
+    "semi": [ "error", "always" ],
+    "standard/no-callback-literal": "off",
+    "jsdoc/require-hyphen-before-param-description": [ "error", "always" ]
+  },
+  "ignorePatterns": [
+    "lib/"
+  ],
+  "globals": {
+    "fakeImport": "readonly"
+  }
+}

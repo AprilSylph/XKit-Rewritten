@@ -1,4 +1,4 @@
-(function() {
+(function () {
   let css;
 
   const cssTemplate = filteredScreen => `
@@ -33,17 +33,17 @@
     }
   `;
 
-  const main = async function() {
+  const main = async function () {
     const { keyToClasses } = await fakeImport('/src/util/css_map.js');
-    const { addStyle } = await fakeImport('/src/util/misc.js');
+    const { addStyle } = await fakeImport('/src/util/interface.js');
 
     const [filteredScreen] = await keyToClasses('filteredScreen');
     css = cssTemplate(filteredScreen);
     addStyle(css);
   };
 
-  const clean = async function() {
-    const { removeStyle } = await fakeImport('/src/util/misc.js');
+  const clean = async function () {
+    const { removeStyle } = await fakeImport('/src/util/interface.js');
     removeStyle(css);
   };
 

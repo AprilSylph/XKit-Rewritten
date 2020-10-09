@@ -1,0 +1,15 @@
+{
+  "title": "Hide Avatars",
+  "icon": {
+    "class_name": "ri-user-unfollow-line",
+    "color": "white",
+    "background_color": "#b5241c"
+  },
+  "preferences": {
+    "hiddenAvatars": {
+      "type": "textarea",
+      "label": "Usernames (comma-separated)",
+      "default": ""
+    }
+  }
+}

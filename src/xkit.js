@@ -1,13 +1,15 @@
 'use strict';
 
 {
-  const {getURL} = browser.runtime;
-  const redpop = [...document.scripts].some(({src}) => src.match('/pop/'));
+  const { getURL } = browser.runtime;
+  const redpop = [...document.scripts].some(({ src }) => src.match('/pop/'));
   const isReactLoaded = () => document.querySelector('[data-rh]') === null;
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-  const runScript = async function(name) {
-    const { main, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
+  const restartListeners = {};
+
+  const runScript = async function (name) {
+    const { main, clean, stylesheet, autoRestart } = await fakeImport(`/src/scripts/${name}.js`);
 
     main()
     .catch(console.error);
@@ -15,35 +17,53 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: getURL(stylesheet),
+        href: getURL(`/src/scripts/${name}.css`),
       });
       document.documentElement.appendChild(link);
     }
+
+    if (autoRestart) {
+      restartListeners[name] = function (changes, areaName) {
+        if (areaName !== 'local') {
+          return;
+        }
+
+        if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`))) {
+          clean().then(main);
+        }
+      };
+
+      browser.storage.onChanged.addListener(restartListeners[name]);
+    }
   };
 
-  const destroyScript = async function(name) {
-    const { clean, stylesheet } = await fakeImport(`/src/scripts/${name}.js`);
+  const destroyScript = async function (name) {
+    const { clean, stylesheet, autoRestart } = await fakeImport(`/src/scripts/${name}.js`);
 
     clean()
     .catch(console.error);
 
     if (stylesheet) {
-      const link = document.querySelector(`link[href="${getURL(stylesheet)}"]`);
+      const link = document.querySelector(`link[href="${getURL(`/src/scripts/${name}.css`)}"]`);
       if (link !== null) {
         link.parentNode.removeChild(link);
       }
     }
+
+    if (autoRestart) {
+      browser.storage.onChanged.removeListener(restartListeners[name]);
+    }
   };
 
-  const onStorageChanged = async function(changes, areaName) {
+  const onStorageChanged = async function (changes, areaName) {
     if (areaName !== 'local') {
       return;
     }
 
-    const {enabledScripts} = changes;
+    const { enabledScripts } = changes;
 
     if (enabledScripts) {
-      const {oldValue = [], newValue = []} = enabledScripts;
+      const { oldValue = [], newValue = [] } = enabledScripts;
 
       const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
       const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
@@ -53,15 +73,15 @@
     }
   };
 
-  const init = async function() {
+  const init = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
 
-    const {enabledScripts = []} = await browser.storage.local.get('enabledScripts');
+    const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
     enabledScripts.forEach(runScript);
   };
 
-  const waitForReactLoaded = async function() {
+  const waitForReactLoaded = async function () {
     let tries = 0;
 
     while (tries < 300) {

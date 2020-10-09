@@ -1,11 +1,25 @@
-(function() {
+(function () {
+  const cache = {};
+
   /**
-   * @param {String} postID - The post ID of an on-screen post
-   * @return {Object} - The post's buried timelineObject property
+   * @param {string} postID - The post ID of an on-screen post
+   * @returns {object} - The post's buried timelineObject property (cached; use
+   *  timelineObject if you need up-to-date properties that may have changed)
    */
-  const timelineObject = async function(postID) {
+  const timelineObjectMemoized = async function (postID) {
+    if (Object.prototype.hasOwnProperty.call(cache, postID)) {
+      return cache[postID];
+    }
+    return timelineObject(postID);
+  };
+
+  /**
+   * @param {string} postID - The post ID of an on-screen post
+   * @returns {object} - The post's buried timelineObject property
+   */
+  const timelineObject = async function (postID) {
     const { inject } = await fakeImport('/src/util/inject.js');
-    return inject(async id => {
+    cache[postID] = inject(async id => {
       const postElement = document.querySelector(`[data-id="${id}"]`);
       const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactInternalInstance'));
       let fiber = postElement[reactKey];
@@ -18,7 +32,8 @@
 
       return fiber.memoizedProps.timelineObject;
     }, [postID]);
+    return cache[postID];
   };
 
-  return { timelineObject };
+  return { timelineObject, timelineObjectMemoized };
 })();

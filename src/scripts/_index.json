@@ -1,10 +1,18 @@
 [
-  "audio_downloader",
+  "accesskit",
+  "classic_search",
   "cleanfeed",
-  "disable_gifs",
+  "hide_avatars",
   "mutualchecker",
   "no_recommended",
+  "open_in_tabs",
   "painter",
+  "postblock",
+  "quick_reblog",
+  "seen_posts",
+  "shorten_posts",
   "timestamps",
-  "tweaks"
+  "tweaks",
+  "vanilla_audio",
+  "vanilla_video"
 ]

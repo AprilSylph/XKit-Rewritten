@@ -1,0 +1,7 @@
+video[controls] {
+  cursor: default;
+}
+
+video[controls] ~ * {
+  display: none !important;
+}

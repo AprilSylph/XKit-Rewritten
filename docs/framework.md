@@ -1,6 +1,6 @@
 # Scripts framework
 
-Scripts are composed of a minimum of two files: a `.js` file (the main module), and a `.json` file (containing its metadata).
+Scripts are composed of a minimum of two files: a `.js` file (the main module), and a `.json` file (containing its metadata). Scripts may also have a `.css` (stylesheet) file, but this is not required.
 
 Note: XKit should only be considered "running" in a content script context; the browser action popup page cannot evaluate the modules themselves (only read their metadata files), and thus only controls the XKit configuration. XKit then listens for configuration changes from the content script context, and reflects the changes automatically.
 
@@ -21,12 +21,16 @@ The main function of the script. Will be called whenever the user enables the sc
 The cleanup function of the script. Called whenever the user disables the script, also regardless of tab focus.
 
 #### `stylesheet`
-- Type: String
+- Type: Boolean
 - Required: No
 
-The pathname of the script's CSS file. This is automatically added and removed during the script's lifecycle.
+Whether the script has a stylesheet. If true, there should be a `.css` file of matching name in the same directory level. The stylesheet is automatically added and removed during the script's lifecycle.
 
-This path is automatically fed into `browser.runtime.getURL()`, so should start with a `/` to ensure the path is resolved starting at the extension's root. This also means that using externally-hosted stylesheets is disallowed.
+#### `autoRestart`
+- Type: Boolean
+- Required: No
+
+Whether the script should automatically restart on preference changes. If true, the script's `clean()` and then `main()` functions are called whenever its preferences are modified. If false, the script must build its own preference changes handling code (assuming it has preferences at all).
 
 ## Metadata files
 
@@ -83,7 +87,7 @@ It is recommended to use camelCase for each preference name, so that the script 
 - Type: String
 - Required: Yes
 
-Type of preference. Supported values: `"checkbox"`, `"text"`, `"color"`, `"select"`
+Type of preference. Supported values: `"checkbox"`, `"text"`, `"color"`, `"select"`, `"textarea"`
 
 #### `"preferences"`: \<preference name\>: `"label"`
 - Type: String
@@ -101,10 +105,10 @@ For `"select"`-type preferences, an object of value/label entries. Unused for ot
 - Type: (Varies)
 - Required: Yes
 
-Default value of the preference to display to the user. This does not automatically set the default value of the preference in storage; scripts should ensure to use the same defaults as they display.
+Default value of the preference to display to the user. This also automatically sets the value of the preference in storage if it has not already been set.
 
 If the preference `type` is `"checkbox"`, this value should be a boolean.  
-If the preference `type` is `"text"`, this value should be a string.  
+If the preference `type` is `"text"` or `"textarea"`, this value should be a string.  
 If the preference `type` is `"color"`, this value should either be a string representing a hexadecimal colour code (i.e. `"#1a2b3c"`) or an empty string.  
 If the preference `type` is `"select"`, this value should be a string that matches one of the keys in `options`.
 

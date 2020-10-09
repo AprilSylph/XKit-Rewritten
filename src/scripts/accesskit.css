@@ -1,5 +1,4 @@
 .xkit-gif-label {
-  z-index: 2;
   position: absolute;
   top: 1ch;
   right: 1ch;
@@ -16,7 +15,19 @@
   content: "GIF";
 }
 
+figure:not(:hover) img[srcset*=".gif"] {
+  display: none;
+}
+
 figure:hover .xkit-paused-gif,
 figure:hover .xkit-gif-label {
   display: none;
+}
+
+.accesskit-blue-links article a[target="_blank"][href^="https://t.umblr.com/redirect"] {
+  color: var(--accent);
+}
+
+.accesskit-no-user-colours article span[style^="color"] {
+  color: inherit !important;
 }

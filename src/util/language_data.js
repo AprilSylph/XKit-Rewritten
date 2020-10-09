@@ -1,11 +1,11 @@
-(function() {
+(function () {
   let languageData;
 
   /**
-   * @param {String} rootString - The English string to translate
-   * @return {String} - The translated string in the current Tumblr locale
+   * @param {string} rootString - The English string to translate
+   * @returns {string} - The translated string in the current Tumblr locale
    */
-  const translate = async function(rootString) {
+  const translate = async function (rootString) {
     if (!languageData) {
       const { getLanguageData } = await fakeImport('/src/util/tumblr_helpers.js');
       languageData = await getLanguageData();

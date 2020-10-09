@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="/lib/remixicon/remixicon.css">
     <link rel="stylesheet" href="/lib/spectrum.css">
     <link rel="stylesheet" href="popup.css">
+    <link rel="stylesheet" href="configuration.css">
+    <link rel="stylesheet" href="backup.css">
+    <link rel="stylesheet" href="links.css">
   </head>
   <body>
     <main>
@@ -17,7 +20,7 @@
         <h1>XKit Control Panel</h1>
         <nav>
           <a href="#configuration" role="button" class="selected">Configuration</a>
-          <a href="#news" role="button">News</a>
+          <a href="#backup" role="button">Backup</a>
           <a href="#links" role="button">Links</a>
         </nav>
       </header>
@@ -38,18 +41,34 @@
         <div class="no-results">
           <p>No results found.</p>
         </div>
+        <div class="scripts"></div>
       </section>
-      <section id="news">
-        <h2>u want da news? i got ya news!!!!</h2>
-        <img src="https://64.media.tumblr.com/tumblr_m6wtcz5pZp1qkxcpa.gif">
-        <p>thats the news!!!</p>
-        <p><small>Source: <a href="https://loathsomespider.tumblr.com/post/188714339104" target="_blank">CNN</a></small></p>
+      <section id="backup">
+        <div class="storage-areas">
+        </div>
+        <div class="if-sync-supported">
+          <hr>
+          <div class="controls">
+            <button id="upload">Upload<br>(Local &#x27F6; Sync)</button>
+            <button id="download">Download<br>(Sync &#x27F6; Local)</button>
+          </div>
+          <pre class="errors"></pre>
+        </div>
+        <div class="local">
+          <hr>
+          <button id="download-to-file">Download local storage to file</button>
+        </div>
       </section>
       <section id="links">
         <ul>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten" target="_blank">Source code</a></li>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues" target="_blank">Issue tracker</a></li>
+          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/releases" target="_blank">Changelog</a></li>
           <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues?q=is%3Aissue+label%3Aquestion+is%3Aclosed" target="_blank">Answered questions</a></li>
+          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues" target="_blank">Issue tracker</a></li>
+          <li><a href="https://github.com/AprilSylph/XKit-Rewritten" target="_blank">Source code</a></li>
+        </ul>
+        <h4>Related projects</h4>
+        <ul>
+          <li><a href="https://github.com/AprilSylph/Palettes-for-Tumblr#readme" target="_blank">Palettes for Tumblr</a></li>
         </ul>
       </section>
     </main>
@@ -98,9 +117,20 @@
       </li>
     </template>
 
+    <template id="textarea-preference">
+      <li>
+        <label></label>
+      </li>
+      <li>
+        <textarea rows="5"></textarea>
+      </li>
+    </template>
+
     <script src="/lib/browser-polyfill.min.js"></script>
     <script src="/lib/jquery.min.js"></script>
     <script src="/lib/spectrum.js"></script>
     <script src="popup.js"></script>
+    <script src="render_scripts.js"></script>
+    <script src="render_backup.js"></script>
   </body>
 </html>

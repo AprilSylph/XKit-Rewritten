@@ -7,25 +7,40 @@
     "background_color": "#4bb51b"
   },
   "preferences": {
-    "own": {
+    "ownColour": {
       "type": "color",
       "label": "Own post colour",
       "default": ""
     },
-    "original": {
+    "originalColour": {
       "type": "color",
       "label": "Original post colour",
       "default": ""
     },
-    "reblog": {
+    "reblogColour": {
       "type": "color",
       "label": "Reblogged post colour",
       "default": ""
     },
-    "liked": {
+    "likedColour": {
       "type": "color",
       "label": "Liked post colour",
       "default": ""
+    },
+    "tagColour": {
+      "type": "color",
+      "label": "Tag highlighting colour",
+      "default": ""
+    },
+    "colouredTags": {
+      "type": "textarea",
+      "label": "Tags to highlight (comma separated)",
+      "default": ""
+    },
+    "colourSourceTags": {
+      "type": "checkbox",
+      "label": "Also highlight for tags on source posts",
+      "default": true
     }
   }
 }

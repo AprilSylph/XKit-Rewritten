@@ -1,9 +1,9 @@
-(function() {
+(function () {
   let recommendedBlogsLabel;
 
   const css = '.xkit-tweaks-recblogs-hidden { display: none; }';
 
-  const checkForRecommendedBlogs = function() {
+  const checkForRecommendedBlogs = function () {
     [...document.querySelectorAll('aside > div > h1:not(.xkit-tweaks-recblogs-done)')]
     .filter(h1 => {
       h1.classList.add('xkit-tweaks-recblogs-done');
@@ -12,10 +12,10 @@
     .forEach(h1 => h1.parentNode.classList.add('xkit-tweaks-recblogs-hidden'));
   };
 
-  const main = async function() {
+  const main = async function () {
     const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
     const { translate } = await fakeImport('/src/util/language_data.js');
-    const { addStyle } = await fakeImport('/src/util/misc.js');
+    const { addStyle } = await fakeImport('/src/util/interface.js');
 
     recommendedBlogsLabel = await translate('Recommended Blogs');
     onBaseContainerMutated.addListener(checkForRecommendedBlogs);
@@ -23,9 +23,9 @@
     addStyle(css);
   };
 
-  const clean = async function() {
+  const clean = async function () {
     const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
-    const { removeStyle } = await fakeImport('/src/util/misc.js');
+    const { removeStyle } = await fakeImport('/src/util/interface.js');
 
     onBaseContainerMutated.removeListener(checkForRecommendedBlogs);
     removeStyle(css);

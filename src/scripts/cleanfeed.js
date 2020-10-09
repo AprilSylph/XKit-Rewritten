@@ -1,23 +1,23 @@
-(function() {
+(function () {
   let blockingMode;
   let reblogSelector;
 
-  const processPosts = async function() {
-    const { timelineObject } = await fakeImport('/src/util/react_props.js');
+  const excludeClass = 'xkit-cleanfeed-done';
 
-    [...document.querySelectorAll('[data-id]:not(.xkit-cleanfeed-done)')]
-    .forEach(async postElement => {
-      postElement.classList.add('xkit-cleanfeed-done');
+  const processPosts = async function () {
+    const { getPostElements } = await fakeImport('/src/util/interface.js');
+    const { timelineObjectMemoized } = await fakeImport('/src/util/react_props.js');
 
+    getPostElements({ excludeClass }).forEach(async postElement => {
       if (blockingMode === 'all') {
         postElement.classList.add('xkit-cleanfeed-hidden');
         return;
       }
 
-      const postTimelineObject = await timelineObject(postElement.dataset.id);
+      const postTimelineObject = await timelineObjectMemoized(postElement.dataset.id);
 
       {
-        const {blog: {isAdult}} = postTimelineObject;
+        const { blog: { isAdult } } = postTimelineObject;
         if (isAdult) {
           postElement.classList.add('xkit-cleanfeed-hidden');
           return;
@@ -25,13 +25,13 @@
       }
 
       const reblogs = postElement.querySelectorAll(reblogSelector);
-      const {trail} = postTimelineObject;
+      const { trail } = postTimelineObject;
       trail.forEach((trailItem, i) => {
         if (trailItem.blog === undefined) {
           return;
         }
 
-        const {blog: {isAdult}} = trailItem;
+        const { blog: { isAdult } } = trailItem;
         if (isAdult) {
           reblogs[i].classList.add('xkit-cleanfeed-hidden');
         }
@@ -39,44 +39,48 @@
     });
   };
 
-  const unProcessPosts = function() {
-    $('.xkit-cleanfeed-done').removeClass('xkit-cleanfeed-done');
+  const unProcessPosts = function () {
+    $(`.${excludeClass}`).removeClass(excludeClass);
     $('.xkit-cleanfeed-hidden').removeClass('xkit-cleanfeed-hidden');
   };
 
-  const onStorageChanged = function(changes, areaName) {
-    const {'cleanfeed.preferences': preferences} = changes;
-    if (!preferences || areaName !== 'local') {
+  const onStorageChanged = function (changes, areaName) {
+    if (areaName !== 'local') {
       return;
     }
 
-    ({newValue: {blockingMode}} = preferences);
+    const {
+      'cleanfeed.preferences.blockingMode': blockingModeChanges,
+    } = changes;
 
-    unProcessPosts();
-    processPosts();
+    if (blockingModeChanges) {
+      ({ newValue: blockingMode } = blockingModeChanges);
+
+      unProcessPosts();
+      processPosts();
+    }
   };
 
-  const main = async function() {
+  const main = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
+    const { getPreferences } = await fakeImport('/src/util/preferences.js');
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     const { keyToCss } = await fakeImport('/src/util/css_map.js');
+
     reblogSelector = await keyToCss('reblog');
 
-    const {'cleanfeed.preferences': preferences = {}} = await browser.storage.local.get('cleanfeed.preferences');
-    ({blockingMode = 'smart'} = preferences);
+    ({ blockingMode } = await getPreferences('cleanfeed'));
 
     onNewPosts.addListener(processPosts);
     processPosts();
   };
 
-  const clean = async function() {
+  const clean = async function () {
     browser.storage.onChanged.removeListener(onStorageChanged);
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     onNewPosts.removeListener(processPosts);
     unProcessPosts();
   };
 
-  const stylesheet = '/src/scripts/cleanfeed.css';
-
-  return { main, clean, stylesheet };
+  return { main, clean, stylesheet: true };
 })();

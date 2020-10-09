@@ -1,43 +1,48 @@
-(function() {
+(function () {
   let enabledTweaks;
 
-  const runTweak = async function(name) {
+  const runTweak = async function (name) {
     const { main: run } = await fakeImport(`/src/scripts/tweaks/${name}.js`);
     run().catch(console.error);
   };
 
-  const destroyTweak = async function(name) {
+  const destroyTweak = async function (name) {
     const { clean: destroy } = await fakeImport(`/src/scripts/tweaks/${name}.js`);
     destroy().catch(console.error);
   };
 
-  const onStorageChanged = async function(changes, areaName) {
-    const {'tweaks.preferences': preferences} = changes;
-    if (!preferences || areaName !== 'local') {
+  const onStorageChanged = async function (changes, areaName) {
+    if (areaName !== 'local') {
       return;
     }
 
-    const {oldValue = {}, newValue = {}} = preferences;
-    const oldTweaks = Object.keys(oldValue).filter(key => oldValue[key] === true);
-    const newTweaks = Object.keys(newValue).filter(key => newValue[key] === true);
+    if (Object.keys(changes).some(key => key.startsWith('tweaks'))) {
+      const { getPreferences } = await fakeImport('/src/util/preferences.js');
+      const preferences = await getPreferences('tweaks');
 
-    enabledTweaks = newTweaks;
+      const newEnabledTweaks = Object.keys(preferences).filter(key => preferences[key] === true);
 
-    const newlyEnabled = newTweaks.filter(x => oldTweaks.includes(x) === false);
-    const newlyDisabled = oldTweaks.filter(x => newTweaks.includes(x) === false);
+      const newlyEnabled = newEnabledTweaks.filter(x => enabledTweaks.includes(x) === false);
+      const newlyDisabled = enabledTweaks.filter(x => newEnabledTweaks.includes(x) === false);
 
-    newlyEnabled.forEach(runTweak);
-    newlyDisabled.forEach(destroyTweak);
+      enabledTweaks = newEnabledTweaks;
+
+      newlyEnabled.forEach(runTweak);
+      newlyDisabled.forEach(destroyTweak);
+    }
   };
 
-  const main = async function() {
+  const main = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
-    const {'tweaks.preferences': preferences = {}} = await browser.storage.local.get('tweaks.preferences');
+    const { getPreferences } = await fakeImport('/src/util/preferences.js');
+
+    const preferences = await getPreferences('tweaks');
+
     enabledTweaks = Object.keys(preferences).filter(key => preferences[key] === true);
     enabledTweaks.forEach(runTweak);
   };
 
-  const clean = async function() {
+  const clean = async function () {
     enabledTweaks.forEach(destroyTweak);
   };
 

@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "XKit Rewritten",
-  "version": "0.0.9",
+  "version": "0.0.11",
 
   "short_name": "XKit",
   "author": "April Sylph",
@@ -32,7 +32,11 @@
   },
 
   "permissions": [ "storage", "*://*.tumblr.com/*" ],
-  "web_accessible_resources": [ "src/*.js", "src/*.css" ],
+  "web_accessible_resources": [ "src/*.js", "src/*.json", "src/*.css" ],
+  "background": {
+    "scripts": [ "lib/browser-polyfill.min.js", "src/background.js" ],
+    "persistent": false
+  },
   "content_scripts": [
     {
       "matches": [ "*://www.tumblr.com/*" ],
@@ -42,6 +46,9 @@
         "lib/jquery.min.js",
         "src/fake_import.js",
         "src/xkit.js"
+      ],
+      "css": [
+        "src/sidebar.css"
       ]
     }
   ],

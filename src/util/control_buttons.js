@@ -6,7 +6,7 @@
    * @returns {string|undefined} The SVG path of the associated RemixIcon if it exists
    */
   const getIconPath = async function (cssClass) {
-    const url = browser.runtime.getURL('/src/lib/remixicon-svg.json');
+    const url = browser.runtime.getURL('/src/lib/remixicon_svg.json');
     const file = await fetch(url);
     const icons = await file.json();
 

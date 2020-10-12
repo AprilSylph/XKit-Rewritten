@@ -1,14 +1,15 @@
 (function () {
-  let blockedPostRootIDs = [];
-
   const meatballButtonLabel = 'Block this post';
   const excludeClass = 'xkit-postblock-done';
+  const storageKey = 'postblock.blockedPostRootIDs';
 
   const processPosts = async function () {
     const { getPostElements } = await fakeImport('/src/util/interface.js');
     const { timelineObjectMemoized } = await fakeImport('/src/util/react_props.js');
 
-    getPostElements({ excludeClass }).forEach(async postElement => {
+    const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
+
+    getPostElements({ excludeClass, includeFiltered: true }).forEach(async postElement => {
       const postID = postElement.dataset.id;
       const { rebloggedRootId } = await timelineObjectMemoized(postID);
 
@@ -29,8 +30,10 @@
     const rootID = rebloggedRootId || postID;
 
     if (window.confirm('Block this post? All instances of this post (including reblogs) will be hidden.')) {
+      const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
       blockedPostRootIDs.push(rootID);
-      browser.storage.local.set({ 'postblock.blockedPostRootIDs': blockedPostRootIDs });
+
+      browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
       postElement.classList.add('xkit-postblock-hidden');
 
       $(`.${excludeClass}`).removeClass(excludeClass);
@@ -43,8 +46,6 @@
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
 
     registerMeatballItem(meatballButtonLabel, onButtonClicked);
-
-    ({ 'postblock.blockedPostRootIDs': blockedPostRootIDs = [] } = await browser.storage.local.get('postblock.blockedPostRootIDs'));
 
     onNewPosts.addListener(processPosts);
     processPosts();

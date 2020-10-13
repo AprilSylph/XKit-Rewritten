@@ -8,6 +8,7 @@ This document aims to provide both guidelines for contributions, and guides for 
 #### Guidelines
 - [Issue guidelines](#issue-guidelines)
 - [Pull request guidelines](#pull-request-guidelines)
+- [Style guide](#style-guide)
 #### Guides
 - [Understanding GitHub](#understanding-github)
 - [WebExtension development](#webextension-development)
@@ -43,6 +44,16 @@ All pull requests must be compatible with the repository license (GPL-3.0).
 - If you have to give criticism, always be as constructive as possible.
 - Always try to include code suggestions when requesting changes.
 - Try not to ask questions in change-requesting reviews. Ideally, general questions should be asked in non-review comments, and questions on specific parts of files should be in neutral reviews.
+
+### Style guide
+
+This project primarily consists of JavaScript, and follows [the StandardJS style guide](https://standardjs.com/rules.html) with some deviations. In particular:
+- Semicolon usage is required
+- Trailing commas in multi-line objects and arrays are required
+
+Most style issues are enforced by the linter, meaning they don't need to be listed here. However, there are two more important style rules to abide by:
+- CSS identifiers (IDs, classnames) should always be `kebab-case`
+- Filenames should be `snake_case`, unless the file originates from outside this project
 
 ---
 

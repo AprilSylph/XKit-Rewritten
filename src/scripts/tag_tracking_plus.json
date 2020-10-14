@@ -1,0 +1,9 @@
+{
+  "title": "Tag Tracking+",
+  "description": "Tracked tags on your sidebar",
+  "icon": {
+    "class_name": "ri-price-tag-3-line",
+    "color": "white",
+    "background_color": "#c538ff"
+  }
+}

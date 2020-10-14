@@ -12,6 +12,7 @@
    * @param {Function} [options.items.onClick] - Click event handler for this item (ignored if href is specified)
    * @param {string} [options.items.count] - Human-readable additional link text
    * @param {boolean} [options.items.carrot] - Whether to include a right-facing arrow on the link (ignored if count is specified)
+   * @returns {HTMLDivElement} - The constructed sidebar section
    */
   const addSidebarItem = function ({ id, title, items }) {
     const sidebarItem = document.createElement('div');
@@ -65,6 +66,7 @@
     }
 
     sidebarItems.appendChild(sidebarItem);
+    return sidebarItem;
   };
 
   const removeSidebarItem = id => sidebarItems.removeChild(sidebarItems.querySelector(`#${id}`));

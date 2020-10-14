@@ -8,7 +8,7 @@
     const sidebarItem = {
       id: 'tag-tracking-plus',
       title: 'Tracked Tags',
-      items: tags.map(({ name, unreadCount }) => ({ label: name, href: `/tagged/${encodeURIComponent(name)}`, count: unreadCount ? unreadCount : undefined }) ),
+      items: tags.map(({ name, unreadCount }) => ({ label: name, href: `/tagged/${encodeURIComponent(name)}`, count: unreadCount || undefined })),
     };
 
     addSidebarItem(sidebarItem);

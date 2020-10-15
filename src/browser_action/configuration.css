@@ -61,7 +61,7 @@
   color: #444444;
 }
 
-.script:hover summary {
+.script summary:hover {
   background-color: #efefef;
 }
 

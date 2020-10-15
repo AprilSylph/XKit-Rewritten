@@ -61,11 +61,11 @@
   color: #444444;
 }
 
-.script:hover:not([open]) summary {
+.script summary:hover {
   background-color: #efefef;
 }
 
-.script[open] summary {
+.script summary:focus {
   background-color: #d9eefc;
 }
 

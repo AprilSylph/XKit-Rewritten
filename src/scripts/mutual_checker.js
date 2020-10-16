@@ -47,32 +47,7 @@
     $link.before(icon);
   };
 
-  const onStorageChanged = async function (changes, areaName) {
-    if (areaName !== 'local') {
-      return;
-    }
-
-    const {
-      'mutual_checker.preferences.selectedBlog': selectedBlogChanges,
-    } = changes;
-
-    if (selectedBlogChanges) {
-      mutuals = {};
-      const { fetchDefaultBlog, fetchUserBlogNames } = await fakeImport('/src/util/user_blogs.js');
-      const allBlogs = await fetchUserBlogNames();
-      if (allBlogs.includes(selectedBlogChanges.newValue)) {
-        myBlog = selectedBlogChanges.newValue;
-      } else {
-        myBlog = (await fetchDefaultBlog()).name;
-      }
-      removeIcons();
-      addIcons();
-    }
-  };
-
   const main = async function () {
-    browser.storage.onChanged.addListener(onStorageChanged);
-
     let selectedBlog = '';
     const { getPreferences } = await fakeImport('/src/util/preferences.js');
     ({ selectedBlog } = await getPreferences('no_recommended'));
@@ -100,12 +75,11 @@
   };
 
   const clean = async function () {
-    browser.storage.onChanged.removeListener(onStorageChanged);
     const { onNewPosts } = await fakeImport('/src/util/mutations.js');
     onNewPosts.removeListener(addIcons);
 
     removeIcons();
   };
 
-  return { main, clean, stylesheet: true };
+  return { main, clean, stylesheet: true, autoRestart: true };
 })();

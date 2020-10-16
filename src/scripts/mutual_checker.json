@@ -5,12 +5,5 @@
     "class_name": "ri-contacts-line",
     "color": "white",
     "background_color": "#777777"
-  },
-  "preferences": {
-    "selectedBlog": {
-      "type": "text",
-      "label": "Blog to check, if not your main",
-      "default": ""
-    }
   }
 }

@@ -48,18 +48,9 @@
   };
 
   const main = async function () {
-    let selectedBlog = '';
-    const { getPreferences } = await fakeImport('/src/util/preferences.js');
-    ({ selectedBlog } = await getPreferences('no_recommended'));
-
     mutuals = {};
-    const { fetchDefaultBlog, fetchUserBlogNames } = await fakeImport('/src/util/user_blogs.js');
-    const allBlogs = await fetchUserBlogNames();
-    if (allBlogs.includes(selectedBlog)) {
-      myBlog = selectedBlog;
-    } else {
-      myBlog = (await fetchDefaultBlog()).name;
-    }
+    const { fetchDefaultBlog } = await fakeImport('/src/util/user_blogs.js');
+    myBlog = (await fetchDefaultBlog()).name;
 
     const { keyToCss } = await fakeImport('/src/util/css_map.js');
     postAttributionSel = await keyToCss('postAttribution');
@@ -81,5 +72,5 @@
     removeIcons();
   };
 
-  return { main, clean, stylesheet: true, autoRestart: true };
+  return { main, clean, stylesheet: true };
 })();

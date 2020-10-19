@@ -11,6 +11,10 @@
   const addIcons = async function () {
     const { getPostElements } = await fakeImport('/src/util/interface.js');
 
+    [...document.querySelectorAll('[data-id].from-mutual')]
+    .filter(postElement => postElement.querySelector('.xkit-mutual-icon') === null)
+    .forEach(postElement => postElement.classList.remove(excludeClass));
+
     getPostElements({ excludeClass, noPeepr: true, includeFiltered: true }).forEach(async postElement => {
       const postAttribution = postElement.querySelector(postAttributionSelector);
       if (postAttribution === null) { return; }

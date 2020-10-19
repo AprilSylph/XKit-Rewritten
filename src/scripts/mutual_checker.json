@@ -1,0 +1,9 @@
+{
+  "title": "Mutual Checker",
+  "description": "See who follows you back",
+  "icon": {
+    "class_name": "ri-contacts-line",
+    "color": "white",
+    "background_color": "#777777"
+  }
+}

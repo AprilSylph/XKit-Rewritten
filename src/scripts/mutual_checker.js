@@ -37,6 +37,10 @@
   };
 
   const isFollowedBy = async function (blogIdentifier, query) {
+    if (blogIdentifier === query) {
+      return false;
+    }
+
     const { apiFetch } = await fakeImport('/src/util/tumblr_helpers.js');
     const { response: { followedBy } } = await apiFetch(`/v2/blog/${blogIdentifier}/followed_by`, { method: 'GET', queryParams: { query } });
     return followedBy;

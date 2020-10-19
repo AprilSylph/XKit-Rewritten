@@ -1,4 +1,6 @@
 .xkit-mutual-icon {
 	height: 1.23em;
+  vertical-align: text-bottom;
+  margin-left: 0 !important;
 	margin-right: 0.5ch;
 }

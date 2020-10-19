@@ -48,7 +48,7 @@
 
   const addIcon = function ($link) {
     $link.closest('[data-id]').addClass('from-mutual');
-    $link.before(icon);
+    $link.prepend(icon);
   };
 
   const main = async function () {

@@ -8,7 +8,7 @@
 
   const addIcons = async function () {
     const { getPostElements } = await fakeImport('/src/util/interface.js');
-    getPostElements({ excludeClass, noPeepr: true }).forEach(async postElement => {
+    getPostElements({ excludeClass, noPeepr: true, includeFiltered: true }).forEach(async postElement => {
       const $link = $(postElement).find(postAttributionSel);
       const blogName = $link.text();
       if (blogName.length) {

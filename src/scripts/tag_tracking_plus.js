@@ -64,7 +64,7 @@
         const sidebarCount = sidebarItemElement.querySelector(`a[href="/tagged/${encodeURIComponent(name)}"] .count`);
         if (sidebarCount.textContent.includes('+')) { return; }
 
-        const { response: { posts: { data } } } = await apiFetch('/v2/mobile/search/posts', { queryParams: { mode: 'recent', query: name } });
+        const { response: { posts: { data, links } } } = await apiFetch('/v2/mobile/search/posts', { queryParams: { mode: 'recent', query: name } });
         let unreadCount = 0;
 
         for (const post of data) {
@@ -78,7 +78,7 @@
 
         if (unreadCount === 0) {
           unreadCount = '';
-        } else if (unreadCount === data.length) {
+        } else if (unreadCount === data.length && links !== undefined) {
           unreadCount += '+';
         }
 

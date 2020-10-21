@@ -4,7 +4,7 @@
    * @returns {object} - the script's preference values
    */
   const getPreferences = async function (scriptName) {
-    const scriptManifestURL = browser.runtime.getURL(`/src/scripts/${scriptName}.json`);
+    const scriptManifestURL = browser.runtime.getURL(`/scripts/${scriptName}.json`);
     const scriptManifestFile = await fetch(scriptManifestURL);
     const scriptManifest = await scriptManifestFile.json();
 

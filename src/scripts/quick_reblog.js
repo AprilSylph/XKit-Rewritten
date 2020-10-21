@@ -49,8 +49,8 @@
     const postID = lastPostID;
     lastPostID = null;
 
-    const { timelineObject } = await fakeImport('/src/util/react_props.js');
-    const { apiFetch } = await fakeImport('/src/util/tumblr_helpers.js');
+    const { timelineObject } = await fakeImport('/util/react_props.js');
+    const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
 
     const { state } = event.target.dataset;
 
@@ -82,7 +82,7 @@
   };
 
   const main = async function () {
-    const { fetchUserBlogs } = await fakeImport('/src/util/user_blogs.js');
+    const { fetchUserBlogs } = await fakeImport('/util/user_blogs.js');
 
     const blogSelector = document.createElement('select');
     blogSelector.id = 'blog';

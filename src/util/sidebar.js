@@ -72,7 +72,7 @@
   const removeSidebarItem = id => sidebarItems.removeChild(sidebarItems.querySelector(`#${id}`));
 
   (async function () {
-    const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
+    const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
 
     const addSidebarToPage = () => {
       const aside = document.querySelector('aside');

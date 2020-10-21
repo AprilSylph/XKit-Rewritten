@@ -27,8 +27,8 @@
   };
 
   const addPostTimestamps = async function () {
-    const { getPostElements } = await fakeImport('/src/util/interface.js');
-    const { timelineObjectMemoized } = await fakeImport('/src/util/react_props.js');
+    const { getPostElements } = await fakeImport('/util/interface.js');
+    const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
 
     getPostElements({ excludeClass: 'xkit-timestamps-done' }).forEach(async postElement => {
       const { timestamp, postUrl } = await timelineObjectMemoized(postElement.dataset.id);
@@ -51,9 +51,9 @@
   };
 
   const addReblogTimestamps = async function () {
-    const { getPostElements } = await fakeImport('/src/util/interface.js');
-    const { timelineObjectMemoized } = await fakeImport('/src/util/react_props.js');
-    const { apiFetch } = await fakeImport('/src/util/tumblr_helpers.js');
+    const { getPostElements } = await fakeImport('/util/interface.js');
+    const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
+    const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
 
     getPostElements({ excludeClass: 'xkit-reblog-timestamps-done' }).forEach(async postElement => {
       let { trail } = await timelineObjectMemoized(postElement.dataset.id);
@@ -109,7 +109,7 @@
       return;
     }
 
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     if (alwaysShowYearChanges) {
       ({ newValue: alwaysShowYear } = alwaysShowYearChanges);
@@ -143,9 +143,9 @@
 
   const main = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
-    const { getPreferences } = await fakeImport('/src/util/preferences.js');
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
-    const { keyToCss } = await fakeImport('/src/util/css_map.js');
+    const { getPreferences } = await fakeImport('/util/preferences.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
+    const { keyToCss } = await fakeImport('/util/css_map.js');
 
     ({ alwaysShowYear, reblogTimestamps } = await getPreferences('timestamps'));
 
@@ -163,7 +163,7 @@
 
   const clean = async function () {
     browser.storage.onChanged.removeListener(onStorageChanged);
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
     onNewPosts.removeListener(addPostTimestamps);
     onNewPosts.removeListener(addReblogTimestamps);
     removePostTimestamps();

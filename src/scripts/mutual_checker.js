@@ -9,7 +9,7 @@
   let icon;
 
   const addIcons = async function () {
-    const { getPostElements } = await fakeImport('/src/util/interface.js');
+    const { getPostElements } = await fakeImport('/util/interface.js');
 
     [...document.querySelectorAll('[data-id].from-mutual')]
     .filter(postElement => postElement.querySelector('.xkit-mutual-icon') === null)
@@ -52,7 +52,7 @@
       return false;
     }
 
-    const { apiFetch } = await fakeImport('/src/util/tumblr_helpers.js');
+    const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
     const { response: { followedBy } } = await apiFetch(`/v2/blog/${blogIdentifier}/followed_by`, { method: 'GET', queryParams: { query } });
     return followedBy;
   };
@@ -65,9 +65,9 @@
   };
 
   const main = async function () {
-    const { fetchDefaultBlog } = await fakeImport('/src/util/user_blogs.js');
-    const { keyToCss } = await fakeImport('/src/util/css_map.js');
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { fetchDefaultBlog } = await fakeImport('/util/user_blogs.js');
+    const { keyToCss } = await fakeImport('/util/css_map.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     myBlog = (await fetchDefaultBlog()).name;
 
@@ -90,7 +90,7 @@
   };
 
   const clean = async function () {
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
     onNewPosts.removeListener(addIcons);
 
     removeIcons();

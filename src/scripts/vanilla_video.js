@@ -20,7 +20,7 @@
   };
 
   const main = async function () {
-    const { onNewPosts, onPostsMutated } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts, onPostsMutated } = await fakeImport('/util/mutations.js');
 
     onNewPosts.addListener(addVideoControls);
     onPostsMutated.addListener(stopVideoAutoplay);
@@ -29,7 +29,7 @@
   };
 
   const clean = async function () {
-    const { onNewPosts, onPostsMutated } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts, onPostsMutated } = await fakeImport('/util/mutations.js');
 
     onNewPosts.removeListener(addVideoControls);
     onPostsMutated.removeListener(stopVideoAutoplay);

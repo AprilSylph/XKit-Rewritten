@@ -4,8 +4,8 @@
   const storageKey = 'postblock.blockedPostRootIDs';
 
   const processPosts = async function () {
-    const { getPostElements } = await fakeImport('/src/util/interface.js');
-    const { timelineObjectMemoized } = await fakeImport('/src/util/react_props.js');
+    const { getPostElements } = await fakeImport('/util/interface.js');
+    const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
 
     const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
 
@@ -22,7 +22,7 @@
   };
 
   const onButtonClicked = async function ({ target }) {
-    const { timelineObjectMemoized } = await fakeImport('/src/util/react_props.js');
+    const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
     const postElement = $(target).parents('[data-id]')[0];
     const postID = postElement.dataset.id;
 
@@ -42,8 +42,8 @@
   };
 
   const main = async function () {
-    const { registerMeatballItem } = await fakeImport('/src/util/interface.js');
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { registerMeatballItem } = await fakeImport('/util/interface.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     registerMeatballItem(meatballButtonLabel, onButtonClicked);
 
@@ -52,8 +52,8 @@
   };
 
   const clean = async function () {
-    const { unregisterMeatballItem } = await fakeImport('/src/util/interface.js');
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { unregisterMeatballItem } = await fakeImport('/util/interface.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     unregisterMeatballItem(meatballButtonLabel);
     onNewPosts.removeListener(processPosts);

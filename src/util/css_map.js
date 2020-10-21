@@ -7,7 +7,7 @@
    */
   const keyToClasses = async function (key) {
     if (cssMap === undefined) {
-      const { getCssMap } = await fakeImport('/src/util/tumblr_helpers.js');
+      const { getCssMap } = await fakeImport('/util/tumblr_helpers.js');
       cssMap = await getCssMap();
     }
 
@@ -37,7 +37,7 @@
    * @returns {string} - A CSS selector
    */
   const descendantSelector = async function (...keys) {
-    const { cartesian } = await fakeImport('/src/util/misc.js');
+    const { cartesian } = await fakeImport('/util/misc.js');
     const sets = [];
 
     for (const key of keys) {

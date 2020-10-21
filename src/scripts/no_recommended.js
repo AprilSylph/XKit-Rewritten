@@ -4,8 +4,8 @@
   const excludeClass = 'xkit-no-recommended-done';
 
   const removeRecommended = async function () {
-    const { getPostElements } = await fakeImport('/src/util/interface.js');
-    const { timelineObject } = await fakeImport('/src/util/react_props.js');
+    const { getPostElements } = await fakeImport('/util/interface.js');
+    const { timelineObject } = await fakeImport('/util/react_props.js');
 
     getPostElements({ excludeClass, noPeepr: true }).forEach(async postElement => {
       const { recommendationReason } = await timelineObject(postElement.dataset.id);
@@ -54,8 +54,8 @@
 
   const main = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
-    const { getPreferences } = await fakeImport('/src/util/preferences.js');
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { getPreferences } = await fakeImport('/util/preferences.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     ({ showSearches } = await getPreferences('no_recommended'));
 
@@ -65,7 +65,7 @@
 
   const clean = async function () {
     browser.storage.onChanged.removeListener(onStorageChanged);
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
     onNewPosts.removeListener(removeRecommended);
     showRecommended();
   };

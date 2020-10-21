@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "XKit Rewritten",
-  "version": "0.0.11",
+  "version": "0.0.12",
 
   "short_name": "XKit",
   "author": "April Sylph",
@@ -9,32 +9,32 @@
 
   "description": "The enhancement suite for Tumblr's new web interface",
   "icons": {
-    "16": "img/icon/16.png",
-    "32": "img/icon/32.png",
-    "48": "img/icon/48.png",
-    "64": "img/icon/64.png",
-    "96": "img/icon/96.png",
-    "128": "img/icon/128.png"
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "64": "icons/64.png",
+    "96": "icons/96.png",
+    "128": "icons/128.png"
   },
 
   "browser_action": {
     "browser_style": true,
     "default_title": "XKit",
-    "default_popup": "src/browser_action/popup.html",
+    "default_popup": "browser_action/popup.html",
     "default_icon": {
-      "16": "img/icon/16.png",
-      "32": "img/icon/32.png",
-      "48": "img/icon/48.png",
-      "64": "img/icon/64.png",
-      "96": "img/icon/96.png",
-      "128": "img/icon/128.png"
+      "16": "icons/16.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "64": "icons/64.png",
+      "96": "icons/96.png",
+      "128": "icons/128.png"
     }
   },
 
   "permissions": [ "storage", "*://*.tumblr.com/*" ],
-  "web_accessible_resources": [ "src/*.js", "src/*.json", "src/*.css" ],
+  "web_accessible_resources": [ "*.js", "*.json", "*.css" ],
   "background": {
-    "scripts": [ "lib/browser-polyfill.min.js", "src/background.js" ],
+    "scripts": [ "lib/browser-polyfill.min.js", "background.js" ],
     "persistent": false
   },
   "content_scripts": [
@@ -44,12 +44,12 @@
       "js": [
         "lib/browser-polyfill.min.js",
         "lib/jquery.min.js",
-        "src/fake_import.js",
-        "src/xkit.js"
+        "content_scripts/fake_import.js",
+        "content_scripts/main.js"
       ],
       "css": [
-        "src/sidebar.css",
-        "src/control_buttons.css"
+        "content_scripts/sidebar.css",
+        "content_scripts/control_buttons.css"
       ]
     }
   ],

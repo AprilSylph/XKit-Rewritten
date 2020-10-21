@@ -2,12 +2,12 @@
   let enabledTweaks;
 
   const runTweak = async function (name) {
-    const { main: run } = await fakeImport(`/src/scripts/tweaks/${name}.js`);
+    const { main: run } = await fakeImport(`/scripts/tweaks/${name}.js`);
     run().catch(console.error);
   };
 
   const destroyTweak = async function (name) {
-    const { clean: destroy } = await fakeImport(`/src/scripts/tweaks/${name}.js`);
+    const { clean: destroy } = await fakeImport(`/scripts/tweaks/${name}.js`);
     destroy().catch(console.error);
   };
 
@@ -17,7 +17,7 @@
     }
 
     if (Object.keys(changes).some(key => key.startsWith('tweaks'))) {
-      const { getPreferences } = await fakeImport('/src/util/preferences.js');
+      const { getPreferences } = await fakeImport('/util/preferences.js');
       const preferences = await getPreferences('tweaks');
 
       const newEnabledTweaks = Object.keys(preferences).filter(key => preferences[key] === true);
@@ -34,7 +34,7 @@
 
   const main = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
-    const { getPreferences } = await fakeImport('/src/util/preferences.js');
+    const { getPreferences } = await fakeImport('/util/preferences.js');
 
     const preferences = await getPreferences('tweaks');
 

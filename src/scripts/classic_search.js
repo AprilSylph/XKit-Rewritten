@@ -41,8 +41,8 @@
   };
 
   const main = async function () {
-    const { getPreferences } = await fakeImport('/src/util/preferences.js');
-    const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
+    const { getPreferences } = await fakeImport('/util/preferences.js');
+    const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
 
     ({ newTab } = await getPreferences('classic_search'));
 
@@ -51,7 +51,7 @@
   };
 
   const clean = async function () {
-    const { onBaseContainerMutated } = await fakeImport('/src/util/mutations.js');
+    const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
     onBaseContainerMutated.removeListener(replaceSearchForm);
 
     searchInputParent.appendChild(searchInputElement);

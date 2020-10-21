@@ -5,8 +5,8 @@
   const excludeClass = 'xkit-cleanfeed-done';
 
   const processPosts = async function () {
-    const { getPostElements } = await fakeImport('/src/util/interface.js');
-    const { timelineObjectMemoized } = await fakeImport('/src/util/react_props.js');
+    const { getPostElements } = await fakeImport('/util/interface.js');
+    const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
 
     getPostElements({ excludeClass }).forEach(async postElement => {
       if (blockingMode === 'all') {
@@ -63,9 +63,9 @@
 
   const main = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
-    const { getPreferences } = await fakeImport('/src/util/preferences.js');
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
-    const { keyToCss } = await fakeImport('/src/util/css_map.js');
+    const { getPreferences } = await fakeImport('/util/preferences.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
+    const { keyToCss } = await fakeImport('/util/css_map.js');
 
     reblogSelector = await keyToCss('reblog');
 
@@ -77,7 +77,7 @@
 
   const clean = async function () {
     browser.storage.onChanged.removeListener(onStorageChanged);
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
     onNewPosts.removeListener(processPosts);
     unProcessPosts();
   };

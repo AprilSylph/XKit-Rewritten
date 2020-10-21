@@ -2,7 +2,7 @@ const fs = require('fs');
 const parser = require('fast-xml-parser');
 
 const inputPath = './node_modules/remixicon/fonts/remixicon.symbol.svg';
-const outputPath = './lib/remixicon_svg.json';
+const outputPath = './src/lib/remixicon_svg.json';
 
 const remixSvg = fs.readFileSync(inputPath, { encoding: 'utf8' });
 const jsonObj = parser.parse(remixSvg, {

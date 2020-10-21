@@ -12,12 +12,12 @@ browser.storage.onChanged.addListener((changes, areaName) => {
 (async function () {
   const { getURL } = browser.runtime;
 
-  const indexUrl = getURL('/src/scripts/_index.json');
+  const indexUrl = getURL('/scripts/_index.json');
   const indexFile = await fetch(indexUrl);
   const installedScripts = await indexFile.json();
 
   for (const scriptName of installedScripts) {
-    const url = getURL(`/src/scripts/${scriptName}.json`);
+    const url = getURL(`/scripts/${scriptName}.json`);
     const file = await fetch(url);
     const { preferences = {} } = await file.json();
 

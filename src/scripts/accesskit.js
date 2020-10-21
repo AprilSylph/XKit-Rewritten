@@ -47,7 +47,7 @@
     } = changes;
 
     if (disableGifsChanges) {
-      const { onPostsMutated } = await fakeImport('/src/util/mutations.js');
+      const { onPostsMutated } = await fakeImport('/util/mutations.js');
       const { newValue: disableGifs } = disableGifsChanges;
 
       if (disableGifs) {
@@ -75,12 +75,12 @@
 
   const main = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
-    const { getPreferences } = await fakeImport('/src/util/preferences.js');
+    const { getPreferences } = await fakeImport('/util/preferences.js');
 
     const { disableGifs, blueLinks, noUserColours } = await getPreferences('accesskit');
 
     if (disableGifs) {
-      const { onPostsMutated } = await fakeImport('/src/util/mutations.js');
+      const { onPostsMutated } = await fakeImport('/util/mutations.js');
       onPostsMutated.addListener(processGifs);
       processGifs();
     }
@@ -96,7 +96,7 @@
 
   const clean = async function () {
     browser.storage.onChanged.removeListener(onStorageChanged);
-    const { onPostsMutated } = await fakeImport('/src/util/mutations.js');
+    const { onPostsMutated } = await fakeImport('/util/mutations.js');
 
     onPostsMutated.removeListener(processGifs);
 

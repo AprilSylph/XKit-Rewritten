@@ -1,6 +1,6 @@
 {
   "name": "xkit-rewrite",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Rewrite of XKit, the extension framework for Tumblr",
   "browser": "src/xkit.js",
   "scripts": {
@@ -38,13 +38,7 @@
     "webextension-polyfill": "^0.6.0"
   },
   "webExt": {
-    "ignoreFiles": [
-      "dev/",
-      "docs/",
-      ".*",
-      "package*.json",
-      "*.md"
-    ],
+    "sourceDir": "src/",
     "build": {
       "overwriteDest": true
     }

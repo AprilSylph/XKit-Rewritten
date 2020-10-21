@@ -60,8 +60,8 @@
   const unregisterMeatballItem = label => delete meatballItems[label];
 
   (async function () {
-    const { keyToClasses, keyToCss } = await fakeImport('/src/util/css_map.js');
-    const { onPostsMutated } = await fakeImport('/src/util/mutations.js');
+    const { keyToClasses, keyToCss } = await fakeImport('/util/css_map.js');
+    const { onPostsMutated } = await fakeImport('/util/mutations.js');
 
     const meatballMenuSelector = await keyToCss('meatballMenu');
     const [meatballItemClass] = await keyToClasses('meatballItem');

@@ -2,9 +2,9 @@
   let addedStyles = [];
 
   const main = async function () {
-    const { getPreferences } = await fakeImport('/src/util/preferences.js');
-    const { translate } = await fakeImport('/src/util/language_data.js');
-    const { addStyle } = await fakeImport('/src/util/interface.js');
+    const { getPreferences } = await fakeImport('/util/preferences.js');
+    const { translate } = await fakeImport('/util/language_data.js');
+    const { addStyle } = await fakeImport('/util/interface.js');
 
     const avatarText = await translate('Avatar');
 
@@ -17,7 +17,7 @@
   };
 
   const clean = async function () {
-    const { removeStyle } = await fakeImport('/src/util/interface.js');
+    const { removeStyle } = await fakeImport('/util/interface.js');
     addedStyles.forEach(style => removeStyle(style));
     addedStyles = [];
   };

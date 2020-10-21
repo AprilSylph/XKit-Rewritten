@@ -6,7 +6,7 @@
     const storageKey = 'seen_posts.seenPosts';
     const { [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey);
 
-    const { getPostElements } = await fakeImport('/src/util/interface.js');
+    const { getPostElements } = await fakeImport('/util/interface.js');
 
     getPostElements({ excludeClass, noPeepr: true, includeFiltered: true }).forEach(postElement => {
       const { id } = postElement.dataset;
@@ -26,14 +26,14 @@
   };
 
   const main = async function () {
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     onNewPosts.addListener(dimPosts);
     dimPosts();
   };
 
   const clean = async function () {
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     onNewPosts.removeListener(dimPosts);
     $(`.${excludeClass}`).removeClass(excludeClass);

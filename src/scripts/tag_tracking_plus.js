@@ -9,9 +9,9 @@
       return;
     }
 
-    const { apiFetch } = await fakeImport('/src/util/tumblr_helpers.js');
-    const { getPostElements } = await fakeImport('/src/util/interface.js');
-    const { timelineObject } = await fakeImport('/src/util/react_props.js');
+    const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
+    const { getPostElements } = await fakeImport('/util/interface.js');
+    const { timelineObject } = await fakeImport('/util/react_props.js');
 
     const currentTag = decodeURIComponent(location.pathname.split('/')[2].replace(/\+/g, ' '));
     const { response: { following } } = await apiFetch('/v2/user/tags/following', { queryParams: { tag: currentTag } });
@@ -37,9 +37,9 @@
   };
 
   const main = async function () {
-    const { apiFetch } = await fakeImport('/src/util/tumblr_helpers.js');
-    const { addSidebarItem } = await fakeImport('/src/util/sidebar.js');
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
+    const { addSidebarItem } = await fakeImport('/util/sidebar.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     const { response: { tags } } = await apiFetch('/v2/user/tags');
 
@@ -91,8 +91,8 @@
   };
 
   const clean = async function () {
-    const { removeSidebarItem } = await fakeImport('/src/util/sidebar.js');
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { removeSidebarItem } = await fakeImport('/util/sidebar.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     removeSidebarItem('tag-tracking-plus');
     onNewPosts.removeListener(processPosts);

@@ -10,7 +10,7 @@
   };
 
   const shortenPosts = async function () {
-    const { getPostElements } = await fakeImport('/src/util/interface.js');
+    const { getPostElements } = await fakeImport('/util/interface.js');
 
     getPostElements({ excludeClass }).forEach(postElement => {
       if (postElement.getBoundingClientRect().height > (window.innerHeight * 1.5)) {
@@ -21,14 +21,14 @@
   };
 
   const main = async function () {
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     onNewPosts.addListener(shortenPosts);
     shortenPosts();
   };
 
   const clean = async function () {
-    const { onNewPosts } = await fakeImport('/src/util/mutations.js');
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     onNewPosts.removeListener(shortenPosts);
 

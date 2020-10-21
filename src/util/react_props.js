@@ -18,7 +18,7 @@
    * @returns {object} - The post's buried timelineObject property
    */
   const timelineObject = async function (postID) {
-    const { inject } = await fakeImport('/src/util/inject.js');
+    const { inject } = await fakeImport('/util/inject.js');
     cache[postID] = inject(async id => {
       const postElement = document.querySelector(`[data-id="${id}"]`);
       const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactInternalInstance'));

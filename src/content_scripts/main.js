@@ -9,7 +9,7 @@
   const restartListeners = {};
 
   const runScript = async function (name) {
-    const { main, clean, stylesheet, autoRestart } = await fakeImport(`/src/scripts/${name}.js`);
+    const { main, clean, stylesheet, autoRestart } = await fakeImport(`/scripts/${name}.js`);
 
     main()
     .catch(console.error);
@@ -17,7 +17,7 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: getURL(`/src/scripts/${name}.css`),
+        href: getURL(`/scripts/${name}.css`),
       });
       document.documentElement.appendChild(link);
     }
@@ -38,13 +38,13 @@
   };
 
   const destroyScript = async function (name) {
-    const { clean, stylesheet, autoRestart } = await fakeImport(`/src/scripts/${name}.js`);
+    const { clean, stylesheet, autoRestart } = await fakeImport(`/scripts/${name}.js`);
 
     clean()
     .catch(console.error);
 
     if (stylesheet) {
-      const link = document.querySelector(`link[href="${getURL(`/src/scripts/${name}.css`)}"]`);
+      const link = document.querySelector(`link[href="${getURL(`/scripts/${name}.css`)}"]`);
       if (link !== null) {
         link.parentNode.removeChild(link);
       }

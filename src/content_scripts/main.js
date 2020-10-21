@@ -73,12 +73,23 @@
     }
   };
 
+  const getInstalledScripts = async function () {
+    const url = getURL('/scripts/_index.json');
+    const file = await fetch(url);
+    const installedScripts = await file.json();
+
+    return installedScripts;
+  };
+
   const init = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
 
+    const installedScripts = await getInstalledScripts();
     const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
-    enabledScripts.forEach(runScript);
+    enabledScripts
+    .filter(scriptName => installedScripts.includes(scriptName))
+    .forEach(runScript);
   };
 
   const waitForReactLoaded = async function () {

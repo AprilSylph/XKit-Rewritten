@@ -51,7 +51,7 @@ const downloadData = async function () {
 
 const downloadToFile = async function () {
   const storageLocal = await browser.storage.local.get();
-  const stringifiedStorage = JSON.stringify(storageLocal);
+  const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
   const storageBlob = new Blob([stringifiedStorage], { type: 'application/json' });
   const blobUrl = URL.createObjectURL(storageBlob);
 

@@ -8,7 +8,7 @@
   overflow-y: clip;
 }
 
-.xkit-shorten-posts-shortened::after {
+.xkit-shorten-posts-shortened:not([class*="-hidden"])::after {
   content: "Expand";
   cursor: pointer;
   background-color: var(--white);

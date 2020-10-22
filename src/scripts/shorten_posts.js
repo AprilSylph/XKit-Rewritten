@@ -4,8 +4,12 @@
 
   const unshortenOnClick = ({ target }) => {
     if (target.classList.contains(shortenClass)) {
+      const headerHeight = document.querySelector('header').getBoundingClientRect().height;
+      const postMargin = parseInt(getComputedStyle(target).getPropertyValue('margin-bottom'));
+
       target.classList.remove(shortenClass);
       target.scrollIntoView();
+      window.scrollBy({ top: 0 - headerHeight - postMargin });
     }
   };
 

@@ -4,6 +4,7 @@
 
 .xkit-shorten-posts-shortened article {
   max-height: calc(100vh - 54px - 40px);
+  overflow-y: hidden;
   overflow-y: clip;
 }
 

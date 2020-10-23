@@ -10,9 +10,7 @@
     const file = await fetch(url);
     const icons = await file.json();
 
-    if (Object.prototype.hasOwnProperty.call(icons, cssClass)) {
-      return `<path d="${icons[cssClass]}"/>`;
-    }
+    return icons[cssClass];
   };
 
   /**
@@ -36,8 +34,18 @@
     const controlButtonInner = document.createElement('span');
     controlButtonInner.classList.add('xkit-control-button-inner');
     controlButtonInner.tabIndex = -1;
-    const iconPath = await getIconPath(iconClass);
-    controlButtonInner.innerHTML = `<svg viewBox="2 2 20 20" width="21" height="21" fill="var(--gray-65)">${iconPath}</svg>`;
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '2 2 20 20');
+    svg.setAttribute('width', '21');
+    svg.setAttribute('height', '21');
+    svg.setAttribute('fill', 'var(--gray-65)');
+    controlButtonInner.appendChild(svg);
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const icon = await getIconPath(iconClass);
+    path.setAttribute('d', icon);
+    svg.appendChild(path);
 
     controlButton.appendChild(controlButtonInner);
     controlButtonContainerSpan.appendChild(controlButton);

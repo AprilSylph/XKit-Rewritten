@@ -49,5 +49,8 @@ document.getElementById('filter').addEventListener('input', event => {
   checkForNoResults();
 });
 
+const versionElement = document.getElementById('version');
+versionElement.textContent = `v${browser.runtime.getManifest().version} (Alpha)`;
+
 const main = document.querySelector('main');
 main.style.minWidth = `${main.getBoundingClientRect().width}px`;

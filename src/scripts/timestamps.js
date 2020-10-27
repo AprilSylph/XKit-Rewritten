@@ -3,6 +3,7 @@
   let reblogHeaderSelector;
   let reblogTimestamps;
   let alwaysShowYear;
+  const cache = {};
 
   const constructTimeString = function (unixTime) {
     const locale = document.documentElement.lang;
@@ -31,7 +32,10 @@
     const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
 
     getPostElements({ excludeClass: 'xkit-timestamps-done' }).forEach(async postElement => {
-      const { timestamp, postUrl } = await timelineObjectMemoized(postElement.dataset.id);
+      const { id } = postElement.dataset;
+
+      const { timestamp, postUrl } = await timelineObjectMemoized(id);
+      cache[id] = Promise.resolve(constructTimeString(timestamp));
 
       const noteCountElement = postElement.querySelector(noteCountSelector);
 
@@ -77,15 +81,17 @@
 
         const timestampElement = document.createElement('div');
         timestampElement.className = 'xkit-reblog-timestamp';
+        reblogHeaders[i].appendChild(timestampElement);
 
-        try {
-          const { response: { timestamp } } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
-          timestampElement.textContent = constructTimeString(timestamp);
-        } catch (exception) {
-          timestampElement.textContent = exception.body.meta.msg;
+        if (cache[id] === undefined) {
+          cache[id] = apiFetch(`/v2/blog/${uuid}/posts/${id}`)
+            .then(({ response: { timestamp } }) => constructTimeString(timestamp))
+            .catch(exception => (exception.body && exception.body.meta) ? exception.body.meta.msg : '');
         }
 
-        reblogHeaders[i].appendChild(timestampElement);
+        cache[id].then(result => {
+          timestampElement.textContent = result;
+        });
       });
     });
   };

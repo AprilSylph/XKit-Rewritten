@@ -35,7 +35,8 @@
       const { id } = postElement.dataset;
 
       const { timestamp, postUrl } = await timelineObjectMemoized(id);
-      cache[id] = Promise.resolve(constructTimeString(timestamp));
+      const constructedTimeString = constructTimeString(timestamp);
+      cache[id] = Promise.resolve(constructedTimeString);
 
       const noteCountElement = postElement.querySelector(noteCountSelector);
 
@@ -43,7 +44,7 @@
       timestampElement.className = 'xkit-timestamp';
       timestampElement.href = postUrl;
       timestampElement.target = '_blank';
-      timestampElement.textContent = constructTimeString(timestamp);
+      timestampElement.textContent = constructedTimeString;
 
       $(noteCountElement).after(timestampElement);
     });

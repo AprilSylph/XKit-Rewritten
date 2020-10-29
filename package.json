@@ -22,12 +22,11 @@
   "homepage": "https://github.com/AprilSylph/XKit-Rewritten#readme",
   "devDependencies": {
     "eslint": "^7.12.1",
-    "eslint-config-standard": "^15.0.1",
+    "eslint-config-standard": "^16.0.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsdoc": "^30.7.3",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.2",
     "fast-xml-parser": "^3.17.4",
     "web-ext": "^5.3.0"
   },

@@ -1,6 +1,7 @@
 const backupSection = document.getElementById('backup');
 const backupSectionLink = document.querySelector('a[href="#backup"]');
 const storageAreasDiv = backupSection.querySelector('.storage-areas');
+const localImportTextarea = document.getElementById('local-import');
 
 let syncSupported = false;
 
@@ -49,7 +50,7 @@ const downloadData = async function () {
   document.querySelector('a[href="#configuration"]').classList.add('outdated');
 };
 
-const downloadToFile = async function () {
+const localExport = async function () {
   const storageLocal = await browser.storage.local.get();
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
   const storageBlob = new Blob([stringifiedStorage], { type: 'application/json' });
@@ -63,6 +64,21 @@ const downloadToFile = async function () {
   tempLink.click();
   tempLink.parentNode.removeChild(tempLink);
   URL.revokeObjectURL(blobUrl);
+};
+
+const localImport = async function () {
+  const importText = localImportTextarea.value;
+  try {
+    const parsedStorage = JSON.parse(importText);
+    await browser.storage.local.set(parsedStorage);
+
+    localImportTextarea.value = 'Successfully restored.';
+    localImportTextarea.disabled = true;
+    backupSectionLink.click();
+    document.querySelector('a[href="#configuration"]').classList.add('outdated');
+  } catch (exception) {
+    localImportTextarea.value = `ERROR: ${exception.msg}`;
+  }
 };
 
 const renderBackup = async function () {
@@ -108,8 +124,10 @@ const renderBackup = async function () {
     downloadButton.addEventListener('click', downloadData);
   }
 
-  const localDownloadButton = document.getElementById('download-to-file');
-  localDownloadButton.addEventListener('click', downloadToFile);
+  const localExportButton = document.getElementById('download-to-file');
+  localExportButton.addEventListener('click', localExport);
+  const localImportButton = document.getElementById('restore-from-file');
+  localImportButton.addEventListener('click', localImport);
 };
 
 renderBackup();

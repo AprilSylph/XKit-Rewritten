@@ -77,7 +77,7 @@ const localImport = async function () {
     backupSectionLink.click();
     document.querySelector('a[href="#configuration"]').classList.add('outdated');
   } catch (exception) {
-    localImportTextarea.value = `ERROR: ${exception.msg}`;
+    localImportTextarea.value = `ERROR: ${exception.message}`;
   }
 };
 

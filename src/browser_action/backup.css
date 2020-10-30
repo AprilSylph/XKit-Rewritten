@@ -55,8 +55,6 @@
   margin: 1ch 0;
 }
 
-.local textarea:disabled {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.local textarea {
+  padding: 1ch;
 }

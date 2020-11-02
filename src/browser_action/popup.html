@@ -45,25 +45,33 @@
         <div class="scripts"></div>
       </section>
       <section id="backup">
-        <div class="storage-areas">
-        </div>
-        <div class="if-sync-supported">
-          <hr>
-          <div class="controls">
-            <button id="upload">Upload<br>(Local &#x27F6; Sync)</button>
-            <button id="download">Download<br>(Sync &#x27F6; Local)</button>
+        <div id="cloud">
+          <div class="storage-area">
+            <div>
+              <h4>Local storage</h4>
+              <p id="local-storage-message"></p>
+            </div>
+          </div>
+          <div class="storage-area">
+            <div>
+              <h4>Cloud storage</h4>
+              <p id="sync-storage-message"></p>
+            </div>
+            <div class="cloud-controls" style="display: none;">
+              <button id="cloud-upload">^</button>
+              <button id="cloud-download">V</button>
+            </div>
           </div>
           <pre class="errors"></pre>
         </div>
-        <div class="local">
-          <hr>
-          <button id="download-to-file">Download local storage to file</button>
-          <details>
-            <summary>Restore from file</summary>
-            <p>Paste your payload below and then click "Restore".</p>
-            <textarea id="local-import" rows="10"></textarea>
-            <button id="restore-from-file">Restore</button>
-          </details>
+        <div id="local">
+          <div class="textarea-container">
+            <textarea id="local-import" rows="5" cols="5" placeholder="Paste your saved export here, then hit the &quot;Restore&quot; button."></textarea>
+          </div>
+          <div class="local-controls">
+            <button id="local-download">Save to file</button>
+            <button id="local-restore">Restore</button>
+          </div>
         </div>
       </section>
       <section id="links">

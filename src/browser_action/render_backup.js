@@ -1,12 +1,7 @@
-const backupSection = document.getElementById('backup');
-const backupSectionLink = document.querySelector('a[href="#backup"]');
-const storageAreasDiv = backupSection.querySelector('.storage-areas');
 const localImportTextarea = document.getElementById('local-import');
 
-let syncSupported = false;
-
-const uploadData = async function () {
-  const errorsDisplay = document.querySelector('.if-sync-supported .errors');
+const cloudUpload = async function () {
+  const errorsDisplay = document.querySelector('#cloud .errors');
   errorsDisplay.textContent = '';
 
   const storageLocal = await browser.storage.local.get();
@@ -35,17 +30,15 @@ const uploadData = async function () {
     return;
   }
 
-  await browser.storage.sync.set(storageLocal);
-  backupSectionLink.click();
+  browser.storage.sync.set(storageLocal);
 };
 
-const downloadData = async function () {
-  const errorsDisplay = document.querySelector('.if-sync-supported .errors');
+const cloudDownload = async function () {
+  const errorsDisplay = document.querySelector('#cloud .errors');
   errorsDisplay.textContent = '';
 
   const storageSync = await browser.storage.sync.get();
   await browser.storage.local.set(storageSync);
-  backupSectionLink.click();
 
   document.querySelector('a[href="#configuration"]').classList.add('outdated');
 };
@@ -68,71 +61,86 @@ const localExport = async function () {
 
 const localImport = async function () {
   const importText = localImportTextarea.value;
+
+  if (importText === localImportTextarea.textContent) {
+    localImportTextarea.value = '';
+    return;
+  }
+
   try {
     const parsedStorage = JSON.parse(importText);
     await browser.storage.local.set(parsedStorage);
 
-    localImportTextarea.value = 'Successfully restored.';
-    localImportTextarea.disabled = true;
-    backupSectionLink.click();
     document.querySelector('a[href="#configuration"]').classList.add('outdated');
   } catch (exception) {
-    localImportTextarea.value = `ERROR: ${exception.message}`;
+    console.error(exception);
   }
 };
 
-const renderBackup = async function () {
-  for (const storageArea of ['local', 'sync']) {
-    const div = document.createElement('div');
-    storageAreasDiv.appendChild(div);
+const updateLastModifiedMessage = async function (areaName) {
+  const messageElement = document.getElementById(`${areaName}-storage-message`);
 
-    const heading = document.createElement('h4');
-    heading.textContent = `${storageArea} storage`;
-    div.appendChild(heading);
+  try {
+    const { storageLastModified } = await browser.storage[areaName].get('storageLastModified');
 
-    const p = document.createElement('p');
-    p.textContent = 'Last modified: ';
-    div.appendChild(p);
-
-    try {
-      const { storageLastModified } = await browser.storage[storageArea].get('storageLastModified');
-
-      if (storageArea === 'sync') {
-        syncSupported = true;
-      }
-
-      if (storageLastModified) {
-        const date = new Date(storageLastModified);
-        const dateString = date.toLocaleString();
-        p.textContent += dateString;
-      } else {
-        p.textContent += 'never';
-      }
-    } catch (exception) {
-      p.textContent = 'Not supported by this browser';
+    if (areaName === 'sync') {
+      const cloudControls = document.querySelector('.cloud-controls');
+      cloudControls.style.display = null;
     }
+
+    messageElement.textContent = 'Last modified: ';
+
+    if (storageLastModified) {
+      const date = new Date(storageLastModified);
+      const dateString = date.toLocaleString();
+      messageElement.textContent += dateString;
+    } else {
+      messageElement.textContent += 'never';
+    }
+  } catch (exception) {
+    messageElement.textContent = 'Not supported by this browser';
   }
-
-  if (syncSupported) {
-    const ifSyncSupportedDiv = backupSection.querySelector('.if-sync-supported');
-    ifSyncSupportedDiv.classList.add('sync-supported');
-
-    const uploadButton = ifSyncSupportedDiv.querySelector('#upload');
-    const downloadButton = ifSyncSupportedDiv.querySelector('#download');
-
-    uploadButton.addEventListener('click', uploadData);
-    downloadButton.addEventListener('click', downloadData);
-  }
-
-  const localExportButton = document.getElementById('download-to-file');
-  localExportButton.addEventListener('click', localExport);
-  const localImportButton = document.getElementById('restore-from-file');
-  localImportButton.addEventListener('click', localImport);
 };
 
-renderBackup();
+const updateLocalStorageTextarea = async function () {
+  const storageLocal = await browser.storage.local.get();
+  const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
 
-backupSectionLink.addEventListener('click', () => {
-  storageAreasDiv.textContent = '';
-  renderBackup();
-});
+  localImportTextarea.textContent = stringifiedStorage;
+  localImportTextarea.value = stringifiedStorage;
+};
+
+const renderCloudBackup = async function () {
+  ['local', 'sync'].forEach(updateLastModifiedMessage);
+
+  browser.storage.onChanged.addListener((changes, areaName) => {
+    if (Object.keys(changes).includes('storageLastModified')) {
+      updateLastModifiedMessage(areaName);
+    }
+  });
+
+  const uploadButton = document.getElementById('cloud-upload');
+  const downloadButton = document.getElementById('cloud-download');
+
+  uploadButton.addEventListener('click', cloudUpload);
+  downloadButton.addEventListener('click', cloudDownload);
+};
+
+const renderLocalBackup = async function () {
+  updateLocalStorageTextarea();
+
+  browser.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === 'local') {
+      updateLocalStorageTextarea();
+    }
+  });
+
+  const downloadButton = document.getElementById('local-download');
+  const restoreButton = document.getElementById('local-restore');
+
+  downloadButton.addEventListener('click', localExport);
+  restoreButton.addEventListener('click', localImport);
+};
+
+renderCloudBackup();
+renderLocalBackup();

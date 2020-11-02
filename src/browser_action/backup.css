@@ -1,60 +1,71 @@
-#backup {
+#backup > div {
   margin: 1ch 0;
   padding: 0 1ch;
 }
 
-.storage-areas div {
-  display: flex;
-  flex-direction: column;
-  padding: 1ch;
+#backup > div + div {
+  padding-top: 1em;
+  border-top: 1px dotted;
+  margin-top: 1em;
 }
 
-.storage-areas h4 {
-  text-transform: capitalize;
-}
-
-.storage-areas h4,
-.storage-areas p {
-  margin: 0;
-}
-
-.storage-areas p {
-  margin-top: 0.5ch;
-}
-
-.if-sync-supported:not(.sync-supported) {
-  display: none;
-}
-
-.if-sync-supported .controls {
+.storage-area {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: stretch;
+  margin: 1em 0;
 }
 
-.if-sync-supported button {
-  width: 100%;
+.storage-area div:not([class]) {
+  display: flex;
+  flex-direction: column;
 }
 
-.if-sync-supported button + button {
+.cloud-controls {
+  display: flex;
+  flex-direction: row;
+}
+
+.storage-area h4,
+.storage-area p {
+  margin: 0;
+}
+
+.storage-area p {
+  margin-top: 0.5ch;
+  line-height: 1em;
+  min-height: 1em;
+}
+
+.storage-area button {
   margin-left: 1ch;
 }
 
-.if-sync-supported .errors {
+.errors {
   font-size: 12px;
   white-space: pre-wrap;
+  max-width: 100%;
 }
 
-.local button {
+.textarea-container {
+  display: flex;
+}
+
+#local-import {
+  padding: 1ch;
+}
+
+.local-controls {
+  display: flex;
+  flex-direction: row;
+  margin-top: 1ch;
+}
+
+.local-controls button {
   width: 100%;
   text-align: center;
 }
 
-.local details summary {
-  margin: 1ch 0;
-}
-
-.local textarea {
-  padding: 1ch;
+.local-controls button:not(:first-child) {
+  margin-left: 1ch;
 }

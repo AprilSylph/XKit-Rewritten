@@ -24,6 +24,7 @@
 .cloud-controls {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 .storage-area h4,
@@ -38,7 +39,16 @@
 }
 
 .storage-area button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 2em;
+  max-height: 2em;
   margin-left: 1ch;
+}
+
+.storage-area button i {
+  font-size: 1.5em;
 }
 
 .errors {

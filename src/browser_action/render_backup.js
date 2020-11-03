@@ -51,7 +51,7 @@ const localExport = async function () {
 
   const tempLink = document.createElement('a');
   tempLink.href = blobUrl;
-  tempLink.download = 'XKit Export.json';
+  tempLink.download = `XKit Payload ${storageLocal.storageLastModified}.json`;
 
   document.documentElement.appendChild(tempLink);
   tempLink.click();

@@ -110,38 +110,23 @@ const renderScripts = async function () {
         preferenceLabel.setAttribute('for', `${scriptName}.${preference.type}.${key}`);
       }
 
-      const inputType = {
-        checkbox: 'input',
-        text: 'input',
-        color: 'input',
-        select: 'select',
-        textarea: 'textarea',
-        iframe: 'iframe',
-      }[preference.type];
+      const preferenceInput = preferenceTemplateClone.querySelector('input, select, textarea, iframe');
+      preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
 
-      let listener = writePreference;
-
-      if (preference.type === 'text' || preference.type === 'textarea') {
-        listener = debounce(writePreference, 500);
-      } else if (preference.type === 'iframe') {
-        listener = null;
-      }
-
-      const preferenceInput = preferenceTemplateClone.querySelector(inputType);
-
-      if (listener !== null) {
-        preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
-        preferenceInput.addEventListener('input', listener);
+      switch (preference.type) {
+        case 'text':
+        case 'textarea':
+          preferenceInput.addEventListener('input', debounce(writePreference, 500));
+          break;
+        case 'iframe':
+          break;
+        default:
+          preferenceInput.addEventListener('input', writePreference);
       }
 
       switch (preference.type) {
         case 'checkbox':
           preferenceInput.checked = preference.value;
-          break;
-        case 'text':
-        case 'color':
-        case 'textarea':
-          preferenceInput.value = preference.value;
           break;
         case 'select':
           for (const [value, text] of Object.entries(preference.options)) {
@@ -155,6 +140,8 @@ const renderScripts = async function () {
         case 'iframe':
           preferenceInput.src = preference.src;
           break;
+        default:
+          preferenceInput.value = preference.value;
       }
 
       preferenceList.appendChild(preferenceTemplateClone);

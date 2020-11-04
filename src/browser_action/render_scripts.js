@@ -104,14 +104,16 @@ const renderScripts = async function () {
 
       const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
 
+      const preferenceInput = preferenceTemplateClone.querySelector('input, select, textarea, iframe');
+      preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
+
       const preferenceLabel = preferenceTemplateClone.querySelector('label');
       if (preferenceLabel) {
         preferenceLabel.textContent = preference.label || key;
         preferenceLabel.setAttribute('for', `${scriptName}.${preference.type}.${key}`);
+      } else {
+        preferenceInput.title = preference.label || key;
       }
-
-      const preferenceInput = preferenceTemplateClone.querySelector('input, select, textarea, iframe');
-      preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
 
       switch (preference.type) {
         case 'text':

@@ -129,3 +129,8 @@
   align-items: center;
   padding: 0.5ch 0;
 }
+
+.script iframe {
+  border: none;
+  width: 100%;
+}

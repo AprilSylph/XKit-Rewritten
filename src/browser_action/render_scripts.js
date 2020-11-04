@@ -105,8 +105,10 @@ const renderScripts = async function () {
       const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
 
       const preferenceLabel = preferenceTemplateClone.querySelector('label');
-      preferenceLabel.textContent = preference.label || key;
-      preferenceLabel.setAttribute('for', `${scriptName}.${preference.type}.${key}`);
+      if (preferenceLabel) {
+        preferenceLabel.textContent = preference.label || key;
+        preferenceLabel.setAttribute('for', `${scriptName}.${preference.type}.${key}`);
+      }
 
       const inputType = {
         checkbox: 'input',
@@ -114,11 +116,23 @@ const renderScripts = async function () {
         color: 'input',
         select: 'select',
         textarea: 'textarea',
+        iframe: 'iframe',
       }[preference.type];
 
+      let listener = writePreference;
+
+      if (preference.type === 'text' || preference.type === 'textarea') {
+        listener = debounce(writePreference, 500);
+      } else if (preference.type === 'iframe') {
+        listener = null;
+      }
+
       const preferenceInput = preferenceTemplateClone.querySelector(inputType);
-      preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
-      preferenceInput.addEventListener('input', ['text', 'textarea'].includes(preference.type) ? debounce(writePreference, 500) : writePreference);
+
+      if (listener !== null) {
+        preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
+        preferenceInput.addEventListener('input', listener);
+      }
 
       switch (preference.type) {
         case 'checkbox':
@@ -137,6 +151,9 @@ const renderScripts = async function () {
             option.selected = value === preference.value;
             preferenceInput.appendChild(option);
           }
+          break;
+        case 'iframe':
+          preferenceInput.src = preference.src;
           break;
       }
 

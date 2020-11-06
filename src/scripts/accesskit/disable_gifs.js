@@ -1,0 +1,60 @@
+(function () {
+  const className = 'accesskit-disable-gifs';
+
+  const pauseGif = function (gifElement) {
+    const image = new Image();
+    image.src = gifElement.currentSrc;
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      canvas.className = gifElement.className;
+      canvas.classList.add('xkit-paused-gif');
+      canvas.getContext('2d').drawImage(image, 0, 0);
+
+      const gifLabel = document.createElement('p');
+      gifLabel.className = 'xkit-gif-label';
+
+      gifElement.parentNode.appendChild(canvas);
+      gifElement.parentNode.appendChild(gifLabel);
+    };
+  };
+
+  const processGifs = function () {
+    [...document.querySelectorAll('figure img[srcset*=".gif"]:not(.xkit-accesskit-disabled-gif)')]
+    .forEach(gifElement => {
+      gifElement.classList.add('xkit-accesskit-disabled-gif');
+
+      if (gifElement.parentNode.querySelector('.xkit-paused-gif') !== null) {
+        return;
+      }
+
+      if (gifElement.complete && gifElement.currentSrc) {
+        pauseGif(gifElement);
+      } else {
+        gifElement.onload = () => pauseGif(gifElement);
+      }
+    });
+  };
+
+  const main = async function () {
+    const { onPostsMutated } = await fakeImport('/util/mutations.js');
+
+    document.body.classList.add(className);
+
+    onPostsMutated.addListener(processGifs);
+    processGifs();
+  };
+
+  const clean = async function () {
+    const { onPostsMutated } = await fakeImport('/util/mutations.js');
+    onPostsMutated.removeListener(processGifs);
+
+    document.body.classList.remove(className);
+
+    $('.xkit-paused-gif, .xkit-gif-label').remove();
+    $('.xkit-accesskit-disabled-gif').removeClass('xkit-accesskit-disabled-gif');
+  };
+
+  return { main, clean };
+})();

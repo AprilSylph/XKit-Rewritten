@@ -7,17 +7,17 @@
     "background_color": "#df46f6"
   },
   "preferences": {
-    "disableGifs": {
+    "disable_gifs": {
       "type": "checkbox",
       "label": "Pause GIFs until they are hovered over",
       "default": true
     },
-    "blueLinks": {
+    "blue_links": {
       "type": "checkbox",
       "label": "Make links in posts blue",
       "default": false
     },
-    "noUserColours": {
+    "no_user_colours": {
       "type": "checkbox",
       "label": "Remove user-set colours from text in posts",
       "default": true

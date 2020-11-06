@@ -1,4 +1,5 @@
 const localImportTextarea = document.getElementById('local-import');
+const restoreButton = document.getElementById('local-restore');
 
 const cloudUpload = async function () {
   const errorsDisplay = document.querySelector('#cloud .errors');
@@ -64,6 +65,7 @@ const localImport = async function () {
 
   if (importText === localImportTextarea.textContent) {
     localImportTextarea.value = '';
+    updateRestoreButtonClass();
     return;
   }
 
@@ -108,6 +110,13 @@ const updateLocalStorageTextarea = async function () {
 
   localImportTextarea.textContent = stringifiedStorage;
   localImportTextarea.value = stringifiedStorage;
+
+  updateRestoreButtonClass();
+};
+
+const updateRestoreButtonClass = async function () {
+  const addOrRemove = localImportTextarea.value === localImportTextarea.textContent ? 'add' : 'remove';
+  restoreButton.classList[addOrRemove]('unchanged-import');
 };
 
 const renderCloudBackup = async function () {
@@ -136,7 +145,6 @@ const renderLocalBackup = async function () {
   });
 
   const downloadButton = document.getElementById('local-download');
-  const restoreButton = document.getElementById('local-restore');
 
   downloadButton.addEventListener('click', localExport);
   restoreButton.addEventListener('click', localImport);
@@ -144,3 +152,5 @@ const renderLocalBackup = async function () {
 
 renderCloudBackup();
 renderLocalBackup();
+
+localImportTextarea.addEventListener('input', updateRestoreButtonClass);

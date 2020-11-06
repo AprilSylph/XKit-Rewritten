@@ -79,3 +79,7 @@
 .local-controls button:not(:first-child) {
   margin-left: 1ch;
 }
+
+#local-restore.unchanged-import::after {
+  content: "\2026";
+}

@@ -12,6 +12,11 @@
       "label": "Pause GIFs until they are hovered over",
       "default": true
     },
+    "boring_tag_chiclets": {
+      "type": "checkbox",
+      "label": "Make the tag chiclet carousels boring",
+      "default": true
+    },
     "blue_links": {
       "type": "checkbox",
       "label": "Make links in posts blue",

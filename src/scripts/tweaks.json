@@ -7,6 +7,21 @@
     "background_color": "#ecc84b"
   },
   "preferences": {
+    "slim_filtered_screens": {
+      "type": "checkbox",
+      "label": "Use a slim layout for filtered posts",
+      "default": false
+    },
+    "highlight_contributed_content": {
+      "type": "checkbox",
+      "label": "Highlight contributed content on reblogs",
+      "default": false
+    },
+    "subtle_follow": {
+      "type": "checkbox",
+      "label": "Make posts' mini-follow buttons more subtle",
+      "default": false
+    },
     "hide_recommended_blogs": {
       "type": "checkbox",
       "label": "Hide recommended blogs in the sidebar",
@@ -17,24 +32,9 @@
       "label": "Hide the Tumblr Radar",
       "default": false
     },
-    "slim_filtered_screens": {
-      "type": "checkbox",
-      "label": "Use a slim layout for filtered posts",
-      "default": false
-    },
-    "subtle_follow": {
-      "type": "checkbox",
-      "label": "Make posts' mini-follow buttons more subtle",
-      "default": false
-    },
     "no_where_were_we": {
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",
-      "default": false
-    },
-    "highlight_contributed_content": {
-      "type": "checkbox",
-      "label": "Highlight contributed content on reblogs",
       "default": false
     }
   }

@@ -36,6 +36,11 @@
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",
       "default": false
+    },
+    "highlight_contributed_content": {
+      "type": "checkbox",
+      "label": "Highlight contributed content on reblogs",
+      "default": false
     }
   }
 }

@@ -26,6 +26,11 @@
       "type": "checkbox",
       "label": "Remove user-set colours from text in posts",
       "default": true
+    },
+    "no_user_fonts": {
+      "type": "checkbox",
+      "label": "Remove user-set fonts from text in posts",
+      "default": true
     }
   }
 }

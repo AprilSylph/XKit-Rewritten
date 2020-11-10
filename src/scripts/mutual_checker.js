@@ -6,9 +6,10 @@
 
   let myBlog;
   let postAttributionSelector;
+  let displayNameSelector;
   let icon;
 
-  const addIcons = async function () {
+  const addPostIcons = async function () {
     const { getPostElements } = await fakeImport('/util/interface.js');
 
     [...document.querySelectorAll('[data-id].from-mutual')]
@@ -21,29 +22,43 @@
 
       const blogName = postAttribution.textContent.trim();
 
-      if (blogName) {
-        check(postAttribution, blogName);
+      if (typeof mutuals[blogName] === 'undefined') {
+        mutuals[blogName] = isFollowedBy(myBlog, blogName)
+        .catch(() => Promise.resolve(false));
       }
+
+      mutuals[blogName].then(isMutual => {
+        if (!isMutual) { return; }
+
+        const $postAttribution = $(postAttribution);
+        $postAttribution.closest('[data-id]').addClass('from-mutual');
+        postAttribution.prepend(icon.cloneNode(true));
+      });
     });
   };
 
-  const removeIcons = function () {
-    $(`.${excludeClass}`)
-    .removeClass(excludeClass)
-    .removeClass('from-mutual');
-    $('.xkit-mutual-icon').remove();
-  };
-
-  const check = async function (postAttribution, blogName) {
-    if (typeof mutuals[blogName] === 'undefined') {
-      mutuals[blogName] = isFollowedBy(myBlog, blogName)
-      .catch(() => Promise.resolve(false));
+  const addDisplayNameIcons = async function () {
+    if (document.documentElement.dataset.pathname !== '/following') {
+      return;
     }
 
-    mutuals[blogName].then(isMutual => {
-      if (isMutual) {
-        addIcon(postAttribution);
+    [...document.querySelectorAll(displayNameSelector)]
+    .filter(displayName => displayName.classList.contains(excludeClass) === false)
+    .forEach(displayName => {
+      displayName.classList.add(excludeClass);
+
+      const blogName = displayName.textContent;
+
+      if (typeof mutuals[blogName] === 'undefined') {
+        mutuals[blogName] = isFollowedBy(myBlog, blogName)
+        .catch(() => Promise.resolve(false));
       }
+
+      mutuals[blogName].then(isMutual => {
+        if (!isMutual) { return; }
+
+        $(displayName).before(icon.cloneNode(true));
+      });
     });
   };
 
@@ -53,21 +68,19 @@
     }
 
     const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
-    const { response: { followedBy } } = await apiFetch(`/v2/blog/${blogIdentifier}/followed_by`, { method: 'GET', queryParams: { query } });
-    return followedBy;
-  };
 
-  const addIcon = function (postAttribution) {
-    const $postAttribution = $(postAttribution);
-    $postAttribution.closest('[data-id]').addClass('from-mutual');
-
-    postAttribution.prepend(icon.cloneNode(true));
+    try {
+      const { response: { followedBy } } = await apiFetch(`/v2/blog/${blogIdentifier}/followed_by`, { method: 'GET', queryParams: { query } });
+      return followedBy;
+    } catch (exception) {
+      return false;
+    }
   };
 
   const main = async function () {
     const { fetchDefaultBlog } = await fakeImport('/util/user_blogs.js');
     const { keyToCss } = await fakeImport('/util/css_map.js');
-    const { onNewPosts } = await fakeImport('/util/mutations.js');
+    const { onNewPosts, onBaseContainerMutated } = await fakeImport('/util/mutations.js');
 
     myBlog = (await fetchDefaultBlog()).name;
 
@@ -85,15 +98,21 @@
     path.setAttribute('d', aprilFools ? aprilFoolsPath : regularPath);
     icon.appendChild(path);
 
-    onNewPosts.addListener(addIcons);
-    addIcons();
+    onNewPosts.addListener(addPostIcons);
+    addPostIcons();
+
+    displayNameSelector = await keyToCss('displayName');
+
+    onBaseContainerMutated.addListener(addDisplayNameIcons);
+    addDisplayNameIcons();
   };
 
   const clean = async function () {
     const { onNewPosts } = await fakeImport('/util/mutations.js');
-    onNewPosts.removeListener(addIcons);
+    onNewPosts.removeListener(addPostIcons);
 
-    removeIcons();
+    $(`.${excludeClass}`).removeClass(excludeClass).removeClass('from-mutual');
+    $('.xkit-mutual-icon').remove();
   };
 
   return { main, clean, stylesheet: true };

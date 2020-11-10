@@ -3,6 +3,7 @@
   let reblogHeaderSelector;
   let reblogTimestamps;
   let alwaysShowYear;
+  let headerTimestamps;
   const cache = {};
 
   const constructTimeString = function (unixTime) {
@@ -27,6 +28,21 @@
     });
   };
 
+  const constructLongTimeString = function (unixTime) {
+    const locale = document.documentElement.lang;
+    const date = new Date(unixTime * 1000);
+
+    return date.toLocaleString(locale, {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+  };
+
   const addPostTimestamps = async function () {
     const { getPostElements } = await fakeImport('/util/interface.js');
     const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
@@ -47,11 +63,20 @@
       timestampElement.textContent = constructedTimeString;
 
       $(noteCountElement).after(timestampElement);
+
+      if (headerTimestamps) {
+        const longTimestampElement = document.createElement('div');
+        longTimestampElement.className = 'xkit-long-timestamp';
+        longTimestampElement.textContent = constructLongTimeString(timestamp);
+
+        $(postElement.querySelector('header')).after(longTimestampElement);
+      }
     });
   };
 
   const removePostTimestamps = function () {
     $('.xkit-timestamp').remove();
+    $('.xkit-long-timestamp').remove();
     $('.xkit-timestamps-done').removeClass('xkit-timestamps-done');
   };
 
@@ -109,30 +134,29 @@
 
     const {
       'timestamps.preferences.alwaysShowYear': alwaysShowYearChanges,
+      'timestamps.preferences.headerTimestamps': headerTimestampsChanges,
       'timestamps.preferences.reblogTimestamps': reblogTimestampsChanges,
     } = changes;
-
-    if (!alwaysShowYearChanges && !reblogTimestampsChanges) {
-      return;
-    }
 
     const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     if (alwaysShowYearChanges) {
       ({ newValue: alwaysShowYear } = alwaysShowYearChanges);
 
-      onNewPosts.removeListener(addPostTimestamps);
-      onNewPosts.removeListener(addReblogTimestamps);
       removePostTimestamps();
       removeReblogTimestamps();
 
-      onNewPosts.addListener(addPostTimestamps);
       addPostTimestamps();
-
       if (reblogTimestamps !== 'none') {
-        onNewPosts.addListener(addReblogTimestamps);
         addReblogTimestamps();
       }
+    }
+
+    if (headerTimestampsChanges) {
+      ({ newValue: headerTimestamps } = headerTimestampsChanges);
+
+      removePostTimestamps();
+      addPostTimestamps();
     }
 
     if (reblogTimestampsChanges) {
@@ -154,7 +178,7 @@
     const { onNewPosts } = await fakeImport('/util/mutations.js');
     const { keyToCss } = await fakeImport('/util/css_map.js');
 
-    ({ alwaysShowYear, reblogTimestamps } = await getPreferences('timestamps'));
+    ({ alwaysShowYear, headerTimestamps, reblogTimestamps } = await getPreferences('timestamps'));
 
     noteCountSelector = await keyToCss('noteCount');
     reblogHeaderSelector = await keyToCss('reblogHeader');

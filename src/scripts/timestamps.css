@@ -8,6 +8,22 @@
   margin-left: var(--post-padding);
 }
 
+.xkit-long-timestamp {
+  font-size: .875rem;
+  color: var(--gray-65);
+  height: 1em;
+  line-height: 1em;
+  padding: 0 var(--post-padding);
+  margin-bottom: var(--post-header-vertical-padding);
+  margin-top: calc(0px - (var(--post-header-vertical-padding) / 2));
+}
+
+@media (max-width: 989px) {
+  .xkit-long-timestamp {
+    margin-top: calc(var(--post-header-vertical-padding) / 2);
+  }
+}
+
 .xkit-reblog-timestamp {
   align-self: center;
   font-weight: normal;

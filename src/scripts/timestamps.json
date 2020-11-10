@@ -12,6 +12,11 @@
       "label": "Show the year on current-year datestamps",
       "default": false
     },
+    "headerTimestamps": {
+      "type": "checkbox",
+      "label": "Show extra verbose timestamps in post headers",
+      "default": false
+    },
     "reblogTimestamps": {
       "type": "select",
       "label": "Reblog Timestamps",

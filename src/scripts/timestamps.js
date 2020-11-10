@@ -51,8 +51,7 @@
       const { id } = postElement.dataset;
 
       const { timestamp, postUrl } = await timelineObjectMemoized(id);
-      const constructedTimeString = constructTimeString(timestamp);
-      cache[id] = Promise.resolve(constructedTimeString);
+      cache[id] = Promise.resolve(timestamp);
 
       const noteCountElement = postElement.querySelector(noteCountSelector);
 
@@ -60,7 +59,7 @@
       timestampElement.className = 'xkit-timestamp';
       timestampElement.href = postUrl;
       timestampElement.target = '_blank';
-      timestampElement.textContent = constructedTimeString;
+      timestampElement.textContent = constructTimeString(timestamp);
 
       $(noteCountElement).after(timestampElement);
 
@@ -110,13 +109,13 @@
         reblogHeaders[i].appendChild(timestampElement);
 
         if (cache[id] === undefined) {
-          cache[id] = apiFetch(`/v2/blog/${uuid}/posts/${id}`)
-            .then(({ response: { timestamp } }) => constructTimeString(timestamp))
-            .catch(exception => (exception.body && exception.body.meta) ? exception.body.meta.msg : '');
+          cache[id] = apiFetch(`/v2/blog/${uuid}/posts/${id}`).then(({ response: { timestamp } }) => timestamp);
         }
 
         cache[id].then(result => {
-          timestampElement.textContent = result;
+          timestampElement.textContent = constructTimeString(result);
+        }).catch(exception => {
+          timestampElement.textContent = (exception.body && exception.body.meta) ? exception.body.meta.msg : '';
         });
       });
     });

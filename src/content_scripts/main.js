@@ -81,6 +81,13 @@
     return installedScripts;
   };
 
+  const injectDataPathnameChanger = async function () {
+    const { inject } = await fakeImport('/util/inject.js');
+    inject(async () => {
+      window.tumblr.on('navigation', () => { document.documentElement.dataset.pathname = location.pathname; });
+    });
+  };
+
   const init = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
 
@@ -90,6 +97,9 @@
     enabledScripts
     .filter(scriptName => installedScripts.includes(scriptName))
     .forEach(runScript);
+
+    document.documentElement.dataset.pathname = location.pathname;
+    injectDataPathnameChanger();
   };
 
   const waitForReactLoaded = async function () {

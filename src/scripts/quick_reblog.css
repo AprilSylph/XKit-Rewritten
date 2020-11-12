@@ -5,11 +5,12 @@
   right: 50%;
   transform: translate(50%, 12px);
   box-shadow: 0 0 15px 0 rgba(0,0,0,.5);
-  border: 1px solid var(--gray-13);
+  border: 1px solid transparent;
   border-radius: 3px;
   overflow: hidden;
   color: var(--black);
   background-color: var(--white);
+  background-image: linear-gradient(var(--gray-13), var(--gray-13));
   display: flex;
   flex-direction: column;
   max-width: 250px;
@@ -54,11 +55,11 @@
 .quick-reblog select,
 .quick-reblog input {
   border: none;
-  border-bottom: 1px solid var(--gray-13);
   border-radius: 0;
   color: inherit;
   background-color: inherit;
   padding: 1ch;
+  margin-bottom: 1px;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
@@ -66,7 +67,6 @@
 .quick-reblog .action-buttons {
   display: flex;
   flex-direction: row;
-  background-color: var(--gray-13);
 }
 
 .quick-reblog .action-buttons button {

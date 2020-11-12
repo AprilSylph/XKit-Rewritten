@@ -5,5 +5,12 @@
     "class_name": "ri-file-forbid-line",
     "color": "white",
     "background_color": "#686868"
+  },
+  "preferences": {
+    "manageBlockedPosts": {
+      "type": "iframe",
+      "label": "Manage blocked posts",
+      "src": "/scripts/postblock/options/index.html"
+    }
   }
 }

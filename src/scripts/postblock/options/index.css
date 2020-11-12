@@ -1,0 +1,17 @@
+body {
+  font-size: 100%;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+}
+
+small {
+  margin-top: 1ch;
+}

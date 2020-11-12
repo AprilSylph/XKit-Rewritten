@@ -10,12 +10,16 @@
 
   const addIcons = async function () {
     const { getPostElements } = await fakeImport('/util/interface.js');
+    const { timelineObject } = await fakeImport('/util/react_props.js');
 
     [...document.querySelectorAll('[data-id].from-mutual')]
     .filter(postElement => postElement.querySelector('.xkit-mutual-icon') === null)
     .forEach(postElement => postElement.classList.remove(excludeClass));
 
     getPostElements({ excludeClass, noPeepr: true, includeFiltered: true }).forEach(async postElement => {
+      const { blog: { followed } } = await timelineObject(postElement.dataset.id);
+      if (!followed) { return; }
+
       const postAttribution = postElement.querySelector(postAttributionSelector);
       if (postAttribution === null) { return; }
 

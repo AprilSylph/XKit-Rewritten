@@ -7,7 +7,7 @@ The easiest part of the custom modules system to explain is the `fakeImport()` f
 Example usage:
 
 ```js
-const { getPostElements } = await fakeImport('/src/util/interface.js');
+const { getPostElements } = await fakeImport('/util/interface.js');
 ```
 
 Note: the argument path is automatically fed into `browser.runtime.getURL()` to retrieve the URL starting at the extension's root. This means it is impossible to use externally-hosted modules with this function, even if they follow the same custom module syntax.

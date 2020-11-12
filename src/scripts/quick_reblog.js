@@ -49,14 +49,14 @@
     const postID = lastPostID;
     lastPostID = null;
 
-    const { timelineObject } = await fakeImport('/util/react_props.js');
+    const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
     const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
 
     const { state } = event.target.dataset;
 
     const blog = popupElement.querySelector('#blog').value;
     const tags = popupElement.querySelector('#tags').value;
-    const { blog: { uuid: parentTumblelogUUID }, reblogKey } = await timelineObject(postID);
+    const { blog: { uuid: parentTumblelogUUID }, reblogKey } = await timelineObjectMemoized(postID);
 
     const requestPath = `/v2/blog/${blog}/posts`;
 

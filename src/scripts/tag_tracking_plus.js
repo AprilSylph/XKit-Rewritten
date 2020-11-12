@@ -11,7 +11,7 @@
 
     const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
     const { getPostElements } = await fakeImport('/util/interface.js');
-    const { timelineObject } = await fakeImport('/util/react_props.js');
+    const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
 
     const currentTag = decodeURIComponent(location.pathname.split('/')[2].replace(/\+/g, ' '));
     const { response: { following } } = await apiFetch('/v2/user/tags/following', { queryParams: { tag: currentTag } });
@@ -21,7 +21,7 @@
 
     const { [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey);
     for (const postElement of getPostElements({ excludeClass, noPeepr: true, includeFiltered: true })) {
-      const { timestamp } = await timelineObject(postElement.dataset.id);
+      const { timestamp } = await timelineObjectMemoized(postElement.dataset.id);
       const savedTimestamp = timestamps[currentTag] || 0;
 
       if (timestamp > savedTimestamp) {

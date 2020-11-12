@@ -1,6 +1,7 @@
 (function () {
   const meatballButtonLabel = 'Block this post';
   const excludeClass = 'xkit-postblock-done';
+  const hiddenClass = 'xkit-postblock-hidden';
   const storageKey = 'postblock.blockedPostRootIDs';
 
   const processPosts = async function () {
@@ -16,7 +17,9 @@
       const rootID = rebloggedRootId || postID;
 
       if (blockedPostRootIDs.includes(rootID)) {
-        postElement.classList.add('xkit-postblock-hidden');
+        postElement.classList.add(hiddenClass);
+      } else {
+        postElement.classList.remove(hiddenClass);
       }
     });
   };
@@ -32,16 +35,21 @@
     if (window.confirm('Block this post? All instances of this post (including reblogs) will be hidden.')) {
       const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
       blockedPostRootIDs.push(rootID);
-
       browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
-      postElement.classList.add('xkit-postblock-hidden');
 
+      postElement.classList.add(hiddenClass);
+    }
+  };
+
+  const onStorageChanged = async function (changes, areaName) {
+    if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
       $(`.${excludeClass}`).removeClass(excludeClass);
       processPosts();
     }
   };
 
   const main = async function () {
+    browser.storage.onChanged.addListener(onStorageChanged);
     const { registerMeatballItem } = await fakeImport('/util/interface.js');
     const { onNewPosts } = await fakeImport('/util/mutations.js');
 
@@ -52,6 +60,7 @@
   };
 
   const clean = async function () {
+    browser.storage.onChanged.removeListener(onStorageChanged);
     const { unregisterMeatballItem } = await fakeImport('/util/interface.js');
     const { onNewPosts } = await fakeImport('/util/mutations.js');
 
@@ -59,7 +68,7 @@
     onNewPosts.removeListener(processPosts);
 
     $(`.${excludeClass}`).removeClass(excludeClass);
-    $('.xkit-postblock-hidden').removeClass('xkit-postblock-hidden');
+    $(`.${hiddenClass}`).removeClass(hiddenClass);
   };
 
   return { main, clean, stylesheet: true };

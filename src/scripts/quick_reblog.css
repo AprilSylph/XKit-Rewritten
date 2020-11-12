@@ -5,7 +5,7 @@
   right: 50%;
   transform: translate(50%, 12px);
   box-shadow: 0 0 15px 0 rgba(0,0,0,.5);
-  border: 1px solid transparent;
+  padding: 2px;
   border-radius: 3px;
   overflow: hidden;
   color: var(--black);
@@ -59,7 +59,7 @@
   color: inherit;
   background-color: inherit;
   padding: 1ch;
-  margin-bottom: 1px;
+  margin-bottom: 2px;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
@@ -81,7 +81,7 @@
 }
 
 .quick-reblog .action-buttons button + button {
-  margin-left: 1px;
+  margin-left: 2px;
 }
 
 .quick-reblog button[data-state="published"] {

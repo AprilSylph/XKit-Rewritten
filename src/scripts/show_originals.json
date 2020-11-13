@@ -1,0 +1,16 @@
+{
+  "title": "Show Originals",
+  "description": "Hide reblogged posts",
+  "icon": {
+    "class_name": "ri-focus-line",
+    "color": "white",
+    "background_color": "#598c75"
+  },
+  "preferences": {
+    "showReblogsWithContributedContent": {
+      "type": "checkbox",
+      "label": "Show reblogs with contributed content",
+      "default": true
+    }
+  }
+}

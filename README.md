@@ -9,10 +9,6 @@ Watch this repository's releases to be notified of the first beta build!
 ## Credits
 XKit Rewritten is authored by [April Sylph and contributors](https://github.com/AprilSylph/XKit-Rewritten/graphs/contributors).
 
-In addition to the [listed dependencies](https://github.com/AprilSylph/XKit-Rewritten/network/dependencies#package.json), the project also uses:
-- [normalize.css](https://github.com/necolas/normalize.css/) by Nicolas Gallagher
-- toggle-button.css by Mozilla (extracted from Firefox's about:addons)
-
 #### Special thanks
 This project would not exist without the efforts of the [contributors to the New XKit project](https://github.com/new-xkit/XKit/graphs/contributors).
 

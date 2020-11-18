@@ -76,11 +76,17 @@
 
     const addSidebarToPage = () => {
       const aside = document.querySelector('aside');
-      const target = aside.children[1] || null;
+      if (aside.querySelector('#xkit-sidebar') !== null) { return; }
 
-      if (aside.querySelector('#xkit-sidebar') === null) {
-        aside.insertBefore(sidebarItems, target);
+      let target;
+
+      if (getComputedStyle(aside.children[0]).position === 'sticky') {
+        target = aside.children[0];
+      } else {
+        target = aside.children[1] || null;
       }
+
+      aside.insertBefore(sidebarItems, target);
 
       if (aside.querySelector(':scope > div > aside') !== null) {
         sidebarItems.classList.add('in-channel');

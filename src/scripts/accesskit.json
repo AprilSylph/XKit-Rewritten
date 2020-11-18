@@ -14,7 +14,7 @@
     },
     "boring_tag_chiclets": {
       "type": "checkbox",
-      "label": "Make the tag chiclet carousels boring",
+      "label": "De-animate the \"You're caught up\" carousel",
       "default": true
     },
     "blue_links": {

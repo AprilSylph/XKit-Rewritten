@@ -39,30 +39,7 @@
     });
   };
 
-  const unProcessPosts = function () {
-    $(`.${excludeClass}`).removeClass(excludeClass);
-    $('.xkit-cleanfeed-hidden').removeClass('xkit-cleanfeed-hidden');
-  };
-
-  const onStorageChanged = function (changes, areaName) {
-    if (areaName !== 'local') {
-      return;
-    }
-
-    const {
-      'cleanfeed.preferences.blockingMode': blockingModeChanges,
-    } = changes;
-
-    if (blockingModeChanges) {
-      ({ newValue: blockingMode } = blockingModeChanges);
-
-      unProcessPosts();
-      processPosts();
-    }
-  };
-
   const main = async function () {
-    browser.storage.onChanged.addListener(onStorageChanged);
     const { getPreferences } = await fakeImport('/util/preferences.js');
     const { onNewPosts } = await fakeImport('/util/mutations.js');
     const { keyToCss } = await fakeImport('/util/css_map.js');
@@ -76,11 +53,12 @@
   };
 
   const clean = async function () {
-    browser.storage.onChanged.removeListener(onStorageChanged);
     const { onNewPosts } = await fakeImport('/util/mutations.js');
     onNewPosts.removeListener(processPosts);
-    unProcessPosts();
+
+    $(`.${excludeClass}`).removeClass(excludeClass);
+    $('.xkit-cleanfeed-hidden').removeClass('xkit-cleanfeed-hidden');
   };
 
-  return { main, clean, stylesheet: true };
+  return { main, clean, stylesheet: true, autoRestart: true };
 })();

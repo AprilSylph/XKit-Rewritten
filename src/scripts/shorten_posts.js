@@ -35,7 +35,7 @@
   const shortenPosts = async function () {
     const { getPostElements } = await fakeImport('/util/interface.js');
 
-    getPostElements({ excludeClass }).forEach(postElement => {
+    getPostElements({ excludeClass, noPeepr: true }).forEach(postElement => {
       if (postElement.getBoundingClientRect().height > (window.innerHeight * 1.5)) {
         postElement.classList.add(shortenClass);
 

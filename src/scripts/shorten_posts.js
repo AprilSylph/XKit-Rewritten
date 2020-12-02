@@ -1,15 +1,25 @@
 (function () {
   const excludeClass = 'xkit-shorten-posts-done';
   const shortenClass = 'xkit-shorten-posts-shortened';
+  const buttonClass = 'xkit-shorten-posts-expand';
+
+  const expandButton = Object.assign(document.createElement('button'), {
+    textContent: 'Expand',
+    className: buttonClass,
+  });
 
   const unshortenOnClick = ({ target }) => {
-    if (target.classList.contains(shortenClass)) {
+    const { parentNode } = target;
+    if (parentNode.classList.contains(shortenClass)) {
       const headerHeight = document.querySelector('header').getBoundingClientRect().height;
-      const postMargin = parseInt(getComputedStyle(target).getPropertyValue('margin-bottom'));
+      const postMargin = parseInt(getComputedStyle(parentNode).getPropertyValue('margin-bottom'));
 
-      target.classList.remove(shortenClass);
-      target.scrollIntoView();
+      parentNode.classList.remove(shortenClass);
+      parentNode.scrollIntoView();
       window.scrollBy({ top: 0 - headerHeight - postMargin });
+      parentNode.focus();
+
+      parentNode.removeChild(target);
     }
   };
 
@@ -19,7 +29,10 @@
     getPostElements({ excludeClass }).forEach(postElement => {
       if (postElement.getBoundingClientRect().height > (window.innerHeight * 1.5)) {
         postElement.classList.add(shortenClass);
-        postElement.addEventListener('click', unshortenOnClick);
+
+        const expandButtonClone = expandButton.cloneNode(true);
+        expandButtonClone.addEventListener('click', unshortenOnClick);
+        postElement.appendChild(expandButtonClone);
       }
     });
   };
@@ -37,11 +50,8 @@
     onNewPosts.removeListener(shortenPosts);
 
     $(`.${excludeClass}`).removeClass(excludeClass);
-
-    [...document.getElementsByClassName(shortenClass)].forEach(postElement => {
-      postElement.classList.remove(shortenClass);
-      postElement.removeEventListener('click', unshortenOnClick);
-    });
+    $(`.${shortenClass}`).removeClass(shortenClass);
+    $(`.${buttonClass}`).remove();
   };
 
   return { main, clean, stylesheet: true };

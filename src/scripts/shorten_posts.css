@@ -8,18 +8,21 @@
   overflow-y: clip;
 }
 
-.xkit-shorten-posts-shortened:not([class*="-hidden"])::after {
-  content: "Expand";
+button.xkit-shorten-posts-expand {
   cursor: pointer;
   background-color: var(--white);
   color: var(--black);
   position: absolute;
-  bottom: 0;
+  transform: translateY(-100%);
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: var(--post-header-vertical-padding);
-  padding-bottom: var(--post-header-vertical-padding);
+  padding: var(--post-header-vertical-padding) 0;
   border-top: 1px solid var(--gray-13);
+}
+
+.xkit-shorten-posts-done:not(.xkit-shorten-posts-shortened) button.xkit-shorten-posts-expand,
+.xkit-shorten-posts-shortened[class*="-hidden"] button.xkit-shorten-posts-expand {
+  display: none;
 }

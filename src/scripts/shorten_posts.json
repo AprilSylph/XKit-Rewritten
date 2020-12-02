@@ -5,5 +5,12 @@
     "class_name": "ri-scissors-cut-line",
     "color": "white",
     "background_color": "#4d6a86"
+  },
+  "preferences": {
+    "showTags": {
+      "type": "checkbox",
+      "label": "Show tags on shortened posts",
+      "default": true
+    }
   }
 }

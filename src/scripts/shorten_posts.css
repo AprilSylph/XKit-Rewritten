@@ -12,8 +12,6 @@ button.xkit-shorten-posts-expand {
   cursor: pointer;
   background-color: var(--white);
   color: var(--black);
-  position: absolute;
-  transform: translateY(-100%);
   width: 100%;
   display: flex;
   justify-content: center;
@@ -24,5 +22,18 @@ button.xkit-shorten-posts-expand {
 
 .xkit-shorten-posts-done:not(.xkit-shorten-posts-shortened) button.xkit-shorten-posts-expand,
 .xkit-shorten-posts-shortened[class*="-hidden"] button.xkit-shorten-posts-expand {
+  display: none;
+}
+
+.xkit-shorten-posts-tags {
+  background-color: var(--white);
+  border-top: 1px dashed var(--gray-13);
+  margin: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  max-height: none;
+}
+
+.xkit-shorten-posts-tags [role="button"] {
   display: none;
 }

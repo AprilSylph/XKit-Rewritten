@@ -1,6 +1,10 @@
 (function () {
+  let showTags;
+  let tagsSelector;
+
   const excludeClass = 'xkit-shorten-posts-done';
   const shortenClass = 'xkit-shorten-posts-shortened';
+  const tagsClass = 'xkit-shorten-posts-tags';
   const buttonClass = 'xkit-shorten-posts-expand';
 
   const expandButton = Object.assign(document.createElement('button'), {
@@ -19,6 +23,11 @@
       window.scrollBy({ top: 0 - headerHeight - postMargin });
       parentNode.focus();
 
+      const tagsClone = parentNode.querySelector(`.${tagsClass}`);
+      if (tagsClone) {
+        parentNode.removeChild(tagsClone);
+      }
+
       parentNode.removeChild(target);
     }
   };
@@ -30,6 +39,15 @@
       if (postElement.getBoundingClientRect().height > (window.innerHeight * 1.5)) {
         postElement.classList.add(shortenClass);
 
+        if (showTags) {
+          const tagsElement = postElement.querySelector(tagsSelector);
+          if (tagsElement) {
+            const tagsClone = tagsElement.cloneNode(true);
+            tagsClone.classList.add(tagsClass);
+            postElement.appendChild(tagsClone);
+          }
+        }
+
         const expandButtonClone = expandButton.cloneNode(true);
         expandButtonClone.addEventListener('click', unshortenOnClick);
         postElement.appendChild(expandButtonClone);
@@ -39,6 +57,11 @@
 
   const main = async function () {
     const { onNewPosts } = await fakeImport('/util/mutations.js');
+    const { getPreferences } = await fakeImport('/util/preferences.js');
+    const { keyToCss } = await fakeImport('/util/css_map.js');
+
+    ({ showTags } = await getPreferences('shorten_posts'));
+    tagsSelector = await keyToCss('tags');
 
     onNewPosts.addListener(shortenPosts);
     shortenPosts();
@@ -51,8 +74,8 @@
 
     $(`.${excludeClass}`).removeClass(excludeClass);
     $(`.${shortenClass}`).removeClass(shortenClass);
-    $(`.${buttonClass}`).remove();
+    $(`.${tagsClass}, .${buttonClass}`).remove();
   };
 
-  return { main, clean, stylesheet: true };
+  return { main, clean, stylesheet: true, autoRestart: true };
 })();

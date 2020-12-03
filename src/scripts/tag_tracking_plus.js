@@ -5,7 +5,8 @@
   let intervalID;
 
   const processPosts = async function () {
-    if (!location.pathname.startsWith('/tagged/')) {
+    const { searchParams } = new URL(location);
+    if (!location.pathname.startsWith('/tagged/') || searchParams.get('sort') === 'top') {
       return;
     }
 

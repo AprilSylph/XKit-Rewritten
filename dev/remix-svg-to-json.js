@@ -19,5 +19,5 @@ for (const symbol of jsonObj.svg.symbol) {
   }
 }
 
-fs.writeFileSync(outputPath, JSON.stringify(symbols), { encoding: 'utf8' });
+fs.writeFileSync(outputPath, JSON.stringify(symbols, null, 2) + '\n', { encoding: 'utf8' });
 console.log('Finished!');

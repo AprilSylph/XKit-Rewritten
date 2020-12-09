@@ -1,6 +1,7 @@
 (function () {
   let popupElement;
   let lastPostID;
+  let timeoutID;
 
   let alreadyRebloggedEnabled;
   let alreadyRebloggedLimit;
@@ -9,12 +10,15 @@
   const excludeClass = 'xkit-quick-reblog-alreadyreblogged-done';
 
   const showPopupOnHover = ({ target }) => {
+    clearTimeout(timeoutID);
+
     const messageDialog = popupElement.querySelector('.message');
     if (messageDialog.textContent === 'Working...') {
       return;
     }
 
     $(target).parents('div')[0].appendChild(popupElement);
+    popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
     const thisPostID = $(target).parents('[data-id]')[0].dataset.id;
     if (thisPostID !== lastPostID) {
@@ -29,18 +33,22 @@
     lastPostID = thisPostID;
   };
 
-  const removePopupOnClick = ({ target }) => {
-    if (popupElement.contains(target)) {
-      return;
-    }
-
+  const removePopupOnLeave = ({ target }) => {
     if (popupElement.querySelector('.message').textContent === 'Working...') {
       return;
     }
 
-    if (popupElement.parentNode) {
-      popupElement.parentNode.removeChild(popupElement);
-    }
+    timeoutID = setTimeout(() => {
+      const { parentNode } = popupElement;
+      if (!parentNode) { return; }
+
+      if (parentNode.matches(':hover')) { return; }
+
+      if (parentNode.querySelector(':focus, :active') !== null) { return; }
+
+      parentNode.removeEventListener('mouseleave', removePopupOnLeave);
+      parentNode.removeChild(popupElement);
+    }, 500);
   };
 
   const makeButtonReblogged = ({ buttonDiv, state }) => {
@@ -177,8 +185,7 @@
     popupElement.classList.add('quick-reblog');
     [messageDialog, blogSelector, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
 
-    $(document.body).on('mouseover', '[data-id] a[href^="https://www.tumblr.com/reblog/"]', showPopupOnHover);
-    document.body.addEventListener('click', removePopupOnClick);
+    $(document.body).on('mouseenter', '[data-id] a[href^="https://www.tumblr.com/reblog/"]', showPopupOnHover);
 
     ({ alreadyRebloggedEnabled, alreadyRebloggedLimit } = await getPreferences('quick_reblog'));
 
@@ -192,8 +199,7 @@
   const clean = async function () {
     const { onNewPosts } = await fakeImport('/util/mutations.js');
 
-    $(document.body).off('mouseover', '[data-id] a[href^="https://www.tumblr.com/reblog/"]', showPopupOnHover);
-    document.body.removeEventListener('click', removePopupOnClick);
+    $(document.body).off('mouseenter', '[data-id] a[href^="https://www.tumblr.com/reblog/"]', showPopupOnHover);
 
     if (popupElement.parentNode) {
       popupElement.parentNode.removeChild(popupElement);

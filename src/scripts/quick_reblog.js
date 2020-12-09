@@ -2,6 +2,12 @@
   let popupElement;
   let lastPostID;
 
+  let alreadyRebloggedEnabled;
+  let alreadyRebloggedLimit;
+
+  const storageKey = 'quick_reblog.alreadyRebloggedList';
+  const excludeClass = 'xkit-quick-reblog-alreadyreblogged-done';
+
   const showPopupOnHover = ({ target }) => {
     const messageDialog = popupElement.querySelector('.message');
     if (messageDialog.textContent === 'Working...') {
@@ -56,7 +62,7 @@
 
     const blog = popupElement.querySelector('#blog').value;
     const tags = popupElement.querySelector('#tags').value;
-    const { blog: { uuid: parentTumblelogUUID }, reblogKey } = await timelineObjectMemoized(postID);
+    const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } = await timelineObjectMemoized(postID);
 
     const requestPath = `/v2/blog/${blog}/posts`;
 
@@ -75,14 +81,58 @@
         makeButtonReblogged({ buttonDiv: popupElement.parentNode, state });
         messageDialog.textContent = response.displayText;
         setTimeout(() => popupElement.parentNode.removeChild(popupElement), 2000);
+
+        if (alreadyRebloggedEnabled) {
+          const { [storageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(storageKey);
+          const rootID = rebloggedRootId || postID;
+
+          if (alreadyRebloggedList.includes(rootID) === false) {
+            alreadyRebloggedList.push(rootID);
+            alreadyRebloggedList.splice(0, alreadyRebloggedList.length - alreadyRebloggedLimit);
+            browser.storage.local.set({ [storageKey]: alreadyRebloggedList });
+          }
+        }
       }
     } catch (exception) {
       console.error(exception);
     }
   };
 
+  const processPosts = async function () {
+    const { getPostElements } = await fakeImport('/util/interface.js');
+    const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
+
+    const { [storageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(storageKey);
+    let storageModified = false;
+
+    for (const postElement of getPostElements({ excludeClass })) {
+      const { id } = postElement.dataset;
+      const { rebloggedRootId, canEdit } = await timelineObjectMemoized(id);
+
+      const rootID = rebloggedRootId || id;
+      const ownReblog = rebloggedRootId !== undefined && canEdit === true;
+
+      if (ownReblog && alreadyRebloggedList.includes(rootID) === false) {
+        alreadyRebloggedList.push(rootID);
+        alreadyRebloggedList.splice(0, alreadyRebloggedList.length - alreadyRebloggedLimit);
+        storageModified = true;
+      }
+
+      if (alreadyRebloggedList.includes(rootID)) {
+        const reblogLink = postElement.querySelector('footer a[href^="https://www.tumblr.com/reblog/"]');
+        const buttonDiv = reblogLink.parentNode;
+        makeButtonReblogged({ buttonDiv, state: 'published' });
+      }
+    }
+
+    if (storageModified) {
+      browser.storage.local.set({ [storageKey]: alreadyRebloggedList });
+    }
+  };
+
   const main = async function () {
     const { fetchUserBlogs } = await fakeImport('/util/user_blogs.js');
+    const { getPreferences } = await fakeImport('/util/preferences.js');
 
     const blogSelector = document.createElement('select');
     blogSelector.id = 'blog';
@@ -129,13 +179,28 @@
 
     $(document.body).on('mouseover', '[data-id] a[href^="https://www.tumblr.com/reblog/"]', showPopupOnHover);
     document.body.addEventListener('click', removePopupOnClick);
+
+    ({ alreadyRebloggedEnabled, alreadyRebloggedLimit } = await getPreferences('quick_reblog'));
+
+    if (alreadyRebloggedEnabled) {
+      const { onNewPosts } = await fakeImport('/util/mutations.js');
+      onNewPosts.addListener(processPosts);
+    }
   };
 
   const clean = async function () {
+    const { onNewPosts } = await fakeImport('/util/mutations.js');
+
     $(document.body).off('mouseover', '[data-id] a[href^="https://www.tumblr.com/reblog/"]', showPopupOnHover);
     document.body.removeEventListener('click', removePopupOnClick);
-    popupElement.parentNode.removeChild(popupElement);
+
+    if (popupElement.parentNode) {
+      popupElement.parentNode.removeChild(popupElement);
+    }
+
+    onNewPosts.removeListener(processPosts);
+    $(`.${excludeClass}`).removeClass(excludeClass);
   };
 
-  return { main, clean, stylesheet: true };
+  return { main, clean, stylesheet: true, autoRestart: true };
 })();

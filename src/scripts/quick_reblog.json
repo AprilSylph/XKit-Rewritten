@@ -4,5 +4,22 @@
     "class_name": "ri-repeat-line",
     "color": "white",
     "background_color": "#acd53a"
+  },
+  "preferences": {
+    "alreadyRebloggedEnabled": {
+      "type": "checkbox",
+      "label": "Remember which posts I've already reblogged",
+      "default": true
+    },
+    "alreadyRebloggedLimit": {
+      "type": "select",
+      "label": "Remember the last ",
+      "options": {
+        "100": "100 posts",
+        "1000": "1000 posts",
+        "10000": "10,000 posts"
+      },
+      "default": "100"
+    }
   }
 }

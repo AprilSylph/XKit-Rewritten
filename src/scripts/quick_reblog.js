@@ -185,6 +185,7 @@
     if (alreadyRebloggedEnabled) {
       const { onNewPosts } = await fakeImport('/util/mutations.js');
       onNewPosts.addListener(processPosts);
+      processPosts();
     }
   };
 

@@ -65,10 +65,10 @@
         const sidebarCount = sidebarItemElement.querySelector(`a[href="/tagged/${encodeURIComponent(name)}"] .count`);
         if (sidebarCount.textContent.includes('+')) { return; }
 
-        const { response: { posts: { data, links } } } = await apiFetch('/v2/mobile/search/posts', { queryParams: { limit: 20, mode: 'recent', query: name } });
+        const { response: { timeline: { elements } } } = await apiFetch(`/v2/hubs/${name}/timeline`, { queryParams: { limit: 20, sort: 'recent' } });
         let unreadCount = 0;
 
-        for (const post of data) {
+        for (const post of elements) {
           const { timestamp } = post;
           if (timestamp <= timestamps[name]) {
             break;
@@ -79,7 +79,7 @@
 
         if (unreadCount === 0) {
           unreadCount = '';
-        } else if (unreadCount === data.length && links !== undefined) {
+        } else if (unreadCount === elements.length) {
           unreadCount += '+';
         }
 

@@ -1,15 +1,18 @@
 (function () {
+  const excludeClass = 'xkit-tweaks-recblogs-done';
+  const hiddenClass = 'xkit-tweaks-recblogs-hidden';
+
   let recommendedBlogsLabel;
 
-  const css = '.xkit-tweaks-recblogs-hidden { display: none; }';
+  const css = `.${hiddenClass} { display: none; }`;
 
   const checkForRecommendedBlogs = function () {
-    [...document.querySelectorAll('aside > div > h1:not(.xkit-tweaks-recblogs-done)')]
+    [...document.querySelectorAll(`aside > div > h1:not(.${excludeClass})`)]
     .filter(h1 => {
-      h1.classList.add('xkit-tweaks-recblogs-done');
+      h1.classList.add(excludeClass);
       return h1.textContent === recommendedBlogsLabel;
     })
-    .forEach(h1 => h1.parentNode.classList.add('xkit-tweaks-recblogs-hidden'));
+    .forEach(h1 => h1.parentNode.classList.add(hiddenClass));
   };
 
   const main = async function () {
@@ -17,7 +20,7 @@
     const { translate } = await fakeImport('/util/language_data.js');
     const { addStyle } = await fakeImport('/util/interface.js');
 
-    recommendedBlogsLabel = await translate('Recommended Blogs');
+    recommendedBlogsLabel = await translate('Check out these blogs');
     onBaseContainerMutated.addListener(checkForRecommendedBlogs);
     checkForRecommendedBlogs();
     addStyle(css);
@@ -29,8 +32,8 @@
 
     onBaseContainerMutated.removeListener(checkForRecommendedBlogs);
     removeStyle(css);
-    $('.xkit-tweaks-recblogs-done').removeClass('xkit-tweaks-recblogs-done');
-    $('.xkit-tweaks-recblogs-hidden').removeClass('xkit-tweaks-recblogs-hidden');
+    $(`.${excludeClass}`).removeClass(excludeClass);
+    $(`.${hiddenClass}`).removeClass(hiddenClass);
   };
 
   return { main, clean };

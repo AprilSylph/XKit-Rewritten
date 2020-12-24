@@ -5,7 +5,7 @@
 
 #backup > div + div {
   padding-top: 1em;
-  border-top: 1px dotted;
+  border-top: 1px dotted var(--dark-grey);
   margin-top: 1em;
 }
 

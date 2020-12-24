@@ -6,9 +6,30 @@
   --in-content-primary-button-background: #0060df;
   --in-content-primary-button-background-hover: #003eaa;
   --in-content-primary-button-background-active: #002275;
+
+  --black: #000000;
+  --white: #ffffff;
+  --light-grey: #dddddd;
+  --dark-grey: #444444;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --black: #ffffff;
+    --white: #343434;
+    --light-grey: #222222;
+    --dark-grey: #bbbbbb;
+  }
+}
+
+html {
+  display: flex;
+  background-color: var(--light-grey);
 }
 
 body {
+  color: var(--black);
+  background-color: var(--white);
   font-size: 100%;
   -webkit-user-select: none;
   user-select: none;
@@ -25,7 +46,7 @@ header {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  background-color: #dddddd;
+  background-color: var(--light-grey);
 }
 
 #version {
@@ -50,7 +71,7 @@ nav {
 nav a {
   flex-grow: 1;
   text-align: center;
-  color: #444444;
+  color: var(--dark-grey);
   line-height: 1em;
   font-weight: bold;
   text-decoration: none;
@@ -59,8 +80,8 @@ nav a {
 }
 
 nav a:active, nav a.selected {
-  color: black;
-  background-color: white;
+  color: var(--black);
+  background-color: var(--white);
 }
 
 section:not(.open) {

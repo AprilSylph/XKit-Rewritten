@@ -1,3 +1,8 @@
+:root {
+  --blue: #00b8ff;
+  --purple: #7c5cff;
+}
+
 #links {
   margin: 1em 0;
   padding: 0 1em;
@@ -17,4 +22,17 @@
 
 #links li {
   margin-bottom: 1ch;
+}
+
+#links a {
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#links :link {
+  color: var(--blue);
+}
+
+#links :visited {
+  color: var(--purple);
 }

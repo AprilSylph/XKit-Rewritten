@@ -1,3 +1,15 @@
+:root {
+  --script-hover: #e5e7ea;
+  --script-focus: #f3f8fb;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --script-hover: #393939;
+    --script-focus: #24363e;
+  }
+}
+
 .finder {
   display: flex;
   flex-direction: row;
@@ -5,9 +17,9 @@
   position: sticky;
   top: 0;
   z-index: 1;
-  background-color: white;
+  background-color: var(--white);
   padding: 1ch;
-  border-bottom: 1px solid #cccccc;
+  border-bottom: 1px solid var(--light-grey);
 }
 
 .finder div {
@@ -41,7 +53,7 @@
 }
 
 .script {
-  border-bottom: 1px dotted #444444;
+  border-bottom: 1px dotted var(--dark-grey);
 }
 
 .script summary {
@@ -58,15 +70,15 @@
 }
 
 .script.disabled summary {
-  color: #444444;
+  color: var(--dark-grey);
 }
 
 .script summary:hover {
-  background-color: #efefef;
+  background-color: var(--script-hover);
 }
 
 .script summary:focus {
-  background-color: #d9eefc;
+  background-color: var(--script-focus);
 }
 
 .script .icon {

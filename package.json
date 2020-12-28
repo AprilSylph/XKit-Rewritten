@@ -11,7 +11,7 @@
     "eslint-plugin-jsdoc": "^30.7.9",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "fast-xml-parser": "^3.17.5",
+    "fast-xml-parser": "^3.17.6",
     "web-ext": "^5.4.1"
   },
   "dependencies": {

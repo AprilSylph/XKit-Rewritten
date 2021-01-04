@@ -8,7 +8,7 @@
     "eslint": "^7.17.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsdoc": "^30.7.9",
+    "eslint-plugin-jsdoc": "^30.7.13",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "fast-xml-parser": "^3.17.6",

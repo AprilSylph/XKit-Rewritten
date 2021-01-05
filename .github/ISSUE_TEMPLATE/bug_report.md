@@ -7,22 +7,8 @@ assignees: ''
 
 ---
 
-#### Bug description
-Summarise what you are reporting:
+- **The browser I'm using is:** 
+- **My browser version is:** 
+- **My XKit Rewritten version is:** 
 
-
-#### Steps to reproduce
-Detail (with numbered steps) how you can reliably re-encounter this bug:
-
-1. 
-
-#### Screenshots
-(Optional) If applicable, add screenshots to help explain your problem:
-
-
-#### Platform information
-Please specify your browser and browser version, i.e. "Firefox 68.11.0esr (64-bit)":
-
-
-#### Additional comments
-(Optional) Add any further comments or relevant information:
+---

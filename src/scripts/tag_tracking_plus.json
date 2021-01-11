@@ -1,6 +1,6 @@
 {
   "title": "Tag Tracking+",
-  "description": "Tracked tags on your sidebar",
+  "description": "Unread counts on tracked tags",
   "icon": {
     "class_name": "ri-price-tag-3-line",
     "color": "white",

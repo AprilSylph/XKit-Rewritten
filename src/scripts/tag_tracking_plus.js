@@ -49,6 +49,12 @@
     const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
 
     tagLinkElements.forEach(async tagLinkElement => {
+      const unreadCountElement = Object.assign(document.createElement('span'), {
+        style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65;',
+        innerHTML: '&ctdot;',
+      });
+      tagLinkElement.firstElementChild.appendChild(unreadCountElement);
+
       const tag = tagLinkElement.querySelector(tagTextSelector).textContent;
       const savedTimestamp = timestamps[tag] || 0;
 
@@ -68,12 +74,7 @@
         unreadCount += '+';
       }
 
-      const unreadCountElement = Object.assign(document.createElement('span'), {
-        style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65;',
-        textContent: `${unreadCount}`,
-      });
-
-      tagLinkElement.firstElementChild.appendChild(unreadCountElement);
+      unreadCountElement.textContent = `${unreadCount}`;
     });
   };
 

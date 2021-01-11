@@ -64,9 +64,7 @@
         }
       }
 
-      if (unreadCount === 0) {
-        unreadCount = '';
-      } else if (unreadCount === elements.length) {
+      if (unreadCount === elements.length) {
         unreadCount += '+';
       }
 

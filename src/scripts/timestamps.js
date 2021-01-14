@@ -9,6 +9,7 @@
   const thresholds = [
     { unit: 'year', denominator: 31557600 },
     { unit: 'month', denominator: 2629800 },
+    { unit: 'week', denominator: 604800 },
     { unit: 'day', denominator: 86400 },
     { unit: 'hour', denominator: 3600 },
     { unit: 'minute', denominator: 60 },

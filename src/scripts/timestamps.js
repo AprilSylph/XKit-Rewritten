@@ -53,16 +53,14 @@
   };
 
   const constructRelativeTimeString = function (unixTime) {
-    const now = Math.floor(new Date().getTime() / 1000);
-    let unixDiff = unixTime - now;
-
-    const negative = unixDiff < 0;
-    if (negative) { unixDiff = Math.abs(unixDiff); }
+    const now = Math.trunc(new Date().getTime() / 1000);
+    const unixDiff = unixTime - now;
+    const unixDiffAbsolute = Math.abs(unixDiff);
 
     for (const { unit, denominator } of thresholds) {
-      if (unixDiff >= denominator) {
-        const value = Math.floor(unixDiff / denominator);
-        return relativeTimeFormat.format(negative ? -value : value, unit);
+      if (unixDiffAbsolute >= denominator) {
+        const value = Math.trunc(unixDiff / denominator);
+        return relativeTimeFormat.format(value, unit);
       }
     }
 

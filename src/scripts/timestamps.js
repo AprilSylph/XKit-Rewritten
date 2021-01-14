@@ -65,6 +65,8 @@
         return relativeTimeFormat.format(negative ? -value : value, unit);
       }
     }
+
+    return relativeTimeFormat.format(-0, 'second');
   };
 
   const addPostTimestamps = async function () {

@@ -5,6 +5,15 @@
   let alwaysShowYear;
   let headerTimestamps;
   const cache = {};
+  const relativeTimeFormat = new Intl.RelativeTimeFormat(document.documentElement.lang, { style: 'long' });
+  const thresholds = [
+    { unit: 'year', denominator: 31557600 },
+    { unit: 'month', denominator: 2629800 },
+    { unit: 'day', denominator: 86400 },
+    { unit: 'hour', denominator: 3600 },
+    { unit: 'minute', denominator: 60 },
+    { unit: 'second', denominator: 1 },
+  ];
 
   const constructTimeString = function (unixTime) {
     const locale = document.documentElement.lang;
@@ -43,6 +52,21 @@
     });
   };
 
+  const constructRelativeTimeString = function (unixTime) {
+    const now = Math.floor(new Date().getTime() / 1000);
+    let unixDiff = unixTime - now;
+
+    const negative = unixDiff < 0;
+    if (negative) { unixDiff = Math.abs(unixDiff); }
+
+    for (const { unit, denominator } of thresholds) {
+      if (unixDiff >= denominator) {
+        const value = Math.floor(unixDiff / denominator);
+        return relativeTimeFormat.format(negative ? -value : value, unit);
+      }
+    }
+  };
+
   const addPostTimestamps = async function () {
     const { getPostElements } = await fakeImport('/util/interface.js');
     const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
@@ -55,18 +79,21 @@
 
       const noteCountElement = postElement.querySelector(noteCountSelector);
 
+      const relativeTimeString = constructRelativeTimeString(timestamp);
+
       const timestampElement = document.createElement('a');
       timestampElement.className = 'xkit-timestamp';
       timestampElement.href = postUrl;
       timestampElement.target = '_blank';
       timestampElement.textContent = constructTimeString(timestamp);
+      timestampElement.title = relativeTimeString;
 
       $(noteCountElement).after(timestampElement);
 
       if (headerTimestamps) {
         const longTimestampElement = document.createElement('div');
         longTimestampElement.className = 'xkit-long-timestamp';
-        longTimestampElement.textContent = constructLongTimeString(timestamp);
+        longTimestampElement.textContent = `${constructLongTimeString(timestamp)} ・ ${relativeTimeString}`;
 
         $(postElement.querySelector('header')).after(longTimestampElement);
       }
@@ -114,6 +141,7 @@
 
         cache[id].then(result => {
           timestampElement.textContent = constructTimeString(result);
+          timestampElement.title = constructRelativeTimeString(result);
         }).catch(exception => {
           timestampElement.textContent = (exception.body && exception.body.meta) ? exception.body.meta.msg : '';
         });

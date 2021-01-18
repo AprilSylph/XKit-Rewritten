@@ -26,6 +26,10 @@ main {
   text-align: center;
 }
 
+p {
+  margin-top: 0;
+}
+
 small {
   margin-top: 1ch;
 }

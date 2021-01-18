@@ -1,4 +1,18 @@
+:root {
+  --black: #000000;
+  --white: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --black: #ffffff;
+    --white: #343434;
+  }
+}
+
 body {
+  color: var(--black);
+  background-color: var(--white);
   font-size: 100%;
   -webkit-user-select: none;
   user-select: none;

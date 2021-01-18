@@ -140,6 +140,12 @@ const renderScripts = async function () {
           }
           break;
         case 'iframe':
+          preferenceInput.addEventListener('load', () => {
+            const callback = () => { preferenceInput.height = preferenceInput.contentDocument.documentElement.scrollHeight; };
+            callback();
+            const observer = new ResizeObserver(callback);
+            observer.observe(preferenceInput.contentDocument.documentElement);
+          });
           preferenceInput.src = preference.src;
           break;
         default:

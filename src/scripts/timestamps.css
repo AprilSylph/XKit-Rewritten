@@ -31,3 +31,10 @@
   margin-left: auto;
   padding-left: 1ch;
 }
+
+/* XKit 7 override */
+
+.xkit-timestamps-done .xtimestamp:not(.xtimestamp-reblog),
+.xkit-reblog-timestamps-done .xtimestamp-reblog {
+  display: none;
+}

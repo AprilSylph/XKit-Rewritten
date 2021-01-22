@@ -107,3 +107,9 @@
 .draft svg[fill="var(--gray-65)"] {
   fill: var(--red);
 }
+
+/* XKit 7 override */
+
+#x1cpostage_box {
+  display: none !important;
+}

@@ -5,7 +5,32 @@
   let alwaysShowYear;
   let headerTimestamps;
   const cache = {};
-  const relativeTimeFormat = new Intl.RelativeTimeFormat(document.documentElement.lang, { style: 'long' });
+
+  const locale = document.documentElement.lang;
+  const currentDayTimeFormat = new Intl.DateTimeFormat(locale, {
+    hour: 'numeric',
+    minute: 'numeric',
+  });
+  const currentYearTimeFormat = new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'short',
+  });
+  const shortTimeFormat = new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+  const longTimeFormat = new Intl.DateTimeFormat(locale, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short',
+  });
+  const relativeTimeFormat = new Intl.RelativeTimeFormat(locale, { style: 'long' });
   const thresholds = [
     { unit: 'year', denominator: 31557600 },
     { unit: 'month', denominator: 2629800 },
@@ -17,7 +42,6 @@
   ];
 
   const constructTimeString = function (unixTime) {
-    const locale = document.documentElement.lang;
     const date = new Date(unixTime * 1000);
     const now = new Date();
 
@@ -25,33 +49,15 @@
     const sameYear = date.getFullYear() === now.getFullYear();
 
     if (sameDate) {
-      return date.toLocaleTimeString(locale, {
-        hour: 'numeric',
-        minute: 'numeric',
-      });
+      return currentDayTimeFormat.format(date);
     }
 
-    return date.toLocaleDateString(locale, {
-      day: 'numeric',
-      month: 'short',
-      year: sameYear && !alwaysShowYear ? undefined : 'numeric',
-    });
+    return sameYear && !alwaysShowYear ? currentYearTimeFormat.format(date) : shortTimeFormat.format(date);
   };
 
   const constructLongTimeString = function (unixTime) {
-    const locale = document.documentElement.lang;
     const date = new Date(unixTime * 1000);
-
-    return date.toLocaleString(locale, {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      second: '2-digit',
-      timeZoneName: 'short',
-    });
+    return longTimeFormat.format(date);
   };
 
   const constructRelativeTimeString = function (unixTime) {

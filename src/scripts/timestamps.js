@@ -2,10 +2,10 @@
   let noteCountSelector;
   let reblogHeaderSelector;
 
-  let reblogTimestamps;
   let alwaysShowYear;
   let headerTimestamps;
   let isoFormat;
+  let reblogTimestamps;
 
   const cache = {};
 
@@ -246,7 +246,7 @@
     const { onNewPosts } = await fakeImport('/util/mutations.js');
     const { keyToCss } = await fakeImport('/util/css_map.js');
 
-    ({ alwaysShowYear, headerTimestamps, reblogTimestamps, isoFormat } = await getPreferences('timestamps'));
+    ({ alwaysShowYear, headerTimestamps, isoFormat, reblogTimestamps } = await getPreferences('timestamps'));
 
     noteCountSelector = await keyToCss('noteCount');
     reblogHeaderSelector = await keyToCss('reblogHeader');

@@ -17,6 +17,11 @@
       "label": "Show extra verbose timestamps in post headers",
       "default": false
     },
+    "isoFormat": {
+      "type": "checkbox",
+      "label": "Use ISO 8601 format for verbose timestamps",
+      "default": false
+    },
     "reblogTimestamps": {
       "type": "select",
       "label": "Reblog Timestamps",

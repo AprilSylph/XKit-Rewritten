@@ -1,9 +1,12 @@
 (function () {
   let noteCountSelector;
   let reblogHeaderSelector;
+
   let reblogTimestamps;
   let alwaysShowYear;
   let headerTimestamps;
+  let isoFormat;
+
   const cache = {};
 
   const locale = document.documentElement.lang;
@@ -60,6 +63,28 @@
     return longTimeFormat.format(date);
   };
 
+  const constructISOString = function (unixTime) {
+    const date = new Date(unixTime * 1000);
+
+    const fourDigitYear = date.getFullYear().toString().padStart(4, '0');
+    const twoDigitMonth = (date.getMonth() + 1).toString().padStart(2, '0');
+    const twoDigitDate = date.getDate().toString().padStart(2, '0');
+
+    const twoDigitHours = date.getHours().toString().padStart(2, '0');
+    const twoDigitMinutes = date.getMinutes().toString().padStart(2, '0');
+    const twoDigitSeconds = date.getSeconds().toString().padStart(2, '0');
+
+    const timezoneOffset = date.getTimezoneOffset();
+
+    const timezoneOffsetAbsolute = Math.abs(timezoneOffset);
+    const timezoneOffsetIsNegative = timezoneOffset === 0 || Math.sign(timezoneOffset) === -1;
+
+    const twoDigitTimezoneOffsetHours = Math.trunc(timezoneOffsetAbsolute / 60).toString().padStart(2, '0');
+    const twoDigitTimezoneOffsetMinutes = Math.trunc(timezoneOffsetAbsolute % 60).toString().padStart(2, '0');
+
+    return `${fourDigitYear}-${twoDigitMonth}-${twoDigitDate}T${twoDigitHours}:${twoDigitMinutes}:${twoDigitSeconds}${timezoneOffsetIsNegative ? '+' : '-'}${twoDigitTimezoneOffsetHours}:${twoDigitTimezoneOffsetMinutes}`;
+  };
+
   const constructRelativeTimeString = function (unixTime) {
     const now = Math.trunc(new Date().getTime() / 1000);
     const unixDiff = unixTime - now;
@@ -101,7 +126,7 @@
       if (headerTimestamps) {
         const longTimestampElement = document.createElement('div');
         longTimestampElement.className = 'xkit-long-timestamp';
-        longTimestampElement.textContent = `${constructLongTimeString(timestamp)} ・ ${relativeTimeString}`;
+        longTimestampElement.textContent = `${isoFormat ? constructISOString(timestamp) : constructLongTimeString(timestamp)} ・ ${relativeTimeString}`;
 
         $(postElement.querySelector('header')).after(longTimestampElement);
       }
@@ -170,6 +195,7 @@
     const {
       'timestamps.preferences.alwaysShowYear': alwaysShowYearChanges,
       'timestamps.preferences.headerTimestamps': headerTimestampsChanges,
+      'timestamps.preferences.isoFormat': isoFormatChanges,
       'timestamps.preferences.reblogTimestamps': reblogTimestampsChanges,
     } = changes;
 
@@ -194,6 +220,13 @@
       addPostTimestamps();
     }
 
+    if (isoFormatChanges) {
+      ({ newValue: isoFormat } = isoFormatChanges);
+
+      removePostTimestamps();
+      addPostTimestamps();
+    }
+
     if (reblogTimestampsChanges) {
       ({ newValue: reblogTimestamps } = reblogTimestampsChanges);
 
@@ -213,7 +246,7 @@
     const { onNewPosts } = await fakeImport('/util/mutations.js');
     const { keyToCss } = await fakeImport('/util/css_map.js');
 
-    ({ alwaysShowYear, headerTimestamps, reblogTimestamps } = await getPreferences('timestamps'));
+    ({ alwaysShowYear, headerTimestamps, reblogTimestamps, isoFormat } = await getPreferences('timestamps'));
 
     noteCountSelector = await keyToCss('noteCount');
     reblogHeaderSelector = await keyToCss('reblogHeader');

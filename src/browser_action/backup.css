@@ -62,6 +62,12 @@
 }
 
 #local-import {
+  color: var(--black);
+  background-color: var(--light-grey);
+  border-color: var(--light-grey);
+  font-family: monospace, monospace;
+  font-size: smaller;
+  white-space: pre;
   padding: 1ch;
 }
 

@@ -6,6 +6,11 @@
     "background_color": "#acd53a"
   },
   "preferences": {
+    "quickTagsIntegration": {
+      "type": "checkbox",
+      "label": "Enable integration with Quick Tags",
+      "default": true
+    },
     "alreadyRebloggedEnabled": {
       "type": "checkbox",
       "label": "Remember which posts I've already reblogged",

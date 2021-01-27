@@ -1,13 +1,23 @@
 (function () {
-  let popupElement;
+  const popupElement = Object.assign(document.createElement('div'), { className: 'quick-reblog' });
+  const quickTagsList = Object.assign(document.createElement('div'), { className: 'quick-tags' });
+  const tagsInput = Object.assign(document.createElement('input'), {
+    id: 'tags',
+    placeholder: 'Tags (comma separated)',
+    autocomplete: 'off',
+    onkeydown: event => event.stopPropagation(),
+  });
   let lastPostID;
   let timeoutID;
 
+  let quickTagsIntegration;
   let alreadyRebloggedEnabled;
   let alreadyRebloggedLimit;
 
   const storageKey = 'quick_reblog.alreadyRebloggedList';
   const excludeClass = 'xkit-quick-reblog-alreadyreblogged-done';
+
+  const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 
   const showPopupOnHover = ({ target }) => {
     clearTimeout(timeoutID);
@@ -138,9 +148,35 @@
     }
   };
 
+  const renderQuickTags = async function () {
+    quickTagsList.textContent = '';
+    if (!quickTagsIntegration) { return; }
+
+    const { [quickTagsStorageKey]: tagBundles = [] } = await browser.storage.local.get(quickTagsStorageKey);
+    tagBundles.forEach(tagBundle => {
+      const bundleButton = document.createElement('button');
+      bundleButton.textContent = tagBundle.title;
+      bundleButton.addEventListener('click', event => {
+        tagsInput.value.trim() === ''
+          ? tagsInput.value = tagBundle.tags
+          : tagsInput.value += `, ${tagBundle.tags}`;
+      });
+
+      quickTagsList.appendChild(bundleButton);
+    });
+  };
+
+  const updateQuickTags = (changes, areaName) => {
+    if (areaName === 'local' && Object.keys(changes).includes(quickTagsStorageKey)) {
+      renderQuickTags();
+    }
+  };
+
   const main = async function () {
     const { fetchUserBlogs } = await fakeImport('/util/user_blogs.js');
     const { getPreferences } = await fakeImport('/util/preferences.js');
+
+    ({ quickTagsIntegration, alreadyRebloggedEnabled, alreadyRebloggedLimit } = await getPreferences('quick_reblog'));
 
     const blogSelector = document.createElement('select');
     blogSelector.id = 'blog';
@@ -151,12 +187,6 @@
       option.textContent = name;
       blogSelector.appendChild(option);
     }
-
-    const tagsInput = document.createElement('input');
-    tagsInput.id = 'tags';
-    tagsInput.placeholder = 'Tags (comma separated)';
-    tagsInput.autocomplete = 'off';
-    tagsInput.addEventListener('keydown', event => event.stopPropagation());
 
     const actionButtons = document.createElement('div');
     actionButtons.classList.add('action-buttons');
@@ -181,13 +211,12 @@
     const messageDialog = document.createElement('div');
     messageDialog.classList.add('message');
 
-    popupElement = document.createElement('div');
-    popupElement.classList.add('quick-reblog');
-    [messageDialog, blogSelector, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
+    [messageDialog, blogSelector, quickTagsList, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
 
     $(document.body).on('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
 
-    ({ alreadyRebloggedEnabled, alreadyRebloggedLimit } = await getPreferences('quick_reblog'));
+    browser.storage.onChanged.addListener(updateQuickTags);
+    renderQuickTags();
 
     if (alreadyRebloggedEnabled) {
       const { onNewPosts } = await fakeImport('/util/mutations.js');
@@ -201,9 +230,12 @@
 
     $(document.body).off('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
 
+    popupElement.textContent = '';
     if (popupElement.parentNode) {
       popupElement.parentNode.removeChild(popupElement);
     }
+
+    browser.storage.onChanged.removeListener(updateQuickTags);
 
     onNewPosts.removeListener(processPosts);
     $(`.${excludeClass}`).removeClass(excludeClass);

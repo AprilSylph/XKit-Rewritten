@@ -1,0 +1,21 @@
+{
+  "title": "Condensed Reblogs",
+  "description": "Shorten the reblog trail",
+  "icon": {
+    "class_name": "ri-merge-cells-vertical",
+    "color": "white",
+    "background_color": "#4d96bc"
+  },
+  "preferences": {
+    "trimAdditions": {
+      "type": "checkbox",
+      "label": "Trim leading items when the post has an addition",
+      "default": true
+    },
+    "trimRebloggedCommentary": {
+      "type": "checkbox",
+      "label": "Trim trailing items on all other posts",
+      "default": false
+    }
+  }
+}

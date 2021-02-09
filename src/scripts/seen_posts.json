@@ -5,5 +5,12 @@
     "class_name": "ri-eye-line",
     "color": "white",
     "background_color": "#849baf"
+  },
+  "preferences": {
+    "onlyDimAvatars": {
+      "type": "checkbox",
+      "label": "Only dim avatars on seen posts",
+      "default": false
+    }
   }
 }

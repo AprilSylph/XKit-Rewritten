@@ -22,6 +22,11 @@
       "label": "Make posts' mini-follow buttons more subtle",
       "default": false
     },
+    "no_focus_shadow": {
+      "type": "checkbox",
+      "label": "Remove the coloured shadow from focused posts",
+      "default": false
+    },
     "hide_recommended_blogs": {
       "type": "checkbox",
       "label": "Hide recommended blogs in the sidebar",

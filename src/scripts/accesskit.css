@@ -25,7 +25,8 @@ figure:hover .xkit-gif-label {
 }
 
 
-body.accesskit-blue-links article a[target="_blank"][href^="https://t.umblr.com/redirect"] {
+body.accesskit-blue-links article a[target="_blank"][href^="https://t.umblr.com/redirect"],
+body.accesskit-blue-links article a[target="_blank"][href^="https://href.li/"] {
   color: var(--accent);
 }
 

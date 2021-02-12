@@ -3,7 +3,6 @@
   const hiddenClass = 'xkit-tweaks-hide-my-posts-hidden';
   const css = `[data-pathname="/dashboard"] .${hiddenClass} article { display: none; }`;
 
-  let userBlogNames;
   let defaultBlog;
 
   const processPosts = async function () {
@@ -11,19 +10,19 @@
     const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
 
     getPostElements({ excludeClass }).forEach(async postElement => {
-      const { blogName, postAuthor } = await timelineObjectMemoized(postElement.dataset.id);
-      if (postAuthor === defaultBlog || (postAuthor === undefined && userBlogNames.includes(blogName))) {
+      const { canEdit, isSubmission, postAuthor } = await timelineObjectMemoized(postElement.dataset.id);
+
+      if (canEdit && (isSubmission || postAuthor === defaultBlog || postAuthor === undefined)) {
         postElement.classList.add(hiddenClass);
       }
     });
   };
 
   const main = async function () {
-    const { fetchUserBlogNames, fetchDefaultBlog } = await fakeImport('/util/user_blogs.js');
+    const { fetchDefaultBlog } = await fakeImport('/util/user_blogs.js');
     const { onNewPosts } = await fakeImport('/util/mutations.js');
     const { addStyle } = await fakeImport('/util/interface.js');
 
-    userBlogNames = await fetchUserBlogNames();
     ({ name: defaultBlog } = await fetchDefaultBlog());
 
     onNewPosts.addListener(processPosts);

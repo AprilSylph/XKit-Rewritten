@@ -27,6 +27,11 @@
       "label": "Remove the coloured shadow from focused posts",
       "default": false
     },
+    "hide_my_posts": {
+      "type": "checkbox",
+      "label": "Hide my own posts on the dashboard",
+      "default": false
+    },
     "hide_recommended_blogs": {
       "type": "checkbox",
       "label": "Hide recommended blogs in the sidebar",

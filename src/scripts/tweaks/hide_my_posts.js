@@ -12,7 +12,7 @@
 
     getPostElements({ excludeClass }).forEach(async postElement => {
       const { blogName, postAuthor } = await timelineObjectMemoized(postElement.dataset.id);
-      if (postAuthor === defaultBlog || userBlogNames.includes(blogName)) {
+      if (postAuthor === defaultBlog || (postAuthor === undefined && userBlogNames.includes(blogName))) {
         postElement.classList.add(hiddenClass);
       }
     });

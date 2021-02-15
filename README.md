@@ -1,5 +1,5 @@
 # XKit Rewritten [![CI](https://github.com/AprilSylph/XKit-Rewritten/workflows/CI/badge.svg)](https://github.com/AprilSylph/XKit-Rewritten/actions?query=workflow%3ACI)
-The enhancement suite for [Tumblr's new web interface](https://tumblr.zendesk.com/hc/articles/360045642454).
+The enhancement suite for Tumblr's new web interface.
 
 ## Installation
 The project is currently in its alpha stage, meaning there are no distribution channels for users yet.

@@ -98,7 +98,7 @@
     .filter(scriptName => installedScripts.includes(scriptName))
     .forEach(runScript);
 
-    document.documentElement.dataset.pathname = location.pathname;
+    document.documentElement.dataset.pathname = location.pathname.replace(/\/+$/, '');
     injectDataPathnameChanger();
   };
 

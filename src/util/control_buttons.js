@@ -58,12 +58,13 @@
    * Create a deep-level clone of a button template that is ready to add to the page
    *
    * @param {HTMLDivElement} template - A button template as returned by createControlButtonTemplate()
-   * @param {Function} callback - A function to run when the button is clicked
-   * @returns {HTMLDivElement} A clone of the template with a click handler attached
+   * @param {object} events - An object of DOM Event names and handler functions,
+   *                          e.g. {click: () => { alert('Hello!'); }}
+   * @returns {HTMLDivElement} A clone of the button template, with the specified event handlers attached
    */
-  const cloneControlButton = function (template, callback) {
+  const cloneControlButton = function (template, events) {
     const newButton = template.cloneNode(true);
-    newButton.querySelector('button').addEventListener('click', callback);
+    Object.entries(events).forEach(([type, listener]) => newButton.addEventListener(type, listener));
     return newButton;
   };
 

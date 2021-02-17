@@ -150,7 +150,6 @@
 
   const renderQuickTags = async function () {
     quickTagsList.textContent = '';
-    if (!quickTagsIntegration) { return; }
 
     const { [quickTagsStorageKey]: tagBundles = [] } = await browser.storage.local.get(quickTagsStorageKey);
     tagBundles.forEach(tagBundle => {
@@ -215,8 +214,10 @@
 
     $(document.body).on('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
 
-    browser.storage.onChanged.addListener(updateQuickTags);
-    renderQuickTags();
+    if (quickTagsIntegration) {
+      browser.storage.onChanged.addListener(updateQuickTags);
+      renderQuickTags();
+    }
 
     if (alreadyRebloggedEnabled) {
       const { onNewPosts } = await fakeImport('/util/mutations.js');
@@ -236,6 +237,7 @@
     }
 
     browser.storage.onChanged.removeListener(updateQuickTags);
+    quickTagsList.textContent = '';
 
     onNewPosts.removeListener(processPosts);
     $(`.${excludeClass}`).removeClass(excludeClass);

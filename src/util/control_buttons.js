@@ -24,16 +24,14 @@
     const controlButtonContainer = document.createElement('div');
     controlButtonContainer.classList.add('xkit-control-button-container', buttonClass);
 
-    const controlButtonContainerSpan = document.createElement('span');
-    controlButtonContainerSpan.classList.add('xkit-control-button-container-span');
-
     const controlButton = document.createElement('button');
     controlButton.classList.add('xkit-control-button');
-    controlButton.tabIndex = 0;
+    controlButtonContainer.appendChild(controlButton);
 
     const controlButtonInner = document.createElement('span');
     controlButtonInner.classList.add('xkit-control-button-inner');
     controlButtonInner.tabIndex = -1;
+    controlButton.appendChild(controlButtonInner);
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', '2 2 20 20');
@@ -46,10 +44,6 @@
     const icon = await getIconPath(iconClass);
     path.setAttribute('d', icon);
     svg.appendChild(path);
-
-    controlButton.appendChild(controlButtonInner);
-    controlButtonContainerSpan.appendChild(controlButton);
-    controlButtonContainer.appendChild(controlButtonContainerSpan);
 
     return controlButtonContainer;
   };

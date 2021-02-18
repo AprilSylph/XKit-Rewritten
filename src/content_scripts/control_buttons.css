@@ -7,12 +7,6 @@
   line-height: 1;
 }
 
-.xkit-control-button-container-span {
-  vertical-align: top;
-  display: inline-block;
-  width: inherit;
-}
-
 .xkit-control-button {
   color: inherit;
   font: inherit;

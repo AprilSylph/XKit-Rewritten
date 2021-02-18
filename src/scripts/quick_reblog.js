@@ -1,5 +1,5 @@
 (function () {
-  const popupElement = Object.assign(document.createElement('div'), { className: 'quick-reblog' });
+  const popupElement = Object.assign(document.createElement('div'), { id: 'quick-reblog' });
   const quickTagsList = Object.assign(document.createElement('div'), { className: 'quick-tags' });
   const tagsInput = Object.assign(document.createElement('input'), {
     id: 'tags',

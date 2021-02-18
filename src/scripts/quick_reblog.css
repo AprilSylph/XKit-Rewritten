@@ -1,4 +1,4 @@
-.quick-reblog {
+#quick-reblog {
   position: absolute;
   z-index: 2;
   top: 100%;
@@ -16,27 +16,28 @@
   max-width: 250px;
 }
 
-#glass-container .quick-reblog {
+#glass-container #quick-reblog {
   top: 50%;
   right: 100%;
   transform: translate(-20px, -50%);
 }
 
 @media only screen and (max-width: 716px) {
-  .quick-reblog {
+  #quick-reblog {
     top: 50%;
     right: 100%;
     transform: translate(-20px, -50%);
   }
 }
 
-.quick-reblog .message {
+#quick-reblog .message {
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 1;
   height: 100%;
   width: 100%;
   color: inherit;
@@ -44,16 +45,16 @@
   font-weight: bold;
 }
 
-.quick-reblog .message:empty {
+#quick-reblog .message:empty {
   display: none;
 }
 
-.quick-reblog select {
+#quick-reblog select {
   font-weight: bold;
 }
 
-.quick-reblog select,
-.quick-reblog input {
+#quick-reblog select,
+#quick-reblog input {
   border: none;
   border-radius: 0;
   color: inherit;
@@ -64,13 +65,13 @@
   -moz-appearance: none;
 }
 
-.quick-reblog .quick-tags {
+#quick-reblog .quick-tags {
   display: flex;
   flex-direction: column;
   align-items: stretch;
 }
 
-.quick-reblog .quick-tags button {
+#quick-reblog .quick-tags button {
   font-size: .875rem;
   text-align: left;
   color: var(--black);
@@ -80,40 +81,40 @@
   margin-bottom: 2px;
 }
 
-.quick-reblog .quick-tags button:hover {
+#quick-reblog .quick-tags button:hover {
   background-color: var(--secondary-accent);
   opacity: 1;
 }
 
-.quick-reblog .action-buttons {
+#quick-reblog .action-buttons {
   display: flex;
   flex-direction: row;
 }
 
-.quick-reblog .action-buttons button {
+#quick-reblog .action-buttons button {
   flex-grow: 1;
   font-weight: bold;
   padding: 1ch;
   background-color: var(--white);
 }
 
-.quick-reblog .action-buttons button:hover {
+#quick-reblog .action-buttons button:hover {
   background-color: var(--secondary-accent);
 }
 
-.quick-reblog .action-buttons button:not(:first-child) {
+#quick-reblog .action-buttons button:not(:first-child) {
   margin-left: 2px;
 }
 
-.quick-reblog button[data-state="published"] {
+#quick-reblog button[data-state="published"] {
   color: var(--blue);
 }
 
-.quick-reblog button[data-state="queue"] {
+#quick-reblog button[data-state="queue"] {
   color: var(--pink);
 }
 
-.quick-reblog button[data-state="draft"] {
+#quick-reblog button[data-state="draft"] {
   color: var(--orange);
 }
 

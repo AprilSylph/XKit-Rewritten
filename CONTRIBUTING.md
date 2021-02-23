@@ -47,9 +47,9 @@ All pull requests must be compatible with the repository license (GPL-3.0).
 
 ### Style guide
 
-This project primarily consists of JavaScript, and follows [the StandardJS style guide](https://standardjs.com/rules.html) with some deviations. In particular:
-- Semicolon usage is required
-- Trailing commas in multi-line objects and arrays are required
+[![js-semistandard-style](https://raw.githubusercontent.com/standard/semistandard/master/badge.svg)](https://github.com/standard/semistandard)
+
+This project follows JavaScript Semi-Standard Style via [`eslint-config-semistandard`](https://github.com/standard/eslint-config-semistandard).
 
 Most style issues are enforced by the linter, meaning they don't need to be listed here. However, there are two more important style rules to abide by:
 - CSS identifiers (IDs, classnames) should always be `kebab-case`

@@ -83,7 +83,7 @@
     icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     icon.classList.add('xkit-mutual-icon');
     icon.setAttribute('viewBox', '0 0 1000 1000');
-    icon.setAttribute('fill', aprilFools ? '#00b8ff' : 'var(--black)');
+    icon.setAttribute('fill', aprilFools ? '#00b8ff' : 'rgb(var(--black))');
 
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', aprilFools ? aprilFoolsPath : regularPath);

@@ -7,8 +7,8 @@
   font-family: var(--font-family);
   font-size: 1.3125rem;
   font-weight: 700;
-  color: var(--white-on-dark);
-  border-bottom: 2px solid var(--transparent-white-13);
+  color: rgb(var(--white-on-dark));
+  border-bottom: 2px solid rgba(var(--white-on-dark), 0.13);
   line-height: 1.2;
   padding: 0 10px 10px;
 }
@@ -21,7 +21,7 @@
 }
 
 .xkit-sidebar-item ul {
-  color: var(--white-on-dark);
+  color: rgb(var(--white-on-dark));
 }
 
 .xkit-sidebar-item li {
@@ -29,7 +29,7 @@
 }
 
 .xkit-sidebar-item li:hover {
-  background-color: var(--transparent-white-7);
+  background-color: rgba(var(--white-on-dark), 0.07);
 }
 
 .xkit-sidebar-item li a {
@@ -42,7 +42,7 @@
 }
 
 .xkit-sidebar-item svg {
-  fill: var(--transparent-white-65);
+  fill: rgba(var(--white-on-dark), 0.65);
 }
 
 .xkit-sidebar-item .count {
@@ -53,5 +53,5 @@
   display: inline-block;
   text-align: right;
   margin-left: 5px;
-  color: var(--transparent-white-65);
+  color: rgba(var(--white-on-dark), 0.65);
 }

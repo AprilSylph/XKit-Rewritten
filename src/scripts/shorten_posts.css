@@ -10,14 +10,14 @@
 
 button.xkit-shorten-posts-expand {
   cursor: pointer;
-  background-color: var(--white);
-  color: var(--black);
+  background-color: rgb(var(--white));
+  color: rgb(var(--black));
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: var(--post-header-vertical-padding) 0;
-  border-top: 1px solid var(--gray-13);
+  border-top: 1px solid rgba(var(--black), 0.13);
 }
 
 .xkit-shorten-posts-done:not(.xkit-shorten-posts-shortened) button.xkit-shorten-posts-expand,
@@ -26,8 +26,8 @@ button.xkit-shorten-posts-expand {
 }
 
 .xkit-shorten-posts-tags {
-  background-color: var(--white);
-  border-top: 1px dashed var(--gray-13);
+  background-color: rgb(var(--white));
+  border-top: 1px dashed rgba(var(--black), 0.13);
   margin: 0;
   padding-top: 10px;
   padding-bottom: 10px;

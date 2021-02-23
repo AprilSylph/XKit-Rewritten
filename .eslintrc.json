@@ -13,7 +13,6 @@
     "ecmaVersion": 12
   },
   "rules": {
-    "indent": [ "error", 2, { "SwitchCase": 1, "MemberExpression": "off" } ],
     "semi": [ "error", "always" ],
     "node/no-callback-literal": "off",
     "jsdoc/require-hyphen-before-param-description": [ "error", "always" ]

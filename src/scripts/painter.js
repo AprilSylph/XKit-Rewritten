@@ -80,9 +80,9 @@
 
   const strip = function () {
     $(`.${excludeClass} article`)
-    .css('border-top', '')
-    .css('border-image-source', '')
-    .css('border-image-slice', '');
+      .css('border-top', '')
+      .css('border-image-source', '')
+      .css('border-image-slice', '');
     $(`.${excludeClass}`).removeClass(excludeClass);
   };
 

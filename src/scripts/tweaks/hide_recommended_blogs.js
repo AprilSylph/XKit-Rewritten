@@ -8,11 +8,11 @@
 
   const checkForRecommendedBlogs = function () {
     [...document.querySelectorAll(`aside > div > h1:not(.${excludeClass})`)]
-    .filter(h1 => {
-      h1.classList.add(excludeClass);
-      return h1.textContent === recommendedBlogsLabel;
-    })
-    .forEach(h1 => h1.parentNode.classList.add(hiddenClass));
+      .filter(h1 => {
+        h1.classList.add(excludeClass);
+        return h1.textContent === recommendedBlogsLabel;
+      })
+      .forEach(h1 => h1.parentNode.classList.add(hiddenClass));
   };
 
   const main = async function () {

@@ -13,8 +13,8 @@
     const { timelineObject } = await fakeImport('/util/react_props.js');
 
     [...document.querySelectorAll('[data-id].from-mutual')]
-    .filter(postElement => postElement.querySelector('.xkit-mutual-icon') === null)
-    .forEach(postElement => postElement.classList.remove(excludeClass));
+      .filter(postElement => postElement.querySelector('.xkit-mutual-icon') === null)
+      .forEach(postElement => postElement.classList.remove(excludeClass));
 
     getPostElements({ excludeClass, noPeepr: true, includeFiltered: true }).forEach(async postElement => {
       const { blog: { followed } } = await timelineObject(postElement.dataset.id);
@@ -33,15 +33,15 @@
 
   const removeIcons = function () {
     $(`.${excludeClass}`)
-    .removeClass(excludeClass)
-    .removeClass('from-mutual');
+      .removeClass(excludeClass)
+      .removeClass('from-mutual');
     $('.xkit-mutual-icon').remove();
   };
 
   const check = async function (postAttribution, blogName) {
     if (typeof mutuals[blogName] === 'undefined') {
       mutuals[blogName] = isFollowedBy(myBlog, blogName)
-      .catch(() => Promise.resolve(false));
+        .catch(() => Promise.resolve(false));
     }
 
     mutuals[blogName].then(isMutual => {

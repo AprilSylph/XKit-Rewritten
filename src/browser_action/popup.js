@@ -1,7 +1,7 @@
 const checkForNoResults = function () {
   const nothingFound =
     [...document.querySelectorAll('details.script')]
-    .every(detailsElement => detailsElement.classList.contains('search-hidden') || detailsElement.classList.contains('filter-hidden'));
+      .every(detailsElement => detailsElement.classList.contains('search-hidden') || detailsElement.classList.contains('filter-hidden'));
 
   document.querySelector('.no-results').style.display = nothingFound ? 'flex' : 'none';
 };
@@ -18,13 +18,13 @@ document.getElementById('search').addEventListener('input', event => {
   const query = event.target.value.toLowerCase();
 
   [...document.querySelectorAll('details.script')]
-  .forEach(detailsElement => {
-    if (detailsElement.textContent.toLowerCase().includes(query)) {
-      detailsElement.classList.remove('search-hidden');
-    } else {
-      detailsElement.classList.add('search-hidden');
-    }
-  });
+    .forEach(detailsElement => {
+      if (detailsElement.textContent.toLowerCase().includes(query)) {
+        detailsElement.classList.remove('search-hidden');
+      } else {
+        detailsElement.classList.add('search-hidden');
+      }
+    });
 
   checkForNoResults();
 });

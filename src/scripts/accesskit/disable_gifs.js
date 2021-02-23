@@ -22,19 +22,19 @@
 
   const processGifs = function () {
     [...document.querySelectorAll('figure img[srcset*=".gif"]:not(.xkit-accesskit-disabled-gif)')]
-    .forEach(gifElement => {
-      gifElement.classList.add('xkit-accesskit-disabled-gif');
+      .forEach(gifElement => {
+        gifElement.classList.add('xkit-accesskit-disabled-gif');
 
-      if (gifElement.parentNode.querySelector('.xkit-paused-gif') !== null) {
-        return;
-      }
+        if (gifElement.parentNode.querySelector('.xkit-paused-gif') !== null) {
+          return;
+        }
 
-      if (gifElement.complete && gifElement.currentSrc) {
-        pauseGif(gifElement);
-      } else {
-        gifElement.onload = () => pauseGif(gifElement);
-      }
-    });
+        if (gifElement.complete && gifElement.currentSrc) {
+          pauseGif(gifElement);
+        } else {
+          gifElement.onload = () => pauseGif(gifElement);
+        }
+      });
   };
 
   const main = async function () {

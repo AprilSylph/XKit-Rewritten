@@ -12,7 +12,7 @@
     const { main, clean, stylesheet, autoRestart } = await fakeImport(`/scripts/${name}.js`);
 
     main()
-    .catch(console.error);
+      .catch(console.error);
 
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
@@ -41,7 +41,7 @@
     const { clean, stylesheet, autoRestart } = await fakeImport(`/scripts/${name}.js`);
 
     clean()
-    .catch(console.error);
+      .catch(console.error);
 
     if (stylesheet) {
       const link = document.querySelector(`link[href="${getURL(`/scripts/${name}.css`)}"]`);
@@ -95,8 +95,8 @@
     const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
     enabledScripts
-    .filter(scriptName => installedScripts.includes(scriptName))
-    .forEach(runScript);
+      .filter(scriptName => installedScripts.includes(scriptName))
+      .forEach(runScript);
 
     document.documentElement.dataset.pathname = location.pathname.replace(/\/+$/, '');
     injectDataPathnameChanger();

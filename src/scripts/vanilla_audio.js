@@ -8,20 +8,20 @@
 
   const addAudioControls = async function () {
     [...document.querySelectorAll(`${nativePlayerSelector}:not(.${excludeClass})`)]
-    .forEach(nativePlayer => {
-      const audio = nativePlayer.querySelector('audio');
-      if (!audio) { return; }
+      .forEach(nativePlayer => {
+        const audio = nativePlayer.querySelector('audio');
+        if (!audio) { return; }
 
-      nativePlayer.classList.add(excludeClass);
+        nativePlayer.classList.add(excludeClass);
 
-      const trackInfo = nativePlayer.querySelector(trackInfoSelector);
-      if (trackInfo) { trackInfo.classList.add('trackInfo'); }
+        const trackInfo = nativePlayer.querySelector(trackInfoSelector);
+        if (trackInfo) { trackInfo.classList.add('trackInfo'); }
 
-      const audioClone = audio.cloneNode(true);
-      audioClone.controls = true;
-      audioClone.volume = defaultVolume / 100;
-      nativePlayer.parentNode.appendChild(audioClone);
-    });
+        const audioClone = audio.cloneNode(true);
+        audioClone.controls = true;
+        audioClone.volume = defaultVolume / 100;
+        nativePlayer.parentNode.appendChild(audioClone);
+      });
   };
 
   const onStorageChanged = async function (changes, areaName) {

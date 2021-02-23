@@ -10,7 +10,7 @@
 
 .xkit-long-timestamp {
   font-size: .875rem;
-  color: var(--gray-65);
+  color: rgba(var(--black), 0.65);
   height: 1em;
   line-height: 1em;
   padding: 0 var(--post-padding);
@@ -27,7 +27,7 @@
 .xkit-reblog-timestamp {
   align-self: center;
   font-weight: normal;
-  color: var(--gray-65);
+  color: rgba(var(--black), 0.65);
   margin-left: auto;
   padding-left: 1ch;
 }

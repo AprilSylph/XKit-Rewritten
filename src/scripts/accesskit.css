@@ -4,8 +4,8 @@
   right: 1ch;
   height: 1em;
   line-height: 1em;
-  background-color: var(--black);
-  color: var(--white);
+  background-color: rgb(var(--black));
+  color: rgb(var(--white));
   font-weight: bold;
   padding: 5px;
   border-radius: 3px;
@@ -27,7 +27,7 @@ figure:hover .xkit-gif-label {
 
 body.accesskit-blue-links article a[target="_blank"][href^="https://t.umblr.com/redirect"],
 body.accesskit-blue-links article a[target="_blank"][href^="https://href.li/"] {
-  color: var(--accent);
+  color: rgb(var(--accent));
 }
 
 body.accesskit-no-user-colours article span[style^="color"] {

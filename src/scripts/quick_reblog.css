@@ -8,9 +8,9 @@
   padding: 2px;
   border-radius: 3px;
   overflow: hidden;
-  color: var(--black);
-  background-color: var(--white);
-  background-image: linear-gradient(var(--gray-13), var(--gray-13));
+  color: rgb(var(--black));
+  background-color: rgb(var(--white));
+  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
   display: flex;
   flex-direction: column;
   max-width: 250px;
@@ -41,7 +41,7 @@
   height: 100%;
   width: 100%;
   color: inherit;
-  background-color: rgba(var(--rgb-white), 0.9);
+  background-color: rgba(var(--white), 0.9);
   font-weight: bold;
 }
 
@@ -74,15 +74,15 @@
 #quick-reblog .quick-tags button {
   font-size: .875rem;
   text-align: left;
-  color: var(--black);
-  background-color: var(--white);
+  color: rgb(var(--black));
+  background-color: rgb(var(--white));
   opacity: 0.65;
   padding: 0.75ch 1ch;
   margin-bottom: 2px;
 }
 
 #quick-reblog .quick-tags button:hover {
-  background-color: var(--secondary-accent);
+  background-color: rgb(var(--secondary-accent));
   opacity: 1;
 }
 
@@ -95,11 +95,11 @@
   flex-grow: 1;
   font-weight: bold;
   padding: 1ch;
-  background-color: var(--white);
+  background-color: rgb(var(--white));
 }
 
 #quick-reblog .action-buttons button:hover {
-  background-color: var(--secondary-accent);
+  background-color: rgb(var(--secondary-accent));
 }
 
 #quick-reblog .action-buttons button:not(:first-child) {
@@ -107,27 +107,27 @@
 }
 
 #quick-reblog button[data-state="published"] {
-  color: var(--blue);
+  color: rgb(var(--blue));
 }
 
 #quick-reblog button[data-state="queue"] {
-  color: var(--pink);
+  color: rgb(var(--pink));
 }
 
 #quick-reblog button[data-state="draft"] {
-  color: var(--orange);
+  color: rgb(var(--orange));
 }
 
-.published svg[fill="var(--gray-65)"] {
-  fill: var(--green);
+.published svg[fill="rgba(var(--black), 0.65)"] {
+  fill: rgb(var(--green));
 }
 
-.queue svg[fill="var(--gray-65)"] {
-  fill: var(--purple);
+.queue svg[fill="rgba(var(--black), 0.65)"] {
+  fill: rgb(var(--purple));
 }
 
-.draft svg[fill="var(--gray-65)"] {
-  fill: var(--red);
+.draft svg[fill="rgba(var(--black), 0.65)"] {
+  fill: rgb(var(--red));
 }
 
 /* XKit 7 override */

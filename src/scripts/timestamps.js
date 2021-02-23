@@ -12,16 +12,16 @@
   const locale = document.documentElement.lang;
   const currentDayTimeFormat = new Intl.DateTimeFormat(locale, {
     hour: 'numeric',
-    minute: 'numeric',
+    minute: 'numeric'
   });
   const currentYearTimeFormat = new Intl.DateTimeFormat(locale, {
     day: 'numeric',
-    month: 'short',
+    month: 'short'
   });
   const shortTimeFormat = new Intl.DateTimeFormat(locale, {
     day: 'numeric',
     month: 'short',
-    year: 'numeric',
+    year: 'numeric'
   });
   const longTimeFormat = new Intl.DateTimeFormat(locale, {
     weekday: 'long',
@@ -31,7 +31,7 @@
     hour: 'numeric',
     minute: '2-digit',
     second: '2-digit',
-    timeZoneName: 'short',
+    timeZoneName: 'short'
   });
   const relativeTimeFormat = new Intl.RelativeTimeFormat(locale, { style: 'long' });
   const thresholds = [
@@ -41,7 +41,7 @@
     { unit: 'day', denominator: 86400 },
     { unit: 'hour', denominator: 3600 },
     { unit: 'minute', denominator: 60 },
-    { unit: 'second', denominator: 1 },
+    { unit: 'second', denominator: 1 }
   ];
 
   const constructTimeString = function (unixTime) {
@@ -196,7 +196,7 @@
       'timestamps.preferences.alwaysShowYear': alwaysShowYearChanges,
       'timestamps.preferences.headerTimestamps': headerTimestampsChanges,
       'timestamps.preferences.isoFormat': isoFormatChanges,
-      'timestamps.preferences.reblogTimestamps': reblogTimestampsChanges,
+      'timestamps.preferences.reblogTimestamps': reblogTimestampsChanges
     } = changes;
 
     const { onNewPosts } = await fakeImport('/util/mutations.js');

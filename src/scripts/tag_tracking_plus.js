@@ -51,7 +51,7 @@
     tagLinkElements.forEach(async tagLinkElement => {
       const unreadCountElement = Object.assign(document.createElement('span'), {
         style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65;',
-        innerHTML: '&ctdot;',
+        innerHTML: '&ctdot;'
       });
       tagLinkElement.firstElementChild.appendChild(unreadCountElement);
 

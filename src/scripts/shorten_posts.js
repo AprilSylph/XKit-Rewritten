@@ -9,7 +9,7 @@
 
   const expandButton = Object.assign(document.createElement('button'), {
     textContent: 'Expand',
-    className: buttonClass,
+    className: buttonClass
   });
 
   const unshortenOnClick = ({ target }) => {

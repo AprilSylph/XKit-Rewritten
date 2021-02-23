@@ -30,7 +30,7 @@
     }
 
     const {
-      'vanilla_audio.preferences.defaultVolume': defaultVolumeChanges,
+      'vanilla_audio.preferences.defaultVolume': defaultVolumeChanges
     } = changes;
 
     if (defaultVolumeChanges) {

@@ -13,7 +13,6 @@
     "ecmaVersion": 12
   },
   "rules": {
-    "comma-dangle": [ "error", "always-multiline" ],
     "indent": [ "error", 2, { "SwitchCase": 1, "MemberExpression": "off" } ],
     "semi": [ "error", "always" ],
     "node/no-callback-literal": "off",

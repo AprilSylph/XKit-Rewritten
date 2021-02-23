@@ -164,7 +164,7 @@ const renderScripts = async function () {
     preferredFormat: 'hex',
     showInput: true,
     showInitial: true,
-    allowEmpty: true,
+    allowEmpty: true
   });
   $makeSpectrum.on('change.spectrum', writePreference);
 };

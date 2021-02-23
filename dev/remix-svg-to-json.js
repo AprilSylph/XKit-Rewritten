@@ -6,7 +6,7 @@ const outputPath = './src/lib/remixicon_svg.json';
 
 const remixSvg = fs.readFileSync(inputPath, { encoding: 'utf8' });
 const jsonObj = parser.parse(remixSvg, {
-  ignoreAttributes: false,
+  ignoreAttributes: false
 });
 
 const symbols = {};

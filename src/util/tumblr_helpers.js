@@ -8,7 +8,7 @@
     const { inject } = await fakeImport('/util/inject.js');
     return inject(
       async (resource, init) => window.tumblr.apiFetch(resource, init),
-      args,
+      args
     );
   };
 

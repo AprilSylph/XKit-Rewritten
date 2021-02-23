@@ -17,7 +17,7 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: getURL(`/scripts/${name}.css`),
+        href: getURL(`/scripts/${name}.css`)
       });
       document.documentElement.appendChild(link);
     }

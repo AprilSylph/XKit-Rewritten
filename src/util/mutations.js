@@ -64,7 +64,7 @@
 
   observer.observe(document.body, {
     childList: true,
-    subtree: true,
+    subtree: true
   });
 
   return { onNewPosts, onPostsMutated, onBaseContainerMutated };

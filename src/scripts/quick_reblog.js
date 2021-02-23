@@ -5,7 +5,7 @@
     id: 'tags',
     placeholder: 'Tags (comma separated)',
     autocomplete: 'off',
-    onkeydown: event => event.stopPropagation(),
+    onkeydown: event => event.stopPropagation()
   });
   let lastPostID;
   let timeoutID;
@@ -90,7 +90,7 @@
       parent_post_id: postID,
       parent_tumblelog_uuid: parentTumblelogUUID,
       reblog_key: reblogKey,
-      state,
+      state
     };
 
     try {

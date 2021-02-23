@@ -6,14 +6,13 @@
     "jquery": true
   },
   "extends": [
-    "standard",
+    "semistandard",
     "plugin:jsdoc/recommended"
   ],
   "parserOptions": {
     "ecmaVersion": 12
   },
   "rules": {
-    "semi": [ "error", "always" ],
     "node/no-callback-literal": "off",
     "jsdoc/require-hyphen-before-param-description": [ "error", "always" ]
   },

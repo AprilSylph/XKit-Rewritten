@@ -37,7 +37,7 @@
     svg.setAttribute('viewBox', '2 2 20 20');
     svg.setAttribute('width', '21');
     svg.setAttribute('height', '21');
-    svg.setAttribute('fill', 'var(--gray-65)');
+    svg.setAttribute('fill', 'rgba(var(--black), 0.65)');
     controlButtonInner.appendChild(svg);
 
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');

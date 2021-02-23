@@ -1,5 +1,5 @@
 (function () {
-  const css = '[data-is-contributed-content="true"] { border-bottom: 1px solid transparent; background-color: var(--follow); }';
+  const css = '[data-is-contributed-content="true"] { border-bottom: 1px solid transparent; background-color: rgb(var(--follow)); }';
 
   const main = async function () {
     const { addStyle } = await fakeImport('/util/interface.js');

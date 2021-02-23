@@ -6,7 +6,7 @@
     const { addStyle } = await fakeImport('/util/interface.js');
 
     const selector = await descendantSelector('post', 'followButton');
-    css = `${selector} { color: var(--gray-40); }`;
+    css = `${selector} { color: rgba(var(--black), 0.4); }`;
     addStyle(css);
   };
 

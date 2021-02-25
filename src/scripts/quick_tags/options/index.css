@@ -1,0 +1,119 @@
+:root {
+  --black: #000000;
+  --white: #ffffff;
+  --light-grey: #dddddd;
+  --dark-grey: #444444;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --black: #ffffff;
+    --white: #343434;
+    --light-grey: #222222;
+    --dark-grey: #bbbbbb;
+  }
+}
+
+body {
+  color: var(--black);
+  background-color: var(--white);
+  font-size: 16px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+section:not(:last-child) {
+  border-bottom: 1px solid var(--dark-grey);
+  margin-bottom: 1em;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#new-bundle li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+#new-bundle label {
+  font-weight: bold;
+  margin-right: 1ch;
+}
+
+#new-bundle input {
+  flex-grow: 1;
+}
+
+#bundles:empty::before {
+  content: "No tag bundles are defined.";
+}
+
+.bundle {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1ch;
+  padding-left: 0;
+}
+
+.bundle {
+  border-top: 1px solid var(--light-grey);
+}
+
+.bundle:last-child {
+  border-bottom: 1px solid var(--light-grey);
+}
+
+.bundle div {
+  max-width: 75%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.bundle span {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.bundle .title {
+  margin-bottom: 0.5ch;
+}
+
+.bundle input:disabled {
+  color: var(--black);
+  background: transparent;
+  padding: 0;
+  border: none;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+.bundle input.title:disabled {
+  font-weight: bold;
+}
+
+.bundle button {
+  cursor: pointer;
+  background: none;
+  padding: 3px;
+  border: none;
+  margin-left: 1ch;
+}
+
+.bundle button i {
+  color: var(--black);
+  font-size: 1.5em;
+}

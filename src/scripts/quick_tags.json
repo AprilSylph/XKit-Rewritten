@@ -1,0 +1,17 @@
+{
+  "title": "Quick Tags",
+  "description": "Add tags to posts easily",
+  "icon": {
+    "class_name": "ri-price-tag-3-line",
+    "color": "white",
+    "background_color": "#eeb92b"
+  },
+  "preferences": {
+    "tagBundles": {
+      "type": "iframe",
+      "label": "Manage tag bundles",
+      "src": "/scripts/quick_tags/options/index.html",
+      "default": []
+    }
+  }
+}

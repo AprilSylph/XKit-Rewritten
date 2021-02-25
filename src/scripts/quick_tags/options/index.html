@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XKit: Manage tag bundles</title>
+    <link rel="stylesheet" href="/lib/normalize.min.css">
+    <link rel="stylesheet" href="/lib/remixicon/remixicon.css">
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <main>
+      <section>
+        <h3>Add new tag bundle</h3>
+        <ul id="new-bundle">
+          <li>
+            <label for="new-bundle-title">Title</label>
+            <input id="new-bundle-title" placeholder="My tag bundle">
+          </li>
+          <li>
+            <label for="new-bundle-tags">Tags</label>
+            <input id="new-bundle-tags" placeholder="tag1, tag2, tag3">
+          </li>
+          <li>
+            <button id="add-bundle">Add bundle</button>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h3>Your tag bundles</h3>
+        <ul id="bundles"></ul>
+      </section>
+    </main>
+
+    <template id="bundle-template">
+      <li class="bundle">
+        <div>
+          <input class="title" disabled>
+          <input class="tags" disabled>
+        </div>
+        <span>
+          <button class="edit" title="Edit tag bundle"><i class="ri-pencil-line"></i></button>
+          <button class="delete" title="Delete tag bundle"><i class="ri-delete-bin-line"></i></button>
+        </span>
+      </li>
+    </template>
+
+    <script src="/lib/browser-polyfill.min.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

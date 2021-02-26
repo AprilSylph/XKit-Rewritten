@@ -32,3 +32,33 @@
 #quick-tags button:not(:last-child) {
   margin-bottom: 2px;
 }
+
+.xkit-quick-tags-tags {
+	font-family: var(--font-family);
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	position: relative;
+	box-sizing: border-box;
+	padding-left: var(--post-padding);
+	padding-right: var(--post-padding);
+	margin-top: 10px;
+	margin-bottom: 10px;
+	word-break: break-word;
+}
+
+.xkit-quick-tags-tags + div {
+  display: none !important;
+}
+
+.xkit-quick-tags-tags a {
+	text-decoration: none;
+	color: rgba(var(--black),.65);
+	vertical-align: bottom;
+	display: inline-block;
+	margin-right: 11px;
+}
+
+.xkit-quick-tags-tags a:hover {
+  text-decoration: underline;
+}

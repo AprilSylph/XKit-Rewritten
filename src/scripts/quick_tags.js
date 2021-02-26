@@ -1,6 +1,7 @@
 (function () {
   const buttonClass = 'xkit-quick-tags-button';
   const excludeClass = 'xkit-quick-tags-done';
+  const tagsClass = 'xkit-quick-tags-tags';
 
   const popupElement = Object.assign(document.createElement('div'), { id: 'quick-tags' });
 
@@ -59,7 +60,7 @@
 
     tags.push(...tagsToAdd.split(','));
 
-    const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
+    await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
       method: 'PUT',
       body: {
         content,
@@ -71,7 +72,20 @@
       }
     });
 
-    window.alert(displayText);
+    const tagsElement = Object.assign(document.createElement('div'), { className: tagsClass });
+
+    const innerTagsDiv = document.createElement('div');
+    tagsElement.appendChild(innerTagsDiv);
+
+    for (const tag of tags) {
+      innerTagsDiv.appendChild(Object.assign(document.createElement('a'), {
+        textContent: `#${tag.trim()}`,
+        href: `/tagged/${encodeURIComponent(tag)}`,
+        target: '_blank'
+      }));
+    }
+
+    postElement.querySelector('footer').parentNode.prepend(tagsElement);
   };
 
   const processPosts = async function () {
@@ -109,6 +123,7 @@
 
     $(`.${buttonClass}`).remove();
     $(`.${excludeClass}`).removeClass(excludeClass);
+    $(`.${tagsClass}`).remove();
 
     browser.storage.onChanged.removeListener(onStorageChanged);
   };

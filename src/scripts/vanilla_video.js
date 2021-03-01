@@ -5,19 +5,18 @@
   let defaultVolume;
 
   const cloneVideoElements = async function () {
-    [...document.querySelectorAll(`video:not(.${excludeClass})`)].forEach(async videoElement => {
+    [...document.querySelectorAll(`video:not(.${excludeClass}):not(.${videoClass})`)].forEach(async videoElement => {
       videoElement.classList.add(excludeClass);
 
       const newVideoElement = Object.assign(document.createElement('video'), {
         controls: true,
-        crossorigin: videoElement.crossorigin,
-        playsinline: true,
+        crossOrigin: videoElement.crossOrigin,
         poster: videoElement.poster,
         src: videoElement.currentSrc,
         volume: defaultVolume / 100,
-        style: videoElement.style,
         className: videoClass
       });
+      newVideoElement.setAttribute('playsinline', true);
 
       videoElement.parentNode.parentNode.prepend(newVideoElement);
     });

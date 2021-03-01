@@ -2,9 +2,7 @@
 The enhancement suite for Tumblr's new web interface.
 
 ## Installation
-The project is currently in its alpha stage, meaning there are no distribution channels for users yet.
-
-Watch this repository's releases to be notified of the first beta build!
+- [Get this extension for Firefox](https://addons.mozilla.org/addon/xkit-rewritten/)
 
 ## Credits
 - [Contributors to this repository](https://github.com/AprilSylph/XKit-Rewritten/graphs/contributors)

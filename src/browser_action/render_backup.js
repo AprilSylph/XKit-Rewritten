@@ -83,7 +83,7 @@ const updateLastModifiedMessage = async function (areaName) {
   const messageElement = document.getElementById(`${areaName}-storage-message`);
 
   try {
-    const { storageLastModified } = await browser.storage[areaName].get('storageLastModified');
+    const { storageLastModified } = await browser.storage[areaName].get();
 
     if (areaName === 'sync') {
       const cloudControls = document.querySelector('.cloud-controls');

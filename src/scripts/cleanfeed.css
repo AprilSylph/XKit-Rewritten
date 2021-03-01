@@ -1,5 +1,5 @@
-.xkit-cleanfeed-hidden figure:not(:hover) > div::after,
-.xkit-cleanfeed-hidden [role="application"]:not(:hover) > div::after {
+.xkit-cleanfeed-filtered figure:not(:hover) > div::after,
+.xkit-cleanfeed-filtered [role="application"]:not(:hover) > div::after {
   content: "Hidden by CleanFeed";
   position: absolute;
   top: 0;

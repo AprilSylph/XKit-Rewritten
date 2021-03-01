@@ -3,6 +3,7 @@
   let reblogSelector;
 
   const excludeClass = 'xkit-cleanfeed-done';
+  const hiddenClass = 'xkit-cleanfeed-filtered';
 
   const processPosts = async function () {
     const { getPostElements } = await fakeImport('/util/interface.js');
@@ -10,7 +11,7 @@
 
     getPostElements({ excludeClass }).forEach(async postElement => {
       if (blockingMode === 'all') {
-        postElement.classList.add('xkit-cleanfeed-hidden');
+        postElement.classList.add(hiddenClass);
         return;
       }
 
@@ -19,7 +20,7 @@
       {
         const { blog: { isAdult } } = postTimelineObject;
         if (isAdult) {
-          postElement.classList.add('xkit-cleanfeed-hidden');
+          postElement.classList.add(hiddenClass);
           return;
         }
       }
@@ -33,7 +34,7 @@
 
         const { blog: { isAdult } } = trailItem;
         if (isAdult) {
-          reblogs[i].classList.add('xkit-cleanfeed-hidden');
+          reblogs[i].classList.add(hiddenClass);
         }
       });
     });
@@ -57,7 +58,7 @@
     onNewPosts.removeListener(processPosts);
 
     $(`.${excludeClass}`).removeClass(excludeClass);
-    $('.xkit-cleanfeed-hidden').removeClass('xkit-cleanfeed-hidden');
+    $(`.${hiddenClass}`).removeClass(hiddenClass);
   };
 
   return { main, clean, stylesheet: true, autoRestart: true };

@@ -2,6 +2,8 @@
   const excludeClass = 'xkit-vanilla-video-done';
   const videoClass = 'xkit-vanilla-video-player';
 
+  let defaultVolume;
+
   const cloneVideoElements = async function () {
     [...document.querySelectorAll(`video:not(.${excludeClass})`)].forEach(async videoElement => {
       videoElement.classList.add(excludeClass);
@@ -12,6 +14,7 @@
         playsinline: true,
         poster: videoElement.poster,
         src: videoElement.currentSrc,
+        volume: defaultVolume / 100,
         style: videoElement.style,
         className: videoClass
       });
@@ -21,7 +24,10 @@
   };
 
   const main = async function () {
+    const { getPreferences } = await fakeImport('/util/preferences.js');
     const { onNewPosts } = await fakeImport('/util/mutations.js');
+
+    ({ defaultVolume } = await getPreferences('vanilla_video'));
 
     onNewPosts.addListener(cloneVideoElements);
     cloneVideoElements();

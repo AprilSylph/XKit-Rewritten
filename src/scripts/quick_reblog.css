@@ -50,6 +50,7 @@
 }
 
 #quick-reblog select {
+  font-family: var(--font-family);
   font-weight: bold;
 }
 

@@ -22,7 +22,22 @@
     });
   };
 
+  const onStorageChanged = async function (changes, areaName) {
+    if (areaName !== 'local') {
+      return;
+    }
+
+    const {
+      'vanilla_video.preferences.defaultVolume': defaultVolumeChanges
+    } = changes;
+
+    if (defaultVolumeChanges) {
+      ({ newValue: defaultVolume } = defaultVolumeChanges);
+    }
+  };
+
   const main = async function () {
+    browser.storage.onChanged.addListener(onStorageChanged);
     const { getPreferences } = await fakeImport('/util/preferences.js');
     const { onNewPosts } = await fakeImport('/util/mutations.js');
 
@@ -33,6 +48,7 @@
   };
 
   const clean = async function () {
+    browser.storage.onChanged.removeListener(onStorageChanged);
     const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     onNewPosts.removeListener(cloneVideoElements);

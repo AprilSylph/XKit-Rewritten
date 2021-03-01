@@ -34,3 +34,31 @@ jobs:
         with:
           name: web-ext-artifacts
           path: web-ext-artifacts
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install npx
+        run: npm install npx
+
+      - name: Lint WebExtension
+        run: npx web-ext lint
+
+      - name: Publish WebExtension
+        run: npx web-ext sign
+        continue-on-error: true
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
+          WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
+          WEB_EXT_ID: ${{ secrets.WEB_EXT_ID }}

@@ -12,11 +12,13 @@
         controls: true,
         crossOrigin: videoElement.crossOrigin,
         poster: videoElement.poster,
-        src: videoElement.currentSrc,
         volume: defaultVolume / 100,
         className: videoClass
       });
       newVideoElement.setAttribute('playsinline', true);
+
+      [...videoElement.children]
+        .forEach(sourceElement => newVideoElement.appendChild(sourceElement.cloneNode(true)));
 
       videoElement.parentNode.parentNode.prepend(newVideoElement);
     });

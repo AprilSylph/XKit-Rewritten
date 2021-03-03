@@ -16,7 +16,7 @@
     "web-ext": "^5.5.0"
   },
   "dependencies": {
-    "jquery": "^3.5.1",
+    "jquery": "^3.6.0",
     "normalize.css": "^8.0.1",
     "remixicon": "^2.5.0",
     "spectrum-colorpicker": "^1.8.1",

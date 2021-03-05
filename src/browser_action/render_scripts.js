@@ -54,6 +54,66 @@ const writePreference = async function (event) {
   }
 };
 
+const renderPreferences = async function ({ scriptName, preferences, preferenceList }) {
+  for (const [key, preference] of Object.entries(preferences)) {
+    const storageKey = `${scriptName}.preferences.${key}`;
+    const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
+    preference.value = savedPreference === undefined ? preference.default : savedPreference;
+
+    const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
+
+    const preferenceInput = preferenceTemplateClone.querySelector('input, select, textarea, iframe');
+    preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
+
+    const preferenceLabel = preferenceTemplateClone.querySelector('label');
+    if (preferenceLabel) {
+      preferenceLabel.textContent = preference.label || key;
+      preferenceLabel.setAttribute('for', `${scriptName}.${preference.type}.${key}`);
+    } else {
+      preferenceInput.title = preference.label || key;
+    }
+
+    switch (preference.type) {
+      case 'text':
+      case 'textarea':
+        preferenceInput.addEventListener('input', debounce(writePreference, 500));
+        break;
+      case 'iframe':
+        break;
+      default:
+        preferenceInput.addEventListener('input', writePreference);
+    }
+
+    switch (preference.type) {
+      case 'checkbox':
+        preferenceInput.checked = preference.value;
+        break;
+      case 'select':
+        for (const [value, text] of Object.entries(preference.options)) {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = text;
+          option.selected = value === preference.value;
+          preferenceInput.appendChild(option);
+        }
+        break;
+      case 'iframe':
+        preferenceInput.addEventListener('load', () => {
+          const callback = () => { preferenceInput.height = preferenceInput.contentDocument.documentElement.scrollHeight; };
+          callback();
+          const observer = new ResizeObserver(callback);
+          observer.observe(preferenceInput.contentDocument.documentElement);
+        });
+        preferenceInput.src = preference.src;
+        break;
+      default:
+        preferenceInput.value = preference.value;
+    }
+
+    preferenceList.appendChild(preferenceTemplateClone);
+  }
+};
+
 const renderScripts = async function () {
   const installedScripts = await getInstalledScripts();
   const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
@@ -95,64 +155,9 @@ const renderScripts = async function () {
     enabledInput.checked = enabledScripts.includes(scriptName);
     enabledInput.addEventListener('input', writeEnabled);
 
-    const preferenceList = scriptTemplateClone.querySelector('.preferences');
-
-    for (const [key, preference] of Object.entries(preferences)) {
-      const storageKey = `${scriptName}.preferences.${key}`;
-      const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
-      preference.value = savedPreference === undefined ? preference.default : savedPreference;
-
-      const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
-
-      const preferenceInput = preferenceTemplateClone.querySelector('input, select, textarea, iframe');
-      preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
-
-      const preferenceLabel = preferenceTemplateClone.querySelector('label');
-      if (preferenceLabel) {
-        preferenceLabel.textContent = preference.label || key;
-        preferenceLabel.setAttribute('for', `${scriptName}.${preference.type}.${key}`);
-      } else {
-        preferenceInput.title = preference.label || key;
-      }
-
-      switch (preference.type) {
-        case 'text':
-        case 'textarea':
-          preferenceInput.addEventListener('input', debounce(writePreference, 500));
-          break;
-        case 'iframe':
-          break;
-        default:
-          preferenceInput.addEventListener('input', writePreference);
-      }
-
-      switch (preference.type) {
-        case 'checkbox':
-          preferenceInput.checked = preference.value;
-          break;
-        case 'select':
-          for (const [value, text] of Object.entries(preference.options)) {
-            const option = document.createElement('option');
-            option.value = value;
-            option.textContent = text;
-            option.selected = value === preference.value;
-            preferenceInput.appendChild(option);
-          }
-          break;
-        case 'iframe':
-          preferenceInput.addEventListener('load', () => {
-            const callback = () => { preferenceInput.height = preferenceInput.contentDocument.documentElement.scrollHeight; };
-            callback();
-            const observer = new ResizeObserver(callback);
-            observer.observe(preferenceInput.contentDocument.documentElement);
-          });
-          preferenceInput.src = preference.src;
-          break;
-        default:
-          preferenceInput.value = preference.value;
-      }
-
-      preferenceList.appendChild(preferenceTemplateClone);
+    if (Object.keys(preferences).length !== 0) {
+      const preferenceList = scriptTemplateClone.querySelector('.preferences');
+      renderPreferences({ scriptName, preferences, preferenceList });
     }
 
     scriptsDiv.appendChild(scriptTemplateClone);

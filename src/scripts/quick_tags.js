@@ -63,32 +63,48 @@
 
     tags.push(...tagsToAdd);
 
-    await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
-      method: 'PUT',
-      body: {
-        content,
-        date,
-        hide_trail: hideTrail,
-        placement_id: placementId,
-        slug,
-        tags: tags.join(',')
+    try {
+      const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
+        method: 'PUT',
+        body: {
+          content,
+          date,
+          hide_trail: hideTrail,
+          placement_id: placementId,
+          slug,
+          tags: tags.join(',')
+        }
+      });
+
+      browser.runtime.sendMessage({
+        command: 'notifications:create',
+        arguments: {
+          options: { type: 'basic', title: 'XKit', message: displayText }
+        }
+      });
+
+      const tagsElement = Object.assign(document.createElement('div'), { className: tagsClass });
+
+      const innerTagsDiv = document.createElement('div');
+      tagsElement.appendChild(innerTagsDiv);
+
+      for (const tag of tags) {
+        innerTagsDiv.appendChild(Object.assign(document.createElement('a'), {
+          textContent: `#${tag.trim()}`,
+          href: `/tagged/${encodeURIComponent(tag)}`,
+          target: '_blank'
+        }));
       }
-    });
 
-    const tagsElement = Object.assign(document.createElement('div'), { className: tagsClass });
-
-    const innerTagsDiv = document.createElement('div');
-    tagsElement.appendChild(innerTagsDiv);
-
-    for (const tag of tags) {
-      innerTagsDiv.appendChild(Object.assign(document.createElement('a'), {
-        textContent: `#${tag.trim()}`,
-        href: `/tagged/${encodeURIComponent(tag)}`,
-        target: '_blank'
-      }));
+      postElement.querySelector('footer').parentNode.prepend(tagsElement);
+    } catch ({ body }) {
+      browser.runtime.sendMessage({
+        command: 'notifications:create',
+        arguments: {
+          options: { type: 'basic', title: 'XKit', message: body.errors[0].detail }
+        }
+      });
     }
-
-    postElement.querySelector('footer').parentNode.prepend(tagsElement);
   };
 
   const processPosts = async function () {

@@ -31,7 +31,7 @@
     }
   },
 
-  "permissions": [ "storage" ],
+  "permissions": [ "notifications", "storage" ],
   "web_accessible_resources": [ "*.js", "*.json", "*.css" ],
   "background": {
     "scripts": [ "lib/browser-polyfill.min.js", "background.js" ],

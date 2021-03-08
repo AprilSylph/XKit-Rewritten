@@ -7,8 +7,8 @@ assignees: ''
 
 ---
 
-- **The browser I'm using is:** 
-- **My browser version is:** 
-- **My XKit Rewritten version is:** 
+- The browser I'm using is: 
+- My browser version is: 
+- My XKit Rewritten version is: 
 
 ---

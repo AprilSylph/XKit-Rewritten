@@ -36,7 +36,7 @@
 
   const processBundleClick = async function ({ target }) {
     if (target.tagName !== 'BUTTON') { return; }
-    const tagsToAdd = target.dataset.tags;
+    const bundleTags = target.dataset.tags.split(',');
 
     const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
     const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
@@ -58,7 +58,10 @@
       }
     } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
 
-    tags.push(...tagsToAdd.split(','));
+    const tagsToAdd = bundleTags.filter(bundleTag => tags.includes(bundleTag) === false);
+    if (tagsToAdd.length === 0) { return; }
+
+    tags.push(...tagsToAdd);
 
     await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
       method: 'PUT',

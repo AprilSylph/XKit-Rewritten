@@ -1,6 +1,11 @@
 (function () {
   const popupElement = Object.assign(document.createElement('div'), { id: 'quick-reblog' });
   const blogSelector = document.createElement('select');
+  const commentInput = Object.assign(document.createElement('input'), {
+    placeholder: 'Comment',
+    autocomplete: 'off',
+    onkeydown: event => event.stopPropagation()
+  });
   const quickTagsList = Object.assign(document.createElement('div'), { className: 'quick-tags' });
   const tagsInput = Object.assign(document.createElement('input'), {
     placeholder: 'Tags (comma separated)',
@@ -11,6 +16,7 @@
   let lastPostID;
   let timeoutID;
 
+  let showCommentInput;
   let quickTagsIntegration;
   let alreadyRebloggedEnabled;
   let alreadyRebloggedLimit;
@@ -29,6 +35,7 @@
     const thisPostID = $(target).parents('[data-id]')[0].dataset.id;
     if (thisPostID !== lastPostID) {
       blogSelector.value = blogSelector.options[0].value;
+      commentInput.value = '';
       tagsInput.value = '';
     }
     lastPostID = thisPostID;
@@ -74,7 +81,7 @@
     const requestPath = `/v2/blog/${blog}/posts`;
 
     const requestBody = {
-      content: [],
+      content: commentInput.value ? [{ formatting: [], type: 'text', text: commentInput.value }] : [],
       tags,
       parent_post_id: postID,
       parent_tumblelog_uuid: parentTumblelogUUID,
@@ -179,7 +186,7 @@
     const { fetchUserBlogs } = await fakeImport('/util/user_blogs.js');
     const { getPreferences } = await fakeImport('/util/preferences.js');
 
-    ({ quickTagsIntegration, alreadyRebloggedEnabled, alreadyRebloggedLimit } = await getPreferences('quick_reblog'));
+    ({ showCommentInput, quickTagsIntegration, alreadyRebloggedEnabled, alreadyRebloggedLimit } = await getPreferences('quick_reblog'));
 
     const userBlogs = await fetchUserBlogs();
     for (const { name, uuid } of userBlogs) {
@@ -188,6 +195,8 @@
       option.textContent = name;
       blogSelector.appendChild(option);
     }
+
+    commentInput.hidden = !showCommentInput;
 
     const reblogButton = document.createElement('button');
     reblogButton.textContent = 'Reblog';
@@ -206,7 +215,7 @@
       actionButtons.appendChild(button);
     });
 
-    [blogSelector, quickTagsList, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
+    [blogSelector, commentInput, quickTagsList, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
 
     $(document.body).on('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
 

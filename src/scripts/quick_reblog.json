@@ -6,6 +6,11 @@
     "background_color": "#acd53a"
   },
   "preferences": {
+    "showCommentInput": {
+      "type": "checkbox",
+      "label": "Show the comment field",
+      "default": false
+    },
     "quickTagsIntegration": {
       "type": "checkbox",
       "label": "Enable integration with Quick Tags",

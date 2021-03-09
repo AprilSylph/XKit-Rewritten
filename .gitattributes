@@ -9,4 +9,4 @@
 .gitattributes  export-ignore
 .gitignore      export-ignore
 
-lib/*           linguist-generated=true
+src/lib/*       linguist-generated=true

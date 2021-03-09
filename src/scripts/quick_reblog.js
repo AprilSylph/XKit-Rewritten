@@ -22,18 +22,11 @@
   const showPopupOnHover = ({ target }) => {
     clearTimeout(timeoutID);
 
-    const messageDialog = popupElement.querySelector('.message');
-    if (messageDialog.textContent === 'Working...') {
-      return;
-    }
-
     $(target).parents('div')[0].appendChild(popupElement);
     popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
     const thisPostID = $(target).parents('[data-id]')[0].dataset.id;
     if (thisPostID !== lastPostID) {
-      messageDialog.textContent = '';
-
       const blogSelector = popupElement.querySelector('#blog');
       blogSelector.value = blogSelector.options[0].value;
 
@@ -44,10 +37,6 @@
   };
 
   const removePopupOnLeave = ({ target }) => {
-    if (popupElement.querySelector('.message').textContent === 'Working...') {
-      return;
-    }
-
     timeoutID = setTimeout(() => {
       const { parentNode } = popupElement;
       if (!parentNode) { return; }
@@ -66,9 +55,13 @@
     buttonDiv.classList.add(state);
   };
 
-  const reblogPost = async function (event) {
-    const messageDialog = popupElement.querySelector('.message');
-    messageDialog.textContent = 'Working...';
+  const reblogPost = async function ({ currentTarget }) {
+    const currentReblogButton = popupElement.parentNode;
+
+    currentTarget.blur();
+
+    const actionButtons = currentTarget.parentNode;
+    actionButtons.disabled = true;
 
     const postID = lastPostID;
     lastPostID = null;
@@ -76,7 +69,7 @@
     const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
     const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
 
-    const { state } = event.target.dataset;
+    const { state } = currentTarget.dataset;
 
     const blog = popupElement.querySelector('#blog').value;
     const tags = popupElement.querySelector('#tags').value;
@@ -96,8 +89,10 @@
     try {
       const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
       if (meta.status === 201) {
-        makeButtonReblogged({ buttonDiv: popupElement.parentNode, state });
-        popupElement.parentNode.removeChild(popupElement);
+        makeButtonReblogged({ buttonDiv: currentReblogButton, state });
+        if (lastPostID === null) {
+          popupElement.parentNode.removeChild(popupElement);
+        }
 
         browser.runtime.sendMessage({
           command: 'notifications:create',
@@ -125,7 +120,7 @@
         }
       });
     } finally {
-      messageDialog.textContent = '';
+      actionButtons.disabled = false;
     }
   };
 
@@ -200,7 +195,7 @@
       blogSelector.appendChild(option);
     }
 
-    const actionButtons = document.createElement('div');
+    const actionButtons = document.createElement('fieldset');
     actionButtons.classList.add('action-buttons');
 
     const reblogButton = document.createElement('button');
@@ -220,10 +215,7 @@
       actionButtons.appendChild(button);
     });
 
-    const messageDialog = document.createElement('div');
-    messageDialog.classList.add('message');
-
-    [messageDialog, blogSelector, quickTagsList, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
+    [blogSelector, quickTagsList, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
 
     $(document.body).on('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
 

@@ -30,25 +30,6 @@
   }
 }
 
-#quick-reblog .message {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  height: 100%;
-  width: 100%;
-  color: inherit;
-  background-color: rgba(var(--white), 0.9);
-  font-weight: bold;
-}
-
-#quick-reblog .message:empty {
-  display: none;
-}
-
 #quick-reblog select {
   font-family: var(--font-family);
   font-weight: bold;
@@ -90,6 +71,7 @@
 #quick-reblog .action-buttons {
   display: flex;
   flex-direction: row;
+  position: relative;
 }
 
 #quick-reblog .action-buttons button {
@@ -99,12 +81,29 @@
   background-color: rgb(var(--white));
 }
 
-#quick-reblog .action-buttons button:hover {
+#quick-reblog .action-buttons:enabled button:hover {
   background-color: rgb(var(--secondary-accent));
 }
 
 #quick-reblog .action-buttons button:not(:first-child) {
   margin-left: 2px;
+}
+
+#quick-reblog .action-buttons:disabled::before {
+  content: "Processing…";
+  font-weight: bold;
+  color: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  background-color: rgb(var(--white));
+  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
 }
 
 #quick-reblog button[data-state="published"] {

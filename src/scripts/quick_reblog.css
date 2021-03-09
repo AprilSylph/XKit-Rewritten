@@ -13,7 +13,8 @@
   background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
   display: flex;
   flex-direction: column;
-  max-width: 250px;
+  box-sizing: border-box;
+  width: 250px;
 }
 
 #glass-container #quick-reblog {
@@ -47,7 +48,7 @@
   -moz-appearance: none;
 }
 
-#quick-reblog .quick-tags {
+#quick-reblog .quick-tags:not([hidden]) {
   display: flex;
   flex-direction: column;
   align-items: stretch;

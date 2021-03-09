@@ -16,8 +16,10 @@
   let lastPostID;
   let timeoutID;
 
+  let showBlogSelector;
   let showCommentInput;
   let quickTagsIntegration;
+  let showTagsInput;
   let alreadyRebloggedEnabled;
   let alreadyRebloggedLimit;
 
@@ -186,7 +188,14 @@
     const { fetchUserBlogs } = await fakeImport('/util/user_blogs.js');
     const { getPreferences } = await fakeImport('/util/preferences.js');
 
-    ({ showCommentInput, quickTagsIntegration, alreadyRebloggedEnabled, alreadyRebloggedLimit } = await getPreferences('quick_reblog'));
+    ({
+      showBlogSelector,
+      showCommentInput,
+      quickTagsIntegration,
+      showTagsInput,
+      alreadyRebloggedEnabled,
+      alreadyRebloggedLimit
+    } = await getPreferences('quick_reblog'));
 
     const userBlogs = await fetchUserBlogs();
     for (const { name, uuid } of userBlogs) {
@@ -196,7 +205,10 @@
       blogSelector.appendChild(option);
     }
 
+    blogSelector.hidden = !showBlogSelector;
     commentInput.hidden = !showCommentInput;
+    quickTagsList.hidden = !quickTagsIntegration || !showTagsInput;
+    tagsInput.hidden = !showTagsInput;
 
     const reblogButton = document.createElement('button');
     reblogButton.textContent = 'Reblog';

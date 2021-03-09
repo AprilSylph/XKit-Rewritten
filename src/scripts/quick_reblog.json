@@ -6,6 +6,11 @@
     "background_color": "#acd53a"
   },
   "preferences": {
+    "showBlogSelector": {
+      "type": "checkbox",
+      "label": "Show the blog selector",
+      "default": true
+    },
     "showCommentInput": {
       "type": "checkbox",
       "label": "Show the comment field",
@@ -14,6 +19,11 @@
     "quickTagsIntegration": {
       "type": "checkbox",
       "label": "Enable integration with Quick Tags",
+      "default": true
+    },
+    "showTagsInput": {
+      "type": "checkbox",
+      "label": "Show the tags field",
       "default": true
     },
     "alreadyRebloggedEnabled": {

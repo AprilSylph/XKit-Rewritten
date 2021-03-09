@@ -1,12 +1,13 @@
 (function () {
   const popupElement = Object.assign(document.createElement('div'), { id: 'quick-reblog' });
+  const blogSelector = document.createElement('select');
   const quickTagsList = Object.assign(document.createElement('div'), { className: 'quick-tags' });
   const tagsInput = Object.assign(document.createElement('input'), {
-    id: 'tags',
     placeholder: 'Tags (comma separated)',
     autocomplete: 'off',
     onkeydown: event => event.stopPropagation()
   });
+  const actionButtons = Object.assign(document.createElement('fieldset'), { className: 'action-buttons' });
   let lastPostID;
   let timeoutID;
 
@@ -27,10 +28,7 @@
 
     const thisPostID = $(target).parents('[data-id]')[0].dataset.id;
     if (thisPostID !== lastPostID) {
-      const blogSelector = popupElement.querySelector('#blog');
       blogSelector.value = blogSelector.options[0].value;
-
-      const tagsInput = popupElement.querySelector('#tags');
       tagsInput.value = '';
     }
     lastPostID = thisPostID;
@@ -59,8 +57,6 @@
     const currentReblogButton = popupElement.parentNode;
 
     currentTarget.blur();
-
-    const actionButtons = currentTarget.parentNode;
     actionButtons.disabled = true;
 
     const postID = lastPostID;
@@ -71,8 +67,8 @@
 
     const { state } = currentTarget.dataset;
 
-    const blog = popupElement.querySelector('#blog').value;
-    const tags = popupElement.querySelector('#tags').value;
+    const blog = blogSelector.value;
+    const tags = tagsInput.value;
     const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } = await timelineObjectMemoized(postID);
 
     const requestPath = `/v2/blog/${blog}/posts`;
@@ -185,8 +181,6 @@
 
     ({ quickTagsIntegration, alreadyRebloggedEnabled, alreadyRebloggedLimit } = await getPreferences('quick_reblog'));
 
-    const blogSelector = document.createElement('select');
-    blogSelector.id = 'blog';
     const userBlogs = await fetchUserBlogs();
     for (const { name, uuid } of userBlogs) {
       const option = document.createElement('option');
@@ -194,9 +188,6 @@
       option.textContent = name;
       blogSelector.appendChild(option);
     }
-
-    const actionButtons = document.createElement('fieldset');
-    actionButtons.classList.add('action-buttons');
 
     const reblogButton = document.createElement('button');
     reblogButton.textContent = 'Reblog';
@@ -243,6 +234,7 @@
 
     browser.storage.onChanged.removeListener(updateQuickTags);
     quickTagsList.textContent = '';
+    actionButtons.textContent = '';
 
     onNewPosts.removeListener(processPosts);
     $(`.${excludeClass}`).removeClass(excludeClass);

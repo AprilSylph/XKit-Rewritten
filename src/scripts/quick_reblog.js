@@ -97,8 +97,14 @@
       const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
       if (meta.status === 201) {
         makeButtonReblogged({ buttonDiv: popupElement.parentNode, state });
-        messageDialog.textContent = response.displayText;
-        setTimeout(() => popupElement.parentNode.removeChild(popupElement), 2000);
+        popupElement.parentNode.removeChild(popupElement);
+
+        browser.runtime.sendMessage({
+          command: 'notifications:create',
+          arguments: {
+            options: { type: 'basic', title: 'XKit', message: response.displayText }
+          }
+        });
 
         if (alreadyRebloggedEnabled) {
           const { [storageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(storageKey);
@@ -111,8 +117,15 @@
           }
         }
       }
-    } catch (exception) {
-      console.error(exception);
+    } catch ({ body }) {
+      browser.runtime.sendMessage({
+        command: 'notifications:create',
+        arguments: {
+          options: { type: 'basic', title: 'XKit', message: body.errors[0].detail }
+        }
+      });
+    } finally {
+      messageDialog.textContent = '';
     }
   };
 

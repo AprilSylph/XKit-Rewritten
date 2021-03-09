@@ -15,7 +15,12 @@
       const storageKey = `${scriptName}.preferences.${key}`;
       const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
 
-      preferenceValues[key] = savedPreference === undefined ? preference.default : savedPreference;
+      if (savedPreference === undefined) {
+        browser.storage.local.set({ [storageKey]: preference.default });
+        preferenceValues[key] = preference.default;
+      } else {
+        preferenceValues[key] = savedPreference;
+      }
     }
 
     return preferenceValues;

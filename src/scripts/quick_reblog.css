@@ -1,9 +1,6 @@
 #quick-reblog {
   position: absolute;
   z-index: 2;
-  top: 100%;
-  right: 50%;
-  transform: translate(50%, 12px);
   box-shadow: 0 0 15px 0 rgba(0,0,0,.5);
   padding: 2px;
   border-radius: 3px;
@@ -17,15 +14,30 @@
   width: 250px;
 }
 
+#quick-reblog.above {
+  bottom: 100%;
+  right: 50%;
+  transform: translate(50%, -12px);
+}
+
+#quick-reblog.below {
+  top: 100%;
+  right: 50%;
+  transform: translate(50%, 12px);
+}
+
 #glass-container #quick-reblog {
   top: 50%;
+  bottom: unset;
   right: 100%;
   transform: translate(-20px, -50%);
 }
 
 @media only screen and (max-width: 716px) {
-  #quick-reblog {
+  #quick-reblog.above,
+  #quick-reblog.below {
     top: 50%;
+    bottom: unset;
     right: 100%;
     transform: translate(-20px, -50%);
   }

@@ -24,6 +24,7 @@
   let lastPostID;
   let timeoutID;
 
+  let popupPosition;
   let showBlogSelector;
   let showCommentInput;
   let quickTagsIntegration;
@@ -202,6 +203,7 @@
     const { getPreferences } = await fakeImport('/util/preferences.js');
 
     ({
+      popupPosition,
       showBlogSelector,
       showCommentInput,
       quickTagsIntegration,
@@ -209,6 +211,8 @@
       alreadyRebloggedEnabled,
       alreadyRebloggedLimit
     } = await getPreferences('quick_reblog'));
+
+    popupElement.className = popupPosition;
 
     const userBlogs = await fetchUserBlogs();
     for (const { name, uuid } of userBlogs) {

@@ -6,6 +6,15 @@
     "background_color": "#acd53a"
   },
   "preferences": {
+    "popupPosition": {
+      "type": "select",
+      "label": "Popup position",
+      "options": {
+        "above": "Above reblog button",
+        "below": "Below reblog button"
+      },
+      "default": "below"
+    },
     "showBlogSelector": {
       "type": "checkbox",
       "label": "Show the blog selector",

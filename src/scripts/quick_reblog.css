@@ -33,7 +33,7 @@
   transform: translate(-20px, -50%);
 }
 
-@media only screen and (max-width: 716px) {
+@media only screen and (max-width: 650px) {
   #quick-reblog.above,
   #quick-reblog.below {
     top: 50%;

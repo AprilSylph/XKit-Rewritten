@@ -11,8 +11,7 @@
   const runScript = async function (name) {
     const { main, clean, stylesheet, autoRestart } = await fakeImport(`/scripts/${name}.js`);
 
-    main()
-      .catch(console.error);
+    main().catch(console.error);
 
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
@@ -24,11 +23,9 @@
 
     if (autoRestart) {
       restartListeners[name] = function (changes, areaName) {
-        if (areaName !== 'local') {
-          return;
-        }
+        if (areaName !== 'local') { return; }
 
-        if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`))) {
+        if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
           clean().then(main);
         }
       };
@@ -40,8 +37,7 @@
   const destroyScript = async function (name) {
     const { clean, stylesheet, autoRestart } = await fakeImport(`/scripts/${name}.js`);
 
-    clean()
-      .catch(console.error);
+    clean().catch(console.error);
 
     if (stylesheet) {
       const link = document.querySelector(`link[href="${getURL(`/scripts/${name}.css`)}"]`);

@@ -13,6 +13,14 @@
     onkeydown: event => event.stopPropagation()
   });
   const actionButtons = Object.assign(document.createElement('fieldset'), { className: 'action-buttons' });
+  const reblogButton = Object.assign(document.createElement('button'), { textContent: 'Reblog' });
+  reblogButton.dataset.state = 'published';
+  const queueButton = Object.assign(document.createElement('button'), { textContent: 'Queue' });
+  queueButton.dataset.state = 'queue';
+  const draftButton = Object.assign(document.createElement('button'), { textContent: 'Draft' });
+  draftButton.dataset.state = 'draft';
+  [blogSelector, commentInput, quickTagsList, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
+
   let lastPostID;
   let timeoutID;
 
@@ -129,6 +137,11 @@
     }
   };
 
+  [reblogButton, queueButton, draftButton].forEach(button => {
+    button.addEventListener('click', reblogPost);
+    actionButtons.appendChild(button);
+  });
+
   const processPosts = async function () {
     const { getPostElements } = await fakeImport('/util/interface.js');
     const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
@@ -210,25 +223,6 @@
     quickTagsList.hidden = !quickTagsIntegration || !showTagsInput;
     tagsInput.hidden = !showTagsInput;
 
-    const reblogButton = document.createElement('button');
-    reblogButton.textContent = 'Reblog';
-    reblogButton.dataset.state = 'published';
-
-    const queueButton = document.createElement('button');
-    queueButton.textContent = 'Queue';
-    queueButton.dataset.state = 'queue';
-
-    const draftButton = document.createElement('button');
-    draftButton.textContent = 'Draft';
-    draftButton.dataset.state = 'draft';
-
-    [reblogButton, queueButton, draftButton].forEach(button => {
-      button.addEventListener('click', reblogPost);
-      actionButtons.appendChild(button);
-    });
-
-    [blogSelector, commentInput, quickTagsList, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
-
     $(document.body).on('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
 
     if (quickTagsIntegration) {
@@ -248,14 +242,12 @@
 
     $(document.body).off('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
 
-    popupElement.textContent = '';
     if (popupElement.parentNode) {
       popupElement.parentNode.removeChild(popupElement);
     }
 
     browser.storage.onChanged.removeListener(updateQuickTags);
     quickTagsList.textContent = '';
-    actionButtons.textContent = '';
 
     onNewPosts.removeListener(processPosts);
     $(`.${excludeClass}`).removeClass(excludeClass);

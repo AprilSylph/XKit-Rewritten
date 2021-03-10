@@ -9,6 +9,7 @@
     const scriptManifest = await scriptManifestFile.json();
 
     const { preferences = {} } = scriptManifest;
+    const unsetPreferences = {};
     const preferenceValues = {};
 
     for (const [key, preference] of Object.entries(preferences)) {
@@ -16,11 +17,15 @@
       const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
 
       if (savedPreference === undefined) {
-        browser.storage.local.set({ [storageKey]: preference.default });
+        Object.assign(unsetPreferences, { [storageKey]: preference.default });
         preferenceValues[key] = preference.default;
       } else {
         preferenceValues[key] = savedPreference;
       }
+    }
+
+    if (Object.keys(unsetPreferences).length !== 0) {
+      browser.storage.local.set(unsetPreferences);
     }
 
     return preferenceValues;

@@ -68,18 +68,18 @@
     const [dropdownItemClass] = await keyToClasses('dropdownItem');
 
     onPostsMutated.addListener(() => {
-      const meatballMenu = document.querySelector(`[data-id] header ${meatballMenuSelector}`);
+      document.querySelectorAll(`[data-id] header ${meatballMenuSelector}`).forEach(async meatballMenu => {
+        if (!meatballMenu || meatballMenu.classList.contains('xkit-done')) { return; }
+        meatballMenu.classList.add('xkit-done');
 
-      if (!meatballMenu || meatballMenu.classList.contains('xkit-done')) { return; }
-      meatballMenu.classList.add('xkit-done');
+        Object.keys(meatballItems).sort().forEach(label => {
+          const meatballItemButton = document.createElement('button');
+          meatballItemButton.classList.add(meatballItemClass, dropdownItemClass);
+          meatballItemButton.textContent = label;
+          meatballItemButton.addEventListener('click', meatballItems[label]);
 
-      Object.keys(meatballItems).sort().forEach(label => {
-        const meatballItemButton = document.createElement('button');
-        meatballItemButton.classList.add(meatballItemClass, dropdownItemClass);
-        meatballItemButton.textContent = label;
-        meatballItemButton.addEventListener('click', meatballItems[label]);
-
-        meatballMenu.appendChild(meatballItemButton);
+          meatballMenu.appendChild(meatballItemButton);
+        });
       });
     });
   })();

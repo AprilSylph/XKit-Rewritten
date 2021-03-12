@@ -250,8 +250,9 @@
       popupElement.parentNode.removeChild(popupElement);
     }
 
+    blogSelector.textContent = '';
+
     browser.storage.onChanged.removeListener(updateQuickTags);
-    quickTagsList.textContent = '';
 
     onNewPosts.removeListener(processPosts);
     $(`.${excludeClass}`).removeClass(excludeClass);

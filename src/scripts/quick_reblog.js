@@ -148,30 +148,17 @@
     const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
 
     const { [storageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(storageKey);
-    let storageModified = false;
-
     for (const postElement of getPostElements({ excludeClass })) {
       const { id } = postElement.dataset;
-      const { rebloggedRootId, canEdit } = await timelineObjectMemoized(id);
+      const { rebloggedRootId } = await timelineObjectMemoized(id);
 
       const rootID = rebloggedRootId || id;
-      const ownReblog = rebloggedRootId !== undefined && canEdit === true;
-
-      if (ownReblog && alreadyRebloggedList.includes(rootID) === false) {
-        alreadyRebloggedList.push(rootID);
-        storageModified = true;
-      }
 
       if (alreadyRebloggedList.includes(rootID)) {
         const reblogLink = postElement.querySelector('footer a[href*="/reblog/"]');
         const buttonDiv = reblogLink.parentNode;
         makeButtonReblogged({ buttonDiv, state: 'published' });
       }
-    }
-
-    if (storageModified) {
-      alreadyRebloggedList.splice(0, alreadyRebloggedList.length - alreadyRebloggedLimit);
-      browser.storage.local.set({ [storageKey]: alreadyRebloggedList });
     }
   };
 

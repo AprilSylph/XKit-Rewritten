@@ -12,10 +12,24 @@ The enhancement suite for Tumblr's new web interface.
 - [Get this extension for Firefox](https://addons.mozilla.org/addon/xkit-rewritten/)
 
 ## Usage
-Once you've installed the addon, click the addon icon to open its configuration. The addon can be configured from any page, but will only affect [www.tumblr.com](https://www.tumblr.com/).
+Click the addon icon in your browser toolbar to open the control panel.
+
+### *Configuration* tab
+The main section, which allows you to enable, disable, and configure the addon's individual features.
+
+#### To search for a feature
+Simply type into the search box to filter to features which have information or preferences containing that substring.
+#### To enable or disable a feature
+Click the toggle button to the right of the feature's information.  
+#### To configure a feature
+Open its preferences by clicking on the feature's information, or the white space containing it.
+
+### *Backup* tab
+The backup section allows you to save your configuration data either to your browser sync account, or to file.
 
 ## Credits
 - [Contributors to this repository](https://github.com/AprilSylph/XKit-Rewritten/graphs/contributors)
+- [Contributors to XKit 7, the predecessor to this project](https://github.com/new-xkit/XKit/graphs/contributors)
 - [Dependency graph](https://github.com/AprilSylph/XKit-Rewritten/network/dependencies)
 
 #### Special thanks

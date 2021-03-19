@@ -13,6 +13,7 @@
 body {
   color: var(--black);
   background-color: var(--white);
+  font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   -webkit-user-select: none;
   user-select: none;

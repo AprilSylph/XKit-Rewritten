@@ -16,6 +16,11 @@
       "type": "checkbox",
       "label": "Show reblogs with contributed content",
       "default": true
+    },
+    "whitelistedUsernames": {
+      "type": "textarea",
+      "label": "Blogs to show reblogs from (comma-separated)",
+      "default": ""
     }
   }
 }

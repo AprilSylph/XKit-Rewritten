@@ -4,13 +4,16 @@
 
   let showOwnReblogs;
   let showReblogsWithContributedContent;
+  let whitelistedUsernames;
 
   const processPosts = async function () {
     const { getPostElements } = await fakeImport('/util/interface.js');
     const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
 
+    const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
+
     getPostElements({ excludeClass, includeFiltered: true }).forEach(async postElement => {
-      const { rebloggedRootId, canEdit, content } = await timelineObjectMemoized(postElement.dataset.id);
+      const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);
 
       if (!rebloggedRootId) {
         return;
@@ -24,6 +27,10 @@
         return;
       }
 
+      if (whitelist.includes(blogName)) {
+        return;
+      }
+
       postElement.classList.add(hiddenClass);
     });
   };
@@ -32,7 +39,7 @@
     const { getPreferences } = await fakeImport('/util/preferences.js');
     const { onNewPosts } = await fakeImport('/util/mutations.js');
 
-    ({ showOwnReblogs, showReblogsWithContributedContent } = await getPreferences('show_originals'));
+    ({ showOwnReblogs, showReblogsWithContributedContent, whitelistedUsernames } = await getPreferences('show_originals'));
 
     onNewPosts.addListener(processPosts);
     processPosts();

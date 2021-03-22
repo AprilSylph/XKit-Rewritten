@@ -15,8 +15,8 @@
       const gifLabel = document.createElement('p');
       gifLabel.className = 'xkit-gif-label';
 
-      gifElement.parentNode.appendChild(canvas);
-      gifElement.parentNode.appendChild(gifLabel);
+      gifElement.parentNode.prepend(canvas);
+      gifElement.parentNode.prepend(gifLabel);
     };
   };
 

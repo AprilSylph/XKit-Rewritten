@@ -2,6 +2,7 @@
   position: absolute;
   top: 1ch;
   right: 1ch;
+  z-index: 2;
   height: 1em;
   line-height: 1em;
   background-color: rgb(var(--black));
@@ -15,8 +16,9 @@
   content: "GIF";
 }
 
-body.accesskit-disable-gifs figure:not(:hover) img[srcset*=".gif"] {
-  display: none;
+.xkit-paused-gif {
+  position: absolute;
+  z-index: 1;
 }
 
 figure:hover .xkit-paused-gif,

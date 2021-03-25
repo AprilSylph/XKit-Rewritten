@@ -122,7 +122,7 @@
           if (alreadyRebloggedList.includes(rootID) === false) {
             alreadyRebloggedList.push(rootID);
             alreadyRebloggedList.splice(0, alreadyRebloggedList.length - alreadyRebloggedLimit);
-            browser.storage.local.set({ [storageKey]: alreadyRebloggedList });
+            await browser.storage.local.set({ [storageKey]: alreadyRebloggedList });
           }
         }
       }

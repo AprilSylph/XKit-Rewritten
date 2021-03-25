@@ -1,4 +1,11 @@
+### NOTE: This page will soon be obsolete!
+
+Dynamic imports in content scripts should be supported in Firefox starting in v89, the beta for which is slated for release on April 19, 2021. Attempts will be made then to convert this project to use ES6 modules, and discard the custom module syntax entirely.
+
+---
+
 # Modules system
+
 XKit Rewritten uses a custom modules system, with syntax similar to ES6 modules, and specifically **dynamic imports**, which the project was originally designed to use. However, dynamic imports do not work in content scripts across every major browser yet.
 
 #### `fakeImport()`

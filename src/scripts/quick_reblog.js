@@ -104,7 +104,7 @@
       const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
       if (meta.status === 201) {
         makeButtonReblogged({ buttonDiv: currentReblogButton, state });
-        if (lastPostID === null) {
+        if (lastPostID === null && popupElement.parentNode) {
           popupElement.parentNode.removeChild(popupElement);
         }
 

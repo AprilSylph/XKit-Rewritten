@@ -54,6 +54,7 @@
         hide_trail: hideTrail = false,
         placement_id: placementId = '',
         slug = '',
+        state = 'published',
         tags = []
       }
     } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
@@ -72,6 +73,7 @@
           hide_trail: hideTrail,
           placement_id: placementId,
           slug,
+          state,
           tags: tags.join(',')
         }
       });

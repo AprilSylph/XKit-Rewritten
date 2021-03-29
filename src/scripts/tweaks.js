@@ -16,7 +16,7 @@
       return;
     }
 
-    if (Object.keys(changes).some(key => key.startsWith('tweaks'))) {
+    if (Object.keys(changes).some(key => key.startsWith('tweaks') && changes[key].oldValue !== undefined)) {
       const { getPreferences } = await fakeImport('/util/preferences.js');
       const preferences = await getPreferences('tweaks');
 

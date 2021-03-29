@@ -33,7 +33,7 @@
       'vanilla_video.preferences.defaultVolume': defaultVolumeChanges
     } = changes;
 
-    if (defaultVolumeChanges) {
+    if (defaultVolumeChanges && defaultVolumeChanges.oldValue !== undefined) {
       ({ newValue: defaultVolume } = defaultVolumeChanges);
     }
   };

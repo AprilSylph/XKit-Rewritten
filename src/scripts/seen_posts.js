@@ -33,7 +33,7 @@
 
     const { 'seen_posts.preferences.onlyDimAvatars': onlyDimAvatarsChanges } = changes;
 
-    if (onlyDimAvatarsChanges) {
+    if (onlyDimAvatarsChanges && onlyDimAvatarsChanges.oldValue !== undefined) {
       const { newValue: onlyDimAvatars } = onlyDimAvatarsChanges;
       const addOrRemove = onlyDimAvatars ? 'add' : 'remove';
       document.body.classList[addOrRemove](onlyDimAvatarsClass);

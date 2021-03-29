@@ -201,7 +201,7 @@
 
     const { onNewPosts } = await fakeImport('/util/mutations.js');
 
-    if (alwaysShowYearChanges) {
+    if (alwaysShowYearChanges && alwaysShowYearChanges.oldValue !== undefined) {
       ({ newValue: alwaysShowYear } = alwaysShowYearChanges);
 
       removePostTimestamps();
@@ -213,21 +213,21 @@
       }
     }
 
-    if (headerTimestampsChanges) {
+    if (headerTimestampsChanges && headerTimestampsChanges.oldValue !== undefined) {
       ({ newValue: headerTimestamps } = headerTimestampsChanges);
 
       removePostTimestamps();
       addPostTimestamps();
     }
 
-    if (isoFormatChanges) {
+    if (isoFormatChanges && isoFormatChanges.oldValue !== undefined) {
       ({ newValue: isoFormat } = isoFormatChanges);
 
       removePostTimestamps();
       addPostTimestamps();
     }
 
-    if (reblogTimestampsChanges) {
+    if (reblogTimestampsChanges && reblogTimestampsChanges.oldValue !== undefined) {
       ({ newValue: reblogTimestamps } = reblogTimestampsChanges);
 
       onNewPosts.removeListener(addReblogTimestamps);

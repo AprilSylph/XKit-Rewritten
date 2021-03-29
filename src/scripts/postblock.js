@@ -26,7 +26,7 @@
 
   const onButtonClicked = async function ({ target }) {
     const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
-    const postElement = $(target).parents('[data-id]')[0];
+    const postElement = target.closest('[data-id]');
     const postID = postElement.dataset.id;
 
     const { rebloggedRootId } = await timelineObjectMemoized(postID);

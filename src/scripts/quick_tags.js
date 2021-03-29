@@ -41,7 +41,7 @@
     const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
     const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
 
-    const postElement = $(target).parents('[data-id]')[0];
+    const postElement = target.closest('[data-id]');
     popupElement.parentNode.removeChild(popupElement);
 
     const postId = postElement.dataset.id;

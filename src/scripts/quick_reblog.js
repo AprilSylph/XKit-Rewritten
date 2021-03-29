@@ -40,10 +40,10 @@
   const showPopupOnHover = ({ target }) => {
     clearTimeout(timeoutID);
 
-    $(target).parents('div')[0].appendChild(popupElement);
+    target.closest('div').appendChild(popupElement);
     popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
-    const thisPostID = $(target).parents('[data-id]')[0].dataset.id;
+    const thisPostID = target.closest('[data-id]').dataset.id;
     if (thisPostID !== lastPostID) {
       blogSelector.value = blogSelector.options[0].value;
       commentInput.value = '';

@@ -32,7 +32,7 @@ The backup section allows you to save your configuration data either to your bro
 - [Contributors to XKit 7, the predecessor to this project](https://github.com/new-xkit/XKit/graphs/contributors)
 - [Dependency graph](https://github.com/AprilSylph/XKit-Rewritten/network/dependencies)
 
-#### Special thanks
+### Special thanks
 - [@nightpool](https://github.com/nightpool)
 - [@hobinjk](https://github.com/hobinjk)
 - [@atesh](https://github.com/atesh)

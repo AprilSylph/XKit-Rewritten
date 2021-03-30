@@ -8,11 +8,14 @@
 
   const processPosts = async function () {
     const { getPostElements } = await fakeImport('/util/interface.js');
-    const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
+    const { timelineObjectMemoized, givenPath } = await fakeImport('/util/react_props.js');
 
     const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
 
     getPostElements({ excludeClass, includeFiltered: true }).forEach(async postElement => {
+      const timeline = await givenPath(postElement);
+      if (timeline !== '/v2/timeline/dashboard') { return; }
+
       const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);
 
       if (!rebloggedRootId) {

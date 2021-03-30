@@ -35,5 +35,38 @@
     return cache[postID];
   };
 
-  return { timelineObject, timelineObjectMemoized };
+  /**
+   * @param {object} postElement - A post's HTMLDivElement
+   * @returns {string} That post's buried endpointApiRequest.givenPath property
+   */
+  const givenPath = async function (postElement) {
+    if (postElement.parentNode.dataset.timeline !== undefined) {
+      return postElement.parentNode.dataset.timeline;
+    }
+
+    const { inject } = await fakeImport('/util/inject.js');
+    const xkitTempId = `${new Date().getTime()}${Math.random()}`;
+    Object.assign(postElement.dataset, { xkitTempId });
+
+    return inject(async tempId => {
+      const localPostElement = document.querySelector(`[data-xkit-temp-id="${tempId}"]`);
+      delete localPostElement.dataset.xkitTempId;
+
+      const reactKey = Object.keys(localPostElement).find(key => key.startsWith('__reactInternalInstance'));
+      let fiber = localPostElement[reactKey];
+      let tries = 0;
+
+      while (fiber.memoizedProps.endpointApiRequest === undefined && tries <= 20) {
+        fiber = fiber.return;
+        tries++;
+      }
+
+      const { givenPath } = fiber.memoizedProps.endpointApiRequest;
+
+      localPostElement.parentNode.dataset.timeline = givenPath;
+      return givenPath;
+    }, [xkitTempId]);
+  };
+
+  return { timelineObject, timelineObjectMemoized, givenPath };
 })();

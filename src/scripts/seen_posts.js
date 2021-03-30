@@ -8,8 +8,12 @@
     const { [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey);
 
     const { getPostElements } = await fakeImport('/util/interface.js');
+    const { givenPath } = await fakeImport('/util/react_props.js');
 
-    getPostElements({ excludeClass, noPeepr: true, includeFiltered: true }).forEach(postElement => {
+    for (const postElement of getPostElements({ excludeClass, noPeepr: true, includeFiltered: true })) {
+      const timeline = await givenPath(postElement);
+      if (timeline !== '/v2/timeline/dashboard') { continue; }
+
       const { id } = postElement.dataset;
 
       if (seenPosts.includes(id)) {
@@ -17,11 +21,9 @@
       } else {
         seenPosts.push(id);
       }
-    });
-
-    if (seenPosts.length >= 10000) {
-      seenPosts.splice(0, 1000);
     }
+
+    seenPosts.splice(0, seenPosts.length - 10000);
 
     browser.storage.local.set({ [storageKey]: seenPosts });
   };

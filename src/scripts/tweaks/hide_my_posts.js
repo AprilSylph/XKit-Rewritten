@@ -1,15 +1,18 @@
 (function () {
   const excludeClass = 'xkit-tweaks-hide-my-posts-done';
   const hiddenClass = 'xkit-tweaks-hide-my-posts-hidden';
-  const css = `[data-pathname="/dashboard"] .${hiddenClass} article { display: none; }`;
+  const css = `.${hiddenClass} article { display: none; }`;
 
   let defaultBlog;
 
   const processPosts = async function () {
     const { getPostElements } = await fakeImport('/util/interface.js');
-    const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
+    const { givenPath, timelineObjectMemoized } = await fakeImport('/util/react_props.js');
 
     getPostElements({ excludeClass }).forEach(async postElement => {
+      const timeline = await givenPath(postElement);
+      if (timeline !== '/v2/timeline/dashboard') { return; }
+
       const { canEdit, isSubmission, postAuthor } = await timelineObjectMemoized(postElement.dataset.id);
 
       if (canEdit && (isSubmission || postAuthor === defaultBlog || postAuthor === undefined)) {

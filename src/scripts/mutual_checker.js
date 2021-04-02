@@ -39,9 +39,8 @@
   };
 
   const check = async function (postAttribution, blogName) {
-    if (typeof mutuals[blogName] === 'undefined') {
-      mutuals[blogName] = isFollowedBy(myBlog, blogName)
-        .catch(() => Promise.resolve(false));
+    if (mutuals[blogName] === undefined) {
+      mutuals[blogName] = isFollowedBy(myBlog, blogName).catch(() => Promise.resolve(false));
     }
 
     mutuals[blogName].then(isMutual => {
@@ -62,9 +61,7 @@
   };
 
   const addIcon = function (postAttribution) {
-    const $postAttribution = $(postAttribution);
-    $postAttribution.closest('[data-id]').addClass('from-mutual');
-
+    postAttribution.closest('[data-id]').classList.add('from-mutual');
     postAttribution.prepend(icon.cloneNode(true));
   };
 

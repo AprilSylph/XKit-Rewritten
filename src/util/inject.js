@@ -21,7 +21,7 @@
         const { result, exception } = event.data;
 
         if (exception === undefined) {
-          resolve(JSON.parse(result));
+          resolve(JSON.parse(result || 'null'));
         } else {
           reject(Object.assign(new Error(), JSON.parse(exception)));
         }

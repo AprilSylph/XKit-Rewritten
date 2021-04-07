@@ -31,7 +31,7 @@
     };
   };
 
-  const runOnNewPosts = debounce(() => onNewPosts.listeners.forEach(callback => callback()), 100);
+  const runOnNewPosts = debounce(() => onNewPosts.listeners.forEach(callback => callback()), 10);
   const runOnPostsMutated = debounce(() => onPostsMutated.listeners.forEach(callback => callback()), 100);
   const runOnBaseContainerMutated = debounce(() => onBaseContainerMutated.listeners.forEach(callback => callback()), 100);
 

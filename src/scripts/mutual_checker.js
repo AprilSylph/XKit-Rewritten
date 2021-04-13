@@ -65,6 +65,7 @@
     const { onNewPosts } = await fakeImport('/util/mutations.js');
 
     myBlog = (await fetchDefaultBlog()).name;
+    following[myBlog] = Promise.resolve(false);
 
     postAttributionSelector = await keyToCss('postAttribution');
 

@@ -10,12 +10,12 @@
     "disable_gifs": {
       "type": "checkbox",
       "label": "Pause GIFs until they are hovered over",
-      "default": true
+      "default": false
     },
     "boring_tag_chiclets": {
       "type": "checkbox",
       "label": "De-animate the \"You're caught up\" carousel",
-      "default": true
+      "default": false
     },
     "blue_links": {
       "type": "checkbox",
@@ -25,12 +25,12 @@
     "no_user_colours": {
       "type": "checkbox",
       "label": "Remove user-set colours from text in posts",
-      "default": true
+      "default": false
     },
     "no_user_fonts": {
       "type": "checkbox",
       "label": "Remove user-set fonts from text in posts",
-      "default": true
+      "default": false
     }
   }
 }

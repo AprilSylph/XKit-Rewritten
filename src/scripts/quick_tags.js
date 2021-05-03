@@ -83,7 +83,7 @@
       browser.runtime.sendMessage({
         command: 'notifications:create',
         arguments: {
-          options: { type: 'basic', title: 'XKit', message: displayText }
+          options: { type: 'basic', iconUrl: 'icons/128.png', title: 'XKit', message: displayText }
         }
       });
 
@@ -105,7 +105,7 @@
       browser.runtime.sendMessage({
         command: 'notifications:create',
         arguments: {
-          options: { type: 'basic', title: 'XKit', message: body.errors[0].detail }
+          options: { type: 'basic', iconUrl: 'icons/128.png', title: 'XKit', message: body.errors[0].detail }
         }
       });
     }

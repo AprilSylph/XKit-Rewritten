@@ -37,7 +37,7 @@
 
   const destroyScript = async function (name) {
     const scriptPath = getURL(`/scripts/${name}.js`);
-    const { main, clean, stylesheet, autoRestart } = await import(scriptPath);
+    const { clean, stylesheet, autoRestart } = await import(scriptPath);
 
     clean().catch(console.error);
 

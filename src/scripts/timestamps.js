@@ -100,8 +100,8 @@ const constructRelativeTimeString = function (unixTime) {
 };
 
 const addPostTimestamps = async function () {
-  const { getPostElements } = await fakeImport('/util/interface.js');
-  const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
+  const { getPostElements } = await import('../util/interface.js');
+  const { timelineObjectMemoized } = await import('../util/react_props.js');
 
   getPostElements({ excludeClass: 'xkit-timestamps-done' }).forEach(async postElement => {
     const { id } = postElement.dataset;
@@ -139,9 +139,9 @@ const removePostTimestamps = function () {
 };
 
 const addReblogTimestamps = async function () {
-  const { getPostElements } = await fakeImport('/util/interface.js');
-  const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
-  const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
+  const { getPostElements } = await import('../util/interface.js');
+  const { timelineObjectMemoized } = await import('../util/react_props.js');
+  const { apiFetch } = await import('../util/tumblr_helpers.js');
 
   getPostElements({ excludeClass: 'xkit-reblog-timestamps-done' }).forEach(async postElement => {
     let { trail } = await timelineObjectMemoized(postElement.dataset.id);
@@ -198,7 +198,7 @@ const onStorageChanged = async function (changes, areaName) {
     'timestamps.preferences.reblogTimestamps': reblogTimestampsChanges
   } = changes;
 
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   if (alwaysShowYearChanges && alwaysShowYearChanges.oldValue !== undefined) {
     ({ newValue: alwaysShowYear } = alwaysShowYearChanges);
@@ -241,9 +241,9 @@ const onStorageChanged = async function (changes, areaName) {
 
 export const main = async function () {
   browser.storage.onChanged.addListener(onStorageChanged);
-  const { getPreferences } = await fakeImport('/util/preferences.js');
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
-  const { keyToCss } = await fakeImport('/util/css_map.js');
+  const { getPreferences } = await import('../util/preferences.js');
+  const { onNewPosts } = await import('../util/mutations.js');
+  const { keyToCss } = await import('../util/css_map.js');
 
   ({ alwaysShowYear, headerTimestamps, isoFormat, reblogTimestamps } = await getPreferences('timestamps'));
 
@@ -261,7 +261,7 @@ export const main = async function () {
 
 export const clean = async function () {
   browser.storage.onChanged.removeListener(onStorageChanged);
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { onNewPosts } = await import('../util/mutations.js');
   onNewPosts.removeListener(addPostTimestamps);
   onNewPosts.removeListener(addReblogTimestamps);
   removePostTimestamps();

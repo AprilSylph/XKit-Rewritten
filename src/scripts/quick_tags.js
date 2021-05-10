@@ -37,8 +37,8 @@ const processBundleClick = async function ({ target }) {
   if (target.tagName !== 'BUTTON') { return; }
   const bundleTags = target.dataset.tags.split(',');
 
-  const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
-  const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
+  const { timelineObjectMemoized } = await import('../util/react_props.js');
+  const { apiFetch } = await import('../util/tumblr_helpers.js');
 
   const postElement = target.closest('[data-id]');
   popupElement.parentNode.removeChild(popupElement);
@@ -111,8 +111,8 @@ const processBundleClick = async function ({ target }) {
 };
 
 const processPosts = async function () {
-  const { getPostElements } = await fakeImport('/util/interface.js');
-  const { cloneControlButton } = await fakeImport('/util/control_buttons.js');
+  const { getPostElements } = await import('../util/interface.js');
+  const { cloneControlButton } = await import('../util/control_buttons.js');
 
   getPostElements({ excludeClass }).forEach(async postElement => {
     const editButton = postElement.querySelector('footer a[href*="/edit/"]');
@@ -124,8 +124,8 @@ const processPosts = async function () {
 };
 
 export const main = async function () {
-  const { createControlButtonTemplate } = await fakeImport('/util/control_buttons.js');
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { createControlButtonTemplate } = await import('../util/control_buttons.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   controlButtonTemplate = await createControlButtonTemplate('ri-price-tag-3-line', buttonClass);
 
@@ -139,7 +139,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   onNewPosts.removeListener(processPosts);
 

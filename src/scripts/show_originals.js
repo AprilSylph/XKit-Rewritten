@@ -6,8 +6,8 @@ let showReblogsWithContributedContent;
 let whitelistedUsernames;
 
 const processPosts = async function () {
-  const { getPostElements } = await fakeImport('/util/interface.js');
-  const { timelineObjectMemoized, givenPath } = await fakeImport('/util/react_props.js');
+  const { getPostElements } = await import('../util/interface.js');
+  const { timelineObjectMemoized, givenPath } = await import('../util/react_props.js');
 
   const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
 
@@ -38,8 +38,8 @@ const processPosts = async function () {
 };
 
 export const main = async function () {
-  const { getPreferences } = await fakeImport('/util/preferences.js');
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { getPreferences } = await import('../util/preferences.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   ({ showOwnReblogs, showReblogsWithContributedContent, whitelistedUsernames } = await getPreferences('show_originals'));
 
@@ -48,7 +48,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { onNewPosts } = await import('../util/mutations.js');
   onNewPosts.removeListener(processPosts);
 
   $(`.${excludeClass}`).removeClass(excludeClass);

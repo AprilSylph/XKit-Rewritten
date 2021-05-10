@@ -6,7 +6,7 @@ let languageData;
  */
 export const translate = async function (rootString) {
   if (!languageData) {
-    const { getLanguageData } = await fakeImport('/util/tumblr_helpers.js');
+    const { getLanguageData } = await import('../util/tumblr_helpers.js');
     languageData = await getLanguageData();
   }
 

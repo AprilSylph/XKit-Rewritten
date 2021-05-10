@@ -37,7 +37,7 @@ const processGifs = function () {
 };
 
 export const main = async function () {
-  const { onPostsMutated } = await fakeImport('/util/mutations.js');
+  const { onPostsMutated } = await import('../../util/mutations.js');
 
   document.body.classList.add(className);
 
@@ -46,7 +46,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onPostsMutated } = await fakeImport('/util/mutations.js');
+  const { onPostsMutated } = await import('../../util/mutations.js');
   onPostsMutated.removeListener(processGifs);
 
   document.body.classList.remove(className);

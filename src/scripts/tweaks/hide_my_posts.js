@@ -5,8 +5,8 @@ const css = `.${hiddenClass} article { display: none; }`;
 let defaultBlog;
 
 const processPosts = async function () {
-  const { getPostElements } = await fakeImport('/util/interface.js');
-  const { givenPath, timelineObjectMemoized } = await fakeImport('/util/react_props.js');
+  const { getPostElements } = await import('../../util/interface.js');
+  const { givenPath, timelineObjectMemoized } = await import('../../util/react_props.js');
 
   getPostElements({ excludeClass }).forEach(async postElement => {
     const timeline = await givenPath(postElement);
@@ -21,9 +21,9 @@ const processPosts = async function () {
 };
 
 export const main = async function () {
-  const { fetchDefaultBlog } = await fakeImport('/util/user_blogs.js');
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
-  const { addStyle } = await fakeImport('/util/interface.js');
+  const { fetchDefaultBlog } = await import('../../util/user_blogs.js');
+  const { onNewPosts } = await import('../../util/mutations.js');
+  const { addStyle } = await import('../../util/interface.js');
 
   ({ name: defaultBlog } = await fetchDefaultBlog());
 
@@ -34,8 +34,8 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
-  const { removeStyle } = await fakeImport('/util/interface.js');
+  const { onNewPosts } = await import('../../util/mutations.js');
+  const { removeStyle } = await import('../../util/interface.js');
 
   onNewPosts.removeListener(processPosts);
   removeStyle(css);

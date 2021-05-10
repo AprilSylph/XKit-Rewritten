@@ -33,8 +33,8 @@ const cssTemplate = filteredScreen => `
 `;
 
 export const main = async function () {
-  const { keyToClasses } = await fakeImport('/util/css_map.js');
-  const { addStyle } = await fakeImport('/util/interface.js');
+  const { keyToClasses } = await import('../../util/css_map.js');
+  const { addStyle } = await import('../../util/interface.js');
 
   const [filteredScreen] = await keyToClasses('filteredScreen');
   css = cssTemplate(filteredScreen);
@@ -42,6 +42,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { removeStyle } = await fakeImport('/util/interface.js');
+  const { removeStyle } = await import('../../util/interface.js');
   removeStyle(css);
 };

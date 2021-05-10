@@ -17,7 +17,7 @@ export const timelineObjectMemoized = async function (postID) {
  * @returns {object} - The post's buried timelineObject property
  */
 export const timelineObject = async function (postID) {
-  const { inject } = await fakeImport('/util/inject.js');
+  const { inject } = await import('../util/inject.js');
   cache[postID] = inject(async id => {
     const postElement = document.querySelector(`[data-id="${id}"]`);
     const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactInternalInstance'));
@@ -43,7 +43,7 @@ export const givenPath = async function (postElement) {
     return postElement.parentNode.dataset.timeline;
   }
 
-  const { inject } = await fakeImport('/util/inject.js');
+  const { inject } = await import('../util/inject.js');
   const xkitTempId = `${new Date().getTime()}${Math.random()}`;
   Object.assign(postElement.dataset, { xkitTempId });
 

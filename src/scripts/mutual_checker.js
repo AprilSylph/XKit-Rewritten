@@ -13,9 +13,9 @@ let postAttributionSelector;
 let icon;
 
 const addIcons = async function () {
-  const { getPostElements } = await fakeImport('/util/interface.js');
-  const { timelineObject } = await fakeImport('/util/react_props.js');
-  const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
+  const { getPostElements } = await import('../util/interface.js');
+  const { timelineObject } = await import('../util/react_props.js');
+  const { apiFetch } = await import('../util/tumblr_helpers.js');
 
   [...document.querySelectorAll(`[data-id].${mutualsClass}`)]
     .filter(postElement => postElement.querySelector(`.${mutualIconClass}`) === null)
@@ -59,9 +59,9 @@ const addIcons = async function () {
 };
 
 export const main = async function () {
-  const { fetchDefaultBlog } = await fakeImport('/util/user_blogs.js');
-  const { keyToCss } = await fakeImport('/util/css_map.js');
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { fetchDefaultBlog } = await import('../util/user_blogs.js');
+  const { keyToCss } = await import('../util/css_map.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   myBlog = (await fetchDefaultBlog()).name;
   following[myBlog] = Promise.resolve(false);
@@ -85,7 +85,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { onNewPosts } = await import('../util/mutations.js');
   onNewPosts.removeListener(addIcons);
 
   $(`.${excludeClass}`)

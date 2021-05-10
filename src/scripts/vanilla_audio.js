@@ -39,9 +39,9 @@ const onStorageChanged = async function (changes, areaName) {
 
 export const main = async function () {
   browser.storage.onChanged.addListener(onStorageChanged);
-  const { keyToCss } = await fakeImport('/util/css_map.js');
-  const { getPreferences } = await fakeImport('/util/preferences.js');
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { keyToCss } = await import('../util/css_map.js');
+  const { getPreferences } = await import('../util/preferences.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   nativePlayerSelector = await keyToCss('nativePlayer');
   trackInfoSelector = await keyToCss('trackInfo');
@@ -54,7 +54,7 @@ export const main = async function () {
 
 export const clean = async function () {
   browser.storage.onChanged.removeListener(onStorageChanged);
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   onNewPosts.removeListener(addAudioControls);
   $(`.${excludeClass} + audio[controls]`).remove();

@@ -11,9 +11,9 @@ const processPosts = async function () {
     return;
   }
 
-  const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
-  const { getPostElements } = await fakeImport('/util/interface.js');
-  const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
+  const { apiFetch } = await import('../util/tumblr_helpers.js');
+  const { getPostElements } = await import('../util/interface.js');
+  const { timelineObjectMemoized } = await import('../util/react_props.js');
 
   const currentTag = decodeURIComponent(location.pathname.split('/')[2].replace(/\+/g, ' '));
   const { response: { following } } = await apiFetch('/v2/user/tags/following', { queryParams: { tag: currentTag } });
@@ -45,7 +45,7 @@ const processTagLinks = async function () {
   const tagLinkElements = searchResultElement.querySelectorAll('[data-followed-tags] ~ [href^="/tagged/"]');
   if (!tagLinkElements) { return; }
 
-  const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
+  const { apiFetch } = await import('../util/tumblr_helpers.js');
 
   tagLinkElements.forEach(async tagLinkElement => {
     const unreadCountElement = Object.assign(document.createElement('span'), {
@@ -78,9 +78,9 @@ const processTagLinks = async function () {
 };
 
 export const main = async function () {
-  const { keyToCss } = await fakeImport('/util/css_map.js');
-  const { onNewPosts, onBaseContainerMutated } = await fakeImport('/util/mutations.js');
-  const { translate } = await fakeImport('/util/language_data.js');
+  const { keyToCss } = await import('../util/css_map.js');
+  const { onNewPosts, onBaseContainerMutated } = await import('../util/mutations.js');
+  const { translate } = await import('../util/language_data.js');
 
   searchResultSelector = await keyToCss('searchResult');
   tagTextSelector = await keyToCss('tagText');
@@ -94,7 +94,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts, onBaseContainerMutated } = await fakeImport('/util/mutations.js');
+  const { onNewPosts, onBaseContainerMutated } = await import('../util/mutations.js');
 
   onNewPosts.removeListener(processPosts);
   onBaseContainerMutated.removeListener(processTagLinks);

@@ -6,8 +6,8 @@ const dimPosts = async function () {
   const storageKey = 'seen_posts.seenPosts';
   const { [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey);
 
-  const { getPostElements } = await fakeImport('/util/interface.js');
-  const { givenPath } = await fakeImport('/util/react_props.js');
+  const { getPostElements } = await import('../util/interface.js');
+  const { givenPath } = await import('../util/react_props.js');
 
   for (const postElement of getPostElements({ excludeClass, noPeepr: true, includeFiltered: true })) {
     const timeline = await givenPath(postElement);
@@ -43,8 +43,8 @@ const onStorageChanged = async function (changes, areaName) {
 
 export const main = async function () {
   browser.storage.onChanged.addListener(onStorageChanged);
-  const { getPreferences } = await fakeImport('/util/preferences.js');
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { getPreferences } = await import('../util/preferences.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   const { onlyDimAvatars } = await getPreferences('seen_posts');
   if (onlyDimAvatars) {
@@ -57,7 +57,7 @@ export const main = async function () {
 
 export const clean = async function () {
   browser.storage.onChanged.removeListener(onStorageChanged);
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   onNewPosts.removeListener(dimPosts);
   $(`.${excludeClass}`).removeClass(excludeClass);

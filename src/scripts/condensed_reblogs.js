@@ -11,7 +11,7 @@ const expandButton = Object.assign(document.createElement('button'), { className
 const onExpandButtonClick = ({ target }) => target.parentNode.removeChild(target);
 
 const processPosts = async function () {
-  const { getPostElements } = await fakeImport('/util/interface.js');
+  const { getPostElements } = await import('../util/interface.js');
 
   getPostElements({ excludeClass }).forEach(async postElement => {
     const reblogs = [...postElement.querySelectorAll(reblogSelector)];
@@ -38,10 +38,10 @@ const processPosts = async function () {
 };
 
 export const main = async function () {
-  const { getPreferences } = await fakeImport('/util/preferences.js');
-  const { keyToCss } = await fakeImport('/util/css_map.js');
-  const { translate } = await fakeImport('/util/language_data.js');
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { getPreferences } = await import('../util/preferences.js');
+  const { keyToCss } = await import('../util/css_map.js');
+  const { translate } = await import('../util/language_data.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   ({ trimAdditions, trimRebloggedCommentary } = await getPreferences('condensed_reblogs'));
 
@@ -54,7 +54,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { onNewPosts } = await import('../util/mutations.js');
   onNewPosts.removeListener(processPosts);
 
   $('.xkit-condensed-reblogs-expand').remove();

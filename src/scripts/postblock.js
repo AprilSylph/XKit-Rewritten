@@ -4,8 +4,8 @@ const hiddenClass = 'xkit-postblock-hidden';
 const storageKey = 'postblock.blockedPostRootIDs';
 
 const processPosts = async function () {
-  const { getPostElements } = await fakeImport('/util/interface.js');
-  const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
+  const { getPostElements } = await import('../util/interface.js');
+  const { timelineObjectMemoized } = await import('../util/react_props.js');
 
   const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
 
@@ -24,7 +24,7 @@ const processPosts = async function () {
 };
 
 const onButtonClicked = async function ({ target }) {
-  const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
+  const { timelineObjectMemoized } = await import('../util/react_props.js');
   const postElement = target.closest('[data-id]');
   const postID = postElement.dataset.id;
 
@@ -49,8 +49,8 @@ const onStorageChanged = async function (changes, areaName) {
 
 export const main = async function () {
   browser.storage.onChanged.addListener(onStorageChanged);
-  const { registerMeatballItem } = await fakeImport('/util/interface.js');
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { registerMeatballItem } = await import('../util/interface.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   registerMeatballItem(meatballButtonLabel, onButtonClicked);
 
@@ -60,8 +60,8 @@ export const main = async function () {
 
 export const clean = async function () {
   browser.storage.onChanged.removeListener(onStorageChanged);
-  const { unregisterMeatballItem } = await fakeImport('/util/interface.js');
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { unregisterMeatballItem } = await import('../util/interface.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   unregisterMeatballItem(meatballButtonLabel);
   onNewPosts.removeListener(processPosts);

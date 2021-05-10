@@ -39,8 +39,8 @@ const onStorageChanged = async function (changes, areaName) {
 
 export const main = async function () {
   browser.storage.onChanged.addListener(onStorageChanged);
-  const { getPreferences } = await fakeImport('/util/preferences.js');
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { getPreferences } = await import('../util/preferences.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   ({ defaultVolume } = await getPreferences('vanilla_video'));
 
@@ -50,7 +50,7 @@ export const main = async function () {
 
 export const clean = async function () {
   browser.storage.onChanged.removeListener(onStorageChanged);
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   onNewPosts.removeListener(cloneVideoElements);
   $(`.${videoClass}`).remove();

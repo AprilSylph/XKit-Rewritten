@@ -12,9 +12,9 @@ const checkForRadar = function () {
 };
 
 export const main = async function () {
-  const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
-  const { translate } = await fakeImport('/util/language_data.js');
-  const { addStyle } = await fakeImport('/util/interface.js');
+  const { onBaseContainerMutated } = await import('../../util/mutations.js');
+  const { translate } = await import('../../util/language_data.js');
+  const { addStyle } = await import('../../util/interface.js');
 
   radarLabel = await translate('Radar');
   onBaseContainerMutated.addListener(checkForRadar);
@@ -23,8 +23,8 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
-  const { removeStyle } = await fakeImport('/util/interface.js');
+  const { onBaseContainerMutated } = await import('../../util/mutations.js');
+  const { removeStyle } = await import('../../util/interface.js');
 
   onBaseContainerMutated.removeListener(checkForRadar);
   removeStyle(css);

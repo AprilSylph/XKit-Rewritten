@@ -40,8 +40,8 @@ const replaceSearchForm = function () {
 };
 
 export const main = async function () {
-  const { getPreferences } = await fakeImport('/util/preferences.js');
-  const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
+  const { getPreferences } = await import('../util/preferences.js');
+  const { onBaseContainerMutated } = await import('../util/mutations.js');
 
   ({ newTab } = await getPreferences('classic_search'));
 
@@ -50,7 +50,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
+  const { onBaseContainerMutated } = await import('../util/mutations.js');
   onBaseContainerMutated.removeListener(replaceSearchForm);
 
   searchInputParent.appendChild(searchInputElement);

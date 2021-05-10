@@ -79,8 +79,8 @@ const reblogPost = async function ({ currentTarget }) {
   const postID = lastPostID;
   lastPostID = null;
 
-  const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
-  const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
+  const { timelineObjectMemoized } = await import('../util/react_props.js');
+  const { apiFetch } = await import('../util/tumblr_helpers.js');
 
   const { state } = currentTarget.dataset;
 
@@ -143,8 +143,8 @@ const reblogPost = async function ({ currentTarget }) {
 });
 
 const processPosts = async function () {
-  const { getPostElements } = await fakeImport('/util/interface.js');
-  const { timelineObjectMemoized } = await fakeImport('/util/react_props.js');
+  const { getPostElements } = await import('../util/interface.js');
+  const { timelineObjectMemoized } = await import('../util/react_props.js');
 
   const { [storageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(storageKey);
   for (const postElement of getPostElements({ excludeClass })) {
@@ -185,8 +185,8 @@ const updateQuickTags = (changes, areaName) => {
 };
 
 export const main = async function () {
-  const { fetchUserBlogs } = await fakeImport('/util/user_blogs.js');
-  const { getPreferences } = await fakeImport('/util/preferences.js');
+  const { fetchUserBlogs } = await import('../util/user_blogs.js');
+  const { getPreferences } = await import('../util/preferences.js');
 
   ({
     popupPosition,
@@ -221,14 +221,14 @@ export const main = async function () {
   }
 
   if (alreadyRebloggedEnabled) {
-    const { onNewPosts } = await fakeImport('/util/mutations.js');
+    const { onNewPosts } = await import('../util/mutations.js');
     onNewPosts.addListener(processPosts);
     processPosts();
   }
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   $(document.body).off('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
 

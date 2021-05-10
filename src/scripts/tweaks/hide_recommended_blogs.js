@@ -15,9 +15,9 @@ const checkForRecommendedBlogs = function () {
 };
 
 export const main = async function () {
-  const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
-  const { translate } = await fakeImport('/util/language_data.js');
-  const { addStyle } = await fakeImport('/util/interface.js');
+  const { onBaseContainerMutated } = await import('../../util/mutations.js');
+  const { translate } = await import('../../util/language_data.js');
+  const { addStyle } = await import('../../util/interface.js');
 
   recommendedBlogsLabel = await translate('Check out these blogs');
   onBaseContainerMutated.addListener(checkForRecommendedBlogs);
@@ -26,8 +26,8 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
-  const { removeStyle } = await fakeImport('/util/interface.js');
+  const { onBaseContainerMutated } = await import('../../util/mutations.js');
+  const { removeStyle } = await import('../../util/interface.js');
 
   onBaseContainerMutated.removeListener(checkForRecommendedBlogs);
   removeStyle(css);

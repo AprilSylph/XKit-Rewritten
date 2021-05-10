@@ -32,7 +32,7 @@ const unshortenOnClick = ({ target }) => {
 };
 
 const shortenPosts = async function () {
-  const { getPostElements } = await fakeImport('/util/interface.js');
+  const { getPostElements } = await import('../util/interface.js');
 
   getPostElements({ excludeClass, noPeepr: true }).forEach(postElement => {
     if (postElement.getBoundingClientRect().height > (window.innerHeight * 1.5)) {
@@ -55,9 +55,9 @@ const shortenPosts = async function () {
 };
 
 export const main = async function () {
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
-  const { getPreferences } = await fakeImport('/util/preferences.js');
-  const { keyToCss } = await fakeImport('/util/css_map.js');
+  const { onNewPosts } = await import('../util/mutations.js');
+  const { getPreferences } = await import('../util/preferences.js');
+  const { keyToCss } = await import('../util/css_map.js');
 
   ({ showTags } = await getPreferences('shorten_posts'));
   tagsSelector = await keyToCss('tags');
@@ -67,7 +67,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { onNewPosts } = await import('../util/mutations.js');
 
   onNewPosts.removeListener(shortenPosts);
 

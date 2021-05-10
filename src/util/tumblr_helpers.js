@@ -4,7 +4,7 @@
  * @returns {Promise} - resolves or rejects with result of window.tumblr.apiFetch()
  */
 export const apiFetch = async function (...args) {
-  const { inject } = await fakeImport('/util/inject.js');
+  const { inject } = await import('../util/inject.js');
   return inject(
     async (resource, init) => window.tumblr.apiFetch(resource, init),
     args
@@ -16,7 +16,7 @@ export const apiFetch = async function (...args) {
  * @returns {Promise} - resolves with the result of window.tumblr.getCssMap()
  */
 export const getCssMap = async function () {
-  const { inject } = await fakeImport('/util/inject.js');
+  const { inject } = await import('../util/inject.js');
   return inject(async () => window.tumblr.getCssMap());
 };
 
@@ -25,6 +25,6 @@ export const getCssMap = async function () {
  * @returns {object} - the window.tumblr.languageData object
  */
 export const getLanguageData = async function () {
-  const { inject } = await fakeImport('/util/inject.js');
+  const { inject } = await import('../util/inject.js');
   return inject(async () => window.tumblr.languageData);
 };

@@ -1,3 +1,9 @@
+import { timelineObjectMemoized } from '../util/react_props.js';
+import { apiFetch } from '../util/tumblr_helpers.js';
+import { getPostElements } from '../util/interface.js';
+import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
+import { onNewPosts } from '../util/mutations.js';
+
 const buttonClass = 'xkit-quick-tags-button';
 const excludeClass = 'xkit-quick-tags-done';
 const tagsClass = 'xkit-quick-tags-tags';
@@ -36,9 +42,6 @@ const togglePopupDisplay = async function ({ target, currentTarget }) {
 const processBundleClick = async function ({ target }) {
   if (target.tagName !== 'BUTTON') { return; }
   const bundleTags = target.dataset.tags.split(',');
-
-  const { timelineObjectMemoized } = await import('../util/react_props.js');
-  const { apiFetch } = await import('../util/tumblr_helpers.js');
 
   const postElement = target.closest('[data-id]');
   popupElement.parentNode.removeChild(popupElement);
@@ -111,9 +114,6 @@ const processBundleClick = async function ({ target }) {
 };
 
 const processPosts = async function () {
-  const { getPostElements } = await import('../util/interface.js');
-  const { cloneControlButton } = await import('../util/control_buttons.js');
-
   getPostElements({ excludeClass }).forEach(async postElement => {
     const editButton = postElement.querySelector('footer a[href*="/edit/"]');
     if (!editButton) { return; }
@@ -124,9 +124,6 @@ const processPosts = async function () {
 };
 
 export const main = async function () {
-  const { createControlButtonTemplate } = await import('../util/control_buttons.js');
-  const { onNewPosts } = await import('../util/mutations.js');
-
   controlButtonTemplate = await createControlButtonTemplate('ri-price-tag-3-line', buttonClass);
 
   onNewPosts.addListener(processPosts);
@@ -139,8 +136,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await import('../util/mutations.js');
-
   onNewPosts.removeListener(processPosts);
 
   $(`.${buttonClass}`).remove();

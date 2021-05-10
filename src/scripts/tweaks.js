@@ -1,3 +1,5 @@
+import { getPreferences } from '../util/preferences.js';
+
 let enabledTweaks;
 
 const runTweak = async function (name) {
@@ -16,7 +18,6 @@ const onStorageChanged = async function (changes, areaName) {
   }
 
   if (Object.keys(changes).some(key => key.startsWith('tweaks') && changes[key].oldValue !== undefined)) {
-    const { getPreferences } = await import('../util/preferences.js');
     const preferences = await getPreferences('tweaks');
 
     const newEnabledTweaks = Object.keys(preferences).filter(key => preferences[key] === true);
@@ -33,7 +34,6 @@ const onStorageChanged = async function (changes, areaName) {
 
 export const main = async function () {
   browser.storage.onChanged.addListener(onStorageChanged);
-  const { getPreferences } = await import('../util/preferences.js');
 
   const preferences = await getPreferences('tweaks');
 

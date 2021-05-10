@@ -1,3 +1,10 @@
+import { timelineObjectMemoized } from '../util/react_props.js';
+import { apiFetch } from '../util/tumblr_helpers.js';
+import { getPostElements } from '../util/interface.js';
+import { fetchUserBlogs } from '../util/user_blogs.js';
+import { getPreferences } from '../util/preferences.js';
+import { onNewPosts } from '../util/mutations.js';
+
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-reblog' });
 const blogSelector = document.createElement('select');
 const commentInput = Object.assign(document.createElement('input'), {
@@ -79,9 +86,6 @@ const reblogPost = async function ({ currentTarget }) {
   const postID = lastPostID;
   lastPostID = null;
 
-  const { timelineObjectMemoized } = await import('../util/react_props.js');
-  const { apiFetch } = await import('../util/tumblr_helpers.js');
-
   const { state } = currentTarget.dataset;
 
   const blog = blogSelector.value;
@@ -143,9 +147,6 @@ const reblogPost = async function ({ currentTarget }) {
 });
 
 const processPosts = async function () {
-  const { getPostElements } = await import('../util/interface.js');
-  const { timelineObjectMemoized } = await import('../util/react_props.js');
-
   const { [storageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(storageKey);
   for (const postElement of getPostElements({ excludeClass })) {
     const { id } = postElement.dataset;
@@ -185,9 +186,6 @@ const updateQuickTags = (changes, areaName) => {
 };
 
 export const main = async function () {
-  const { fetchUserBlogs } = await import('../util/user_blogs.js');
-  const { getPreferences } = await import('../util/preferences.js');
-
   ({
     popupPosition,
     showBlogSelector,
@@ -221,15 +219,12 @@ export const main = async function () {
   }
 
   if (alreadyRebloggedEnabled) {
-    const { onNewPosts } = await import('../util/mutations.js');
     onNewPosts.addListener(processPosts);
     processPosts();
   }
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await import('../util/mutations.js');
-
   $(document.body).off('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
 
   if (popupElement.parentNode) {

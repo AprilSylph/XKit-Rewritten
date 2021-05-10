@@ -1,3 +1,10 @@
+import { apiFetch } from '../util/tumblr_helpers.js';
+import { getPostElements } from '../util/interface.js';
+import { timelineObjectMemoized } from '../util/react_props.js';
+import { keyToCss } from '../util/css_map.js';
+import { onNewPosts, onBaseContainerMutated } from '../util/mutations.js';
+import { translate } from '../util/language_data.js';
+
 const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
 const excludeClass = 'xkit-tag-tracking-plus-done';
 
@@ -10,10 +17,6 @@ const processPosts = async function () {
   if (!location.pathname.startsWith('/tagged/') || searchParams.get('sort') === 'top') {
     return;
   }
-
-  const { apiFetch } = await import('../util/tumblr_helpers.js');
-  const { getPostElements } = await import('../util/interface.js');
-  const { timelineObjectMemoized } = await import('../util/react_props.js');
 
   const currentTag = decodeURIComponent(location.pathname.split('/')[2].replace(/\+/g, ' '));
   const { response: { following } } = await apiFetch('/v2/user/tags/following', { queryParams: { tag: currentTag } });
@@ -44,8 +47,6 @@ const processTagLinks = async function () {
 
   const tagLinkElements = searchResultElement.querySelectorAll('[data-followed-tags] ~ [href^="/tagged/"]');
   if (!tagLinkElements) { return; }
-
-  const { apiFetch } = await import('../util/tumblr_helpers.js');
 
   tagLinkElements.forEach(async tagLinkElement => {
     const unreadCountElement = Object.assign(document.createElement('span'), {
@@ -78,10 +79,6 @@ const processTagLinks = async function () {
 };
 
 export const main = async function () {
-  const { keyToCss } = await import('../util/css_map.js');
-  const { onNewPosts, onBaseContainerMutated } = await import('../util/mutations.js');
-  const { translate } = await import('../util/language_data.js');
-
   searchResultSelector = await keyToCss('searchResult');
   tagTextSelector = await keyToCss('tagText');
   tagsYouFollowString = await translate('Tags you follow');
@@ -94,8 +91,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts, onBaseContainerMutated } = await import('../util/mutations.js');
-
   onNewPosts.removeListener(processPosts);
   onBaseContainerMutated.removeListener(processTagLinks);
 };

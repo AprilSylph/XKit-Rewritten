@@ -1,3 +1,9 @@
+import { getPostElements } from '../util/interface.js';
+import { timelineObject } from '../util/react_props.js';
+import { apiFetch } from '../util/tumblr_helpers.js';
+import { getPreferences } from '../util/preferences.js';
+import { onNewPosts } from '../util/mutations.js';
+
 let ownColour;
 let originalColour;
 let reblogColour;
@@ -9,9 +15,6 @@ let colourSourceTags;
 const excludeClass = 'xkit-painter-done';
 
 const paint = async function () {
-  const { getPostElements } = await import('../util/interface.js');
-  const { timelineObject } = await import('../util/react_props.js');
-  const { apiFetch } = await import('../util/tumblr_helpers.js');
   const tagArray = colouredTags.split(',').map(tag => tag.trim().replace(/#/g, '').toLowerCase());
 
   getPostElements({ excludeClass }).forEach(async postElement => {
@@ -86,9 +89,6 @@ const strip = function () {
 };
 
 export const main = async function () {
-  const { getPreferences } = await import('../util/preferences.js');
-  const { onNewPosts } = await import('../util/mutations.js');
-
   ({ ownColour, originalColour, reblogColour, likedColour, tagColour, colouredTags, colourSourceTags } = await getPreferences('painter'));
 
   onNewPosts.addListener(paint);
@@ -96,7 +96,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await import('../util/mutations.js');
   onNewPosts.removeListener(paint);
   strip();
 };

@@ -1,3 +1,6 @@
+import { keyToClasses, keyToCss } from './css_map.js';
+import { onPostsMutated } from './mutations.js';
+
 /**
  * @param {object} options - Arguments object (destructured, not used directly)
  * @param {string} options.excludeClass - Classname to exclude and add
@@ -59,9 +62,6 @@ export const registerMeatballItem = function (label, callback) {
 export const unregisterMeatballItem = label => delete meatballItems[label];
 
 (async function () {
-  const { keyToClasses, keyToCss } = await import('./css_map.js');
-  const { onPostsMutated } = await import('./mutations.js');
-
   const meatballMenuSelector = await keyToCss('meatballMenu');
   const [meatballItemClass] = await keyToClasses('meatballItem');
   const [dropdownItemClass] = await keyToClasses('dropdownItem');

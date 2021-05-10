@@ -1,3 +1,8 @@
+import { getPostElements } from '../util/interface.js';
+import { givenPath } from '../util/react_props.js';
+import { getPreferences } from '../util/preferences.js';
+import { onNewPosts } from '../util/mutations.js';
+
 const excludeClass = 'xkit-seen-posts-done';
 const dimClass = 'xkit-seen-posts-seen';
 const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
@@ -5,9 +10,6 @@ const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 const dimPosts = async function () {
   const storageKey = 'seen_posts.seenPosts';
   const { [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey);
-
-  const { getPostElements } = await import('../util/interface.js');
-  const { givenPath } = await import('../util/react_props.js');
 
   for (const postElement of getPostElements({ excludeClass, noPeepr: true, includeFiltered: true })) {
     const timeline = await givenPath(postElement);
@@ -43,8 +45,6 @@ const onStorageChanged = async function (changes, areaName) {
 
 export const main = async function () {
   browser.storage.onChanged.addListener(onStorageChanged);
-  const { getPreferences } = await import('../util/preferences.js');
-  const { onNewPosts } = await import('../util/mutations.js');
 
   const { onlyDimAvatars } = await getPreferences('seen_posts');
   if (onlyDimAvatars) {
@@ -57,7 +57,6 @@ export const main = async function () {
 
 export const clean = async function () {
   browser.storage.onChanged.removeListener(onStorageChanged);
-  const { onNewPosts } = await import('../util/mutations.js');
 
   onNewPosts.removeListener(dimPosts);
   $(`.${excludeClass}`).removeClass(excludeClass);

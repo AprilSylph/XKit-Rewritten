@@ -1,3 +1,6 @@
+import { getCssMap } from './tumblr_helpers.js';
+import { cartesian } from './misc.js';
+
 let cssMap;
 
 /**
@@ -6,7 +9,6 @@ let cssMap;
  */
 export const keyToClasses = async function (key) {
   if (cssMap === undefined) {
-    const { getCssMap } = await import('./tumblr_helpers.js');
     cssMap = await getCssMap();
   }
 
@@ -36,7 +38,6 @@ export const keyToCss = async function (key) {
  * @returns {string} - A CSS selector
  */
 export const descendantSelector = async function (...keys) {
-  const { cartesian } = await import('./misc.js');
   const sets = [];
 
   for (const key of keys) {

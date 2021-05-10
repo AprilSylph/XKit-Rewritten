@@ -1,3 +1,5 @@
+import { onBaseContainerMutated } from './mutations.js';
+
 const sidebarItems = Object.assign(document.createElement('div'), { id: 'xkit-sidebar' });
 
 /* eslint-disable jsdoc/check-param-names */
@@ -71,8 +73,6 @@ export const addSidebarItem = function ({ id, title, items }) {
 export const removeSidebarItem = id => sidebarItems.removeChild(sidebarItems.querySelector(`#${id}`));
 
 (async function () {
-  const { onBaseContainerMutated } = await import('./mutations.js');
-
   const addSidebarToPage = () => {
     const aside = document.querySelector('aside');
     if (aside.querySelector('#xkit-sidebar') !== null) { return; }

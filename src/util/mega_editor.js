@@ -1,3 +1,5 @@
+import { inject } from './inject.js';
+
 let formKey;
 
 const pathnames = {
@@ -16,7 +18,6 @@ const pathnames = {
  * @param {object[]} options.tags - Array of tags to add or remove. Required if options.mode is "add" or "remove"
  */
 export const megaEdit = async function (postIds, options) {
-  const { inject } = await import('./inject.js');
   const pathname = pathnames[options.mode];
 
   if (!formKey) {

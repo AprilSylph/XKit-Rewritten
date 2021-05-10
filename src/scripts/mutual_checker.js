@@ -1,3 +1,10 @@
+import { getPostElements } from '../util/interface.js';
+import { timelineObject } from '../util/react_props.js';
+import { apiFetch } from '../util/tumblr_helpers.js';
+import { fetchDefaultBlog } from '../util/user_blogs.js';
+import { keyToCss } from '../util/css_map.js';
+import { onNewPosts } from '../util/mutations.js';
+
 const excludeClass = 'xkit-mutual-checker-done';
 const mutualIconClass = 'xkit-mutual-icon';
 const mutualsClass = 'from-mutual';
@@ -13,10 +20,6 @@ let postAttributionSelector;
 let icon;
 
 const addIcons = async function () {
-  const { getPostElements } = await import('../util/interface.js');
-  const { timelineObject } = await import('../util/react_props.js');
-  const { apiFetch } = await import('../util/tumblr_helpers.js');
-
   [...document.querySelectorAll(`[data-id].${mutualsClass}`)]
     .filter(postElement => postElement.querySelector(`.${mutualIconClass}`) === null)
     .forEach(postElement => postElement.classList.remove(excludeClass));
@@ -59,10 +62,6 @@ const addIcons = async function () {
 };
 
 export const main = async function () {
-  const { fetchDefaultBlog } = await import('../util/user_blogs.js');
-  const { keyToCss } = await import('../util/css_map.js');
-  const { onNewPosts } = await import('../util/mutations.js');
-
   myBlog = (await fetchDefaultBlog()).name;
   following[myBlog] = Promise.resolve(false);
 
@@ -85,7 +84,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await import('../util/mutations.js');
   onNewPosts.removeListener(addIcons);
 
   $(`.${excludeClass}`)

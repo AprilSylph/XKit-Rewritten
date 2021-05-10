@@ -1,3 +1,8 @@
+import { getPostElements } from '../util/interface.js';
+import { onNewPosts } from '../util/mutations.js';
+import { getPreferences } from '../util/preferences.js';
+import { keyToCss } from '../util/css_map.js';
+
 let showTags;
 let tagsSelector;
 
@@ -32,8 +37,6 @@ const unshortenOnClick = ({ target }) => {
 };
 
 const shortenPosts = async function () {
-  const { getPostElements } = await import('../util/interface.js');
-
   getPostElements({ excludeClass, noPeepr: true }).forEach(postElement => {
     if (postElement.getBoundingClientRect().height > (window.innerHeight * 1.5)) {
       postElement.classList.add(shortenClass);
@@ -55,10 +58,6 @@ const shortenPosts = async function () {
 };
 
 export const main = async function () {
-  const { onNewPosts } = await import('../util/mutations.js');
-  const { getPreferences } = await import('../util/preferences.js');
-  const { keyToCss } = await import('../util/css_map.js');
-
   ({ showTags } = await getPreferences('shorten_posts'));
   tagsSelector = await keyToCss('tags');
 
@@ -67,8 +66,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await import('../util/mutations.js');
-
   onNewPosts.removeListener(shortenPosts);
 
   $(`.${excludeClass}`).removeClass(excludeClass);
@@ -76,4 +73,5 @@ export const clean = async function () {
   $(`.${tagsClass}, .${buttonClass}`).remove();
 };
 
+export const stylesheet = true;
 export const autoRestart = true;

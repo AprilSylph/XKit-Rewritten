@@ -1,3 +1,5 @@
+import { apiFetch } from './tumblr_helpers.js';
+
 let userBlogs;
 
 /**
@@ -5,7 +7,6 @@ let userBlogs;
  */
 export const fetchUserBlogs = async function () {
   if (!userBlogs) {
-    const { apiFetch } = await import('./tumblr_helpers.js');
     const response = await apiFetch('/v2/user/info');
     if (response.meta.status === 200) {
       userBlogs = response.response.user.blogs;

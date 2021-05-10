@@ -9,7 +9,8 @@
   const restartListeners = {};
 
   const runScript = async function (name) {
-    const { main, clean, stylesheet, autoRestart } = await fakeImport(`/scripts/${name}.js`);
+    const scriptPath = getURL(`/scripts/${name}.js`);
+    const { main, clean, stylesheet, autoRestart } = await import(scriptPath);
 
     main().catch(console.error);
 
@@ -35,7 +36,8 @@
   };
 
   const destroyScript = async function (name) {
-    const { clean, stylesheet, autoRestart } = await fakeImport(`/scripts/${name}.js`);
+    const scriptPath = getURL(`/scripts/${name}.js`);
+    const { main, clean, stylesheet, autoRestart } = await import(scriptPath);
 
     clean().catch(console.error);
 
@@ -78,7 +80,7 @@
   };
 
   const injectDataPathnameChanger = async function () {
-    const { inject } = await fakeImport('/util/inject.js');
+    const { inject } = await import(getURL('/util/inject.js'));
     inject(async () => {
       window.tumblr.on('navigation', () => { document.documentElement.dataset.pathname = location.pathname; });
     });

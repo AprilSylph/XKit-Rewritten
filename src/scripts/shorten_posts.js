@@ -1,81 +1,79 @@
-(function () {
-  let showTags;
-  let tagsSelector;
+let showTags;
+let tagsSelector;
 
-  const excludeClass = 'xkit-shorten-posts-done';
-  const shortenClass = 'xkit-shorten-posts-shortened';
-  const tagsClass = 'xkit-shorten-posts-tags';
-  const buttonClass = 'xkit-shorten-posts-expand';
+const excludeClass = 'xkit-shorten-posts-done';
+const shortenClass = 'xkit-shorten-posts-shortened';
+const tagsClass = 'xkit-shorten-posts-tags';
+const buttonClass = 'xkit-shorten-posts-expand';
 
-  const expandButton = Object.assign(document.createElement('button'), {
-    textContent: 'Expand',
-    className: buttonClass
-  });
+const expandButton = Object.assign(document.createElement('button'), {
+  textContent: 'Expand',
+  className: buttonClass
+});
 
-  const unshortenOnClick = ({ target }) => {
-    const { parentNode } = target;
-    if (parentNode.classList.contains(shortenClass)) {
-      const headerHeight = document.querySelector('header').getBoundingClientRect().height;
-      const postMargin = parseInt(getComputedStyle(parentNode).getPropertyValue('margin-bottom'));
+const unshortenOnClick = ({ target }) => {
+  const { parentNode } = target;
+  if (parentNode.classList.contains(shortenClass)) {
+    const headerHeight = document.querySelector('header').getBoundingClientRect().height;
+    const postMargin = parseInt(getComputedStyle(parentNode).getPropertyValue('margin-bottom'));
 
-      parentNode.classList.remove(shortenClass);
-      parentNode.scrollIntoView();
-      window.scrollBy({ top: 0 - headerHeight - postMargin });
-      parentNode.focus();
+    parentNode.classList.remove(shortenClass);
+    parentNode.scrollIntoView();
+    window.scrollBy({ top: 0 - headerHeight - postMargin });
+    parentNode.focus();
 
-      const tagsClone = parentNode.querySelector(`.${tagsClass}`);
-      if (tagsClone) {
-        parentNode.removeChild(tagsClone);
-      }
-
-      parentNode.removeChild(target);
+    const tagsClone = parentNode.querySelector(`.${tagsClass}`);
+    if (tagsClone) {
+      parentNode.removeChild(tagsClone);
     }
-  };
 
-  const shortenPosts = async function () {
-    const { getPostElements } = await fakeImport('/util/interface.js');
+    parentNode.removeChild(target);
+  }
+};
 
-    getPostElements({ excludeClass, noPeepr: true }).forEach(postElement => {
-      if (postElement.getBoundingClientRect().height > (window.innerHeight * 1.5)) {
-        postElement.classList.add(shortenClass);
+const shortenPosts = async function () {
+  const { getPostElements } = await fakeImport('/util/interface.js');
 
-        if (showTags) {
-          const tagsElement = postElement.querySelector(tagsSelector);
-          if (tagsElement) {
-            const tagsClone = tagsElement.cloneNode(true);
-            tagsClone.classList.add(tagsClass);
-            postElement.appendChild(tagsClone);
-          }
+  getPostElements({ excludeClass, noPeepr: true }).forEach(postElement => {
+    if (postElement.getBoundingClientRect().height > (window.innerHeight * 1.5)) {
+      postElement.classList.add(shortenClass);
+
+      if (showTags) {
+        const tagsElement = postElement.querySelector(tagsSelector);
+        if (tagsElement) {
+          const tagsClone = tagsElement.cloneNode(true);
+          tagsClone.classList.add(tagsClass);
+          postElement.appendChild(tagsClone);
         }
-
-        const expandButtonClone = expandButton.cloneNode(true);
-        expandButtonClone.addEventListener('click', unshortenOnClick);
-        postElement.appendChild(expandButtonClone);
       }
-    });
-  };
 
-  const main = async function () {
-    const { onNewPosts } = await fakeImport('/util/mutations.js');
-    const { getPreferences } = await fakeImport('/util/preferences.js');
-    const { keyToCss } = await fakeImport('/util/css_map.js');
+      const expandButtonClone = expandButton.cloneNode(true);
+      expandButtonClone.addEventListener('click', unshortenOnClick);
+      postElement.appendChild(expandButtonClone);
+    }
+  });
+};
 
-    ({ showTags } = await getPreferences('shorten_posts'));
-    tagsSelector = await keyToCss('tags');
+export const main = async function () {
+  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  const { getPreferences } = await fakeImport('/util/preferences.js');
+  const { keyToCss } = await fakeImport('/util/css_map.js');
 
-    onNewPosts.addListener(shortenPosts);
-    shortenPosts();
-  };
+  ({ showTags } = await getPreferences('shorten_posts'));
+  tagsSelector = await keyToCss('tags');
 
-  const clean = async function () {
-    const { onNewPosts } = await fakeImport('/util/mutations.js');
+  onNewPosts.addListener(shortenPosts);
+  shortenPosts();
+};
 
-    onNewPosts.removeListener(shortenPosts);
+export const clean = async function () {
+  const { onNewPosts } = await fakeImport('/util/mutations.js');
 
-    $(`.${excludeClass}`).removeClass(excludeClass);
-    $(`.${shortenClass}`).removeClass(shortenClass);
-    $(`.${tagsClass}, .${buttonClass}`).remove();
-  };
+  onNewPosts.removeListener(shortenPosts);
 
-  return { main, clean, stylesheet: true, autoRestart: true };
-})();
+  $(`.${excludeClass}`).removeClass(excludeClass);
+  $(`.${shortenClass}`).removeClass(shortenClass);
+  $(`.${tagsClass}, .${buttonClass}`).remove();
+};
+
+export const autoRestart = true;

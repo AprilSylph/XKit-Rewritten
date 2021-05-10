@@ -1,63 +1,62 @@
-(function () {
-  let newTab;
+let newTab;
 
-  let searchInputElement;
-  let searchInputParent;
+let searchInputElement;
+let searchInputParent;
 
-  const replaceSearchForm = function () {
-    const searchFormElement = document.querySelector('form[role="search"][action="//www.tumblr.com/search"]:not(.classic-search):not(.xkit-classic-search-done)');
+const replaceSearchForm = function () {
+  const searchFormElement = document.querySelector('form[role="search"][action="//www.tumblr.com/search"]:not(.classic-search):not(.xkit-classic-search-done)');
 
-    if (!searchFormElement) {
-      return;
+  if (!searchFormElement) {
+    return;
+  }
+
+  searchFormElement.classList.add('xkit-classic-search-done');
+
+  searchInputElement = searchFormElement.querySelector('input');
+  searchInputParent = searchInputElement.parentNode;
+
+  const searchFormElementClone = searchFormElement.cloneNode(true);
+  searchFormElementClone.addEventListener('submit', event => {
+    event.preventDefault();
+
+    const query = event.target.querySelector('input').value;
+    const address = `//www.tumblr.com/tagged/${query}`;
+
+    if (newTab) {
+      window.open(address);
+    } else {
+      location.assign(address);
     }
+  });
 
-    searchFormElement.classList.add('xkit-classic-search-done');
+  const eventlessInput = searchFormElementClone.querySelector('input');
+  const eventlessInputParent = eventlessInput.parentNode;
+  eventlessInputParent.removeChild(eventlessInput);
+  eventlessInputParent.appendChild(searchInputElement);
 
-    searchInputElement = searchFormElement.querySelector('input');
-    searchInputParent = searchInputElement.parentNode;
+  searchFormElementClone.classList.add('classic-search');
 
-    const searchFormElementClone = searchFormElement.cloneNode(true);
-    searchFormElementClone.addEventListener('submit', event => {
-      event.preventDefault();
+  searchFormElement.parentNode.prepend(searchFormElementClone);
+};
 
-      const query = event.target.querySelector('input').value;
-      const address = `//www.tumblr.com/tagged/${query}`;
+export const main = async function () {
+  const { getPreferences } = await fakeImport('/util/preferences.js');
+  const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
 
-      if (newTab) {
-        window.open(address);
-      } else {
-        location.assign(address);
-      }
-    });
+  ({ newTab } = await getPreferences('classic_search'));
 
-    const eventlessInput = searchFormElementClone.querySelector('input');
-    const eventlessInputParent = eventlessInput.parentNode;
-    eventlessInputParent.removeChild(eventlessInput);
-    eventlessInputParent.appendChild(searchInputElement);
+  onBaseContainerMutated.addListener(replaceSearchForm);
+  replaceSearchForm();
+};
 
-    searchFormElementClone.classList.add('classic-search');
+export const clean = async function () {
+  const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
+  onBaseContainerMutated.removeListener(replaceSearchForm);
 
-    searchFormElement.parentNode.prepend(searchFormElementClone);
-  };
+  searchInputParent.appendChild(searchInputElement);
+  $('.classic-search').remove();
+  $('.xkit-classic-search-done').removeClass('xkit-classic-search-done');
+};
 
-  const main = async function () {
-    const { getPreferences } = await fakeImport('/util/preferences.js');
-    const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
-
-    ({ newTab } = await getPreferences('classic_search'));
-
-    onBaseContainerMutated.addListener(replaceSearchForm);
-    replaceSearchForm();
-  };
-
-  const clean = async function () {
-    const { onBaseContainerMutated } = await fakeImport('/util/mutations.js');
-    onBaseContainerMutated.removeListener(replaceSearchForm);
-
-    searchInputParent.appendChild(searchInputElement);
-    $('.classic-search').remove();
-    $('.xkit-classic-search-done').removeClass('xkit-classic-search-done');
-  };
-
-  return { main, clean, stylesheet: true, autoRestart: true };
-})();
+export const stylesheet = true;
+export const autoRestart = true;

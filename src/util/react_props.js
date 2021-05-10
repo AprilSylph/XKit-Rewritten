@@ -1,72 +1,68 @@
-(function () {
-  const cache = {};
+const cache = {};
 
-  /**
-   * @param {string} postID - The post ID of an on-screen post
-   * @returns {object} - The post's buried timelineObject property (cached; use
-   *  timelineObject if you need up-to-date properties that may have changed)
-   */
-  const timelineObjectMemoized = async function (postID) {
-    if (Object.prototype.hasOwnProperty.call(cache, postID)) {
-      return cache[postID];
-    }
-    return timelineObject(postID);
-  };
-
-  /**
-   * @param {string} postID - The post ID of an on-screen post
-   * @returns {object} - The post's buried timelineObject property
-   */
-  const timelineObject = async function (postID) {
-    const { inject } = await fakeImport('/util/inject.js');
-    cache[postID] = inject(async id => {
-      const postElement = document.querySelector(`[data-id="${id}"]`);
-      const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactInternalInstance'));
-      let fiber = postElement[reactKey];
-      let tries = 0;
-
-      while (fiber.memoizedProps.timelineObject === undefined && tries <= 10) {
-        fiber = fiber.return;
-        tries++;
-      }
-
-      return fiber.memoizedProps.timelineObject;
-    }, [postID]);
+/**
+ * @param {string} postID - The post ID of an on-screen post
+ * @returns {object} - The post's buried timelineObject property (cached; use
+ *  timelineObject if you need up-to-date properties that may have changed)
+ */
+export const timelineObjectMemoized = async function (postID) {
+  if (Object.prototype.hasOwnProperty.call(cache, postID)) {
     return cache[postID];
-  };
+  }
+  return timelineObject(postID);
+};
 
-  /**
-   * @param {object} postElement - A post's HTMLDivElement
-   * @returns {string} That post's buried endpointApiRequest.givenPath property
-   */
-  const givenPath = async function (postElement) {
-    if (postElement.parentNode.dataset.timeline !== undefined) {
-      return postElement.parentNode.dataset.timeline;
+/**
+ * @param {string} postID - The post ID of an on-screen post
+ * @returns {object} - The post's buried timelineObject property
+ */
+export const timelineObject = async function (postID) {
+  const { inject } = await fakeImport('/util/inject.js');
+  cache[postID] = inject(async id => {
+    const postElement = document.querySelector(`[data-id="${id}"]`);
+    const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactInternalInstance'));
+    let fiber = postElement[reactKey];
+    let tries = 0;
+
+    while (fiber.memoizedProps.timelineObject === undefined && tries <= 10) {
+      fiber = fiber.return;
+      tries++;
     }
 
-    const { inject } = await fakeImport('/util/inject.js');
-    const xkitTempId = `${new Date().getTime()}${Math.random()}`;
-    Object.assign(postElement.dataset, { xkitTempId });
+    return fiber.memoizedProps.timelineObject;
+  }, [postID]);
+  return cache[postID];
+};
 
-    return inject(async tempId => {
-      const localPostElement = document.querySelector(`[data-xkit-temp-id="${tempId}"]`);
-      delete localPostElement.dataset.xkitTempId;
+/**
+ * @param {object} postElement - A post's HTMLDivElement
+ * @returns {string} That post's buried endpointApiRequest.givenPath property
+ */
+export const givenPath = async function (postElement) {
+  if (postElement.parentNode.dataset.timeline !== undefined) {
+    return postElement.parentNode.dataset.timeline;
+  }
 
-      const reactKey = Object.keys(localPostElement).find(key => key.startsWith('__reactInternalInstance'));
-      let fiber = localPostElement[reactKey];
-      let tries = 0;
+  const { inject } = await fakeImport('/util/inject.js');
+  const xkitTempId = `${new Date().getTime()}${Math.random()}`;
+  Object.assign(postElement.dataset, { xkitTempId });
 
-      while (fiber.memoizedProps.endpointApiRequest === undefined && tries <= 20) {
-        fiber = fiber.return;
-        tries++;
-      }
+  return inject(async tempId => {
+    const localPostElement = document.querySelector(`[data-xkit-temp-id="${tempId}"]`);
+    delete localPostElement.dataset.xkitTempId;
 
-      const { givenPath } = fiber.memoizedProps.endpointApiRequest;
+    const reactKey = Object.keys(localPostElement).find(key => key.startsWith('__reactInternalInstance'));
+    let fiber = localPostElement[reactKey];
+    let tries = 0;
 
-      localPostElement.parentNode.dataset.timeline = givenPath;
-      return givenPath;
-    }, [xkitTempId]);
-  };
+    while (fiber.memoizedProps.endpointApiRequest === undefined && tries <= 20) {
+      fiber = fiber.return;
+      tries++;
+    }
 
-  return { timelineObject, timelineObjectMemoized, givenPath };
-})();
+    const { givenPath } = fiber.memoizedProps.endpointApiRequest;
+
+    localPostElement.parentNode.dataset.timeline = givenPath;
+    return givenPath;
+  }, [xkitTempId]);
+};

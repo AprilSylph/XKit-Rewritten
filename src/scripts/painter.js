@@ -1,106 +1,104 @@
-(function () {
-  let ownColour;
-  let originalColour;
-  let reblogColour;
-  let likedColour;
-  let tagColour;
-  let colouredTags;
-  let colourSourceTags;
+let ownColour;
+let originalColour;
+let reblogColour;
+let likedColour;
+let tagColour;
+let colouredTags;
+let colourSourceTags;
 
-  const excludeClass = 'xkit-painter-done';
+const excludeClass = 'xkit-painter-done';
 
-  const paint = async function () {
-    const { getPostElements } = await fakeImport('/util/interface.js');
-    const { timelineObject } = await fakeImport('/util/react_props.js');
-    const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
-    const tagArray = colouredTags.split(',').map(tag => tag.trim().replace(/#/g, '').toLowerCase());
+const paint = async function () {
+  const { getPostElements } = await fakeImport('/util/interface.js');
+  const { timelineObject } = await fakeImport('/util/react_props.js');
+  const { apiFetch } = await fakeImport('/util/tumblr_helpers.js');
+  const tagArray = colouredTags.split(',').map(tag => tag.trim().replace(/#/g, '').toLowerCase());
 
-    getPostElements({ excludeClass }).forEach(async postElement => {
-      const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, tags } = await timelineObject(postElement.dataset.id);
+  getPostElements({ excludeClass }).forEach(async postElement => {
+    const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, tags } = await timelineObject(postElement.dataset.id);
 
-      const coloursToApply = [];
-      if (canDelete && ownColour) {
-        coloursToApply.push(ownColour);
+    const coloursToApply = [];
+    if (canDelete && ownColour) {
+      coloursToApply.push(ownColour);
+    }
+
+    if (liked && likedColour) {
+      coloursToApply.push(likedColour);
+    }
+
+    if (rebloggedFromId) {
+      if (reblogColour) {
+        coloursToApply.push(reblogColour);
       }
+    } else if (originalColour) {
+      coloursToApply.push(originalColour);
+    }
 
-      if (liked && likedColour) {
-        coloursToApply.push(likedColour);
-      }
-
-      if (rebloggedFromId) {
-        if (reblogColour) {
-          coloursToApply.push(reblogColour);
+    if (tagColour) {
+      let tagColourFound = false;
+      for (const tag of tags) {
+        if (tagArray.includes(tag.toLowerCase())) {
+          coloursToApply.push(tagColour);
+          tagColourFound = true;
+          break;
         }
-      } else if (originalColour) {
-        coloursToApply.push(originalColour);
       }
-
-      if (tagColour) {
-        let tagColourFound = false;
-        for (const tag of tags) {
-          if (tagArray.includes(tag.toLowerCase())) {
-            coloursToApply.push(tagColour);
-            tagColourFound = true;
-            break;
-          }
-        }
-        if (!tagColourFound && colourSourceTags && rebloggedRootId && rebloggedRootUuid) {
-          try {
-            const sourcePost = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts?id=${rebloggedRootId}`);
-            for (const sourceTag of sourcePost.response.posts[0].tags) {
-              if (tagArray.includes(sourceTag.toLowerCase())) {
-                coloursToApply.push(tagColour);
-                break;
-              }
+      if (!tagColourFound && colourSourceTags && rebloggedRootId && rebloggedRootUuid) {
+        try {
+          const sourcePost = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts?id=${rebloggedRootId}`);
+          for (const sourceTag of sourcePost.response.posts[0].tags) {
+            if (tagArray.includes(sourceTag.toLowerCase())) {
+              coloursToApply.push(tagColour);
+              break;
             }
-          } catch (e) {
-            // The source post can't be found, so we can't extract tags from it either.
-            // This means we don't have to do anything else with it, and we can quit quietly.
           }
+        } catch (e) {
+          // The source post can't be found, so we can't extract tags from it either.
+          // This means we don't have to do anything else with it, and we can quit quietly.
         }
       }
+    }
 
-      if (!coloursToApply.length) {
-        return;
-      }
+    if (!coloursToApply.length) {
+      return;
+    }
 
-      const step = 100 / coloursToApply.length;
-      let borderImage = 'linear-gradient(to right';
-      coloursToApply.forEach((colour, i) => {
-        borderImage += `, ${colour} ${step * i}% ${step * (i + 1)}%`;
-      });
-      borderImage += ')';
-
-      const articleElement = postElement.querySelector('article');
-      articleElement.style.borderTop = '5px solid';
-      articleElement.style.borderImageSource = borderImage;
-      articleElement.style.borderImageSlice = 1;
+    const step = 100 / coloursToApply.length;
+    let borderImage = 'linear-gradient(to right';
+    coloursToApply.forEach((colour, i) => {
+      borderImage += `, ${colour} ${step * i}% ${step * (i + 1)}%`;
     });
-  };
+    borderImage += ')';
 
-  const strip = function () {
-    $(`.${excludeClass} article`)
-      .css('border-top', '')
-      .css('border-image-source', '')
-      .css('border-image-slice', '');
-    $(`.${excludeClass}`).removeClass(excludeClass);
-  };
+    const articleElement = postElement.querySelector('article');
+    articleElement.style.borderTop = '5px solid';
+    articleElement.style.borderImageSource = borderImage;
+    articleElement.style.borderImageSlice = 1;
+  });
+};
 
-  const main = async function () {
-    const { getPreferences } = await fakeImport('/util/preferences.js');
-    const { onNewPosts } = await fakeImport('/util/mutations.js');
+const strip = function () {
+  $(`.${excludeClass} article`)
+    .css('border-top', '')
+    .css('border-image-source', '')
+    .css('border-image-slice', '');
+  $(`.${excludeClass}`).removeClass(excludeClass);
+};
 
-    ({ ownColour, originalColour, reblogColour, likedColour, tagColour, colouredTags, colourSourceTags } = await getPreferences('painter'));
+export const main = async function () {
+  const { getPreferences } = await fakeImport('/util/preferences.js');
+  const { onNewPosts } = await fakeImport('/util/mutations.js');
 
-    onNewPosts.addListener(paint);
-    paint();
-  };
+  ({ ownColour, originalColour, reblogColour, likedColour, tagColour, colouredTags, colourSourceTags } = await getPreferences('painter'));
 
-  const clean = async function () {
-    const { onNewPosts } = await fakeImport('/util/mutations.js');
-    onNewPosts.removeListener(paint);
-    strip();
-  };
+  onNewPosts.addListener(paint);
+  paint();
+};
 
-  return { main, clean, autoRestart: true };
-})();
+export const clean = async function () {
+  const { onNewPosts } = await fakeImport('/util/mutations.js');
+  onNewPosts.removeListener(paint);
+  strip();
+};
+
+export const autoRestart = true;

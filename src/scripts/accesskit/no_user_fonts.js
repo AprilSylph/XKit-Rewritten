@@ -1,21 +1,18 @@
-(function () {
-  let css;
-  const main = async function () {
-    const { descendantSelector } = await fakeImport('/util/css_map.js');
-    const { addStyle } = await fakeImport('/util/interface.js');
+let css;
 
-    const quoteSelector = await descendantSelector('textBlock', 'quote');
-    const chatSelector = await descendantSelector('textBlock', 'chat');
-    const quirkySelector = await descendantSelector('textBlock', 'quirky');
+export const main = async function () {
+  const { descendantSelector } = await fakeImport('/util/css_map.js');
+  const { addStyle } = await fakeImport('/util/interface.js');
 
-    css = `${quoteSelector}, ${chatSelector}, ${quirkySelector} { font-family: var(--font-family); }`;
-    addStyle(css);
-  };
+  const quoteSelector = await descendantSelector('textBlock', 'quote');
+  const chatSelector = await descendantSelector('textBlock', 'chat');
+  const quirkySelector = await descendantSelector('textBlock', 'quirky');
 
-  const clean = async function () {
-    const { removeStyle } = await fakeImport('/util/interface.js');
-    removeStyle(css);
-  };
+  css = `${quoteSelector}, ${chatSelector}, ${quirkySelector} { font-family: var(--font-family); }`;
+  addStyle(css);
+};
 
-  return { main, clean };
-})();
+export const clean = async function () {
+  const { removeStyle } = await fakeImport('/util/interface.js');
+  removeStyle(css);
+};

@@ -1,12 +1,12 @@
 let enabledOptions;
 
 const runOption = async function (name) {
-  const { main: run } = await import(`../scripts/accesskit/${name}.js`);
+  const { main: run } = await import(`./accesskit/${name}.js`);
   run().catch(console.error);
 };
 
 const destroyOption = async function (name) {
-  const { clean: destroy } = await import(`../scripts/accesskit/${name}.js`);
+  const { clean: destroy } = await import(`./accesskit/${name}.js`);
   destroy().catch(console.error);
 };
 

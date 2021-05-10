@@ -59,8 +59,8 @@ export const registerMeatballItem = function (label, callback) {
 export const unregisterMeatballItem = label => delete meatballItems[label];
 
 (async function () {
-  const { keyToClasses, keyToCss } = await import('../util/css_map.js');
-  const { onPostsMutated } = await import('../util/mutations.js');
+  const { keyToClasses, keyToCss } = await import('./css_map.js');
+  const { onPostsMutated } = await import('./mutations.js');
 
   const meatballMenuSelector = await keyToCss('meatballMenu');
   const [meatballItemClass] = await keyToClasses('meatballItem');

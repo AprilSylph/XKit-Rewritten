@@ -71,7 +71,7 @@ export const addSidebarItem = function ({ id, title, items }) {
 export const removeSidebarItem = id => sidebarItems.removeChild(sidebarItems.querySelector(`#${id}`));
 
 (async function () {
-  const { onBaseContainerMutated } = await import('../util/mutations.js');
+  const { onBaseContainerMutated } = await import('./mutations.js');
 
   const addSidebarToPage = () => {
     const aside = document.querySelector('aside');

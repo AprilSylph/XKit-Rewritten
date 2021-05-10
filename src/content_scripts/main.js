@@ -80,7 +80,7 @@
   };
 
   const injectDataPathnameChanger = async function () {
-    const { inject } = await import(getURL('/util/inject.js'));
+    const { inject } = await import('../util/inject.js');
     inject(async () => {
       window.tumblr.on('navigation', () => { document.documentElement.dataset.pathname = location.pathname; });
     });

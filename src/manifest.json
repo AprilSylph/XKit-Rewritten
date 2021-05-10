@@ -56,7 +56,7 @@
   "minimum_chrome_version": "71",
   "browser_specific_settings": {
     "gecko": {
-      "strict_min_version": "69.0a2"
+      "strict_min_version": "89.0a1"
     }
   }
 }

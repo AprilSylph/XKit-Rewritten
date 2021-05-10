@@ -44,7 +44,6 @@
       "js": [
         "lib/browser-polyfill.min.js",
         "lib/jquery.min.js",
-        "content_scripts/fake_import.js",
         "content_scripts/main.js"
       ],
       "css": [

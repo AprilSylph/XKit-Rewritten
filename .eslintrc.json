@@ -10,7 +10,8 @@
     "plugin:jsdoc/recommended"
   ],
   "parserOptions": {
-    "ecmaVersion": 12
+    "ecmaVersion": 12,
+    "sourceType": "module"
   },
   "rules": {
     "node/no-callback-literal": "off",
@@ -18,8 +19,5 @@
   },
   "ignorePatterns": [
     "lib/"
-  ],
-  "globals": {
-    "fakeImport": "readonly"
-  }
+  ]
 }

@@ -1,0 +1,23 @@
+{
+  "title": "No Recommended",
+  "description": "Focus only on what you follow",
+  "icon": {
+    "class_name": "ri-delete-row",
+    "color": "white",
+    "background_color": "#00cf35"
+  },
+  "preferences": {
+    "hide_recommended_blogs": {
+      "type": "checkbox",
+      "label": "Hide recommended blogs in the sidebar",
+      "default": false,
+      "inherit": "tweaks.preferences.hide_recommended_blogs"
+    },
+    "hide_radar": {
+      "type": "checkbox",
+      "label": "Hide the Tumblr Radar",
+      "default": false,
+      "inherit": "tweaks.preferences.hide_radar"
+    }
+  }
+}

@@ -26,7 +26,7 @@ const populatePopup = async function () {
   }
 };
 
-const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes, areaName) {
   if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
     populatePopup();
   }
@@ -129,15 +129,12 @@ export const main = async function () {
   onNewPosts.addListener(processPosts);
   processPosts();
 
-  browser.storage.onChanged.addListener(onStorageChanged);
   populatePopup();
 
   popupElement.addEventListener('click', processBundleClick);
 };
 
 export const clean = async function () {
-  onNewPosts.removeListener(processPosts);
-
   $(`.${buttonClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${tagsClass}`).remove();

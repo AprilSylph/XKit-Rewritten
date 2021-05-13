@@ -29,7 +29,7 @@ const dimPosts = async function () {
   browser.storage.local.set({ [storageKey]: seenPosts });
 };
 
-const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes, areaName) {
   if (areaName !== 'local') {
     return;
   }
@@ -44,8 +44,6 @@ const onStorageChanged = async function (changes, areaName) {
 };
 
 export const main = async function () {
-  browser.storage.onChanged.addListener(onStorageChanged);
-
   const { onlyDimAvatars } = await getPreferences('seen_posts');
   if (onlyDimAvatars) {
     document.body.classList.add(onlyDimAvatarsClass);
@@ -56,8 +54,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  browser.storage.onChanged.removeListener(onStorageChanged);
-
   onNewPosts.removeListener(dimPosts);
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${dimClass}`).removeClass(dimClass);

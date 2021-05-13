@@ -12,7 +12,7 @@ const destroyTweak = async function (name) {
   destroy().catch(console.error);
 };
 
-const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes, areaName) {
   if (areaName !== 'local') {
     return;
   }
@@ -33,8 +33,6 @@ const onStorageChanged = async function (changes, areaName) {
 };
 
 export const main = async function () {
-  browser.storage.onChanged.addListener(onStorageChanged);
-
   const preferences = await getPreferences('tweaks');
 
   enabledTweaks = Object.keys(preferences).filter(key => preferences[key] === true);

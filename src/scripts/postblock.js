@@ -40,7 +40,7 @@ const onButtonClicked = async function ({ target }) {
   }
 };
 
-const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes, areaName) {
   if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
     $(`.${excludeClass}`).removeClass(excludeClass);
     processPosts();
@@ -48,8 +48,6 @@ const onStorageChanged = async function (changes, areaName) {
 };
 
 export const main = async function () {
-  browser.storage.onChanged.addListener(onStorageChanged);
-
   registerMeatballItem(meatballButtonLabel, onButtonClicked);
 
   onNewPosts.addListener(processPosts);
@@ -57,8 +55,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  browser.storage.onChanged.removeListener(onStorageChanged);
-
   unregisterMeatballItem(meatballButtonLabel);
   onNewPosts.removeListener(processPosts);
 

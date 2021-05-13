@@ -186,7 +186,7 @@ const removeReblogTimestamps = function () {
   $('.xkit-reblog-timestamps-done').removeClass('xkit-reblog-timestamps-done');
 };
 
-const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes, areaName) {
   if (areaName !== 'local') {
     return;
   }
@@ -238,8 +238,6 @@ const onStorageChanged = async function (changes, areaName) {
 };
 
 export const main = async function () {
-  browser.storage.onChanged.addListener(onStorageChanged);
-
   ({ alwaysShowYear, headerTimestamps, isoFormat, reblogTimestamps } = await getPreferences('timestamps'));
 
   noteCountSelector = await keyToCss('noteCount');
@@ -255,7 +253,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  browser.storage.onChanged.removeListener(onStorageChanged);
   onNewPosts.removeListener(addPostTimestamps);
   onNewPosts.removeListener(addReblogTimestamps);
   removePostTimestamps();

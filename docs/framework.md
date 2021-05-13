@@ -6,7 +6,7 @@ Note: XKit should only be considered "running" in a content script context; the 
 
 ## Module files
 
-Each module is required to return at least two async functions.
+Each module is required to export at least two async functions.
 
 #### `main()`
 - Type: Async Function
@@ -20,17 +20,17 @@ The main function of the script. Will be called whenever the user enables the sc
 
 The cleanup function of the script. Called whenever the user disables the script, also regardless of tab focus.
 
+#### `onStorageChanged()`
+- Type: Async Function
+- Required: No
+
+The preference-handling code of the script. Added as a `browser.storage.onChanged` listener when the script is enabled, and removed when the script is disabled. If the script does not export this function, the script will be automatically restarted when its preferences are changed.
+
 #### `stylesheet`
 - Type: Boolean
 - Required: No
 
 Whether the script has a stylesheet. If true, there should be a `.css` file of matching name in the same directory level. The stylesheet is automatically added and removed during the script's lifecycle.
-
-#### `autoRestart`
-- Type: Boolean
-- Required: No
-
-Whether the script should automatically restart on preference changes. If true, the script's `clean()` and then `main()` functions are called whenever its preferences are modified. If false, the script must build its own preference changes handling code (assuming it has preferences at all).
 
 ## Metadata files
 

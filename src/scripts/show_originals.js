@@ -54,4 +54,3 @@ export const clean = async function () {
 };
 
 export const stylesheet = true;
-export const autoRestart = true;

@@ -19,5 +19,3 @@ export const clean = async function () {
   addedStyles.forEach(style => removeStyle(style));
   addedStyles = [];
 };
-
-export const autoRestart = true;

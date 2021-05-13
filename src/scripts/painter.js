@@ -99,5 +99,3 @@ export const clean = async function () {
   onNewPosts.removeListener(paint);
   strip();
 };
-
-export const autoRestart = true;

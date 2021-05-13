@@ -37,16 +37,6 @@
       "label": "Hide my own posts on the dashboard",
       "default": false
     },
-    "hide_recommended_blogs": {
-      "type": "checkbox",
-      "label": "Hide recommended blogs in the sidebar",
-      "default": false
-    },
-    "hide_radar": {
-      "type": "checkbox",
-      "label": "Hide the Tumblr Radar",
-      "default": false
-    },
     "no_where_were_we": {
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",

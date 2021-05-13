@@ -12,6 +12,11 @@
       "label": "Hide recommended blogs between posts",
       "default": false
     },
+    "hide_tag_carousels": {
+      "type": "checkbox",
+      "label": "Hide recommended tags between posts",
+      "default": false
+    },
     "hide_recommended_blogs": {
       "type": "checkbox",
       "label": "Hide recommended blogs in the sidebar",

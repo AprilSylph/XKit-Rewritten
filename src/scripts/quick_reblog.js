@@ -114,7 +114,7 @@ const reblogPost = async function ({ currentTarget }) {
       browser.runtime.sendMessage({
         command: 'notifications:create',
         arguments: {
-          options: { type: 'basic', iconUrl: 'icons/128.png', title: 'XKit', message: response.displayText }
+          options: { type: 'basic', title: 'XKit', message: response.displayText }
         }
       });
 
@@ -133,7 +133,7 @@ const reblogPost = async function ({ currentTarget }) {
     browser.runtime.sendMessage({
       command: 'notifications:create',
       arguments: {
-        options: { type: 'basic', iconUrl: 'icons/128.png', title: 'XKit', message: body.errors[0].detail }
+        options: { type: 'basic', title: 'XKit', message: body.errors[0].detail }
       }
     });
   } finally {

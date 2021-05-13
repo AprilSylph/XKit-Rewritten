@@ -118,6 +118,12 @@ If the preference `type` is `"text"` or `"textarea"`, this value should be a str
 If the preference `type` is `"color"`, this value should either be a string representing a hexadecimal colour code (i.e. `"#1a2b3c"`) or an empty string.  
 If the preference `type` is `"select"`, this value should be a string that matches one of the keys in `options`.
 
+#### `"preferences"`: \<preference name\>: `"inherit"`
+- Type: String
+- Required: No
+
+The storage key to inherit the value of, if the preference has not been set. Only to be used when moving preferences between scripts; the storage key specified here will be deleted in the process.
+
 # Scripts index
 
 Since WebExtensions cannot natively read the contents of a directory, there is a file (`src/scripts/_index.json`) which lists the relative filename (without file extensions) of each installed script. If you build a new script, it will not be recognised until its name is added to this file.

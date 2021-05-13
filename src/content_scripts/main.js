@@ -10,7 +10,7 @@
 
   const runScript = async function (name) {
     const scriptPath = getURL(`/scripts/${name}.js`);
-    const { main, clean, stylesheet, autoRestart } = await import(scriptPath);
+    const { main, clean, stylesheet, onStorageChanged } = await import(scriptPath);
 
     main().catch(console.error);
 
@@ -22,22 +22,20 @@
       document.documentElement.appendChild(link);
     }
 
-    if (autoRestart) {
-      restartListeners[name] = function (changes, areaName) {
-        if (areaName !== 'local') { return; }
+    restartListeners[name] = onStorageChanged || function (changes, areaName) {
+      if (areaName !== 'local') { return; }
 
-        if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
-          clean().then(main);
-        }
-      };
+      if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
+        clean().then(main);
+      }
+    };
 
-      browser.storage.onChanged.addListener(restartListeners[name]);
-    }
+    browser.storage.onChanged.addListener(restartListeners[name]);
   };
 
   const destroyScript = async function (name) {
     const scriptPath = getURL(`/scripts/${name}.js`);
-    const { clean, stylesheet, autoRestart } = await import(scriptPath);
+    const { clean, stylesheet } = await import(scriptPath);
 
     clean().catch(console.error);
 
@@ -48,9 +46,8 @@
       }
     }
 
-    if (autoRestart) {
-      browser.storage.onChanged.removeListener(restartListeners[name]);
-    }
+    browser.storage.onChanged.removeListener(restartListeners[name]);
+    delete restartListeners[name];
   };
 
   const onStorageChanged = async function (changes, areaName) {

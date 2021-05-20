@@ -1,0 +1,40 @@
+#xkit-toasts {
+  position: fixed;
+  bottom: 0;
+  z-index: 99;
+
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+
+  background-color: rgb(var(--navy));
+}
+
+aside #xkit-toasts {
+  width: 320px;
+}
+
+#xkit-toasts div {
+  padding: 1ch 2ch;
+  border-radius: 3px;
+  margin-top: 1ch;
+
+  background-color: rgba(var(--white-on-dark), .13);
+  color: rgb(var(--white-on-dark));
+  font-family: var(--font-family);
+  line-height: 1.5;
+  text-align: center;
+
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+#xkit-toasts div.visible {
+  opacity: 1;
+}
+
+aside #xkit-toasts div {
+  margin-top: 0;
+  margin-bottom: 1ch;
+
+  text-align: left;
+}

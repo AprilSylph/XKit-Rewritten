@@ -48,7 +48,8 @@
       ],
       "css": [
         "content_scripts/sidebar.css",
-        "content_scripts/control_buttons.css"
+        "content_scripts/control_buttons.css",
+        "content_scripts/notifications.css"
       ]
     }
   ],

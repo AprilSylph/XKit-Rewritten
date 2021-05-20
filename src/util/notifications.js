@@ -3,10 +3,10 @@ import { onBaseContainerMutated } from './mutations.js';
 const toastContainer = Object.assign(document.createElement('div'), { id: 'xkit-toasts' });
 
 const addToastContainerToPage = () => {
-  if (document.body.contains(toastContainer)) { return; }
-
   const targetNode = document.body.querySelector('aside') || document.body;
-  targetNode.appendChild(toastContainer);
+  if (targetNode.contains(toastContainer) === false) {
+    targetNode.appendChild(toastContainer);
+  }
 };
 
 onBaseContainerMutated.addListener(addToastContainerToPage);

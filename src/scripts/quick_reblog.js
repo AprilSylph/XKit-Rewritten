@@ -4,6 +4,7 @@ import { getPostElements } from '../util/interface.js';
 import { fetchUserBlogs } from '../util/user_blogs.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
+import { notify } from '../util/notifications.js';
 
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-reblog' });
 const blogSelector = document.createElement('select');
@@ -111,12 +112,7 @@ const reblogPost = async function ({ currentTarget }) {
         popupElement.parentNode.removeChild(popupElement);
       }
 
-      browser.runtime.sendMessage({
-        command: 'notifications:create',
-        arguments: {
-          options: { type: 'basic', title: 'XKit', message: response.displayText }
-        }
-      });
+      notify(response.displayText);
 
       if (alreadyRebloggedEnabled) {
         const { [storageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(storageKey);
@@ -130,12 +126,7 @@ const reblogPost = async function ({ currentTarget }) {
       }
     }
   } catch ({ body }) {
-    browser.runtime.sendMessage({
-      command: 'notifications:create',
-      arguments: {
-        options: { type: 'basic', title: 'XKit', message: body.errors[0].detail }
-      }
-    });
+    notify(body.errors[0].detail);
   } finally {
     actionButtons.disabled = false;
   }

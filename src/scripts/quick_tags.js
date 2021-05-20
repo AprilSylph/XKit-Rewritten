@@ -3,6 +3,7 @@ import { apiFetch } from '../util/tumblr_helpers.js';
 import { getPostElements } from '../util/interface.js';
 import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
 import { onNewPosts } from '../util/mutations.js';
+import { notify } from '../util/notifications.js';
 
 const buttonClass = 'xkit-quick-tags-button';
 const excludeClass = 'xkit-quick-tags-done';
@@ -82,12 +83,7 @@ const processBundleClick = async function ({ target }) {
       }
     });
 
-    browser.runtime.sendMessage({
-      command: 'notifications:create',
-      arguments: {
-        options: { type: 'basic', title: 'XKit', message: displayText }
-      }
-    });
+    notify(displayText);
 
     const tagsElement = Object.assign(document.createElement('div'), { className: tagsClass });
 
@@ -104,12 +100,7 @@ const processBundleClick = async function ({ target }) {
 
     postElement.querySelector('footer').parentNode.prepend(tagsElement);
   } catch ({ body }) {
-    browser.runtime.sendMessage({
-      command: 'notifications:create',
-      arguments: {
-        options: { type: 'basic', title: 'XKit', message: body.errors[0].detail }
-      }
-    });
+    notify(body.errors[0].detail);
   }
 };
 

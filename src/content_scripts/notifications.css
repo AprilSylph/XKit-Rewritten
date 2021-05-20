@@ -4,18 +4,17 @@
   z-index: 99;
 
   width: 100%;
-  border-radius: 3px 3px 0 0;
 
   background-color: rgb(var(--navy));
 }
 
 aside #xkit-toasts {
   width: 320px;
+  border-radius: 3px 3px 0 0;
 }
 
 #xkit-toasts div {
   padding: 1ch 2ch;
-  border-radius: 3px;
   margin-top: 1ch;
 
   background-color: rgba(var(--white-on-dark), .13);
@@ -33,6 +32,7 @@ aside #xkit-toasts {
 }
 
 aside #xkit-toasts div {
+  border-radius: 3px;
   margin-top: 0;
   margin-bottom: 1ch;
 

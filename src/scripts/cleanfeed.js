@@ -1,3 +1,5 @@
+import { onNewPosts } from '../util/mutations.js';
+import { keyToCss } from '../util/css_map.js';
 import { getPostElements } from '../util/interface.js';
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
@@ -41,9 +43,6 @@ const processPosts = async function () {
 };
 
 export const main = async function () {
-  const { onNewPosts } = await import('../util/mutations.js');
-  const { keyToCss } = await import('../util/css_map.js');
-
   reblogSelector = await keyToCss('reblog');
 
   ({ blockingMode } = await getPreferences('cleanfeed'));
@@ -53,7 +52,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await import('../util/mutations.js');
   onNewPosts.removeListener(processPosts);
 
   $(`.${excludeClass}`).removeClass(excludeClass);

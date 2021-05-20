@@ -1,9 +1,9 @@
+import { descendantSelector } from '../../util/css_map.js';
+import { addStyle, removeStyle } from '../../util/interface.js';
+
 let css;
 
 export const main = async function () {
-  const { descendantSelector } = await import('../../util/css_map.js');
-  const { addStyle } = await import('../../util/interface.js');
-
   const quoteSelector = await descendantSelector('textBlock', 'quote');
   const chatSelector = await descendantSelector('textBlock', 'chat');
   const quirkySelector = await descendantSelector('textBlock', 'quirky');
@@ -13,6 +13,5 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { removeStyle } = await import('../../util/interface.js');
   removeStyle(css);
 };

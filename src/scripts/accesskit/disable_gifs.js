@@ -1,3 +1,5 @@
+import { onPostsMutated } from '../../util/mutations.js';
+
 const className = 'accesskit-disable-gifs';
 
 const pauseGif = function (gifElement) {
@@ -37,8 +39,6 @@ const processGifs = function () {
 };
 
 export const main = async function () {
-  const { onPostsMutated } = await import('../../util/mutations.js');
-
   document.body.classList.add(className);
 
   onPostsMutated.addListener(processGifs);
@@ -46,7 +46,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onPostsMutated } = await import('../../util/mutations.js');
   onPostsMutated.removeListener(processGifs);
 
   document.body.classList.remove(className);

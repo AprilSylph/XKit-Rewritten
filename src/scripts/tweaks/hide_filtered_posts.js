@@ -1,12 +1,14 @@
+import { onNewPosts } from '../../util/mutations.js';
+import { addStyle, removeStyle, getPostElements } from '../../util/interface.js';
+
+import { timelineObjectMemoized } from '../../util/react_props.js';
+
 const excludeClass = 'xkit-tweaks-hide-filtered-posts-done';
 const includeFiltered = true;
 const hiddenClass = 'xkit-tweaks-hide-filtered-posts-hidden';
 const css = `.${hiddenClass} article { display: none; }`;
 
 const processPosts = async function () {
-  const { getPostElements } = await import('../../util/interface.js');
-  const { timelineObjectMemoized } = await import('../../util/react_props.js');
-
   getPostElements({ excludeClass, includeFiltered }).forEach(async postElement => {
     const { filtered } = await timelineObjectMemoized(postElement.dataset.id);
 
@@ -17,9 +19,6 @@ const processPosts = async function () {
 };
 
 export const main = async function () {
-  const { onNewPosts } = await import('../../util/mutations.js');
-  const { addStyle } = await import('../../util/interface.js');
-
   onNewPosts.addListener(processPosts);
   processPosts();
 
@@ -27,9 +26,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onNewPosts } = await import('../../util/mutations.js');
-  const { removeStyle } = await import('../../util/interface.js');
-
   onNewPosts.removeListener(processPosts);
   removeStyle(css);
 

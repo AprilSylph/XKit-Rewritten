@@ -1,3 +1,6 @@
+import { keyToClasses } from '../../util/css_map.js';
+import { addStyle, removeStyle } from '../../util/interface.js';
+
 let css;
 
 const cssTemplate = filteredScreen => `
@@ -33,15 +36,11 @@ const cssTemplate = filteredScreen => `
 `;
 
 export const main = async function () {
-  const { keyToClasses } = await import('../../util/css_map.js');
-  const { addStyle } = await import('../../util/interface.js');
-
   const [filteredScreen] = await keyToClasses('filteredScreen');
   css = cssTemplate(filteredScreen);
   addStyle(css);
 };
 
 export const clean = async function () {
-  const { removeStyle } = await import('../../util/interface.js');
   removeStyle(css);
 };

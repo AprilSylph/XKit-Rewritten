@@ -1,3 +1,7 @@
+import { onBaseContainerMutated } from '../../util/mutations.js';
+import { translate } from '../../util/language_data.js';
+import { addStyle, removeStyle } from '../../util/interface.js';
+
 const excludeClass = 'xkit-no-recommended-radar-done';
 const hiddenClass = 'xkit-no-recommended-radar-hidden';
 
@@ -15,10 +19,6 @@ const checkForRadar = function () {
 };
 
 export const main = async function () {
-  const { onBaseContainerMutated } = await import('../../util/mutations.js');
-  const { translate } = await import('../../util/language_data.js');
-  const { addStyle } = await import('../../util/interface.js');
-
   radarLabel = await translate('Radar');
   onBaseContainerMutated.addListener(checkForRadar);
   checkForRadar();
@@ -26,9 +26,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  const { onBaseContainerMutated } = await import('../../util/mutations.js');
-  const { removeStyle } = await import('../../util/interface.js');
-
   onBaseContainerMutated.removeListener(checkForRadar);
   removeStyle(css);
   $(`.${excludeClass}`).removeClass(excludeClass);

@@ -4,20 +4,13 @@
   z-index: 99;
 
   width: 100%;
-
-  background-color: rgb(var(--navy));
-}
-
-aside #xkit-toasts {
-  width: 320px;
-  border-radius: 3px 3px 0 0;
 }
 
 #xkit-toasts div {
-  padding: 1ch 2ch;
-  margin-top: 1ch;
+  padding: 10px;
 
-  background-color: rgba(var(--white-on-dark), .13);
+  background-color: rgb(var(--navy));
+  background-image: linear-gradient(rgba(var(--white-on-dark), .07), rgba(var(--white-on-dark), .07));
   color: rgb(var(--white-on-dark));
   font-family: var(--font-family);
   line-height: 1.5;
@@ -31,10 +24,15 @@ aside #xkit-toasts {
   opacity: 1;
 }
 
-aside #xkit-toasts div {
-  border-radius: 3px;
-  margin-top: 0;
-  margin-bottom: 1ch;
+#xkit-toasts div:not(:last-child) {
+  border-bottom: 2px solid rgba(var(--white-on-dark), .13);
+}
 
+aside #xkit-toasts {
+  width: 320px;
+  margin-bottom: 1ch;
+}
+
+aside #xkit-toasts div {
   text-align: left;
 }

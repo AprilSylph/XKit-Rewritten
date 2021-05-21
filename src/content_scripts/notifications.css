@@ -36,3 +36,10 @@ aside #xkit-toasts {
 aside #xkit-toasts div {
   text-align: left;
 }
+
+#glass-container #xkit-toasts {
+  position: sticky;
+  top: 100%;
+  bottom: unset;
+  transform: translateY(-100%);
+}

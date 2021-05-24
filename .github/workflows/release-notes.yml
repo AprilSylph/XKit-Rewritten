@@ -1,0 +1,22 @@
+name: Release Notes
+
+on: workflow_dispatch
+
+jobs:
+  create:
+    name: Create
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+
+      - name: Create release notes
+        run: git log $(git describe --tags --abbrev=0)..HEAD --reverse --pretty --format="- [\`%h\`](https://github.com/$GITHUB_REPOSITORY/commit/%H) %s (%an)" --follow src/ > release-notes.md
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-notes.md
+          path: release-notes.md

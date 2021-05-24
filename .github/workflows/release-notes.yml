@@ -18,5 +18,5 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: release-notes.md
+          name: release-notes
           path: release-notes.md

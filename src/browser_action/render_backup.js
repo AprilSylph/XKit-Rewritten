@@ -50,9 +50,17 @@ const localExport = async function () {
   const storageBlob = new Blob([stringifiedStorage], { type: 'application/json' });
   const blobUrl = URL.createObjectURL(storageBlob);
 
+  const date = new Date(storageLocal.storageLastModified);
+
+  const fourDigitYear = date.getFullYear().toString().padStart(4, '0');
+  const twoDigitMonth = (date.getMonth() + 1).toString().padStart(2, '0');
+  const twoDigitDate = date.getDate().toString().padStart(2, '0');
+
+  const dateString = `${fourDigitYear}-${twoDigitMonth}-${twoDigitDate}`;
+
   const tempLink = document.createElement('a');
   tempLink.href = blobUrl;
-  tempLink.download = `XKit Payload ${storageLocal.storageLastModified}.json`;
+  tempLink.download = `XKit Backup @ ${dateString}.json`;
 
   document.documentElement.appendChild(tempLink);
   tempLink.click();

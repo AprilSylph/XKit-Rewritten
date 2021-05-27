@@ -90,3 +90,11 @@ const renderLocalBackup = async function () {
 };
 
 renderLocalBackup();
+
+document.querySelectorAll('#backup details').forEach(details => details.addEventListener('toggle', ({ currentTarget }) => {
+  if (currentTarget.open) {
+    [...currentTarget.parentNode.children]
+      .filter(element => element !== currentTarget)
+      .forEach(sibling => { sibling.open = false; });
+  }
+}));

@@ -13,6 +13,14 @@
   margin: 1em 0;
 }
 
+#backup pre {
+  width: 0;
+  min-width: 100%;
+
+  user-select: all;
+}
+
+#backup pre,
 #backup textarea {
   box-sizing: border-box;
   max-height: calc(10em + 2ch);
@@ -26,7 +34,6 @@
   background-color: var(--light-grey);
   font-family: monospace, monospace;
   font-size: smaller;
-  user-select: all;
   white-space: pre;
 }
 

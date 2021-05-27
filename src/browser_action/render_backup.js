@@ -7,7 +7,6 @@ const localRestoreButton = document.getElementById('restore-local');
 
 const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
 
-
 const updateLocalExportDisplay = async function () {
   const storageLocal = await browser.storage.local.get();
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
@@ -63,7 +62,14 @@ const localRestore = async function () {
     const parsedStorage = JSON.parse(importText);
     await browser.storage.local.set(parsedStorage);
 
+    localRestoreButton.disabled = true;
+    localRestoreButton.textContent = 'Successfully restored!';
+    localImportTextarea.value = '';
     document.querySelector('a[href="#configuration"]').classList.add('outdated');
+
+    await sleep(3000);
+    localRestoreButton.disabled = false;
+    localRestoreButton.textContent = 'Restore';
   } catch (exception) {
     console.error(exception);
   }

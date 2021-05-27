@@ -1,47 +1,35 @@
-const localImportTextarea = document.getElementById('local-import');
-const restoreButton = document.getElementById('local-restore');
+const localExportDisplayElement = document.getElementById('local-storage-export');
+const localCopyButton = document.getElementById('copy-local');
+const localDownloadButton = document.getElementById('download-local');
 
-const cloudUpload = async function () {
-  const errorsDisplay = document.querySelector('#cloud .errors');
-  errorsDisplay.textContent = '';
+const localImportTextarea = document.getElementById('local-storage-import');
+const localRestoreButton = document.getElementById('restore-local');
 
+const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
+
+
+const updateLocalExportDisplay = async function () {
   const storageLocal = await browser.storage.local.get();
-  const keys = Object.keys(storageLocal);
+  const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
 
-  if (keys.length > 512) {
-    errorsDisplay.textContent += 'ERROR: More than 512 storage keys; cannot upload.';
-    return;
+  localExportDisplayElement.textContent = stringifiedStorage;
+
+  if (Object.keys(storageLocal).length === 0) {
+    document.getElementById('export').open = false;
+    document.getElementById('import').open = true;
   }
-
-  const encoder = new TextEncoder();
-
-  for (const key of keys) {
-    const stringToMeasure = key + JSON.stringify(storageLocal[key]);
-    const byteStream = encoder.encode(stringToMeasure);
-    if (byteStream.length > 8192) {
-      errorsDisplay.textContent += `WARNING: Dropped ${key} for exceeding quota.\n  (${byteStream.length} of 8192 bytes used)\n`;
-      delete storageLocal[key];
-    }
-  }
-
-  const stringifiedStorage = JSON.stringify(storageLocal);
-  const storageByteStream = encoder.encode(stringifiedStorage);
-  if (storageByteStream.length > 102400) {
-    errorsDisplay.textContent += `ERROR: Storage too large to upload.\n  (${storageByteStream.length} of 102400 bytes used)\n`;
-    return;
-  }
-
-  browser.storage.sync.set(storageLocal);
 };
 
-const cloudDownload = async function () {
-  const errorsDisplay = document.querySelector('#cloud .errors');
-  errorsDisplay.textContent = '';
+const localCopy = async function () {
+  if (localCopyButton.classList.contains('copied')) { return; }
 
-  const storageSync = await browser.storage.sync.get();
-  await browser.storage.local.set(storageSync);
-
-  document.querySelector('a[href="#configuration"]').classList.add('outdated');
+  navigator.clipboard.writeText(localExportDisplayElement.textContent).then(async () => {
+    localCopyButton.classList.add('copied');
+    await sleep(2000);
+    localCopyButton.classList.add('fading');
+    await sleep(1000);
+    localCopyButton.classList.remove('copied', 'fading');
+  });
 };
 
 const localExport = async function () {
@@ -68,14 +56,8 @@ const localExport = async function () {
   URL.revokeObjectURL(blobUrl);
 };
 
-const localImport = async function () {
+const localRestore = async function () {
   const importText = localImportTextarea.value;
-
-  if (importText === localImportTextarea.textContent) {
-    localImportTextarea.value = '';
-    updateRestoreButtonClass();
-    return;
-  }
 
   try {
     const parsedStorage = JSON.parse(importText);
@@ -87,78 +69,18 @@ const localImport = async function () {
   }
 };
 
-const updateLastModifiedMessage = async function (areaName) {
-  const messageElement = document.getElementById(`${areaName}-storage-message`);
-
-  try {
-    const { storageLastModified } = await browser.storage[areaName].get();
-
-    if (areaName === 'sync') {
-      const cloudControls = document.querySelector('.cloud-controls');
-      cloudControls.style.display = null;
-    }
-
-    messageElement.textContent = 'Last modified: ';
-
-    if (storageLastModified) {
-      const date = new Date(storageLastModified);
-      const dateString = date.toLocaleString();
-      messageElement.textContent += dateString;
-    } else {
-      messageElement.textContent += 'never';
-    }
-  } catch (exception) {
-    messageElement.textContent = 'Not supported by this browser';
-  }
-};
-
-const updateLocalStorageTextarea = async function () {
-  const storageLocal = await browser.storage.local.get();
-  const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
-
-  localImportTextarea.textContent = stringifiedStorage;
-  localImportTextarea.value = stringifiedStorage;
-
-  updateRestoreButtonClass();
-};
-
-const updateRestoreButtonClass = async function () {
-  const addOrRemove = localImportTextarea.value === localImportTextarea.textContent ? 'add' : 'remove';
-  restoreButton.classList[addOrRemove]('unchanged-import');
-};
-
-const renderCloudBackup = async function () {
-  ['local', 'sync'].forEach(updateLastModifiedMessage);
-
-  browser.storage.onChanged.addListener((changes, areaName) => {
-    if (Object.keys(changes).includes('storageLastModified')) {
-      updateLastModifiedMessage(areaName);
-    }
-  });
-
-  const uploadButton = document.getElementById('cloud-upload');
-  const downloadButton = document.getElementById('cloud-download');
-
-  uploadButton.addEventListener('click', cloudUpload);
-  downloadButton.addEventListener('click', cloudDownload);
-};
-
 const renderLocalBackup = async function () {
-  updateLocalStorageTextarea();
-
+  updateLocalExportDisplay();
   browser.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'local') {
-      updateLocalStorageTextarea();
+      updateLocalExportDisplay();
     }
   });
 
-  const downloadButton = document.getElementById('local-download');
+  localCopyButton.addEventListener('click', localCopy);
+  localDownloadButton.addEventListener('click', localExport);
 
-  downloadButton.addEventListener('click', localExport);
-  restoreButton.addEventListener('click', localImport);
+  localRestoreButton.addEventListener('click', localRestore);
 };
 
-renderCloudBackup();
 renderLocalBackup();
-
-localImportTextarea.addEventListener('input', updateRestoreButtonClass);

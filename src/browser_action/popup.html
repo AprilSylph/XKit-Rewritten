@@ -45,34 +45,20 @@
         <div class="scripts"></div>
       </section>
       <section id="backup">
-        <div id="cloud">
-          <div class="storage-area">
-            <div>
-              <h4>Local storage</h4>
-              <p id="local-storage-message"></p>
-            </div>
+        <details id="export" open>
+          <summary><h4>Local Export</h4></summary>
+          <textarea id="local-storage-export" rows="10" disabled></textarea>
+          <div class="buttons-container">
+            <button id="copy-local">Copy All</button>
+            <button id="download-local">Download</button>
           </div>
-          <div class="storage-area">
-            <div>
-              <h4>Cloud storage</h4>
-              <p id="sync-storage-message"></p>
-            </div>
-            <div class="cloud-controls" style="display: none;">
-              <button id="cloud-upload" title="Upload configuration to cloud storage"><i class="ri-upload-cloud-2-line"></i></button>
-              <button id="cloud-download" title="Download configuration from cloud storage"><i class="ri-download-cloud-2-line"></i></button>
-            </div>
-          </div>
-          <pre class="errors"></pre>
-        </div>
-        <div id="local">
-          <div class="textarea-container">
-            <textarea id="local-import" rows="10" cols="10" spellcheck="false" placeholder="Paste your saved export here, then hit the &quot;Restore&quot; button."></textarea>
-          </div>
-          <div class="local-controls">
-            <button id="local-download">Save to file</button>
-            <button id="local-restore">Restore</button>
-          </div>
-        </div>
+        </details>
+        <details id="import">
+          <summary><h4>Local Import</h4></summary>
+          <label for="local-storage-import">Paste the contents of your saved backup here.</label>
+          <textarea id="local-storage-import" rows="10"></textarea>
+          <button id="restore-local">Restore</button>
+        </details>
       </section>
       <section id="links">
         <ul>

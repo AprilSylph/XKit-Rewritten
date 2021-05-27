@@ -1,91 +1,74 @@
-#backup > div {
-  margin: 1ch 0;
-  padding: 0 1ch;
-}
-
-#backup > div + div {
-  padding-top: 1em;
-  border-top: 1px dotted var(--dark-grey);
-  margin-top: 1em;
-}
-
-.storage-area {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 1em 0;
-}
-
-.storage-area div:not([class]) {
+#backup details {
   display: flex;
   flex-direction: column;
-}
-
-.cloud-controls {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.storage-area h4,
-.storage-area p {
-  margin: 0;
-}
-
-.storage-area p {
-  margin-top: 0.5ch;
-  line-height: 1em;
-  min-height: 1em;
-}
-
-.storage-area button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 2em;
-  max-height: 2em;
-  margin-left: 1ch;
-}
-
-.storage-area button i {
-  font-size: 1.5em;
-}
-
-.errors {
-  font-size: 12px;
-  white-space: pre-wrap;
-  max-width: 100%;
-}
-
-.textarea-container {
-  display: flex;
-}
-
-#local-import {
-  color: var(--black);
-  background-color: var(--light-grey);
-  border-color: var(--light-grey);
-  font-family: monospace, monospace;
-  font-size: smaller;
-  white-space: pre;
   padding: 1ch;
 }
 
-.local-controls {
+#backup h4 {
+  display: inline-block;
+  margin: 0;
+}
+
+#backup label {
+  margin: 1em 0;
+}
+
+#backup textarea {
+  box-sizing: border-box;
+  max-height: calc(10em + 2ch);
+  overflow: auto;
+  overflow-wrap: break-word;
+  padding: 1ch;
+  border: none;
+  margin: 1em 0;
+
+  color: var(--black);
+  background-color: var(--light-grey);
+  font-family: monospace, monospace;
+  font-size: smaller;
+  user-select: all;
+  white-space: pre;
+}
+
+.buttons-container {
   display: flex;
   flex-direction: row;
-  margin-top: 1ch;
+  justify-content: space-between;
 }
 
-.local-controls button {
-  width: 100%;
-  text-align: center;
+.buttons-container button {
+  padding: 0;
+  border: none;
+  margin: 0;
+
+  background-color: inherit;
+  color: var(--blue);
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.local-controls button:not(:first-child) {
+#copy-local.copied::after {
   margin-left: 1ch;
+
+  content: "Copied!";
+  color: var(--black);
+  font-weight: normal;
+
+  transition: opacity 1s;
+  opacity: 1;
 }
 
-#local-restore.unchanged-import::after {
-  content: "\2026";
+#copy-local.copied.fading::after {
+  opacity: 0;
+}
+
+#import {
+  border-top: 1px dotted var(--dark-grey);
+}
+
+#restore-local {
+  display: block;
+  width: 100%;
+
+  text-align: center;
 }

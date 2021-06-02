@@ -75,6 +75,7 @@ export const unregisterMeatballItem = label => delete meatballItems[label];
         const meatballItemButton = document.createElement('button');
         meatballItemButton.classList.add(meatballItemClass, dropdownItemClass);
         meatballItemButton.textContent = label;
+        meatballItemButton.dataset.xkitMeatballButton = label;
         meatballItemButton.addEventListener('click', meatballItems[label]);
 
         meatballMenu.appendChild(meatballItemButton);

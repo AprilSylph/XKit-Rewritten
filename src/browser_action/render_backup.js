@@ -12,11 +12,6 @@ const updateLocalExportDisplay = async function () {
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
 
   localExportDisplayElement.textContent = stringifiedStorage;
-
-  if (Object.keys(storageLocal).length === 0) {
-    document.getElementById('export').open = false;
-    document.getElementById('import').open = true;
-  }
 };
 
 const localCopy = async function () {
@@ -63,13 +58,10 @@ const localRestore = async function () {
     await browser.storage.local.set(parsedStorage);
 
     localRestoreButton.disabled = true;
-    localRestoreButton.textContent = 'Successfully restored!';
     localImportTextarea.value = '';
     document.querySelector('a[href="#configuration"]').classList.add('outdated');
-
     await sleep(3000);
     localRestoreButton.disabled = false;
-    localRestoreButton.textContent = 'Restore';
   } catch (exception) {
     console.error(exception);
   }

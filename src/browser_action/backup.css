@@ -80,10 +80,18 @@
   text-align: center;
 }
 
+#restore-local:enabled::before {
+  content: "Restore";
+}
+
 #restore-local:disabled {
   border: none;
 
   background-color: transparent;
   color: #00cf35;
   font-weight: bold;
+}
+
+#restore-local:disabled::before {
+  content: "Successfully restored!";
 }

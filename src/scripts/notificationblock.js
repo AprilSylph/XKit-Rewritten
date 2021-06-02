@@ -31,7 +31,7 @@ const processNotifications = () => inject(async () => {
       tries++;
     }
 
-    if (!fiber) { return; }
+    if (!fiber || !fiber.memoizedProps.notification) { return; }
 
     const { targetPostId } = fiber.memoizedProps.notification;
     Object.assign(notificationElement.dataset, { targetPostId });

@@ -2,7 +2,7 @@
   position: absolute;
   top: 1ch;
   right: 1ch;
-  z-index: 2;
+  z-index: 1;
   height: 1em;
   line-height: 1em;
   background-color: rgb(var(--black));

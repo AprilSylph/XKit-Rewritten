@@ -16,8 +16,7 @@ const pauseGif = function (gifElement) {
     const gifLabel = document.createElement('p');
     gifLabel.className = 'xkit-gif-label';
 
-    gifElement.parentNode.prepend(canvas);
-    gifElement.parentNode.prepend(gifLabel);
+    gifElement.parentNode.prepend(canvas, gifLabel);
   };
 };
 

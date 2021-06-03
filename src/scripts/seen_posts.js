@@ -1,5 +1,5 @@
 import { getPostElements } from '../util/interface.js';
-import { givenPath } from '../util/react_props.js';
+import { exposeTimelines } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 
@@ -11,10 +11,9 @@ const dimPosts = async function () {
   const storageKey = 'seen_posts.seenPosts';
   const { [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey);
 
-  for (const postElement of getPostElements({ excludeClass, noPeepr: true, includeFiltered: true })) {
-    const timeline = await givenPath(postElement);
-    if (timeline !== '/v2/timeline/dashboard') { continue; }
+  await exposeTimelines();
 
+  for (const postElement of getPostElements({ excludeClass, timeline: /\/v2\/timeline\/dashboard/, includeFiltered: true })) {
     const { id } = postElement.dataset;
 
     if (seenPosts.includes(id)) {

@@ -36,6 +36,30 @@ export const timelineObject = async function (postID) {
 };
 
 /**
+ * Adds data-timeline attributes to all timeline elements on the page, set to the buried endpointApiRequest.givenPath property
+ *
+ * @returns {null} - Resolves when finished
+ */
+export const exposeTimelines = async () => inject(async () => {
+  const cssMap = await window.tumblr.getCssMap();
+  const [timelineClass] = cssMap.timeline;
+
+  [...document.querySelectorAll(`.${timelineClass}:not([data-timeline])`)].forEach(timelineElement => {
+    const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactInternalInstance'));
+    let fiber = timelineElement[reactKey];
+
+    while (fiber.memoizedProps.endpointApiRequest === undefined) {
+      fiber = fiber.return;
+    }
+
+    if (!fiber) { return; }
+
+    const { givenPath } = fiber.memoizedProps.endpointApiRequest;
+    timelineElement.dataset.timeline = givenPath;
+  });
+});
+
+/**
  * @param {object} postElement - A post's HTMLDivElement
  * @returns {string} That post's buried endpointApiRequest.givenPath property
  */

@@ -23,11 +23,9 @@ export const timelineObject = async function (postID) {
     const postElement = document.querySelector(`[data-id="${id}"]`);
     const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactInternalInstance'));
     let fiber = postElement[reactKey];
-    let tries = 0;
 
-    while (fiber.memoizedProps.timelineObject === undefined && tries <= 10) {
+    while (fiber.memoizedProps.timelineObject === undefined) {
       fiber = fiber.return;
-      tries++;
     }
 
     return fiber.memoizedProps.timelineObject;

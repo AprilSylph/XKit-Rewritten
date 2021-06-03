@@ -17,11 +17,9 @@ const processNotifications = () => inject(async () => {
   [...document.querySelectorAll(notificationSelector)].forEach(async notificationElement => {
     const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactInternalInstance'));
     let fiber = notificationElement[reactKey];
-    let tries = 0;
 
-    while (fiber.memoizedProps.notification === undefined && tries <= 10) {
+    while (fiber.memoizedProps.notification === undefined) {
       fiber = fiber.return;
-      tries++;
     }
 
     if (!fiber || !fiber.memoizedProps.notification) { return; }

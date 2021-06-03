@@ -1,6 +1,3 @@
-import { keyToClasses, keyToCss } from './css_map.js';
-import { onPostsMutated } from './mutations.js';
-
 /**
  * @param {object} options - Arguments object (destructured, not used directly)
  * @param {string} options.excludeClass - Classname to exclude and add
@@ -44,42 +41,3 @@ export const removeStyle = css => {
     .filter(style => style.textContent === css)
     .forEach(style => style.parentNode.removeChild(style));
 };
-
-const meatballItems = {};
-
-/**
- * Add a custom button to posts' meatball menus.
- *
- * @param {string} label - Button text to display
- * @param {Function} callback - Button click listener function
- */
-export const registerMeatballItem = function (label, callback) {
-  if (meatballItems[label] === undefined) {
-    meatballItems[label] = callback;
-  }
-};
-
-export const unregisterMeatballItem = label => delete meatballItems[label];
-
-(async function () {
-  const meatballMenuSelector = await keyToCss('meatballMenu');
-  const [meatballItemClass] = await keyToClasses('meatballItem');
-  const [dropdownItemClass] = await keyToClasses('dropdownItem');
-
-  onPostsMutated.addListener(() => {
-    document.querySelectorAll(`[data-id] header ${meatballMenuSelector}`).forEach(async meatballMenu => {
-      if (!meatballMenu || meatballMenu.classList.contains('xkit-done')) { return; }
-      meatballMenu.classList.add('xkit-done');
-
-      Object.keys(meatballItems).sort().forEach(label => {
-        const meatballItemButton = document.createElement('button');
-        meatballItemButton.classList.add(meatballItemClass, dropdownItemClass);
-        meatballItemButton.textContent = label;
-        meatballItemButton.dataset.xkitMeatballButton = label;
-        meatballItemButton.addEventListener('click', meatballItems[label]);
-
-        meatballMenu.appendChild(meatballItemButton);
-      });
-    });
-  });
-})();

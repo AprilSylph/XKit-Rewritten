@@ -1,21 +1,14 @@
-import { addStyle, removeStyle, getPostElements, registerMeatballItem, unregisterMeatballItem } from '../util/interface.js';
-import { onNewPosts, onBaseContainerMutated } from '../util/mutations.js';
+import { addStyle, removeStyle } from '../util/interface.js';
+import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
+import { onBaseContainerMutated } from '../util/mutations.js';
 import { inject } from '../util/inject.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
-const excludeClass = 'xkit-notificationblock-done';
-const actionableClass = 'xkit-notificationblock-actionable';
 const meatballButtonLabel = 'NotificationBlock';
 
 let css;
 
 const buildStyles = blockedPostTargetIDs => blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
-
-const processPosts = () => {
-  getPostElements({ excludeClass })
-    .filter(postElement => postElement.querySelector('footer a[href*="/edit/"]') !== null)
-    .forEach(postElement => postElement.classList.add(actionableClass));
-};
 
 const processNotifications = () => inject(async () => {
   const cssMap = await window.tumblr.getCssMap();
@@ -56,6 +49,8 @@ const onButtonClicked = async function ({ currentTarget }) {
   }
 };
 
+const postFilter = postElement => postElement.querySelector('footer a[href*="/edit"]') !== null;
+
 export const onStorageChanged = (changes, areaName) => {
   if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
     removeStyle(css);
@@ -69,22 +64,14 @@ export const main = async function () {
   css = buildStyles(blockedPostTargetIDs);
   addStyle(css);
 
-  onNewPosts.addListener(processPosts);
-  processPosts();
   onBaseContainerMutated.addListener(processNotifications);
   processNotifications();
 
-  registerMeatballItem(meatballButtonLabel, onButtonClicked);
+  registerMeatballItem({ label: meatballButtonLabel, onClick: onButtonClicked, postFilter });
 };
 
 export const clean = async function () {
   removeStyle(css);
   onBaseContainerMutated.removeListener(processNotifications);
   unregisterMeatballItem(meatballButtonLabel);
-
-  $(`.${excludeClass}`)
-    .removeClass(excludeClass)
-    .removeClass(actionableClass);
 };
-
-export const stylesheet = true;

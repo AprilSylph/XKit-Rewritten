@@ -1,4 +1,5 @@
-import { getPostElements, registerMeatballItem, unregisterMeatballItem } from '../util/interface.js';
+import { getPostElements } from '../util/interface.js';
+import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { onNewPosts } from '../util/mutations.js';
 
@@ -48,7 +49,7 @@ export const onStorageChanged = async function (changes, areaName) {
 };
 
 export const main = async function () {
-  registerMeatballItem(meatballButtonLabel, onButtonClicked);
+  registerMeatballItem({ label: meatballButtonLabel, onClick: onButtonClicked });
 
   onNewPosts.addListener(processPosts);
   processPosts();

@@ -25,7 +25,7 @@ Click the toggle button to the right of the feature's information.
 Open its preferences by clicking on the feature's information, or the white space containing it.
 
 ### *Backup* tab
-The backup section allows you to save your configuration data either to your browser sync account, or to file.
+The backup section allows you to manage your configuration data.
 
 ## Credits
 - [Contributors to this repository](https://github.com/AprilSylph/XKit-Rewritten/graphs/contributors)

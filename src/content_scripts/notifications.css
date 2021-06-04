@@ -6,6 +6,10 @@
   width: 100%;
 }
 
+#xkit-toasts:empty {
+  display: none;
+}
+
 #xkit-toasts div {
   padding: 10px;
 
@@ -38,8 +42,5 @@ aside #xkit-toasts div {
 }
 
 #glass-container #xkit-toasts {
-  position: sticky;
-  top: 100%;
-  bottom: unset;
-  transform: translateY(-100%);
+  position: absolute;
 }

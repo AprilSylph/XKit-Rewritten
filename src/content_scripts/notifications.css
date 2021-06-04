@@ -12,6 +12,7 @@
 
 #xkit-toasts div {
   padding: 10px;
+  border-top: 1px solid rgba(var(--white-on-dark), .13);
 
   background-color: rgb(var(--navy));
   background-image: linear-gradient(rgba(var(--white-on-dark), .07), rgba(var(--white-on-dark), .07));
@@ -28,17 +29,19 @@
   opacity: 1;
 }
 
-#xkit-toasts div:not(:last-child) {
-  border-bottom: 2px solid rgba(var(--white-on-dark), .13);
-}
-
 aside #xkit-toasts {
   width: 320px;
   margin-bottom: 1ch;
 }
 
 aside #xkit-toasts div {
+  border-top: none;
+
   text-align: left;
+}
+
+aside #xkit-toasts div:not(:last-child) {
+  border-bottom: 1px solid rgba(var(--white-on-dark), .13);
 }
 
 #glass-container #xkit-toasts {

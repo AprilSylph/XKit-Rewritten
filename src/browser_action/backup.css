@@ -4,6 +4,10 @@
   padding: 1ch;
 }
 
+#backup details[open] ~ details summary ~ * {
+  display: none;
+}
+
 #backup h4 {
   display: inline-block;
   margin: 0;

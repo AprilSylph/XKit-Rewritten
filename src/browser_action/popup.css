@@ -24,6 +24,8 @@
 
 html {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
   background-color: var(--light-grey);
 }
 
@@ -37,10 +39,6 @@ body {
   margin: 0;
   padding: 0;
   overflow-y: scroll;
-}
-
-main {
-  min-width: 350px;
 }
 
 header {

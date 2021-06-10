@@ -174,7 +174,10 @@ const renderScripts = async function () {
   $makeSpectrum.on('change.spectrum', writePreference);
 };
 
-renderScripts();
+renderScripts().then(() => {
+  const main = document.querySelector('main');
+  main.style.minWidth = `${main.getBoundingClientRect().width}px`;
+});
 
 configSectionLink.addEventListener('click', ({ target }) => {
   if (target.classList.contains('outdated')) {

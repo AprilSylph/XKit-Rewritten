@@ -51,8 +51,3 @@ document.getElementById('filter').addEventListener('input', event => {
 
 const versionElement = document.getElementById('version');
 versionElement.textContent = `v${browser.runtime.getManifest().version} (Beta)`;
-
-window.onload = () => {
-  const main = document.querySelector('main');
-  main.style.minWidth = `${main.getBoundingClientRect().width}px`;
-};

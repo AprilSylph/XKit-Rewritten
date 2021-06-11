@@ -4,8 +4,15 @@
 }
 
 #links {
+  position: relative;
   margin: 1em 0;
   padding: 0 1em;
+}
+
+#version {
+  position: absolute;
+  top: 0;
+  right: 8px;
 }
 
 #links h4 {

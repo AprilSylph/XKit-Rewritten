@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-input[type="checkbox"].toggle-button {
+ input[type="checkbox"].toggle-button {
   --button-height: 16px;
   --button-half-height: 8px;
   --button-width: 26px;
@@ -19,7 +19,6 @@ input[type="checkbox"].toggle-button {
   appearance: none;
   padding: 0;
   margin: 0;
-  outline: 0;
   border: var(--button-border-width) solid var(--border-color);
   height: var(--button-height);
   width: var(--button-width);
@@ -34,12 +33,6 @@ input[type="checkbox"].toggle-button:enabled:hover {
 input[type="checkbox"].toggle-button:enabled:active {
   background: var(--in-content-button-background-active);
   border-color: var(--border-color);
-}
-input[type="checkbox"].toggle-button:focus {
-  box-shadow: 0 0 0 1px var(--border-color), 0 0 0 4px rgba(10, 132, 255, 0.3);
-}
-input[type="checkbox"].toggle-button:checked:focus {
-  box-shadow: 0 0 0 1px var(--in-content-border-active), 0 0 0 4px rgba(10, 132, 255, 0.3);
 }
 
 input[type="checkbox"].toggle-button:checked {
@@ -64,7 +57,6 @@ input[type="checkbox"].toggle-button::before {
   margin: var(--dot-margin);
   border-radius: 50%;
   outline: 1px solid var(--border-color);
-  -moz-outline-radius: 50%;
   transition: transform 100ms;
 }
 input[type="checkbox"].toggle-button:checked::before {

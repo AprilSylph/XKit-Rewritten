@@ -34,8 +34,8 @@
   border: none;
   margin: 1em 0;
 
-  color: var(--black);
-  background-color: var(--light-grey);
+  color: rgb(var(--black));
+  background-color: rgb(var(--passive-grey));
   font-family: monospace, monospace;
   font-size: smaller;
   white-space: pre;
@@ -53,7 +53,7 @@
   margin: 0;
 
   background-color: inherit;
-  color: var(--blue);
+  color: rgb(var(--accent));
   cursor: pointer;
   font-weight: bold;
 }
@@ -62,7 +62,7 @@
   margin-left: 1ch;
 
   content: "Copied!";
-  color: var(--black);
+  color: rgb(var(--black));
   font-weight: normal;
 
   transition: opacity 1s;
@@ -74,7 +74,7 @@
 }
 
 #import {
-  border-top: 1px dotted var(--dark-grey);
+  border-top: 1px dotted rgb(var(--active-grey));
 }
 
 #restore-local {

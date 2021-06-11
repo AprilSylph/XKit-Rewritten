@@ -1,18 +1,18 @@
 :root {
-  --black: #000000;
-  --white: #ffffff;
+  --black: 21, 20, 25;
+  --white: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --black: #ffffff;
-    --white: #343434;
+    --black: 251, 251, 254;
+    --white: 66, 65, 77;
   }
 }
 
 body {
-  color: var(--black);
-  background-color: var(--white);
+  color: rgb(var(--black));
+  background-color: rgb(var(--white));
   font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   -webkit-user-select: none;

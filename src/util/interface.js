@@ -2,7 +2,7 @@
  * @param {object} options - Arguments object (destructured, not used directly)
  * @param {string} options.excludeClass - Classname to exclude and add
  * @param {object} [options.timeline] - RegExp which posts' closest data-timeline attribute must match (use exposeTimelines() first)
- * @param {boolean} [options.noPeepr] - Whether to exclude posts in #glass-container
+ * @param {boolean} [options.noPeepr] - Whether to exclude posts in [role="dialog"]
  * @param {boolean} [options.includeFiltered] - Whether to include filtered posts
  * @returns {Array} - Array of post elements matching the query options
  */
@@ -11,11 +11,15 @@ export const getPostElements = function ({ excludeClass, timeline, noPeepr = fal
     return [];
   }
 
-  const selector = `${noPeepr ? '#base-container > :not(#glass-container)' : ''} [data-id]:not(.${excludeClass})`;
+  const selector = `[data-id]:not(.${excludeClass})`;
   let postElements = [...document.querySelectorAll(selector)];
 
   if (timeline !== undefined) {
     postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]').dataset.timeline));
+  }
+
+  if (noPeepr) {
+    postElements = postElements.filter(postElement => postElement.matches('[role="dialog"] [data-id]') === false);
   }
 
   if (!includeFiltered) {

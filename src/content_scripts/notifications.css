@@ -44,6 +44,6 @@ aside #xkit-toasts div:not(:last-child) {
   border-bottom: 1px solid rgba(var(--white-on-dark), .13);
 }
 
-#glass-container #xkit-toasts {
+[role="dialog"] #xkit-toasts {
   position: absolute;
 }

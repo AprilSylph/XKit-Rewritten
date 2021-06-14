@@ -60,8 +60,6 @@ div:first-child + a + #quick-reblog {
   background-color: inherit;
   padding: 1ch;
   margin-bottom: 2px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
 
 #quick-reblog .quick-tags:not([hidden]) {

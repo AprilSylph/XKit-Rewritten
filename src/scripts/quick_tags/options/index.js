@@ -6,11 +6,14 @@ const bundleTemplate = document.getElementById('bundle-template');
 const newBundleTitleInput = document.getElementById('new-bundle-title');
 const newBundleTagsInput = document.getElementById('new-bundle-tags');
 
-const saveNewBundle = async ({ target }) => {
+const saveNewBundle = async () => {
   const tagBundle = {
     title: newBundleTitleInput.value,
     tags: newBundleTagsInput.value
   };
+
+  if (!newBundleTitleInput.reportValidity()) { return; }
+  if (!newBundleTagsInput.reportValidity()) { return; }
 
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
   tagBundles.push(tagBundle);
@@ -29,6 +32,7 @@ const editTagBundle = async ({ currentTarget }) => {
     currentTarget.firstElementChild.className = 'ri-save-3-fill';
     inputs.forEach(input => { input.disabled = false; });
   } else {
+    if (inputs.some(input => input.reportValidity() === false)) { return; }
     currentTarget.title = 'Edit tag bundle';
     currentTarget.firstElementChild.className = 'ri-pencil-line';
 

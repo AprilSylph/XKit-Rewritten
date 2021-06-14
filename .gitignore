@@ -3,3 +3,4 @@ web-ext-artifacts/
 .web-extension-id
 release-notes.md
 **.less
+.vscode/

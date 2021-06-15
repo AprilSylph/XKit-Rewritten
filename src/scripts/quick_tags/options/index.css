@@ -23,6 +23,7 @@ html {
 body {
   color: rgb(var(--black));
   background-color: rgb(var(--white));
+  font-size: 100%;
   font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
   -webkit-user-select: none;
   user-select: none;
@@ -120,6 +121,11 @@ input[type="text"] {
 
 .bundle .title {
   margin-bottom: 0.5ch;
+}
+
+.bundle input {
+  width: 0;
+  min-width: 100%;
 }
 
 .bundle input:disabled {

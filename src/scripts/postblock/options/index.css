@@ -1,13 +1,20 @@
 :root {
   --black: 21, 20, 25;
   --white: 255, 255, 255;
+  --grey: 207, 207, 216;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --black: 251, 251, 254;
     --white: 66, 65, 77;
+    --grey: 91, 91, 102;
   }
+}
+
+html {
+  scrollbar-color: rgb(var(--grey)) transparent;
+  scrollbar-width: thin;
 }
 
 body {

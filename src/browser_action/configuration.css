@@ -1,7 +1,7 @@
 .finder {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  align-items: center;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -10,25 +10,14 @@
   border-bottom: 1px solid rgb(var(--active-grey));
 }
 
-.finder div {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  flex-basis: 0;
-  flex-grow: 1;
-}
-
-#search,
-#filter,
-label[for="filter"] {
+#search {
   width: 0;
   flex-basis: 0;
   flex-grow: 1;
 }
 
 label[for="filter"] {
-  text-align: right;
-  margin-left: 1ch;
+  margin-left: 2ch;
 }
 
 .no-results {

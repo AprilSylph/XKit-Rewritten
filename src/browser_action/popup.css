@@ -50,18 +50,6 @@ body {
   padding: 0;
 }
 
-header {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-h1 {
-  text-align: center;
-  margin-top: 0;
-  padding: 0 0.67em;
-}
-
 nav {
   display: flex;
   flex-direction: row;

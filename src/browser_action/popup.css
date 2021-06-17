@@ -34,6 +34,9 @@ html {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  width: 375px;
+  min-width: 100%;
+  max-width: 100%;
 
   overflow-y: scroll;
   scrollbar-color: rgb(var(--active-grey)) rgb(var(--white));

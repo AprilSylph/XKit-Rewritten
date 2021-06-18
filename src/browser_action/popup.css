@@ -115,6 +115,11 @@ textarea {
   color: rgb(var(--black));
 }
 
+::placeholder {
+  color: inherit;
+  opacity: .55;
+}
+
 input[type="text"] {
   padding-left: 8px;
   padding-right: 8px;

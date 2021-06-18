@@ -2,7 +2,10 @@
   "license": "GPL-3.0",
   "repository": "github:AprilSylph/XKit-Rewritten",
   "scripts": {
-    "test": "eslint . && web-ext lint"
+    "test": "eslint . && web-ext lint",
+    "lint-webextension": "web-ext lint",
+    "build-webextension": "web-ext build",
+    "sign-webextension": "web-ext sign"
   },
   "devDependencies": {
     "eslint": "^7.28.0",

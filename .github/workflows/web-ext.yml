@@ -20,14 +20,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install npx
-        run: npm install npx
-
       - name: Lint WebExtension
-        run: npx web-ext lint
+        run: npm run lint-webextension
 
       - name: Build WebExtension
-        run: npx web-ext build
+        run: npm run build-webextension
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
@@ -49,14 +46,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install npx
-        run: npm install npx
-
       - name: Lint WebExtension
-        run: npx web-ext lint
+        run: npm run lint-webextension
 
       - name: Publish WebExtension
-        run: npx web-ext sign
+        run: npm run sign-webextension
         continue-on-error: true
         env:
           WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}

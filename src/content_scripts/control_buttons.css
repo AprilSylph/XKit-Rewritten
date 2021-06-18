@@ -1,9 +1,11 @@
 .xkit-control-button-container {
+  position: relative;
+
+  margin-left: 20px;
+
   font-family: var(--font-family);
   font-size: 1rem;
   font-weight: 700;
-  margin-left: 20px;
-  position: relative;
   line-height: 1;
 }
 
@@ -14,6 +16,7 @@
 
 .xkit-control-button-inner {
   display: block;
+
   color: inherit;
   font: inherit;
 }

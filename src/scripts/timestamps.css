@@ -1,7 +1,8 @@
 .xkit-timestamp {
+  margin-right: auto;
+
   font-weight: normal;
   text-decoration: none;
-  margin-right: auto;
 }
 
 :not(:empty) + .xkit-timestamp {
@@ -9,13 +10,14 @@
 }
 
 .xkit-long-timestamp {
-  font-size: .875rem;
-  color: rgba(var(--black), 0.65);
   height: 1em;
-  line-height: 1em;
   padding: 0 var(--post-padding);
   margin-bottom: var(--post-header-vertical-padding);
   margin-top: calc(0px - (var(--post-header-vertical-padding) / 2));
+
+  color: rgba(var(--black), 0.65);
+  font-size: .875rem;
+  line-height: 1em;
 }
 
 @media (max-width: 989px) {
@@ -26,10 +28,12 @@
 
 .xkit-reblog-timestamp {
   align-self: center;
-  font-weight: normal;
-  color: rgba(var(--black), 0.65);
-  margin-left: auto;
+
   padding-left: 1ch;
+  margin-left: auto;
+
+  color: rgba(var(--black), 0.65);
+  font-weight: normal;
 }
 
 /* XKit 7 override */

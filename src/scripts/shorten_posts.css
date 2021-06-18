@@ -3,21 +3,22 @@
 }
 
 .xkit-shorten-posts-shortened article {
-  max-height: calc(100vh - 54px - 40px);
   overflow-y: hidden;
   overflow-y: clip;
+  max-height: calc(100vh - 54px - 40px);
 }
 
 button.xkit-shorten-posts-expand {
-  cursor: pointer;
-  background-color: rgb(var(--white));
-  color: rgb(var(--black));
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
   padding: var(--post-header-vertical-padding) 0;
   border-top: 1px solid rgba(var(--black), 0.13);
+
+  background-color: rgb(var(--white));
+  color: rgb(var(--black));
+  cursor: pointer;
 }
 
 .xkit-shorten-posts-done:not(.xkit-shorten-posts-shortened) button.xkit-shorten-posts-expand,
@@ -26,12 +27,13 @@ button.xkit-shorten-posts-expand {
 }
 
 .xkit-shorten-posts-tags {
-  background-color: rgb(var(--white));
-  border-top: 1px dashed rgba(var(--black), 0.13);
-  margin: 0;
+  max-height: none;
   padding-top: 10px;
   padding-bottom: 10px;
-  max-height: none;
+  border-top: 1px dashed rgba(var(--black), 0.13);
+  margin: 0;
+
+  background-color: rgb(var(--white));
 }
 
 .xkit-shorten-posts-tags [role="button"] {

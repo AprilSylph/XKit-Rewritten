@@ -3,13 +3,15 @@
   top: 1ch;
   right: 1ch;
   z-index: 1;
+
   height: 1em;
-  line-height: 1em;
+  padding: 5px;
+  border-radius: 3px;
+
   background-color: rgb(var(--black));
   color: rgb(var(--white));
   font-weight: bold;
-  padding: 5px;
-  border-radius: 3px;
+  line-height: 1em;
 }
 
 .xkit-gif-label::before {

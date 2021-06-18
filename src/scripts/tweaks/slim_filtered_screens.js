@@ -7,10 +7,10 @@ const cssTemplate = filteredScreen => `
   [data-id] .${filteredScreen} {
     flex-direction: row;
     justify-content: space-between;
+    overflow-x: auto;
     height: auto;
     padding-top: var(--post-header-vertical-padding);
     padding-bottom: var(--post-header-vertical-padding);
-    overflow-x: auto;
   }
 
   [data-id] .${filteredScreen} > p {
@@ -18,11 +18,12 @@ const cssTemplate = filteredScreen => `
   }
 
   [data-id] .${filteredScreen} > a {
+      overflow: hidden;
       margin-right: auto;
       margin-left: 1ch;
-      white-space: nowrap;
-      overflow: hidden;
+
       text-overflow: ellipsis;
+      white-space: nowrap;
   }
 
   [data-id] .${filteredScreen} > button {

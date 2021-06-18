@@ -4,29 +4,33 @@
   top: 100%;
   right: 50%;
   transform: translate(50%, 12px);
-  box-shadow: 0 0 15px 0 rgba(0,0,0,.5);
+
   display: flex;
   flex-direction: column;
   align-items: stretch;
   width: 250px;
   padding: 2px;
   border-radius: 3px;
-  color: rgb(var(--black));
+
   background-color: rgb(var(--white));
   background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, .5);
+  color: rgb(var(--black));
 }
 
 #quick-tags:empty::before {
+  padding: 1ch;
+
   content: "No tag bundles are defined.";
   text-align: center;
-  padding: 1ch;
 }
 
 #quick-tags button {
-  color: inherit;
-  background-color: inherit;
-  text-align: initial;
   padding: 1ch;
+
+  background-color: inherit;
+  color: inherit;
+  text-align: initial;
 }
 
 #quick-tags button:not(:last-child) {
@@ -34,16 +38,18 @@
 }
 
 .xkit-quick-tags-tags {
-	font-family: var(--font-family);
-	font-size: 1rem;
-	font-weight: 400;
-	line-height: 1.5;
 	position: relative;
+
 	box-sizing: border-box;
 	padding-left: var(--post-padding);
 	padding-right: var(--post-padding);
 	margin-top: 10px;
 	margin-bottom: 10px;
+
+	font-family: var(--font-family);
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
 	word-break: break-word;
 }
 
@@ -52,11 +58,13 @@
 }
 
 .xkit-quick-tags-tags a {
-	text-decoration: none;
-	color: rgba(var(--black),.65);
 	vertical-align: bottom;
+
 	display: inline-block;
 	margin-right: 11px;
+
+	text-decoration: none;
+	color: rgba(var(--black), .65);
 }
 
 .xkit-quick-tags-tags a:hover {

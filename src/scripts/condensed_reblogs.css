@@ -2,10 +2,11 @@
   display: block;
   box-sizing: border-box;
   width: 100%;
-  text-align: center;
-  color: rgb(var(--black));
-  background-color: rgb(var(--secondary-accent));
   padding: var(--post-header-vertical-padding) var(--post-padding);
+
+  background-color: rgb(var(--secondary-accent));
+  color: rgb(var(--black));
+  text-align: center;
 }
 
 .xkit-condensed-reblogs-reblog + .xkit-condensed-reblogs-expand {

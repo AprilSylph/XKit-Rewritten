@@ -1,13 +1,15 @@
 .finder {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   position: sticky;
   top: 0;
   z-index: 1;
-  background-color: rgb(var(--white));
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   padding: 1ch;
   border-bottom: 1px solid rgb(var(--active-grey));
+
+  background-color: rgb(var(--white));
 }
 
 #search {
@@ -36,12 +38,13 @@ label[for="filter"] {
 }
 
 .script summary {
-  cursor: pointer;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   padding: 1ch;
+
+  cursor: pointer;
 }
 
 .script summary::-webkit-details-marker {
@@ -61,12 +64,12 @@ label[for="filter"] {
 }
 
 .script .icon {
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
   border-radius: 5px;
 }
 
@@ -102,6 +105,7 @@ label[for="filter"] {
 .script ul.preferences {
   padding: 0 1ch;
   margin: 1ch 0;
+
   list-style-type: none;
 }
 

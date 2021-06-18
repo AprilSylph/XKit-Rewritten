@@ -19,8 +19,8 @@ html {
 }
 
 body {
-  color: rgb(var(--black));
   background-color: rgb(var(--white));
+  color: rgb(var(--black));
   font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
   font-size: 100%;
   -webkit-user-select: none;

@@ -21,6 +21,7 @@
   width: 0;
   min-width: 100%;
 
+  -webkit-user-select: all;
   user-select: all;
 }
 
@@ -34,8 +35,8 @@
   border: none;
   margin: 1em 0;
 
-  color: rgb(var(--black));
   background-color: rgb(var(--passive-grey));
+  color: rgb(var(--black));
   font-family: monospace, monospace;
   font-size: smaller;
   white-space: pre;

@@ -21,13 +21,14 @@ html {
 }
 
 body {
-  color: rgb(var(--black));
+  padding: 3px;
+
   background-color: rgb(var(--white));
-  font-size: 100%;
+  color: rgb(var(--black));
   font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-size: 100%;
   -webkit-user-select: none;
   user-select: none;
-  padding: 3px;
 }
 
 section:not(:last-child) {
@@ -76,9 +77,10 @@ input[type="text"] {
 }
 
 #bundles {
-  list-style-type: none;
   padding: 0;
   margin: 0;
+
+  list-style-type: none;
 }
 
 #bundles:empty::before {
@@ -129,11 +131,12 @@ input[type="text"] {
 }
 
 .bundle input:disabled {
-  color: rgb(var(--black));
-  background: transparent;
+  overflow-x: hidden;
   padding: 0;
   border: none;
-  overflow-x: hidden;
+
+  color: rgb(var(--black));
+  background: transparent;
   text-overflow: ellipsis;
 }
 
@@ -142,11 +145,12 @@ input[type="text"] {
 }
 
 .bundle button {
-  cursor: pointer;
-  background: none;
   padding: 3px;
   border: none;
   margin-left: 1ch;
+
+  cursor: pointer;
+  background: none;
 }
 
 .bundle button i {

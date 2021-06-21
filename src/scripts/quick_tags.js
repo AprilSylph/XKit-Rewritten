@@ -129,8 +129,6 @@ export const clean = async function () {
   $(`.${buttonClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${tagsClass}`).remove();
-
-  browser.storage.onChanged.removeListener(onStorageChanged);
 };
 
 export const stylesheet = true;

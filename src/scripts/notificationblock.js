@@ -18,14 +18,16 @@ const processNotifications = () => inject(async () => {
     const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactInternalInstance'));
     let fiber = notificationElement[reactKey];
 
-    while (fiber.memoizedProps.notification === undefined) {
-      fiber = fiber.return;
+    while (fiber !== null) {
+      const { notification } = fiber.memoizedProps || {};
+      if (notification !== undefined) {
+        const { targetPostId } = notification;
+        Object.assign(notificationElement.dataset, { targetPostId });
+        break;
+      } else {
+        fiber = fiber.return;
+      }
     }
-
-    if (!fiber || !fiber.memoizedProps.notification) { return; }
-
-    const { targetPostId } = fiber.memoizedProps.notification;
-    Object.assign(notificationElement.dataset, { targetPostId });
   });
 });
 

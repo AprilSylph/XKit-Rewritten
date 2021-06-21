@@ -24,11 +24,14 @@ export const timelineObject = async function (postID) {
     const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactInternalInstance'));
     let fiber = postElement[reactKey];
 
-    while (fiber.memoizedProps.timelineObject === undefined) {
-      fiber = fiber.return;
+    while (fiber !== null) {
+      const { timelineObject } = fiber.memoizedProps || {};
+      if (timelineObject !== undefined) {
+        return timelineObject;
+      } else {
+        fiber = fiber.return;
+      }
     }
-
-    return fiber.memoizedProps.timelineObject;
   }, [postID]);
   return cache[postID];
 };
@@ -46,13 +49,14 @@ export const exposeTimelines = async () => inject(async () => {
     const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactInternalInstance'));
     let fiber = timelineElement[reactKey];
 
-    while (fiber.memoizedProps.endpointApiRequest === undefined) {
-      fiber = fiber.return;
+    while (fiber !== null) {
+      const { endpointApiRequest } = fiber.memoizedProps || {};
+      if (endpointApiRequest !== undefined) {
+        timelineElement.dataset.timeline = endpointApiRequest.givenPath;
+        break;
+      } else {
+        fiber = fiber.return;
+      }
     }
-
-    if (!fiber) { return; }
-
-    const { givenPath } = fiber.memoizedProps.endpointApiRequest;
-    timelineElement.dataset.timeline = givenPath;
   });
 });

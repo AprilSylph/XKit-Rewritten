@@ -186,21 +186,8 @@ const removeReblogTimestamps = function () {
   $('.xkit-reblog-timestamps-done').removeClass('xkit-reblog-timestamps-done');
 };
 
-export const onStorageChanged = async function (changes, areaName) {
-  if (areaName !== 'local') {
-    return;
-  }
-
-  const {
-    'timestamps.preferences.alwaysShowYear': alwaysShowYearChanges,
-    'timestamps.preferences.headerTimestamps': headerTimestampsChanges,
-    'timestamps.preferences.isoFormat': isoFormatChanges,
-    'timestamps.preferences.reblogTimestamps': reblogTimestampsChanges
-  } = changes;
-
-  if (alwaysShowYearChanges && alwaysShowYearChanges.oldValue !== undefined) {
-    ({ newValue: alwaysShowYear } = alwaysShowYearChanges);
-
+const preferenceHandlers = {
+  'timestamps.preferences.alwaysShowYear': () => {
     removePostTimestamps();
     removeReblogTimestamps();
 
@@ -208,25 +195,16 @@ export const onStorageChanged = async function (changes, areaName) {
     if (reblogTimestamps !== 'none') {
       addReblogTimestamps();
     }
-  }
-
-  if (headerTimestampsChanges && headerTimestampsChanges.oldValue !== undefined) {
-    ({ newValue: headerTimestamps } = headerTimestampsChanges);
-
+  },
+  'timestamps.preferences.headerTimestamps': () => {
     removePostTimestamps();
     addPostTimestamps();
-  }
-
-  if (isoFormatChanges && isoFormatChanges.oldValue !== undefined) {
-    ({ newValue: isoFormat } = isoFormatChanges);
-
+  },
+  'timestamps.preferences.isoFormat': () => {
     removePostTimestamps();
     addPostTimestamps();
-  }
-
-  if (reblogTimestampsChanges && reblogTimestampsChanges.oldValue !== undefined) {
-    ({ newValue: reblogTimestamps } = reblogTimestampsChanges);
-
+  },
+  'timestamps.preferences.reblogTimestamps': () => {
     onNewPosts.removeListener(addReblogTimestamps);
     removeReblogTimestamps();
 
@@ -235,6 +213,22 @@ export const onStorageChanged = async function (changes, areaName) {
       addReblogTimestamps();
     }
   }
+};
+
+export const onStorageChanged = async function (changes, areaName) {
+  if (areaName !== 'local') {
+    return;
+  }
+
+  ({ alwaysShowYear, headerTimestamps, isoFormat, reblogTimestamps } = await getPreferences('timestamps'));
+
+  const changesKeys = Object.keys(changes);
+
+  Object.keys(preferenceHandlers)
+    .filter(preferenceKey => changesKeys.includes(preferenceKey))
+    .filter(preferenceKey => changes[preferenceKey].oldValue !== undefined)
+    .filter(preferenceKey => changes[preferenceKey].newValue !== changes[preferenceKey].oldValue)
+    .forEach(preferenceKey => preferenceHandlers[preferenceKey]());
 };
 
 export const main = async function () {

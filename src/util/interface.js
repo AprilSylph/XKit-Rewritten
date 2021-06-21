@@ -14,7 +14,7 @@ export const getPostElements = function ({ excludeClass, timeline, noPeepr = fal
   const selector = `[data-id]:not(.${excludeClass})`;
   let postElements = [...document.querySelectorAll(selector)];
 
-  if (timeline !== undefined) {
+  if (timeline instanceof RegExp) {
     postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]').dataset.timeline));
   }
 

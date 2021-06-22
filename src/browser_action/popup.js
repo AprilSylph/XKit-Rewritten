@@ -9,13 +9,13 @@ const checkForNoResults = function () {
 $('nav a').click(event => {
   event.preventDefault();
   $('nav .selected').removeClass('selected');
-  $(event.target).addClass('selected');
+  $(event.currentTarget).addClass('selected');
   $('section.open').removeClass('open');
-  $(`section${event.target.getAttribute('href')}`).addClass('open');
+  $(`section${event.currentTarget.getAttribute('href')}`).addClass('open');
 });
 
 document.getElementById('search').addEventListener('input', event => {
-  const query = event.target.value.toLowerCase();
+  const query = event.currentTarget.value.toLowerCase();
 
   [...document.querySelectorAll('details.script')]
     .forEach(detailsElement => {
@@ -30,7 +30,7 @@ document.getElementById('search').addEventListener('input', event => {
 });
 
 document.getElementById('filter').addEventListener('input', event => {
-  switch (event.target.value) {
+  switch (event.currentTarget.value) {
     case 'all':
       $('.script.filter-hidden').removeClass('filter-hidden');
       break;

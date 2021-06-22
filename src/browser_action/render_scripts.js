@@ -13,8 +13,8 @@ const getInstalledScripts = async function () {
 };
 
 const writeEnabled = async function (event) {
-  const { checked, id } = event.target;
-  const { parentNode: { parentNode: detailsElement } } = event.target;
+  const { checked, id } = event.currentTarget;
+  const { parentNode: { parentNode: detailsElement } } = event.currentTarget;
   let { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
   if (checked) {
@@ -37,19 +37,19 @@ const debounce = (callback, ms) => {
 };
 
 const writePreference = async function (event) {
-  const { id } = event.target;
+  const { id } = event.currentTarget;
   const [scriptName, preferenceType, preferenceName] = id.split('.');
   const storageKey = `${scriptName}.preferences.${preferenceName}`;
 
   switch (preferenceType) {
     case 'checkbox':
-      browser.storage.local.set({ [storageKey]: event.target.checked });
+      browser.storage.local.set({ [storageKey]: event.currentTarget.checked });
       break;
     case 'text':
     case 'color':
     case 'select':
     case 'textarea':
-      browser.storage.local.set({ [storageKey]: event.target.value });
+      browser.storage.local.set({ [storageKey]: event.currentTarget.value });
       break;
   }
 };
@@ -179,9 +179,9 @@ renderScripts().then(() => {
   main.style.minWidth = `${main.getBoundingClientRect().width}px`;
 });
 
-configSectionLink.addEventListener('click', ({ target }) => {
-  if (target.classList.contains('outdated')) {
-    target.classList.remove('outdated');
+configSectionLink.addEventListener('click', ({ currentTarget }) => {
+  if (currentTarget.classList.contains('outdated')) {
+    currentTarget.classList.remove('outdated');
     scriptsDiv.textContent = '';
     renderScripts();
   }

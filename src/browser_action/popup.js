@@ -6,7 +6,7 @@ const checkForNoResults = function () {
   document.querySelector('.no-results').style.display = nothingFound ? 'flex' : 'none';
 };
 
-$('nav a').click(event => {
+$('nav a').on('click', event => {
   event.preventDefault();
   $('nav .selected').removeClass('selected');
   $(event.currentTarget).addClass('selected');

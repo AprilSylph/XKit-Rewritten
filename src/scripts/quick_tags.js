@@ -126,6 +126,9 @@ export const main = async function () {
 };
 
 export const clean = async function () {
+  onNewPosts.removeListener(processPosts);
+  popupElement.parentNode?.removeChild(popupElement);
+
   $(`.${buttonClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${tagsClass}`).remove();

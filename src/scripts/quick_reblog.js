@@ -62,14 +62,10 @@ const showPopupOnHover = ({ currentTarget }) => {
 const removePopupOnLeave = () => {
   timeoutID = setTimeout(() => {
     const { parentNode } = popupElement;
-    if (!parentNode) { return; }
-
-    if (parentNode.matches(':hover')) { return; }
-
-    if (parentNode.querySelector(':focus, :active') !== null) { return; }
-
-    parentNode.removeEventListener('mouseleave', removePopupOnLeave);
-    parentNode.removeChild(popupElement);
+    if (parentNode?.matches(':hover, :active, :focus-within') === false) {
+      parentNode?.removeEventListener('mouseleave', removePopupOnLeave);
+      parentNode?.removeChild(popupElement);
+    }
   }, 500);
 };
 
@@ -108,8 +104,8 @@ const reblogPost = async function ({ currentTarget }) {
     const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
     if (meta.status === 201) {
       makeButtonReblogged({ buttonDiv: currentReblogButton, state });
-      if (lastPostID === null && popupElement.parentNode) {
-        popupElement.parentNode.removeChild(popupElement);
+      if (lastPostID === null) {
+        popupElement.parentNode?.removeChild(popupElement);
       }
 
       notify(response.displayText);
@@ -218,9 +214,7 @@ export const main = async function () {
 export const clean = async function () {
   $(document.body).off('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
 
-  if (popupElement.parentNode) {
-    popupElement.parentNode.removeChild(popupElement);
-  }
+  popupElement.parentNode?.removeChild(popupElement);
 
   blogSelector.textContent = '';
 

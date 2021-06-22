@@ -12,10 +12,9 @@ let listTimelineObjectSelector;
 const hideBlogCarousels = async function () {
   [...document.querySelectorAll(blogCarouselSelector)]
     .map(blogCarousel => blogCarousel.closest(listTimelineObjectSelector))
-    .filter(element => element !== null)
     .forEach(listTimelineObject => {
-      listTimelineObject.classList.add(hiddenClass);
-      listTimelineObject.previousElementSibling.classList.add(hiddenClass);
+      listTimelineObject?.classList.add(hiddenClass);
+      listTimelineObject?.previousElementSibling.classList.add(hiddenClass);
     });
 };
 

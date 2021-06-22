@@ -17,25 +17,16 @@ const processPosts = async function () {
       return;
     }
 
-    const postTimelineObject = await timelineObjectMemoized(postElement.dataset.id);
+    const { blog: { isAdult }, trail } = await timelineObjectMemoized(postElement.dataset.id);
 
-    {
-      const { blog: { isAdult } } = postTimelineObject;
-      if (isAdult) {
-        postElement.classList.add(hiddenClass);
-        return;
-      }
+    if (isAdult) {
+      postElement.classList.add(hiddenClass);
+      return;
     }
 
     const reblogs = postElement.querySelectorAll(reblogSelector);
-    const { trail } = postTimelineObject;
     trail.forEach((trailItem, i) => {
-      if (trailItem.blog === undefined) {
-        return;
-      }
-
-      const { blog: { isAdult } } = trailItem;
-      if (isAdult) {
+      if (trailItem.blog?.isAdult) {
         reblogs[i].classList.add(hiddenClass);
       }
     });

@@ -46,9 +46,8 @@ const processTagLinks = async function () {
   tagsYouFollowHeading.dataset.followedTags = true;
 
   const tagLinkElements = searchResultElement.querySelectorAll('[data-followed-tags] ~ [href^="/tagged/"]');
-  if (!tagLinkElements) { return; }
 
-  tagLinkElements.forEach(async tagLinkElement => {
+  tagLinkElements?.forEach(async tagLinkElement => {
     const unreadCountElement = Object.assign(document.createElement('span'), {
       style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65;',
       innerHTML: '&ctdot;'

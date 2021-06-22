@@ -18,7 +18,7 @@ const addAudioControls = async function () {
       nativePlayer.classList.add(excludeClass);
 
       const trackInfo = nativePlayer.querySelector(trackInfoSelector);
-      if (trackInfo) { trackInfo.classList.add('trackInfo'); }
+      trackInfo?.classList.add('trackInfo');
 
       const audioClone = audio.cloneNode(true);
       audioClone.controls = true;

@@ -16,8 +16,8 @@ const expandButton = Object.assign(document.createElement('button'), {
   className: buttonClass
 });
 
-const unshortenOnClick = ({ target }) => {
-  const { parentNode } = target;
+const unshortenOnClick = ({ currentTarget }) => {
+  const { parentNode } = currentTarget;
   if (parentNode.classList.contains(shortenClass)) {
     const headerHeight = document.querySelector('header').getBoundingClientRect().height;
     const postMargin = parseInt(getComputedStyle(parentNode).getPropertyValue('margin-bottom'));
@@ -32,7 +32,7 @@ const unshortenOnClick = ({ target }) => {
       parentNode.removeChild(tagsClone);
     }
 
-    parentNode.removeChild(target);
+    parentNode.removeChild(currentTarget);
   }
 };
 

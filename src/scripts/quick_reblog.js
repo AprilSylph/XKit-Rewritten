@@ -44,13 +44,13 @@ const excludeClass = 'xkit-quick-reblog-alreadyreblogged-done';
 
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 
-const showPopupOnHover = ({ target }) => {
+const showPopupOnHover = ({ currentTarget }) => {
   clearTimeout(timeoutID);
 
-  target.closest('div').appendChild(popupElement);
+  currentTarget.closest('div').appendChild(popupElement);
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
-  const thisPostID = target.closest('[data-id]').dataset.id;
+  const thisPostID = currentTarget.closest('[data-id]').dataset.id;
   if (thisPostID !== lastPostID) {
     blogSelector.value = blogSelector.options[0].value;
     commentInput.value = '';
@@ -59,7 +59,7 @@ const showPopupOnHover = ({ target }) => {
   lastPostID = thisPostID;
 };
 
-const removePopupOnLeave = ({ target }) => {
+const removePopupOnLeave = () => {
   timeoutID = setTimeout(() => {
     const { parentNode } = popupElement;
     if (!parentNode) { return; }

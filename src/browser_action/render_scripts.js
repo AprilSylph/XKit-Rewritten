@@ -58,7 +58,7 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
   for (const [key, preference] of Object.entries(preferences)) {
     const storageKey = `${scriptName}.preferences.${key}`;
     const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
-    preference.value = savedPreference === undefined ? preference.default : savedPreference;
+    preference.value = savedPreference ?? preference.default;
 
     const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
 

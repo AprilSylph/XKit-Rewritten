@@ -38,3 +38,8 @@ export const hideModal = () => {
   const modalElement = document.getElementById('xkit-modal');
   modalElement?.parentNode?.removeChild(modalElement);
 };
+
+export const modalCancelButton = Object.assign(document.createElement('button'), {
+  textContent: 'Cancel',
+  onclick: hideModal
+});

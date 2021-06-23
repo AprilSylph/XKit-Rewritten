@@ -1,5 +1,6 @@
 import { getPostElements } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
+import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { onNewPosts } from '../util/mutations.js';
 
@@ -25,20 +26,34 @@ const processPosts = async function () {
   });
 };
 
-const onButtonClicked = async function ({ target }) {
-  const postElement = target.closest('[data-id]');
+const onButtonClicked = async function ({ currentTarget }) {
+  const postElement = currentTarget.closest('[data-id]');
   const postID = postElement.dataset.id;
 
   const { rebloggedRootId } = await timelineObjectMemoized(postID);
   const rootID = rebloggedRootId || postID;
 
-  if (window.confirm('Block this post? All instances of this post (including reblogs) will be hidden.')) {
-    const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
-    blockedPostRootIDs.push(rootID);
-    browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
+  showModal({
+    title: 'Block this post?',
+    message: [
+      'All instances of this post (including reblogs) will be hidden.'
+    ],
+    buttons: [
+      modalCancelButton,
+      Object.assign(document.createElement('button'), {
+        textContent: 'Block this post',
+        className: 'red',
+        onclick: () => blockPost(rootID)
+      })
+    ]
+  });
+};
 
-    postElement.classList.add(hiddenClass);
-  }
+const blockPost = async rootID => {
+  hideModal();
+  const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
+  blockedPostRootIDs.push(rootID);
+  browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
 };
 
 export const onStorageChanged = async function (changes, areaName) {

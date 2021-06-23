@@ -1,6 +1,6 @@
 import { getPostElements } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
-import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
+import { showModal, hideModal } from '../util/modals.js';
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { onNewPosts } from '../util/mutations.js';
 
@@ -39,7 +39,6 @@ const onButtonClicked = async function ({ currentTarget }) {
       'All instances of this post (including reblogs) will be hidden.'
     ],
     buttons: [
-      modalCancelButton,
       Object.assign(document.createElement('button'), {
         textContent: 'Block this post',
         className: 'red',

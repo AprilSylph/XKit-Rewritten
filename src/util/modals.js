@@ -27,7 +27,7 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
   modalElement.appendChild(messageElement);
 
   const buttonsElement = Object.assign(document.createElement('div'), { className: 'buttons' });
-  buttonsElement.append(...buttons);
+  buttonsElement.append(modalCancelButton, ...buttons);
   modalElement.appendChild(buttonsElement);
 
   hideModal();
@@ -39,7 +39,7 @@ export const hideModal = () => {
   modalElement?.parentNode?.removeChild(modalElement);
 };
 
-export const modalCancelButton = Object.assign(document.createElement('button'), {
+const modalCancelButton = Object.assign(document.createElement('button'), {
   textContent: 'Cancel',
   onclick: hideModal
 });

@@ -7,7 +7,7 @@ let searchInputElement;
 let searchInputParent;
 
 const replaceSearchForm = function () {
-  const searchFormElement = document.querySelector('form[role="search"][action="//www.tumblr.com/search"]:not(.classic-search):not(.xkit-classic-search-done)');
+  const searchFormElement = document.querySelector('form[role="search"][action="/search"]:not(.classic-search):not(.xkit-classic-search-done)');
 
   if (!searchFormElement) {
     return;

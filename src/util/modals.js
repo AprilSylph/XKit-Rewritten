@@ -3,7 +3,7 @@
  *
  * @param {object} options - Destructured
  * @param {string} [options.title] - Prompt title
- * @param {Node[]} [options.message] - Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
+ * @param {(string|Node)[]} [options.message] - Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
  * @param {HTMLButtonElement[]} [options.buttons] - Array of buttons to be displayed in the modal
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {

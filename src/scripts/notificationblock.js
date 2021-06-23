@@ -2,6 +2,7 @@ import { addStyle, removeStyle } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { onBaseContainerMutated } from '../util/mutations.js';
 import { inject } from '../util/inject.js';
+import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonLabel = 'NotificationBlock';
@@ -36,17 +37,38 @@ const onButtonClicked = async function ({ currentTarget }) {
   const { id } = postElement.dataset;
 
   const { [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey);
+  const shouldBlockNotifications = blockedPostTargetIDs.includes(id) === false;
 
-  if (blockedPostTargetIDs.includes(id)) {
-    if (window.confirm('This post\'s notifications are blocked. Unblock this post\'s notifications?')) {
-      await browser.storage.local.set({ [storageKey]: blockedPostTargetIDs.filter(blockedId => blockedId !== id) });
-    }
-  } else {
-    if (window.confirm('Block this post\'s notifications?')) {
-      blockedPostTargetIDs.push(id);
-      await browser.storage.local.set({ [storageKey]: blockedPostTargetIDs });
-    }
-  }
+  const title = shouldBlockNotifications
+    ? 'Block this post\'s notifications?'
+    : 'Unblock this post\'s notifications?';
+  const message = [
+    shouldBlockNotifications
+      ? 'Notifications for this post will be hidden from your activity feed.'
+      : 'Notifications for this post will appear in your activity feed again.'
+  ];
+  const textContent = shouldBlockNotifications
+    ? 'Block notifications'
+    : 'Unblock notifications';
+  const className = shouldBlockNotifications
+    ? 'red'
+    : 'blue';
+  const saveNotificationPreference = shouldBlockNotifications
+    ? () => { blockedPostTargetIDs.push(id); browser.storage.local.set({ [storageKey]: blockedPostTargetIDs }); }
+    : () => browser.storage.local.set({ [storageKey]: blockedPostTargetIDs.filter(blockedId => blockedId !== id) });
+
+  showModal({
+    title,
+    message,
+    buttons: [
+      modalCancelButton,
+      Object.assign(document.createElement('button'), {
+        textContent,
+        className,
+        onclick: () => { hideModal(); saveNotificationPreference(); }
+      })
+    ]
+  });
 };
 
 const postFilter = postElement => postElement.querySelector('footer a[href*="/edit"]') !== null;

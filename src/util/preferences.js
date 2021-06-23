@@ -1,6 +1,6 @@
 /**
- * @param {string} scriptName - filename (without file extension) of script
- * @returns {object} - the script's preference values
+ * @param {string} scriptName - Filename (without file extension) of script
+ * @returns {object} The script's preference values
  */
 export const getPreferences = async function (scriptName) {
   const scriptManifestURL = browser.runtime.getURL(`/scripts/${scriptName}.json`);

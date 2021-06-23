@@ -39,7 +39,7 @@ export const timelineObject = async function (postID) {
 /**
  * Adds data-timeline attributes to all timeline elements on the page, set to the buried endpointApiRequest.givenPath property
  *
- * @returns {null} - Resolves when finished
+ * @returns {Promise<void>} Resolves when finished
  */
 export const exposeTimelines = async () => inject(async () => {
   const cssMap = await window.tumblr.getCssMap();

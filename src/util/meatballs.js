@@ -6,7 +6,7 @@ const meatballItems = {};
 /**
  * Add a custom button to posts' meatball menus.
  *
- * @param {object} options -
+ * @param {object} options - Destructured
  * @param {string} options.label - Button text to display (must be unique)
  * @param {Function} options.onClick - Button click listener function
  * @param {Function} [options.postFilter] - Filter function, called with the post element being actioned on. Must return true for button to be added

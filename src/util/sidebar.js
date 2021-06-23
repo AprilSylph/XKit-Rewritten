@@ -2,18 +2,18 @@ import { onBaseContainerMutated } from './mutations.js';
 
 const sidebarItems = Object.assign(document.createElement('div'), { id: 'xkit-sidebar' });
 
-/* eslint-disable jsdoc/check-param-names */
 /**
- * @param {object} options - Destructured, not used directly
+ * @typedef {object} sidebarItemOptions
+ * @property {string} label - Human-readable link text
+ * @property {string} [href] - Link address for this item
+ * @property {Function} [onClick] - Click event handler for this item (ignored if href is specified)
+ * @property {string} [count] - Human-readable additional link text
+ * @property {boolean} [carrot] - Whether to include a right-facing arrow on the link (ignored if count is specified)
+ * @param {object} options - Destructured
  * @param {string} options.id - Unique ID for the sidebar section
  * @param {string} options.title - Human-readable sidebar section heading
- * @param {object[]} options.items - Array of item objects to construct clickable links in the sidebar section
- * @param {string} options.items.label - Human-readable link text
- * @param {string} [options.items.href] - Link address for this item
- * @param {Function} [options.items.onClick] - Click event handler for this item (ignored if href is specified)
- * @param {string} [options.items.count] - Human-readable additional link text
- * @param {boolean} [options.items.carrot] - Whether to include a right-facing arrow on the link (ignored if count is specified)
- * @returns {HTMLDivElement} - The constructed sidebar section
+ * @param {sidebarItemOptions[]} options.items - Item options objects to construct clickable links in the sidebar section
+ * @returns {HTMLDivElement} The constructed sidebar section, for future referencing
  */
 export const addSidebarItem = function ({ id, title, items }) {
   const sidebarItem = document.createElement('div');

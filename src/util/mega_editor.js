@@ -8,14 +8,15 @@ const pathnames = {
   delete: 'delete_posts'
 };
 
-/*
- * @param {object[]} postIds - Array of post IDs to edit (must not exceed 100 items)
+/**
+ * @param {string[]} postIds - Array of post IDs to edit (must not exceed 100 items)
  * @param {object} options - Configuration object
- * @param {String} options.mode - Post editing method; valid modes are:
+ * @param {string} options.mode - Post editing method; valid modes are:
  *                                 1. "add" (add tags to posts)
  *                                 2. "remove" (remove tags from posts)
  *                                 3. "delete" (delete posts)
- * @param {object[]} options.tags - Array of tags to add or remove. Required if options.mode is "add" or "remove"
+ * @param {string[]} options.tags - Array of tags to add or remove. Required if options.mode is "add" or "remove"
+ * @returns {Promise<Response>} Response from constructed request
  */
 export const megaEdit = async function (postIds, options) {
   const pathname = pathnames[options.mode];

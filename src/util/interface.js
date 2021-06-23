@@ -1,10 +1,10 @@
 /**
- * @param {object} options - Arguments object (destructured, not used directly)
+ * @param {object} options - Destructured
  * @param {string} options.excludeClass - Classname to exclude and add
- * @param {object} [options.timeline] - RegExp which posts' closest data-timeline attribute must match (use exposeTimelines() first)
+ * @param {RegExp} [options.timeline] - Filter results to matching [data-timeline] children {@link ./react_props.js exposeTimelines}
  * @param {boolean} [options.noPeepr] - Whether to exclude posts in [role="dialog"]
  * @param {boolean} [options.includeFiltered] - Whether to include filtered posts
- * @returns {Array} - Array of post elements matching the query options
+ * @returns {HTMLDivElement[]} Post elements matching the query options
  */
 export const getPostElements = function ({ excludeClass, timeline, noPeepr = false, includeFiltered = false }) {
   if (!excludeClass) {

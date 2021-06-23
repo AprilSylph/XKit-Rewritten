@@ -5,7 +5,7 @@ let cssMap;
 
 /**
  * @param {string} key - The source name of an element
- * @returns {object[]} - An array of generated classnames from the CSS map
+ * @returns {string[]} An array of generated classnames from the CSS map
  */
 export const keyToClasses = async function (key) {
   if (cssMap === undefined) {

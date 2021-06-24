@@ -2,7 +2,7 @@ import { addStyle, removeStyle } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { onBaseContainerMutated } from '../util/mutations.js';
 import { inject } from '../util/inject.js';
-import { showModal, hideModal } from '../util/modals.js';
+import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonLabel = 'NotificationBlock';
@@ -61,6 +61,7 @@ const onButtonClicked = async function ({ currentTarget }) {
     title,
     message,
     buttons: [
+      modalCancelButton,
       Object.assign(document.createElement('button'), {
         textContent,
         className,

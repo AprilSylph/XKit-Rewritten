@@ -72,28 +72,26 @@ export const addSidebarItem = function ({ id, title, items }) {
 
 export const removeSidebarItem = id => sidebarItems.removeChild(sidebarItems.querySelector(`#${id}`));
 
-(async function () {
-  const addSidebarToPage = () => {
-    const aside = document.querySelector('aside');
-    if (aside.querySelector('#xkit-sidebar') !== null) { return; }
+const addSidebarToPage = () => {
+  const aside = document.querySelector('aside');
+  if (aside.querySelector('#xkit-sidebar') !== null) { return; }
 
-    let target;
+  let target;
 
-    if (getComputedStyle(aside.children[0]).position === 'sticky') {
-      target = aside.children[0];
-    } else {
-      target = aside.children[1] || null;
-    }
+  if (getComputedStyle(aside.children[0]).position === 'sticky') {
+    target = aside.children[0];
+  } else {
+    target = aside.children[1] || null;
+  }
 
-    aside.insertBefore(sidebarItems, target);
+  aside.insertBefore(sidebarItems, target);
 
-    if (aside.querySelector(':scope > div > aside') !== null) {
-      sidebarItems.classList.add('in-channel');
-    } else {
-      sidebarItems.classList.remove('in-channel');
-    }
-  };
+  if (aside.querySelector(':scope > div > aside') !== null) {
+    sidebarItems.classList.add('in-channel');
+  } else {
+    sidebarItems.classList.remove('in-channel');
+  }
+};
 
-  onBaseContainerMutated.addListener(addSidebarToPage);
-  addSidebarToPage();
-})();
+onBaseContainerMutated.addListener(addSidebarToPage);
+addSidebarToPage();

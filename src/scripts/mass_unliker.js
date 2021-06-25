@@ -1,7 +1,6 @@
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
-import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
+import { showModal, modalCancelButton, modalCompleteButton } from '../util/modals.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
-import { notify } from '../util/notifications.js';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -43,17 +42,26 @@ const unlikePosts = async function () {
     }
   }
 
-  hideModal();
-  unlikedCount && notify(`Unliked ${unlikedCount} posts.`);
-  failureCount && notify(`Failed to unlike ${failureCount} posts.`);
+  showModal({
+    title: 'All done!',
+    message: [
+      `Unliked ${unlikedCount} posts.`,
+      document.createElement('br'),
+      `Failed to unlike ${failureCount} posts.`,
+      document.createElement('br'),
+      document.createElement('br'),
+      'You may still have some likes due to quirks with the Tumblr API.'
+    ],
+    buttons: [
+      modalCompleteButton
+    ]
+  });
 };
 
 const modalWorkingOptions = {
   title: 'Clearing your likes...',
   message: [
     'Do not navigate away from this page, or the process will be interrupted.',
-    document.createElement('br'),
-    'This dialog will disappear when the process is complete.',
     document.createElement('br'),
     document.createElement('br'),
     gatherStatusElement,
@@ -77,11 +85,7 @@ const modalConfirmButton = Object.assign(document.createElement('button'), {
 const modalPromptOptions = {
   title: 'Clear your likes?',
   message: [
-    'This may take a while if you have a lot of likes.',
-    document.createElement('br'),
-    document.createElement('br'),
-    'You may be left with some likes due to imperfections in the Tumblr API.'
-
+    'This may take a while if you have a lot of likes.'
   ],
   buttons: [
     modalCancelButton,

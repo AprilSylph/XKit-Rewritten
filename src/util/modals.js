@@ -43,3 +43,9 @@ export const modalCancelButton = Object.assign(document.createElement('button'),
   textContent: 'Cancel',
   onclick: hideModal
 });
+
+export const modalCompleteButton = Object.assign(document.createElement('button'), {
+  textContent: 'OK',
+  className: 'blue',
+  onclick: hideModal
+});

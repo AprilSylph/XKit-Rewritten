@@ -19,6 +19,7 @@ const gatherLikes = async function () {
     resource = response.links?.next?.href;
   }
 
+  gatherStatusElement.textContent = `Found ${likes.length} liked posts.`;
   return likes;
 };
 
@@ -26,6 +27,7 @@ const unlikePosts = async function () {
   gatherStatusElement.textContent = 'Gathering likes...';
   const likes = await gatherLikes();
   let unlikedCount = 0;
+  let failureCount = 0;
 
   for (const { id, reblogKey } of likes) {
     unlikeStatusElement.textContent = `Unliking post with ID ${id}...`;
@@ -37,17 +39,21 @@ const unlikePosts = async function () {
       unlikedCount++;
     } catch (exception) {
       console.error(exception);
+      failureCount++;
     }
   }
 
   hideModal();
-  notify(`Unliked ${unlikedCount} posts.`);
+  unlikedCount && notify(`Unliked ${unlikedCount} posts.`);
+  failureCount && notify(`Failed to unlike ${failureCount} posts.`);
 };
 
 const modalWorkingOptions = {
   title: 'Clearing your likes...',
   message: [
-    'Do not navigate away from this page, or the process will be interrupted. This dialog will disappear when the process is complete.',
+    'Do not navigate away from this page, or the process will be interrupted.',
+    document.createElement('br'),
+    'This dialog will disappear when the process is complete.',
     document.createElement('br'),
     document.createElement('br'),
     gatherStatusElement,

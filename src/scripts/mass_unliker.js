@@ -3,6 +3,8 @@ import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { notify } from '../util/notifications.js';
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 const gatherStatusElement = document.createElement('span');
 const unlikeStatusElement = document.createElement('span');
 
@@ -28,7 +30,10 @@ const unlikePosts = async function () {
   for (const { id, reblogKey } of likes) {
     unlikeStatusElement.textContent = `Unliking post with ID ${id}...`;
     try {
-      await apiFetch('/v2/user/unlike', { method: 'POST', body: { id, reblog_key: reblogKey } });
+      await Promise.all([
+        apiFetch('/v2/user/unlike', { method: 'POST', body: { id, reblog_key: reblogKey } }),
+        sleep(1000)
+      ]);
       unlikedCount++;
     } catch (exception) {
       console.error(exception);

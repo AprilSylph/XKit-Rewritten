@@ -4,6 +4,10 @@
 }
 
 .xkit-sidebar-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   padding: 0 10px 10px;
   border-bottom: 2px solid rgba(var(--white-on-dark), 0.13);
 
@@ -12,6 +16,13 @@
   font-size: 1.3125rem;
   font-weight: 700;
   line-height: 1.2;
+}
+
+.xkit-sidebar-title::after {
+  content: "XKit";
+  font-size: 0.875rem;
+  font-weight: normal;
+  opacity: 0.65;
 }
 
 .xkit-sidebar-item ul,

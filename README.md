@@ -27,6 +27,12 @@ Open its preferences by clicking on the feature's information, or the white spac
 ### *Backup* tab
 The backup section allows you to manage your configuration data.
 
+## Support
+
+Need help? Start a new discussion or open an issue in this repository.
+
+Please check existing discussions/issues before opening your own.
+
 ## Credits
 - [Contributors to this repository](https://github.com/AprilSylph/XKit-Rewritten/graphs/contributors)
 - [Contributors to XKit 7, the predecessor to this project](https://github.com/new-xkit/XKit/graphs/contributors)

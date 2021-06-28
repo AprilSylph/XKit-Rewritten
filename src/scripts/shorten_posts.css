@@ -37,6 +37,7 @@ button.xkit-shorten-posts-expand {
 
   box-sizing: border-box;
   max-height: calc((var(--shortened-post-height) - var(--expand-button-total-height)) / 2);
+  width: 100%;
   overflow-y: auto;
   padding-top: 10px;
   padding-bottom: 10px;

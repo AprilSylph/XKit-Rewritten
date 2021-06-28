@@ -14,8 +14,7 @@
     "sourceType": "module"
   },
   "rules": {
-    "node/no-callback-literal": "off",
-    "jsdoc/require-hyphen-before-param-description": [ "error", "always" ]
+    "node/no-callback-literal": "off"
   },
   "ignorePatterns": [
     "lib/"

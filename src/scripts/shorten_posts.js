@@ -46,6 +46,7 @@ const shortenPosts = async function () {
         if (tagsElement) {
           const tagsClone = tagsElement.cloneNode(true);
           tagsClone.classList.add(tagsClass);
+          [...tagsClone.querySelectorAll('[href]')].forEach(element => { element.target = '_blank'; });
           postElement.querySelector('article')?.appendChild(tagsClone);
         }
       }

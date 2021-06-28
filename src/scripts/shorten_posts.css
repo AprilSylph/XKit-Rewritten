@@ -1,36 +1,46 @@
 .xkit-shorten-posts-shortened {
+  --shortened-post-height: calc(100vh - 54px - 40px);
+  --expand-button-total-height: calc(1rem + (var(--post-header-vertical-padding) * 2) + 1px);
+
   position: relative;
 }
 
 .xkit-shorten-posts-shortened article {
   overflow-y: hidden;
   overflow-y: clip;
-  max-height: calc(100vh - 54px - 40px);
+  max-height: var(--shortened-post-height);
 }
 
 button.xkit-shorten-posts-expand {
+  position: absolute;
+  bottom: 0;
+
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
   width: 100%;
+  height: var(--expand-button-total-height);
   padding: var(--post-header-vertical-padding) 0;
-  border-top: 1px solid rgba(var(--black), 0.13);
+  border-top: 1px solid rgb(var(--secondary-accent));
 
   background-color: rgb(var(--white));
   color: rgb(var(--black));
   cursor: pointer;
-}
-
-.xkit-shorten-posts-done:not(.xkit-shorten-posts-shortened) button.xkit-shorten-posts-expand,
-.xkit-shorten-posts-shortened[class*="-hidden"] button.xkit-shorten-posts-expand {
-  display: none;
+  font-size: 1rem;
+  line-height: 1rem;
 }
 
 .xkit-shorten-posts-tags {
-  max-height: none;
+  position: absolute;
+  bottom: var(--expand-button-total-height);
+
+  box-sizing: border-box;
+  max-height: calc((var(--shortened-post-height) - var(--expand-button-total-height)) / 2);
+  overflow-y: auto;
   padding-top: 10px;
   padding-bottom: 10px;
-  border-top: 1px dashed rgba(var(--black), 0.13);
+  border-top: 1px dashed rgb(var(--secondary-accent));
   margin: 0;
 
   background-color: rgb(var(--white));

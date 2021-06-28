@@ -17,23 +17,23 @@ const expandButton = Object.assign(document.createElement('button'), {
 });
 
 const unshortenOnClick = ({ currentTarget }) => {
-  const { parentNode } = currentTarget;
-  if (parentNode.classList.contains(shortenClass)) {
-    const headerHeight = document.querySelector('header').getBoundingClientRect().height;
-    const postMargin = parseInt(getComputedStyle(parentNode).getPropertyValue('margin-bottom'));
-
-    parentNode.classList.remove(shortenClass);
-    parentNode.scrollIntoView();
-    window.scrollBy({ top: 0 - headerHeight - postMargin });
-    parentNode.focus();
-
-    const tagsClone = parentNode.querySelector(`.${tagsClass}`);
-    if (tagsClone) {
-      parentNode.removeChild(tagsClone);
-    }
-
-    parentNode.removeChild(currentTarget);
+  const postElement = currentTarget.closest('[data-id]');
+  if (postElement.classList.contains(shortenClass) === false) {
+    return;
   }
+
+  const headerHeight = document.querySelector('header').getBoundingClientRect().height;
+  const postMargin = parseInt(getComputedStyle(postElement).getPropertyValue('margin-bottom'));
+
+  postElement.classList.remove(shortenClass);
+  postElement.scrollIntoView();
+  window.scrollBy({ top: 0 - headerHeight - postMargin });
+  postElement.focus();
+
+  const tagsClone = postElement.querySelector(`.${tagsClass}`);
+  tagsClone?.parentNode.removeChild(tagsClone);
+
+  currentTarget.parentNode.removeChild(currentTarget);
 };
 
 const shortenPosts = async function () {
@@ -46,13 +46,13 @@ const shortenPosts = async function () {
         if (tagsElement) {
           const tagsClone = tagsElement.cloneNode(true);
           tagsClone.classList.add(tagsClass);
-          postElement.appendChild(tagsClone);
+          postElement.querySelector('article')?.appendChild(tagsClone);
         }
       }
 
       const expandButtonClone = expandButton.cloneNode(true);
       expandButtonClone.addEventListener('click', unshortenOnClick);
-      postElement.appendChild(expandButtonClone);
+      postElement.querySelector('article')?.appendChild(expandButtonClone);
     }
   });
 };

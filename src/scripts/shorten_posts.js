@@ -1,9 +1,12 @@
-import { getPostElements } from '../util/interface.js';
+import { getPostElements, addStyle, removeStyle } from '../util/interface.js';
 import { onNewPosts } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
 import { keyToCss } from '../util/css_map.js';
 
 let showTags;
+let maxHeight;
+
+let css;
 let tagsSelector;
 
 const excludeClass = 'xkit-shorten-posts-done';
@@ -22,13 +25,7 @@ const unshortenOnClick = ({ currentTarget }) => {
     return;
   }
 
-  const headerHeight = document.querySelector('header').getBoundingClientRect().height;
-  const postMargin = parseInt(getComputedStyle(postElement).getPropertyValue('margin-bottom'));
-
   postElement.classList.remove(shortenClass);
-  postElement.scrollIntoView();
-  window.scrollBy({ top: 0 - headerHeight - postMargin });
-  postElement.focus();
 
   const tagsClone = postElement.querySelector(`.${tagsClass}`);
   tagsClone?.parentNode.removeChild(tagsClone);
@@ -38,7 +35,7 @@ const unshortenOnClick = ({ currentTarget }) => {
 
 const shortenPosts = async function () {
   getPostElements({ excludeClass, noPeepr: true }).forEach(postElement => {
-    if (postElement.getBoundingClientRect().height > (window.innerHeight * 1.5)) {
+    if (postElement.getBoundingClientRect().height > (window.innerHeight * maxHeight)) {
       postElement.classList.add(shortenClass);
 
       if (showTags) {
@@ -59,7 +56,11 @@ const shortenPosts = async function () {
 };
 
 export const main = async function () {
-  ({ showTags } = await getPreferences('shorten_posts'));
+  ({ showTags, maxHeight } = await getPreferences('shorten_posts'));
+
+  css = `body { --xkit-shorten-posts-max-height: ${maxHeight} }`;
+  addStyle(css);
+
   tagsSelector = await keyToCss('tags');
 
   onNewPosts.addListener(shortenPosts);
@@ -68,6 +69,8 @@ export const main = async function () {
 
 export const clean = async function () {
   onNewPosts.removeListener(shortenPosts);
+
+  removeStyle(css);
 
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${shortenClass}`).removeClass(shortenClass);

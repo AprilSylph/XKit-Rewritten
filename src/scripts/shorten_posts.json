@@ -11,6 +11,18 @@
       "type": "checkbox",
       "label": "Show tags on shortened posts",
       "default": true
+    },
+    "maxHeight": {
+      "type": "select",
+      "label": "Maximum post height",
+      "options": [
+        { "value": "0.25", "label": "0.25x viewport height" },
+        { "value": "0.5", "label": "0.5x viewport height" },
+        { "value": "1", "label": "1x viewport height" },
+        { "value": "1.5", "label": "1.5x viewport height" },
+        { "value": "2", "label": "2x viewport height" }
+      ],
+      "default": "1"
     }
   }
 }

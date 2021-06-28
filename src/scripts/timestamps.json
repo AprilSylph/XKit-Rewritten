@@ -25,11 +25,11 @@
     "reblogTimestamps": {
       "type": "select",
       "label": "Reblog Timestamps",
-      "options": {
-        "none": "None",
-        "op": "Only on original post",
-        "all": "On all reblog items"
-      },
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "op", "label": "Only on original post" },
+        { "value": "all", "label": "On all reblog items" }
+      ],
       "default": "op"
     }
   }

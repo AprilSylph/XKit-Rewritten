@@ -96,10 +96,10 @@ Type of preference. Supported values: `"checkbox"`, `"text"`, `"color"`, `"selec
 Label displayed to the user to describe the preference.
 
 #### `"preferences"`: \<preference name\>: `"options"`
-- Type: Object
+- Type: Array
 - Required: Yes, if `type` is `"select"`
 
-For `"select"`-type preferences, an object of value/label entries. Unused for other preference types.
+For `"select"`-type preferences, an array of objects each with `"value"` and `"label"` properties. Unused for other preference types.
 
 #### `"preferences"`: \<preference name\>: `"src"`
 - Type: String
@@ -116,7 +116,7 @@ Default value of the preference to display to the user. This also automatically 
 If the preference `type` is `"checkbox"`, this value should be a boolean.  
 If the preference `type` is `"text"` or `"textarea"`, this value should be a string.  
 If the preference `type` is `"color"`, this value should either be a string representing a hexadecimal colour code (i.e. `"#1a2b3c"`) or an empty string.  
-If the preference `type` is `"select"`, this value should be a string that matches one of the keys in `options`.
+If the preference `type` is `"select"`, this value should be a string that matches one of the `"options"` item's `"value"`.
 
 #### `"preferences"`: \<preference name\>: `"inherit"`
 - Type: String

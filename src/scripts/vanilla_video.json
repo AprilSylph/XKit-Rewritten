@@ -10,13 +10,13 @@
     "defaultVolume": {
       "type": "select",
       "label": "Default Volume",
-      "options": {
-        "0": "Muted",
-        "25": "25%",
-        "50": "50%",
-        "75": "75%",
-        "100": "100%"
-      },
+      "options": [
+        { "value": "0", "label": "Muted" },
+        { "value": "25", "label": "25%" },
+        { "value": "50", "label": "50%" },
+        { "value": "75", "label": "75%" },
+        { "value": "100", "label": "100%" }
+      ],
       "default": "100"
     }
   }

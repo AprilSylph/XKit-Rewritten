@@ -10,10 +10,10 @@
     "blockingMode": {
       "label": "Hide media from",
       "type": "select",
-      "options": {
-        "smart": "flagged blogs only",
-        "all": "all blogs"
-      },
+      "options": [
+        { "value": "smart", "label": "flagged blogs only" },
+        { "value": "all", "label": "all blogs" }
+      ],
       "default": "smart"
     }
   }

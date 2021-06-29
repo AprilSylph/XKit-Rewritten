@@ -5,12 +5,15 @@ import { inject } from '../util/inject.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
-const meatballButtonId = 'notificationblock';
-const meatballButtonLabel = 'NotificationBlock';
+const meatballButtonBlockId = 'notificationblock-block';
+const meatballButtonBlockLabel = 'Block notifications';
+const meatballButtonUnblockId = 'notificationblock-unblock';
+const meatballButtonUnblockLabel = 'Unblock notifications';
 
 let css;
+let blockedPostTargetIDs;
 
-const buildStyles = blockedPostTargetIDs => blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
+const buildStyles = () => blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
 
 const processNotifications = () => inject(async () => {
   const cssMap = await window.tumblr.getCssMap();
@@ -37,7 +40,6 @@ const onButtonClicked = async function ({ currentTarget }) {
   const postElement = currentTarget.closest('[data-id]');
   const { id } = postElement.dataset;
 
-  const { [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey);
   const shouldBlockNotifications = blockedPostTargetIDs.includes(id) === false;
 
   const title = shouldBlockNotifications
@@ -72,29 +74,33 @@ const onButtonClicked = async function ({ currentTarget }) {
   });
 };
 
-const postFilter = postElement => postElement.querySelector('footer a[href*="/edit"]') !== null;
+const blockPostFilter = postElement => postElement.querySelector('footer a[href*="/edit"]') !== null && blockedPostTargetIDs.includes(postElement.dataset.id) === false;
+const unblockPostFilter = ({ dataset: { id } }) => blockedPostTargetIDs.includes(id);
 
 export const onStorageChanged = (changes, areaName) => {
   if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
     removeStyle(css);
-    css = buildStyles(changes[storageKey].newValue);
+    blockedPostTargetIDs = changes[storageKey].newValue;
+    css = buildStyles();
     addStyle(css);
   }
 };
 
 export const main = async function () {
-  const { [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey);
-  css = buildStyles(blockedPostTargetIDs);
+  ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
+  css = buildStyles();
   addStyle(css);
 
   onBaseContainerMutated.addListener(processNotifications);
   processNotifications();
 
-  registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked, postFilter });
+  registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
+  registerMeatballItem({ id: meatballButtonUnblockId, label: meatballButtonUnblockLabel, onclick: onButtonClicked, postFilter: unblockPostFilter });
 };
 
 export const clean = async function () {
   removeStyle(css);
   onBaseContainerMutated.removeListener(processNotifications);
-  unregisterMeatballItem(meatballButtonId);
+  unregisterMeatballItem(meatballButtonBlockId);
+  unregisterMeatballItem(meatballButtonUnblockId);
 };

@@ -28,11 +28,11 @@ const writeEnabled = async function (event) {
   browser.storage.local.set({ enabledScripts });
 };
 
-const debounce = (callback, ms) => {
+const debounce = (func, ms) => {
   let timeoutID;
   return (...args) => {
     clearTimeout(timeoutID);
-    timeoutID = setTimeout(() => callback(...args), ms);
+    timeoutID = setTimeout(() => func(...args), ms);
   };
 };
 

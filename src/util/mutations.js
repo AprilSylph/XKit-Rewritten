@@ -22,11 +22,11 @@ export const onNewPosts = Object.freeze(new ListenerTracker());
 export const onPostsMutated = Object.freeze(new ListenerTracker());
 export const onBaseContainerMutated = Object.freeze(new ListenerTracker());
 
-const debounce = (callback, ms) => {
+const debounce = (func, ms) => {
   let timeoutID;
   return (...args) => {
     clearTimeout(timeoutID);
-    timeoutID = setTimeout(() => callback(...args), ms);
+    timeoutID = setTimeout(() => func(...args), ms);
   };
 };
 

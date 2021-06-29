@@ -4,3 +4,4 @@ web-ext-artifacts/
 release-notes.md
 **.less
 .vscode/
+.DS_Store

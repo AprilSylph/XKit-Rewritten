@@ -74,6 +74,7 @@ export const removeSidebarItem = id => sidebarItems.removeChild(sidebarItems.que
 
 const addSidebarToPage = () => {
   const aside = document.querySelector('aside');
+  if (aside === null) { return; }
   if (aside.querySelector('#xkit-sidebar') !== null) { return; }
 
   let target;

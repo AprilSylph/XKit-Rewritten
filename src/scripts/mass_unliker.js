@@ -96,10 +96,10 @@ const modalPromptOptions = {
 const sidebarOptions = {
   id: 'mass-unliker',
   title: 'Mass Unliker',
-  items: [
+  rows: [
     {
       label: 'Clear likes',
-      onClick: () => showModal(modalPromptOptions),
+      onclick: () => showModal(modalPromptOptions),
       carrot: true
     }
   ]

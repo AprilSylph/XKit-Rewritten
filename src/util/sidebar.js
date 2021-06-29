@@ -3,19 +3,19 @@ import { onBaseContainerMutated } from './mutations.js';
 const sidebarItems = Object.assign(document.createElement('div'), { id: 'xkit-sidebar' });
 
 /**
- * @typedef {object} sidebarItemOptions
+ * @typedef {object} sidebarRowOptions
  * @property {string} label - Human-readable link text
  * @property {string} [href] - Link address for this item
- * @property {Function} [onClick] - Click event handler for this item (ignored if href is specified)
+ * @property {Function} [onclick] - Click event handler for this item (ignored if href is specified)
  * @property {string} [count] - Human-readable additional link text
  * @property {boolean} [carrot] - Whether to include a right-facing arrow on the link (ignored if count is specified)
  * @param {object} options - Destructured
  * @param {string} options.id - Unique ID for the sidebar section
  * @param {string} options.title - Human-readable sidebar section heading
- * @param {sidebarItemOptions[]} options.items - Item options objects to construct clickable links in the sidebar section
- * @returns {HTMLDivElement} The constructed sidebar section, for future referencing
+ * @param {sidebarRowOptions[]} options.rows - Row options objects to construct clickable links in the sidebar item
+ * @returns {HTMLDivElement} The constructed sidebar item, for future referencing
  */
-export const addSidebarItem = function ({ id, title, items }) {
+export const addSidebarItem = function ({ id, title, rows }) {
   const sidebarItem = document.createElement('div');
   sidebarItem.classList.add('xkit-sidebar-item');
   sidebarItem.id = id;
@@ -28,32 +28,32 @@ export const addSidebarItem = function ({ id, title, items }) {
   const sidebarList = document.createElement('ul');
   sidebarItem.appendChild(sidebarList);
 
-  for (const item of items) {
+  for (const row of rows) {
     const sidebarListItem = document.createElement('li');
     sidebarList.appendChild(sidebarListItem);
 
     const link = document.createElement('a');
-    if (item.href) {
-      link.href = item.href;
-    } else if (item.onClick instanceof Function) {
+    if (row.href) {
+      link.href = row.href;
+    } else if (row.onclick instanceof Function) {
       link.href = '#';
       link.addEventListener('click', event => {
         event.preventDefault();
-        item.onClick(event);
+        row.onclick(event);
       });
     }
     sidebarListItem.appendChild(link);
 
     const label = document.createElement('span');
-    label.textContent = item.label;
+    label.textContent = row.label;
     link.appendChild(label);
 
-    if (item.count !== undefined) {
+    if (row.count !== undefined) {
       const count = document.createElement('span');
       count.classList.add('count');
-      count.textContent = item.count;
+      count.textContent = row.count;
       link.appendChild(count);
-    } else if (item.carrot === true) {
+    } else if (row.carrot === true) {
       const carrot = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       carrot.setAttribute('viewBox', '0 0 13 20.1');
       carrot.setAttribute('width', '12');

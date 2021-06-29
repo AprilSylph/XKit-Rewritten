@@ -79,7 +79,7 @@ Once you're set up, you'll need to load your copy of the project as a [temporary
 
 Use **`npm test`** to lint your code. Use it before you start a pull request to ensure it's up to scratch, or to catch any syntax errors if your code isn't doing what you expect.
 
-While you can use `npx web-ext build` to create a ZIP of the WebExtension, it's not loadable via about:addons in Firefox even if you [disable the extension signing requirement](https://support.mozilla.org/en-US/kb/add-on-signing-in-firefox#w_what-are-my-options-if-i-want-to-use-an-unsigned-add-on-advanced-users), since an add-on ID isn't specified in the `manifest.json`.
+While you can use **`npm run build-webextension`** to create a ZIP of the WebExtension, it can still only be loaded as a temporary add-on. This may still be useful for fixing bugs which you cannot reproduce yourself.
 
 If you're unfamiliar with the XKit Rewritten framework, check out the `docs/` folder.
 

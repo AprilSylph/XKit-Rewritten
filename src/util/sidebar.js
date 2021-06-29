@@ -10,8 +10,8 @@ const sidebarItems = Object.assign(document.createElement('div'), { id: 'xkit-si
  * @property {string} [count] - Human-readable additional link text
  * @property {boolean} [carrot] - Whether to include a right-facing arrow on the link (ignored if count is specified)
  * @param {object} options - Destructured
- * @param {string} options.id - Unique ID for the sidebar section
- * @param {string} options.title - Human-readable sidebar section heading
+ * @param {string} options.id - Unique ID for the sidebar item
+ * @param {string} options.title - Human-readable sidebar item heading
  * @param {sidebarRowOptions[]} options.rows - Row options objects to construct clickable links in the sidebar item
  * @returns {HTMLDivElement} The constructed sidebar item, for future referencing
  */

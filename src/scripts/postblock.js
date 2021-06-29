@@ -4,6 +4,7 @@ import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { onNewPosts } from '../util/mutations.js';
 
+const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
 const excludeClass = 'xkit-postblock-done';
 const hiddenClass = 'xkit-postblock-hidden';
@@ -64,14 +65,14 @@ export const onStorageChanged = async function (changes, areaName) {
 };
 
 export const main = async function () {
-  registerMeatballItem({ label: meatballButtonLabel, onClick: onButtonClicked });
+  registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
 
   onNewPosts.addListener(processPosts);
   processPosts();
 };
 
 export const clean = async function () {
-  unregisterMeatballItem(meatballButtonLabel);
+  unregisterMeatballItem(meatballButtonId);
   onNewPosts.removeListener(processPosts);
 
   $(`.${excludeClass}`).removeClass(excludeClass);

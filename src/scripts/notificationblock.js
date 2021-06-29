@@ -5,6 +5,7 @@ import { inject } from '../util/inject.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
+const meatballButtonId = 'notificationblock';
 const meatballButtonLabel = 'NotificationBlock';
 
 let css;
@@ -89,11 +90,11 @@ export const main = async function () {
   onBaseContainerMutated.addListener(processNotifications);
   processNotifications();
 
-  registerMeatballItem({ label: meatballButtonLabel, onClick: onButtonClicked, postFilter });
+  registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked, postFilter });
 };
 
 export const clean = async function () {
   removeStyle(css);
   onBaseContainerMutated.removeListener(processNotifications);
-  unregisterMeatballItem(meatballButtonLabel);
+  unregisterMeatballItem(meatballButtonId);
 };

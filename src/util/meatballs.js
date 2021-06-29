@@ -7,20 +7,19 @@ const meatballItems = {};
  * Add a custom button to posts' meatball menus.
  *
  * @param {object} options - Destructured
- * @param {string} options.label - Button text to display (must be unique)
- * @param {Function} options.onClick - Button click listener function
+ * @param {string} options.id - Identifier for this button (must be unique)
+ * @param {string} options.label - Button text to display
+ * @param {Function} options.onclick - Button click listener function
  * @param {Function} [options.postFilter] - Filter function, called with the post element being actioned on. Must return true for button to be added
  */
-export const registerMeatballItem = function ({ label, onClick, postFilter }) {
-  if (meatballItems[label] === undefined) {
-    meatballItems[label] = { onClick, postFilter };
-  }
+export const registerMeatballItem = function ({ id, label, onclick, postFilter }) {
+  meatballItems[id] = { label, onclick, postFilter };
 };
 
-export const unregisterMeatballItem = label => {
-  delete meatballItems[label];
+export const unregisterMeatballItem = id => {
+  delete meatballItems[id];
   [...document.querySelectorAll('[data-xkit-meatball-button]')]
-    .filter(button => button.textContent === label)
+    .filter(button => button.dataset.xkitMeatballButton === id)
     .forEach(button => button.parentNode.removeChild(button));
 };
 
@@ -36,13 +35,13 @@ export const unregisterMeatballItem = label => {
 
       Object.keys(meatballItems)
         .sort()
-        .filter(label => meatballItems[label].postFilter === undefined || meatballItems[label].postFilter(meatballMenu.closest('[data-id]')))
-        .forEach(label => {
+        .filter(id => meatballItems[id].postFilter === undefined || meatballItems[id].postFilter(meatballMenu.closest('[data-id]')))
+        .forEach(id => {
+          const { label, onclick } = meatballItems[id];
           const meatballItemButton = document.createElement('button');
+          Object.assign(meatballItemButton, { textContent: label, onclick });
           meatballItemButton.classList.add(meatballItemClass, dropdownItemClass);
-          meatballItemButton.textContent = label;
-          meatballItemButton.dataset.xkitMeatballButton = true;
-          meatballItemButton.addEventListener('click', meatballItems[label].onClick);
+          meatballItemButton.dataset.xkitMeatballButton = id;
 
           meatballMenu.appendChild(meatballItemButton);
         });

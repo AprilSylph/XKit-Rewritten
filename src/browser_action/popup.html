@@ -23,7 +23,7 @@
       </nav>
       <section id="configuration" class="open">
         <div class="finder">
-          <input id="search" type="text" placeholder="Search" autocomplete="off">
+          <input id="search" type="text" placeholder="Search" autocomplete="off" spellcheck="false">
           <label for="filter">Filter by</label>
           <select id="filter">
             <option value="all" selected>All</option>
@@ -48,7 +48,7 @@
         <details id="import">
           <summary><h4>Import</h4></summary>
           <label for="local-storage-import">Paste the contents of your saved backup here.</label>
-          <textarea id="local-storage-import" rows="10"></textarea>
+          <textarea id="local-storage-import" rows="10" spellcheck="false"></textarea>
           <button id="restore-local"></button>
         </details>
       </section>
@@ -97,7 +97,7 @@
     <template id="text-preference">
       <li>
         <label></label>
-        <input type="text">
+        <input type="text" spellcheck="false">
       </li>
     </template>
 
@@ -120,7 +120,7 @@
         <label></label>
       </li>
       <li>
-        <textarea rows="5"></textarea>
+        <textarea rows="5" spellcheck="false"></textarea>
       </li>
     </template>
 

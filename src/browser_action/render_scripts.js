@@ -36,20 +36,20 @@ const debounce = (func, ms) => {
   };
 };
 
-const writePreference = async function (event) {
-  const { id } = event.currentTarget;
+const writePreference = async function ({ target }) {
+  const { id } = target;
   const [scriptName, preferenceType, preferenceName] = id.split('.');
   const storageKey = `${scriptName}.preferences.${preferenceName}`;
 
   switch (preferenceType) {
     case 'checkbox':
-      browser.storage.local.set({ [storageKey]: event.currentTarget.checked });
+      browser.storage.local.set({ [storageKey]: target.checked });
       break;
     case 'text':
     case 'color':
     case 'select':
     case 'textarea':
-      browser.storage.local.set({ [storageKey]: event.currentTarget.value });
+      browser.storage.local.set({ [storageKey]: target.value });
       break;
   }
 };

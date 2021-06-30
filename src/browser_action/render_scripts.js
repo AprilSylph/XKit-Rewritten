@@ -36,20 +36,20 @@ const debounce = (func, ms) => {
   };
 };
 
-const writePreference = async function (event) {
-  const { id } = event.currentTarget;
+const writePreference = async function ({ target }) {
+  const { id } = target;
   const [scriptName, preferenceType, preferenceName] = id.split('.');
   const storageKey = `${scriptName}.preferences.${preferenceName}`;
 
   switch (preferenceType) {
     case 'checkbox':
-      browser.storage.local.set({ [storageKey]: event.currentTarget.checked });
+      browser.storage.local.set({ [storageKey]: target.checked });
       break;
     case 'text':
     case 'color':
     case 'select':
     case 'textarea':
-      browser.storage.local.set({ [storageKey]: event.currentTarget.value });
+      browser.storage.local.set({ [storageKey]: target.value });
       break;
   }
 };
@@ -96,6 +96,17 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
           option.selected = value === preference.value;
           preferenceInput.appendChild(option);
         }
+        break;
+      case 'color':
+        preferenceInput.value = preference.value;
+        $(preferenceInput)
+          .on('change.spectrum', writePreference)
+          .spectrum({
+            preferredFormat: 'hex',
+            showInput: true,
+            showInitial: true,
+            allowEmpty: true
+          });
         break;
       case 'iframe':
         preferenceInput.addEventListener('load', () => {
@@ -164,16 +175,6 @@ const renderScripts = async function () {
     scriptTemplateClones.push(scriptTemplateClone);
   }
   scriptTemplateClones.forEach(scriptTemplateClone => scriptsDiv.appendChild(scriptTemplateClone));
-
-  const $makeSpectrum = $(scriptsDiv).find('.makeSpectrum');
-
-  $makeSpectrum.spectrum({
-    preferredFormat: 'hex',
-    showInput: true,
-    showInitial: true,
-    allowEmpty: true
-  });
-  $makeSpectrum.on('change.spectrum', writePreference);
 };
 
 renderScripts().then(() => {

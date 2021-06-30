@@ -126,7 +126,7 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
 };
 
 const renderScripts = async function () {
-  const scriptTemplateClones = [];
+  scriptsDiv.style.display = 'none';
   const installedScripts = await getInstalledScripts();
   const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
@@ -172,9 +172,10 @@ const renderScripts = async function () {
       renderPreferences({ scriptName, preferences, preferenceList });
     }
 
-    scriptTemplateClones.push(scriptTemplateClone);
+    scriptsDiv.appendChild(scriptTemplateClone);
   }
-  scriptTemplateClones.forEach(scriptTemplateClone => scriptsDiv.appendChild(scriptTemplateClone));
+
+  scriptsDiv.style.display = '';
 };
 
 renderScripts().then(() => {

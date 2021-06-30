@@ -14,6 +14,7 @@
 button.xkit-shorten-posts-expand {
   position: absolute;
   bottom: 0;
+  z-index: 2;
 
   display: flex;
   justify-content: center;
@@ -33,6 +34,7 @@ button.xkit-shorten-posts-expand {
 .xkit-shorten-posts-tags {
   position: absolute;
   bottom: var(--expand-button-total-height);
+  z-index: 2;
 
   box-sizing: border-box;
   max-height: calc((var(--shortened-post-height) - var(--expand-button-total-height)) / 2);

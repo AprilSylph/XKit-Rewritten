@@ -97,6 +97,17 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
           preferenceInput.appendChild(option);
         }
         break;
+      case 'color':
+        preferenceInput.value = preference.value;
+        $(preferenceInput)
+          .on('change.spectrum', writePreference)
+          .spectrum({
+            preferredFormat: 'hex',
+            showInput: true,
+            showInitial: true,
+            allowEmpty: true
+          });
+        break;
       case 'iframe':
         preferenceInput.addEventListener('load', () => {
           const callback = () => { preferenceInput.height = preferenceInput.contentDocument.documentElement.scrollHeight; };
@@ -162,16 +173,6 @@ const renderScripts = async function () {
 
     scriptsDiv.appendChild(scriptTemplateClone);
   }
-
-  const $makeSpectrum = $(scriptsDiv).find('.makeSpectrum');
-
-  $makeSpectrum.spectrum({
-    preferredFormat: 'hex',
-    showInput: true,
-    showInitial: true,
-    allowEmpty: true
-  });
-  $makeSpectrum.on('change.spectrum', writePreference);
 };
 
 renderScripts().then(() => {

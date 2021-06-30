@@ -115,6 +115,7 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
 };
 
 const renderScripts = async function () {
+  const scriptTemplateClones = [];
   const installedScripts = await getInstalledScripts();
   const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
@@ -160,8 +161,9 @@ const renderScripts = async function () {
       renderPreferences({ scriptName, preferences, preferenceList });
     }
 
-    scriptsDiv.appendChild(scriptTemplateClone);
+    scriptTemplateClones.push(scriptTemplateClone);
   }
+  scriptTemplateClones.forEach(scriptTemplateClone => scriptsDiv.appendChild(scriptTemplateClone));
 
   const $makeSpectrum = $(scriptsDiv).find('.makeSpectrum');
 

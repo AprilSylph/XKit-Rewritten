@@ -126,6 +126,7 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
 };
 
 const renderScripts = async function () {
+  scriptsDiv.style.display = 'none';
   const installedScripts = await getInstalledScripts();
   const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
@@ -173,6 +174,8 @@ const renderScripts = async function () {
 
     scriptsDiv.appendChild(scriptTemplateClone);
   }
+
+  scriptsDiv.style.display = '';
 };
 
 renderScripts().then(() => {

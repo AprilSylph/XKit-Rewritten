@@ -12,25 +12,13 @@ The enhancement suite for Tumblr's new web interface.
 - [Get this extension for Firefox](https://addons.mozilla.org/addon/xkit-rewritten/)
 
 ## Usage
-Click the addon icon in your browser toolbar to open the control panel.
+Click the addon icon in your browser toolbar to open the control panel.  
 
-### *Configuration* tab
-The main section, which allows you to enable, disable, and configure the addon's individual features.
-
-#### To search for a feature
-Simply type into the search box to filter to features which have information or preferences containing that substring.
-#### To enable or disable a feature
-Click the toggle button to the right of the feature's information.  
-#### To configure a feature
-Open its preferences by clicking on the feature's information, or the white space containing it.
-
-### *Backup* tab
-The backup section allows you to manage your configuration data.
+- **To enable a feature**, click the toggle switch to the right of its information
+- **To configure a feature**, click its information or the white space containing it
 
 ## Support
-
-Need help? Start a new discussion or open an issue in this repository.
-
+Need help? Start a new discussion or open an issue in this repository.  
 Please check existing discussions/issues before opening your own.
 
 ## Credits

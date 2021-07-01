@@ -11,10 +11,6 @@ on:
   pull_request:
     branches:
       - master
-    paths:
-      - src/**
-      - package*.json
-      - .eslintrc.json
 
 jobs:
   test:

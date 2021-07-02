@@ -2,11 +2,11 @@
   --available-space: calc(100vh - 54px - 20px);
   --shortened-post-height: calc((var(--available-space) * var(--xkit-shorten-posts-max-height)) - 20px);
   --expand-button-total-height: calc(1rem + (var(--post-header-vertical-padding) * 2));
-
-  position: relative;
 }
 
 .xkit-shorten-posts-shortened article {
+  position: static;
+
   overflow: hidden;
   max-height: var(--shortened-post-height);
 }

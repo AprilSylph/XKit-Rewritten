@@ -41,7 +41,8 @@
   padding: 5px 10px;
 }
 
-.xkit-sidebar-item li:hover {
+.xkit-sidebar-item li:hover,
+.xkit-sidebar-item li:focus-within {
   background-color: rgba(var(--white-on-dark), 0.07);
 }
 
@@ -70,4 +71,34 @@
   font-weight: 400;
   line-height: 1.5;
   text-align: right;
+}
+
+nav .xkit-sidebar-item {
+  margin-bottom: .75em;
+}
+
+nav .xkit-sidebar-title {
+  padding: 5px 18px;
+  border-bottom: none;
+
+  line-height: 1.5238;
+}
+
+nav .xkit-sidebar-item li {
+  padding-top: 13px;
+  padding-right: 15px;
+  padding-bottom: 13px;
+  padding-left: 18px;
+
+  font-size: 1.125rem;
+  line-height: 1.333;
+}
+
+nav .xkit-sidebar-item li a {
+  min-height: 0;
+}
+
+nav .xkit-sidebar-item svg {
+  width: 23px;
+  height: 16px;
 }

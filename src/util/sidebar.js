@@ -1,3 +1,4 @@
+import { keyToCss } from './css_map.js';
 import { onBaseContainerMutated } from './mutations.js';
 
 const sidebarItems = Object.assign(document.createElement('div'), { id: 'xkit-sidebar' });
@@ -71,27 +72,28 @@ export const addSidebarItem = function ({ id, title, rows }) {
 
 export const removeSidebarItem = id => sidebarItems.removeChild(sidebarItems.querySelector(`#${id}`));
 
-const addSidebarToPage = () => {
-  const aside = document.querySelector('aside');
-  if (aside === null) { return; }
-  if (aside.querySelector('#xkit-sidebar') !== null) { return; }
+(async () => {
+  const sidebarItemSelector = await keyToCss('sidebarItem');
+  const navSubHeaderSelector = await keyToCss('navSubHeader');
 
-  let target;
+  const addSidebarToPage = () => {
+    if (document.body.contains(sidebarItems)) { return; }
+    const outdatedSidebarItems = document.getElementById('xkit-sidebar');
+    outdatedSidebarItems?.parentNode.removeChild(outdatedSidebarItems);
 
-  if (getComputedStyle(aside.children[0]).position === 'sticky') {
-    target = aside.children[0];
-  } else {
-    target = aside.children[1] || null;
-  }
+    const firstSidebarItem = document.querySelector(sidebarItemSelector);
+    const firstNavSubHeader = document.querySelector(navSubHeaderSelector);
 
-  aside.insertBefore(sidebarItems, target);
+    if (firstSidebarItem) {
+      const target = getComputedStyle(firstSidebarItem).position === 'sticky'
+        ? firstSidebarItem
+        : firstSidebarItem.nextElementSibling;
+      firstSidebarItem.parentNode.insertBefore(sidebarItems, target);
+    } else if (firstNavSubHeader) {
+      firstNavSubHeader.parentNode.insertBefore(sidebarItems, firstNavSubHeader);
+    }
+  };
 
-  if (aside.querySelector(':scope > div > aside') !== null) {
-    sidebarItems.classList.add('in-channel');
-  } else {
-    sidebarItems.classList.remove('in-channel');
-  }
-};
-
-onBaseContainerMutated.addListener(addSidebarToPage);
-addSidebarToPage();
+  onBaseContainerMutated.addListener(addSidebarToPage);
+  addSidebarToPage();
+})();

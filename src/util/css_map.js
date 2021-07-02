@@ -5,7 +5,7 @@ let cssMap;
 
 /**
  * @param {string} key - The source name of an element
- * @returns {string[]} An array of generated classnames from the CSS map
+ * @returns {Promise<string[]>} An array of generated classnames from the CSS map
  */
 export const keyToClasses = async function (key) {
   if (cssMap === undefined) {
@@ -17,7 +17,7 @@ export const keyToClasses = async function (key) {
 
 /**
  * @param {string} key - The source name of an element
- * @returns {string} - A CSS selector which targets all elements with that source name
+ * @returns {Promise<string>} - A CSS selector which targets all elements with that source name
  */
 export const keyToCss = async function (key) {
   const classes = await keyToClasses(key);
@@ -35,7 +35,7 @@ export const keyToCss = async function (key) {
  * which targets any 'timeline' contained in any 'main'.
  *
  * @param {...string} keys - One or more element source names
- * @returns {string} - A CSS selector
+ * @returns {Promise<string>} - A CSS selector
  */
 export const descendantSelector = async function (...keys) {
   const sets = [];

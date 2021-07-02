@@ -4,7 +4,7 @@ const cache = {};
 
 /**
  * @param {string} postID - The post ID of an on-screen post
- * @returns {object} - The post's buried timelineObject property (cached; use
+ * @returns {Promise<object>} - The post's buried timelineObject property (cached; use
  *  timelineObject if you need up-to-date properties that may have changed)
  */
 export const timelineObjectMemoized = async function (postID) {
@@ -16,7 +16,7 @@ export const timelineObjectMemoized = async function (postID) {
 
 /**
  * @param {string} postID - The post ID of an on-screen post
- * @returns {object} - The post's buried timelineObject property
+ * @returns {Promise<object>} - The post's buried timelineObject property
  */
 export const timelineObject = async function (postID) {
   cache[postID] = inject(async id => {

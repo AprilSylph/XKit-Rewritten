@@ -2,7 +2,7 @@
  * Fetch the SVG belonging to a specific RemixIcon.
  *
  * @param {string} cssClass - The RemixIcon class of the requested icon
- * @returns {string|undefined} The SVG path of the associated RemixIcon if it exists
+ * @returns {Promise<string|undefined>} The SVG path of the associated RemixIcon if it exists
  */
 export const getIconPath = async function (cssClass) {
   const url = browser.runtime.getURL('/lib/remixicon_svg.json');
@@ -17,7 +17,7 @@ export const getIconPath = async function (cssClass) {
  *
  * @param {string} iconClass - The RemixIcon class of the requested icon
  * @param {string} buttonClass - An extra class to identify the extension that added the button
- * @returns {HTMLDivElement} A button that can be cloned with cloneControlButton()
+ * @returns {Promise<HTMLDivElement>} A button that can be cloned with cloneControlButton()
  */
 export const createControlButtonTemplate = async function (iconClass, buttonClass) {
   const controlButtonContainer = document.createElement('div');

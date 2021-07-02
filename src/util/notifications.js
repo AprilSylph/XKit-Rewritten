@@ -18,7 +18,6 @@ addToastContainerToPage();
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
- *
  * @param {string} textContent - Text to display to the user as a notification
  */
 export const notify = async textContent => {

@@ -6,8 +6,7 @@
 
 .xkit-shorten-posts-shortened article {
   position: static;
-
-  overflow: hidden;
+  overflow-y: clip;
   max-height: var(--shortened-post-height);
 }
 

@@ -51,9 +51,9 @@ All pull requests must be compatible with the repository license (GPL-3.0).
 
 This project follows JavaScript Semi-Standard Style via [`eslint-config-semistandard`](https://github.com/standard/eslint-config-semistandard).
 
-Most style issues are enforced by the linter, meaning they don't need to be listed here. However, there are two more important style rules to abide by:
-- CSS identifiers (IDs, classnames) should always be `kebab-case`
-- Filenames should be `snake_case`, unless the file originates from outside this project
+Stylesheets should follow Nicolas Gallagher's [Idiomatic CSS](https://github.com/necolas/idiomatic-css#readme) principles. Additionally, element IDs and classnames should be `kebab-case`, to fit with the automatic casing of [`data-*` attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/data-*).
+
+Filenames should be `snake_case` to fit with the casing of WebExtension manifest files. This does not apply to vendored files.
 
 ---
 

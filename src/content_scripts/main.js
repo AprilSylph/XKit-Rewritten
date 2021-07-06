@@ -82,8 +82,8 @@
     const installedScripts = await getInstalledScripts();
     const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
-    enabledScripts
-      .filter(scriptName => installedScripts.includes(scriptName))
+    installedScripts
+      .filter(scriptName => enabledScripts.includes(scriptName))
       .forEach(runScript);
   };
 

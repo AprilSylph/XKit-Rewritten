@@ -25,7 +25,9 @@ const unshortenOnClick = ({ currentTarget }) => {
     return;
   }
 
+  document.documentElement.style.overflowAnchor = 'none';
   postElement.classList.remove(shortenClass);
+  document.documentElement.style.overflowAnchor = '';
 
   const tagsClone = postElement.querySelector(`.${tagsClass}`);
   tagsClone?.parentNode.removeChild(tagsClone);

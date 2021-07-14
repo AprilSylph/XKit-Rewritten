@@ -1,5 +1,5 @@
 const baseContainerNode = document.getElementById('base-container');
-const postSelector = '[data-id]';
+const postSelector = '[tabindex="-1"][data-id]';
 
 const ListenerTracker = function () {
   this.listeners = [];

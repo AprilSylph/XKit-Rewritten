@@ -11,7 +11,7 @@ export const getPostElements = function ({ excludeClass, timeline, noPeepr = fal
     return [];
   }
 
-  const selector = `[data-id]:not(.${excludeClass})`;
+  const selector = `[tabindex="-1"][data-id]:not(.${excludeClass})`;
   let postElements = [...document.querySelectorAll(selector)];
 
   if (timeline instanceof RegExp) {
@@ -19,7 +19,7 @@ export const getPostElements = function ({ excludeClass, timeline, noPeepr = fal
   }
 
   if (noPeepr) {
-    postElements = postElements.filter(postElement => postElement.matches('[role="dialog"] [data-id]') === false);
+    postElements = postElements.filter(postElement => postElement.matches('[role="dialog"] [tabindex="-1"][data-id]') === false);
   }
 
   if (!includeFiltered) {

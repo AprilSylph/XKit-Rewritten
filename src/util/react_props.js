@@ -20,7 +20,7 @@ export const timelineObjectMemoized = async function (postID) {
  */
 export const timelineObject = async function (postID) {
   cache[postID] = inject(async id => {
-    const postElement = document.querySelector(`[data-id="${id}"]`);
+    const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
     const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactInternalInstance'));
     let fiber = postElement[reactKey];
 

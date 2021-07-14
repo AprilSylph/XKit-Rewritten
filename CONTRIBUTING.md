@@ -4,15 +4,6 @@ First of all, thanks for taking the time to contribute to this repository!
 
 This document aims to provide both guidelines for contributions, and guides for those who want to contribute.
 
-### Contents
-#### Guidelines
-- [Issue guidelines](#issue-guidelines)
-- [Pull request guidelines](#pull-request-guidelines)
-- [Style guide](#style-guide)
-#### Guides
-- [Understanding GitHub](#understanding-github)
-- [WebExtension development](#webextension-development)
-
 ---
 
 ## Guidelines

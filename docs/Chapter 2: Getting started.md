@@ -1,7 +1,5 @@
 # Getting started
 
-This guide details 
-
 ## Prerequisites
 
 - [Download and install Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for your platform

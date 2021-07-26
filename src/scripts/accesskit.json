@@ -31,6 +31,11 @@
       "type": "checkbox",
       "label": "Remove user-set fonts from text in posts",
       "default": false
+    },
+    "visible_alt_text": {
+      "type": "checkbox",
+      "label": "Show alt text as captions below images",
+      "default": false
     }
   }
 }

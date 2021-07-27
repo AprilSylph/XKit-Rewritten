@@ -7,7 +7,7 @@
  * @param {HTMLButtonElement[]} [options.buttons] - Array of buttons to be displayed in the modal
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {
-  const modalElement = Object.assign(document.createElement('div'), { id: 'xkit-modal' });
+  const modalElement = Object.assign(document.createElement('div'), { id: 'xkit-modal', tabIndex: -1 });
   modalElement.setAttribute('role', 'dialog');
   modalElement.setAttribute('aria-modal', true);
 
@@ -32,6 +32,7 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
 
   hideModal();
   document.getElementById('base-container')?.appendChild(modalElement);
+  modalElement.focus();
 };
 
 export const hideModal = () => {

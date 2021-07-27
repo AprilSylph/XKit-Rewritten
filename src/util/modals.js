@@ -1,3 +1,5 @@
+let lastFocusedElement;
+
 /**
  * Show a takeover prompt to the user
  *
@@ -32,12 +34,15 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
 
   hideModal();
   document.getElementById('base-container')?.appendChild(modalElement);
+
+  lastFocusedElement = document.activeElement;
   modalElement.focus();
 };
 
 export const hideModal = () => {
   const modalElement = document.getElementById('xkit-modal');
   modalElement?.parentNode?.removeChild(modalElement);
+  lastFocusedElement?.focus();
 };
 
 export const modalCancelButton = Object.assign(document.createElement('button'), {

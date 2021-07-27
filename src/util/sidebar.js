@@ -37,6 +37,8 @@ export const addSidebarItem = function ({ id, title, rows }) {
     if (row.href) {
       link.href = row.href;
     } else if (row.onclick instanceof Function) {
+      link.href = 'javascript:void(0)';
+      link.setAttribute('role', 'button');
       link.addEventListener('click', event => {
         event.preventDefault();
         row.onclick(event);

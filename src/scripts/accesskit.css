@@ -50,11 +50,10 @@ figure.accesskit-visible-alt-text figcaption {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 2px;
   padding: 5px;
 
   line-height: 1;
   text-align: center;
-  background: #ddd;
-  color: #111;
+  background-color: rgb(var(--secondary-accent));
+  color: rgb(var(--black));
 }

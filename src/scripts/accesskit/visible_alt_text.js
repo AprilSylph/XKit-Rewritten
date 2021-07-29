@@ -14,7 +14,7 @@ const processImages = function () {
       if (image) {
         imageBlock.classList.add(className);
 
-        if (image.alt && image.alt.toLowerCase() !== 'image') {
+        if (image.alt) {
           const caption = document.createElement('figcaption');
           caption.textContent = image.alt;
           imageBlock.appendChild(caption);

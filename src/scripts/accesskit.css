@@ -50,9 +50,10 @@ figure.accesskit-visible-alt-text figcaption {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: .75ch;
+  padding: .75ch 1ch;
 
-  line-height: 1.25;
+  font-size: .875rem;
+  line-height: 1.5;
   text-align: center;
   background-color: rgb(var(--secondary-accent));
   color: rgb(var(--black));

@@ -6,6 +6,16 @@
 - [Install EditorConfig](https://editorconfig.org/#download) for your favourite text editor
 - Install the project dependencies with **`npm install`**
 
+## CLI commands
+
+- **`npm test`**: Runs all linters. Will report any syntax or style errors.
+- **`npm run lint-webextension`**: Runs only the addon linter. Only reports syntax and WebExtension API errors.
+- **`npm run build-webextension`**: Creates an unsigned ZIP of the addon. Useful for debugging issues you can't reproduce.
+
+### Web-only development
+
+If you're unable to get set up locally, all you need to do is go to the **Actions** tab in your fork, then to the **WebExt** workflow, and then use "Run workflow" with whichever branch you've made changes to. This will lint and then build the WebExtension for you to download and test! It will give you a ZIP within a ZIP, so be sure to extract from the inner ZIP to avoid extracting everything twice. If there are any major issues, this workflow will fail and tell you what went wrong under the "Lint WebExtension" step.
+
 ## Loading the project into the browser
 
 The extension source code is located in `src/`. Before loading your development version, first be sure to disable the release version if you have it installed on the browser you're testing on.

@@ -5,15 +5,15 @@ import { onPostsMutated } from '../../util/mutations.js';
 let imageBlockSelector;
 let css;
 
-const className = 'accesskit-visible-alt-text';
+const processedClass = 'accesskit-visible-alt-text';
 
 const processImages = function () {
   [...document.querySelectorAll(imageBlockSelector)]
-    .filter(imageBlock => imageBlock.classList.contains(className) === false)
+    .filter(imageBlock => imageBlock.classList.contains(processedClass) === false)
     .forEach(imageBlock => {
       const image = imageBlock.querySelector('img');
       if (image) {
-        imageBlock.classList.add(className);
+        imageBlock.classList.add(processedClass);
 
         if (image.alt) {
           const caption = document.createElement('figcaption');
@@ -42,6 +42,6 @@ export const clean = async function () {
 
   removeStyle(css);
 
-  $(`.${className} figcaption`).remove();
-  $(`.${className}`).removeClass(className);
+  $(`.${processedClass} figcaption`).remove();
+  $(`.${processedClass}`).removeClass(processedClass);
 };

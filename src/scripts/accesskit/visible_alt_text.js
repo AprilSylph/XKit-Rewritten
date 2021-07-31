@@ -8,7 +8,8 @@ let css;
 const className = 'accesskit-visible-alt-text';
 
 const processImages = function () {
-  [...document.querySelectorAll(`${imageBlockSelector}:not(.${className})`)]
+  [...document.querySelectorAll(imageBlockSelector)]
+    .filter(imageBlock => imageBlock.classList.contains(className) === false)
     .forEach(imageBlock => {
       const image = imageBlock.querySelector('img');
       if (image) {
@@ -41,6 +42,6 @@ export const clean = async function () {
 
   removeStyle(css);
 
-  document.querySelectorAll(`.${className} figcaption`).forEach(caption => caption.remove());
-  document.querySelectorAll(`.${className}`).forEach(element => element.classList.remove(className));
+  $(`.${className} figcaption`).remove();
+  $(`.${className}`).removeClass(className);
 };

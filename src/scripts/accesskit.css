@@ -37,3 +37,24 @@ body.accesskit-blue-links article a[target="_blank"][href^="https://href.li/"] {
 body.accesskit-no-user-colours article span[style^="color"] {
   color: inherit !important;
 }
+
+
+figure.accesskit-visible-alt-text {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+figure.accesskit-visible-alt-text figcaption {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: .75ch 1ch;
+
+  font-size: .875rem;
+  line-height: 1.5;
+  text-align: center;
+  background-color: rgb(var(--secondary-accent));
+  color: rgb(var(--black));
+}

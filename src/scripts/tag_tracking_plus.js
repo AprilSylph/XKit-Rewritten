@@ -57,11 +57,11 @@ const processTagLinks = async function () {
     const tag = tagLinkElement.querySelector(tagTextSelector).textContent;
     const savedTimestamp = timestamps[tag] || 0;
 
-    const { response: { timeline: { elements } } } = await apiFetch(`/v2/hubs/${tag}/timeline`, { queryParams: { limit: 20, sort: 'recent' } });
+    const { response: { timeline: { elements = [], links } } } = await apiFetch(`/v2/hubs/${tag}/timeline`, { queryParams: { limit: 20, sort: 'recent' } });
+    const posts = elements.filter(({ objectType }) => objectType === 'post');
     let unreadCount = 0;
 
-    for (const post of elements) {
-      const { timestamp } = post;
+    for (const { timestamp } of posts) {
       if (timestamp <= savedTimestamp) {
         break;
       } else {
@@ -69,7 +69,7 @@ const processTagLinks = async function () {
       }
     }
 
-    if (unreadCount === elements.length) {
+    if (unreadCount === posts.length && links?.next) {
       unreadCount += '+';
     }
 

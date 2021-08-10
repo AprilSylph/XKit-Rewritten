@@ -1,6 +1,11 @@
 .xkit-sidebar-item {
   width: 100%;
   margin-bottom: 38px;
+
+  font-family: var(--font-family);
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.333;
 }
 
 .xkit-sidebar-title {
@@ -41,20 +46,32 @@
   padding: 5px 10px;
 }
 
-.xkit-sidebar-item li:hover,
-.xkit-sidebar-item li:focus-within {
+.xkit-sidebar-item li:hover {
   background-color: rgba(var(--white-on-dark), 0.07);
 }
 
-.xkit-sidebar-item li a {
+.xkit-sidebar-item li:focus-within {
+  outline-color: #00b8ff;
+  outline-style: auto;
+  outline-width: medium;
+  outline-offset: -3px;
+}
+
+.xkit-sidebar-item li button {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
   min-height: 36px;
 
   color: inherit;
   cursor: pointer;
-  text-decoration: none;
+  font: inherit;
+  text-align: left;
+}
+
+.xkit-sidebar-item li button:focus {
+  outline: none;
 }
 
 .xkit-sidebar-item svg {
@@ -85,17 +102,20 @@ nav .xkit-sidebar-title {
 }
 
 nav .xkit-sidebar-item li {
+  padding: 0;
+}
+
+nav .xkit-sidebar-item li:hover {
+  background-color: transparent;
+}
+
+nav .xkit-sidebar-item li button {
+  box-sizing: border-box;
+  min-height: 41px;
   padding-top: 13px;
   padding-right: 15px;
   padding-bottom: 13px;
   padding-left: 18px;
-
-  font-size: 1.125rem;
-  line-height: 1.333;
-}
-
-nav .xkit-sidebar-item li a {
-  min-height: 0;
 }
 
 nav .xkit-sidebar-item svg {

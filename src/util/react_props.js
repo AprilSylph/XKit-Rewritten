@@ -60,3 +60,27 @@ export const exposeTimelines = async () => inject(async () => {
     }
   });
 });
+
+/**
+ * Manipulate post form tags
+ *
+ * @param {Function} transformer - Function to feed post tags array to; expects String[], must return String[]
+ * @returns {Promise<void>} Resolves when finished
+ */
+export const editTags = async transformer => inject(async transformer => {
+  const selectedTagsElement = document.getElementById('selected-tags');
+  if (!selectedTagsElement) { return; }
+
+  const reactKey = Object.keys(selectedTagsElement).find(key => key.startsWith('__reactInternalInstance'));
+  let fiber = selectedTagsElement[reactKey];
+
+  while (fiber !== null) {
+    const tags = fiber.stateNode?.state?.tags;
+    if (Array.isArray(tags)) {
+      fiber.stateNode.setState({ tags: transformer(tags) });
+      break;
+    } else {
+      fiber = fiber.return;
+    }
+  }
+}, [transformer]);

@@ -64,10 +64,12 @@ export const exposeTimelines = async () => inject(async () => {
 /**
  * Manipulate post form tags
  *
- * @param {Function} transformer - Function to feed post tags array to; expects String[], must return String[]
+ * @param {object} options - Destructured
+ * @param {string[]} options.add - Tags to insert into post form
+ * @param {string[]} options.remove - Tags to remove from post form
  * @returns {Promise<void>} Resolves when finished
  */
-export const editTags = async transformer => inject(async transformer => {
+export const editPostFormTags = async ({ add = [], remove = [] }) => inject(async ({ add, remove }) => {
   const selectedTagsElement = document.getElementById('selected-tags');
   if (!selectedTagsElement) { return; }
 
@@ -75,12 +77,14 @@ export const editTags = async transformer => inject(async transformer => {
   let fiber = selectedTagsElement[reactKey];
 
   while (fiber !== null) {
-    const tags = fiber.stateNode?.state?.tags;
+    let tags = fiber.stateNode?.state?.tags;
     if (Array.isArray(tags)) {
-      fiber.stateNode.setState({ tags: transformer(tags) });
+      tags.push(...add);
+      tags = tags.filter(tag => remove.includes(tag) === false);
+      fiber.stateNode.setState({ tags });
       break;
     } else {
       fiber = fiber.return;
     }
   }
-}, [transformer]);
+}, [{ add, remove }]);

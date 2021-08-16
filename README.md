@@ -8,6 +8,11 @@ The enhancement suite for Tumblr's new web interface.
 - Adjust the volume on audio & video posts
 - And more! Check out the [full features list on the wiki](https://github.com/AprilSylph/XKit-Rewritten/wiki/Features)
 
+## Screenshots
+
+![](https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/master/assets/screenshots/1.png) | ![](https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/master/assets/screenshots/2.png) | ![](https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/master/assets/screenshots/4.png)
+-- | -- | --
+
 ## Installation
 - [Get this extension for Firefox](https://addons.mozilla.org/addon/xkit-rewritten/)
 

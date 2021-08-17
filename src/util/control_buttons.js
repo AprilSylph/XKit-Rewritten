@@ -52,7 +52,7 @@ export const createControlButtonTemplate = async function (iconClass, buttonClas
  *
  * @param {HTMLDivElement} template - A button template as returned by createControlButtonTemplate()
  * @param {object} events - An object of DOM Event names and handler functions,
- *                          e.g. {click: () => { alert('Hello!'); }}
+ *                          e.g. { click: () => { alert('Hello!'); } }
  * @returns {HTMLDivElement} A clone of the button template, with the specified event handlers attached
  */
 export const cloneControlButton = function (template, events) {

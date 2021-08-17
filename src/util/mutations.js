@@ -17,6 +17,10 @@ const ListenerTracker = function () {
       this.listeners.splice(index, 1);
     }
   };
+
+  this.trigger = function () {
+    this.listeners.forEach(callback => callback());
+  };
 };
 
 export const onNewPosts = Object.freeze(new ListenerTracker());
@@ -32,10 +36,10 @@ const debounce = (func, ms) => {
   };
 };
 
-const runOnNewPosts = debounce(() => onNewPosts.listeners.forEach(callback => callback()), 10);
-const runOnPostsMutated = debounce(() => onPostsMutated.listeners.forEach(callback => callback()), 100);
-const runOnBaseContainerMutated = debounce(() => onBaseContainerMutated.listeners.forEach(callback => callback()), 100);
-const runOnGlassContainerMutated = debounce(() => onGlassContainerMutated.listeners.forEach(callback => callback(), 100));
+const runOnNewPosts = debounce(() => onNewPosts.trigger(), 10);
+const runOnPostsMutated = debounce(() => onPostsMutated.trigger(), 100);
+const runOnBaseContainerMutated = debounce(() => onBaseContainerMutated.trigger(), 100);
+const runOnGlassContainerMutated = debounce(() => onGlassContainerMutated.trigger(), 100);
 
 const observer = new MutationObserver(mutations => {
   if (onNewPosts.listeners.length !== 0 || onPostsMutated.listeners.length !== 0) {

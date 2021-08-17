@@ -1,0 +1,18 @@
+.xkit-post-actions {
+  display: flex;
+  flex-direction: row;
+  margin-top: 8px;
+  margin-left: auto;
+}
+
+.xkit-post-option {
+  display: block;
+  padding-top: 5px;
+  padding-right: 10px;
+
+  text-align: center;
+}
+
+.xkit-post-option svg {
+  fill: rgba(var(--black), 0.4);
+}

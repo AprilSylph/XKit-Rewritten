@@ -1,4 +1,5 @@
 const baseContainerNode = document.getElementById('base-container');
+const dialogSelector = '[role="dialog"][aria-modal="true"]';
 const postSelector = '[tabindex="-1"][data-id]';
 
 const ListenerTracker = function () {
@@ -21,6 +22,7 @@ const ListenerTracker = function () {
 export const onNewPosts = Object.freeze(new ListenerTracker());
 export const onPostsMutated = Object.freeze(new ListenerTracker());
 export const onBaseContainerMutated = Object.freeze(new ListenerTracker());
+export const onGlassContainerMutated = Object.freeze(new ListenerTracker());
 
 const debounce = (func, ms) => {
   let timeoutID;
@@ -33,6 +35,7 @@ const debounce = (func, ms) => {
 const runOnNewPosts = debounce(() => onNewPosts.listeners.forEach(callback => callback()), 10);
 const runOnPostsMutated = debounce(() => onPostsMutated.listeners.forEach(callback => callback()), 100);
 const runOnBaseContainerMutated = debounce(() => onBaseContainerMutated.listeners.forEach(callback => callback()), 100);
+const runOnGlassContainerMutated = debounce(() => onGlassContainerMutated.listeners.forEach(callback => callback(), 100));
 
 const observer = new MutationObserver(mutations => {
   if (onNewPosts.listeners.length !== 0 || onPostsMutated.listeners.length !== 0) {
@@ -57,6 +60,14 @@ const observer = new MutationObserver(mutations => {
 
     if (baseContainerMutated || baseContainerMutations) {
       runOnBaseContainerMutated();
+    }
+  }
+
+  if (onGlassContainerMutated.listeners.length !== 0) {
+    const glassContainerMutations = mutations.some(({ target }) => target.matches(`${dialogSelector}, ${dialogSelector} ${target.tagName.toLowerCase()}`));
+
+    if (glassContainerMutations) {
+      runOnGlassContainerMutated();
     }
   }
 });

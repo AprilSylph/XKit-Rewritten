@@ -1,4 +1,5 @@
-#quick-tags {
+#quick-tags,
+#quick-tags-post-option {
   position: absolute;
   z-index: 2;
   top: 100%;
@@ -18,14 +19,16 @@
   color: rgb(var(--black));
 }
 
-#quick-tags:empty::before {
+#quick-tags:empty::before,
+#quick-tags-post-option:empty::before {
   padding: 1ch;
 
   content: "No tag bundles are defined.";
   text-align: center;
 }
 
-#quick-tags button {
+#quick-tags button,
+#quick-tags-post-option button {
   padding: 1ch;
 
   background-color: inherit;
@@ -33,7 +36,8 @@
   text-align: initial;
 }
 
-#quick-tags button:not(:last-child) {
+#quick-tags button:not(:last-child),
+#quick-tags-post-option button:not(:last-child) {
   margin-bottom: 2px;
 }
 

@@ -2,21 +2,25 @@ import { cloneControlButton, createControlButtonTemplate } from '../util/control
 import { getPostElements } from '../util/interface.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
-import { timelineObjectMemoized } from '../util/react_props.js';
+import { registerPostOption, unregisterPostAction } from '../util/post_actions.js';
+import { timelineObjectMemoized, editPostFormTags } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
+const iconClass = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
 const excludeClass = 'xkit-quick-tags-done';
 const tagsClass = 'xkit-quick-tags-tags';
 
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-tags' });
+const postOptionPopupElement = Object.assign(document.createElement('div'), { id: 'quick-tags-post-option' });
 
 let controlButtonTemplate;
 
 const storageKey = 'quick_tags.preferences.tagBundles';
 
-const populatePopup = async function () {
+const populatePopups = async function () {
   popupElement.textContent = '';
+  postOptionPopupElement.textContent = '';
 
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
   for (const tagBundle of tagBundles) {
@@ -24,12 +28,14 @@ const populatePopup = async function () {
     bundleButton.textContent = tagBundle.title;
     bundleButton.dataset.tags = tagBundle.tags;
     popupElement.appendChild(bundleButton);
+
+    postOptionPopupElement.appendChild(bundleButton.cloneNode(true));
   }
 };
 
 export const onStorageChanged = async function (changes, areaName) {
   if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
-    populatePopup();
+    populatePopups();
   }
 };
 
@@ -38,6 +44,13 @@ const togglePopupDisplay = async function ({ target, currentTarget }) {
 
   const appendOrRemove = currentTarget.contains(popupElement) ? 'removeChild' : 'appendChild';
   currentTarget[appendOrRemove](popupElement);
+};
+
+const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) {
+  if (target === postOptionPopupElement || postOptionPopupElement.contains(target)) { return; }
+
+  const appendOrRemove = currentTarget.contains(postOptionPopupElement) ? 'removeChild' : 'appendChild';
+  currentTarget[appendOrRemove](postOptionPopupElement);
 };
 
 const processBundleClick = async function ({ target }) {
@@ -104,6 +117,13 @@ const processBundleClick = async function ({ target }) {
   }
 };
 
+const processPostOptionBundleClick = function ({ target }) {
+  if (target.tagName !== 'BUTTON') { return; }
+  const bundleTags = target.dataset.tags.split(',');
+
+  editPostFormTags({ add: bundleTags });
+};
+
 const processPosts = async function () {
   getPostElements({ excludeClass }).forEach(async postElement => {
     const editButton = postElement.querySelector('footer a[href*="/edit/"]');
@@ -115,19 +135,24 @@ const processPosts = async function () {
 };
 
 export const main = async function () {
-  controlButtonTemplate = await createControlButtonTemplate('ri-price-tag-3-line', buttonClass);
+  controlButtonTemplate = await createControlButtonTemplate(iconClass, buttonClass);
 
   onNewPosts.addListener(processPosts);
   processPosts();
 
-  populatePopup();
+  registerPostOption('quick-tags', { iconClass, onclick: togglePostOptionPopupDisplay });
+
+  populatePopups();
 
   popupElement.addEventListener('click', processBundleClick);
+  postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
   popupElement.parentNode?.removeChild(popupElement);
+
+  unregisterPostAction('quick-tags');
 
   $(`.${buttonClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);

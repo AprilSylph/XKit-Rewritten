@@ -1,9 +1,9 @@
-import { timelineObjectMemoized } from '../util/react_props.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
-import { getPostElements } from '../util/interface.js';
 import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
+import { getPostElements } from '../util/interface.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
+import { timelineObjectMemoized } from '../util/react_props.js';
+import { apiFetch } from '../util/tumblr_helpers.js';
 
 const buttonClass = 'xkit-quick-tags-button';
 const excludeClass = 'xkit-quick-tags-done';

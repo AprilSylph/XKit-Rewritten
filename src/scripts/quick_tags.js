@@ -2,7 +2,7 @@ import { cloneControlButton, createControlButtonTemplate } from '../util/control
 import { getPostElements } from '../util/interface.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
-import { registerPostOption, unregisterPostAction } from '../util/post_actions.js';
+import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
 import { timelineObjectMemoized, editPostFormTags } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
@@ -152,7 +152,7 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
   popupElement.parentNode?.removeChild(popupElement);
 
-  unregisterPostAction('quick-tags');
+  unregisterPostOption('quick-tags');
 
   $(`.${buttonClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);

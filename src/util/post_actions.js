@@ -42,8 +42,8 @@ export const registerPostOption = async function (id, { iconClass, onclick }) {
   onGlassContainerMutated.trigger();
 };
 
-export const unregisterPostAction = id => {
-  postOptions[id].parentNode?.removeChild(postOptions[id]);
+export const unregisterPostOption = id => {
+  postOptions[id]?.parentNode?.removeChild(postOptions[id]);
   delete postOptions[id];
 };
 

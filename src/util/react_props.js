@@ -79,7 +79,7 @@ export const editPostFormTags = async ({ add = [], remove = [] }) => inject(asyn
   while (fiber !== null) {
     let tags = fiber.stateNode?.state?.tags;
     if (Array.isArray(tags)) {
-      tags.push(...add);
+      tags.push(...add.filter(tag => tags.includes(tag) === false));
       tags = tags.filter(tag => remove.includes(tag) === false);
       fiber.stateNode.setState({ tags });
       break;

@@ -51,7 +51,7 @@ export const unregisterPostOption = id => {
   const postActionsSelector = await keyToCss('postActions');
   const postFormButtonSelector = await keyToCss('postFormButton');
 
-  onGlassContainerMutated.addListener(() => {
+  const addPostOptions = () => {
     const glass = document.querySelector(glassSelector);
 
     const postFormButton = glass?.querySelector(postFormButtonSelector);
@@ -69,5 +69,8 @@ export const unregisterPostOption = id => {
       const target = postActions || fakePostActions;
       if (!target.contains(postOption)) { target.prepend(postOption); }
     });
-  });
+  };
+
+  onGlassContainerMutated.addListener(addPostOptions);
+  addPostOptions();
 })();

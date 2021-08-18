@@ -9,6 +9,37 @@ const excludeClass = 'xkit-post-actions-done';
 const fakePostActions = Object.assign(document.createElement('div'), { className: 'xkit-post-actions' });
 const postOptions = {};
 
+let postActionsSelector;
+let postFormButtonSelector;
+
+const addPostOptions = () => {
+  const glass = document.querySelector(glassSelector);
+
+  const postFormButton = glass?.querySelector(postFormButtonSelector);
+  if (!postFormButton || postFormButton.classList.contains(excludeClass)) { return; }
+  postFormButton.classList.add(excludeClass);
+
+  const postActions = glass.querySelector(postActionsSelector);
+  if (!postActions) {
+    fakePostActions.textContent = '';
+    postFormButton.parentNode.insertBefore(fakePostActions, postFormButton);
+  }
+
+  Object.keys(postOptions).sort().reverse().forEach(id => {
+    const postOption = postOptions[id];
+    const target = postActions || fakePostActions;
+    if (!target.contains(postOption)) { target.prepend(postOption); }
+  });
+};
+
+(async () => {
+  postActionsSelector = await keyToCss('postActions');
+  postFormButtonSelector = await keyToCss('postFormButton');
+
+  onGlassContainerMutated.addListener(addPostOptions);
+  addPostOptions();
+})();
+
 /**
  * Create and register a button to add to the new post form
  *
@@ -39,38 +70,13 @@ export const registerPostOption = async function (id, { iconClass, onclick }) {
   postOptions[id] = postOptionLabel;
 
   $(`.${excludeClass}`).removeClass(excludeClass);
-  onGlassContainerMutated.trigger();
+  addPostOptions();
 };
 
+/**
+ * @param {string} id - Identifier for the previously registered post option
+ */
 export const unregisterPostOption = id => {
   postOptions[id]?.parentNode?.removeChild(postOptions[id]);
   delete postOptions[id];
 };
-
-(async () => {
-  const postActionsSelector = await keyToCss('postActions');
-  const postFormButtonSelector = await keyToCss('postFormButton');
-
-  const addPostOptions = () => {
-    const glass = document.querySelector(glassSelector);
-
-    const postFormButton = glass?.querySelector(postFormButtonSelector);
-    if (!postFormButton || postFormButton.classList.contains(excludeClass)) { return; }
-    postFormButton.classList.add(excludeClass);
-
-    const postActions = glass.querySelector(postActionsSelector);
-    if (!postActions) {
-      fakePostActions.textContent = '';
-      postFormButton.parentNode.insertBefore(fakePostActions, postFormButton);
-    }
-
-    Object.keys(postOptions).sort().reverse().forEach(id => {
-      const postOption = postOptions[id];
-      const target = postActions || fakePostActions;
-      if (!target.contains(postOption)) { target.prepend(postOption); }
-    });
-  };
-
-  onGlassContainerMutated.addListener(addPostOptions);
-  addPostOptions();
-})();

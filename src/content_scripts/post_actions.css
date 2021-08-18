@@ -6,6 +6,8 @@
 }
 
 .xkit-post-option {
+  position: relative;
+
   display: block;
   padding-top: 5px;
   padding-right: 10px;

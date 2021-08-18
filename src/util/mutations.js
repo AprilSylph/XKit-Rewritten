@@ -68,9 +68,12 @@ const observer = new MutationObserver(mutations => {
   }
 
   if (onGlassContainerMutated.listeners.length !== 0) {
+    const glassContainerNode = document.getElementById('glass-container') || document.querySelector(dialogSelector)?.parentNode;
+
+    const glassContainerMutated = mutations.some(({ target }) => target === glassContainerNode);
     const glassContainerMutations = mutations.some(({ target }) => target.matches(`${dialogSelector}, ${dialogSelector} ${target.tagName.toLowerCase()}`));
 
-    if (glassContainerMutations) {
+    if (glassContainerMutated || glassContainerMutations) {
       runOnGlassContainerMutated();
     }
   }

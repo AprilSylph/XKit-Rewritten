@@ -2,8 +2,6 @@ import { getIconPath } from './control_buttons.js';
 import { onGlassContainerMutated } from './mutations.js';
 import { keyToCss } from './css_map.js';
 
-const glassSelector = '[role="dialog"][aria-modal="true"]';
-
 const excludeClass = 'xkit-post-actions-done';
 
 const fakePostActions = Object.assign(document.createElement('div'), { className: 'xkit-post-actions' });
@@ -13,7 +11,7 @@ let postActionsSelector;
 let postFormButtonSelector;
 
 const addPostOptions = () => {
-  const postFormButton = document.querySelector(`${glassSelector} ${postFormButtonSelector}`);
+  const postFormButton = document.querySelector(postFormButtonSelector);
   if (!postFormButton || postFormButton.classList.contains(excludeClass)) { return; }
   postFormButton.classList.add(excludeClass);
 

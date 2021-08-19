@@ -13,13 +13,11 @@ let postActionsSelector;
 let postFormButtonSelector;
 
 const addPostOptions = () => {
-  const glass = document.querySelector(glassSelector);
-
-  const postFormButton = glass?.querySelector(postFormButtonSelector);
+  const postFormButton = document.querySelector(`${glassSelector} ${postFormButtonSelector}`);
   if (!postFormButton || postFormButton.classList.contains(excludeClass)) { return; }
   postFormButton.classList.add(excludeClass);
 
-  const postActions = glass.querySelector(postActionsSelector);
+  const postActions = document.querySelector(postActionsSelector);
   if (!postActions) {
     fakePostActions.textContent = '';
     postFormButton.parentNode.insertBefore(fakePostActions, postFormButton);

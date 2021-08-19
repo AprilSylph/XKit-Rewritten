@@ -55,7 +55,7 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
 
 const processBundleClick = async function ({ target }) {
   if (target.tagName !== 'BUTTON') { return; }
-  const bundleTags = target.dataset.tags.split(',');
+  const bundleTags = target.dataset.tags.split(',').map(bundleTag => bundleTag.trim());
 
   const postElement = target.closest('[data-id]');
   popupElement.parentNode.removeChild(popupElement);
@@ -105,7 +105,7 @@ const processBundleClick = async function ({ target }) {
 
     for (const tag of tags) {
       innerTagsDiv.appendChild(Object.assign(document.createElement('a'), {
-        textContent: `#${tag.trim()}`,
+        textContent: `#${tag}`,
         href: `/tagged/${encodeURIComponent(tag)}`,
         target: '_blank'
       }));
@@ -119,7 +119,7 @@ const processBundleClick = async function ({ target }) {
 
 const processPostOptionBundleClick = function ({ target }) {
   if (target.tagName !== 'BUTTON') { return; }
-  const bundleTags = target.dataset.tags.split(',');
+  const bundleTags = target.dataset.tags.split(',').map(bundleTag => bundleTag.trim());
 
   editPostFormTags({ add: bundleTags });
 };

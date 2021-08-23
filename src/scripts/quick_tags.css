@@ -17,6 +17,9 @@
   background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, .5);
   color: rgb(var(--black));
+  font-family: var(--font-family);
+  font-size: .875rem;
+  font-weight: normal;
 }
 
 #quick-tags:empty::before,
@@ -33,6 +36,7 @@
 
   background-color: inherit;
   color: inherit;
+  font: inherit;
   text-align: initial;
 }
 

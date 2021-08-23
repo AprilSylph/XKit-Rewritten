@@ -62,7 +62,7 @@ export const addSidebarItem = function ({ id, title, rows }) {
   return sidebarItem;
 };
 
-export const removeSidebarItem = id => sidebarItems.removeChild(sidebarItems.querySelector(`#${id}`));
+export const removeSidebarItem = id => sidebarItems.querySelector(`#${id}`)?.remove();
 
 (async () => {
   const sidebarItemSelector = await keyToCss('sidebarItem');
@@ -71,7 +71,7 @@ export const removeSidebarItem = id => sidebarItems.removeChild(sidebarItems.que
   const addSidebarToPage = () => {
     if (document.body.contains(sidebarItems)) { return; }
     const outdatedSidebarItems = document.getElementById('xkit-sidebar');
-    outdatedSidebarItems?.parentNode.removeChild(outdatedSidebarItems);
+    outdatedSidebarItems?.remove();
 
     const firstSidebarItem = document.querySelector(sidebarItemSelector);
     const firstNavSubHeader = document.querySelector(navSubHeaderSelector);

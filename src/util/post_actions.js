@@ -73,6 +73,6 @@ export const registerPostOption = async function (id, { iconClass, onclick }) {
  * @param {string} id - Identifier for the previously registered post option
  */
 export const unregisterPostOption = id => {
-  postOptions[id]?.parentNode?.removeChild(postOptions[id]);
+  postOptions[id]?.remove();
   delete postOptions[id];
 };

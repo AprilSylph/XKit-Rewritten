@@ -30,9 +30,9 @@ const unshortenOnClick = ({ currentTarget }) => {
   document.documentElement.style.overflowAnchor = '';
 
   const tagsClone = postElement.querySelector(`.${tagsClass}`);
-  tagsClone?.parentNode.removeChild(tagsClone);
+  tagsClone?.remove();
 
-  currentTarget.parentNode.removeChild(currentTarget);
+  currentTarget.remove();
 };
 
 const shortenPosts = async function () {

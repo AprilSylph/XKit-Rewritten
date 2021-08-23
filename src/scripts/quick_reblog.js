@@ -64,7 +64,7 @@ const removePopupOnLeave = () => {
     const { parentNode } = popupElement;
     if (parentNode?.matches(':hover, :active, :focus-within') === false) {
       parentNode?.removeEventListener('mouseleave', removePopupOnLeave);
-      parentNode?.removeChild(popupElement);
+      popupElement.remove();
     }
   }, 500);
 };
@@ -105,7 +105,7 @@ const reblogPost = async function ({ currentTarget }) {
     if (meta.status === 201) {
       makeButtonReblogged({ buttonDiv: currentReblogButton, state });
       if (lastPostID === null) {
-        popupElement.parentNode?.removeChild(popupElement);
+        popupElement.remove();
       }
 
       notify(response.displayText);
@@ -214,7 +214,7 @@ export const main = async function () {
 export const clean = async function () {
   $(document.body).off('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
 
-  popupElement.parentNode?.removeChild(popupElement);
+  popupElement.remove();
 
   blogSelector.textContent = '';
 

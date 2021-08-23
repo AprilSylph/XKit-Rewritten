@@ -40,10 +40,7 @@
     clean().catch(console.error);
 
     if (stylesheet) {
-      const link = document.querySelector(`link[href="${getURL(`/scripts/${name}.css`)}"]`);
-      if (link !== null) {
-        link.parentNode.removeChild(link);
-      }
+      document.querySelector(`link[href="${getURL(`/scripts/${name}.css`)}"]`)?.remove();
     }
 
     browser.storage.onChanged.removeListener(restartListeners[name]);

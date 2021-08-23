@@ -26,5 +26,5 @@ export const notify = async textContent => {
   await sleep(4000);
   toast.classList.remove('visible');
   await sleep(1000);
-  toastContainer.removeChild(toast);
+  toast.remove();
 };

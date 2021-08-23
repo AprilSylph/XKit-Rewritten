@@ -31,14 +31,8 @@ const replaceSearchForm = function () {
       location.assign(address);
     }
   });
-
-  const eventlessInput = searchFormElementClone.querySelector('input');
-  const eventlessInputParent = eventlessInput.parentNode;
-  eventlessInputParent.removeChild(eventlessInput);
-  eventlessInputParent.appendChild(searchInputElement);
-
   searchFormElementClone.classList.add('classic-search');
-
+  searchFormElementClone.querySelector('input').replaceWith(searchInputElement);
   searchFormElement.parentNode.prepend(searchFormElementClone);
 };
 

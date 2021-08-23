@@ -14,7 +14,7 @@ const reblogClass = 'xkit-condensed-reblogs-reblog';
 const contextItemClass = 'xkit-condensed-reblogs-context';
 
 const expandButton = Object.assign(document.createElement('button'), { className: 'xkit-condensed-reblogs-expand' });
-const onExpandButtonClick = ({ target }) => target.parentNode.removeChild(target);
+const onExpandButtonClick = ({ target }) => target.remove();
 
 const processPosts = async function () {
   getPostElements({ excludeClass }).forEach(async postElement => {

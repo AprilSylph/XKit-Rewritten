@@ -41,7 +41,7 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
 
 export const hideModal = () => {
   const modalElement = document.getElementById('xkit-modal');
-  modalElement?.parentNode?.removeChild(modalElement);
+  modalElement?.remove();
   lastFocusedElement?.focus();
 };
 

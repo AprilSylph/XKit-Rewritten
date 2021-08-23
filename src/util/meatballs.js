@@ -20,7 +20,7 @@ export const unregisterMeatballItem = id => {
   delete meatballItems[id];
   [...document.querySelectorAll('[data-xkit-meatball-button]')]
     .filter(button => button.dataset.xkitMeatballButton === id)
-    .forEach(button => button.parentNode.removeChild(button));
+    .forEach(button => button.remove());
 };
 
 (async function () {

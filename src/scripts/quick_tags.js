@@ -58,7 +58,7 @@ const processBundleClick = async function ({ target }) {
   const bundleTags = target.dataset.tags.split(',').map(bundleTag => bundleTag.trim());
 
   const postElement = target.closest('[data-id]');
-  popupElement.parentNode.removeChild(popupElement);
+  popupElement.remove();
 
   const postId = postElement.dataset.id;
   const { blog: { uuid } } = await timelineObjectMemoized(postId);
@@ -150,7 +150,7 @@ export const main = async function () {
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  popupElement.parentNode?.removeChild(popupElement);
+  popupElement.remove();
 
   unregisterPostOption('quick-tags');
 

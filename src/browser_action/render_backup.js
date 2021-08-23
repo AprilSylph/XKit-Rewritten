@@ -46,7 +46,7 @@ const localExport = async function () {
 
   document.documentElement.appendChild(tempLink);
   tempLink.click();
-  tempLink.parentNode.removeChild(tempLink);
+  tempLink.remove();
   URL.revokeObjectURL(blobUrl);
 };
 

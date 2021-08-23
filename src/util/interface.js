@@ -48,5 +48,5 @@ export const addStyle = css => {
 export const removeStyle = css => {
   [...document.querySelectorAll('style.xkit')]
     .filter(style => style.textContent === css)
-    .forEach(style => style.parentNode.removeChild(style));
+    .forEach(style => style.remove());
 };

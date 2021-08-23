@@ -2,7 +2,7 @@
 
 {
   const { getURL } = browser.runtime;
-  const redpop = [...document.scripts].some(({ src }) => src.match('/pop/'));
+  const redpop = [...document.scripts].some(({ src }) => src.includes('/pop/'));
   const isReactLoaded = () => document.querySelector('[data-rh]') === null;
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 

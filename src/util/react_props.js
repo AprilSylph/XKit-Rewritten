@@ -43,9 +43,10 @@ export const timelineObject = async function (postID) {
  */
 export const exposeTimelines = async () => inject(async () => {
   const cssMap = await window.tumblr.getCssMap();
-  const [timelineClass] = cssMap.timeline;
+  const timelineClasses = cssMap.timeline;
+  const selector = timelineClasses.map(className => `.${className}:not([data-timeline])`).join(',');
 
-  [...document.querySelectorAll(`.${timelineClass}:not([data-timeline])`)].forEach(timelineElement => {
+  [...document.querySelectorAll(selector)].forEach(timelineElement => {
     const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactInternalInstance'));
     let fiber = timelineElement[reactKey];
 

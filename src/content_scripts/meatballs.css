@@ -1,0 +1,21 @@
+[data-xkit-meatball-button] {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+[data-xkit-meatball-button]:hover,
+[data-xkit-meatball-button]:focus {
+  background-color: rgb(var(--secondary-accent));
+}

@@ -1,4 +1,4 @@
-import { keyToClasses, keyToCss } from './css_map.js';
+import { keyToCss } from './css_map.js';
 import { onPostsMutated } from './mutations.js';
 
 const meatballItems = {};
@@ -25,26 +25,25 @@ export const unregisterMeatballItem = id => {
 
 (async function () {
   const meatballMenuSelector = await keyToCss('meatballMenu');
-  const [meatballItemClass] = await keyToClasses('meatballItem');
-  const [dropdownItemClass] = await keyToClasses('dropdownItem');
 
   onPostsMutated.addListener(() => {
-    document.querySelectorAll(`[data-id] header ${meatballMenuSelector}`).forEach(async meatballMenu => {
-      if (!meatballMenu || meatballMenu.classList.contains('xkit-done')) { return; }
-      meatballMenu.classList.add('xkit-done');
+    [...document.querySelectorAll(meatballMenuSelector)]
+      .filter(meatballMenu => meatballMenu.matches(`[tabindex="-1"][data-id] article header ${meatballMenu.tagName.toLowerCase()}`))
+      .filter(meatballMenu => meatballMenu.classList.contains('xkit-done') === false)
+      .forEach(async meatballMenu => {
+        meatballMenu.classList.add('xkit-done');
 
-      Object.keys(meatballItems)
-        .sort()
-        .filter(id => meatballItems[id].postFilter === undefined || meatballItems[id].postFilter(meatballMenu.closest('[data-id]')))
-        .forEach(id => {
-          const { label, onclick } = meatballItems[id];
-          const meatballItemButton = document.createElement('button');
-          Object.assign(meatballItemButton, { textContent: label, onclick });
-          meatballItemButton.classList.add(meatballItemClass, dropdownItemClass);
-          meatballItemButton.dataset.xkitMeatballButton = id;
+        Object.keys(meatballItems)
+          .sort()
+          .filter(id => meatballItems[id].postFilter === undefined || meatballItems[id].postFilter(meatballMenu.closest('[data-id]')))
+          .forEach(id => {
+            const { label, onclick } = meatballItems[id];
+            const meatballItemButton = document.createElement('button');
+            Object.assign(meatballItemButton, { textContent: label, onclick });
+            meatballItemButton.dataset.xkitMeatballButton = id;
 
-          meatballMenu.appendChild(meatballItemButton);
-        });
-    });
+            meatballMenu.appendChild(meatballItemButton);
+          });
+      });
   });
 })();

@@ -21,7 +21,7 @@ const processPosts = async function () {
     const reblogs = [...postElement.querySelectorAll(reblogSelector)];
     if (reblogs.length < 2) { return; }
 
-    reblogs.forEach(async reblog => reblog.classList.add(reblogClass));
+    reblogs.forEach(reblog => reblog.classList.add(reblogClass));
 
     const contributedContent = postElement.querySelector('[data-is-contributed-content]');
     const firstReblog = reblogs[0];

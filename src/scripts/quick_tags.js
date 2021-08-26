@@ -53,13 +53,7 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
   currentTarget[appendOrRemove](postOptionPopupElement);
 };
 
-const processBundleClick = async function ({ target }) {
-  if (target.tagName !== 'BUTTON') { return; }
-  const bundleTags = target.dataset.tags.split(',').map(bundleTag => bundleTag.trim());
-
-  const postElement = target.closest('[data-id]');
-  popupElement.remove();
-
+const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   const postId = postElement.dataset.id;
   const { blog: { uuid } } = await timelineObjectMemoized(postId);
 
@@ -76,7 +70,7 @@ const processBundleClick = async function ({ target }) {
     }
   } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
 
-  const tagsToAdd = bundleTags.filter(bundleTag => tags.includes(bundleTag) === false);
+  const tagsToAdd = inputTags.filter(inputTag => tags.includes(inputTag) === false);
   if (tagsToAdd.length === 0) { return; }
 
   tags.push(...tagsToAdd);
@@ -115,6 +109,16 @@ const processBundleClick = async function ({ target }) {
   } catch ({ body }) {
     notify(body.errors[0].detail);
   }
+};
+
+const processBundleClick = function ({ target }) {
+  if (target.tagName !== 'BUTTON') { return; }
+  const inputTags = target.dataset.tags.split(',').map(inputTag => inputTag.trim());
+
+  const postElement = target.closest('[data-id]');
+  popupElement.remove();
+
+  addTagsToPost({ postElement, inputTags });
 };
 
 const processPostOptionBundleClick = function ({ target }) {

@@ -47,5 +47,5 @@ export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) =>
 
   window.addEventListener('message', callback);
   document.documentElement.appendChild(script);
-  document.documentElement.removeChild(script);
+  script.remove();
 });

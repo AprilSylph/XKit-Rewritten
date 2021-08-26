@@ -12,6 +12,16 @@ const excludeClass = 'xkit-quick-tags-done';
 const tagsClass = 'xkit-quick-tags-tags';
 
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-tags' });
+const popupForm = Object.assign(document.createElement('form'), {
+  onsubmit: event => event.preventDefault()
+});
+const popupInput = Object.assign(document.createElement('input'), {
+  placeholder: 'Tags (comma separated)',
+  autocomplete: 'off',
+  onkeydown: event => event.stopPropagation()
+});
+popupForm.appendChild(popupInput);
+
 const postOptionPopupElement = Object.assign(document.createElement('div'), { id: 'quick-tags-post-option' });
 
 let controlButtonTemplate;
@@ -21,6 +31,8 @@ const storageKey = 'quick_tags.preferences.tagBundles';
 const populatePopups = async function () {
   popupElement.textContent = '';
   postOptionPopupElement.textContent = '';
+
+  popupElement.appendChild(popupForm);
 
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
   for (const tagBundle of tagBundles) {
@@ -111,14 +123,22 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   }
 };
 
-const processBundleClick = function ({ target }) {
-  if (target.tagName !== 'BUTTON') { return; }
-  const inputTags = target.dataset.tags.split(',').map(inputTag => inputTag.trim());
-
-  const postElement = target.closest('[data-id]');
-  popupElement.remove();
+const processFormSubmit = function ({ currentTarget }) {
+  const postElement = currentTarget.closest('[data-id]');
+  const inputTags = popupInput.value.split(',').map(inputTag => inputTag.trim());
 
   addTagsToPost({ postElement, inputTags });
+  currentTarget.reset();
+};
+
+const processBundleClick = function ({ target }) {
+  if (target.tagName !== 'BUTTON') { return; }
+
+  const postElement = target.closest('[data-id]');
+  const inputTags = target.dataset.tags.split(',').map(inputTag => inputTag.trim());
+
+  addTagsToPost({ postElement, inputTags });
+  popupElement.remove();
 };
 
 const processPostOptionBundleClick = function ({ target }) {
@@ -138,6 +158,10 @@ const processPosts = async function () {
   });
 };
 
+popupElement.addEventListener('click', processBundleClick);
+popupForm.addEventListener('submit', processFormSubmit);
+postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
+
 export const main = async function () {
   controlButtonTemplate = await createControlButtonTemplate(iconClass, buttonClass);
 
@@ -147,9 +171,6 @@ export const main = async function () {
   registerPostOption('quick-tags', { iconClass, onclick: togglePostOptionPopupDisplay });
 
   populatePopups();
-
-  popupElement.addEventListener('click', processBundleClick);
-  postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 };
 
 export const clean = async function () {

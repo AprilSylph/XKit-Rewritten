@@ -30,6 +30,24 @@
   text-align: center;
 }
 
+#quick-tags form {
+  margin: 2px 0;
+}
+
+#quick-tags input {
+  box-sizing: border-box;
+  width: 0;
+  min-width: 100%;
+  padding: 1ch;
+  border: none;
+  margin: 0;
+
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: initial;
+}
+
 #quick-tags button,
 #quick-tags-post-option button {
   padding: 1ch;

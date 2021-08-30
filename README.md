@@ -15,6 +15,7 @@ The enhancement suite for Tumblr's new web interface.
 
 ## Installation
 - [Get this extension for Firefox](https://addons.mozilla.org/addon/xkit-rewritten/)
+- [View on the Chrome Web Store](https://chrome.google.com/webstore/detail/xkit-rewritten/ehgbadgnkmeeldglkmnplolneidgpbcm)
 
 ## Usage
 Click the addon icon in your browser toolbar to open the control panel.  

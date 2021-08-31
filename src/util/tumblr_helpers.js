@@ -12,18 +12,5 @@ export const apiFetch = async function (...args) {
   );
 };
 
-/**
- * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#getcssmap}
- * @returns {Promise<object>} The result of window.tumblr.getCssMap()
- */
-export const getCssMap = async function () {
-  return inject(async () => window.tumblr.getCssMap());
-};
-
-/**
- * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#languagedata}
- * @returns {Promise<object>} - The window.tumblr.languageData object
- */
-export const getLanguageData = async function () {
-  return inject(async () => window.tumblr.languageData);
-};
+export const getCssMap = inject(async () => window.tumblr.getCssMap());
+export const getLanguageData = inject(async () => window.tumblr.languageData);

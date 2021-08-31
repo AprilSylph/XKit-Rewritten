@@ -1,17 +1,12 @@
 import { getCssMap } from './tumblr_helpers.js';
 import { cartesian } from './misc.js';
 
-let cssMap;
-
 /**
  * @param {string} key - The source name of an element
  * @returns {Promise<string[]>} An array of generated classnames from the CSS map
  */
 export const keyToClasses = async function (key) {
-  if (cssMap === undefined) {
-    cssMap = await getCssMap();
-  }
-
+  const cssMap = await getCssMap;
   return cssMap[key];
 };
 

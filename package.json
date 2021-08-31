@@ -5,9 +5,11 @@
     "test": "eslint . && web-ext lint",
     "lint-webextension": "web-ext lint",
     "build-webextension": "web-ext build",
-    "sign-webextension": "web-ext sign"
+    "sign-webextension": "web-ext sign",
+    "webstore-upload": "webstore upload --source=src/ --auto-publish"
   },
   "devDependencies": {
+    "chrome-webstore-upload-cli": "^1.2.1",
     "eslint": "^7.32.0",
     "eslint-config-semistandard": "^16.0.0",
     "eslint-config-standard": "^16.0.3",

@@ -14,7 +14,7 @@
 
 ### Web-only development
 
-If you're unable to get set up locally, all you need to do is go to the **Actions** tab in your fork, then to the **WebExt** workflow, and then use "Run workflow" with whichever branch you've made changes to. This will lint and then build the WebExtension for you to download and test! It will give you a ZIP within a ZIP, so be sure to extract from the inner ZIP to avoid extracting everything twice. If there are any major issues, this workflow will fail and tell you what went wrong under the "Lint WebExtension" step.
+If you're unable to get set up locally, all you need to do is go to the **Actions** tab in your fork, then to the **Build** workflow, and then use "Run workflow" with whichever branch you've made changes to. This will lint and then build the WebExtension for you to download and test! It will give you a ZIP within a ZIP, so be sure to extract from the inner ZIP to avoid extracting everything twice. If there are any major issues, this workflow will fail and tell you what went wrong under the "Lint WebExtension" step.
 
 ## Loading the project into the browser
 

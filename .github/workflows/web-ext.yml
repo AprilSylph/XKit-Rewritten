@@ -1,10 +1,10 @@
-name: WebExt
+name: Build
 
 on: workflow_dispatch
 
 jobs:
-  build:
-    name: Build
+  webextension:
+    name: WebExtension
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

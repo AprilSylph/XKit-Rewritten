@@ -1,4 +1,23 @@
 let nonce;
+const pending = new Map();
+
+const callback = event => {
+  const { result, exception, xkitCallbackNonce } = event.data;
+
+  if (event.origin === `${location.protocol}//${location.host}` && pending.has(xkitCallbackNonce)) {
+    const [resolve, reject] = pending.get(xkitCallbackNonce);
+    pending.delete(xkitCallbackNonce);
+    if (pending.size === 0) {
+      window.removeEventListener('message', callback);
+    }
+
+    if (exception === undefined) {
+      resolve(JSON.parse(result || 'null'));
+    } else {
+      reject(Object.assign(new Error(), JSON.parse(exception)));
+    }
+  }
+};
 
 /**
  * @param {Function} asyncFunc - Asynchronous function to run in the page context
@@ -11,21 +30,11 @@ export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) =>
     nonce = scriptWithNonce.nonce || scriptWithNonce.getAttribute('nonce');
   }
 
+  if (pending.size === 0) {
+    window.addEventListener('message', callback);
+  }
   const callbackNonce = Math.random();
-
-  const callback = event => {
-    if (event.origin === `${location.protocol}//${location.host}` && event.data.xkitCallbackNonce === callbackNonce) {
-      window.removeEventListener('message', callback);
-
-      const { result, exception } = event.data;
-
-      if (exception === undefined) {
-        resolve(JSON.parse(result || 'null'));
-      } else {
-        reject(Object.assign(new Error(), JSON.parse(exception)));
-      }
-    }
-  };
+  pending.set(callbackNonce, [resolve, reject]);
 
   const script = document.createElement('script');
 
@@ -45,7 +54,6 @@ export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) =>
     }, '${location.protocol}//${location.host}'))
   }`;
 
-  window.addEventListener('message', callback);
   document.documentElement.appendChild(script);
   script.remove();
 });

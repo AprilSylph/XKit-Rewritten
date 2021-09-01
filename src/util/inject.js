@@ -1,14 +1,14 @@
 let nonce;
-const pending = new Map();
+const callbacks = new Map();
 
-const callback = event => {
+const messageHandler = event => {
   const { result, exception, xkitCallbackNonce } = event.data;
 
-  if (event.origin === `${location.protocol}//${location.host}` && pending.has(xkitCallbackNonce)) {
-    const [resolve, reject] = pending.get(xkitCallbackNonce);
-    pending.delete(xkitCallbackNonce);
-    if (pending.size === 0) {
-      window.removeEventListener('message', callback);
+  if (event.origin === `${location.protocol}//${location.host}` && callbacks.has(xkitCallbackNonce)) {
+    const [resolve, reject] = callbacks.get(xkitCallbackNonce);
+    callbacks.delete(xkitCallbackNonce);
+    if (callbacks.size === 0) {
+      window.removeEventListener('message', messageHandler);
     }
 
     if (exception === undefined) {
@@ -30,11 +30,11 @@ export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) =>
     nonce = scriptWithNonce.nonce || scriptWithNonce.getAttribute('nonce');
   }
 
-  if (pending.size === 0) {
-    window.addEventListener('message', callback);
+  if (callbacks.size === 0) {
+    window.addEventListener('message', messageHandler);
   }
   const callbackNonce = Math.random();
-  pending.set(callbackNonce, [resolve, reject]);
+  callbacks.set(callbackNonce, [resolve, reject]);
 
   const script = document.createElement('script');
 

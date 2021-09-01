@@ -2,9 +2,9 @@ let nonce;
 const callbacks = new Map();
 
 const messageHandler = event => {
-  const { result, exception, xkitCallbackNonce } = event.data;
+  const { origin, result, exception, xkitCallbackNonce } = event.data;
 
-  if (event.origin === `${location.protocol}//${location.host}` && callbacks.has(xkitCallbackNonce)) {
+  if (origin === `${location.protocol}//${location.host}` && callbacks.has(xkitCallbackNonce)) {
     const [resolve, reject] = callbacks.get(xkitCallbackNonce);
     callbacks.delete(xkitCallbackNonce);
     if (callbacks.size === 0) {

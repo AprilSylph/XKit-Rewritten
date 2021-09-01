@@ -10,9 +10,6 @@ const messageHandler = event => {
   if (origin === `${location.protocol}//${location.host}` && callbacks.has(xkitCallbackNonce)) {
     const [resolve, reject] = callbacks.get(xkitCallbackNonce);
     callbacks.delete(xkitCallbackNonce);
-    if (callbacks.size === 0) {
-      window.removeEventListener('message', messageHandler);
-    }
 
     if (exception === undefined) {
       resolve(JSON.parse(result || 'null'));
@@ -21,6 +18,7 @@ const messageHandler = event => {
     }
   }
 };
+window.addEventListener('message', messageHandler);
 
 /**
  * @param {Function} asyncFunc - Asynchronous function to run in the page context
@@ -33,9 +31,6 @@ export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) =>
     nonce = scriptWithNonce.nonce || scriptWithNonce.getAttribute('nonce');
   }
 
-  if (callbacks.size === 0) {
-    window.addEventListener('message', messageHandler);
-  }
   const callbackNonce = Math.random();
   callbacks.set(callbackNonce, [resolve, reject]);
 

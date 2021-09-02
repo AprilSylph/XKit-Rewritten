@@ -1,22 +1,50 @@
 const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
+const initNonce = `${browser.runtime.getURL('')}:${Math.random()}`;
 
 const callbacks = new Map();
 
-window.addEventListener(
-  'message',
-  function messageHandler ({ origin, data: { result, exception, xkitCallbackNonce } }) {
-    if (origin === location.origin && callbacks.has(xkitCallbackNonce)) {
-      const [resolve, reject] = callbacks.get(xkitCallbackNonce);
-      callbacks.delete(xkitCallbackNonce);
+let messagePort;
 
-      if (exception === undefined) {
-        resolve(JSON.parse(result || 'null'));
-      } else {
-        reject(Object.assign(new Error(), JSON.parse(exception)));
-      }
+const messageHandler = function ({ data: { result, exception, xkitCallbackNonce } }) {
+  if (callbacks.has(xkitCallbackNonce)) {
+    const [resolve, reject] = callbacks.get(xkitCallbackNonce);
+    callbacks.delete(xkitCallbackNonce);
+
+    if (exception === undefined) {
+      resolve(JSON.parse(result || 'null'));
+    } else {
+      reject(Object.assign(new Error(), JSON.parse(exception)));
     }
   }
-);
+};
+
+const init = new Promise(resolve => {
+  const receivePort = function ({ origin, data: { init }, ports: [receivedPort] }) {
+    if (origin === location.origin && init === initNonce) {
+      window.removeEventListener('message', receivePort);
+      messagePort = receivedPort;
+      messagePort.addEventListener('message', messageHandler);
+      messagePort.start();
+      resolve();
+    }
+  };
+  window.addEventListener('message', receivePort);
+
+  const initScript = document.createElement('script');
+  initScript.setAttribute('nonce', nonce);
+  initScript.textContent = `{
+    const channel = new MessageChannel();
+    window.xkit = { messagePort: channel.port1 };
+    window.postMessage(
+      { init: '${initNonce}' },
+      '${location.origin}',
+      [channel.port2]
+    );
+  }`;
+
+  document.documentElement.appendChild(initScript);
+  initScript.remove();
+});
 
 /**
  * @param {Function} asyncFunc - Asynchronous function to run in the page context
@@ -32,19 +60,21 @@ export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) =>
   script.setAttribute('nonce', nonce);
   script.textContent = `{
     (${asyncFunc.toString()})(...${JSON.stringify(args)})
-    .then(result => window.postMessage({
+    .then(result => window.xkit.messagePort.postMessage({
       xkitCallbackNonce: ${callbackNonce},
       result: JSON.stringify(result),
-    }, '${location.origin}'))
-    .catch(exception => window.postMessage({
+    }))
+    .catch(exception => window.xkit.messagePort.postMessage({
       xkitCallbackNonce: ${callbackNonce},
       exception: JSON.stringify(Object.assign({}, exception, {
         message: exception.message,
         stack: exception.stack,
       })),
-    }, '${location.origin}'))
+    }))
   }`;
 
-  document.documentElement.appendChild(script);
-  script.remove();
+  init.then(() => {
+    document.documentElement.appendChild(script);
+    script.remove();
+  });
 });

@@ -34,7 +34,7 @@ const init = new Promise(resolve => {
   initScript.setAttribute('nonce', nonce);
   initScript.textContent = `{
     const channel = new MessageChannel();
-    Object.defineProperty(window, 'xkit', {
+    Object.defineProperty(window, 'xkit_${initNonce}', {
       value: { messagePort: channel.port1 },
       writable: false,
       enumerable: false,
@@ -65,11 +65,11 @@ export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) =>
   script.setAttribute('nonce', nonce);
   script.textContent = `{
     (${asyncFunc.toString()})(...${JSON.stringify(args)})
-    .then(result => window.xkit.messagePort.postMessage({
+    .then(result => window['xkit_${initNonce}'].messagePort.postMessage({
       xkitCallbackNonce: ${callbackNonce},
       result: JSON.stringify(result),
     }))
-    .catch(exception => window.xkit.messagePort.postMessage({
+    .catch(exception => window['xkit_${initNonce}'].messagePort.postMessage({
       xkitCallbackNonce: ${callbackNonce},
       exception: JSON.stringify(Object.assign({}, exception, {
         message: exception.message,

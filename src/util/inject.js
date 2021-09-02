@@ -34,7 +34,12 @@ const init = new Promise(resolve => {
   initScript.setAttribute('nonce', nonce);
   initScript.textContent = `{
     const channel = new MessageChannel();
-    window.xkit = { messagePort: channel.port1 };
+    Object.defineProperty(window, 'xkit', {
+      value: { messagePort: channel.port1 },
+      writable: false,
+      enumerable: false,
+      configurable: false
+    });
     window.postMessage(
       { init: '${initNonce}' },
       '${location.origin}',

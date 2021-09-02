@@ -1,5 +1,5 @@
 const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
-const initNonce = `${browser.runtime.getURL('')}:${Math.random()}`;
+const initNonce = `${Date.now()}.${Math.random()}`;
 
 const callbacks = new Map();
 

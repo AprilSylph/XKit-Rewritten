@@ -1,49 +1,44 @@
-(function () {
-  const excludeClass = 'xkit-collapsed-queue-done';
-  const doneClass = 'xkit-collapsed-queue-collapsed';
+import { getPostElements } from '../util/interface.js';
+import { exposeTimelines } from '../util/react_props.js';
+import { getPreferences } from '../util/preferences.js';
+import { onNewPosts } from '../util/mutations.js';
+import { keyToCss } from '../util/css_map.js';
 
-  let footerSelector;
+const excludeClass = 'xkit-collapsed-queue-done';
+const doneClass = 'xkit-collapsed-queue-collapsed';
 
-  const processPosts = async function () {
-    const { getPostElements } = await fakeImport('/util/interface.js');
-    const { givenPath } = await fakeImport('/util/react_props.js');
+let footerSelector;
 
-    getPostElements({ excludeClass }).forEach(async postElement => {
-      const timeline = await givenPath(postElement);
-      if (!timeline.endsWith('/posts/queue')) { return; }
+const processPosts = async function () {
+  await exposeTimelines();
 
-      postElement.classList.add(doneClass);
+  getPostElements({ excludeClass, timeline: /\/v2\/blog\/[^/]+\/posts\/queue/ }).forEach(async postElement => {
+    postElement.classList.add(doneClass);
 
-      const $post = $(postElement).find('article').first();
-      const $header = $post.find('header').first();
+    const $post = $(postElement).find('article').first();
+    const $header = $post.find('header').first();
 
-      $header.next().css('margin', 0);
+    $header.next().css('margin', 0);
 
-      $header.nextUntil(footerSelector)
-        .wrapAll('<div class="queue_plus_shrink_container"><div class="queue_plus_shrink_container_inner"></div></div>')
-        .parent().before('<div class="queue_plus_shrink_container_shadow"></div>');
-    });
-  };
+    $header.nextUntil(footerSelector)
+      .wrapAll('<div class="queue_plus_shrink_container"><div class="queue_plus_shrink_container_inner"></div></div>')
+      .parent().before('<div class="queue_plus_shrink_container_shadow"></div>');
+  });
+};
 
-  const main = async function () {
-    // const { getPreferences } = await fakeImport('/util/preferences.js');
-    const { onNewPosts } = await fakeImport('/util/mutations.js');
-    const { keyToCss } = await fakeImport('/util/css_map.js');
+export const main = async function () {
+  // ({  } = await getPreferences('collapsed_queue'));
+  footerSelector = await keyToCss('footerWrapper');
 
-    // ({  } = await getPreferences('collapsed_queue'));
-    footerSelector = await keyToCss('footerWrapper');
+  onNewPosts.addListener(processPosts);
+  processPosts();
+};
 
-    onNewPosts.addListener(processPosts);
-    processPosts();
-  };
+export const clean = async function () {
+  onNewPosts.removeListener(processPosts);
 
-  const clean = async function () {
-    const { onNewPosts } = await fakeImport('/util/mutations.js');
-    onNewPosts.removeListener(processPosts);
+  $(`.${excludeClass}`).removeClass(excludeClass);
+  $(`.${doneClass}`).removeClass(doneClass);
+};
 
-    $(`.${excludeClass}`).removeClass(excludeClass);
-    $(`.${doneClass}`).removeClass(doneClass);
-  };
-
-  return { main, clean, stylesheet: true, autoRestart: true };
-})();
+export const stylesheet = true;

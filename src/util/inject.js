@@ -4,7 +4,7 @@ const callbacks = new Map();
 window.addEventListener(
   'message',
   function messageHandler ({ origin, data: { result, exception, xkitCallbackNonce } }) {
-    if (origin === `${location.protocol}//${location.host}` && callbacks.has(xkitCallbackNonce)) {
+    if (origin === location.origin && callbacks.has(xkitCallbackNonce)) {
       const [resolve, reject] = callbacks.get(xkitCallbackNonce);
       callbacks.delete(xkitCallbackNonce);
 
@@ -39,14 +39,14 @@ export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) =>
     .then(result => window.postMessage({
       xkitCallbackNonce: ${callbackNonce},
       result: JSON.stringify(result),
-    }, '${location.protocol}//${location.host}'))
+    }, '${location.origin}'))
     .catch(exception => window.postMessage({
       xkitCallbackNonce: ${callbackNonce},
       exception: JSON.stringify(Object.assign({}, exception, {
         message: exception.message,
         stack: exception.stack,
       })),
-    }, '${location.protocol}//${location.host}'))
+    }, '${location.origin}'))
   }`;
 
   document.documentElement.appendChild(script);

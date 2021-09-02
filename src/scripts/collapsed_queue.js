@@ -37,6 +37,12 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
+  $('.queue_plus_shrink_container_shadow').remove();
+  $('.queue_plus_shrink_container_inner').unwrap();
+  $('.queue_plus_shrink_container_inner').each(function () {
+    $(this).children().first().unwrap();
+  });
+
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${doneClass}`).removeClass(doneClass);
 };

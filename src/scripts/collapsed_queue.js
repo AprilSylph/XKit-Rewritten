@@ -11,12 +11,13 @@ const containerClass = 'queue_plus_shrink_container';
 const containerClassInner = 'queue_plus_shrink_container_inner';
 const containerClassShadow = 'queue_plus_shrink_container_shadow';
 
+let timelineRegex;
 let footerSelector;
 
 const processPosts = async function () {
   await exposeTimelines();
 
-  getPostElements({ excludeClass, timeline: /\/v2\/blog\/[^/]+\/posts\/queue/ }).forEach(async postElement => {
+  getPostElements({ excludeClass, timeline: timelineRegex }).forEach(async postElement => {
     postElement.classList.add(doneClass);
 
     const $post = $(postElement).find('article').first();
@@ -31,7 +32,13 @@ const processPosts = async function () {
 };
 
 export const main = async function () {
-  // ({  } = await getPreferences('collapsed_queue'));
+  const { runInQueue, runInDrafts } = await getPreferences('collapsed_queue');
+  const regexGroup = [
+    ...runInQueue ? ['queue'] : [],
+    ...runInDrafts ? ['draft'] : []
+  ].join('|');
+  timelineRegex = new RegExp(String.raw`\/v2\/blog\/[^/]+\/posts\/(${regexGroup})`);
+
   footerSelector = await keyToCss('footerWrapper');
 
   onNewPosts.addListener(processPosts);

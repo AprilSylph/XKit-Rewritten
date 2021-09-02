@@ -2,16 +2,16 @@ const { nonce } = [...document.scripts].find(script => script.getAttributeNames(
 
 const typedArray = new Uint8Array(8);
 window.crypto.getRandomValues(typedArray);
-const initNonce = [...typedArray].map(number => number.toString(16).padStart(2, '0')).join('');
+const injectKey = [...typedArray].map(number => number.toString(16).padStart(2, '0')).join('');
 
 const callbacks = new Map();
 
 let messagePort;
 
-const messageHandler = function ({ data: { result, exception, xkitCallbackNonce } }) {
-  if (callbacks.has(xkitCallbackNonce)) {
-    const [resolve, reject] = callbacks.get(xkitCallbackNonce);
-    callbacks.delete(xkitCallbackNonce);
+const messageHandler = function ({ data: { result, exception, xkitCallbackId } }) {
+  if (callbacks.has(xkitCallbackId)) {
+    const [resolve, reject] = callbacks.get(xkitCallbackId);
+    callbacks.delete(xkitCallbackId);
 
     if (exception === undefined) {
       resolve(JSON.parse(result || 'null'));
@@ -22,8 +22,8 @@ const messageHandler = function ({ data: { result, exception, xkitCallbackNonce 
 };
 
 const init = new Promise(resolve => {
-  const receivePort = function ({ origin, data: { init }, ports: [receivedPort] }) {
-    if (origin === location.origin && init === initNonce) {
+  const receivePort = function ({ origin, data, ports: [receivedPort] }) {
+    if (origin === location.origin && data === injectKey) {
       window.removeEventListener('message', receivePort);
       messagePort = receivedPort;
       messagePort.addEventListener('message', messageHandler);
@@ -37,14 +37,14 @@ const init = new Promise(resolve => {
   initScript.setAttribute('nonce', nonce);
   initScript.textContent = `{
     const channel = new MessageChannel();
-    Object.defineProperty(window, 'xkit$${initNonce}', {
+    Object.defineProperty(window, 'xkit$${injectKey}', {
       value: { messagePort: channel.port1 },
       writable: false,
       enumerable: false,
       configurable: false
     });
     window.postMessage(
-      { init: '${initNonce}' },
+      '${injectKey}',
       '${location.origin}',
       [channel.port2]
     );
@@ -60,20 +60,20 @@ const init = new Promise(resolve => {
  * @returns {Promise<any>} The return value of the async function, or the caught exception
  */
 export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) => {
-  const callbackNonce = Math.random();
-  callbacks.set(callbackNonce, [resolve, reject]);
+  const callbackId = Math.random();
+  callbacks.set(callbackId, [resolve, reject]);
 
   const script = document.createElement('script');
 
   script.setAttribute('nonce', nonce);
   script.textContent = `{
     (${asyncFunc.toString()})(...${JSON.stringify(args)})
-    .then(result => window.xkit$${initNonce}.messagePort.postMessage({
-      xkitCallbackNonce: ${callbackNonce},
+    .then(result => window.xkit$${injectKey}.messagePort.postMessage({
+      xkitCallbackId: ${callbackId},
       result: JSON.stringify(result),
     }))
-    .catch(exception => window.xkit$${initNonce}.messagePort.postMessage({
-      xkitCallbackNonce: ${callbackNonce},
+    .catch(exception => window.xkit$${injectKey}.messagePort.postMessage({
+      xkitCallbackId: ${callbackId},
       exception: JSON.stringify(Object.assign({}, exception, {
         message: exception.message,
         stack: exception.stack,

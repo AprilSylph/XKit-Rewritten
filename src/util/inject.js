@@ -1,20 +1,21 @@
 let nonce;
 const callbacks = new Map();
 
-const messageHandler = ({ origin, data: { result, exception, xkitCallbackNonce } }) => {
+window.addEventListener(
+  'message',
+  function messageHandler ({ origin, data: { result, exception, xkitCallbackNonce } }) {
+    if (origin === `${location.protocol}//${location.host}` && callbacks.has(xkitCallbackNonce)) {
+      const [resolve, reject] = callbacks.get(xkitCallbackNonce);
+      callbacks.delete(xkitCallbackNonce);
 
-  if (origin === `${location.protocol}//${location.host}` && callbacks.has(xkitCallbackNonce)) {
-    const [resolve, reject] = callbacks.get(xkitCallbackNonce);
-    callbacks.delete(xkitCallbackNonce);
-
-    if (exception === undefined) {
-      resolve(JSON.parse(result || 'null'));
-    } else {
-      reject(Object.assign(new Error(), JSON.parse(exception)));
+      if (exception === undefined) {
+        resolve(JSON.parse(result || 'null'));
+      } else {
+        reject(Object.assign(new Error(), JSON.parse(exception)));
+      }
     }
   }
-};
-window.addEventListener('message', messageHandler);
+);
 
 /**
  * @param {Function} asyncFunc - Asynchronous function to run in the page context

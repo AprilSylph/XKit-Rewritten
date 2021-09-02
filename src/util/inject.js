@@ -1,11 +1,7 @@
 let nonce;
 const callbacks = new Map();
 
-const messageHandler = event => {
-  const {
-    origin,
-    data: { result, exception, xkitCallbackNonce }
-  } = event;
+const messageHandler = ({ origin, data: { result, exception, xkitCallbackNonce } }) => {
 
   if (origin === `${location.protocol}//${location.host}` && callbacks.has(xkitCallbackNonce)) {
     const [resolve, reject] = callbacks.get(xkitCallbackNonce);

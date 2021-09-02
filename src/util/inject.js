@@ -1,4 +1,5 @@
-let nonce;
+const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
+
 const callbacks = new Map();
 
 window.addEventListener(
@@ -23,11 +24,6 @@ window.addEventListener(
  * @returns {Promise<any>} The return value of the async function, or the caught exception
  */
 export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) => {
-  if (!nonce) {
-    const scriptWithNonce = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
-    nonce = scriptWithNonce.nonce || scriptWithNonce.getAttribute('nonce');
-  }
-
   const callbackNonce = Math.random();
   callbacks.set(callbackNonce, [resolve, reject]);
 

@@ -7,6 +7,10 @@ import { keyToCss } from '../util/css_map.js';
 const excludeClass = 'xkit-collapsed-queue-done';
 const doneClass = 'xkit-collapsed-queue-collapsed';
 
+const containerClass = 'queue_plus_shrink_container';
+const containerClassInner = 'queue_plus_shrink_container_inner';
+const containerClassShadow = 'queue_plus_shrink_container_shadow';
+
 let footerSelector;
 
 const processPosts = async function () {
@@ -21,8 +25,8 @@ const processPosts = async function () {
     $header.next().css('margin', 0);
 
     $header.nextUntil(footerSelector)
-      .wrapAll('<div class="queue_plus_shrink_container"><div class="queue_plus_shrink_container_inner"></div></div>')
-      .parent().before('<div class="queue_plus_shrink_container_shadow"></div>');
+      .wrapAll(`<div class="${containerClass}"><div class="${containerClassInner}"></div></div>`)
+      .parent().before(`<div class="${containerClassShadow}"></div>`);
   });
 };
 
@@ -37,9 +41,9 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  $('.queue_plus_shrink_container_shadow').remove();
-  $('.queue_plus_shrink_container_inner').unwrap();
-  $('.queue_plus_shrink_container_inner').each(function () {
+  $(`.${containerClassShadow}`).remove();
+  $(`.${containerClassInner}`).unwrap();
+  $(`.${containerClassInner}`).each(function () {
     $(this).children().first().unwrap();
   });
 

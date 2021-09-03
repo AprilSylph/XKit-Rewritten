@@ -6,7 +6,7 @@ import { registerPostOption, unregisterPostOption } from '../util/post_actions.j
 import { timelineObjectMemoized, editPostFormTags } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
-const iconClass = 'ri-price-tag-3-line';
+const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
 const excludeClass = 'xkit-quick-tags-done';
 const tagsClass = 'xkit-quick-tags-tags';
@@ -163,12 +163,12 @@ popupForm.addEventListener('submit', processFormSubmit);
 postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 
 export const main = async function () {
-  controlButtonTemplate = await createControlButtonTemplate(iconClass, buttonClass);
+  controlButtonTemplate = await createControlButtonTemplate(symbolId, buttonClass);
 
   onNewPosts.addListener(processPosts);
   processPosts();
 
-  registerPostOption('quick-tags', { iconClass, onclick: togglePostOptionPopupDisplay });
+  registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });
 
   populatePopups();
 };

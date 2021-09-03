@@ -32,7 +32,7 @@
   },
 
   "permissions": [ "storage" ],
-  "web_accessible_resources": [ "*.js", "*.json", "*.css" ],
+  "web_accessible_resources": [ "*.js", "*.json", "*.css", "*.svg" ],
   "content_scripts": [
     {
       "matches": [ "*://www.tumblr.com/*" ],

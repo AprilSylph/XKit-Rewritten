@@ -1,4 +1,4 @@
-import { fetchDefaultBlog } from '../../util/user_blogs.js';
+import { getDefaultBlog } from '../../util/user_blogs.js';
 import { onNewPosts } from '../../util/mutations.js';
 import { addStyle, removeStyle, getPostElements } from '../../util/interface.js';
 import { exposeTimelines, timelineObjectMemoized } from '../../util/react_props.js';
@@ -21,7 +21,7 @@ const processPosts = async function () {
 };
 
 export const main = async function () {
-  ({ name: defaultBlog } = await fetchDefaultBlog());
+  ({ name: defaultBlog } = await getDefaultBlog());
 
   onNewPosts.addListener(processPosts);
   processPosts();

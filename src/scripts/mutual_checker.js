@@ -1,7 +1,7 @@
 import { getPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
-import { fetchDefaultBlog } from '../util/user_blogs.js';
+import { getDefaultBlog } from '../util/user_blogs.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts } from '../util/mutations.js';
 
@@ -62,7 +62,7 @@ const addIcons = async function () {
 };
 
 export const main = async function () {
-  myBlog = (await fetchDefaultBlog()).name;
+  myBlog = (await getDefaultBlog()).name;
   following[myBlog] = Promise.resolve(false);
 
   postAttributionSelector = await keyToCss('postAttribution');

@@ -19,17 +19,17 @@ export const getUserBlogNames = async function () {
 };
 
 /**
- * @returns {Promise<object>} - The default ("main") blog for the user
+ * @returns {Promise<object>} - The primary ("main") blog for the user
  */
-export const getDefaultBlog = async function () {
+export const getPrimaryBlog = async function () {
   const blogs = await getUserBlogs();
   return blogs.find(blog => blog.primary === true);
 };
 
 /**
- * @returns {Promise<string>} - The blog name of the user's primary blog
+ * @returns {Promise<string>} - The name of the user's primary blog
  */
-export const getDefaultBlogName = async function () {
-  const defaultBlog = await getDefaultBlog();
-  return defaultBlog.name;
+export const getPrimaryBlogName = async function () {
+  const primaryBlog = await getPrimaryBlog();
+  return primaryBlog.name;
 };

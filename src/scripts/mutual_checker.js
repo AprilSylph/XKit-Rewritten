@@ -1,7 +1,7 @@
 import { getPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
-import { getDefaultBlogName } from '../util/user_blogs.js';
+import { getPrimaryBlogName } from '../util/user_blogs.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts } from '../util/mutations.js';
 
@@ -15,7 +15,7 @@ const aprilFoolsPath = 'M858 352q-6-14-8-35-2-12-4-38-3-38-6-54-7-28-22-43t-43-2
 const following = {};
 const mutuals = {};
 
-let myBlog;
+let primaryBlogName;
 let postAttributionSelector;
 let icon;
 
@@ -48,7 +48,7 @@ const addIcons = async function () {
     if (!followingBlog) { return; }
 
     if (mutuals[blogName] === undefined) {
-      mutuals[blogName] = apiFetch(`/v2/blog/${myBlog}/followed_by`, { queryParams: { query: blogName } })
+      mutuals[blogName] = apiFetch(`/v2/blog/${primaryBlogName}/followed_by`, { queryParams: { query: blogName } })
         .then(({ response: { followedBy } }) => followedBy)
         .catch(() => Promise.resolve(false));
     }
@@ -62,8 +62,8 @@ const addIcons = async function () {
 };
 
 export const main = async function () {
-  myBlog = await getDefaultBlogName();
-  following[myBlog] = Promise.resolve(false);
+  primaryBlogName = await getPrimaryBlogName();
+  following[primaryBlogName] = Promise.resolve(false);
 
   postAttributionSelector = await keyToCss('postAttribution');
 

@@ -10,6 +10,8 @@
   flex-direction: column;
   align-items: stretch;
   width: 250px;
+  max-height: 250px;
+  overflow-y: auto;
   padding: 2px;
   border-radius: 3px;
 

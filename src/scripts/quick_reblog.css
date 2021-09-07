@@ -62,20 +62,31 @@ div:first-child + a + #quick-reblog {
   margin-bottom: 2px;
 }
 
+#quick-reblog .quick-tags {
+  font-size: .875rem;
+  line-height: 1.125;
+  --button-height: calc(1.125em + (0.75ch * 2) + 2px);
+}
+
 #quick-reblog .quick-tags:not([hidden]) {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  max-height: calc(var(--button-height) * 4);
+  overflow-y: auto;
 }
 
 #quick-reblog .quick-tags button {
-  font-size: .875rem;
-  text-align: left;
-  color: rgb(var(--black));
-  background-color: rgb(var(--white));
-  opacity: 0.65;
   padding: 0.75ch 1ch;
   margin-bottom: 2px;
+
+  background-color: rgb(var(--white));
+  color: rgb(var(--black));
+  font-size: inherit;
+  line-height: inherit;
+  text-align: left;
+
+  opacity: 0.65;
 }
 
 #quick-reblog .quick-tags button:hover {

@@ -19,7 +19,7 @@
 
   "browser_action": {
     "browser_style": true,
-    "default_title": "XKit",
+    "default_title": "XKit Control Panel",
     "default_popup": "browser_action/popup.html",
     "default_icon": {
       "16": "icons/16.png",

@@ -21,19 +21,13 @@ const onButtonClicked = async function ({ currentTarget }) {
 
   const {
     blog: { uuid },
-    shouldOpenInLegacy,
     rebloggedRootUuid,
     rebloggedRootId
   } = await timelineObjectMemoized(postId);
 
-  if (shouldOpenInLegacy) {
-    notify('Legacy posts cannot be trimmed.');
-    return;
-  }
-
   if (rebloggedRootUuid && rebloggedRootId) {
-    const { response: { shouldOpenInLegacy: rootShouldOpenInLegacy } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
-    if (rootShouldOpenInLegacy) {
+    const { response: { shouldOpenInLegacy } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
+    if (shouldOpenInLegacy) {
       notify('Legacy posts cannot be trimmed.');
       return;
     }

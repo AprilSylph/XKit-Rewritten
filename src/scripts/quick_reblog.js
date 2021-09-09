@@ -29,7 +29,6 @@ draftButton.dataset.state = 'draft';
 [blogSelector, commentInput, quickTagsList, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
 
 let lastPostID;
-let lastBlogID;
 let timeoutID;
 
 let popupPosition;
@@ -54,7 +53,9 @@ const showPopupOnHover = ({ currentTarget }) => {
 
   const thisPostID = currentTarget.closest('[data-id]').dataset.id;
   if (thisPostID !== lastPostID) {
-    blogSelector.value = rememberLastBlog ? lastBlogID : blogSelector.options[0].value;
+    if (!rememberLastBlog) {
+      blogSelector.value = blogSelector.options[0].value;
+    }
     commentInput.value = '';
     tagsInput.value = '';
   }
@@ -211,13 +212,6 @@ export const main = async function () {
   if (alreadyRebloggedEnabled) {
     onNewPosts.addListener(processPosts);
     processPosts();
-  }
-
-  if (rememberLastBlog) {
-    lastBlogID = blogSelector.options[0].value;
-    blogSelector.addEventListener('change', () => {
-      lastBlogID = blogSelector.value;
-    });
   }
 };
 

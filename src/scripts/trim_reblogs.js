@@ -4,7 +4,7 @@ import { getPostElements } from '../util/interface.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
-import { timelineObjectMemoized } from '../util/react_props.js';
+import { timelineObject, timelineObjectMemoized } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-scissors-cut-line';
@@ -90,6 +90,8 @@ const onButtonClicked = async function ({ currentTarget }) {
             });
             notify(displayText);
 
+            currentTarget.remove();
+
             const reblogs = [...postElement.querySelectorAll(reblogSelector)];
             excludeTrailItems
               .map(i => reblogs[i])
@@ -107,6 +109,9 @@ const processPosts = async function () {
   getPostElements({ excludeClass }).forEach(async postElement => {
     const editButton = postElement.querySelector('footer a[href*="/edit/"]');
     if (!editButton) { return; }
+
+    const { trail = [] } = await timelineObject(postElement.dataset.id);
+    if (trail.length < 2) { return; }
 
     const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });
     editButton.parentNode.parentNode.insertBefore(clonedControlButton, editButton.parentNode);

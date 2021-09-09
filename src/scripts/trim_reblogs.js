@@ -128,4 +128,7 @@ export const main = async function () {
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
+
+  $(`.${buttonClass}`).remove();
+  $(`.${excludeClass}`).removeClass(excludeClass);
 };

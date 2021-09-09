@@ -20,6 +20,11 @@
       "label": "Show the blog selector",
       "default": true
     },
+    "rememberLastBlog": {
+      "type": "checkbox",
+      "label": "Remember the last selected blog in the popup",
+      "default": false
+    },
     "showCommentInput": {
       "type": "checkbox",
       "label": "Show the comment field",

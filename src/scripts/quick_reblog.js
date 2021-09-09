@@ -33,6 +33,7 @@ let timeoutID;
 
 let popupPosition;
 let showBlogSelector;
+let rememberLastBlog;
 let showCommentInput;
 let quickTagsIntegration;
 let showTagsInput;
@@ -52,7 +53,9 @@ const showPopupOnHover = ({ currentTarget }) => {
 
   const thisPostID = currentTarget.closest('[data-id]').dataset.id;
   if (thisPostID !== lastPostID) {
-    blogSelector.value = blogSelector.options[0].value;
+    if (!rememberLastBlog) {
+      blogSelector.value = blogSelector.options[0].value;
+    }
     commentInput.value = '';
     tagsInput.value = '';
   }
@@ -176,6 +179,7 @@ export const main = async function () {
   ({
     popupPosition,
     showBlogSelector,
+    rememberLastBlog,
     showCommentInput,
     quickTagsIntegration,
     showTagsInput,

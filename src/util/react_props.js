@@ -7,12 +7,7 @@ const cache = {};
  * @returns {Promise<object>} - The post's buried timelineObject property (cached; use
  *  timelineObject if you need up-to-date properties that may have changed)
  */
-export const timelineObjectMemoized = async function (postID) {
-  if (Object.prototype.hasOwnProperty.call(cache, postID)) {
-    return cache[postID];
-  }
-  return timelineObject(postID);
-};
+export const timelineObjectMemoized = async postID => cache[postID] || timelineObject(postID);
 
 /**
  * @param {string} postID - The post ID of an on-screen post

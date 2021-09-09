@@ -29,6 +29,7 @@ draftButton.dataset.state = 'draft';
 [blogSelector, commentInput, quickTagsList, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
 
 let lastPostID;
+let lastBlogID;
 let timeoutID;
 
 let popupPosition;
@@ -38,7 +39,7 @@ let quickTagsIntegration;
 let showTagsInput;
 let alreadyRebloggedEnabled;
 let alreadyRebloggedLimit;
-let lastSelectedBlog;
+let rememberLastBlog;
 
 const storageKey = 'quick_reblog.alreadyRebloggedList';
 const excludeClass = 'xkit-quick-reblog-alreadyreblogged-done';
@@ -53,7 +54,7 @@ const showPopupOnHover = ({ currentTarget }) => {
 
   const thisPostID = currentTarget.closest('[data-id]').dataset.id;
   if (thisPostID !== lastPostID) {
-    blogSelector.value = lastSelectedBlog;
+    blogSelector.value = rememberLastBlog ? lastBlogID : blogSelector.options[0].value;
     commentInput.value = '';
     tagsInput.value = '';
   }
@@ -181,7 +182,8 @@ export const main = async function () {
     quickTagsIntegration,
     showTagsInput,
     alreadyRebloggedEnabled,
-    alreadyRebloggedLimit
+    alreadyRebloggedLimit,
+    rememberLastBlog
   } = await getPreferences('quick_reblog'));
 
   popupElement.className = popupPosition;
@@ -193,11 +195,6 @@ export const main = async function () {
     option.textContent = name;
     blogSelector.appendChild(option);
   }
-
-  lastSelectedBlog = blogSelector.options[0].value;
-  blogSelector.addEventListener('change', () => {
-    lastSelectedBlog = blogSelector.value;
-  });
 
   blogSelector.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;
@@ -214,6 +211,13 @@ export const main = async function () {
   if (alreadyRebloggedEnabled) {
     onNewPosts.addListener(processPosts);
     processPosts();
+  }
+
+  if (rememberLastBlog) {
+    lastBlogID = blogSelector.options[0].value;
+    blogSelector.addEventListener('change', () => {
+      lastBlogID = blogSelector.value;
+    });
   }
 };
 

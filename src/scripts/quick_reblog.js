@@ -33,12 +33,12 @@ let timeoutID;
 
 let popupPosition;
 let showBlogSelector;
+let rememberLastBlog;
 let showCommentInput;
 let quickTagsIntegration;
 let showTagsInput;
 let alreadyRebloggedEnabled;
 let alreadyRebloggedLimit;
-let rememberLastBlog;
 
 const storageKey = 'quick_reblog.alreadyRebloggedList';
 const excludeClass = 'xkit-quick-reblog-alreadyreblogged-done';
@@ -179,12 +179,12 @@ export const main = async function () {
   ({
     popupPosition,
     showBlogSelector,
+    rememberLastBlog,
     showCommentInput,
     quickTagsIntegration,
     showTagsInput,
     alreadyRebloggedEnabled,
-    alreadyRebloggedLimit,
-    rememberLastBlog
+    alreadyRebloggedLimit
   } = await getPreferences('quick_reblog'));
 
   popupElement.className = popupPosition;

@@ -1,7 +1,7 @@
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { getPostElements } from '../util/interface.js';
-import { fetchUserBlogs } from '../util/user_blogs.js';
+import { getUserBlogs } from '../util/user_blogs.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
@@ -33,6 +33,7 @@ let timeoutID;
 
 let popupPosition;
 let showBlogSelector;
+let rememberLastBlog;
 let showCommentInput;
 let quickTagsIntegration;
 let showTagsInput;
@@ -52,7 +53,9 @@ const showPopupOnHover = ({ currentTarget }) => {
 
   const thisPostID = currentTarget.closest('[data-id]').dataset.id;
   if (thisPostID !== lastPostID) {
-    blogSelector.value = blogSelector.options[0].value;
+    if (!rememberLastBlog) {
+      blogSelector.value = blogSelector.options[0].value;
+    }
     commentInput.value = '';
     tagsInput.value = '';
   }
@@ -176,6 +179,7 @@ export const main = async function () {
   ({
     popupPosition,
     showBlogSelector,
+    rememberLastBlog,
     showCommentInput,
     quickTagsIntegration,
     showTagsInput,
@@ -185,7 +189,7 @@ export const main = async function () {
 
   popupElement.className = popupPosition;
 
-  const userBlogs = await fetchUserBlogs();
+  const userBlogs = await getUserBlogs();
   for (const { name, uuid } of userBlogs) {
     const option = document.createElement('option');
     option.value = uuid;

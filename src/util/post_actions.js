@@ -1,4 +1,4 @@
-import { getIconPath } from './control_buttons.js';
+import { buildSvg } from './remixicon.js';
 import { onGlassContainerMutated } from './mutations.js';
 import { keyToCss } from './css_map.js';
 
@@ -41,27 +41,18 @@ const addPostOptions = () => {
  *
  * @param {string} id - Unique identifier for this post option
  * @param {object} options - Construction options for this post option
- * @param {string} options.iconClass - RemixIcon class to construct the button with
+ * @param {string} options.symbolId - RemixIcon symbol to use
  * @param {Function} options.onclick - Click handler function for this button
  */
-export const registerPostOption = async function (id, { iconClass, onclick }) {
+export const registerPostOption = async function (id, { symbolId, onclick }) {
   const postOptionLabel = Object.assign(document.createElement('label'), { className: 'xkit-post-option' });
   const postOptionButton = document.createElement('button');
 
   postOptionButton.addEventListener('click', onclick);
   postOptionLabel.appendChild(postOptionButton);
 
-  const postOptionSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  const postOptionPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-
-  postOptionSvg.setAttribute('viewBox', '0 0 25 25');
-  postOptionSvg.setAttribute('width', '24');
-  postOptionSvg.setAttribute('height', '24');
+  const postOptionSvg = buildSvg(symbolId);
   postOptionButton.appendChild(postOptionSvg);
-
-  const iconPath = await getIconPath(iconClass);
-  postOptionPath.setAttribute('d', iconPath);
-  postOptionSvg.appendChild(postOptionPath);
 
   postOptions[id] = postOptionLabel;
 

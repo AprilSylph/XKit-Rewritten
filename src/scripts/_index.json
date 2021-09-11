@@ -3,7 +3,6 @@
   "classic_search",
   "cleanfeed",
   "collapsed_queue",
-  "condensed_reblogs",
   "hide_avatars",
   "mass_unliker",
   "mutual_checker",
@@ -19,6 +18,7 @@
   "show_originals",
   "tag_tracking_plus",
   "timestamps",
+  "trim_reblogs",
   "tweaks",
   "vanilla_audio",
   "vanilla_video"

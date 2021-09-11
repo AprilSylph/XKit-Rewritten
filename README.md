@@ -1,4 +1,4 @@
-# XKit Rewritten [![CI](https://github.com/AprilSylph/XKit-Rewritten/workflows/CI/badge.svg)](https://github.com/AprilSylph/XKit-Rewritten/actions?query=workflow%3ACI)
+# XKit Rewritten [![CI](https://github.com/AprilSylph/XKit-Rewritten/actions/workflows/ci.yml/badge.svg)](https://github.com/AprilSylph/XKit-Rewritten/actions/workflows/ci.yml)
 The enhancement suite for Tumblr's new web interface.
 
 ## Features

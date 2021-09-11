@@ -2,7 +2,7 @@
   "title": "Shorten Posts",
   "description": "Limit the length of posts on your dash",
   "icon": {
-    "class_name": "ri-scissors-cut-line",
+    "class_name": "ri-merge-cells-vertical",
     "color": "white",
     "background_color": "#4d6a86"
   },

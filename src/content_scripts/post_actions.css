@@ -16,5 +16,8 @@
 }
 
 .xkit-post-option svg {
+  width: 22px;
+  height: 22px;
+
   fill: rgba(var(--black), 0.4);
 }

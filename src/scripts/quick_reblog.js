@@ -13,7 +13,10 @@ const commentInput = Object.assign(document.createElement('input'), {
   autocomplete: 'off',
   onkeydown: event => event.stopPropagation()
 });
-const quickTagsList = Object.assign(document.createElement('div'), { className: 'quick-tags' });
+const quickTagsList = Object.assign(document.createElement('div'), {
+  className: 'quick-tags',
+  tabIndex: -1
+});
 const tagsInput = Object.assign(document.createElement('input'), {
   placeholder: 'Tags (comma separated)',
   autocomplete: 'off',

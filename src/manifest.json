@@ -35,7 +35,16 @@
   "web_accessible_resources": [ "*.js", "*.json", "*.css", "*.svg" ],
   "content_scripts": [
     {
-      "matches": [ "*://www.tumblr.com/*" ],
+      "matches": [
+        "*://www.tumblr.com/*"
+      ],
+      "exclude_matches": [
+        "*://www.tumblr.com/",
+        "*://www.tumblr.com/login",
+        "*://www.tumblr.com/register",
+        "*://www.tumblr.com/register?*",
+        "*://www.tumblr.com/privacy/*"
+      ],
       "run_at": "document_idle",
       "js": [
         "lib/browser-polyfill.min.js",

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Something else
+    url: https://github.com/AprilSylph/XKit-Rewritten/discussions
+    about: Start a discussion in this repository

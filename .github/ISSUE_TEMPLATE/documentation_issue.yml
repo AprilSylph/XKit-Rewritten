@@ -1,0 +1,17 @@
+name: Documentation issue
+description: You've noticed missing, incomplete, or unclear documentation
+labels: [documentation]
+body:
+  - type: input
+    attributes:
+      label: File
+      description: Please provide the path or URL to the affected file and section, if applicable.
+      placeholder: i.e. README.md#usage, CONTRIBUTING.md, https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Details
+      placeholder: Describe the problem
+    validations:
+      required: true

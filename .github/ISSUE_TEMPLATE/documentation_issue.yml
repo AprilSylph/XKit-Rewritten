@@ -5,8 +5,8 @@ body:
   - type: input
     attributes:
       label: File
-      description: Please provide the path or URL to the affected file and section, if applicable.
-      placeholder: i.e. README.md#usage, CONTRIBUTING.md, https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks
+      description: Please provide the path or URL to the relevant file and section, if applicable.
+      placeholder: i.e. CONTRIBUTING.md or README.md#usage
     validations:
       required: false
   - type: textarea

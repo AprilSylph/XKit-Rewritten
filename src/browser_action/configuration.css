@@ -36,7 +36,8 @@ label[for="filter"] {
 
   color: rgb(var(--active-grey));
   content: "Loading...";
-  font-size: 2rem;
+  font-size: 1.3125rem;
+  font-weight: 700;
 }
 
 .script.search-hidden,

@@ -1,5 +1,5 @@
 name: Documentation issue
-description: You've noticed missing, incomplete, or unclear documentation
+description: Missing, incomplete, or unclear documentation
 labels: [documentation]
 body:
   - type: input

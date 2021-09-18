@@ -36,10 +36,22 @@ const debounce = (func, ms) => {
   };
 };
 
-const runOnNewPosts = debounce(() => onNewPosts.trigger(), 10);
-const runOnPostsMutated = debounce(() => onPostsMutated.trigger(), 100);
-const runOnBaseContainerMutated = debounce(() => onBaseContainerMutated.trigger(), 100);
-const runOnGlassContainerMutated = debounce(() => onGlassContainerMutated.trigger(), 100);
+const debounceDOM = (func) => {
+  let queued = false;
+  return (...args) => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      func(...args);
+    });
+  };
+};
+
+const runOnNewPosts = debounceDOM(() => onNewPosts.trigger());
+const runOnPostsMutated = debounceDOM(() => onPostsMutated.trigger());
+const runOnBaseContainerMutated = debounceDOM(() => onBaseContainerMutated.trigger());
+const runOnGlassContainerMutated = debounceDOM(() => onGlassContainerMutated.trigger());
 
 const observer = new MutationObserver(mutations => {
   if (onNewPosts.listeners.length !== 0 || onPostsMutated.listeners.length !== 0) {

@@ -37,10 +37,10 @@ const debounce = (func, ms) => {
 };
 
 const debounceDOM = (func) => {
-  let timeoutID;
+  let requestID;
   return (...args) => {
-    cancelAnimationFrame(timeoutID);
-    timeoutID = requestAnimationFrame(() => func(...args));
+    cancelAnimationFrame(requestID);
+    requestID = requestAnimationFrame(() => func(...args));
   };
 };
 

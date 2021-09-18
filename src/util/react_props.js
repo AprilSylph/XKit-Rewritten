@@ -1,4 +1,5 @@
 import { inject } from './inject.js';
+import { keyToClasses } from './css_map.js';
 
 const cache = {};
 
@@ -31,16 +32,7 @@ export const timelineObject = async function (postID) {
   return cache[postID];
 };
 
-/**
- * Adds data-timeline attributes to all timeline elements on the page, set to the buried endpointApiRequest.givenPath property
- *
- * @returns {Promise<void>} Resolves when finished
- */
-export const exposeTimelines = async () => inject(async () => {
-  const cssMap = await window.tumblr.getCssMap();
-  const timelineClasses = cssMap.timeline;
-  const selector = timelineClasses.map(className => `.${className}:not([data-timeline])`).join(',');
-
+const exposeTimelinesInjected = async (selector) => {
   [...document.querySelectorAll(selector)].forEach(timelineElement => {
     const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactInternalInstance'));
     let fiber = timelineElement[reactKey];
@@ -55,7 +47,21 @@ export const exposeTimelines = async () => inject(async () => {
       }
     }
   });
-});
+};
+
+/**
+ * Adds data-timeline attributes to all timeline elements on the page, set to the buried endpointApiRequest.givenPath property
+ *
+ * @returns {Promise<void>} Resolves when finished
+ */
+export const exposeTimelines = async () => {
+  const timelineClasses = await keyToClasses('timeline');
+  const selector = timelineClasses.map(className => `.${className}:not([data-timeline])`).join(',');
+
+  if (document.querySelectorAll(selector).length) {
+    inject(exposeTimelinesInjected, [selector]);
+  }
+};
 
 /**
  * Manipulate post form tags

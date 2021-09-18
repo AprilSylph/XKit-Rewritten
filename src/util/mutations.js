@@ -37,14 +37,10 @@ const debounce = (func, ms) => {
 };
 
 const debounceDOM = (func) => {
-  let queued = false;
+  let timeoutID;
   return (...args) => {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(() => {
-      queued = false;
-      func(...args);
-    });
+    cancelAnimationFrame(timeoutID);
+    timeoutID = requestAnimationFrame(() => func(...args));
   };
 };
 

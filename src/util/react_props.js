@@ -32,7 +32,7 @@ export const timelineObject = async function (postID) {
   return cache[postID];
 };
 
-const exposeTimelinesInjected = async (selector) => {
+const unburyGivenPaths = async (selector) => {
   [...document.querySelectorAll(selector)].forEach(timelineElement => {
     const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactInternalInstance'));
     let fiber = timelineElement[reactKey];
@@ -59,7 +59,7 @@ export const exposeTimelines = async () => {
   const selector = timelineClasses.map(className => `.${className}:not([data-timeline])`).join(',');
 
   if (document.querySelectorAll(selector).length) {
-    inject(exposeTimelinesInjected, [selector]);
+    inject(unburyGivenPaths, [selector]);
   }
 };
 

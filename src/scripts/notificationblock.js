@@ -16,7 +16,7 @@ let blockedPostTargetIDs;
 
 const buildStyles = () => blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
 
-const notificationBlockInjected = async (notificationSelector) => {
+const unburyTargetPostIds = async (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)].forEach(async notificationElement => {
     const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactInternalInstance'));
     let fiber = notificationElement[reactKey];
@@ -41,7 +41,7 @@ const processNotifications = async () => {
     .join(', ');
 
   if (document.querySelectorAll(notificationSelector).length) {
-    inject(notificationBlockInjected, [notificationSelector]);
+    inject(unburyTargetPostIds, [notificationSelector]);
   }
 };
 

@@ -2,6 +2,7 @@ import { addStyle, removeStyle } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { onBaseContainerMutated } from '../util/mutations.js';
 import { inject } from '../util/inject.js';
+import { keyToClasses } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
@@ -15,10 +16,7 @@ let blockedPostTargetIDs;
 
 const buildStyles = () => blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
 
-const processNotifications = () => inject(async () => {
-  const cssMap = await window.tumblr.getCssMap();
-  const notificationSelector = cssMap.notification.map(className => `.${className}:not([data-target-post-id])`).join(', ');
-
+const unburyTargetPostIds = async (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)].forEach(async notificationElement => {
     const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactInternalInstance'));
     let fiber = notificationElement[reactKey];
@@ -34,7 +32,18 @@ const processNotifications = () => inject(async () => {
       }
     }
   });
-});
+};
+
+const processNotifications = async () => {
+  const notificationClasses = await keyToClasses('notification');
+  const notificationSelector = notificationClasses
+    .map((className) => `.${className}:not([data-target-post-id])`)
+    .join(', ');
+
+  if (document.querySelectorAll(notificationSelector).length) {
+    inject(unburyTargetPostIds, [notificationSelector]);
+  }
+};
 
 const onButtonClicked = async function ({ currentTarget }) {
   const postElement = currentTarget.closest('[data-id]');

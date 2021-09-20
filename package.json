@@ -6,7 +6,7 @@
     "lint-webextension": "web-ext lint",
     "build-webextension": "web-ext build",
     "sign-webextension": "web-ext sign",
-    "webstore-upload": "webstore upload --source=src/ --auto-publish"
+    "webstore-upload": "chrome-webstore-upload upload --source=src/ --auto-publish"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^2.0.1",

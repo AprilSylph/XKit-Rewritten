@@ -37,6 +37,11 @@
       "label": "Hide my own posts on the dashboard",
       "default": false
     },
+    "hide_follower_counts": {
+      "type": "checkbox",
+      "label": "Hide my follower count where possible",
+      "default": false
+    },
     "no_where_were_we": {
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",

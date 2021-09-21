@@ -5,8 +5,8 @@ let css;
 
 export const main = async function () {
   const countClasses = await keyToClasses('count');
-  const selector = countClasses.map(className => `a[href$="/followers"] .${className}`).join(',');
-  css = `${selector} { visibility: hidden; }`;
+  const countSelector = countClasses.map(className => `a[href$="/followers"] .${className}`).join(',');
+  css = `${countSelector} { visibility: hidden; } a[href$="/activity/total"] { display: none; }`;
 
   addStyle(css);
 };

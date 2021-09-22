@@ -4,7 +4,10 @@ import { onNewPosts } from '../../util/mutations.js';
 
 const hiddenClass = 'xkit-no-recommended-blog-carousels-hidden';
 
-const css = `.${hiddenClass} > div { display: none; }`;
+const css = `
+  .${hiddenClass} { position: relative; }
+  .${hiddenClass} > div { visibility: hidden; position: absolute; max-width: 100%; }
+`;
 
 let blogCarouselSelector;
 let listTimelineObjectSelector;

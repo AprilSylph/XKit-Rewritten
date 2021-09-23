@@ -14,7 +14,9 @@ const meatballButtonUnblockLabel = 'Unblock notifications';
 let blockedPostTargetIDs;
 
 const styleElement = buildStyle();
-const buildCss = () => blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
+const buildCss = () => blockedPostTargetIDs.length === 0
+  ? ''
+  : blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
 
 const unburyTargetPostIds = async (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)].forEach(async notificationElement => {

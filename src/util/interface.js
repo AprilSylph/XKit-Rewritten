@@ -32,26 +32,6 @@ export const getPostElements = function ({ excludeClass, timeline, noPeepr = fal
 };
 
 /**
- * @param {string} css - CSS rules to be applied to the page
- */
-export const addStyle = css => {
-  const style = document.createElement('style');
-  style.classList.add('xkit');
-  style.textContent = css;
-  document.documentElement.appendChild(style);
-};
-
-/**
- * @param {string} css - CSS rules to remove from the page
- *                       (must match a string previously passed to addStyle)
- */
-export const removeStyle = css => {
-  [...document.querySelectorAll('style.xkit')]
-    .filter(style => style.textContent === css)
-    .forEach(style => style.remove());
-};
-
-/**
  * @param {string} [css] - CSS rules to be included
  * @returns {HTMLStyleElement} Style element containing the provided CSS
  */

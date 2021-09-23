@@ -14,7 +14,7 @@ const meatballButtonUnblockLabel = 'Unblock notifications';
 let css;
 let blockedPostTargetIDs;
 
-const buildStyles = () => blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
+const buildCss = () => blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
 
 const unburyTargetPostIds = async (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)].forEach(async notificationElement => {
@@ -90,14 +90,14 @@ export const onStorageChanged = (changes, areaName) => {
   if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
     removeStyle(css);
     blockedPostTargetIDs = changes[storageKey].newValue;
-    css = buildStyles();
+    css = buildCss();
     addStyle(css);
   }
 };
 
 export const main = async function () {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
-  css = buildStyles();
+  css = buildCss();
   addStyle(css);
 
   onBaseContainerMutated.addListener(processNotifications);

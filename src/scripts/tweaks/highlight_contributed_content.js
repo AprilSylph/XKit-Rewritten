@@ -1,6 +1,6 @@
-import { addStyle, removeStyle } from '../../util/interface.js';
+import { buildStyle } from '../../util/interface.js';
 
-const css = '[data-is-contributed-content="true"] { border-bottom: 1px solid transparent; background-color: rgb(var(--follow)); }';
+const styleElement = buildStyle('[data-is-contributed-content="true"] { border-bottom: 1px solid transparent; background-color: rgb(var(--follow)); }');
 
-export const main = async () => addStyle(css);
-export const clean = async () => removeStyle(css);
+export const main = async () => document.head.append(styleElement);
+export const clean = async () => styleElement.remove();

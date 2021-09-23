@@ -1,16 +1,15 @@
 import { keyToClasses } from '../../util/css_map.js';
-import { addStyle, removeStyle } from '../../util/interface.js';
+import { buildStyle } from '../../util/interface.js';
 
-let css;
+const styleElement = buildStyle();
 
 export const main = async function () {
   const countClasses = await keyToClasses('count');
   const countSelector = countClasses.map(className => `a[href$="/followers"] .${className}`).join(',');
-  css = `${countSelector} { visibility: hidden; } a[href$="/activity/total"] { display: none; }`;
-
-  addStyle(css);
+  styleElement.textContent = `${countSelector} { visibility: hidden; } a[href$="/activity/total"] { display: none; }`;
+  document.head.append(styleElement);
 };
 
 export const clean = async function () {
-  removeStyle(css);
+  styleElement.remove();
 };

@@ -1,15 +1,14 @@
 import { keyToCss } from '../../util/css_map.js';
-import { addStyle, removeStyle } from '../../util/interface.js';
+import { buildStyle } from '../../util/interface.js';
 
-let css;
+const styleElement = buildStyle();
 
 export const main = async function () {
   const stickyContainerSelector = await keyToCss('stickyContainer');
-  css = `${stickyContainerSelector} { height: auto !important; }`;
-
-  addStyle(css);
+  styleElement.textContent = `${stickyContainerSelector} { height: auto !important; }`;
+  document.head.append(styleElement);
 };
 
 export const clean = async function () {
-  removeStyle(css);
+  styleElement.remove();
 };

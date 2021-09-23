@@ -1,14 +1,14 @@
 import { descendantSelector } from '../../util/css_map.js';
-import { addStyle, removeStyle } from '../../util/interface.js';
+import { buildStyle } from '../../util/interface.js';
 
-let css;
+const styleElement = buildStyle();
 
 export const main = async function () {
   const selector = await descendantSelector('post', 'followButton');
-  css = `${selector} { color: rgba(var(--black), 0.4); }`;
-  addStyle(css);
+  styleElement.textContent = `${selector} { color: rgba(var(--black), 0.4); }`;
+  document.head.append(styleElement);
 };
 
 export const clean = async function () {
-  removeStyle(css);
+  styleElement.remove();
 };

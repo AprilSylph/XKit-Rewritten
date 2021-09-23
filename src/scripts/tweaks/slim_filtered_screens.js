@@ -1,8 +1,7 @@
 import { keyToClasses } from '../../util/css_map.js';
-import { addStyle, removeStyle } from '../../util/interface.js';
+import { buildStyle } from '../../util/interface.js';
 
-let css;
-
+const styleElement = buildStyle();
 const cssTemplate = filteredScreen => `
   [tabindex="-1"][data-id] .${filteredScreen} {
     flex-direction: row;
@@ -38,10 +37,10 @@ const cssTemplate = filteredScreen => `
 
 export const main = async function () {
   const filteredScreenClasses = await keyToClasses('filteredScreen');
-  css = filteredScreenClasses.map(cssTemplate).join('');
-  addStyle(css);
+  styleElement.textContent = filteredScreenClasses.map(cssTemplate).join('');
+  document.head.append(styleElement);
 };
 
 export const clean = async function () {
-  removeStyle(css);
+  styleElement.remove();
 };

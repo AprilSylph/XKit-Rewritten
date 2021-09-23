@@ -1,15 +1,15 @@
 import { keyToCss } from '../../util/css_map.js';
-import { addStyle, removeStyle } from '../../util/interface.js';
+import { buildStyle } from '../../util/interface.js';
 
-let css;
+const styleElement = buildStyle();
 
 export const main = async function () {
   const tagChicletWrapperSelector = await keyToCss('tagChicletWrapper');
-  css = `${tagChicletWrapperSelector} { background-image: none !important; color: rgb(var(--black)); background-color: rgb(var(--secondary-accent)); }`;
+  styleElement.textContent = `${tagChicletWrapperSelector} { background-image: none !important; color: rgb(var(--black)); background-color: rgb(var(--secondary-accent)); }`;
 
-  addStyle(css);
+  document.head.append(styleElement);
 };
 
 export const clean = async function () {
-  removeStyle(css);
+  styleElement.remove();
 };

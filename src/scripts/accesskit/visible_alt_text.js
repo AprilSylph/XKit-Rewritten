@@ -1,10 +1,10 @@
 import { descendantSelector, keyToCss } from '../../util/css_map.js';
-import { addStyle, removeStyle } from '../../util/interface.js';
+import { buildStyle } from '../../util/interface.js';
 import { onPostsMutated } from '../../util/mutations.js';
 
 let imageBlockSelector;
-let css;
 
+const styleElement = buildStyle();
 const processedClass = 'accesskit-visible-alt-text';
 
 const processImages = function () {
@@ -30,8 +30,8 @@ export const main = async function () {
   const imageBlockButtonInnerSelector = await descendantSelector('imageBlockButton', 'buttonInner');
 
   // Setting this for all images ensures side-by-side images align vertically even if one has a caption and the other doesn't
-  css = `${imageBlockButtonInnerSelector} { height: 100%; }`;
-  addStyle(css);
+  styleElement.textContent = `${imageBlockButtonInnerSelector} { height: 100%; }`;
+  document.head.append(styleElement);
 
   onPostsMutated.addListener(processImages);
   processImages();
@@ -40,7 +40,7 @@ export const main = async function () {
 export const clean = async function () {
   onPostsMutated.removeListener(processImages);
 
-  removeStyle(css);
+  styleElement.remove();
 
   $(`.${processedClass} figcaption`).remove();
   $(`.${processedClass}`).removeClass(processedClass);

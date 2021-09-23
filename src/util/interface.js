@@ -50,3 +50,9 @@ export const removeStyle = css => {
     .filter(style => style.textContent === css)
     .forEach(style => style.remove());
 };
+
+/**
+ * @param {string} [css] - CSS rules to be included
+ * @returns {HTMLStyleElement} Style element containing the provided CSS
+ */
+export const buildStyle = (css = '') => Object.assign(document.createElement('style'), { className: 'xkit', textContent: css });

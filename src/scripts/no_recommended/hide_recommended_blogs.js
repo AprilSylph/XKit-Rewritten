@@ -1,6 +1,6 @@
 import { onBaseContainerMutated } from '../../util/mutations.js';
 import { translate } from '../../util/language_data.js';
-import { addStyle, removeStyle } from '../../util/interface.js';
+import { buildStyle } from '../../util/interface.js';
 
 const excludeClass = 'xkit-no-recommended-blogs-done';
 const hiddenClass = 'xkit-no-recommended-blogs-hidden';
@@ -8,7 +8,7 @@ const hiddenClass = 'xkit-no-recommended-blogs-hidden';
 let checkOutTheseBlogsLabel;
 let topBlogsSelector;
 
-const css = `.${hiddenClass} { display: none; }`;
+const styleElement = buildStyle(`.${hiddenClass} { display: none; }`);
 
 const checkForRecommendedBlogs = function () {
   [...document.querySelectorAll(`aside > div > h1:not(.${excludeClass})`)]
@@ -34,12 +34,12 @@ export const main = async function () {
 
   onBaseContainerMutated.addListener(checkForRecommendedBlogs);
   checkForRecommendedBlogs();
-  addStyle(css);
+  document.head.append(styleElement);
 };
 
 export const clean = async function () {
   onBaseContainerMutated.removeListener(checkForRecommendedBlogs);
-  removeStyle(css);
+  styleElement.remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${hiddenClass}`).removeClass(hiddenClass);
 };

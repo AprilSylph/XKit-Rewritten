@@ -1,4 +1,4 @@
-import { addStyle, removeStyle } from '../util/interface.js';
+import { buildStyle } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { onBaseContainerMutated } from '../util/mutations.js';
 import { inject } from '../util/inject.js';
@@ -11,9 +11,9 @@ const meatballButtonBlockLabel = 'Block notifications';
 const meatballButtonUnblockId = 'notificationblock-unblock';
 const meatballButtonUnblockLabel = 'Unblock notifications';
 
-let css;
 let blockedPostTargetIDs;
 
+const styleElement = buildStyle();
 const buildCss = () => blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
 
 const unburyTargetPostIds = async (notificationSelector) => {
@@ -88,17 +88,15 @@ const unblockPostFilter = ({ dataset: { id } }) => blockedPostTargetIDs.includes
 
 export const onStorageChanged = (changes, areaName) => {
   if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
-    removeStyle(css);
     blockedPostTargetIDs = changes[storageKey].newValue;
-    css = buildCss();
-    addStyle(css);
+    styleElement.textContent = buildCss();
   }
 };
 
 export const main = async function () {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
-  css = buildCss();
-  addStyle(css);
+  styleElement.textContent = buildCss();
+  document.head.append(styleElement);
 
   onBaseContainerMutated.addListener(processNotifications);
   processNotifications();
@@ -108,7 +106,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  removeStyle(css);
+  styleElement.remove();
   onBaseContainerMutated.removeListener(processNotifications);
   unregisterMeatballItem(meatballButtonBlockId);
   unregisterMeatballItem(meatballButtonUnblockId);

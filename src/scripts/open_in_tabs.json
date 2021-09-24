@@ -1,6 +1,6 @@
 {
   "title": "Open In Tabs",
-  "description": "Open links and blogs in new tabs",
+  "description": "Open blogs in new tabs",
   "icon": {
     "class_name": "ri-add-box-line",
     "color": "white",

@@ -6,12 +6,14 @@ const hiddenClass = 'xkit-no-recommended-tag-carousels-hidden';
 
 const styleElement = buildStyle(`.${hiddenClass} > div { display: none; }`);
 
-let tagCardCarouselContainerSelector;
+let carouselWrapperSelector;
+let tagCardCarouselItemSelector;
 let listTimelineObjectSelector;
 
 const hideTagCarousels = async function () {
-  [...document.querySelectorAll(tagCardCarouselContainerSelector)]
-    .map(tagCardCarouselContainer => tagCardCarouselContainer.closest(listTimelineObjectSelector))
+  [...document.querySelectorAll(carouselWrapperSelector)]
+    .filter(carouselWrapper => carouselWrapper.querySelector(tagCardCarouselItemSelector) !== null)
+    .map(carouselWrapper => carouselWrapper.closest(listTimelineObjectSelector))
     .forEach(listTimelineObject => {
       listTimelineObject?.classList.add(hiddenClass);
       listTimelineObject?.previousElementSibling.classList.add(hiddenClass);
@@ -19,7 +21,8 @@ const hideTagCarousels = async function () {
 };
 
 export const main = async function () {
-  tagCardCarouselContainerSelector = await keyToCss('tagCardCarouselContainer');
+  carouselWrapperSelector = await keyToCss('carouselWrapper');
+  tagCardCarouselItemSelector = await keyToCss('tagCardCarouselItem');
   listTimelineObjectSelector = await keyToCss('listTimelineObject');
 
   document.head.append(styleElement);

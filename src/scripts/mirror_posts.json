@@ -1,0 +1,9 @@
+{
+  "title": "Mirror Posts",
+  "description": "Back up posts to public archives",
+  "icon": {
+    "class_name": "ri-file-copy-line",
+    "color": "white",
+    "background_color": "#2a86bf"
+  }
+}

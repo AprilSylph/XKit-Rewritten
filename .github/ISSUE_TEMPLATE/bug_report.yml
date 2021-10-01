@@ -7,22 +7,22 @@ body:
       label: Platform
       description: What operating system are you using? Please include the version.
       placeholder: e.g. Windows 10 or macOS 11.6
-      validations:
-        required: true
+    validations:
+      required: true
   - type: input
     attributes:
       label: Browser
       description: What browser are you using? Please include the exact version.
       placeholder: e.g. Firefox 93.0b9 (64-bit)
-      validations:
-        required: true
+    validations:
+      required: true
   - type: input
     attributes:
       label: Addon version
       description: What version of XKit Rewritten are you using?
       placeholder: e.g. v0.9.0
-      validations:
-        required: true
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Details

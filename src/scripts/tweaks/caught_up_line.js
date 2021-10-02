@@ -6,26 +6,24 @@ const hiddenClass = 'xkit-tweaks-caught-up-line-title';
 const borderClass = 'xkit-tweaks-caught-up-line-border';
 
 const styleElement = buildStyle(`
-  .${hiddenClass} { display: none; }
-  .${borderClass} { border-top: 4px solid rgb(var(--white-on-dark)); height: 0px; }
+  .${hiddenClass} > div { display: none; }
+  .${borderClass} > div > div { border-top: 4px solid rgb(var(--white-on-dark)); height: 0px; }
 `);
 
 let tagChicletCarouselItemSelector;
-let carouselWrapperSelector;
 let listTimelineObjectSelector;
 
 const createCaughtUpLine = async function () {
   [...document.querySelectorAll(tagChicletCarouselItemSelector)]
-    .map(tagChicletCarouselItem => tagChicletCarouselItem.closest(carouselWrapperSelector))
-    .forEach(carouselWrapper => {
-      carouselWrapper?.classList.add(borderClass);
-      carouselWrapper?.closest(listTimelineObjectSelector)?.previousElementSibling.classList.add(hiddenClass);
+    .map(tagChicletCarouselItem => tagChicletCarouselItem.closest(listTimelineObjectSelector))
+    .forEach(listTimelineObject => {
+      listTimelineObject?.classList.add(borderClass);
+      listTimelineObject?.previousElementSibling.classList.add(hiddenClass);
     });
 };
 
 export const main = async function () {
   tagChicletCarouselItemSelector = await keyToCss('tagChicletCarouselItem');
-  carouselWrapperSelector = await keyToCss('carouselWrapper');
   listTimelineObjectSelector = await keyToCss('listTimelineObject');
 
   document.head.append(styleElement);

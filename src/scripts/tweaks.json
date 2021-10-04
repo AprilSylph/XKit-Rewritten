@@ -17,6 +17,11 @@
       "label": "Highlight contributed content on reblogs",
       "default": false
     },
+    "caught_up_line": {
+      "type": "checkbox",
+      "label": "Turn \"You're caught up\" into a separating line",
+      "default": false
+    },
     "subtle_follow": {
       "type": "checkbox",
       "label": "Make posts' mini-follow buttons more subtle",
@@ -50,11 +55,6 @@
     "no_where_were_we": {
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",
-      "default": false
-    },
-    "caught_up_line": {
-      "type": "checkbox",
-      "label": "Turn \"You're caught up\" into a separating line",
       "default": false
     }
   }

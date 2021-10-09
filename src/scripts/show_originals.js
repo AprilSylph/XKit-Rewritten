@@ -2,9 +2,27 @@ import { getPostElements } from '../util/interface.js';
 import { timelineObjectMemoized, exposeTimelines } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
+import { keyToCss } from '../util/css_map.js';
 
 const excludeClass = 'xkit-show-originals-done';
 const hiddenClass = 'xkit-show-originals-hidden';
+const lengthenedClass = 'xkit-show-originals-lengthened';
+
+const dashboardTimeline = '/v2/timeline/dashboard';
+
+const lengthenTimelines = async () => {
+  const timeline =
+    document.querySelector(`[data-timeline="${dashboardTimeline}"]:not(.${excludeClass})`);
+
+  if (timeline) {
+    timeline.classList.add(excludeClass);
+    const paginationCss = await keyToCss('manualPaginatorButtons');
+
+    if (!timeline.querySelector(paginationCss)) {
+      timeline.classList.add(lengthenedClass);
+    }
+  }
+};
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
@@ -14,6 +32,7 @@ const processPosts = async function () {
   const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
 
   await exposeTimelines();
+  lengthenTimelines();
 
   getPostElements({ excludeClass, timeline: /\/v2\/timeline\/dashboard/, includeFiltered: true }).forEach(async postElement => {
     const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);

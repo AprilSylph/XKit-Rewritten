@@ -5,9 +5,9 @@ import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 
 const excludeClass = 'xkit-collapsed-queue-done';
-const containerClass = 'queue_plus_shrink_container';
-const containerClassInner = 'queue_plus_shrink_container_inner';
-const containerClassShadow = 'queue_plus_shrink_container_shadow';
+const shadowOuterClass = 'xkit-queue-shadow-outer';
+const shadowClass = 'xkit-queue-shadow';
+const containerClass = 'xkit-collapsed-queue-container';
 
 let timelineRegex;
 let footerSelector;
@@ -19,15 +19,14 @@ const processPosts = async function () {
     const headerElement = postElement.querySelector('header');
     const footerElement = postElement.querySelector(footerSelector);
 
-    const outer = Object.assign(document.createElement('div'), { className: containerClass });
-    const inner = Object.assign(document.createElement('div'), { className: containerClassInner });
-    const shadow = Object.assign(document.createElement('div'), { className: containerClassShadow });
-    outer.append(shadow, inner);
+    const shadowOuter = Object.assign(document.createElement('div'), { className: shadowOuterClass });
+    const shadow = Object.assign(document.createElement('div'), { className: shadowClass });
+    const container = Object.assign(document.createElement('div'), { className: containerClass });
+    shadowOuter.append(shadow, container);
 
-    headerElement.after(outer);
-
-    while (outer.nextElementSibling !== footerElement) {
-      inner.append(outer.nextElementSibling);
+    headerElement.after(shadowOuter);
+    while (shadowOuter.nextElementSibling !== footerElement) {
+      container.append(shadowOuter.nextElementSibling);
     }
   });
 };
@@ -49,8 +48,8 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  [...document.querySelectorAll(`.${containerClass}`)].forEach(outer => {
-    const inner = outer.querySelector(`.${containerClassInner}`);
+  [...document.querySelectorAll(`.${shadowOuterClass}`)].forEach(outer => {
+    const inner = outer.querySelector(`.${containerClass}`);
     outer.replaceWith(...inner.children);
   });
 

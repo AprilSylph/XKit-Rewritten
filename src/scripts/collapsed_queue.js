@@ -5,8 +5,6 @@ import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 
 const excludeClass = 'xkit-collapsed-queue-done';
-const doneClass = 'xkit-collapsed-queue-collapsed';
-
 const containerClass = 'queue_plus_shrink_container';
 const containerClassInner = 'queue_plus_shrink_container_inner';
 const containerClassShadow = 'queue_plus_shrink_container_shadow';
@@ -18,8 +16,6 @@ const processPosts = async function () {
   await exposeTimelines();
 
   getPostElements({ excludeClass, timeline: timelineRegex }).forEach(async postElement => {
-    postElement.classList.add(doneClass);
-
     const $post = $(postElement).find('article').first();
     const $header = $post.find('header').first();
 
@@ -55,7 +51,6 @@ export const clean = async function () {
   });
 
   $(`.${excludeClass}`).removeClass(excludeClass);
-  $(`.${doneClass}`).removeClass(doneClass);
 };
 
 export const stylesheet = true;

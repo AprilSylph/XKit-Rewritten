@@ -16,14 +16,19 @@ const processPosts = async function () {
   await exposeTimelines();
 
   getPostElements({ excludeClass, timeline: timelineRegex }).forEach(async postElement => {
-    const $post = $(postElement).find('article').first();
-    const $header = $post.find('header').first();
+    const headerElement = postElement.querySelector('header');
+    const footerElement = postElement.querySelector(footerSelector);
 
-    $header.next().css('margin', 0);
+    const outer = Object.assign(document.createElement('div'), { className: containerClass });
+    const inner = Object.assign(document.createElement('div'), { className: containerClassInner });
+    const shadow = Object.assign(document.createElement('div'), { className: containerClassShadow });
+    outer.append(shadow, inner);
 
-    $header.nextUntil(footerSelector)
-      .wrapAll(`<div class="${containerClass}"><div class="${containerClassInner}"></div></div>`)
-      .parent().before(`<div class="${containerClassShadow}"></div>`);
+    headerElement.after(outer);
+
+    while (outer.nextElementSibling !== footerElement) {
+      inner.append(outer.nextElementSibling);
+    }
   });
 };
 
@@ -44,10 +49,9 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  $(`.${containerClassShadow}`).remove();
-  $(`.${containerClassInner}`).unwrap();
-  $(`.${containerClassInner}`).each(function () {
-    $(this).children().first().unwrap();
+  [...document.querySelectorAll(`.${containerClass}`)].forEach(outer => {
+    const inner = outer.querySelector(`.${containerClassInner}`);
+    outer.replaceWith(...inner.children);
   });
 
   $(`.${excludeClass}`).removeClass(excludeClass);

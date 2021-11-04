@@ -9,6 +9,7 @@ const hiddenClass = 'xkit-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 
 const dashboardTimeline = '/v2/timeline/dashboard';
+const dashboardTimelineRegExp = new RegExp(dashboardTimeline);
 
 const lengthenTimelines = async () => {
   const timeline =
@@ -34,7 +35,7 @@ const processPosts = async function () {
   await exposeTimelines();
   lengthenTimelines();
 
-  getPostElements({ excludeClass, timeline: /\/v2\/timeline\/dashboard/, includeFiltered: true }).forEach(async postElement => {
+  getPostElements({ excludeClass, timeline: dashboardTimelineRegExp, includeFiltered: true }).forEach(async postElement => {
     const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);
 
     if (!rebloggedRootId) { return; }

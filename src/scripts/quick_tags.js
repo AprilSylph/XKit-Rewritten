@@ -72,13 +72,13 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   const {
     response: {
       content = {},
-      date,
-      hide_trail: hideTrail = false,
       layout,
-      placement_id: placementId = '',
-      slug = '',
       state = 'published',
-      tags = []
+      publish_on: publishOn,
+      date,
+      tags = [],
+      sourceUrlRaw,
+      slug = ''
     }
   } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
 
@@ -92,13 +92,13 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
       method: 'PUT',
       body: {
         content,
-        date,
-        hide_trail: hideTrail,
         layout,
-        placement_id: placementId,
-        slug,
         state,
-        tags: tags.join(',')
+        publish_on: publishOn,
+        date,
+        tags: tags.join(','),
+        source_url: sourceUrlRaw,
+        slug
       }
     });
 

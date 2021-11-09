@@ -36,18 +36,17 @@ const onButtonClicked = async function ({ currentTarget }) {
   const {
     response: {
       content = {},
-      date,
-      hide_trail: hideTrail = false,
       layout,
-      placement_id: placementId = '',
-      slug = '',
       state = 'published',
+      publishOn,
+      date,
       tags = [],
+      slug = '',
       trail = []
     }
   } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
 
-  if (trail?.length < 2 || hideTrail) {
+  if (trail?.length < 2) {
     notify('This post is too short to trim!');
     return;
   }
@@ -78,14 +77,13 @@ const onButtonClicked = async function ({ currentTarget }) {
               method: 'PUT',
               body: {
                 content,
-                date,
-                exclude_trail_items: excludeTrailItems,
-                hide_trail: hideTrail,
                 layout,
-                placement_id: placementId,
-                slug,
                 state,
-                tags: tags.join(',')
+                publish_on: publishOn,
+                date,
+                tags: tags.join(','),
+                slug,
+                exclude_trail_items: excludeTrailItems
               }
             });
             notify(displayText);

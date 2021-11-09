@@ -74,7 +74,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
       content = {},
       layout,
       state = 'published',
-      publish_on: publishOn,
+      publishOn,
       date,
       tags = [],
       sourceUrlRaw,

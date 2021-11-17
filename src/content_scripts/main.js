@@ -76,6 +76,8 @@
   const init = async function () {
     browser.storage.onChanged.addListener(onStorageChanged);
 
+    $(document).on('click', 'header a[href="/dashboard"][tabindex="-1"]', ({ currentTarget: { href } }) => location.pathname === '/dashboard' && location.assign(href));
+
     const installedScripts = await getInstalledScripts();
     const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 

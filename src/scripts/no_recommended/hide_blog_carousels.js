@@ -15,6 +15,7 @@ let listTimelineObjectSelector;
 const hideBlogCarousels = async function () {
   [...document.querySelectorAll(blogCarouselSelector)]
     .map(blogCarousel => blogCarousel.closest(listTimelineObjectSelector))
+    .filter(listTimelineObject => listTimelineObject.matches(`[data-id] ~ ${listTimelineObject.tagName.toLowerCase()}`))
     .forEach(listTimelineObject => {
       listTimelineObject?.classList.add(hiddenClass);
       listTimelineObject?.previousElementSibling.classList.add(hiddenClass);

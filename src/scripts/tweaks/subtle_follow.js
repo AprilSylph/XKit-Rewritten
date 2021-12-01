@@ -5,7 +5,7 @@ const styleElement = buildStyle();
 
 export const main = async function () {
   const selector = await descendantSelector('post', 'followButton');
-  styleElement.textContent = `${selector} { color: rgba(var(--black), 0.4); }`;
+  styleElement.textContent = `${selector} { display: none; }`;
   document.head.append(styleElement);
 };
 

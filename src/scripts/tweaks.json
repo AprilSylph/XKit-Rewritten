@@ -24,7 +24,7 @@
     },
     "subtle_follow": {
       "type": "checkbox",
-      "label": "Make posts' mini-follow buttons more subtle",
+      "label": "Hide mini-follow buttons on posts",
       "default": false
     },
     "no_focus_shadow": {

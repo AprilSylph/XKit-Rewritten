@@ -22,12 +22,6 @@
       "label": "Turn \"You're caught up\" into a separating line",
       "default": false
     },
-    "hide_mini_follow": {
-      "type": "checkbox",
-      "label": "Hide mini-follow buttons on posts",
-      "default": false,
-      "inherit": "tweaks.preferences.subtle_follow"
-    },
     "no_focus_shadow": {
       "type": "checkbox",
       "label": "Remove the coloured shadow from focused posts",
@@ -37,6 +31,12 @@
       "type": "checkbox",
       "label": "Remove sticky effect from post avatars",
       "default": false
+    },
+    "hide_mini_follow": {
+      "type": "checkbox",
+      "label": "Hide mini-follow buttons on posts",
+      "default": false,
+      "inherit": "tweaks.preferences.subtle_follow"
     },
     "hide_filtered_posts": {
       "type": "checkbox",

@@ -22,10 +22,11 @@
       "label": "Turn \"You're caught up\" into a separating line",
       "default": false
     },
-    "subtle_follow": {
+    "hide_mini_follow": {
       "type": "checkbox",
       "label": "Hide mini-follow buttons on posts",
-      "default": false
+      "default": false,
+      "inherit": "tweaks.preferences.subtle_follow"
     },
     "no_focus_shadow": {
       "type": "checkbox",

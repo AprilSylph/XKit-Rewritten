@@ -65,6 +65,7 @@ const renderTagSuggestions = () => {
 
   const tagsToSuggest = suggestableTags
     .filter(tag => !currentTags.includes(tag.toLowerCase()))
+    .filter((tag, index, array) => array.indexOf(tag) === index)
     .map(tag => `${tagsInput.value}${includeSpace ? ' ' : ''}${tag}`);
 
   tagSuggestions.append(

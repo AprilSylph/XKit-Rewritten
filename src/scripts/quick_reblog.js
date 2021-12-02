@@ -1,6 +1,6 @@
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
-import { getPostElements } from '../util/interface.js';
+import { getPostElements, postType } from '../util/interface.js';
 import { getUserBlogs } from '../util/user_blogs.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -94,10 +94,11 @@ const showPopupOnHover = ({ currentTarget }) => {
     }
     commentInput.value = '';
     tagsInput.value = '';
-    timelineObjectMemoized(thisPostID).then(({ tags, blogName, rebloggedRootName }) => {
+    timelineObjectMemoized(thisPostID).then(({ tags, trail, content, layout, blogName, rebloggedRootName }) => {
       suggestableTags = tags;
       if (blogName) suggestableTags.push(blogName);
       if (rebloggedRootName) suggestableTags.push(rebloggedRootName);
+      suggestableTags.push(postType({ trail, content, layout }));
       renderTagSuggestions();
     });
   }

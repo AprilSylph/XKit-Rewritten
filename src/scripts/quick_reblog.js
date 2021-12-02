@@ -93,8 +93,10 @@ const showPopupOnHover = ({ currentTarget }) => {
     }
     commentInput.value = '';
     tagsInput.value = '';
-    timelineObjectMemoized(thisPostID).then(({ tags }) => {
+    timelineObjectMemoized(thisPostID).then(({ tags, blogName, rebloggedRootName }) => {
       suggestableTags = tags;
+      if (blogName) suggestableTags.push(blogName);
+      if (rebloggedRootName) suggestableTags.push(rebloggedRootName);
       renderTagSuggestions();
     });
   }

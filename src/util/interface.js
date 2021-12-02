@@ -48,10 +48,8 @@ export const buildStyle = (css = '') => Object.assign(document.createElement('st
  * @see https://github.com/tumblr/docs/blob/master/npf-spec.md#mapping-npf-post-content-to-legacy-post-types
  */
 export const postType = ({ trail = [], content = [], layout = [] }) => {
-  trail.forEach(item => {
-    content.unshift(...item.content);
-    layout.unshift(...item.layout);
-  });
+  content = trail[0]?.content || content;
+  layout = trail[0]?.layout || layout;
 
   if (layout.some(({ type }) => type === 'ask')) return 'ask';
   else if (content.some(({ type }) => type === 'video')) return 'video';

@@ -3,6 +3,7 @@ import { buildStyle } from '../util/interface.js';
 import { cartesian } from '../util/misc.js';
 
 const styleElement = buildStyle();
+styleElement.media = '(min-width: 990px)';
 
 const mainCssTemplate = containerSelector => `
   ${containerSelector} {
@@ -10,14 +11,14 @@ const mainCssTemplate = containerSelector => `
     padding-left: ${85 - 64}px;
     padding-right: 30px;
   }
-  ${containerSelector} > :first-child:not(:last-child) {
+  ${containerSelector} > :first-child {
     min-width: 0;
     max-width: none;
     flex: 1;
   }
-  ${containerSelector} > :first-child:not(:last-child) > main { max-width: calc(100% - ${625 - 540}px); }
-  ${containerSelector} > :first-child:not(:last-child) > main article { max-width: 100%; }
-  ${containerSelector} > :first-child:not(:last-child) > main article > * { max-width: 100%; }
+  ${containerSelector} > :first-child > main { max-width: calc(100% - ${625 - 540}px); }
+  ${containerSelector} > :first-child > main article { max-width: 100%; }
+  ${containerSelector} > :first-child > main article > * { max-width: 100%; }
 `;
 
 const videoCssTemplate = videoBlock => `

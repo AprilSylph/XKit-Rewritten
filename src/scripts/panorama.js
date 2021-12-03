@@ -5,12 +5,10 @@ import { cartesian } from '../util/misc.js';
 const styleElement = buildStyle();
 
 const mainCssTemplate = containerSelector => `
-  ${containerSelector} { max-width: 100vw; }
-  ${containerSelector}::before,
-  ${containerSelector}::after {
-    content: "";
-    display: block;
-    width: 20px;
+  ${containerSelector} {
+    max-width: 100vw;
+    padding-left: ${85 - 64}px;
+    padding-right: 30px;
   }
   ${containerSelector} > :first-child:not(:last-child) {
     min-width: 0;
@@ -33,7 +31,7 @@ const queueSettingsCssTemplate = queueSettings => `${queueSettings} {
 }`;
 
 export const main = async function () {
-  styleElement.textContent = '#base-container > div > div > header { max-width: none; }\n';
+  styleElement.textContent = `#base-container > div > div > header { max-width: 100vw; padding-left: ${85 - 64}px; padding-right: 30px; }\n`;
 
   const sets = [];
   for (const key of ['bluespaceLayout', 'container']) {

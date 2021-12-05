@@ -7,10 +7,14 @@
   margin-top: 5px;
   padding-bottom: 5px;
 }
-.xkit-collapsed-queue-shadow {
+.xkit-collapsed-queue-wrapper {
   position: relative;
 }
-.xkit-collapsed-queue-shadow::before {
+.xkit-collapsed-queue-container {
+  max-height: 200px !important;
+  overflow-y: scroll;
+}
+.xkit-collapsed-queue-container::before {
   content: "";
   box-shadow: inset 0 -18px 18px -24px black, inset 0 18px 18px -24px black;
   position: absolute;
@@ -18,8 +22,4 @@
   height: 100%;
   z-index: 1;
   pointer-events: none;
-}
-.xkit-collapsed-queue-container {
-  max-height: 200px !important;
-  overflow-y: scroll;
 }

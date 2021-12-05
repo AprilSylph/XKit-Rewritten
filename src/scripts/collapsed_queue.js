@@ -5,7 +5,7 @@ import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 
 const excludeClass = 'xkit-collapsed-queue-done';
-const shadowClass = 'xkit-collapsed-queue-shadow';
+const wrapperClass = 'xkit-collapsed-queue-wrapper';
 const containerClass = 'xkit-collapsed-queue-container';
 
 let timelineRegex;
@@ -18,13 +18,13 @@ const processPosts = async function () {
     const headerElement = postElement.querySelector('header');
     const footerElement = postElement.querySelector(footerSelector);
 
-    const shadow = Object.assign(document.createElement('div'), { className: shadowClass });
+    const wrapper = Object.assign(document.createElement('div'), { className: wrapperClass });
     const container = Object.assign(document.createElement('div'), { className: containerClass });
-    shadow.append(container);
+    wrapper.append(container);
 
-    headerElement.after(shadow);
-    while (shadow.nextElementSibling !== footerElement) {
-      container.append(shadow.nextElementSibling);
+    headerElement.after(wrapper);
+    while (wrapper.nextElementSibling !== footerElement) {
+      container.append(wrapper.nextElementSibling);
     }
   });
 };
@@ -46,9 +46,9 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  [...document.querySelectorAll(`.${shadowClass}`)].forEach(outer => {
-    const inner = outer.querySelector(`.${containerClass}`);
-    outer.replaceWith(...inner.children);
+  [...document.querySelectorAll(`.${wrapperClass}`)].forEach(wrapper => {
+    const container = wrapper.querySelector(`.${containerClass}`);
+    wrapper.replaceWith(...container.children);
   });
 
   $(`.${excludeClass}`).removeClass(excludeClass);

@@ -10,7 +10,8 @@
 .xkit-queue-shadow-outer {
   position: relative;
 }
-.xkit-queue-shadow {
+.xkit-queue-shadow-outer::before {
+  content: "";
   box-shadow: inset 0 -18px 18px -24px black, inset 0 18px 18px -24px black;
   position: absolute;
   width: 100%;

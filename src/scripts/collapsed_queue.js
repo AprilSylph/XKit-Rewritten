@@ -6,7 +6,6 @@ import { keyToCss } from '../util/css_map.js';
 
 const excludeClass = 'xkit-collapsed-queue-done';
 const shadowOuterClass = 'xkit-queue-shadow-outer';
-const shadowClass = 'xkit-queue-shadow';
 const containerClass = 'xkit-collapsed-queue-container';
 
 let timelineRegex;
@@ -20,9 +19,8 @@ const processPosts = async function () {
     const footerElement = postElement.querySelector(footerSelector);
 
     const shadowOuter = Object.assign(document.createElement('div'), { className: shadowOuterClass });
-    const shadow = Object.assign(document.createElement('div'), { className: shadowClass });
     const container = Object.assign(document.createElement('div'), { className: containerClass });
-    shadowOuter.append(shadow, container);
+    shadowOuter.append(container);
 
     headerElement.after(shadowOuter);
     while (shadowOuter.nextElementSibling !== footerElement) {

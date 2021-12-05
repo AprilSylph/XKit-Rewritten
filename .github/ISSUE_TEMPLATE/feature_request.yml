@@ -1,0 +1,20 @@
+name: Feature request
+description: Propose an enhancement
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before requesting a feature, please check the following:
+        - [Feature progress](https://github.com/AprilSylph/XKit-Rewritten/projects/4)
+        - [Excluded features](https://github.com/AprilSylph/XKit-Rewritten/wiki/Excluded-features)
+        - [Removed features](https://github.com/AprilSylph/XKit-Rewritten/wiki/Removed-features)
+
+        Not sure if your idea aligns with the project? Start a discussion in the [Suggestion Box](https://github.com/AprilSylph/XKit-Rewritten/discussions/categories/suggestion-box).
+  - type: textarea
+    attributes:
+      label: Concept
+      description: Please limit your issue to one clearly defined idea. To propose multiple enhancements, open multiple issues.
+      placeholder: Describe your idea
+    validations:
+      required: true

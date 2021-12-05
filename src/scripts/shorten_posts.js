@@ -1,4 +1,4 @@
-import { getPostElements, addStyle, removeStyle } from '../util/interface.js';
+import { getPostElements, buildStyle } from '../util/interface.js';
 import { onNewPosts } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
 import { keyToCss } from '../util/css_map.js';
@@ -6,7 +6,6 @@ import { keyToCss } from '../util/css_map.js';
 let showTags;
 let maxHeight;
 
-let css;
 let tagsSelector;
 
 const excludeClass = 'xkit-shorten-posts-done';
@@ -14,6 +13,7 @@ const shortenClass = 'xkit-shorten-posts-shortened';
 const tagsClass = 'xkit-shorten-posts-tags';
 const buttonClass = 'xkit-shorten-posts-expand';
 
+const styleElement = buildStyle();
 const expandButton = Object.assign(document.createElement('button'), {
   textContent: 'Expand',
   className: buttonClass
@@ -60,8 +60,8 @@ const shortenPosts = async function () {
 export const main = async function () {
   ({ showTags, maxHeight } = await getPreferences('shorten_posts'));
 
-  css = `body { --xkit-shorten-posts-max-height: ${maxHeight} }`;
-  addStyle(css);
+  styleElement.textContent = `body { --xkit-shorten-posts-max-height: ${maxHeight}; }`;
+  document.head.append(styleElement);
 
   tagsSelector = await keyToCss('tags');
 
@@ -72,7 +72,7 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(shortenPosts);
 
-  removeStyle(css);
+  styleElement.remove();
 
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${shortenClass}`).removeClass(shortenClass);

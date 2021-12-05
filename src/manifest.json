@@ -1,11 +1,11 @@
 {
   "manifest_version": 2,
   "name": "XKit Rewritten",
-  "version": "0.8.0",
+  "version": "0.9.5",
 
   "short_name": "XKit",
   "author": "April Sylph",
-  "homepage_url": "https://github.com/AprilSylph/XKit-Rewritten#readme",
+  "homepage_url": "https://github.com/AprilSylph/XKit-Rewritten/wiki",
 
   "description": "The enhancement suite for Tumblr's new web interface",
   "icons": {
@@ -35,7 +35,16 @@
   "web_accessible_resources": [ "*.js", "*.json", "*.css", "*.svg" ],
   "content_scripts": [
     {
-      "matches": [ "*://www.tumblr.com/*" ],
+      "matches": [
+        "*://www.tumblr.com/*"
+      ],
+      "exclude_matches": [
+        "*://www.tumblr.com/",
+        "*://www.tumblr.com/login",
+        "*://www.tumblr.com/register",
+        "*://www.tumblr.com/register?*",
+        "*://www.tumblr.com/privacy/*"
+      ],
       "run_at": "document_idle",
       "js": [
         "lib/browser-polyfill.min.js",

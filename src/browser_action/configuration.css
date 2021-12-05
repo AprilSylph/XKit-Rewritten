@@ -28,6 +28,18 @@ label[for="filter"] {
   align-items: center;
 }
 
+.scripts:empty::before {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+
+  color: rgb(var(--active-grey));
+  content: "Loading...";
+  font-size: 1.3125rem;
+  font-weight: 700;
+}
+
 .script.search-hidden,
 .script.filter-hidden {
   display: none;

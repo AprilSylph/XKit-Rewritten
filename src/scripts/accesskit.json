@@ -17,6 +17,11 @@
       "label": "De-animate the \"You're caught up\" carousel",
       "default": false
     },
+    "disable_animations": {
+      "type": "checkbox",
+      "label": "Disable layout element animations",
+      "default": false
+    },
     "blue_links": {
       "type": "checkbox",
       "label": "Make links in posts blue",

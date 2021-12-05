@@ -1,7 +1,8 @@
-import { addStyle, removeStyle } from '../util/interface.js';
+import { buildStyle } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { onBaseContainerMutated } from '../util/mutations.js';
 import { inject } from '../util/inject.js';
+import { keyToClasses } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
@@ -10,15 +11,14 @@ const meatballButtonBlockLabel = 'Block notifications';
 const meatballButtonUnblockId = 'notificationblock-unblock';
 const meatballButtonUnblockLabel = 'Unblock notifications';
 
-let css;
 let blockedPostTargetIDs;
 
-const buildStyles = () => blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
+const styleElement = buildStyle();
+const buildCss = () => blockedPostTargetIDs.length === 0
+  ? ''
+  : blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
 
-const processNotifications = () => inject(async () => {
-  const cssMap = await window.tumblr.getCssMap();
-  const notificationSelector = cssMap.notification.map(className => `.${className}:not([data-target-post-id])`).join(', ');
-
+const unburyTargetPostIds = async (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)].forEach(async notificationElement => {
     const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactInternalInstance'));
     let fiber = notificationElement[reactKey];
@@ -34,7 +34,18 @@ const processNotifications = () => inject(async () => {
       }
     }
   });
-});
+};
+
+const processNotifications = async () => {
+  const notificationClasses = await keyToClasses('notification');
+  const notificationSelector = notificationClasses
+    .map((className) => `.${className}:not([data-target-post-id])`)
+    .join(', ');
+
+  if (document.querySelectorAll(notificationSelector).length) {
+    inject(unburyTargetPostIds, [notificationSelector]);
+  }
+};
 
 const onButtonClicked = async function ({ currentTarget }) {
   const postElement = currentTarget.closest('[data-id]');
@@ -79,17 +90,15 @@ const unblockPostFilter = ({ dataset: { id } }) => blockedPostTargetIDs.includes
 
 export const onStorageChanged = (changes, areaName) => {
   if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
-    removeStyle(css);
     blockedPostTargetIDs = changes[storageKey].newValue;
-    css = buildStyles();
-    addStyle(css);
+    styleElement.textContent = buildCss();
   }
 };
 
 export const main = async function () {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
-  css = buildStyles();
-  addStyle(css);
+  styleElement.textContent = buildCss();
+  document.head.append(styleElement);
 
   onBaseContainerMutated.addListener(processNotifications);
   processNotifications();
@@ -99,7 +108,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  removeStyle(css);
+  styleElement.remove();
   onBaseContainerMutated.removeListener(processNotifications);
   unregisterMeatballItem(meatballButtonBlockId);
   unregisterMeatballItem(meatballButtonUnblockId);

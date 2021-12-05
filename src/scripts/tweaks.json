@@ -17,6 +17,11 @@
       "label": "Highlight contributed content on reblogs",
       "default": false
     },
+    "caught_up_line": {
+      "type": "checkbox",
+      "label": "Turn \"You're caught up\" into a separating line",
+      "default": false
+    },
     "subtle_follow": {
       "type": "checkbox",
       "label": "Make posts' mini-follow buttons more subtle",
@@ -27,6 +32,11 @@
       "label": "Remove the coloured shadow from focused posts",
       "default": false
     },
+    "unsticky_post_avatars": {
+      "type": "checkbox",
+      "label": "Remove sticky effect from post avatars",
+      "default": false
+    },
     "hide_filtered_posts": {
       "type": "checkbox",
       "label": "Hide filtered posts entirely",
@@ -35,6 +45,11 @@
     "hide_my_posts": {
       "type": "checkbox",
       "label": "Hide my own posts on the dashboard",
+      "default": false
+    },
+    "hide_follower_counts": {
+      "type": "checkbox",
+      "label": "Hide my follower count where possible",
       "default": false
     },
     "no_where_were_we": {

@@ -47,11 +47,6 @@ div:first-child + a + #quick-reblog {
   display: none;
 }
 
-#quick-reblog select {
-  font-family: var(--font-family);
-  font-weight: bold;
-}
-
 #quick-reblog select,
 #quick-reblog input {
   border: none;
@@ -60,6 +55,13 @@ div:first-child + a + #quick-reblog {
   background-color: inherit;
   padding: 1ch;
   margin-bottom: 2px;
+}
+
+#quick-reblog select {
+  padding-left: 0.5ch;
+
+  font-family: var(--font-family);
+  font-weight: bold;
 }
 
 #quick-reblog .quick-tags {

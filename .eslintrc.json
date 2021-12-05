@@ -7,7 +7,8 @@
   },
   "extends": [
     "semistandard",
-    "plugin:jsdoc/recommended"
+    "plugin:jsdoc/recommended",
+    "plugin:import/recommended"
   ],
   "parserOptions": {
     "ecmaVersion": 12,

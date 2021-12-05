@@ -40,6 +40,11 @@
       "label": "Show the tags field",
       "default": true
     },
+    "showTagSuggestions": {
+      "type": "checkbox",
+      "label": "Suggest tags from the post being reblogged",
+      "default": false
+    },
     "alreadyRebloggedEnabled": {
       "type": "checkbox",
       "label": "Remember which posts I've already reblogged",

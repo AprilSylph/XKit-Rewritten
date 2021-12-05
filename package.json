@@ -6,19 +6,18 @@
     "lint-webextension": "web-ext lint",
     "build-webextension": "web-ext build",
     "sign-webextension": "web-ext sign",
-    "webstore-upload": "webstore upload --source=src/ --auto-publish"
+    "webstore-upload": "chrome-webstore-upload upload --source=src/ --auto-publish"
   },
   "devDependencies": {
-    "chrome-webstore-upload-cli": "^1.2.1",
+    "chrome-webstore-upload-cli": "^2.0.1",
     "eslint": "^7.32.0",
     "eslint-config-semistandard": "^16.0.0",
     "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-jsdoc": "^36.1.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsdoc": "^37.0.3",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "fast-xml-parser": "^3.19.0",
-    "web-ext": "^6.3.0"
+    "eslint-plugin-promise": "^5.1.1",
+    "web-ext": "^6.5.0"
   },
   "dependencies": {
     "jquery": "^3.6.0",

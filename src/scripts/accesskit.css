@@ -34,6 +34,11 @@ body.accesskit-blue-links article a[target="_blank"][href^="https://href.li/"] {
   color: rgb(var(--accent));
 }
 
+body.accesskit-disable-animations * {
+  animation: none !important;
+  transition: none !important;
+}
+
 body.accesskit-no-user-colours article span[style^="color"] {
   color: inherit !important;
 }

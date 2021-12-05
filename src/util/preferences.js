@@ -12,6 +12,8 @@ export const getPreferences = async function (scriptName) {
   const preferenceValues = {};
 
   for (const [key, preference] of Object.entries(preferences)) {
+    if (preference.type === 'iframe') { continue; }
+
     const storageKey = `${scriptName}.preferences.${key}`;
     const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
 

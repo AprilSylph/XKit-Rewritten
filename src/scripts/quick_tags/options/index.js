@@ -3,24 +3,23 @@ const storageKey = 'quick_tags.preferences.tagBundles';
 const bundlesList = document.getElementById('bundles');
 const bundleTemplate = document.getElementById('bundle-template');
 
-const newBundleTitleInput = document.getElementById('new-bundle-title');
-const newBundleTagsInput = document.getElementById('new-bundle-tags');
+const saveNewBundle = async event => {
+  event.preventDefault();
+  const { currentTarget } = event;
 
-const saveNewBundle = async () => {
+  if (!currentTarget.reportValidity()) { return; }
+  const { title, tags } = currentTarget.elements;
+
   const tagBundle = {
-    title: newBundleTitleInput.value,
-    tags: newBundleTagsInput.value
+    title: title.value,
+    tags: tags.value
   };
-
-  if (!newBundleTitleInput.reportValidity()) { return; }
-  if (!newBundleTagsInput.reportValidity()) { return; }
 
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
   tagBundles.push(tagBundle);
   await browser.storage.local.set({ [storageKey]: tagBundles });
 
-  newBundleTitleInput.value = '';
-  newBundleTagsInput.value = '';
+  currentTarget.reset();
 };
 
 const editTagBundle = async ({ currentTarget }) => {
@@ -83,6 +82,6 @@ browser.storage.onChanged.addListener((changes, areaName) => {
   }
 });
 
-document.getElementById('add-bundle').addEventListener('click', saveNewBundle);
+document.getElementById('new-bundle').addEventListener('submit', saveNewBundle);
 
 renderBundles();

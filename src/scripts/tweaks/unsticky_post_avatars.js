@@ -1,11 +1,11 @@
-import { descendantSelector } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
 const styleElement = buildStyle();
 
 export const main = async function () {
-  const selector = await descendantSelector('post', 'followButton');
-  styleElement.textContent = `${selector} { color: rgba(var(--black), 0.4); }`;
+  const stickyContainerSelector = await keyToCss('stickyContainer');
+  styleElement.textContent = `${stickyContainerSelector} { height: auto !important; }`;
   document.head.append(styleElement);
 };
 

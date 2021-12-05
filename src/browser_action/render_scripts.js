@@ -109,12 +109,6 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
           });
         break;
       case 'iframe':
-        preferenceInput.addEventListener('load', () => {
-          const callback = () => { preferenceInput.height = preferenceInput.contentDocument.documentElement.scrollHeight; };
-          callback();
-          const observer = new ResizeObserver(callback);
-          observer.observe(preferenceInput.contentDocument.documentElement);
-        });
         preferenceInput.src = preference.src;
         break;
       default:
@@ -126,7 +120,9 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
 };
 
 const renderScripts = async function () {
-  scriptsDiv.style.display = 'none';
+  const scriptClones = [];
+  scriptsDiv.textContent = '';
+
   const installedScripts = await getInstalledScripts();
   const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
@@ -172,10 +168,10 @@ const renderScripts = async function () {
       renderPreferences({ scriptName, preferences, preferenceList });
     }
 
-    scriptsDiv.appendChild(scriptTemplateClone);
+    scriptClones.push(scriptTemplateClone);
   }
 
-  scriptsDiv.style.display = '';
+  scriptsDiv.append(...scriptClones);
 };
 
 renderScripts().then(() => {
@@ -186,7 +182,6 @@ renderScripts().then(() => {
 configSectionLink.addEventListener('click', ({ currentTarget }) => {
   if (currentTarget.classList.contains('outdated')) {
     currentTarget.classList.remove('outdated');
-    scriptsDiv.textContent = '';
     renderScripts();
   }
 });

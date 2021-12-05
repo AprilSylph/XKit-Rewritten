@@ -1,3 +1,7 @@
 .xkit-show-originals-hidden article {
   display: none;
 }
+
+.xkit-show-originals-lengthened {
+  min-height: 100vh;
+}

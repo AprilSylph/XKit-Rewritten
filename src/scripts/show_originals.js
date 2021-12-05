@@ -6,23 +6,26 @@ import { keyToCss } from '../util/css_map.js';
 
 const excludeClass = 'xkit-show-originals-done';
 const hiddenClass = 'xkit-show-originals-hidden';
+const activeTimelineClass = 'xkit-show-originals-timeline';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 
 const dashboardTimeline = '/v2/timeline/dashboard';
-const dashboardTimelineRegExp = new RegExp(dashboardTimeline);
 
-const lengthenTimelines = async () => {
-  const timeline =
-    document.querySelector(`[data-timeline="${dashboardTimeline}"]:not(.${excludeClass})`);
+const processTimelines = async () => {
+  const paginationCss = await keyToCss('manualPaginatorButtons');
 
-  if (timeline) {
-    timeline.classList.add(excludeClass);
-    const paginationCss = await keyToCss('manualPaginatorButtons');
+  [...document.querySelectorAll(`[data-timeline]:not(.${excludeClass})`)]
+    .forEach(timeline => {
+      timeline.classList.add(excludeClass);
 
-    if (!timeline.querySelector(paginationCss)) {
-      timeline.classList.add(lengthenedClass);
-    }
-  }
+      if (timeline.dataset.timeline === dashboardTimeline) { // add conditional logic here
+        timeline.classList.add(activeTimelineClass);
+
+        if (!timeline.querySelector(paginationCss)) {
+          timeline.classList.add(lengthenedClass);
+        }
+      }
+    });
 };
 
 let showOwnReblogs;
@@ -33,9 +36,12 @@ const processPosts = async function () {
   const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
 
   await exposeTimelines();
-  lengthenTimelines();
+  await processTimelines();
 
-  getPostElements({ excludeClass, timeline: dashboardTimelineRegExp, includeFiltered: true }).forEach(async postElement => {
+  const postElements = getPostElements({ excludeClass, includeFiltered: true })
+    .filter(postElement => postElement.closest('[data-timeline]').classList.contains(activeTimelineClass));
+
+  postElements.forEach(async postElement => {
     const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);
 
     postElement.classList.add('temporary-test-class');

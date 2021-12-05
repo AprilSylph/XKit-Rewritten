@@ -4,4 +4,9 @@
 
 .xkit-show-originals-lengthened {
   min-height: 100vh;
+  outline: 2px solid red;
+}
+
+.temporary-test-class {
+  outline: 4px dotted yellow;
 }

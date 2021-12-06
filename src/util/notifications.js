@@ -2,12 +2,21 @@ import { onBaseContainerMutated } from './mutations.js';
 import { keyToCss } from './css_map.js';
 
 const toastContainer = Object.assign(document.createElement('div'), { id: 'xkit-toasts' });
+
 const drawerContentSelectorPromise = keyToCss('drawerContent');
+const sidebarSelectorPromise = keyToCss('sidebar');
 
 const addToastContainerToPage = async () => {
   const drawerContentSelector = await drawerContentSelectorPromise;
-  const targetNode = document.body.querySelector(drawerContentSelector) || document.body.querySelector('aside') || document.body;
+  const sidebarSelector = await sidebarSelectorPromise;
+
+  const targetNode =
+    document.body.querySelector(drawerContentSelector) ||
+    document.body.querySelector(sidebarSelector) ||
+    document.body;
+
   if (targetNode.contains(toastContainer) === false) {
+    toastContainer.dataset.inSidebar = targetNode.matches(sidebarSelector);
     targetNode.appendChild(toastContainer);
   }
 };

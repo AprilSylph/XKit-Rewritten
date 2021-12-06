@@ -8,7 +8,7 @@
   line-height: 1.333;
 }
 
-.xkit-sidebar-title {
+.xkit-sidebar-item > h1 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -23,7 +23,7 @@
   line-height: 1.2;
 }
 
-.xkit-sidebar-title::after {
+.xkit-sidebar-item > h1::after {
   content: "XKit";
   font-size: 0.875rem;
   font-weight: normal;

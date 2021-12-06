@@ -17,7 +17,7 @@ const addToastContainerToPage = async () => {
 
   if (targetNode.contains(toastContainer) === false) {
     toastContainer.dataset.inSidebar = targetNode.matches(sidebarSelector);
-    targetNode.appendChild(toastContainer);
+    targetNode.append(toastContainer);
   }
 };
 
@@ -31,7 +31,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
  */
 export const notify = async textContent => {
   const toast = Object.assign(document.createElement('div'), { textContent, className: 'visible' });
-  toastContainer.appendChild(toast);
+  toastContainer.append(toast);
   await sleep(4000);
   toast.classList.remove('visible');
   await sleep(1000);

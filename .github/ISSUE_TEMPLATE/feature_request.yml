@@ -5,6 +5,12 @@ body:
   - type: markdown
     attributes:
       value: |
+        ## Issue guidelines
+        - Check the list of open issues before submitting your own to help reduce duplicate issues.
+        - If you see your issue already listed, upvote it by adding a :+1: reaction to the initial comment.
+  - type: markdown
+    attributes:
+      value: |
         Before requesting a feature, please check the following:
         - [Feature progress](https://github.com/AprilSylph/XKit-Rewritten/projects/4)
         - [Excluded features](https://github.com/AprilSylph/XKit-Rewritten/wiki/Excluded-features)

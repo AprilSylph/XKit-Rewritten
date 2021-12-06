@@ -2,6 +2,12 @@ name: Bug report
 description: Unexpected or unintended behaviour
 labels: [bug]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Issue guidelines
+        - Check the list of open issues before submitting your own to help reduce duplicate issues.
+        - If you see your issue already listed, upvote it by adding a :+1: reaction to the initial comment.
   - type: input
     attributes:
       label: Platform

@@ -45,6 +45,11 @@
       "label": "Suggest tags from the post being reblogged",
       "default": false
     },
+    "queueTag": {
+      "type": "text",
+      "label": "Queue tag",
+      "default": ""
+    },
     "alreadyRebloggedEnabled": {
       "type": "checkbox",
       "label": "Remember which posts I've already reblogged",

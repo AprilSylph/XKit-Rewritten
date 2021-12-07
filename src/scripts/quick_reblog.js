@@ -44,6 +44,7 @@ let showCommentInput;
 let quickTagsIntegration;
 let showTagsInput;
 let showTagSuggestions;
+let queueTag;
 let alreadyRebloggedEnabled;
 let alreadyRebloggedLimit;
 
@@ -132,7 +133,7 @@ const reblogPost = async function ({ currentTarget }) {
   const { state } = currentTarget.dataset;
 
   const blog = blogSelector.value;
-  const tags = tagsInput.value;
+  const tags = tagsInput.value + state === 'queue' && queueTag ? `, ${queueTag}` : '';
   const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } = await timelineObjectMemoized(postID);
 
   const requestPath = `/v2/blog/${blog}/posts`;
@@ -227,6 +228,7 @@ export const main = async function () {
     quickTagsIntegration,
     showTagsInput,
     showTagSuggestions,
+    queueTag,
     alreadyRebloggedEnabled,
     alreadyRebloggedLimit
   } = await getPreferences('quick_reblog'));

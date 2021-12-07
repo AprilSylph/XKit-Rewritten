@@ -126,10 +126,9 @@ const reblogPost = async function ({ currentTarget }) {
 
   currentTarget.blur();
   actionButtons.disabled = true;
-
-  const postID = lastPostID;
   lastPostID = null;
 
+  const postID = currentTarget.closest('[data-id]').dataset.id;
   const { state } = currentTarget.dataset;
 
   const blog = blogSelector.value;

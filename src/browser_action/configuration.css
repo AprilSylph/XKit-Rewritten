@@ -137,6 +137,7 @@ label[for="filter"] {
   padding: 0.5ch 0;
 }
 
+.script input[type="text"],
 .script select {
   margin-left: auto;
 }

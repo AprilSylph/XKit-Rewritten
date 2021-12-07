@@ -7,6 +7,16 @@
     "background_color": "#eeb92b"
   },
   "preferences": {
+    "originalPostTag": {
+      "type": "text",
+      "label": "Original post tag",
+      "default": ""
+    },
+    "answerTag": {
+      "type": "text",
+      "label": "Answer tag",
+      "default": ""
+    },
     "tagBundles": {
       "type": "iframe",
       "label": "Manage tag bundles",

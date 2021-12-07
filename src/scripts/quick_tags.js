@@ -1,8 +1,9 @@
 import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
 import { getPostElements } from '../util/interface.js';
-import { onNewPosts } from '../util/mutations.js';
+import { onBaseContainerMutated, onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
+import { getPreferences } from '../util/preferences.js';
 import { timelineObjectMemoized, editPostFormTags } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
@@ -10,6 +11,9 @@ const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
 const excludeClass = 'xkit-quick-tags-done';
 const tagsClass = 'xkit-quick-tags-tags';
+
+let originalPostTag;
+let answerTag;
 
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-tags' });
 const popupForm = Object.assign(document.createElement('form'), {
@@ -45,9 +49,40 @@ const populatePopups = async function () {
   }
 };
 
+const processPostForm = async function () {
+  const selectedTagsElement = document.getElementById('selected-tags');
+  if (selectedTagsElement === null || selectedTagsElement.classList.contains(excludeClass)) {
+    return;
+  } else {
+    selectedTagsElement.classList.add(excludeClass);
+  }
+
+  if (originalPostTag && location.pathname.startsWith('/new')) {
+    editPostFormTags({
+      add: originalPostTag.split(',').map(tag => tag.trim())
+    });
+  } else if (answerTag && location.pathname.startsWith('/edit')) {
+    const postId = location.pathname.split('/')[3];
+    const { state } = await timelineObjectMemoized(postId);
+    if (state === 'submission') {
+      editPostFormTags({
+        add: answerTag.split(',').map(tag => tag.trim())
+      });
+    }
+  }
+};
+
 export const onStorageChanged = async function (changes, areaName) {
-  if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
-    populatePopups();
+  if (areaName === 'local' && Object.keys(changes).some(key => key.startsWith('quick_tags'))) {
+    if (Object.keys(changes).includes(storageKey)) populatePopups();
+
+    ({ originalPostTag, answerTag } = await getPreferences('quick_tags'));
+    if (originalPostTag || answerTag) {
+      onBaseContainerMutated.addListener(processPostForm);
+      processPostForm();
+    } else {
+      onBaseContainerMutated.removeListener(processPostForm);
+    }
   }
 };
 
@@ -171,9 +206,16 @@ export const main = async function () {
   registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });
 
   populatePopups();
+
+  ({ originalPostTag, answerTag } = await getPreferences('quick_tags'));
+  if (originalPostTag || answerTag) {
+    onBaseContainerMutated.addListener(processPostForm);
+    processPostForm();
+  }
 };
 
 export const clean = async function () {
+  onBaseContainerMutated.removeListener(processPostForm);
   onNewPosts.removeListener(processPosts);
   popupElement.remove();
 

@@ -17,6 +17,11 @@
       "label": "Answer tag",
       "default": ""
     },
+    "autoTagAsker": {
+      "type": "checkbox",
+      "label": "Automatically tag asker when answering",
+      "default": false
+    },
     "tagBundles": {
       "type": "iframe",
       "label": "Manage tag bundles",

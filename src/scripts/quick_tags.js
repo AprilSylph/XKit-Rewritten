@@ -14,6 +14,7 @@ const tagsClass = 'xkit-quick-tags-tags';
 
 let originalPostTag;
 let answerTag;
+let autoTagAsker;
 
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-tags' });
 const popupForm = Object.assign(document.createElement('form'), {
@@ -61,13 +62,14 @@ const processPostForm = async function () {
     editPostFormTags({
       add: originalPostTag.split(',').map(tag => tag.trim())
     });
-  } else if (answerTag && location.pathname.startsWith('/edit')) {
+  } else if ((answerTag || autoTagAsker) && location.pathname.startsWith('/edit')) {
     const postId = location.pathname.split('/')[3];
-    const { state } = await timelineObjectMemoized(postId);
+    const { state, askingName } = await timelineObjectMemoized(postId);
     if (state === 'submission') {
-      editPostFormTags({
-        add: answerTag.split(',').map(tag => tag.trim())
-      });
+      const tagsToAdd = [];
+      if (answerTag) tagsToAdd.push(...answerTag.split(','));
+      if (autoTagAsker && askingName) tagsToAdd.push(askingName);
+      editPostFormTags({ add: tagsToAdd });
     }
   }
 };
@@ -76,8 +78,8 @@ export const onStorageChanged = async function (changes, areaName) {
   if (areaName === 'local' && Object.keys(changes).some(key => key.startsWith('quick_tags'))) {
     if (Object.keys(changes).includes(storageKey)) populatePopups();
 
-    ({ originalPostTag, answerTag } = await getPreferences('quick_tags'));
-    if (originalPostTag || answerTag) {
+    ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+    if (originalPostTag || answerTag || autoTagAsker) {
       onBaseContainerMutated.addListener(processPostForm);
       processPostForm();
     } else {
@@ -207,8 +209,8 @@ export const main = async function () {
 
   populatePopups();
 
-  ({ originalPostTag, answerTag } = await getPreferences('quick_tags'));
-  if (originalPostTag || answerTag) {
+  ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+  if (originalPostTag || answerTag || autoTagAsker) {
     onBaseContainerMutated.addListener(processPostForm);
     processPostForm();
   }

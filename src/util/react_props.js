@@ -72,6 +72,8 @@ export const exposeTimelines = async () => {
  * @returns {Promise<void>} Resolves when finished
  */
 export const editPostFormTags = async ({ add = [], remove = [] }) => inject(async ({ add, remove }) => {
+  add = add.map(tag => tag.trim()).filter((tag, index, array) => array.indexOf(tag) === index);
+
   const selectedTagsElement = document.getElementById('selected-tags');
   if (!selectedTagsElement) { return; }
 

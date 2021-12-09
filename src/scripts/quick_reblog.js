@@ -130,9 +130,10 @@ const reblogPost = async function ({ currentTarget }) {
 
   const postID = currentTarget.closest('[data-id]').dataset.id;
   const { state } = currentTarget.dataset;
+  if (state === 'queue' && queueTag) tagsInput.value += `, ${queueTag}`;
 
   const blog = blogSelector.value;
-  const tags = tagsInput.value + state === 'queue' && queueTag ? `, ${queueTag}` : '';
+  const tags = tagsInput.value;
   const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } = await timelineObjectMemoized(postID);
 
   const requestPath = `/v2/blog/${blog}/posts`;

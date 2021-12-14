@@ -132,7 +132,7 @@ const renderScripts = async function () {
   for (const scriptName of [...orderedEnabledScripts, ...disabledScripts]) {
     const url = getURL(`/scripts/${scriptName}.json`);
     const file = await fetch(url);
-    const { title = scriptName, description = '', icon = {}, preferences = {} } = await file.json();
+    const { title = scriptName, description = '', icon = {}, help = '', preferences = {} } = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 
@@ -156,6 +156,11 @@ const renderScripts = async function () {
     if (description !== '') {
       const descriptionParagraph = scriptTemplateClone.querySelector('p.description');
       descriptionParagraph.textContent = description;
+    }
+
+    if (help !== '') {
+      const helpLink = scriptTemplateClone.querySelector('a.help');
+      helpLink.href = help;
     }
 
     const enabledInput = scriptTemplateClone.querySelector('input.toggle-button');

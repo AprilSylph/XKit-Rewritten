@@ -40,6 +40,12 @@ The foreground colour of the feature icon. Defaults to pure black (`#000000`) if
 
 The background colour of the feature icon. Defaults to pure white (`#ffffff`) if not provided.
 
+### `"help"`
+- Type: String
+- Required: No
+
+URL which points to a usage guide or extended description for the feature.
+
 ### `"preferences"`
 - Type: Object
 - Required: No

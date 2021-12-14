@@ -90,13 +90,35 @@ label[for="filter"] {
 }
 
 .script .icon,
-.script .meta {
+.script .meta,
+.script .help {
   margin-right: 1ch;
 }
 
 .script .icon,
-.script .toggle-button {
+.script .buttons {
   flex-shrink: 0;
+}
+
+.script .buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: auto;
+}
+
+.script .help {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.script .help:not([href]) {
+  display: none;
+}
+
+.script .help i {
+  font-size: 1.25rem;
 }
 
 .script .title,
@@ -108,10 +130,6 @@ label[for="filter"] {
   content: "(disabled)";
   margin-left: 0.5ch;
   font-weight: normal;
-}
-
-.script input[type="checkbox"].toggle-button {
-  margin-left: auto;
 }
 
 .script ul.preferences {

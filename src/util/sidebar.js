@@ -2,6 +2,7 @@ import { keyToCss } from './css_map.js';
 import { onBaseContainerMutated } from './mutations.js';
 
 const sidebarItems = Object.assign(document.createElement('div'), { id: 'xkit-sidebar' });
+const conditions = new Map();
 
 /**
  * @typedef {object} sidebarRowOptions
@@ -48,9 +49,10 @@ const buildSidebarRow = function ({ label, onclick, count, carrot }) {
  * @param {string} options.id - Unique ID for the sidebar item
  * @param {string} options.title - Human-readable sidebar item heading
  * @param {sidebarRowOptions[]} options.rows - Row options objects to construct clickable links in the sidebar item
+ * @param {Function} [options.visibility] - Visibility condition function (called each time sidebar is added)
  * @returns {HTMLDivElement} The constructed sidebar item, for future referencing
  */
-export const addSidebarItem = function ({ id, title, rows }) {
+export const addSidebarItem = function ({ id, title, rows, visibility }) {
   const sidebarItem = Object.assign(document.createElement('div'), { id, className: 'xkit-sidebar-item' });
   const sidebarTitle = Object.assign(document.createElement('h1'), { textContent: title });
   const sidebarList = document.createElement('ul');
@@ -59,10 +61,21 @@ export const addSidebarItem = function ({ id, title, rows }) {
   sidebarItem.append(sidebarTitle, sidebarList);
   sidebarList.append(...rows.map(buildSidebarRow));
 
+  if (visibility instanceof Function) {
+    conditions.set(sidebarItem, visibility);
+    conditions.hidden = visibility() === false;
+  }
+
   return sidebarItem;
 };
 
-export const removeSidebarItem = id => sidebarItems.querySelector(`#${id}`)?.remove();
+export const removeSidebarItem = id => {
+  const sidebarItem = sidebarItems.querySelector(`#${id}`);
+  if (sidebarItem === null) return;
+
+  conditions.delete(sidebarItem);
+  sidebarItem.remove();
+};
 
 (async () => {
   const sidebarItemSelector = await keyToCss('sidebarItem');
@@ -72,6 +85,10 @@ export const removeSidebarItem = id => sidebarItems.querySelector(`#${id}`)?.rem
     if (document.body.contains(sidebarItems)) { return; }
     const outdatedSidebarItems = document.getElementById('xkit-sidebar');
     outdatedSidebarItems?.remove();
+
+    [...sidebarItems.children]
+      .filter(sidebarItem => conditions.has(sidebarItem))
+      .forEach(sidebarItem => { sidebarItem.hidden = conditions.get(sidebarItem)() === false; });
 
     const firstSidebarItem = document.querySelector(sidebarItemSelector);
     const firstNavSubHeader = document.querySelector(navSubHeaderSelector);

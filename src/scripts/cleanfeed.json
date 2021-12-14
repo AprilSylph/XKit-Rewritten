@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#ff567e"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#cleanfeed",
   "preferences": {
     "blockingMode": {
       "label": "Hide media from",

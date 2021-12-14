@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#f7650d"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#classic-search",
   "preferences": {
     "newTab": {
       "type": "checkbox",

@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#00cf35"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#no-recommended",
   "preferences": {
     "hide_answertime": {
       "type": "checkbox",

@@ -5,6 +5,7 @@
     "color": "white",
     "background_color": "#acd53a"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quick-reblog",
   "preferences": {
     "popupPosition": {
       "type": "select",

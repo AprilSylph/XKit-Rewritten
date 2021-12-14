@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#ecc84b"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks",
   "preferences": {
     "slim_filtered_screens": {
       "type": "checkbox",

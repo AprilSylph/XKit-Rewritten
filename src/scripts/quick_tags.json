@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#eeb92b"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quick-tags",
   "preferences": {
     "originalPostTag": {
       "type": "text",

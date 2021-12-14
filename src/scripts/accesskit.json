@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#df46f6"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#accesskit",
   "preferences": {
     "disable_gifs": {
       "type": "checkbox",

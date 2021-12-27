@@ -16,6 +16,11 @@
         { "value": "all", "label": "all blogs" }
       ],
       "default": "smart"
+    },
+    "localFlagging": {
+      "label": "Treat these blogs as flagged (comma-separated)",
+      "type": "textarea",
+      "default": ""
     }
   }
 }

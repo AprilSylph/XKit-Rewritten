@@ -23,6 +23,11 @@
       "label": "Hide recommended tags between posts",
       "default": false
     },
+    "hide_lightbox_related": {
+      "type": "checkbox",
+      "label": "Hide related posts in the photo lightbox",
+      "default": false
+    },
     "hide_recommended_blogs": {
       "type": "checkbox",
       "label": "Hide recommended blogs in the sidebar",

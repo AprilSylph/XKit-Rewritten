@@ -55,6 +55,13 @@ body {
   user-select: none;
 }
 
+#embedded-banner {
+  padding: 4px 8px;
+  border-bottom: 1px solid rgb(var(--active-grey));
+
+  text-align: center;
+}
+
 nav {
   display: flex;
   flex-direction: row;

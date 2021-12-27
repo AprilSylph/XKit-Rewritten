@@ -30,6 +30,10 @@
       "128": "icons/128.png"
     }
   },
+  "options_ui": {
+    "page": "browser_action/popup.html?embedded=true",
+    "open_in_tab": false
+  },
 
   "permissions": [ "storage" ],
   "web_accessible_resources": [ "*.js", "*.json", "*.css", "*.svg" ],

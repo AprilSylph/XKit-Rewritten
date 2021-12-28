@@ -62,6 +62,10 @@ body {
   text-align: center;
 }
 
+#embedded-banner:not([hidden]) + main {
+  min-width: auto !important;
+}
+
 nav {
   display: flex;
   flex-direction: row;

@@ -12,9 +12,9 @@ const getInstalledScripts = async function () {
   return installedScripts;
 };
 
-const writeEnabled = async function (event) {
-  const { checked, id } = event.currentTarget;
-  const { parentNode: { parentNode: detailsElement } } = event.currentTarget;
+const writeEnabled = async function ({ currentTarget }) {
+  const { checked, id } = currentTarget;
+  const detailsElement = currentTarget.closest('details');
   let { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
   if (checked) {

@@ -98,13 +98,24 @@ input[type="text"] {
 
 .bundle {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr auto;
   grid-column-gap: 8px;
   border-top: 1px solid rgb(var(--light-grey));
 }
 
 .bundle:last-child {
   border-bottom: 1px solid rgb(var(--light-grey));
+}
+
+.bundle .move-buttons {
+  display: flex;
+  flex-direction: column;
+  margin-right: 1ch;
+}
+
+.bundle button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
 }
 
 .bundle div {
@@ -126,6 +137,7 @@ input[type="text"] {
 }
 
 .bundle input {
+  box-sizing: border-box;
   width: 0;
   min-width: 100%;
 }

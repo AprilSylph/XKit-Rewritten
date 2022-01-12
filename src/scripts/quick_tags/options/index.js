@@ -22,6 +22,16 @@ const saveNewBundle = async event => {
   currentTarget.reset();
 };
 
+const moveBundle = async ({ currentTarget }) => {
+  const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
+  const currentIndex = parseInt(currentTarget.closest('[id]').id);
+  const targetIndex = currentIndex + (currentTarget.className === 'down' ? 1 : -1);
+
+  [tagBundles[currentIndex], tagBundles[targetIndex]] = [tagBundles[targetIndex], tagBundles[currentIndex]];
+
+  browser.storage.local.set({ [storageKey]: tagBundles });
+};
+
 const editTagBundle = async ({ currentTarget }) => {
   const { parentNode: { parentNode } } = currentTarget;
   const inputs = [...parentNode.querySelectorAll('input')];
@@ -60,19 +70,24 @@ const deleteBundle = async ({ currentTarget }) => {
 const renderBundles = async function () {
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
 
-  for (const tagBundle of tagBundles) {
+  bundlesList.append(...tagBundles.map(({ title, tags }, index) => {
     const bundleTemplateClone = bundleTemplate.content.cloneNode(true);
 
-    bundleTemplateClone.querySelector('.bundle').id = tagBundles.indexOf(tagBundle);
+    bundleTemplateClone.querySelector('.up').disabled = index === 0;
+    bundleTemplateClone.querySelector('.up').addEventListener('click', moveBundle);
+    bundleTemplateClone.querySelector('.down').disabled = index === (tagBundles.length - 1);
+    bundleTemplateClone.querySelector('.down').addEventListener('click', moveBundle);
 
-    bundleTemplateClone.querySelector('.title').value = tagBundle.title;
-    bundleTemplateClone.querySelector('.tags').value = tagBundle.tags;
+    bundleTemplateClone.querySelector('.bundle').id = index;
+
+    bundleTemplateClone.querySelector('.title').value = title;
+    bundleTemplateClone.querySelector('.tags').value = tags;
 
     bundleTemplateClone.querySelector('.edit').addEventListener('click', editTagBundle);
     bundleTemplateClone.querySelector('.delete').addEventListener('click', deleteBundle);
 
-    bundlesList.appendChild(bundleTemplateClone);
-  }
+    return bundleTemplateClone;
+  }));
 };
 
 browser.storage.onChanged.addListener((changes, areaName) => {

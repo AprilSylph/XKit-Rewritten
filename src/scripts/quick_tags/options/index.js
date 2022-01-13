@@ -73,12 +73,12 @@ const renderBundles = async function () {
   bundlesList.append(...tagBundles.map(({ title, tags }, index) => {
     const bundleTemplateClone = bundleTemplate.content.cloneNode(true);
 
+    bundleTemplateClone.querySelector('.bundle').id = index;
+
     bundleTemplateClone.querySelector('.up').disabled = index === 0;
     bundleTemplateClone.querySelector('.up').addEventListener('click', moveBundle);
     bundleTemplateClone.querySelector('.down').disabled = index === (tagBundles.length - 1);
     bundleTemplateClone.querySelector('.down').addEventListener('click', moveBundle);
-
-    bundleTemplateClone.querySelector('.bundle').id = index;
 
     bundleTemplateClone.querySelector('.title').value = title;
     bundleTemplateClone.querySelector('.tags').value = tags;

@@ -33,9 +33,12 @@ const onStorageChanged = async function (changes, areaName) {
   if (areaName !== 'local') return;
 
   const { 'accesskit.preferences.visible_alt_text_mode': modeChanges } = changes;
-  if (modeChanges.oldValue !== undefined) {
-    clean().then(main);
-  }
+  if (modeChanges?.oldValue === undefined) return;
+
+  mode = modeChanges.newValue;
+  $(`.${processedClass} figcaption`).remove();
+  $(`.${processedClass}`).removeClass(processedClass);
+  processImages();
 };
 
 export const main = async function () {

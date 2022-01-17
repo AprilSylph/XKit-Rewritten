@@ -42,6 +42,15 @@
       "type": "checkbox",
       "label": "Show alt text as captions below images",
       "default": false
+    },
+    "visible_alt_text_mode": {
+      "type": "select",
+      "label": "Alt text mode",
+      "options": [
+        { "value": "show", "label": "Show all alt text" },
+        { "value": "hide", "label": "Only show image descriptions" }
+      ],
+      "default": "show"
     }
   }
 }

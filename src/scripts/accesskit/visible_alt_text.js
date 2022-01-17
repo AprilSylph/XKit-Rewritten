@@ -1,8 +1,13 @@
 import { descendantSelector, keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
+import { translate } from '../../util/language_data.js';
 import { onPostsMutated } from '../../util/mutations.js';
+import { getPreferences } from '../../util/preferences.js';
+
+let mode;
 
 let imageBlockSelector;
+let imageString;
 
 const styleElement = buildStyle();
 const processedClass = 'accesskit-visible-alt-text';
@@ -15,7 +20,7 @@ const processImages = function () {
       if (image) {
         imageBlock.classList.add(processedClass);
 
-        if (image.alt) {
+        if (image.alt && (mode === 'show' || image.alt !== imageString)) {
           const caption = document.createElement('figcaption');
           caption.textContent = image.alt;
           imageBlock.appendChild(caption);
@@ -24,8 +29,19 @@ const processImages = function () {
     });
 };
 
+const onStorageChanged = async function (changes, areaName) {
+  if (areaName !== 'local') return;
+
+  const { 'accesskit.preferences.visible_alt_text_mode': modeChanges } = changes;
+  if (modeChanges.oldValue !== undefined) {
+    clean().then(main);
+  }
+};
+
 export const main = async function () {
+  ({ visible_alt_text_mode: mode } = await getPreferences('accesskit'));
   imageBlockSelector = await keyToCss('imageBlock');
+  imageString = await translate('Image');
 
   const imageBlockButtonInnerSelector = await descendantSelector('imageBlockButton', 'buttonInner');
 
@@ -35,10 +51,13 @@ export const main = async function () {
 
   onPostsMutated.addListener(processImages);
   processImages();
+
+  browser.storage.onChanged.addListener(onStorageChanged);
 };
 
 export const clean = async function () {
   onPostsMutated.removeListener(processImages);
+  browser.storage.onChanged.removeListener(onStorageChanged);
 
   styleElement.remove();
 

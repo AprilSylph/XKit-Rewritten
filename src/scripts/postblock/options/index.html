@@ -7,16 +7,23 @@
     <link rel="icon" href="/icons/128.png" type="image/png">
     <link rel="stylesheet" href="/lib/normalize.min.css">
     <link rel="stylesheet" href="index.css">
+    <script src="/browser_action/resize_frames.js" defer></script>
+    <script src="/lib/browser-polyfill.min.js" defer></script>
+    <script src="index.js" defer></script>
   </head>
   <body>
+    <template id="blocked-post">
+      <li class="blocked-post">
+        <span></span>
+        <button data-post-id="">Unblock</button>
+      </li>
+    </template>
     <main>
-      <p id="posts-blocked-count"></p>
-      <button id="unblock-last-post">Unblock last blocked post</button>
-      <small>This will immediately unhide the post that is unblocked.</small>
+      <header>
+        <span id="posts-blocked-count"></span>
+        <small>Unblocking a post will immediately unhide it.</small>
+      </header>
+      <ul id="blocked-posts"></ul>
     </main>
-
-    <script src="/browser_action/resize_frames.js" defer></script>
-    <script src="/lib/browser-polyfill.min.js"></script>
-    <script src="index.js"></script>
   </body>
 </html>

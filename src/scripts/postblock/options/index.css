@@ -2,6 +2,7 @@
   --black: 21, 20, 25;
   --white: 255, 255, 255;
   --grey: 207, 207, 216;
+  --accent: 10, 132, 255;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -9,6 +10,7 @@
     --black: 251, 251, 254;
     --white: 66, 65, 77;
     --grey: 91, 91, 102;
+    --accent: 54, 213, 255;
   }
 }
 
@@ -27,18 +29,40 @@ body {
   user-select: none;
 }
 
-main {
+header {
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  text-align: center;
+  margin-bottom: 1em;
 }
 
-p {
-  margin-top: 0;
+#posts-blocked-count {
+  font-weight: bold;
 }
 
-small {
-  margin-top: 1ch;
+#blocked-posts {
+  padding: 0;
+  border-bottom: 1px solid rgb(var(--grey));
+  margin: 0;
+}
+
+.blocked-post {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1ch 0;
+  border-top: 1px solid rgb(var(--grey));
+}
+
+.blocked-post button {
+  padding: 0;
+  border: none;
+
+  appearance: none;
+  background-color: transparent;
+  color: rgb(var(--accent));
+  cursor: pointer;
+  font-weight: bold;
 }

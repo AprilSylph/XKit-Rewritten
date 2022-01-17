@@ -1,0 +1,21 @@
+{
+  "title": "Collapsed Queue",
+  "description": "Shorten posts in your queue",
+  "icon": {
+    "class_name": "ri-qr-scan-line",
+    "color": "white",
+    "background_color": "#F1615F"
+  },
+  "preferences": {
+    "runInQueue": {
+      "type": "checkbox",
+      "label": "Run on the queue page",
+      "default": true
+    },
+    "runInDrafts": {
+      "type": "checkbox",
+      "label": "Run on the drafts page",
+      "default": false
+    }
+  }
+}

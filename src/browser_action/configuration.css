@@ -111,6 +111,8 @@ label[for="filter"] {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  text-decoration: none;
 }
 
 .script .help:not([href]) {

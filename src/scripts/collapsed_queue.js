@@ -35,7 +35,7 @@ export const main = async function () {
     ...runInQueue ? ['queue'] : [],
     ...runInDrafts ? ['draft'] : []
   ].join('|');
-  timelineRegex = new RegExp(String.raw`/v2/blog/[^/]+/posts/(${regexGroup})`);
+  timelineRegex = new RegExp(`/v2/blog/[^/]+/posts/(${regexGroup})`);
 
   footerSelector = await keyToCss('footerWrapper');
 

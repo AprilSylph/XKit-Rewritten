@@ -17,7 +17,7 @@ const unblockPost = async function ({ currentTarget }) {
 const renderBlockedPosts = async function () {
   const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
 
-  postsBlockedCount.textContent = `${blockedPostRootIDs.length} blocked posts`;
+  postsBlockedCount.textContent = `${blockedPostRootIDs.length} blocked ${blockedPostRootIDs.length === 1 ? 'post' : 'posts'}`;
   blockedPostList.textContent = '';
 
   for (const blockedPostID of blockedPostRootIDs) {

@@ -10,6 +10,7 @@ export const main = async function () {
 
   styleElement.textContent = `
     ${flexLayoutSelector}, ${mainSectionSelector} { margin-top: 0; }
+    ${mainSectionSelector} { display: flex; }
     ${relatedPostsSectionSelector} { display: none; }
   `;
 

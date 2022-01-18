@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#F1615F"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#collapsed-queue",
   "preferences": {
     "runInQueue": {
       "type": "checkbox",

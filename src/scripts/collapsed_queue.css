@@ -13,6 +13,7 @@
 .xkit-collapsed-queue-container {
   max-height: 200px !important;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 .xkit-collapsed-queue-container::before {
   content: "";

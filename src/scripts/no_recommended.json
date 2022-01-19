@@ -8,6 +8,11 @@
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#no-recommended",
   "preferences": {
+    "hide_recommended_posts": {
+      "type": "checkbox",
+      "label": "Hide recommended posts on the dashboard",
+      "default": true
+    },
     "hide_answertime": {
       "type": "checkbox",
       "label": "Hide the answertime banner",

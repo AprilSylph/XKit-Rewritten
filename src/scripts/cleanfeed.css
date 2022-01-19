@@ -1,5 +1,10 @@
-.xkit-cleanfeed-filtered figure:not(:hover) > div::after,
-.xkit-cleanfeed-filtered [role="application"]:not(:hover) > div::after {
+.xkit-cleanfeed-filtered figure:not(:hover),
+.xkit-cleanfeed-filtered [role="application"]:not(:hover) {
+  position: relative;
+}
+
+.xkit-cleanfeed-filtered figure:not(:hover)::after,
+.xkit-cleanfeed-filtered [role="application"]:not(:hover)::after {
   position: absolute;
   top: 0;
   left: 0;

@@ -21,7 +21,7 @@ const processPosts = async function () {
 
     if (loggingReason.startsWith('pin:')) return;
     if (loggingReason.startsWith('search:')) return;
-    // TODO: Exclude posts recommended from the "Include stuff in your orbit" option
+    if (loggingReason === 'orbitznews') return;
 
     postElement.classList.add(hiddenClass);
   });

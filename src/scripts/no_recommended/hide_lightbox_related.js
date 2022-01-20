@@ -9,8 +9,8 @@ export const main = async function () {
   const relatedPostsSectionSelector = await descendantSelector('glass', 'flexLayout', 'relatedPostsSection');
 
   styleElement.textContent = `
-    ${flexLayoutSelector}, ${mainSectionSelector} { margin-top: 0; }
-    ${mainSectionSelector} { display: flex; }
+    ${flexLayoutSelector} { align-items: center; justify-content: center; margin-top: 0; }
+    ${mainSectionSelector} { height: unset; margin: auto; }
     ${relatedPostsSectionSelector} { display: none; }
   `;
 

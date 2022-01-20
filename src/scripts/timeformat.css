@@ -1,0 +1,8 @@
+[data-formatted-time] {
+  font-size: 0px;
+}
+
+[data-formatted-time]::after {
+  content: attr(data-formatted-time);
+  font-size: .78125rem;
+}

@@ -10,27 +10,28 @@ let active = false;
 const scrollToBottom = () => window.scrollTo({ top: document.documentElement.scrollHeight });
 const observer = new ResizeObserver(scrollToBottom);
 
-const onClick = () => {
-  if (active) {
-    observer.disconnect();
-    active = false;
-  } else {
-    observer.observe(document.documentElement);
-    scrollToBottom();
-    active = true;
-  }
-
-  scrollToBottomIcon.style.fill = active ? 'rgb(var(--yellow))' : '';
+const startScrolling = () => {
+  observer.observe(document.documentElement);
+  scrollToBottom();
+  active = true;
+  scrollToBottomIcon.style.fill = 'rgb(var(--yellow))';
 };
+
+const stopScrolling = () => {
+  observer.disconnect();
+  active = false;
+  scrollToBottomIcon.style.fill = '';
+};
+
+const onClick = () => active ? stopScrolling() : startScrolling();
+const onKeyDown = ({ key }) => key === '.' && stopScrolling();
 
 const mutationCallback = () => {
   const noLoaderOnPage = document.querySelector(knightRiderLoaderSelector) === null;
   const buttonWasRemoved = document.documentElement.contains(scrollToBottomButton) === false;
 
   if (active && (noLoaderOnPage || buttonWasRemoved)) {
-    observer.disconnect();
-    active = false;
-    scrollToBottomIcon.style.fill = '';
+    stopScrolling();
   } else if (!scrollToBottomButton || buttonWasRemoved) {
     init();
   }
@@ -56,6 +57,8 @@ const init = async function () {
   }
 
   scrollToTopButton.after(scrollToBottomButton);
+  scrollToTopButton.addEventListener('click', stopScrolling);
+  document.documentElement.addEventListener('keydown', onKeyDown);
 };
 
 export const main = async function () {

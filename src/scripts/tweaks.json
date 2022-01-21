@@ -8,6 +8,11 @@
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks",
   "preferences": {
+    "footer_unredesign": {
+      "type": "checkbox",
+      "label": "Attempt to revert the post footer redesign",
+      "default": false
+    },
     "slim_filtered_screens": {
       "type": "checkbox",
       "label": "Use a slim layout for filtered posts",

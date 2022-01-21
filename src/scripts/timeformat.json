@@ -11,7 +11,7 @@
     "format": {
       "type": "text",
       "label": "Format",
-      "default": "MMM D, YYYY"
+      "default": "MMM D, YYYY - h:mm A"
     },
     "displayRelative": {
       "type": "checkbox",

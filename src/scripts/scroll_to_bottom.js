@@ -20,7 +20,7 @@ const startScrolling = () => {
 const stopScrolling = () => {
   observer.disconnect();
   active = false;
-  scrollToBottomIcon.style.fill = '';
+  if (scrollToBottomIcon) scrollToBottomIcon.style.fill = '';
 };
 
 const onClick = () => active ? stopScrolling() : startScrolling();
@@ -69,6 +69,6 @@ export const main = async function () {
 
 export const clean = async function () {
   onBaseContainerMutated.removeListener(mutationCallback);
-  observer.disconnect();
+  stopScrolling();
   scrollToBottomButton?.remove();
 };

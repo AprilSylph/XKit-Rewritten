@@ -1,6 +1,7 @@
 {
   "title": "Scroll to Bottom",
   "description": "Load ALL the posts!",
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#scroll-to-bottom",
   "icon": {
     "class_name": "ri-download-fill",
     "color": "#e8d738",

@@ -6,3 +6,7 @@
   content: attr(data-formatted-time);
   font-size: .78125rem;
 }
+
+[data-formatted-time][title]::after {
+  cursor: help;
+}

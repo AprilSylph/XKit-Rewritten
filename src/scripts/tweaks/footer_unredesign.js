@@ -21,6 +21,6 @@ export const main = async function () {
 export const clean = async function () {
   onBaseContainerMutated.removeListener(removeFooterRedesign);
   $('[data-old-class-name]')
-    .attr('class', function () { return this.attr('data-old-class-name'); })
+    .attr('class', function () { return this.dataset.oldClassName; })
     .removeAttr('data-old-class-name');
 };

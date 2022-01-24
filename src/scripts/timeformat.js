@@ -41,7 +41,7 @@ const formatTimeElements = function (timeElements) {
 
 export const main = async function () {
   ({ format, displayRelative } = await getPreferences('timeformat'));
-  pageModifications.register('time[datetime]:not([data-formatted-time]', formatTimeElements);
+  pageModifications.register('time[datetime]', formatTimeElements);
   formatTimeElements();
 };
 

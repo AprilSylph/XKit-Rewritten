@@ -28,14 +28,14 @@ let repaintQueued = false;
 
 export const pageModifications = Object.freeze({
   listeners: new Map(),
-  register (selector, callback) {
-    if (this.listeners.has(callback) === false) {
-      this.listeners.set(callback, selector);
-      callback(document.querySelectorAll(selector));
+  register (selector, modifierFunction) {
+    if (this.listeners.has(modifierFunction) === false) {
+      this.listeners.set(modifierFunction, selector);
+      modifierFunction([...document.querySelectorAll(selector)]);
     }
   },
-  unregister (callback) {
-    this.listeners.delete(callback);
+  unregister (modifierFunction) {
+    this.listeners.delete(modifierFunction);
   }
 });
 
@@ -47,13 +47,13 @@ const onBeforeRepaint = () => {
     .filter(addedNode => addedNode instanceof Element);
   mutationsPool = [];
 
-  for (const [callback, selector] of pageModifications.listeners) {
+  for (const [modifierFunction, selector] of pageModifications.listeners) {
     const matchingElements = [
       ...addedNodes.filter(addedNode => addedNode.matches(selector)),
       ...addedNodes.flatMap(addedNode => [...addedNode.querySelectorAll(selector)])
     ];
     if (matchingElements.length !== 0) {
-      callback(matchingElements);
+      modifierFunction(matchingElements);
     }
   }
 };

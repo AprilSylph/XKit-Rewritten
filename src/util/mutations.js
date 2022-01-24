@@ -47,6 +47,8 @@ const onBeforeRepaint = () => {
     .filter(addedNode => addedNode instanceof Element);
   mutationsPool = [];
 
+  if (addedNodes.length === 0) return;
+
   for (const [modifierFunction, selector] of pageModifications.listeners) {
     const matchingElements = [
       ...addedNodes.filter(addedNode => addedNode.matches(selector)),

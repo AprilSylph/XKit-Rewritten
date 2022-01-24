@@ -19,8 +19,12 @@ const processImages = function () {
       const image = imageBlock.querySelector('img');
       if (image) {
         imageBlock.classList.add(processedClass);
+        if (!image.alt) return;
 
-        if (image.alt && (mode === 'show' || image.alt !== imageString)) {
+        const isDefaultAltText = image.alt === imageString || image.alt === 'image';
+        const shouldShowCaption = mode === 'show' || !isDefaultAltText;
+
+        if (shouldShowCaption) {
           const caption = document.createElement('figcaption');
           caption.textContent = image.alt;
           imageBlock.appendChild(caption);

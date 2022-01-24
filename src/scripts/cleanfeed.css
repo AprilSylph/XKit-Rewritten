@@ -14,6 +14,7 @@
   align-items: center;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 
   background-color: rgb(var(--white));
   background-image: linear-gradient(rgba(var(--black), 0.07), rgba(var(--black), 0.07));

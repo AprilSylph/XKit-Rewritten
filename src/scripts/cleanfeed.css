@@ -1,9 +1,9 @@
-.xkit-cleanfeed-filtered figure:not(:hover),
+.xkit-cleanfeed-filtered figure:not([style]):not(:hover),
 .xkit-cleanfeed-filtered [role="application"]:not(:hover) {
   position: relative;
 }
 
-.xkit-cleanfeed-filtered figure:not(:hover)::after,
+.xkit-cleanfeed-filtered figure:not([style]):not(:hover)::after,
 .xkit-cleanfeed-filtered [role="application"]:not(:hover)::after {
   position: absolute;
   top: 0;

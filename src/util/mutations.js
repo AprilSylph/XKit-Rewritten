@@ -23,6 +23,41 @@ const ListenerTracker = function () {
   };
 };
 
+let mutationsPool = [];
+let repaintQueued = false;
+
+export const pageModifications = Object.freeze({
+  listeners: new Map(),
+  register (selector, callback) {
+    if (this.listeners.has(callback) === false) {
+      this.listeners.set(callback, selector);
+      callback(document.querySelectorAll(selector));
+    }
+  },
+  unregister (callback) {
+    this.listeners.delete(callback);
+  }
+});
+
+const onBeforeRepaint = () => {
+  repaintQueued = false;
+
+  const addedNodes = mutationsPool
+    .flatMap(({ addedNodes }) => [...addedNodes])
+    .filter(addedNode => addedNode instanceof Element);
+  mutationsPool = [];
+
+  for (const [callback, selector] of pageModifications.listeners) {
+    const matchingElements = [
+      ...addedNodes.filter(addedNode => addedNode.matches(selector)),
+      ...addedNodes.flatMap(addedNode => [...addedNode.querySelectorAll(selector)])
+    ];
+    if (matchingElements.length !== 0) {
+      callback(matchingElements);
+    }
+  }
+};
+
 export const onNewPosts = Object.freeze(new ListenerTracker());
 export const onPostsMutated = Object.freeze(new ListenerTracker());
 export const onBaseContainerMutated = Object.freeze(new ListenerTracker());
@@ -42,6 +77,14 @@ const runOnBaseContainerMutated = debounce(() => onBaseContainerMutated.trigger(
 const runOnGlassContainerMutated = debounce(() => onGlassContainerMutated.trigger(), 100);
 
 const observer = new MutationObserver(mutations => {
+  if (pageModifications.listeners.size !== 0) {
+    mutationsPool.push(...mutations);
+    if (repaintQueued === false) {
+      window.requestAnimationFrame(onBeforeRepaint);
+      repaintQueued = true;
+    }
+  }
+
   if (onNewPosts.listeners.length !== 0 || onPostsMutated.listeners.length !== 0) {
     const newPosts = mutations.some(({ addedNodes }) => [...addedNodes]
       .filter(addedNode => addedNode instanceof HTMLElement)

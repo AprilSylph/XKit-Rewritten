@@ -1,5 +1,5 @@
 import moment from '../lib/moment.js';
-import { onBaseContainerMutated } from '../util/mutations.js';
+import { pageModifications } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
 
 let format;
@@ -31,8 +31,8 @@ const constructRelativeTimeString = function (unixTime) {
   return relativeTimeFormat.format(-0, 'second');
 };
 
-const formatTimeElements = function () {
-  [...document.querySelectorAll('time[datetime]:not([data-formatted-time]')].forEach(timeElement => {
+const formatTimeElements = function (timeElements) {
+  timeElements.forEach(timeElement => {
     const momentDate = moment(timeElement.dateTime, moment.ISO_8601);
     timeElement.dataset.formattedTime = momentDate.format(format);
     if (displayRelative) timeElement.dataset.formattedTime += `\u2002\u00B7\u2002${constructRelativeTimeString(momentDate.unix())}`;
@@ -41,12 +41,12 @@ const formatTimeElements = function () {
 
 export const main = async function () {
   ({ format, displayRelative } = await getPreferences('timeformat'));
-  onBaseContainerMutated.addListener(formatTimeElements);
+  pageModifications.register('time[datetime]:not([data-formatted-time]', formatTimeElements);
   formatTimeElements();
 };
 
 export const clean = async function () {
-  onBaseContainerMutated.removeListener(formatTimeElements);
+  pageModifications.unregister(formatTimeElements);
   $('[data-formatted-time]').removeAttr('data-formatted-time');
 };
 

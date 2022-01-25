@@ -31,7 +31,11 @@ export const pageModifications = Object.freeze({
   register (selector, modifierFunction) {
     if (this.listeners.has(modifierFunction) === false) {
       this.listeners.set(modifierFunction, selector);
-      modifierFunction([...document.querySelectorAll(selector)]);
+
+      const matchingElements = [...document.querySelectorAll(selector)];
+      if (matchingElements.length !== 0) {
+        modifierFunction(matchingElements);
+      }
     }
   },
   unregister (modifierFunction) {

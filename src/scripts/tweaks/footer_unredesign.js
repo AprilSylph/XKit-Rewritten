@@ -1,11 +1,11 @@
 import { keyToClasses, keyToCss } from '../../util/css_map.js';
-import { onBaseContainerMutated } from '../../util/mutations.js';
+import { pageModifications } from '../../util/mutations.js';
 
 let footerRedesignClasses;
 let footerRedesignSelector;
 
-const removeFooterRedesign = () => {
-  [...document.querySelectorAll(footerRedesignSelector)].forEach(element => {
+const removeFooterRedesign = elements => {
+  elements.forEach(element => {
     element.dataset.oldClassName = element.className;
     element.classList.remove(...footerRedesignClasses);
   });
@@ -14,12 +14,11 @@ const removeFooterRedesign = () => {
 export const main = async function () {
   footerRedesignClasses = await keyToClasses('footerRedesign');
   footerRedesignSelector = await keyToCss('footerRedesign');
-  onBaseContainerMutated.addListener(removeFooterRedesign);
-  removeFooterRedesign();
+  pageModifications.register(footerRedesignSelector, removeFooterRedesign);
 };
 
 export const clean = async function () {
-  onBaseContainerMutated.removeListener(removeFooterRedesign);
+  pageModifications.unregister(removeFooterRedesign);
   $('[data-old-class-name]')
     .attr('class', function () { return this.dataset.oldClassName; })
     .removeAttr('data-old-class-name');

@@ -23,6 +23,43 @@ const ListenerTracker = function () {
   };
 };
 
+let mutationsPool = [];
+let repaintQueued = false;
+
+export const pageModifications = Object.freeze({
+  listeners: new Map(),
+  register (selector, modifierFunction) {
+    if (this.listeners.has(modifierFunction) === false) {
+      this.listeners.set(modifierFunction, selector);
+      modifierFunction([...document.querySelectorAll(selector)]);
+    }
+  },
+  unregister (modifierFunction) {
+    this.listeners.delete(modifierFunction);
+  }
+});
+
+const onBeforeRepaint = () => {
+  repaintQueued = false;
+
+  const addedNodes = mutationsPool
+    .flatMap(({ addedNodes }) => [...addedNodes])
+    .filter(addedNode => addedNode instanceof Element);
+  mutationsPool = [];
+
+  if (addedNodes.length === 0) return;
+
+  for (const [modifierFunction, selector] of pageModifications.listeners) {
+    const matchingElements = [
+      ...addedNodes.filter(addedNode => addedNode.matches(selector)),
+      ...addedNodes.flatMap(addedNode => [...addedNode.querySelectorAll(selector)])
+    ];
+    if (matchingElements.length !== 0) {
+      modifierFunction(matchingElements);
+    }
+  }
+};
+
 export const onNewPosts = Object.freeze(new ListenerTracker());
 export const onPostsMutated = Object.freeze(new ListenerTracker());
 export const onBaseContainerMutated = Object.freeze(new ListenerTracker());
@@ -42,6 +79,14 @@ const runOnBaseContainerMutated = debounce(() => onBaseContainerMutated.trigger(
 const runOnGlassContainerMutated = debounce(() => onGlassContainerMutated.trigger(), 100);
 
 const observer = new MutationObserver(mutations => {
+  if (pageModifications.listeners.size !== 0) {
+    mutationsPool.push(...mutations);
+    if (repaintQueued === false) {
+      window.requestAnimationFrame(onBeforeRepaint);
+      repaintQueued = true;
+    }
+  }
+
   if (onNewPosts.listeners.length !== 0 || onPostsMutated.listeners.length !== 0) {
     const newPosts = mutations.some(({ addedNodes }) => [...addedNodes]
       .filter(addedNode => addedNode instanceof HTMLElement)

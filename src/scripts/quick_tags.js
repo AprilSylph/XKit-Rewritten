@@ -1,6 +1,5 @@
 import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
-import { getPostElements } from '../util/interface.js';
-import { onBaseContainerMutated, onNewPosts } from '../util/mutations.js';
+import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
 import { getPreferences } from '../util/preferences.js';
@@ -50,9 +49,8 @@ const populatePopups = async function () {
   }
 };
 
-const processPostForm = async function () {
-  const selectedTagsElement = document.getElementById('selected-tags');
-  if (selectedTagsElement === null || selectedTagsElement.classList.contains(excludeClass)) {
+const processPostForm = async function ([selectedTagsElement]) {
+  if (selectedTagsElement.classList.contains(excludeClass)) {
     return;
   } else {
     selectedTagsElement.classList.add(excludeClass);
@@ -87,10 +85,9 @@ export const onStorageChanged = async function (changes, areaName) {
 
     ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
     if (originalPostTag || answerTag || autoTagAsker) {
-      onBaseContainerMutated.addListener(processPostForm);
-      processPostForm();
+      pageModifications.register('#selected-tags', processPostForm);
     } else {
-      onBaseContainerMutated.removeListener(processPostForm);
+      pageModifications.unregister(processPostForm);
     }
   }
 };
@@ -192,14 +189,14 @@ const processPostOptionBundleClick = function ({ target }) {
   editPostFormTags({ add: bundleTags });
 };
 
-const processPosts = async function () {
-  getPostElements({ excludeClass }).forEach(async postElement => {
-    const editButton = postElement.querySelector('footer a[href*="/edit/"]');
-    if (!editButton) { return; }
-
-    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
-    editButton.parentNode.parentNode.insertBefore(clonedControlButton, editButton.parentNode);
-  });
+const addControlButtons = function (editButtons) {
+  editButtons
+    .filter(({ classList }) => classList.contains(excludeClass) === false)
+    .forEach(editButton => {
+      editButton.classList.add(excludeClass);
+      const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
+      editButton.parentNode.parentNode.insertBefore(clonedControlButton, editButton.parentNode);
+    });
 };
 
 popupElement.addEventListener('click', processBundleClick);
@@ -209,23 +206,20 @@ postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 export const main = async function () {
   controlButtonTemplate = await createControlButtonTemplate(symbolId, buttonClass);
 
-  onNewPosts.addListener(processPosts);
-  processPosts();
-
+  pageModifications.register('[data-id] footer a[href*="/edit/"]', addControlButtons);
   registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });
 
   populatePopups();
 
   ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
   if (originalPostTag || answerTag || autoTagAsker) {
-    onBaseContainerMutated.addListener(processPostForm);
-    processPostForm();
+    pageModifications.register('#selected-tags', processPostForm);
   }
 };
 
 export const clean = async function () {
-  onBaseContainerMutated.removeListener(processPostForm);
-  onNewPosts.removeListener(processPosts);
+  pageModifications.unregister(addControlButtons);
+  pageModifications.unregister(processPostForm);
   popupElement.remove();
 
   unregisterPostOption('quick-tags');

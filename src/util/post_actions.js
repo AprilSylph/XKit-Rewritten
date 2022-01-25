@@ -1,5 +1,5 @@
 import { buildSvg } from './remixicon.js';
-import { onGlassContainerMutated } from './mutations.js';
+import { pageModifications } from './mutations.js';
 import { keyToCss } from './css_map.js';
 
 const excludeClass = 'xkit-post-actions-done';
@@ -10,8 +10,7 @@ const postOptions = {};
 let postActionsSelector;
 let postFormButtonSelector;
 
-const addPostOptions = () => {
-  const postFormButton = document.querySelector(postFormButtonSelector);
+const addPostOptions = ([postFormButton] = [document.querySelector(postFormButtonSelector)]) => {
   if (!postFormButton || postFormButton.classList.contains(excludeClass)) { return; }
   postFormButton.classList.add(excludeClass);
 
@@ -32,8 +31,7 @@ const addPostOptions = () => {
   postActionsSelector = await keyToCss('postActions');
   postFormButtonSelector = await keyToCss('postFormButton');
 
-  onGlassContainerMutated.addListener(addPostOptions);
-  addPostOptions();
+  pageModifications.register(postFormButtonSelector, addPostOptions);
 })();
 
 /**

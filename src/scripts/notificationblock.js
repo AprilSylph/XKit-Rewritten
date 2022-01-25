@@ -1,8 +1,8 @@
 import { buildStyle } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
-import { onBaseContainerMutated } from '../util/mutations.js';
+import { pageModifications } from '../util/mutations.js';
 import { inject } from '../util/inject.js';
-import { keyToClasses } from '../util/css_map.js';
+import { keyToCss } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
@@ -12,6 +12,7 @@ const meatballButtonUnblockId = 'notificationblock-unblock';
 const meatballButtonUnblockLabel = 'Unblock notifications';
 
 let blockedPostTargetIDs;
+let notificationSelector;
 
 const styleElement = buildStyle();
 const buildCss = () => blockedPostTargetIDs.length === 0
@@ -19,33 +20,26 @@ const buildCss = () => blockedPostTargetIDs.length === 0
   : blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
 
 const unburyTargetPostIds = async (notificationSelector) => {
-  [...document.querySelectorAll(notificationSelector)].forEach(async notificationElement => {
-    const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactInternalInstance'));
-    let fiber = notificationElement[reactKey];
+  [...document.querySelectorAll(notificationSelector)]
+    .filter(({ dataset: { targetPostId } }) => targetPostId === undefined)
+    .forEach(async notificationElement => {
+      const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactInternalInstance'));
+      let fiber = notificationElement[reactKey];
 
-    while (fiber !== null) {
-      const { notification } = fiber.memoizedProps || {};
-      if (notification !== undefined) {
-        const { targetPostId } = notification;
-        Object.assign(notificationElement.dataset, { targetPostId });
-        break;
-      } else {
-        fiber = fiber.return;
+      while (fiber !== null) {
+        const { notification } = fiber.memoizedProps || {};
+        if (notification !== undefined) {
+          const { targetPostId } = notification;
+          Object.assign(notificationElement.dataset, { targetPostId });
+          break;
+        } else {
+          fiber = fiber.return;
+        }
       }
-    }
-  });
+    });
 };
 
-const processNotifications = async () => {
-  const notificationClasses = await keyToClasses('notification');
-  const notificationSelector = notificationClasses
-    .map((className) => `.${className}:not([data-target-post-id])`)
-    .join(', ');
-
-  if (document.querySelectorAll(notificationSelector).length) {
-    inject(unburyTargetPostIds, [notificationSelector]);
-  }
-};
+const processNotifications = () => inject(unburyTargetPostIds, [notificationSelector]);
 
 const onButtonClicked = async function ({ currentTarget }) {
   const postElement = currentTarget.closest('[data-id]');
@@ -100,8 +94,8 @@ export const main = async function () {
   styleElement.textContent = buildCss();
   document.head.append(styleElement);
 
-  onBaseContainerMutated.addListener(processNotifications);
-  processNotifications();
+  notificationSelector = await keyToCss('notification');
+  pageModifications.register(notificationSelector, processNotifications);
 
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
   registerMeatballItem({ id: meatballButtonUnblockId, label: meatballButtonUnblockLabel, onclick: onButtonClicked, postFilter: unblockPostFilter });
@@ -109,7 +103,7 @@ export const main = async function () {
 
 export const clean = async function () {
   styleElement.remove();
-  onBaseContainerMutated.removeListener(processNotifications);
+  pageModifications.unregister(processNotifications);
   unregisterMeatballItem(meatballButtonBlockId);
   unregisterMeatballItem(meatballButtonUnblockId);
 };

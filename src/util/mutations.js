@@ -27,15 +27,34 @@ let repaintQueued = false;
 
 export const pageModifications = Object.freeze({
   listeners: new Map(),
+
+  /**
+   * Register a page modification
+   *
+   * @param {string} selector - CSS selector for elements to target
+   * @param {Function} modifierFunction - Function to handle matching elements (accepts one Element[] argument)
+   */
   register (selector, modifierFunction) {
     if (this.listeners.has(modifierFunction) === false) {
       this.listeners.set(modifierFunction, selector);
       this.trigger(modifierFunction);
     }
   },
+
+  /**
+   * Unregister a page modification
+   *
+   * @param {Function} modifierFunction - Previously-registered function to remove
+   */
   unregister (modifierFunction) {
     this.listeners.delete(modifierFunction);
   },
+
+  /**
+   * Run a page modification on all existing matching elements
+   *
+   * @param {Function} modifierFunction - Previously-registered function to run
+   */
   trigger (modifierFunction) {
     const selector = this.listeners.get(modifierFunction);
     if (!selector) return;

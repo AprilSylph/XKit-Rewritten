@@ -1,6 +1,6 @@
 import { keyToClasses, descendantSelector } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
-import { onBaseContainerMutated } from '../util/mutations.js';
+import { pageModifications } from '../util/mutations.js';
 
 let knightRiderLoaderSelector;
 let scrollToBottomButton;
@@ -31,24 +31,18 @@ const stopScrolling = () => {
 const onClick = () => active ? stopScrolling() : startScrolling();
 const onKeyDown = ({ key }) => key === '.' && stopScrolling();
 
-const mutationCallback = () => {
+const checkForButtonRemoved = () => {
   const buttonWasRemoved = document.documentElement.contains(scrollToBottomButton) === false;
-
-  if (active && buttonWasRemoved) {
-    stopScrolling();
-  } else if (!scrollToBottomButton || buttonWasRemoved) {
-    init();
+  if (buttonWasRemoved) {
+    if (active) stopScrolling();
+    pageModifications.unregister(checkForButtonRemoved);
   }
 };
 
-const init = async function () {
-  const scrollToTopLabel = await translate('Scroll to top');
-  const hiddenClasses = await keyToClasses('hidden');
-
-  const scrollToTopButton = document.querySelector(`button[aria-label="${scrollToTopLabel}"]`);
-  if (!scrollToTopButton) return;
-
+const addButtonToPage = async function ([scrollToTopButton]) {
   if (!scrollToBottomButton) {
+    const hiddenClasses = await keyToClasses('hidden');
+
     scrollToBottomButton = scrollToTopButton.cloneNode(true);
     hiddenClasses.forEach(className => scrollToBottomButton.classList.remove(className));
     scrollToBottomButton.removeAttribute('aria-label');
@@ -63,16 +57,19 @@ const init = async function () {
   scrollToTopButton.after(scrollToBottomButton);
   scrollToTopButton.addEventListener('click', stopScrolling);
   document.documentElement.addEventListener('keydown', onKeyDown);
+  pageModifications.register('*', checkForButtonRemoved);
 };
 
 export const main = async function () {
   knightRiderLoaderSelector = await descendantSelector('main', 'loader', 'knightRiderLoader');
-  onBaseContainerMutated.addListener(mutationCallback);
-  init();
+
+  const scrollToTopLabel = await translate('Scroll to top');
+  pageModifications.register(`button[aria-label="${scrollToTopLabel}"]`, addButtonToPage);
 };
 
 export const clean = async function () {
-  onBaseContainerMutated.removeListener(mutationCallback);
+  pageModifications.unregister(addButtonToPage);
+  pageModifications.unregister(checkForButtonRemoved);
   stopScrolling();
   scrollToBottomButton?.remove();
 };

@@ -1,5 +1,5 @@
 import { keyToCss } from './css_map.js';
-import { onPostsMutated } from './mutations.js';
+import { pageModifications } from './mutations.js';
 
 const meatballItems = {};
 
@@ -23,14 +23,12 @@ export const unregisterMeatballItem = id => {
     .forEach(button => button.remove());
 };
 
-(async function () {
-  const meatballMenuSelector = await keyToCss('meatballMenu');
-
-  onPostsMutated.addListener(() => {
-    [...document.querySelectorAll(meatballMenuSelector)]
+keyToCss('meatballMenu').then(meatballMenuSelector => {
+  pageModifications.register(meatballMenuSelector, meatballMenuElements => {
+    meatballMenuElements
       .filter(meatballMenu => meatballMenu.matches(`[tabindex="-1"][data-id] article header ${meatballMenu.tagName.toLowerCase()}`))
       .filter(meatballMenu => meatballMenu.classList.contains('xkit-done') === false)
-      .forEach(async meatballMenu => {
+      .forEach(meatballMenu => {
         meatballMenu.classList.add('xkit-done');
 
         Object.keys(meatballItems)
@@ -46,4 +44,4 @@ export const unregisterMeatballItem = id => {
           });
       });
   });
-})();
+});

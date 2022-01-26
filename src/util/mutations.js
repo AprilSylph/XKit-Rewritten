@@ -30,15 +30,20 @@ export const pageModifications = Object.freeze({
   register (selector, modifierFunction) {
     if (this.listeners.has(modifierFunction) === false) {
       this.listeners.set(modifierFunction, selector);
-
-      const matchingElements = [...document.querySelectorAll(selector)];
-      if (matchingElements.length !== 0) {
-        modifierFunction(matchingElements);
-      }
+      this.trigger(modifierFunction);
     }
   },
   unregister (modifierFunction) {
     this.listeners.delete(modifierFunction);
+  },
+  trigger (modifierFunction) {
+    const selector = this.listeners.get(modifierFunction);
+    if (!selector) return;
+
+    const matchingElements = [...document.querySelectorAll(selector)];
+    if (matchingElements.length !== 0) {
+      modifierFunction(matchingElements);
+    }
   }
 });
 

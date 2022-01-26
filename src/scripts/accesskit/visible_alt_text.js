@@ -42,7 +42,7 @@ const onStorageChanged = async function (changes, areaName) {
   mode = modeChanges.newValue;
   $(`.${processedClass} figcaption`).remove();
   $(`.${processedClass}`).removeClass(processedClass);
-  processImages([...document.querySelectorAll('img[alt]')]);
+  pageModifications.trigger(processImages);
 };
 
 export const main = async function () {

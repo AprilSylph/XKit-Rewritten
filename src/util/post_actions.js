@@ -10,7 +10,7 @@ const postOptions = {};
 let postActionsSelector;
 let postFormButtonSelector;
 
-const addPostOptions = ([postFormButton] = [document.querySelector(postFormButtonSelector)]) => {
+const addPostOptions = ([postFormButton]) => {
   if (!postFormButton || postFormButton.classList.contains(excludeClass)) { return; }
   postFormButton.classList.add(excludeClass);
 
@@ -55,7 +55,7 @@ export const registerPostOption = async function (id, { symbolId, onclick }) {
   postOptions[id] = postOptionLabel;
 
   $(`.${excludeClass}`).removeClass(excludeClass);
-  addPostOptions();
+  pageModifications.trigger(addPostOptions);
 };
 
 /**

@@ -64,7 +64,6 @@ const onBeforeRepaint = () => {
 };
 
 export const onNewPosts = Object.freeze(new ListenerTracker());
-export const onPostsMutated = Object.freeze(new ListenerTracker());
 export const onBaseContainerMutated = Object.freeze(new ListenerTracker());
 
 const debounce = (func, ms) => {
@@ -76,7 +75,6 @@ const debounce = (func, ms) => {
 };
 
 const runOnNewPosts = debounce(() => onNewPosts.trigger(), 10);
-const runOnPostsMutated = debounce(() => onPostsMutated.trigger(), 100);
 const runOnBaseContainerMutated = debounce(() => onBaseContainerMutated.trigger(), 100);
 
 const observer = new MutationObserver(mutations => {
@@ -88,20 +86,12 @@ const observer = new MutationObserver(mutations => {
     }
   }
 
-  if (onNewPosts.listeners.length !== 0 || onPostsMutated.listeners.length !== 0) {
+  if (onNewPosts.listeners.length !== 0) {
     const newPosts = mutations.some(({ addedNodes }) => [...addedNodes]
       .filter(addedNode => addedNode instanceof HTMLElement)
       .some(addedNode => addedNode.matches(postSelector) || addedNode.matches(`${postSelector} > div`) || addedNode.matches(`${postSelector} article`) || addedNode.querySelector(postSelector) !== null));
 
-    if (newPosts) {
-      runOnNewPosts();
-      runOnPostsMutated();
-    } else {
-      const mutatedPosts = mutations.some(({ target }) => target.matches(`${postSelector} ${target.tagName.toLowerCase()}`));
-      if (mutatedPosts) {
-        runOnPostsMutated();
-      }
-    }
+    if (newPosts) runOnNewPosts();
   }
 
   if (onBaseContainerMutated.listeners.length !== 0) {

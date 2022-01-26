@@ -1,7 +1,7 @@
 import { descendantSelector, keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { translate } from '../../util/language_data.js';
-import { onPostsMutated } from '../../util/mutations.js';
+import { pageModifications } from '../../util/mutations.js';
 import { getPreferences } from '../../util/preferences.js';
 
 let mode;
@@ -12,25 +12,25 @@ let imageString;
 const styleElement = buildStyle();
 const processedClass = 'accesskit-visible-alt-text';
 
-const processImages = function () {
-  [...document.querySelectorAll(imageBlockSelector)]
-    .filter(imageBlock => imageBlock.classList.contains(processedClass) === false)
-    .forEach(imageBlock => {
-      const image = imageBlock.querySelector('img');
-      if (image) {
-        imageBlock.classList.add(processedClass);
-        if (!image.alt) return;
+const processImages = function (imageElements) {
+  const imageBlocks = new Map();
+  imageElements.forEach(imageElement => {
+    const { alt } = imageElement;
+    const imageBlock = imageElement.closest(imageBlockSelector);
+    if (imageBlock !== null) imageBlocks.set(imageBlock, alt);
+  });
 
-        const isDefaultAltText = image.alt === imageString || image.alt === 'image';
-        const shouldShowCaption = mode === 'show' || !isDefaultAltText;
+  for (const [imageBlock, alt] of imageBlocks) {
+    if (imageBlock.classList.contains(processedClass)) continue;
+    imageBlock.classList.add(processedClass);
 
-        if (shouldShowCaption) {
-          const caption = document.createElement('figcaption');
-          caption.textContent = image.alt;
-          imageBlock.appendChild(caption);
-        }
-      }
-    });
+    const isDefaultAltText = alt === imageString || alt === 'image';
+    const shouldShowCaption = mode === 'show' || !isDefaultAltText;
+    if (!shouldShowCaption) continue;
+
+    const caption = Object.assign(document.createElement('figcaption'), { textContent: alt });
+    imageBlock.append(caption);
+  }
 };
 
 const onStorageChanged = async function (changes, areaName) {
@@ -42,7 +42,7 @@ const onStorageChanged = async function (changes, areaName) {
   mode = modeChanges.newValue;
   $(`.${processedClass} figcaption`).remove();
   $(`.${processedClass}`).removeClass(processedClass);
-  processImages();
+  processImages([...document.querySelectorAll('img[alt]')]);
 };
 
 export const main = async function () {
@@ -56,14 +56,13 @@ export const main = async function () {
   styleElement.textContent = `${imageBlockButtonInnerSelector} { height: 100%; }`;
   document.head.append(styleElement);
 
-  onPostsMutated.addListener(processImages);
-  processImages();
+  pageModifications.register('img[alt]', processImages);
 
   browser.storage.onChanged.addListener(onStorageChanged);
 };
 
 export const clean = async function () {
-  onPostsMutated.removeListener(processImages);
+  pageModifications.unregister(processImages);
   browser.storage.onChanged.removeListener(onStorageChanged);
 
   styleElement.remove();

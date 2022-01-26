@@ -1,18 +1,12 @@
 import { getPreferences } from '../util/preferences.js';
-import { onBaseContainerMutated } from '../util/mutations.js';
+import { pageModifications } from '../util/mutations.js';
 
 let newTab;
 
 let searchInputElement;
 let searchInputParent;
 
-const replaceSearchForm = function () {
-  const searchFormElement = document.querySelector('form[role="search"][action="/search"]:not(.classic-search):not(.xkit-classic-search-done)');
-
-  if (!searchFormElement) {
-    return;
-  }
-
+const replaceSearchForm = function ([searchFormElement]) {
   searchFormElement.classList.add('xkit-classic-search-done');
 
   searchInputElement = searchFormElement.querySelector('input');
@@ -39,12 +33,11 @@ const replaceSearchForm = function () {
 export const main = async function () {
   ({ newTab } = await getPreferences('classic_search'));
 
-  onBaseContainerMutated.addListener(replaceSearchForm);
-  replaceSearchForm();
+  pageModifications.register('form[role="search"][action="/search"]:not(.classic-search):not(.xkit-classic-search-done)', replaceSearchForm);
 };
 
 export const clean = async function () {
-  onBaseContainerMutated.removeListener(replaceSearchForm);
+  pageModifications.unregister(replaceSearchForm);
 
   searchInputParent.appendChild(searchInputElement);
   $('.classic-search').remove();

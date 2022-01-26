@@ -1,21 +1,84 @@
 import { inject } from './inject.js';
 import { keyToClasses } from './css_map.js';
+import { postSelector } from './mutations.js';
 
 const cache = {};
+
+const init = () => inject((postSelector) => {
+  const dataElement = document.createElement('div');
+  dataElement.classList.add('xkit-data');
+  document.body.appendChild(dataElement);
+
+  const writeTimelineObject = (postElement) => {
+    const id = postElement.dataset.id;
+    if (!id) return;
+
+    const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactInternalInstance') || key.startsWith('__reactFiber'));
+    let fiber = postElement[reactKey];
+
+    while (fiber !== null) {
+      const { timelineObject } = fiber.memoizedProps || {};
+      if (timelineObject !== undefined) {
+        // postElement.dataset.timelineobject = JSON.stringify(timelineObject);
+        dataElement.dataset[id] = JSON.stringify(timelineObject);
+        return;
+      } else {
+        fiber = fiber.return;
+      }
+    }
+  };
+
+  [...document.querySelectorAll(postSelector)].forEach(writeTimelineObject);
+
+  const observer = new MutationObserver(function timelineObjectNew (mutations) {
+    const newPosts = mutations.flatMap(({ addedNodes }) => [...addedNodes])
+      .filter(addedNode => addedNode instanceof HTMLElement)
+      .filter(addedNode => addedNode.matches(postSelector) || addedNode.matches(`${postSelector} > div`) || addedNode.matches(`${postSelector} article`) || addedNode.querySelector(postSelector) !== null);
+
+    newPosts.forEach(writeTimelineObject);
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+}, [postSelector]);
+
+init();
+let dataElement;
+
+const getTimelineObject = postID => {
+  dataElement = dataElement || [...document.body.children].find(element => element.classList.contains('xkit-data'));
+  return dataElement?.dataset?.[postID];
+};
+
+const timelineObjectMemoSync = postID => {
+  cache[postID] = new Promise(resolve => {
+    const data = getTimelineObject(postID);
+    if (data) {
+      const timelineObject = JSON.parse(data);
+      console.log('sick codes yo!');
+      resolve(timelineObject);
+    } else {
+      console.log('well this is unfortunate, you need to implement queueMicroTask/rAF fallback (which you should do anyway tbh)');
+    }
+  }).catch((error) => console.log('Error in timelineObjectMemoized!', error));
+  return cache[postID];
+};
 
 /**
  * @param {string} postID - The post ID of an on-screen post
  * @returns {Promise<object>} - The post's buried timelineObject property (cached; use
  *  timelineObject if you need up-to-date properties that may have changed)
  */
-export const timelineObjectMemoized = async postID => cache[postID] || timelineObject(postID);
+export const timelineObjectMemoized = async postID => cache[postID] || timelineObjectMemoSync(postID);
 
 /**
  * @param {string} postID - The post ID of an on-screen post
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
 export const timelineObject = async function (postID) {
-  cache[postID] = inject(async id => {
+  return inject(async function timelineObjectOld (id) {
     const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
     const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactInternalInstance') || key.startsWith('__reactFiber'));
     let fiber = postElement[reactKey];
@@ -29,7 +92,6 @@ export const timelineObject = async function (postID) {
       }
     }
   }, [postID]);
-  return cache[postID];
 };
 
 const unburyGivenPaths = async (selector) => {

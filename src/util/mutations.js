@@ -1,6 +1,6 @@
 const baseContainerNode = document.getElementById('base-container');
 const dialogSelector = '[role="dialog"][aria-modal="true"]';
-const postSelector = '[tabindex="-1"][data-id]';
+export const postSelector = '[tabindex="-1"][data-id]';
 
 const ListenerTracker = function () {
   this.listeners = [];

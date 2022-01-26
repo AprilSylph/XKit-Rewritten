@@ -17,7 +17,7 @@ const replaceSearchForm = function ([searchFormElement]) {
     event.preventDefault();
 
     const query = event.target.querySelector('input').value;
-    const address = `//www.tumblr.com/tagged/${query}`;
+    const address = `//www.tumblr.com/tagged/${query}?sort=recent`;
 
     if (newTab) {
       window.open(address);

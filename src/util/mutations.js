@@ -59,6 +59,12 @@ export const pageModifications = Object.freeze({
     const selector = this.listeners.get(modifierFunction);
     if (!selector) return;
 
+    if (modifierFunction.length === 0) {
+      const shouldRun = document.querySelector(selector) !== null;
+      if (shouldRun) modifierFunction();
+      return;
+    }
+
     const matchingElements = [...document.querySelectorAll(selector)];
     if (matchingElements.length !== 0) {
       modifierFunction(matchingElements);
@@ -77,6 +83,12 @@ const onBeforeRepaint = () => {
   if (addedNodes.length === 0) return;
 
   for (const [modifierFunction, selector] of pageModifications.listeners) {
+    if (modifierFunction.length === 0) {
+      const shouldRun = addedNodes.some(addedNode => addedNode.matches(selector) || addedNode.querySelector(selector) !== null);
+      if (shouldRun) modifierFunction();
+      continue;
+    }
+
     const matchingElements = [
       ...addedNodes.filter(addedNode => addedNode.matches(selector)),
       ...addedNodes.flatMap(addedNode => [...addedNode.querySelectorAll(selector)])

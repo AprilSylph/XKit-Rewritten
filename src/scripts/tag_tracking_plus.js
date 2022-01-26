@@ -2,7 +2,7 @@ import { apiFetch } from '../util/tumblr_helpers.js';
 import { getPostElements } from '../util/interface.js';
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { keyToCss } from '../util/css_map.js';
-import { onNewPosts, onBaseContainerMutated } from '../util/mutations.js';
+import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { translate } from '../util/language_data.js';
 
 const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
@@ -34,11 +34,10 @@ const processPosts = async function () {
   browser.storage.local.set({ [storageKey]: timestamps });
 };
 
-const processTagLinks = async function () {
-  const searchResultElement = document.querySelector(searchResultSelector);
-  if (!searchResultElement || searchResultElement.classList.contains(excludeClass)) { return; }
-
+const processTagLinks = async function ([searchResultElement]) {
+  if (searchResultElement.classList.contains(excludeClass)) return;
   searchResultElement.classList.add(excludeClass);
+
   const { [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey);
 
   const tagsYouFollowHeading = [...searchResultElement.querySelectorAll('h3')].find(h3 => h3.textContent === tagsYouFollowString);
@@ -47,7 +46,7 @@ const processTagLinks = async function () {
 
   const tagLinkElements = searchResultElement.querySelectorAll('[data-followed-tags] ~ [href^="/tagged/"]');
 
-  tagLinkElements?.forEach(async tagLinkElement => {
+  tagLinkElements.forEach(async tagLinkElement => {
     const unreadCountElement = Object.assign(document.createElement('span'), {
       style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65;',
       innerHTML: '&ctdot;'
@@ -85,11 +84,10 @@ export const main = async function () {
   onNewPosts.addListener(processPosts);
   processPosts();
 
-  onBaseContainerMutated.addListener(processTagLinks);
-  processTagLinks();
+  pageModifications.register(searchResultSelector, processTagLinks);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  onBaseContainerMutated.removeListener(processTagLinks);
+  pageModifications.unregister(processTagLinks);
 };

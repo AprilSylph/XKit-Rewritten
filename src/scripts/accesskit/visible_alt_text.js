@@ -50,10 +50,10 @@ export const main = async function () {
   imageBlockSelector = await keyToCss('imageBlock');
   imageString = await translate('Image');
 
+  const imageBlockLinkSelector = await keyToCss('imageBlockLink');
   const imageBlockButtonInnerSelector = await descendantSelector('imageBlockButton', 'buttonInner');
-
-  // Setting this for all images ensures side-by-side images align vertically even if one has a caption and the other doesn't
-  styleElement.textContent = `${imageBlockButtonInnerSelector} { height: 100%; }`;
+  // Ensure proper styling for image attributions and images in rows
+  styleElement.textContent = `${imageBlockLinkSelector}, ${imageBlockButtonInnerSelector} { height: 100%; }`;
   document.head.append(styleElement);
 
   pageModifications.register('img[alt]', processImages);

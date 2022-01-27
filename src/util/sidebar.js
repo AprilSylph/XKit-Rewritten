@@ -10,6 +10,9 @@ const conditions = new Map();
  * @property {Function} onclick - Click event handler for this row
  * @property {string} [count] - Human-readable additional link text
  * @property {boolean} [carrot] - Whether to include a right-facing arrow on the link (ignored if count is specified)
+ */
+
+/**
  * @param {sidebarRowOptions} options - Sidebar row options
  * @returns {HTMLLIElement} The constructed sidebar row
  */

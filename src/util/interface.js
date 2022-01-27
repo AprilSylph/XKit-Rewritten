@@ -1,21 +1,26 @@
+export const postSelector = '[tabindex="-1"][data-id]';
+
 /**
- * @param {object} options - Destructured
- * @param {string} options.excludeClass - Classname to exclude and add
- * @param {RegExp} [options.timeline] - Filter results to matching [data-timeline] children {@link ./react_props.js exposeTimelines}
- * @param {boolean} [options.noPeepr] - Whether to exclude posts in [role="dialog"]
- * @param {boolean} [options.includeFiltered] - Whether to include filtered posts
- * @returns {HTMLDivElement[]} Post elements matching the query options
+ * @typedef {object} PostFilterOptions
+ * @property {string} [excludeClass] - Classname to exclude and add
+ * @property {RegExp} [timeline] - Filter results to matching [data-timeline] children
+ * @property {boolean} [noPeepr] - Whether to exclude posts in [role="dialog"]
+ * @property {boolean} [includeFiltered] - Whether to include filtered posts
  */
-export const getPostElements = function ({ excludeClass, timeline, noPeepr = false, includeFiltered = false }) {
-  if (!excludeClass) {
-    return [];
+
+/**
+ * @param {HTMLDivElement[]} postElements - Post elements to filter
+ * @param {PostFilterOptions} postFilterOptions - Post filter options
+ * @returns {HTMLDivElement[]} Matching post elements
+ */
+export const filterPostElements = function (postElements, { excludeClass, timeline, noPeepr = false, includeFiltered = false }) {
+  if (excludeClass) {
+    postElements = postElements.filter(({ classList }) => classList.contains(excludeClass) === false);
+    postElements.forEach(postElement => postElement.classList.add(excludeClass));
   }
 
-  const selector = `[tabindex="-1"][data-id]:not(.${excludeClass})`;
-  let postElements = [...document.querySelectorAll(selector)];
-
   if (timeline instanceof RegExp) {
-    postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]').dataset.timeline));
+    postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]')?.dataset.timeline));
   }
 
   if (noPeepr) {
@@ -26,10 +31,14 @@ export const getPostElements = function ({ excludeClass, timeline, noPeepr = fal
     postElements = postElements.filter(postElement => postElement.querySelector('article footer') !== null);
   }
 
-  postElements.forEach(postElement => postElement.classList.add(excludeClass));
-
   return postElements;
 };
+
+/**
+ * @param {PostFilterOptions} postFilterOptions - Post filter options
+ * @returns {HTMLDivElement[]} Matching post elements on the page
+ */
+export const getPostElements = postFilterOptions => filterPostElements([...document.querySelectorAll(postSelector)], postFilterOptions);
 
 /**
  * @param {string} [css] - CSS rules to be included

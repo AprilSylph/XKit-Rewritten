@@ -1,3 +1,4 @@
+const rootNode = document.getElementById('root');
 const postSelector = '[tabindex="-1"][data-id]';
 
 const ListenerTracker = function () {
@@ -59,12 +60,12 @@ export const pageModifications = Object.freeze({
     if (!selector) return;
 
     if (modifierFunction.length === 0) {
-      const shouldRun = document.querySelector(selector) !== null;
+      const shouldRun = rootNode.querySelector(selector) !== null;
       if (shouldRun) modifierFunction();
       return;
     }
 
-    const matchingElements = [...document.querySelectorAll(selector)];
+    const matchingElements = [...rootNode.querySelectorAll(selector)];
     if (matchingElements.length !== 0) {
       modifierFunction(matchingElements);
     }
@@ -128,7 +129,4 @@ const observer = new MutationObserver(mutations => {
   }
 });
 
-observer.observe(document.body, {
-  childList: true,
-  subtree: true
-});
+observer.observe(rootNode, { childList: true, subtree: true });

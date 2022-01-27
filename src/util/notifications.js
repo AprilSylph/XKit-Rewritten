@@ -1,4 +1,4 @@
-import { onBaseContainerMutated } from './mutations.js';
+import { pageModifications } from './mutations.js';
 import { keyToCss } from './css_map.js';
 
 const toastContainer = Object.assign(document.createElement('div'), { id: 'xkit-toasts' });
@@ -21,8 +21,7 @@ const addToastContainerToPage = async () => {
   }
 };
 
-onBaseContainerMutated.addListener(addToastContainerToPage);
-addToastContainerToPage();
+pageModifications.register('*', addToastContainerToPage);
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 

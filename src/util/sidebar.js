@@ -1,5 +1,5 @@
 import { keyToCss } from './css_map.js';
-import { onBaseContainerMutated } from './mutations.js';
+import { pageModifications } from './mutations.js';
 
 const sidebarItems = Object.assign(document.createElement('div'), { id: 'xkit-sidebar' });
 const conditions = new Map();
@@ -103,6 +103,5 @@ export const removeSidebarItem = id => {
     }
   };
 
-  onBaseContainerMutated.addListener(addSidebarToPage);
-  addSidebarToPage();
+  pageModifications.register(`${sidebarItemSelector}, ${navSubHeaderSelector}`, addSidebarToPage);
 })();

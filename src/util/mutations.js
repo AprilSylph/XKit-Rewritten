@@ -1,4 +1,3 @@
-const baseContainerNode = document.getElementById('base-container');
 const postSelector = '[tabindex="-1"][data-id]';
 
 const ListenerTracker = function () {
@@ -100,7 +99,6 @@ const onBeforeRepaint = () => {
 };
 
 export const onNewPosts = Object.freeze(new ListenerTracker());
-export const onBaseContainerMutated = Object.freeze(new ListenerTracker());
 
 const debounce = (func, ms) => {
   let timeoutID;
@@ -111,7 +109,6 @@ const debounce = (func, ms) => {
 };
 
 const runOnNewPosts = debounce(() => onNewPosts.trigger(), 10);
-const runOnBaseContainerMutated = debounce(() => onBaseContainerMutated.trigger(), 100);
 
 const observer = new MutationObserver(mutations => {
   if (pageModifications.listeners.size !== 0) {
@@ -128,15 +125,6 @@ const observer = new MutationObserver(mutations => {
       .some(addedNode => addedNode.matches(postSelector) || addedNode.matches(`${postSelector} > div`) || addedNode.matches(`${postSelector} article`) || addedNode.querySelector(postSelector) !== null));
 
     if (newPosts) runOnNewPosts();
-  }
-
-  if (onBaseContainerMutated.listeners.length !== 0) {
-    const baseContainerMutated = mutations.some(({ target }) => target === baseContainerNode);
-    const baseContainerMutations = mutations.some(({ target }) => baseContainerNode.contains(target));
-
-    if (baseContainerMutated || baseContainerMutations) {
-      runOnBaseContainerMutated();
-    }
   }
 });
 

@@ -1,4 +1,3 @@
-import { pageModifications } from './mutations.js';
 import { keyToCss } from './css_map.js';
 
 const toastContainer = Object.assign(document.createElement('div'), { id: 'xkit-toasts' });
@@ -21,14 +20,13 @@ const addToastContainerToPage = async () => {
   }
 };
 
-pageModifications.register('*', addToastContainerToPage);
-
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * @param {string} textContent - Text to display to the user as a notification
  */
 export const notify = async textContent => {
+  await addToastContainerToPage();
   const toast = Object.assign(document.createElement('div'), { textContent, className: 'visible' });
   toastContainer.append(toast);
   await sleep(4000);

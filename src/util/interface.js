@@ -14,11 +14,6 @@ export const postSelector = '[tabindex="-1"][data-id]';
  * @returns {HTMLDivElement[]} Matching post elements
  */
 export const filterPostElements = function (postElements, { excludeClass, timeline, noPeepr = false, includeFiltered = false }) {
-  if (excludeClass) {
-    postElements = postElements.filter(({ classList }) => classList.contains(excludeClass) === false);
-    postElements.forEach(postElement => postElement.classList.add(excludeClass));
-  }
-
   if (timeline instanceof RegExp) {
     postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]')?.dataset.timeline));
   }
@@ -29,6 +24,11 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
 
   if (!includeFiltered) {
     postElements = postElements.filter(postElement => postElement.querySelector('article footer') !== null);
+  }
+
+  if (excludeClass) {
+    postElements = postElements.filter(({ classList }) => classList.contains(excludeClass) === false);
+    postElements.forEach(postElement => postElement.classList.add(excludeClass));
   }
 
   return postElements;

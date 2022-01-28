@@ -1,7 +1,7 @@
 import { postSelector } from './interface.js';
 const rootNode = document.getElementById('root');
 
-let mutationsPool = [];
+const mutationsPool = [];
 let repaintQueued = false;
 
 export const pageModifications = Object.freeze({
@@ -60,9 +60,9 @@ const onBeforeRepaint = () => {
   repaintQueued = false;
 
   const addedNodes = mutationsPool
+    .splice(0)
     .flatMap(({ addedNodes }) => [...addedNodes])
     .filter(addedNode => addedNode instanceof Element);
-  mutationsPool = [];
 
   if (addedNodes.length === 0) return;
 

@@ -84,12 +84,10 @@ const onBeforeRepaint = () => {
 };
 
 const observer = new MutationObserver(mutations => {
-  if (pageModifications.listeners.size !== 0) {
-    mutationsPool.push(...mutations);
-    if (repaintQueued === false) {
-      window.requestAnimationFrame(onBeforeRepaint);
-      repaintQueued = true;
-    }
+  mutationsPool.push(...mutations);
+  if (repaintQueued === false) {
+    window.requestAnimationFrame(onBeforeRepaint);
+    repaintQueued = true;
   }
 });
 

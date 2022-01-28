@@ -1,26 +1,5 @@
+import { postSelector } from './interface.js';
 const rootNode = document.getElementById('root');
-const postSelector = '[tabindex="-1"][data-id]';
-
-const ListenerTracker = function () {
-  this.listeners = [];
-
-  this.addListener = function (callback) {
-    if (this.listeners.includes(callback) === false) {
-      this.listeners.push(callback);
-    }
-  };
-
-  this.removeListener = function (callback) {
-    const index = this.listeners.indexOf(callback);
-    if (index !== -1) {
-      this.listeners.splice(index, 1);
-    }
-  };
-
-  this.trigger = function () {
-    this.listeners.forEach(callback => callback());
-  };
-};
 
 let mutationsPool = [];
 let repaintQueued = false;
@@ -72,6 +51,11 @@ export const pageModifications = Object.freeze({
   }
 });
 
+export const onNewPosts = Object.freeze({
+  addListener: callback => pageModifications.register(`${postSelector} article`, callback),
+  removeListener: callback => pageModifications.unregister(callback)
+});
+
 const onBeforeRepaint = () => {
   repaintQueued = false;
 
@@ -99,18 +83,6 @@ const onBeforeRepaint = () => {
   }
 };
 
-export const onNewPosts = Object.freeze(new ListenerTracker());
-
-const debounce = (func, ms) => {
-  let timeoutID;
-  return (...args) => {
-    clearTimeout(timeoutID);
-    timeoutID = setTimeout(() => func(...args), ms);
-  };
-};
-
-const runOnNewPosts = debounce(() => onNewPosts.trigger(), 10);
-
 const observer = new MutationObserver(mutations => {
   if (pageModifications.listeners.size !== 0) {
     mutationsPool.push(...mutations);
@@ -118,14 +90,6 @@ const observer = new MutationObserver(mutations => {
       window.requestAnimationFrame(onBeforeRepaint);
       repaintQueued = true;
     }
-  }
-
-  if (onNewPosts.listeners.length !== 0) {
-    const newPosts = mutations.some(({ addedNodes }) => [...addedNodes]
-      .filter(addedNode => addedNode instanceof HTMLElement)
-      .some(addedNode => addedNode.matches(postSelector) || addedNode.matches(`${postSelector} > div`) || addedNode.matches(`${postSelector} article`) || addedNode.querySelector(postSelector) !== null));
-
-    if (newPosts) runOnNewPosts();
   }
 });
 

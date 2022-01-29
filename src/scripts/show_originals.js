@@ -55,7 +55,6 @@ const processPosts = async function () {
   postElements.forEach(async postElement => {
     const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);
 
-    postElement.classList.add('temporary-test-class');
     if (!rebloggedRootId) { return; }
     if (showOwnReblogs && canEdit) { return; }
     if (showReblogsWithContributedContent && content.length > 0) { return; }

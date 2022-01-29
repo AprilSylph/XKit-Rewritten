@@ -41,10 +41,6 @@ const unburyGivenPaths = async (selector) => {
       const { endpointApiRequest } = fiber.memoizedProps || {};
       if (endpointApiRequest !== undefined) {
         timelineElement.dataset.timeline = endpointApiRequest.givenPath;
-
-        const temp = document.createElement('pre');
-        temp.textContent = JSON.stringify(endpointApiRequest?.options?.queryParams, null, 2);
-        timelineElement.prepend(temp);
         break;
       } else {
         fiber = fiber.return;

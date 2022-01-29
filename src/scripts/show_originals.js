@@ -86,8 +86,6 @@ export const clean = async function () {
   $(`.${hiddenClass}`).removeClass(hiddenClass);
   $(`.${activeTimelineClass}`).removeClass(activeTimelineClass);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
-
-  $(`.${'temporary-test-class'}`).removeClass('temporary-test-class');
 };
 
 export const stylesheet = true;

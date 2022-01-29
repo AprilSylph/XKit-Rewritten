@@ -16,9 +16,15 @@ let runOnDashboard;
 let runOnPeepr;
 let runOnBlogSubscriptions;
 
-const processTimelines = async () => {
+const lengthenTimeline = async (timeline) => {
   const paginationCss = await keyToCss('manualPaginatorButtons');
 
+  if (!timeline.querySelector(paginationCss)) {
+    timeline.classList.add(lengthenedClass);
+  }
+};
+
+const processTimelines = () => {
   [...document.querySelectorAll(`[data-timeline]:not(.${excludeClass})`)]
     .forEach(timeline => {
       timeline.classList.add(excludeClass);
@@ -35,10 +41,7 @@ const processTimelines = async () => {
 
       if (shouldRun) {
         timeline.classList.add(activeTimelineClass);
-
-        if (!timeline.querySelector(paginationCss)) {
-          timeline.classList.add(lengthenedClass);
-        }
+        lengthenTimeline(timeline);
       }
     });
 };
@@ -47,7 +50,7 @@ const processPosts = async function () {
   const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
 
   await exposeTimelines();
-  await processTimelines();
+  processTimelines();
 
   const postElements = getPostElements({ excludeClass, includeFiltered: true })
     .filter(postElement => postElement.closest('[data-timeline]').classList.contains(activeTimelineClass));

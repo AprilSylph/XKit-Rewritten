@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#7c5cff"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#vanilla-audio",
   "preferences": {
     "defaultVolume": {
       "type": "select",

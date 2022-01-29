@@ -1,0 +1,22 @@
+{
+  "title": "TimeFormat",
+  "description": "Reformat native timestamps",
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#timeformat",
+  "icon": {
+    "class_name": "ri-history-line",
+    "color": "white",
+    "background_color": "#625282"
+  },
+  "preferences": {
+    "format": {
+      "type": "text",
+      "label": "Format",
+      "default": "MMM D, YYYY - h:mm A"
+    },
+    "displayRelative": {
+      "type": "checkbox",
+      "label": "Append relative time",
+      "default": true
+    }
+  }
+}

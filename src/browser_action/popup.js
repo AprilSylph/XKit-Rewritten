@@ -51,3 +51,7 @@ document.getElementById('filter').addEventListener('input', event => {
 
 const versionElement = document.getElementById('version');
 versionElement.textContent = `v${browser.runtime.getManifest().version} (Beta)`;
+
+const params = new URLSearchParams(location.search);
+const pageIsEmbedded = params.get('embedded') === 'true';
+document.getElementById('embedded-banner').hidden = !pageIsEmbedded;

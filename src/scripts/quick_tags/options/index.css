@@ -88,18 +88,11 @@ input[type="text"] {
 }
 
 .bundle {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1ch;
-  padding-left: 0;
-}
-
-.bundle {
   display: grid;
-  grid-template-columns: 1fr auto;
-  grid-column-gap: 8px;
+  grid-template-columns: auto 1fr auto;
+  grid-column-gap: 1ch;
+  align-items: center;
+  padding-right: 1ch;
   border-top: 1px solid rgb(var(--light-grey));
 }
 
@@ -107,18 +100,35 @@ input[type="text"] {
   border-bottom: 1px solid rgb(var(--light-grey));
 }
 
+.bundle .move-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.bundle button {
+  padding: 3px;
+  border: none;
+
+  cursor: pointer;
+  background: none;
+}
+
+.bundle button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.bundle button i {
+  color: rgb(var(--black));
+  font-size: 1.5em;
+}
+
 .bundle div {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-}
-
-.bundle span {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  padding: 1ch 0;
 }
 
 .bundle .title {
@@ -126,13 +136,13 @@ input[type="text"] {
 }
 
 .bundle input {
+  box-sizing: border-box;
   width: 0;
   min-width: 100%;
 }
 
 .bundle input:disabled {
   overflow-x: hidden;
-  padding: 0;
   border: none;
 
   color: rgb(var(--black));
@@ -144,16 +154,13 @@ input[type="text"] {
   font-weight: bold;
 }
 
-.bundle button {
-  padding: 3px;
-  border: none;
-  margin-left: 1ch;
-
-  cursor: pointer;
-  background: none;
+.bundle .controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-.bundle button i {
-  color: rgb(var(--black));
-  font-size: 1.5em;
+.bundle .controls > :not(:first-child) {
+  margin-left: 1ch;
 }

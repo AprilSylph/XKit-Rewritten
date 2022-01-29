@@ -3,8 +3,8 @@ The enhancement suite for Tumblr's new web interface.
 
 ## Features
 - Block all instances of any specific post
-- Get an unread count on your tracked tags
-- Easily see when a post was originally made
+- Get unread counts on your followed tags
+- Trim long threads down for readability
 - Adjust the volume on audio & video posts
 - And more! Check out the [full features list on the wiki](https://github.com/AprilSylph/XKit-Rewritten/wiki/Features)
 

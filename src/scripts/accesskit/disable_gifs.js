@@ -1,4 +1,4 @@
-import { onPostsMutated } from '../../util/mutations.js';
+import { pageModifications } from '../../util/mutations.js';
 
 const className = 'accesskit-disable-gifs';
 
@@ -20,33 +20,27 @@ const pauseGif = function (gifElement) {
   };
 };
 
-const processGifs = function () {
-  [...document.querySelectorAll('figure img[srcset*=".gif"]:not(.xkit-accesskit-disabled-gif)')]
-    .forEach(gifElement => {
-      gifElement.classList.add('xkit-accesskit-disabled-gif');
+const processGifs = function (gifElements) {
+  gifElements.forEach(gifElement => {
+    if (gifElement.parentNode.querySelector('.xkit-paused-gif') !== null) {
+      return;
+    }
 
-      if (gifElement.parentNode.querySelector('.xkit-paused-gif') !== null) {
-        return;
-      }
-
-      if (gifElement.complete && gifElement.currentSrc) {
-        pauseGif(gifElement);
-      } else {
-        gifElement.onload = () => pauseGif(gifElement);
-      }
-    });
+    if (gifElement.complete && gifElement.currentSrc) {
+      pauseGif(gifElement);
+    } else {
+      gifElement.onload = () => pauseGif(gifElement);
+    }
+  });
 };
 
 export const main = async function () {
   document.body.classList.add(className);
-
-  onPostsMutated.addListener(processGifs);
-  processGifs();
+  pageModifications.register('figure img[srcset*=".gif"]', processGifs);
 };
 
 export const clean = async function () {
-  onPostsMutated.removeListener(processGifs);
-
+  pageModifications.unregister(processGifs);
   document.body.classList.remove(className);
 
   $('.xkit-paused-gif, .xkit-gif-label').remove();

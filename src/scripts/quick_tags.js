@@ -1,15 +1,19 @@
 import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
-import { getPostElements } from '../util/interface.js';
-import { onNewPosts } from '../util/mutations.js';
+import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
-import { timelineObjectMemoized, editPostFormTags } from '../util/react_props.js';
+import { getPreferences } from '../util/preferences.js';
+import { timelineObjectMemoized, timelineObject, editPostFormTags } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
 const excludeClass = 'xkit-quick-tags-done';
 const tagsClass = 'xkit-quick-tags-tags';
+
+let originalPostTag;
+let answerTag;
+let autoTagAsker;
 
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-tags' });
 const popupForm = Object.assign(document.createElement('form'), {
@@ -45,9 +49,46 @@ const populatePopups = async function () {
   }
 };
 
+const processPostForm = async function ([selectedTagsElement]) {
+  if (selectedTagsElement.classList.contains(excludeClass)) {
+    return;
+  } else {
+    selectedTagsElement.classList.add(excludeClass);
+  }
+
+  if (originalPostTag && location.pathname.startsWith('/new')) {
+    editPostFormTags({
+      add: originalPostTag.split(',').map(tag => tag.trim())
+    });
+  } else if ((answerTag || autoTagAsker) && location.pathname.startsWith('/edit')) {
+    const [blogName, postId] = location.pathname.split('/').slice(2);
+    const postIsOnScreen = document.querySelector(`[tabindex="-1"][data-id="${postId}"]`) !== null;
+
+    const {
+      response = {},
+      state = response.state,
+      askingName = response.askingName
+    } = await (postIsOnScreen ? timelineObject(postId) : apiFetch(`/v2/blog/${blogName}/posts/${postId}`));
+
+    if (state === 'submission') {
+      const tagsToAdd = [];
+      if (answerTag) tagsToAdd.push(...answerTag.split(','));
+      if (autoTagAsker && askingName) tagsToAdd.push(askingName);
+      editPostFormTags({ add: tagsToAdd });
+    }
+  }
+};
+
 export const onStorageChanged = async function (changes, areaName) {
-  if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
-    populatePopups();
+  if (areaName === 'local' && Object.keys(changes).some(key => key.startsWith('quick_tags'))) {
+    if (Object.keys(changes).includes(storageKey)) populatePopups();
+
+    ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+    if (originalPostTag || answerTag || autoTagAsker) {
+      pageModifications.register('#selected-tags', processPostForm);
+    } else {
+      pageModifications.unregister(processPostForm);
+    }
   }
 };
 
@@ -148,14 +189,14 @@ const processPostOptionBundleClick = function ({ target }) {
   editPostFormTags({ add: bundleTags });
 };
 
-const processPosts = async function () {
-  getPostElements({ excludeClass }).forEach(async postElement => {
-    const editButton = postElement.querySelector('footer a[href*="/edit/"]');
-    if (!editButton) { return; }
-
-    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
-    editButton.parentNode.parentNode.insertBefore(clonedControlButton, editButton.parentNode);
-  });
+const addControlButtons = function (editButtons) {
+  editButtons
+    .filter(({ classList }) => classList.contains(excludeClass) === false)
+    .forEach(editButton => {
+      editButton.classList.add(excludeClass);
+      const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
+      editButton.parentNode.parentNode.insertBefore(clonedControlButton, editButton.parentNode);
+    });
 };
 
 popupElement.addEventListener('click', processBundleClick);
@@ -165,16 +206,20 @@ postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 export const main = async function () {
   controlButtonTemplate = await createControlButtonTemplate(symbolId, buttonClass);
 
-  onNewPosts.addListener(processPosts);
-  processPosts();
-
+  pageModifications.register('[data-id] footer a[href*="/edit/"]', addControlButtons);
   registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });
 
   populatePopups();
+
+  ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+  if (originalPostTag || answerTag || autoTagAsker) {
+    pageModifications.register('#selected-tags', processPostForm);
+  }
 };
 
 export const clean = async function () {
-  onNewPosts.removeListener(processPosts);
+  pageModifications.unregister(addControlButtons);
+  pageModifications.unregister(processPostForm);
   popupElement.remove();
 
   unregisterPostOption('quick-tags');

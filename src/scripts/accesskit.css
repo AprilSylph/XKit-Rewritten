@@ -52,14 +52,13 @@ figure.accesskit-visible-alt-text {
 
 figure.accesskit-visible-alt-text figcaption {
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: .75ch 1ch;
+  padding: var(--post-header-vertical-padding) var(--post-padding);
+  overflow: hidden;
 
+  background-color: rgb(var(--secondary-accent));
+  color: rgb(var(--black));
   font-size: .875rem;
   line-height: 1.5;
   text-align: center;
-  background-color: rgb(var(--secondary-accent));
-  color: rgb(var(--black));
+  overflow-wrap: break-word;
 }

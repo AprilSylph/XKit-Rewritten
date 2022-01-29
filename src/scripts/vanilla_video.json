@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#ff62ce"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#vanilla-video",
   "preferences": {
     "defaultVolume": {
       "type": "select",

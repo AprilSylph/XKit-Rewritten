@@ -29,18 +29,18 @@
   opacity: 1;
 }
 
-aside #xkit-toasts {
+#xkit-toasts[data-in-sidebar="true"] {
   width: 320px;
   margin-bottom: 1ch;
 }
 
-aside #xkit-toasts div {
+#xkit-toasts[data-in-sidebar="true"] div {
   border-top: none;
 
   text-align: left;
 }
 
-aside #xkit-toasts div:not(:last-child) {
+#xkit-toasts[data-in-sidebar="true"] div:not(:last-child) {
   border-bottom: 1px solid rgba(var(--white-on-dark), .13);
 }
 

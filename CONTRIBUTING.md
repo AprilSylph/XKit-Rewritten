@@ -8,7 +8,6 @@ This document aims to provide guidelines for contributions. For a guide on how t
 
 - Check the list of open issues before submitting your own to help reduce duplicate issues.
 - If you see your issue already listed, upvote it by adding a :+1: reaction to the initial comment.
-- Use the provided issue templates wherever possible.
 
 If you are a contributor, try to file issues even if you intend to resolve the problem with a pull request. It may be tempting to immediately work on something and then describe the problem in the pull request body, but it's important that any known issue is acknowledged in the issues tab for everyone to see.
 

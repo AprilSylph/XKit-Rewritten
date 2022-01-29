@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#849baf"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#seen-posts",
   "preferences": {
     "onlyDimAvatars": {
       "type": "checkbox",

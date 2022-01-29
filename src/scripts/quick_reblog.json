@@ -5,6 +5,7 @@
     "color": "white",
     "background_color": "#acd53a"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quick-reblog",
   "preferences": {
     "popupPosition": {
       "type": "select",
@@ -39,6 +40,16 @@
       "type": "checkbox",
       "label": "Show the tags field",
       "default": true
+    },
+    "showTagSuggestions": {
+      "type": "checkbox",
+      "label": "Suggest tags from the post being reblogged",
+      "default": false
+    },
+    "queueTag": {
+      "type": "text",
+      "label": "Queue tag",
+      "default": ""
     },
     "alreadyRebloggedEnabled": {
       "type": "checkbox",

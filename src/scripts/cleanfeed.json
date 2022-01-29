@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#ff567e"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#cleanfeed",
   "preferences": {
     "blockingMode": {
       "label": "Hide media from",
@@ -15,6 +16,11 @@
         { "value": "all", "label": "all blogs" }
       ],
       "default": "smart"
+    },
+    "localFlagging": {
+      "label": "Treat these blogs as flagged (comma-separated)",
+      "type": "textarea",
+      "default": ""
     }
   }
 }

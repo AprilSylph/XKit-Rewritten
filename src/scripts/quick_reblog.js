@@ -1,6 +1,6 @@
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
-import { getPostElements } from '../util/interface.js';
+import { getPostElements, postType } from '../util/interface.js';
 import { getUserBlogs } from '../util/user_blogs.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -22,6 +22,8 @@ const tagsInput = Object.assign(document.createElement('input'), {
   autocomplete: 'off',
   onkeydown: event => event.stopPropagation()
 });
+tagsInput.setAttribute('list', 'quick-reblog-tag-suggestions');
+const tagSuggestions = Object.assign(document.createElement('datalist'), { id: 'quick-reblog-tag-suggestions' });
 const actionButtons = Object.assign(document.createElement('fieldset'), { className: 'action-buttons' });
 const reblogButton = Object.assign(document.createElement('button'), { textContent: 'Reblog' });
 reblogButton.dataset.state = 'published';
@@ -29,10 +31,11 @@ const queueButton = Object.assign(document.createElement('button'), { textConten
 queueButton.dataset.state = 'queue';
 const draftButton = Object.assign(document.createElement('button'), { textContent: 'Draft' });
 draftButton.dataset.state = 'draft';
-[blogSelector, commentInput, quickTagsList, tagsInput, actionButtons].forEach(element => popupElement.appendChild(element));
+[blogSelector, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons].forEach(element => popupElement.appendChild(element));
 
 let lastPostID;
 let timeoutID;
+let suggestableTags;
 
 let popupPosition;
 let showBlogSelector;
@@ -40,6 +43,8 @@ let rememberLastBlog;
 let showCommentInput;
 let quickTagsIntegration;
 let showTagsInput;
+let showTagSuggestions;
+let queueTag;
 let alreadyRebloggedEnabled;
 let alreadyRebloggedLimit;
 
@@ -47,6 +52,35 @@ const storageKey = 'quick_reblog.alreadyRebloggedList';
 const excludeClass = 'xkit-quick-reblog-alreadyreblogged-done';
 
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
+
+const renderTagSuggestions = () => {
+  tagSuggestions.textContent = '';
+  if (!showTagSuggestions) return;
+
+  const currentTags = tagsInput.value
+    .split(',')
+    .map(tag => tag.trim().toLowerCase())
+    .filter(tag => tag !== '');
+
+  const includeSpace = !tagsInput.value.endsWith(' ') && tagsInput.value.trim() !== '';
+
+  const tagsToSuggest = suggestableTags
+    .filter(tag => !currentTags.includes(tag.toLowerCase()))
+    .filter((tag, index, array) => array.indexOf(tag) === index)
+    .map(tag => `${tagsInput.value}${includeSpace ? ' ' : ''}${tag}`);
+
+  tagSuggestions.append(
+    ...tagsToSuggest.map(value => Object.assign(document.createElement('option'), { value }))
+  );
+};
+
+const updateTagSuggestions = () => {
+  if (tagsInput.value.trim().endsWith(',') || tagsInput.value.trim() === '') {
+    renderTagSuggestions();
+  }
+};
+
+tagsInput.addEventListener('input', updateTagSuggestions);
 
 const showPopupOnHover = ({ currentTarget }) => {
   clearTimeout(timeoutID);
@@ -61,6 +95,13 @@ const showPopupOnHover = ({ currentTarget }) => {
     }
     commentInput.value = '';
     tagsInput.value = '';
+    timelineObjectMemoized(thisPostID).then(({ tags, trail, content, layout, blogName, rebloggedRootName }) => {
+      suggestableTags = tags;
+      if (blogName) suggestableTags.push(blogName);
+      if (rebloggedRootName) suggestableTags.push(rebloggedRootName);
+      suggestableTags.push(postType({ trail, content, layout }));
+      renderTagSuggestions();
+    });
   }
   lastPostID = thisPostID;
 };
@@ -85,14 +126,13 @@ const reblogPost = async function ({ currentTarget }) {
 
   currentTarget.blur();
   actionButtons.disabled = true;
-
-  const postID = lastPostID;
   lastPostID = null;
 
+  const postID = currentTarget.closest('[data-id]').dataset.id;
   const { state } = currentTarget.dataset;
 
   const blog = blogSelector.value;
-  const tags = tagsInput.value;
+  const tags = (state === 'queue' && queueTag) ? `${tagsInput.value}, ${queueTag}` : tagsInput.value;
   const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } = await timelineObjectMemoized(postID);
 
   const requestPath = `/v2/blog/${blog}/posts`;
@@ -186,6 +226,8 @@ export const main = async function () {
     showCommentInput,
     quickTagsIntegration,
     showTagsInput,
+    showTagSuggestions,
+    queueTag,
     alreadyRebloggedEnabled,
     alreadyRebloggedLimit
   } = await getPreferences('quick_reblog'));

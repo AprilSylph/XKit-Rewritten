@@ -17,7 +17,7 @@ export const timelineObjectMemoized = async postID => cache[postID] || timelineO
 export const timelineObject = async function (postID) {
   cache[postID] = inject(async id => {
     const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
-    const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactInternalInstance'));
+    const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactInternalInstance') || key.startsWith('__reactFiber'));
     let fiber = postElement[reactKey];
 
     while (fiber !== null) {
@@ -34,7 +34,7 @@ export const timelineObject = async function (postID) {
 
 const unburyGivenPaths = async (selector) => {
   [...document.querySelectorAll(selector)].forEach(timelineElement => {
-    const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactInternalInstance'));
+    const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactInternalInstance') || key.startsWith('__reactFiber'));
     let fiber = timelineElement[reactKey];
 
     while (fiber !== null) {
@@ -72,10 +72,12 @@ export const exposeTimelines = async () => {
  * @returns {Promise<void>} Resolves when finished
  */
 export const editPostFormTags = async ({ add = [], remove = [] }) => inject(async ({ add, remove }) => {
+  add = add.map(tag => tag.trim()).filter((tag, index, array) => array.indexOf(tag) === index);
+
   const selectedTagsElement = document.getElementById('selected-tags');
   if (!selectedTagsElement) { return; }
 
-  const reactKey = Object.keys(selectedTagsElement).find(key => key.startsWith('__reactInternalInstance'));
+  const reactKey = Object.keys(selectedTagsElement).find(key => key.startsWith('__reactInternalInstance') || key.startsWith('__reactFiber'));
   let fiber = selectedTagsElement[reactKey];
 
   while (fiber !== null) {

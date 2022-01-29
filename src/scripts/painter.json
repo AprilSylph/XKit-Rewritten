@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#4bb51b"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#painter",
   "preferences": {
     "ownColour": {
       "type": "color",

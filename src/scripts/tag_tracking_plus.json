@@ -1,9 +1,10 @@
 {
   "title": "Tag Tracking+",
-  "description": "Unread counts on tracked tags",
+  "description": "Unread counts on followed tags",
   "icon": {
-    "class_name": "ri-price-tag-3-line",
+    "class_name": "ri-hashtag",
     "color": "white",
     "background_color": "#c538ff"
-  }
+  },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tag-tracking"
 }

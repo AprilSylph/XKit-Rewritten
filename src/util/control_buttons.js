@@ -1,3 +1,5 @@
+import { keyToClasses } from './css_map.js';
+import { buildStyle } from './interface.js';
 import { buildSvg } from './remixicon.js';
 
 /**
@@ -39,3 +41,9 @@ export const cloneControlButton = function (template, events) {
   Object.entries(events).forEach(([type, listener]) => newButton.addEventListener(type, listener));
   return newButton;
 };
+
+keyToClasses('footerRedesign').then(footerRedesignClasses => {
+  const selector = footerRedesignClasses.map(className => `.${className} .xkit-control-button-container`);
+  const styleElement = buildStyle(`${selector} { margin-left: 0; }`);
+  document.head.append(styleElement);
+});

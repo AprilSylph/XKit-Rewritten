@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#598c75"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#show-originals",
   "preferences": {
     "showOwnReblogs": {
       "type": "checkbox",

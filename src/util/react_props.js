@@ -41,6 +41,16 @@ const unburyGivenPaths = async (selector) => {
       const { endpointApiRequest } = fiber.memoizedProps || {};
       if (endpointApiRequest !== undefined) {
         timelineElement.dataset.timeline = endpointApiRequest.givenPath;
+
+        // distinguishes between the timelines in 'secret' dashboards:
+        // tumblr.com/timeline/blog_subscriptions
+        // tumblr.com/timeline/crushes
+        // tumblr.com/timeline/what_you_missed
+        // tumblr.com/timeline/trending
+        const which = endpointApiRequest?.options?.queryParams?.which;
+        if (which) {
+          timelineElement.dataset.which = which;
+        }
         break;
       } else {
         fiber = fiber.return;

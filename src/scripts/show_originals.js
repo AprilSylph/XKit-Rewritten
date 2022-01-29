@@ -9,7 +9,12 @@ const hiddenClass = 'xkit-show-originals-hidden';
 const activeTimelineClass = 'xkit-show-originals-timeline';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 
-const dashboardTimeline = '/v2/timeline/dashboard';
+let showOwnReblogs;
+let showReblogsWithContributedContent;
+let whitelistedUsernames;
+let runOnDashboard;
+let runOnPeepr;
+let runOnBlogSubscriptions;
 
 const processTimelines = async () => {
   const paginationCss = await keyToCss('manualPaginatorButtons');
@@ -18,7 +23,17 @@ const processTimelines = async () => {
     .forEach(timeline => {
       timeline.classList.add(excludeClass);
 
-      if (timeline.dataset.timeline === dashboardTimeline) { // add conditional logic here
+      const onDashboard = timeline.dataset.timeline === '/v2/timeline/dashboard';
+      const onPeepr = timeline.closest('[role="dialog"]') !== null;
+      const onBlogSubscriptions = timeline.dataset.timeline === '/v2/timeline' &&
+        timeline.dataset.which === 'blog_subscriptions';
+
+      const shouldRun =
+        (runOnDashboard && onDashboard) ||
+        (runOnPeepr && onPeepr) ||
+        (runOnBlogSubscriptions && onBlogSubscriptions);
+
+      if (shouldRun) {
         timeline.classList.add(activeTimelineClass);
 
         if (!timeline.querySelector(paginationCss)) {
@@ -27,10 +42,6 @@ const processTimelines = async () => {
       }
     });
 };
-
-let showOwnReblogs;
-let showReblogsWithContributedContent;
-let whitelistedUsernames;
 
 const processPosts = async function () {
   const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
@@ -55,7 +66,14 @@ const processPosts = async function () {
 };
 
 export const main = async function () {
-  ({ showOwnReblogs, showReblogsWithContributedContent, whitelistedUsernames } = await getPreferences('show_originals'));
+  ({
+    showOwnReblogs,
+    showReblogsWithContributedContent,
+    whitelistedUsernames,
+    runOnDashboard,
+    runOnPeepr,
+    runOnBlogSubscriptions
+  } = await getPreferences('show_originals'));
 
   onNewPosts.addListener(processPosts);
   processPosts();
@@ -66,6 +84,8 @@ export const clean = async function () {
 
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${hiddenClass}`).removeClass(hiddenClass);
+  $(`.${activeTimelineClass}`).removeClass(activeTimelineClass);
+  $(`.${lengthenedClass}`).removeClass(lengthenedClass);
 };
 
 export const stylesheet = true;

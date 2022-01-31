@@ -26,13 +26,14 @@ const addIcons = async function () {
 
   getPostElements({ excludeClass, noPeepr: true, includeFiltered: true }).forEach(async postElement => {
     const { blog } = await timelineObject(postElement.dataset.id);
-    if (!blog.followed) { return; }
+    if (!blog.followed && !blog.isMember) { return; }
 
     const postAttribution = postElement.querySelector(postAttributionSelector);
     if (postAttribution === null) { return; }
 
     const blogLink = postAttribution.querySelector('a');
-    const blogName = blogLink.textContent;
+    const blogName = blogLink?.textContent;
+    if (!blogName) return;
 
     if (following[blogName] === undefined) {
       if (blogName === blog.name) {

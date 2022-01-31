@@ -1,5 +1,5 @@
 import { getPostElements } from '../util/interface.js';
-import { timelineObject } from '../util/react_props.js';
+import { timelineObjectMemoized } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { getPrimaryBlogName } from '../util/user_blogs.js';
 import { keyToCss } from '../util/css_map.js';
@@ -25,18 +25,17 @@ const addIcons = async function () {
     .forEach(postElement => postElement.classList.remove(excludeClass));
 
   getPostElements({ excludeClass, noPeepr: true, includeFiltered: true }).forEach(async postElement => {
-    const { blog } = await timelineObject(postElement.dataset.id);
-    if (!blog.followed) { return; }
-
     const postAttribution = postElement.querySelector(postAttributionSelector);
     if (postAttribution === null) { return; }
 
     const blogLink = postAttribution.querySelector('a');
-    const blogName = blogLink.textContent;
+    const blogName = blogLink?.textContent;
+    if (!blogName) return;
 
     if (following[blogName] === undefined) {
+      const { blog } = await timelineObjectMemoized(postElement.dataset.id);
       if (blogName === blog.name) {
-        following[blogName] = Promise.resolve(blog.followed);
+        following[blogName] = Promise.resolve(blog.followed && !blog.isMember);
       } else {
         following[blogName] = apiFetch(`/v2/blog/${blogName}/info`)
           .then(({ response: { blog: { followed } } }) => followed)

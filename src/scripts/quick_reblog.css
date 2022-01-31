@@ -26,23 +26,6 @@
   transform: translate(50%, 12px);
 }
 
-[role="dialog"] #quick-reblog {
-  top: 50%;
-  bottom: unset;
-  right: 100%;
-  transform: translate(-20px, -50%);
-}
-
-@media only screen and (max-width: 650px) {
-  #quick-reblog.above,
-  #quick-reblog.below {
-    top: 50%;
-    bottom: unset;
-    right: 100%;
-    transform: translate(-20px, -50%);
-  }
-}
-
 div:first-child + a + #quick-reblog {
   display: none;
 }

@@ -1,8 +1,6 @@
 .xkit-control-button-container {
   position: relative;
 
-  margin-left: 20px;
-
   font-family: var(--font-family);
   font-size: 1rem;
   font-weight: 700;

@@ -10,8 +10,9 @@ let active = false;
 
 const scrollToBottom = () => {
   window.scrollTo({ top: document.documentElement.scrollHeight });
-  if ([...document.querySelectorAll(knightRiderLoaderSelector)]
-    .some(element => element.matches(loaderSelector)) === false) {
+  const knightRiderLoaders = [...document.querySelectorAll(knightRiderLoaderSelector)];
+  const shouldKeepScrolling = knightRiderLoaders.some(element => element.matches(loaderSelector));
+  if (!shouldKeepScrolling) {
     stopScrolling();
   }
 };

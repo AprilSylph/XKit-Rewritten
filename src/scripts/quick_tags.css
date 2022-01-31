@@ -24,20 +24,6 @@
   font-weight: normal;
 }
 
-[role="dialog"] #quick-tags {
-  top: 50%;
-  right: 100%;
-  transform: translate(-20px, -50%);
-}
-
-@media only screen and (max-width: 650px) {
-  #quick-tags {
-    top: 50%;
-    right: 100%;
-    transform: translate(-20px, -50%);
-  }
-}
-
 #quick-tags:empty::before,
 #quick-tags-post-option:empty::before {
   padding: 1ch;

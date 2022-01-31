@@ -6,6 +6,10 @@ let footerRedesignClasses;
 let footerRedesignSelector;
 
 const styleElement = buildStyle(`
+.xkit-control-button-container {
+  margin-left: 20px;
+}
+
 [role="dialog"] #quick-reblog,
 [role="dialog"] #quick-tags {
   top: 50% !important;

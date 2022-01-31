@@ -48,18 +48,3 @@ export const descendantSelector = async function (...keys) {
     .map(selectors => selectors.join(' '))
     .join(', ');
 };
-
-// tests
-(async () => {
-  const test1 = await descendantSelector('post', 'footer', 'controls');
-  console.log(test1);
-  console.log([...document.querySelectorAll(test1)]);
-  const test2 = await descendantSelector(['article'], ['footer'], 'controls');
-  console.log(test2);
-  console.log([...document.querySelectorAll(test2)]);
-
-  const specificTimelineClasses = (await keyToClasses('timeline'))
-    .map(className => `.${className}:not[data-timeline="whatever"]`);
-  const test3 = await descendantSelector(specificTimelineClasses, 'listTimelineObject');
-  console.log(test3);
-})();

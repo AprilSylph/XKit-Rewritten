@@ -36,8 +36,12 @@ export const descendantSelector = async function (...keys) {
   const sets = [];
 
   for (const key of keys) {
-    const set = await keyToClasses(key);
-    sets.push(set.map(className => `.${className}`));
+    if (Array.isArray(key)) {
+      sets.push(key);
+    } else {
+      const set = await keyToClasses(key);
+      sets.push(set.map(className => `.${className}`));
+    }
   }
 
   return cartesian(...sets)

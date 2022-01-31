@@ -249,10 +249,12 @@ export const main = async function () {
   if (defaultBlogs.length) {
     for (const defaultBlog of defaultBlogs.split(/[\s,]+/).filter(Boolean)) {
       activeDefaultBlog = userBlogs.find(({ name }) => name.toUpperCase() === defaultBlog.toUpperCase())?.uuid;
-      if (activeDefaultBlog) break;
+      if (activeDefaultBlog) {
+        blogSelector.value = activeDefaultBlog;
+        break;
+      }
     }
   }
-  if (activeDefaultBlog) blogSelector.value = activeDefaultBlog;
 
   blogSelector.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;

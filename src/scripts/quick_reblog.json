@@ -21,6 +21,11 @@
       "label": "Show the blog selector",
       "default": true
     },
+    "defaultBlogs": {
+      "type": "text",
+      "label": "Default blog(s)",
+      "default": ""
+    },
     "rememberLastBlog": {
       "type": "checkbox",
       "label": "Remember the last selected blog in the popup",

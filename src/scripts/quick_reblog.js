@@ -39,6 +39,7 @@ let suggestableTags;
 
 let popupPosition;
 let showBlogSelector;
+let defaultBlogs;
 let rememberLastBlog;
 let showCommentInput;
 let quickTagsIntegration;
@@ -47,6 +48,8 @@ let showTagSuggestions;
 let queueTag;
 let alreadyRebloggedEnabled;
 let alreadyRebloggedLimit;
+
+let activeDefaultBlog;
 
 const storageKey = 'quick_reblog.alreadyRebloggedList';
 const excludeClass = 'xkit-quick-reblog-alreadyreblogged-done';
@@ -91,7 +94,7 @@ const showPopupOnHover = ({ currentTarget }) => {
   const thisPostID = currentTarget.closest('[data-id]').dataset.id;
   if (thisPostID !== lastPostID) {
     if (!rememberLastBlog) {
-      blogSelector.value = blogSelector.options[0].value;
+      blogSelector.value = activeDefaultBlog || blogSelector.options[0].value;
     }
     commentInput.value = '';
     tagsInput.value = '';
@@ -222,6 +225,7 @@ export const main = async function () {
   ({
     popupPosition,
     showBlogSelector,
+    defaultBlogs,
     rememberLastBlog,
     showCommentInput,
     quickTagsIntegration,
@@ -241,6 +245,14 @@ export const main = async function () {
     option.textContent = name;
     blogSelector.appendChild(option);
   }
+
+  if (defaultBlogs.length) {
+    for (const defaultBlog of defaultBlogs.split(/[\s,]+/).filter(Boolean)) {
+      activeDefaultBlog = userBlogs.find(({ name }) => name.toUpperCase() === defaultBlog.toUpperCase())?.uuid;
+      if (activeDefaultBlog) break;
+    }
+  }
+  if (activeDefaultBlog) blogSelector.value = activeDefaultBlog;
 
   blogSelector.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;
@@ -266,6 +278,8 @@ export const clean = async function () {
   popupElement.remove();
 
   blogSelector.textContent = '';
+
+  activeDefaultBlog = undefined;
 
   browser.storage.onChanged.removeListener(updateQuickTags);
 

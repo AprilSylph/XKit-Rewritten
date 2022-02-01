@@ -30,7 +30,8 @@ const processTimelines = () => {
       timeline.classList.add(excludeClass);
 
       const onDashboard = timeline.dataset.timeline === '/v2/timeline/dashboard';
-      const onPeepr = timeline.closest('[role="dialog"]') !== null;
+      const isSinglePostPeepr = timeline.dataset.timeline.includes('permalink');
+      const onPeepr = timeline.closest('[role="dialog"]') !== null && isSinglePostPeepr === false;
       const onBlogSubscriptions = timeline.dataset.timeline === '/v2/timeline' &&
         timeline.dataset.which === 'blog_subscriptions';
 

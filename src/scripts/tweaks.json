@@ -13,6 +13,11 @@
       "label": "Attempt to revert the post footer redesign",
       "default": false
     },
+    "hide_note_count_types": {
+      "type": "checkbox",
+      "label": "Hide the type indicators next to the note count",
+      "default": false
+    },
     "slim_filtered_screens": {
       "type": "checkbox",
       "label": "Use a slim layout for filtered posts",

@@ -20,7 +20,8 @@ export const keyToCss = async function (key) {
 
 /**
  * Template tag for constructing strings with promise parts
- * e.g. resolveExpressions`article > ${keyToCss('footerWrapper')}`
+ * e.g. resolveExpressions`article > ${keyToCss('reblog')}`
+ *      => 'article > :is(.FHOOB, .u2tXn)'
  *
  * @param {string[]} strings - Raw string parts
  * @param {Promise<string>[]} expressions - Promises to resolve

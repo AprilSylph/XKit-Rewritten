@@ -1,4 +1,4 @@
-import { keyToCss, asyncSelector } from '../../util/css_map.js';
+import { keyToCss, resolveExpressions } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { translate } from '../../util/language_data.js';
 import { pageModifications } from '../../util/mutations.js';
@@ -51,7 +51,7 @@ export const main = async function () {
   imageString = await translate('Image');
 
   const imageBlockLinkSelector = await keyToCss('imageBlockLink');
-  const imageBlockButtonInnerSelector = await asyncSelector`${keyToCss('imageBlockButton')} ${keyToCss('buttonInner')}`;
+  const imageBlockButtonInnerSelector = await resolveExpressions`${keyToCss('imageBlockButton')} ${keyToCss('buttonInner')}`;
   // Ensure proper styling for image attributions and images in rows
   styleElement.textContent = `${imageBlockLinkSelector}, ${imageBlockButtonInnerSelector} { height: 100%; }`;
   document.head.append(styleElement);

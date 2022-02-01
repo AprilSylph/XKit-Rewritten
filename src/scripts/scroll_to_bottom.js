@@ -1,4 +1,4 @@
-import { keyToClasses, keyToCss, asyncSelector } from '../util/css_map.js';
+import { keyToClasses, keyToCss, resolveExpressions } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { pageModifications } from '../util/mutations.js';
 
@@ -65,7 +65,7 @@ const addButtonToPage = async function ([scrollToTopButton]) {
 
 export const main = async function () {
   knightRiderLoaderSelector = await keyToCss('knightRiderLoader');
-  loaderSelector = await asyncSelector`main ${keyToCss('loader')} ${keyToCss('knightRiderLoader')}`;
+  loaderSelector = await resolveExpressions`main ${keyToCss('loader')} ${keyToCss('knightRiderLoader')}`;
 
   const scrollToTopLabel = await translate('Scroll to top');
   pageModifications.register(`button[aria-label="${scrollToTopLabel}"]`, addButtonToPage);

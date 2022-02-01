@@ -19,14 +19,14 @@ export const keyToCss = async function (key) {
 };
 
 /**
- * Template tag for constructing selectors with promise parts
- * e.g. asyncSelector`article > ${keyToCss('footerWrapper')}`
+ * Template tag for constructing strings with promise parts
+ * e.g. resolveExpressions`article > ${keyToCss('footerWrapper')}`
  *
  * @param {string[]} strings - Raw string parts
- * @param  {Promise<string>[]} expressions - Promises to resolve
+ * @param {Promise<string>[]} expressions - Promises to resolve
  * @returns {Promise<string>} The input string with resolved promises
  */
-export const asyncSelector = async function (strings, ...expressions) {
+export const resolveExpressions = async function (strings, ...expressions) {
   const resolvedExpressions = await Promise.all(expressions);
   return strings.map((string, index) => `${string}${resolvedExpressions[index] || ''}`).join('');
 };

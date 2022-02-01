@@ -92,7 +92,6 @@ export const main = async function () {
   ({ ownColour, originalColour, reblogColour, likedColour, tagColour, colouredTags, colourSourceTags } = await getPreferences('painter'));
 
   onNewPosts.addListener(paint);
-  paint();
 };
 
 export const clean = async function () {

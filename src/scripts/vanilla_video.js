@@ -44,7 +44,6 @@ export const main = async function () {
   ({ defaultVolume } = await getPreferences('vanilla_video'));
 
   onNewPosts.addListener(cloneVideoElements);
-  cloneVideoElements();
 };
 
 export const clean = async function () {

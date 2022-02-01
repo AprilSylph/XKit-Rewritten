@@ -79,7 +79,6 @@ export const main = async function () {
   icon.appendChild(path);
 
   onNewPosts.addListener(addIcons);
-  addIcons();
 };
 
 export const clean = async function () {

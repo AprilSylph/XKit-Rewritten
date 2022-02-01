@@ -28,7 +28,6 @@ export const main = async function () {
   document.head.append(styleElement);
 
   onNewPosts.addListener(hideTagCarousels);
-  hideTagCarousels();
 };
 
 export const clean = async function () {

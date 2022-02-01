@@ -40,7 +40,6 @@ export const main = async function () {
   footerSelector = await keyToCss('footerWrapper');
 
   onNewPosts.addListener(processPosts);
-  processPosts();
 };
 
 export const clean = async function () {

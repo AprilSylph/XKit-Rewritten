@@ -82,7 +82,6 @@ export const main = async function () {
   tagsYouFollowString = await translate('Tags you follow');
 
   onNewPosts.addListener(processPosts);
-  processPosts();
 
   pageModifications.register(searchResultSelector, processTagLinks);
 };

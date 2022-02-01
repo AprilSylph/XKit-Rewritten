@@ -49,7 +49,6 @@ export const main = async function () {
   }
 
   onNewPosts.addListener(dimPosts);
-  dimPosts();
 };
 
 export const clean = async function () {

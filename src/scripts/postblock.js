@@ -68,7 +68,6 @@ export const main = async function () {
   registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
 
   onNewPosts.addListener(processPosts);
-  processPosts();
 };
 
 export const clean = async function () {

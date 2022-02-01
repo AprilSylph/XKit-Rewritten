@@ -121,7 +121,6 @@ export const main = async function () {
   controlButtonTemplate = await createControlButtonTemplate(symbolId, buttonClass);
 
   onNewPosts.addListener(processPosts);
-  processPosts();
 };
 
 export const clean = async function () {

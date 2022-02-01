@@ -66,7 +66,6 @@ export const main = async function () {
   tagsSelector = await keyToCss('tags');
 
   onNewPosts.addListener(shortenPosts);
-  shortenPosts();
 };
 
 export const clean = async function () {

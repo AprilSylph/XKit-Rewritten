@@ -20,8 +20,6 @@ const processPosts = async function () {
 
 export const main = async function () {
   onNewPosts.addListener(processPosts);
-  processPosts();
-
   document.head.append(styleElement);
 };
 

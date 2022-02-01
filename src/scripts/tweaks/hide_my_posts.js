@@ -24,8 +24,6 @@ export const main = async function () {
   primaryBlogName = await getPrimaryBlogName();
 
   onNewPosts.addListener(processPosts);
-  processPosts();
-
   document.head.append(styleElement);
 };
 

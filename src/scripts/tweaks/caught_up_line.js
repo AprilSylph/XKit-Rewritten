@@ -35,7 +35,6 @@ export const main = async function () {
   document.head.append(styleElement);
 
   onNewPosts.addListener(createCaughtUpLine);
-  createCaughtUpLine();
 };
 
 export const clean = async function () {

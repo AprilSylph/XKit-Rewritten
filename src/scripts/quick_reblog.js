@@ -257,7 +257,6 @@ export const main = async function () {
 
   if (alreadyRebloggedEnabled) {
     onNewPosts.addListener(processPosts);
-    processPosts();
   }
 };
 

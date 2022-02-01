@@ -210,7 +210,6 @@ const preferenceHandlers = {
 
     if (reblogTimestamps !== 'none') {
       onNewPosts.addListener(addReblogTimestamps);
-      addReblogTimestamps();
     }
   }
 };
@@ -238,11 +237,9 @@ export const main = async function () {
   reblogHeaderSelector = await keyToCss('reblogHeader');
 
   onNewPosts.addListener(addPostTimestamps);
-  addPostTimestamps();
 
   if (reblogTimestamps !== 'none') {
     onNewPosts.addListener(addReblogTimestamps);
-    addReblogTimestamps();
   }
 };
 

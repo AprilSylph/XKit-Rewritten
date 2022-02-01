@@ -48,7 +48,6 @@ export const main = async function () {
   ({ defaultVolume } = await getPreferences('vanilla_audio'));
 
   onNewPosts.addListener(addAudioControls);
-  addAudioControls();
 };
 
 export const clean = async function () {

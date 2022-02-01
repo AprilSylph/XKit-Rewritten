@@ -49,7 +49,6 @@ export const main = async function () {
 
   reblogSelector = await keyToCss('reblog');
   onNewPosts.addListener(processPosts);
-  processPosts();
 };
 
 export const clean = async function () {

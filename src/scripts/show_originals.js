@@ -51,7 +51,6 @@ export const main = async function () {
   ({ showOwnReblogs, showReblogsWithContributedContent, whitelistedUsernames } = await getPreferences('show_originals'));
 
   onNewPosts.addListener(processPosts);
-  processPosts();
 };
 
 export const clean = async function () {

@@ -32,7 +32,7 @@ export const timelineObject = async function (postID) {
   return cache[postID];
 };
 
-const unburyGivenPaths = async (selector) => {
+const unburyGivenPaths = async function unburyGivenPaths (selector) {
   [...document.querySelectorAll(selector)].forEach(timelineElement => {
     const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactFiber'));
     let fiber = timelineElement[reactKey];

@@ -1,31 +1,28 @@
 import { keyToCss } from '../util/css_map.js';
 import { getPreferences } from '../util/preferences.js';
-import { onNewPosts } from '../util/mutations.js';
+import { pageModifications } from '../util/mutations.js';
 
-let nativePlayerSelector;
 let trackInfoSelector;
 
 let defaultVolume;
 
 const excludeClass = 'xkit-vanilla-audio-done';
 
-const addAudioControls = async function () {
-  [...document.querySelectorAll(`${nativePlayerSelector}:not(.${excludeClass})`)]
-    .forEach(nativePlayer => {
-      const audio = nativePlayer.querySelector('audio');
-      if (!audio) { return; }
+const addAudioControls = nativePlayers => nativePlayers.forEach(nativePlayer => {
+  if (nativePlayer.classList.contains(excludeClass)) return;
+  nativePlayer.classList.add(excludeClass);
 
-      nativePlayer.classList.add(excludeClass);
+  const audio = nativePlayer.querySelector('audio');
+  if (audio === null) return;
 
-      const trackInfo = nativePlayer.querySelector(trackInfoSelector);
-      trackInfo?.classList.add('trackInfo');
+  const trackInfo = nativePlayer.querySelector(trackInfoSelector);
+  trackInfo?.classList.add('trackInfo');
 
-      const audioClone = audio.cloneNode(true);
-      audioClone.controls = true;
-      audioClone.volume = defaultVolume / 100;
-      nativePlayer.parentNode.appendChild(audioClone);
-    });
-};
+  const audioClone = audio.cloneNode(true);
+  audioClone.controls = true;
+  audioClone.volume = defaultVolume / 100;
+  nativePlayer.parentNode.appendChild(audioClone);
+});
 
 export const onStorageChanged = async function (changes, areaName) {
   if (areaName !== 'local') {
@@ -42,16 +39,15 @@ export const onStorageChanged = async function (changes, areaName) {
 };
 
 export const main = async function () {
-  nativePlayerSelector = await keyToCss('nativePlayer');
   trackInfoSelector = await keyToCss('trackInfo');
-
   ({ defaultVolume } = await getPreferences('vanilla_audio'));
 
-  onNewPosts.addListener(addAudioControls);
+  const nativePlayerSelector = await keyToCss('nativePlayer');
+  pageModifications.register(nativePlayerSelector, addAudioControls);
 };
 
 export const clean = async function () {
-  onNewPosts.removeListener(addAudioControls);
+  pageModifications.unregister(addAudioControls);
   $(`.${excludeClass} + audio[controls]`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
 };

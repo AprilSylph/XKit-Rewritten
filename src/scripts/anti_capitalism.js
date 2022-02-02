@@ -1,13 +1,8 @@
-import { getCssMap } from '../util/tumblr_helpers.js';
+import { keyToCss } from '../util/css_map.js';
 import { buildStyle } from '../util/interface.js';
 
 const styleElement = buildStyle();
-getCssMap
-  .then(cssMap => ['adTimelineObject', 'instreamAd', 'mrecContainer', 'nativeIponWebAd', 'takeoverBanner']
-    .flatMap(key => cssMap[key])
-    .map(className => `.${className}`)
-    .join(', ')
-  )
+keyToCss('adTimelineObject', 'instreamAd', 'mrecContainer', 'nativeIponWebAd', 'takeoverBanner')
   .then(selector => {
     styleElement.textContent = `${selector} { display: none !important; }`;
   });

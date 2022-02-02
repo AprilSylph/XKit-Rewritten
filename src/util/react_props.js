@@ -71,7 +71,7 @@ export const exposeTimelines = async () => {
  * @param {string[]} options.remove - Tags to remove from post form
  * @returns {Promise<void>} Resolves when finished
  */
-export const editPostFormTags = async ({ add = [], remove = [] }) => inject(async ({ add, remove }) => {
+export const editPostFormTags = async ({ add = [], remove = [] }) => inject(async function xkitEditPostFormTags ({ add, remove }) {
   add = add.map(tag => tag.trim()).filter((tag, index, array) => array.indexOf(tag) === index);
 
   const selectedTagsElement = document.getElementById('selected-tags');

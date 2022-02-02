@@ -11,5 +11,9 @@ export const apiFetch = async function (...args) {
   }, args);
 };
 
-export const getCssMap = inject(async () => window.tumblr.getCssMap());
-export const getLanguageData = inject(async () => window.tumblr.languageData);
+export const getCssMap = inject(async function xkitGetCssMap () {
+  return window.tumblr.getCssMap();
+});
+export const getLanguageData = inject(async function xkitGetLanguageData () {
+  return window.tumblr.languageData;
+});

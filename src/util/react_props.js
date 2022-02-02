@@ -15,7 +15,7 @@ export const timelineObjectMemoized = async postID => cache[postID] || timelineO
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
 export const timelineObject = async function (postID) {
-  cache[postID] = inject(async id => {
+  cache[postID] = inject(async function unburyTimelineObject (id) {
     const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
     const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
     let fiber = postElement[reactKey];

@@ -6,7 +6,7 @@ import { inject } from './inject.js';
  * @returns {Promise<Response|Error>} Resolves or rejects with result of window.tumblr.apiFetch()
  */
 export const apiFetch = async function (...args) {
-  return inject(async function callApiFetch (resource, init) {
+  return inject(async function xkitApiFetch (resource, init) {
     return window.tumblr.apiFetch(resource, init);
   }, args);
 };

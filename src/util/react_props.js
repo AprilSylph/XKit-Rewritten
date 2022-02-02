@@ -15,7 +15,7 @@ export const timelineObjectMemoized = async postID => cache[postID] || timelineO
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
 export const timelineObject = async function (postID) {
-  cache[postID] = inject(async function unburyTimelineObject (id) {
+  cache[postID] = inject(async function xkitTimelineObject (id) {
     const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
     const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
     let fiber = postElement[reactKey];
@@ -32,7 +32,7 @@ export const timelineObject = async function (postID) {
   return cache[postID];
 };
 
-const unburyGivenPaths = async function unburyGivenPaths (selector) {
+const unburyGivenPaths = async function xkitUnburyGivenPaths (selector) {
   [...document.querySelectorAll(selector)].forEach(timelineElement => {
     const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactFiber'));
     let fiber = timelineElement[reactKey];

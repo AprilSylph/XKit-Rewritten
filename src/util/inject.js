@@ -59,15 +59,7 @@ const init = new Promise(resolve => {
  * @param {Array} args - Array of arguments to pass to the function via spread
  * @returns {Promise<any>} The return value of the async function, or the caught exception
  */
-export const inject = (asyncFunc, args) => {
-  // eslint-disable-next-line no-eval
-  eval(`
-    console.log('injected', (${asyncFunc.toString()}).name || ${JSON.stringify(asyncFunc.toString())});
-  `);
-  return injectReal(asyncFunc, args);
-};
-
-const injectReal = (asyncFunc, args = []) => new Promise((resolve, reject) => {
+export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) => {
   const callbackId = Math.random();
   callbacks.set(callbackId, [resolve, reject]);
 

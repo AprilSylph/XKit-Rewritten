@@ -9,11 +9,13 @@ export const postSelector = '[tabindex="-1"][data-id]';
  */
 
 /**
- * @param {HTMLDivElement[]} postElements - Post elements to filter
+ * @param {Element[]} postElements - Post elements (or descendants) to filter
  * @param {PostFilterOptions} postFilterOptions - Post filter options
  * @returns {HTMLDivElement[]} Matching post elements
  */
 export const filterPostElements = function (postElements, { excludeClass, timeline, noPeepr = false, includeFiltered = false }) {
+  postElements = postElements.map(element => element.closest(postSelector)).filter(Boolean);
+
   if (timeline instanceof RegExp) {
     postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]')?.dataset.timeline));
   }

@@ -44,9 +44,11 @@ export const megaEdit = async function (postIds, options) {
     delete requestBody.tags;
   }
 
-  return inject((resource, body) => fetch(resource, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-    body
-  }), [`https://www.tumblr.com/${pathname}`, $.param(requestBody)]);
+  return inject(function xkitMegaEdit (resource, body) {
+    return fetch(resource, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+      body
+    });
+  }, [`https://www.tumblr.com/${pathname}`, $.param(requestBody)]);
 };

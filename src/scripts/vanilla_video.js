@@ -1,30 +1,29 @@
 import { getPreferences } from '../util/preferences.js';
-import { onNewPosts } from '../util/mutations.js';
+import { pageModifications } from '../util/mutations.js';
 
-const excludeClass = 'xkit-vanilla-video-done';
-const videoClass = 'xkit-vanilla-video-player';
+const vanillaVideoClass = 'xkit-vanilla-video-player';
 
 let defaultVolume;
 
-const cloneVideoElements = async function () {
-  [...document.querySelectorAll(`video:not(.${excludeClass}):not(.${videoClass})`)].forEach(async videoElement => {
-    videoElement.classList.add(excludeClass);
+const cloneVideoElements = videoElements => videoElements.forEach(videoElement => {
+  if (videoElement.previousElementSibling?.classList.contains(vanillaVideoClass)) return;
 
-    const newVideoElement = Object.assign(document.createElement('video'), {
-      controls: true,
-      crossOrigin: videoElement.crossOrigin,
-      poster: videoElement.poster,
-      volume: defaultVolume / 100,
-      className: videoClass
-    });
-    newVideoElement.setAttribute('playsinline', true);
-
-    [...videoElement.children]
-      .forEach(sourceElement => newVideoElement.appendChild(sourceElement.cloneNode(true)));
-
-    videoElement.parentNode.parentNode.prepend(newVideoElement);
+  const newVideoElement = Object.assign(document.createElement('video'), {
+    controls: true,
+    crossOrigin: videoElement.crossOrigin,
+    poster: videoElement.poster,
+    volume: defaultVolume / 100,
+    className: vanillaVideoClass
   });
-};
+  newVideoElement.setAttribute('playsinline', true);
+
+  const videoSources = [...videoElement.children];
+  newVideoElement.append(
+    ...videoSources.map(sourceElement => sourceElement.cloneNode(true))
+  );
+
+  videoElement.before(newVideoElement);
+});
 
 export const onStorageChanged = async function (changes, areaName) {
   if (areaName !== 'local') {
@@ -42,14 +41,12 @@ export const onStorageChanged = async function (changes, areaName) {
 
 export const main = async function () {
   ({ defaultVolume } = await getPreferences('vanilla_video'));
-
-  onNewPosts.addListener(cloneVideoElements);
+  pageModifications.register(`video:not(.${vanillaVideoClass})`, cloneVideoElements);
 };
 
 export const clean = async function () {
-  onNewPosts.removeListener(cloneVideoElements);
-  $(`.${videoClass}`).remove();
-  $(`.${excludeClass}`).removeClass(excludeClass);
+  pageModifications.unregister(cloneVideoElements);
+  $(`.${vanillaVideoClass}`).remove();
 };
 
 export const stylesheet = true;

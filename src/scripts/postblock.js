@@ -1,19 +1,18 @@
-import { getPostElements } from '../util/interface.js';
+import { filterPostElements } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObjectMemoized } from '../util/react_props.js';
-import { onNewPosts } from '../util/mutations.js';
+import { onNewPosts, pageModifications } from '../util/mutations.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
-const excludeClass = 'xkit-postblock-done';
 const hiddenClass = 'xkit-postblock-hidden';
 const storageKey = 'postblock.blockedPostRootIDs';
 
-const processPosts = async function () {
+const processPosts = async function (postElements) {
   const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
 
-  getPostElements({ excludeClass, includeFiltered: true }).forEach(async postElement => {
+  filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     const postID = postElement.dataset.id;
     const { rebloggedRootId } = await timelineObjectMemoized(postID);
 
@@ -59,8 +58,7 @@ const blockPost = async rootID => {
 
 export const onStorageChanged = async function (changes, areaName) {
   if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
-    $(`.${excludeClass}`).removeClass(excludeClass);
-    processPosts();
+    pageModifications.trigger(processPosts);
   }
 };
 
@@ -74,7 +72,6 @@ export const clean = async function () {
   unregisterMeatballItem(meatballButtonId);
   onNewPosts.removeListener(processPosts);
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${hiddenClass}`).removeClass(hiddenClass);
 };
 

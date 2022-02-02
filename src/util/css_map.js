@@ -1,7 +1,7 @@
 import { getCssMap } from './tumblr_helpers.js';
 
 /**
- * @param {...string} keys - The source name of an element
+ * @param {...string} keys - One or more element source names
  * @returns {Promise<string[]>} An array of generated classnames from the CSS map
  */
 export const keyToClasses = async function (...keys) {

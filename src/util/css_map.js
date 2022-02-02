@@ -1,20 +1,20 @@
 import { getCssMap } from './tumblr_helpers.js';
 
 /**
- * @param {string} key - The source name of an element
+ * @param {...string} keys - The source name of an element
  * @returns {Promise<string[]>} An array of generated classnames from the CSS map
  */
-export const keyToClasses = async function (key) {
+export const keyToClasses = async function (...keys) {
   const cssMap = await getCssMap;
-  return cssMap[key];
+  return keys.flatMap(key => cssMap[key]);
 };
 
 /**
- * @param {string} key - The source name of an element
- * @returns {Promise<string>} - A CSS :is() selector which targets all elements with that source name
+ * @param {...string} keys - The source name of an element
+ * @returns {Promise<string>} - A CSS :is() selector which targets all elements that match any of the given source names
  */
-export const keyToCss = async function (key) {
-  const classes = await keyToClasses(key);
+export const keyToCss = async function (...keys) {
+  const classes = await keyToClasses(...keys);
   return `:is(${classes.map(className => `.${className}`).join(', ')})`;
 };
 

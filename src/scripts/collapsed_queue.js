@@ -1,4 +1,4 @@
-import { getPostElements } from '../util/interface.js';
+import { filterPostElements } from '../util/interface.js';
 import { exposeTimelines } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -11,10 +11,10 @@ const containerClass = 'xkit-collapsed-queue-container';
 let timelineRegex;
 let footerSelector;
 
-const processPosts = async function () {
+const processPosts = async function (postElements) {
   await exposeTimelines();
 
-  getPostElements({ excludeClass, timeline: timelineRegex }).forEach(async postElement => {
+  filterPostElements(postElements, { excludeClass, timeline: timelineRegex }).forEach(async postElement => {
     const headerElement = postElement.querySelector('header');
     const footerElement = postElement.querySelector(footerSelector);
 

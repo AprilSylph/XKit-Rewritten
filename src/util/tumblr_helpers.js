@@ -6,10 +6,9 @@ import { inject } from './inject.js';
  * @returns {Promise<Response|Error>} Resolves or rejects with result of window.tumblr.apiFetch()
  */
 export const apiFetch = async function (...args) {
-  return inject(
-    async (resource, init) => window.tumblr.apiFetch(resource, init),
-    args
-  );
+  return inject(async function callApiFetch (resource, init) {
+    return window.tumblr.apiFetch(resource, init);
+  }, args);
 };
 
 export const getCssMap = inject(async () => window.tumblr.getCssMap());

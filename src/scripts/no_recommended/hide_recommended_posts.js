@@ -1,4 +1,4 @@
-import { buildStyle, getPostElements } from '../../util/interface.js';
+import { buildStyle, filterPostElements } from '../../util/interface.js';
 import { onNewPosts } from '../../util/mutations.js';
 import { exposeTimelines, timelineObject } from '../../util/react_props.js';
 
@@ -9,10 +9,10 @@ const includeFiltered = true;
 
 const styleElement = buildStyle(`.${hiddenClass} article { display: none; }`);
 
-const processPosts = async function () {
+const processPosts = async function (postElements) {
   await exposeTimelines();
 
-  getPostElements({ excludeClass, timeline, includeFiltered }).forEach(async postElement => {
+  filterPostElements(postElements, { excludeClass, timeline, includeFiltered }).forEach(async postElement => {
     const { recommendationReason } = await timelineObject(postElement.dataset.id);
     if (!recommendationReason) return;
 

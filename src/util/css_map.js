@@ -10,7 +10,7 @@ export const keyToClasses = async function (...keys) {
 };
 
 /**
- * @param {...string} keys - The source name of an element
+ * @param {...string} keys - One or more element source names
  * @returns {Promise<string>} - A CSS :is() selector which targets all elements that match any of the given source names
  */
 export const keyToCss = async function (...keys) {

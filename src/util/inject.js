@@ -64,10 +64,12 @@ export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) =>
   callbacks.set(callbackId, [resolve, reject]);
 
   const script = document.createElement('script');
+  const name = asyncFunc.name || 'xkitInjected';
 
   script.setAttribute('nonce', nonce);
   script.textContent = `{
-    (${asyncFunc.toString()})(...${JSON.stringify(args)})
+    const ${name} = ${asyncFunc.toString()};
+    ${name}(...${JSON.stringify(args)})
     .then(result => window.xkit$${injectKey}.messagePort.postMessage({
       xkitCallbackId: ${callbackId},
       result: JSON.stringify(result),

@@ -3,6 +3,21 @@ import { keyToClasses } from './css_map.js';
 
 const cache = {};
 
+const unburyTimelineObject = async id => {
+  const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
+  const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
+  let fiber = postElement[reactKey];
+
+  while (fiber !== null) {
+    const { timelineObject } = fiber.memoizedProps || {};
+    if (timelineObject !== undefined) {
+      return timelineObject;
+    } else {
+      fiber = fiber.return;
+    }
+  }
+};
+
 /**
  * @param {string} postID - The post ID of an on-screen post
  * @returns {Promise<object>} - The post's buried timelineObject property (cached; use
@@ -15,20 +30,7 @@ export const timelineObjectMemoized = async postID => cache[postID] || timelineO
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
 export const timelineObject = async function (postID) {
-  cache[postID] = inject(async id => {
-    const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
-    const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
-    let fiber = postElement[reactKey];
-
-    while (fiber !== null) {
-      const { timelineObject } = fiber.memoizedProps || {};
-      if (timelineObject !== undefined) {
-        return timelineObject;
-      } else {
-        fiber = fiber.return;
-      }
-    }
-  }, [postID]);
+  cache[postID] = inject(unburyTimelineObject, [postID]);
   return cache[postID];
 };
 
@@ -63,15 +65,7 @@ export const exposeTimelines = async () => {
   }
 };
 
-/**
- * Manipulate post form tags
- *
- * @param {object} options - Destructured
- * @param {string[]} options.add - Tags to insert into post form
- * @param {string[]} options.remove - Tags to remove from post form
- * @returns {Promise<void>} Resolves when finished
- */
-export const editPostFormTags = async ({ add = [], remove = [] }) => inject(async ({ add, remove }) => {
+const controlTagsInput = async ({ add, remove }) => {
   add = add.map(tag => tag.trim()).filter((tag, index, array) => array.indexOf(tag) === index);
 
   const selectedTagsElement = document.getElementById('selected-tags');
@@ -91,4 +85,14 @@ export const editPostFormTags = async ({ add = [], remove = [] }) => inject(asyn
       fiber = fiber.return;
     }
   }
-}, [{ add, remove }]);
+};
+
+/**
+ * Manipulate post form tags
+ *
+ * @param {object} options - Destructured
+ * @param {string[]} options.add - Tags to insert into post form
+ * @param {string[]} options.remove - Tags to remove from post form
+ * @returns {Promise<void>} Resolves when finished
+ */
+export const editPostFormTags = async ({ add = [], remove = [] }) => inject(controlTagsInput, [{ add, remove }]);

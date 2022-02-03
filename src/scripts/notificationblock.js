@@ -19,7 +19,7 @@ const buildCss = () => blockedPostTargetIDs.length === 0
   ? ''
   : blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
 
-const unburyTargetPostIds = async (notificationSelector) => {
+const xkitUnburyTargetPostIds = async (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)]
     .filter(({ dataset: { targetPostId } }) => targetPostId === undefined)
     .forEach(async notificationElement => {
@@ -39,7 +39,7 @@ const unburyTargetPostIds = async (notificationSelector) => {
     });
 };
 
-const processNotifications = () => inject(unburyTargetPostIds, [notificationSelector]);
+const processNotifications = () => inject(xkitUnburyTargetPostIds, [notificationSelector]);
 
 const onButtonClicked = async function ({ currentTarget }) {
   const postElement = currentTarget.closest('[data-id]');

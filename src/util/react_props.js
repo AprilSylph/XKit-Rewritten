@@ -88,9 +88,9 @@ const controlTagsInput = async ({ add, remove }) => {
 /**
  * Manipulate post form tags
  *
- * @param {object} options - Destructured
- * @param {string[]} options.add - Tags to insert into post form
- * @param {string[]} options.remove - Tags to remove from post form
+ * @param {object} options - Tags to add/remove to/from the current post form
+ * @param {string[]} [options.add] - Tags to insert
+ * @param {string[]} [options.remove] - Tags to remove
  * @returns {Promise<void>} Resolves when finished
  */
 export const editPostFormTags = async ({ add = [], remove = [] }) => inject(controlTagsInput, [{ add, remove }]);

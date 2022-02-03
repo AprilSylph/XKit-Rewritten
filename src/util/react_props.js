@@ -71,7 +71,7 @@ const controlTagsInput = async ({ add, remove }) => {
   const selectedTagsElement = document.getElementById('selected-tags');
   if (!selectedTagsElement) { return; }
 
-  const reactKey = Object.keys(selectedTagsElement).find(key => key.startsWith('__reactInternalInstance') || key.startsWith('__reactFiber'));
+  const reactKey = Object.keys(selectedTagsElement).find(key => key.startsWith('__reactFiber'));
   let fiber = selectedTagsElement[reactKey];
 
   while (fiber !== null) {

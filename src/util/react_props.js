@@ -3,7 +3,7 @@ import { keyToClasses } from './css_map.js';
 
 const cache = {};
 
-const xkitTimelineObject = async id => {
+const unburyTimelineObject = async id => {
   const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
   const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
   let fiber = postElement[reactKey];
@@ -30,7 +30,7 @@ export const timelineObjectMemoized = async postID => cache[postID] || timelineO
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
 export const timelineObject = async function (postID) {
-  cache[postID] = inject(xkitTimelineObject, [postID]);
+  cache[postID] = inject(unburyTimelineObject, [postID]);
   return cache[postID];
 };
 

@@ -65,15 +65,7 @@ export const exposeTimelines = async () => {
   }
 };
 
-/**
- * Manipulate post form tags
- *
- * @param {object} options - Destructured
- * @param {string[]} options.add - Tags to insert into post form
- * @param {string[]} options.remove - Tags to remove from post form
- * @returns {Promise<void>} Resolves when finished
- */
-export const editPostFormTags = async ({ add = [], remove = [] }) => inject(async ({ add, remove }) => {
+const controlTagsInput = async ({ add, remove }) => {
   add = add.map(tag => tag.trim()).filter((tag, index, array) => array.indexOf(tag) === index);
 
   const selectedTagsElement = document.getElementById('selected-tags');
@@ -93,4 +85,14 @@ export const editPostFormTags = async ({ add = [], remove = [] }) => inject(asyn
       fiber = fiber.return;
     }
   }
-}, [{ add, remove }]);
+};
+
+/**
+ * Manipulate post form tags
+ *
+ * @param {object} options - Destructured
+ * @param {string[]} options.add - Tags to insert into post form
+ * @param {string[]} options.remove - Tags to remove from post form
+ * @returns {Promise<void>} Resolves when finished
+ */
+export const editPostFormTags = async ({ add = [], remove = [] }) => inject(controlTagsInput, [{ add, remove }]);

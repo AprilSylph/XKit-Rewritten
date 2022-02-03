@@ -65,7 +65,15 @@ export const exposeTimelines = async () => {
   }
 };
 
-const xkitEditPostFormTags = async ({ add, remove }) => {
+/**
+ * Manipulate post form tags
+ *
+ * @param {object} options - Destructured
+ * @param {string[]} options.add - Tags to insert into post form
+ * @param {string[]} options.remove - Tags to remove from post form
+ * @returns {Promise<void>} Resolves when finished
+ */
+export const editPostFormTags = async ({ add = [], remove = [] }) => inject(async ({ add, remove }) => {
   add = add.map(tag => tag.trim()).filter((tag, index, array) => array.indexOf(tag) === index);
 
   const selectedTagsElement = document.getElementById('selected-tags');
@@ -85,14 +93,4 @@ const xkitEditPostFormTags = async ({ add, remove }) => {
       fiber = fiber.return;
     }
   }
-};
-
-/**
- * Manipulate post form tags
- *
- * @param {object} options - Destructured
- * @param {string[]} options.add - Tags to insert into post form
- * @param {string[]} options.remove - Tags to remove from post form
- * @returns {Promise<void>} Resolves when finished
- */
-export const editPostFormTags = async ({ add = [], remove = [] }) => inject(xkitEditPostFormTags, [{ add, remove }]);
+}, [{ add, remove }]);

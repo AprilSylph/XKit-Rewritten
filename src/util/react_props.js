@@ -15,7 +15,7 @@ export const timelineObjectMemoized = async postID => cache[postID] || timelineO
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
 export const timelineObject = async function (postID) {
-  cache[postID] = inject(async function xkitTimelineObject (id) {
+  cache[postID] = inject(async id => {
     const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
     const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
     let fiber = postElement[reactKey];
@@ -32,7 +32,7 @@ export const timelineObject = async function (postID) {
   return cache[postID];
 };
 
-const unburyGivenPaths = async function xkitUnburyGivenPaths (selector) {
+const unburyGivenPaths = async (selector) => {
   [...document.querySelectorAll(selector)].forEach(timelineElement => {
     const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactFiber'));
     let fiber = timelineElement[reactKey];
@@ -71,7 +71,7 @@ export const exposeTimelines = async () => {
  * @param {string[]} options.remove - Tags to remove from post form
  * @returns {Promise<void>} Resolves when finished
  */
-export const editPostFormTags = async ({ add = [], remove = [] }) => inject(async function xkitEditPostFormTags ({ add, remove }) {
+export const editPostFormTags = async ({ add = [], remove = [] }) => inject(async ({ add, remove }) => {
   add = add.map(tag => tag.trim()).filter((tag, index, array) => array.indexOf(tag) === index);
 
   const selectedTagsElement = document.getElementById('selected-tags');

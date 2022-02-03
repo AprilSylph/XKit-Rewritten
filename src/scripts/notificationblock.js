@@ -19,7 +19,7 @@ const buildCss = () => blockedPostTargetIDs.length === 0
   ? ''
   : blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
 
-const unburyTargetPostIds = async function xkitUnburyTargetPostIds (notificationSelector) {
+const unburyTargetPostIds = async (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)]
     .filter(({ dataset: { targetPostId } }) => targetPostId === undefined)
     .forEach(async notificationElement => {

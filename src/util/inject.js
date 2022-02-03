@@ -64,7 +64,7 @@ export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) =>
   callbacks.set(callbackId, [resolve, reject]);
 
   const script = document.createElement('script');
-  const name = `xkit$${asyncFunc.name || 'injected'};
+  const name = `xkit$${asyncFunc.name || 'injected'}`;
 
   script.setAttribute('nonce', nonce);
   script.textContent = `{

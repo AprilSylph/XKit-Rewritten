@@ -86,7 +86,10 @@ const onBeforeRepaint = () => {
 const observer = new MutationObserver(mutations => {
   mutationsPool.push(...mutations);
   if (repaintQueued === false) {
-    window.requestAnimationFrame(onBeforeRepaint);
+    Promise.race([
+      new Promise(resolve => window.requestAnimationFrame(resolve)),
+      new Promise(resolve => setTimeout(resolve, 0))
+    ]).then(onBeforeRepaint);
     repaintQueued = true;
   }
 });

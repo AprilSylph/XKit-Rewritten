@@ -1,5 +1,5 @@
 import { inject } from './inject.js';
-import { keyToClasses } from './css_map.js';
+import { keyToCss, resolveExpressions } from './css_map.js';
 
 const cache = {};
 
@@ -57,11 +57,9 @@ const unburyGivenPaths = async (selector) => {
  * @returns {Promise<void>} Resolves when finished
  */
 export const exposeTimelines = async () => {
-  const timelineClasses = await keyToClasses('timeline');
-  const selector = timelineClasses.map(className => `.${className}:not([data-timeline])`).join(',');
-
-  if (document.querySelectorAll(selector).length) {
-    inject(unburyGivenPaths, [selector]);
+  const timelineSelector = await resolveExpressions`${keyToCss('timeline')}:not([data-timeline])`;
+  if (document.querySelector(timelineSelector) !== null) {
+    return inject(unburyGivenPaths, [timelineSelector]);
   }
 };
 

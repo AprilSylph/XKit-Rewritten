@@ -222,7 +222,7 @@ const updateQuickTags = (changes, areaName) => {
 };
 
 /**
- * adapted from https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#basic_example
+ * adapted from https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
  *
  * @param {string} data - String to hash
  * @returns {Promise<string>} Hexadecimal string of a unique hash of the input

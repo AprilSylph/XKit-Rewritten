@@ -48,7 +48,7 @@ let queueTag;
 let alreadyRebloggedEnabled;
 let alreadyRebloggedLimit;
 
-const storageKey = 'quick_reblog.alreadyRebloggedList';
+const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 
 const renderTagSuggestions = () => {
@@ -155,13 +155,13 @@ const reblogPost = async function ({ currentTarget }) {
       notify(response.displayText);
 
       if (alreadyRebloggedEnabled) {
-        const { [storageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(storageKey);
+        const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(alreadyRebloggedStorageKey);
         const rootID = rebloggedRootId || postID;
 
         if (alreadyRebloggedList.includes(rootID) === false) {
           alreadyRebloggedList.push(rootID);
           alreadyRebloggedList.splice(0, alreadyRebloggedList.length - alreadyRebloggedLimit);
-          await browser.storage.local.set({ [storageKey]: alreadyRebloggedList });
+          await browser.storage.local.set({ [alreadyRebloggedStorageKey]: alreadyRebloggedList });
         }
       }
     }
@@ -178,7 +178,7 @@ const reblogPost = async function ({ currentTarget }) {
 });
 
 const processPosts = async function (postElements) {
-  const { [storageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(storageKey);
+  const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(alreadyRebloggedStorageKey);
   filterPostElements(postElements).forEach(async postElement => {
     const { id } = postElement.dataset;
     const { rebloggedRootId } = await timelineObjectMemoized(id);

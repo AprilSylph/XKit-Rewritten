@@ -49,7 +49,7 @@
         "*://www.tumblr.com/register?*",
         "*://www.tumblr.com/privacy/*"
       ],
-      "run_at": "document_idle",
+      "run_at": "document_end",
       "js": [
         "lib/browser-polyfill.min.js",
         "lib/jquery.min.js",

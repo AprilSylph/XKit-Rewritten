@@ -4,7 +4,6 @@
   const { getURL } = browser.runtime;
   const redpop = [...document.scripts].some(({ src }) => src.includes('/pop/'));
   const isReactLoaded = () => document.querySelector('[data-rh]') === null;
-  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
   const restartListeners = {};
 
@@ -84,20 +83,11 @@
       .forEach(runScript);
   };
 
-  const waitForReactLoaded = async function () {
-    let tries = 0;
-
-    while (tries < 300) {
-      if (isReactLoaded()) {
-        break;
-      }
-
-      tries++;
-      await sleep(100);
-    }
-  };
+  const waitForReactLoaded = () => new Promise(resolve => {
+    window.requestAnimationFrame(() => isReactLoaded() ? resolve() : waitForReactLoaded().then(resolve));
+  });
 
   if (redpop) {
-    waitForReactLoaded().then(init);
+    isReactLoaded() ? init() : waitForReactLoaded().then(init);
   }
 }

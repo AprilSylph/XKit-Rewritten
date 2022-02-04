@@ -222,10 +222,10 @@ const updateQuickTags = (changes, areaName) => {
 };
 
 /**
- * adapted from https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
+ * adapted from https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#basic_example
  *
- * @param {string} data - string to hash
- * @returns {Promise<string>} hash - hexadecimal string of a unique hash of the input
+ * @param {string} data - String to hash
+ * @returns {Promise<string>} Hexadecimal string of a unique hash of the input
  */
 const sha256 = async (data) => {
   const msgUint8 = new TextEncoder().encode(data);

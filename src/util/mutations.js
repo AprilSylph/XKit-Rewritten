@@ -88,7 +88,7 @@ const observer = new MutationObserver(mutations => {
   if (repaintQueued === false) {
     Promise.race([
       new Promise(resolve => window.requestAnimationFrame(resolve)),
-      new Promise(resolve => setTimeout(resolve, 0))
+      new Promise(resolve => setTimeout(resolve, 500))
     ]).then(onBeforeRepaint);
     repaintQueued = true;
   }

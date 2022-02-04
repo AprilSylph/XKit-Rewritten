@@ -40,6 +40,8 @@ let suggestableTags;
 let popupPosition;
 let showBlogSelector;
 let rememberLastBlog;
+let uuidToHash;
+let accountKey;
 let showCommentInput;
 let quickTagsIntegration;
 let showTagsInput;
@@ -49,6 +51,7 @@ let alreadyRebloggedEnabled;
 let alreadyRebloggedLimit;
 
 const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
+const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 
 const renderTagSuggestions = () => {
@@ -218,6 +221,34 @@ const updateQuickTags = (changes, areaName) => {
   }
 };
 
+/**
+ * adapted from https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
+ *
+ * @param {string} data - string to hash
+ * @returns {Promise<string>} hash - hexadecimal string of a unique hash of the input
+ */
+const sha256 = async (data) => {
+  const msgUint8 = new TextEncoder().encode(data);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+};
+
+const updateRememberedBlog = async event => {
+  if (!rememberLastBlog) return;
+
+  const { [rememberedBlogStorageKey]: rememberedBlogs = {} } =
+    await browser.storage.local.get(rememberedBlogStorageKey);
+
+  const selectedBlog = event.target.value;
+  const selectedBlogHash = uuidToHash[selectedBlog];
+
+  rememberedBlogs[accountKey] = selectedBlogHash;
+  console.log('setting', rememberedBlogs);
+  browser.storage.local.set({ [rememberedBlogStorageKey]: rememberedBlogs });
+};
+
 export const main = async function () {
   ({
     popupPosition,
@@ -239,6 +270,42 @@ export const main = async function () {
     ...userBlogs.map(({ name, uuid }) => Object.assign(document.createElement('option'), { value: uuid, textContent: name }))
   );
 
+  if (rememberLastBlog) {
+    // const userBlogHashEntries = await Promise.all(userBlogs.map(async ({ uuid }) => [uuid, await sha256(uuid)]));
+    // userBlogHashes = Object.fromEntries(userBlogHashEntries);
+    // accountKey = userBlogHashEntries[0][1];
+
+    uuidToHash = {};
+    const hashToUuid = {};
+    for (const { uuid } of userBlogs) {
+      const hash = await sha256(uuid);
+      uuidToHash[uuid] = hash;
+      hashToUuid[hash] = uuid;
+    }
+
+    const mainBlog = userBlogs[0].uuid;
+    accountKey = uuidToHash[mainBlog];
+
+    const { [rememberedBlogStorageKey]: rememberedBlogs = {} } =
+      await browser.storage.local.get(rememberedBlogStorageKey);
+
+    const savedBlogHash = rememberedBlogs[accountKey];
+
+    console.log(userBlogs.map(({ name, uuid }) => ({ name, uuid })));
+    console.log('userBlogHashes', uuidToHash);
+    console.log('mainBlogHash', accountKey);
+    console.log('savedBlogHash', savedBlogHash);
+
+    // const [savedBlog] = userBlogHashEntries.find(([key, value]) => value === savedBlogHash) || [];
+
+    if (savedBlogHash && hashToUuid[savedBlogHash]) {
+      blogSelector.value = hashToUuid[savedBlogHash];
+      console.log('userblogUUIDs[savedBlogHash]', hashToUuid[savedBlogHash]);
+    }
+
+    blogSelector.addEventListener('change', updateRememberedBlog);
+  }
+
   blogSelector.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;
   quickTagsList.hidden = !quickTagsIntegration || !showTagsInput;
@@ -259,6 +326,8 @@ export const main = async function () {
 export const clean = async function () {
   $(document.body).off('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
   popupElement.remove();
+
+  blogSelector.removeEventListener('change', updateRememberedBlog);
 
   browser.storage.onChanged.removeListener(updateQuickTags);
   onNewPosts.removeListener(processPosts);

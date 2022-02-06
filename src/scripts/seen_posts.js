@@ -1,19 +1,22 @@
-import { getPostElements } from '../util/interface.js';
+import { filterPostElements } from '../util/interface.js';
 import { exposeTimelines } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 
 const excludeClass = 'xkit-seen-posts-done';
+const timeline = /\/v2\/timeline\/dashboard/;
+const includeFiltered = true;
+
 const dimClass = 'xkit-seen-posts-seen';
 const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 
-const dimPosts = async function () {
+const dimPosts = async function (postElements) {
   const storageKey = 'seen_posts.seenPosts';
   const { [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey);
 
   await exposeTimelines();
 
-  for (const postElement of getPostElements({ excludeClass, timeline: /\/v2\/timeline\/dashboard/, includeFiltered: true })) {
+  for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
     const { id } = postElement.dataset;
 
     if (seenPosts.includes(id)) {
@@ -49,7 +52,6 @@ export const main = async function () {
   }
 
   onNewPosts.addListener(dimPosts);
-  dimPosts();
 };
 
 export const clean = async function () {

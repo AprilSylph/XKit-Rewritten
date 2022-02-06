@@ -1,6 +1,6 @@
 import { createControlButtonTemplate, cloneControlButton } from '../util/control_buttons.js';
 import { keyToCss } from '../util/css_map.js';
-import { getPostElements } from '../util/interface.js';
+import { filterPostElements } from '../util/interface.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
@@ -103,25 +103,22 @@ const onButtonClicked = async function ({ currentTarget }) {
   });
 };
 
-const processPosts = async function () {
-  getPostElements({ excludeClass }).forEach(async postElement => {
-    const editButton = postElement.querySelector('footer a[href*="/edit/"]');
-    if (!editButton) { return; }
+const processPosts = postElements => filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
+  const editButton = postElement.querySelector('footer a[href*="/edit/"]');
+  if (!editButton) { return; }
 
-    const { trail = [] } = await timelineObject(postElement.dataset.id);
-    if (trail.length < 2) { return; }
+  const { trail = [] } = await timelineObject(postElement.dataset.id);
+  if (trail.length < 2) { return; }
 
-    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });
-    editButton.parentNode.parentNode.insertBefore(clonedControlButton, editButton.parentNode);
-  });
-};
+  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });
+  editButton.parentNode.parentNode.insertBefore(clonedControlButton, editButton.parentNode);
+});
 
 export const main = async function () {
   reblogSelector = await keyToCss('reblog');
   controlButtonTemplate = await createControlButtonTemplate(symbolId, buttonClass);
 
   onNewPosts.addListener(processPosts);
-  processPosts();
 };
 
 export const clean = async function () {

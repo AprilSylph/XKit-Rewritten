@@ -79,7 +79,6 @@ export const main = async function () {
   } = await getPreferences('show_originals'));
 
   onNewPosts.addListener(processPosts);
-  processPosts();
 };
 
 export const clean = async function () {

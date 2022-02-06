@@ -23,7 +23,7 @@ const unburyTargetPostIds = async (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)]
     .filter(({ dataset: { targetPostId } }) => targetPostId === undefined)
     .forEach(async notificationElement => {
-      const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactInternalInstance') || key.startsWith('__reactFiber'));
+      const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactFiber'));
       let fiber = notificationElement[reactKey];
 
       while (fiber !== null) {

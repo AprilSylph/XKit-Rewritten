@@ -6,6 +6,7 @@ const pauseGif = function (gifElement) {
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
+    if (gifElement.parentNode === null) { return; }
     const canvas = document.createElement('canvas');
     canvas.width = image.naturalWidth;
     canvas.height = image.naturalHeight;

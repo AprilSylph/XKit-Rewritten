@@ -1,4 +1,4 @@
-import { getPostElements, buildStyle } from '../util/interface.js';
+import { buildStyle, filterPostElements } from '../util/interface.js';
 import { onNewPosts } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
 import { keyToCss } from '../util/css_map.js';
@@ -9,6 +9,8 @@ let maxHeight;
 let tagsSelector;
 
 const excludeClass = 'xkit-shorten-posts-done';
+const noPeepr = true;
+
 const shortenClass = 'xkit-shorten-posts-shortened';
 const tagsClass = 'xkit-shorten-posts-tags';
 const buttonClass = 'xkit-shorten-posts-expand';
@@ -35,27 +37,25 @@ const unshortenOnClick = ({ currentTarget }) => {
   currentTarget.remove();
 };
 
-const shortenPosts = async function () {
-  getPostElements({ excludeClass, noPeepr: true }).forEach(postElement => {
-    if (postElement.getBoundingClientRect().height > (window.innerHeight * maxHeight)) {
-      postElement.classList.add(shortenClass);
+const shortenPosts = postElements => filterPostElements(postElements, { excludeClass, noPeepr }).forEach(postElement => {
+  if (postElement.getBoundingClientRect().height > (window.innerHeight * maxHeight)) {
+    postElement.classList.add(shortenClass);
 
-      if (showTags) {
-        const tagsElement = postElement.querySelector(tagsSelector);
-        if (tagsElement) {
-          const tagsClone = tagsElement.cloneNode(true);
-          tagsClone.classList.add(tagsClass);
-          [...tagsClone.querySelectorAll('[href]')].forEach(element => { element.target = '_blank'; });
-          postElement.querySelector('article')?.appendChild(tagsClone);
-        }
+    if (showTags) {
+      const tagsElement = postElement.querySelector(tagsSelector);
+      if (tagsElement) {
+        const tagsClone = tagsElement.cloneNode(true);
+        tagsClone.classList.add(tagsClass);
+        [...tagsClone.querySelectorAll('[href]')].forEach(element => { element.target = '_blank'; });
+        postElement.querySelector('article')?.appendChild(tagsClone);
       }
-
-      const expandButtonClone = expandButton.cloneNode(true);
-      expandButtonClone.addEventListener('click', unshortenOnClick);
-      postElement.querySelector('article')?.appendChild(expandButtonClone);
     }
-  });
-};
+
+    const expandButtonClone = expandButton.cloneNode(true);
+    expandButtonClone.addEventListener('click', unshortenOnClick);
+    postElement.querySelector('article')?.appendChild(expandButtonClone);
+  }
+});
 
 export const main = async function () {
   ({ showTags, maxHeight } = await getPreferences('shorten_posts'));
@@ -66,7 +66,6 @@ export const main = async function () {
   tagsSelector = await keyToCss('tags');
 
   onNewPosts.addListener(shortenPosts);
-  shortenPosts();
 };
 
 export const clean = async function () {

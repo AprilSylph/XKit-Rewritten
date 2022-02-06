@@ -1,6 +1,6 @@
-import { keyToCss } from '../../util/css_map.js';
+import { keyToCss, resolveExpressions } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
-import { onNewPosts } from '../../util/mutations.js';
+import { pageModifications } from '../../util/mutations.js';
 
 const hiddenClass = 'xkit-tweaks-caught-up-line-title';
 const borderClass = 'xkit-tweaks-caught-up-line-border';
@@ -15,33 +15,27 @@ const styleElement = buildStyle(`
   }
 `);
 
-let tagChicletCarouselItemSelector;
 let listTimelineObjectSelector;
 
-const createCaughtUpLine = async function () {
-  [...document.querySelectorAll(tagChicletCarouselItemSelector)]
-    .map(tagChicletCarouselItem => tagChicletCarouselItem.closest(listTimelineObjectSelector))
-    .filter((element, index, array) => array.indexOf(element) === index)
-    .forEach(listTimelineObject => {
-      listTimelineObject?.classList.add(borderClass);
-      listTimelineObject?.previousElementSibling.classList.add(hiddenClass);
-    });
-};
+const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
+  .map(tagChicletCarouselItem => tagChicletCarouselItem.closest(listTimelineObjectSelector))
+  .filter((element, index, array) => array.indexOf(element) === index)
+  .forEach(listTimelineObject => {
+    listTimelineObject.classList.add(borderClass);
+    listTimelineObject.previousElementSibling.classList.add(hiddenClass);
+  });
 
 export const main = async function () {
-  tagChicletCarouselItemSelector = await keyToCss('tagChicletCarouselItem');
-  listTimelineObjectSelector = await keyToCss('listTimelineObject');
-
   document.head.append(styleElement);
 
-  onNewPosts.addListener(createCaughtUpLine);
-  createCaughtUpLine();
+  listTimelineObjectSelector = await keyToCss('listTimelineObject');
+  const tagChicletCarouselItemSelector = await resolveExpressions`${listTimelineObjectSelector} ${keyToCss('tagChicletCarouselItem')}`;
+  pageModifications.register(tagChicletCarouselItemSelector, createCaughtUpLine);
 };
 
 export const clean = async function () {
+  pageModifications.unregister(createCaughtUpLine);
   styleElement.remove();
-
-  onNewPosts.removeListener(createCaughtUpLine);
   $(`.${hiddenClass}`).removeClass(hiddenClass);
   $(`.${borderClass}`).removeClass(borderClass);
 };

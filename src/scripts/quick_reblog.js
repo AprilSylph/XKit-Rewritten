@@ -1,6 +1,6 @@
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
-import { getPostElements, postType } from '../util/interface.js';
+import { filterPostElements, postType } from '../util/interface.js';
 import { getUserBlogs } from '../util/user_blogs.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -49,8 +49,6 @@ let alreadyRebloggedEnabled;
 let alreadyRebloggedLimit;
 
 const storageKey = 'quick_reblog.alreadyRebloggedList';
-const excludeClass = 'xkit-quick-reblog-alreadyreblogged-done';
-
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 
 const renderTagSuggestions = () => {
@@ -179,9 +177,9 @@ const reblogPost = async function ({ currentTarget }) {
   actionButtons.appendChild(button);
 });
 
-const processPosts = async function () {
+const processPosts = async function (postElements) {
   const { [storageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(storageKey);
-  for (const postElement of getPostElements({ excludeClass })) {
+  filterPostElements(postElements).forEach(async postElement => {
     const { id } = postElement.dataset;
     const { rebloggedRootId } = await timelineObjectMemoized(id);
 
@@ -189,11 +187,12 @@ const processPosts = async function () {
 
     if (alreadyRebloggedList.includes(rootID)) {
       const reblogLink = postElement.querySelector('footer a[href*="/reblog/"]');
-      if (!reblogLink) { continue; }
-      const buttonDiv = reblogLink.parentNode;
-      makeButtonReblogged({ buttonDiv, state: 'published' });
+      if (reblogLink !== null) {
+        const buttonDiv = reblogLink.parentNode;
+        makeButtonReblogged({ buttonDiv, state: 'published' });
+      }
     }
-  }
+  });
 };
 
 const renderQuickTags = async function () {
@@ -236,12 +235,9 @@ export const main = async function () {
   popupElement.className = popupPosition;
 
   const userBlogs = await getUserBlogs();
-  for (const { name, uuid } of userBlogs) {
-    const option = document.createElement('option');
-    option.value = uuid;
-    option.textContent = name;
-    blogSelector.appendChild(option);
-  }
+  blogSelector.replaceChildren(
+    ...userBlogs.map(({ name, uuid }) => Object.assign(document.createElement('option'), { value: uuid, textContent: name }))
+  );
 
   blogSelector.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;
@@ -257,21 +253,15 @@ export const main = async function () {
 
   if (alreadyRebloggedEnabled) {
     onNewPosts.addListener(processPosts);
-    processPosts();
   }
 };
 
 export const clean = async function () {
   $(document.body).off('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
-
   popupElement.remove();
 
-  blogSelector.textContent = '';
-
   browser.storage.onChanged.removeListener(updateQuickTags);
-
   onNewPosts.removeListener(processPosts);
-  $(`.${excludeClass}`).removeClass(excludeClass);
 };
 
 export const stylesheet = true;

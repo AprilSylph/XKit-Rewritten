@@ -1,4 +1,4 @@
-import { getPostElements } from '../util/interface.js';
+import { filterPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { getPreferences } from '../util/preferences.js';
@@ -12,60 +12,40 @@ let tagColour;
 let colouredTags;
 let colourSourceTags;
 
+let tagArray;
+
 const excludeClass = 'xkit-painter-done';
 
-const paint = async function () {
-  const tagArray = colouredTags.split(',').map(tag => tag.trim().replace(/#/g, '').toLowerCase());
+const paint = postElements => filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
+  const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, tags } = await timelineObject(postElement.dataset.id);
 
-  getPostElements({ excludeClass }).forEach(async postElement => {
-    const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, tags } = await timelineObject(postElement.dataset.id);
+  const coloursToApply = [];
 
-    const coloursToApply = [];
-    if (canDelete && ownColour) {
-      coloursToApply.push(ownColour);
+  if (canDelete && ownColour) coloursToApply.push(ownColour);
+  if (liked && likedColour) coloursToApply.push(likedColour);
+  if (rebloggedFromId && reblogColour) coloursToApply.push(reblogColour);
+  if (!rebloggedFromId && originalColour) coloursToApply.push(originalColour);
+
+  if (tagColour) {
+    let tagColourFound = false;
+
+    if (tags.some(tag => tagArray.includes(tag.toLowerCase()))) {
+      coloursToApply.push(tagColour);
+      tagColourFound = true;
     }
 
-    if (liked && likedColour) {
-      coloursToApply.push(likedColour);
-    }
-
-    if (rebloggedFromId) {
-      if (reblogColour) {
-        coloursToApply.push(reblogColour);
-      }
-    } else if (originalColour) {
-      coloursToApply.push(originalColour);
-    }
-
-    if (tagColour) {
-      let tagColourFound = false;
-      for (const tag of tags) {
-        if (tagArray.includes(tag.toLowerCase())) {
-          coloursToApply.push(tagColour);
-          tagColourFound = true;
-          break;
-        }
-      }
-      if (!tagColourFound && colourSourceTags && rebloggedRootId && rebloggedRootUuid) {
-        try {
-          const sourcePost = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts?id=${rebloggedRootId}`);
-          for (const sourceTag of sourcePost.response.posts[0].tags) {
-            if (tagArray.includes(sourceTag.toLowerCase())) {
-              coloursToApply.push(tagColour);
-              break;
-            }
-          }
-        } catch (e) {
-          // The source post can't be found, so we can't extract tags from it either.
-          // This means we don't have to do anything else with it, and we can quit quietly.
-        }
+    if (!tagColourFound && colourSourceTags && rebloggedRootId && rebloggedRootUuid) {
+      try {
+        const { response: { tags: sourceTags } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
+        if (sourceTags.some(tag => tagArray.includes(tag.toLowerCase()))) coloursToApply.push(tagColour);
+      } catch (exception) {
+        // The source post can't be found, so we can't extract tags from it either.
+        // This means we don't have to do anything else with it, and we can quit quietly.
       }
     }
+  }
 
-    if (!coloursToApply.length) {
-      return;
-    }
-
+  if (coloursToApply.length > 0) {
     const step = 100 / coloursToApply.length;
     let borderImage = 'linear-gradient(to right';
     coloursToApply.forEach((colour, i) => {
@@ -77,8 +57,8 @@ const paint = async function () {
     articleElement.style.borderTop = '5px solid';
     articleElement.style.borderImageSource = borderImage;
     articleElement.style.borderImageSlice = 1;
-  });
-};
+  }
+});
 
 const strip = function () {
   $(`.${excludeClass} article`)
@@ -89,10 +69,25 @@ const strip = function () {
 };
 
 export const main = async function () {
-  ({ ownColour, originalColour, reblogColour, likedColour, tagColour, colouredTags, colourSourceTags } = await getPreferences('painter'));
+  ({
+    ownColour,
+    originalColour,
+    reblogColour,
+    likedColour,
+    tagColour,
+    colouredTags,
+    colourSourceTags
+  } = await getPreferences('painter'));
+
+  tagArray = colouredTags
+    .split(',')
+    .map(tag => tag
+      .trim()
+      .replace(/#/g, '')
+      .toLowerCase()
+    );
 
   onNewPosts.addListener(paint);
-  paint();
 };
 
 export const clean = async function () {

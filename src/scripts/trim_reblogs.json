@@ -1,6 +1,6 @@
 {
   "title": "Trim Reblogs",
-  "description": "Remove old trail items",
+  "description": "Cut long threads down to size",
   "icon": {
     "class_name": "ri-scissors-cut-line",
     "color": "white",

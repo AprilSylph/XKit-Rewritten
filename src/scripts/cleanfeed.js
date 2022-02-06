@@ -1,11 +1,10 @@
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
-import { getPostElements, buildStyle } from '../util/interface.js';
+import { buildStyle, filterPostElements } from '../util/interface.js';
 import { translate } from '../util/language_data.js';
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 
-const excludeClass = 'xkit-cleanfeed-done';
 const hiddenClass = 'xkit-cleanfeed-filtered';
 
 const styleElement = buildStyle();
@@ -16,28 +15,26 @@ let localFlagging;
 let localFlaggedBlogs;
 let reblogSelector;
 
-const processPosts = async function () {
-  getPostElements({ excludeClass }).forEach(async postElement => {
-    if (blockingMode === 'all') {
-      postElement.classList.add(hiddenClass);
-      return;
+const processPosts = postElements => filterPostElements(postElements).forEach(async postElement => {
+  if (blockingMode === 'all') {
+    postElement.classList.add(hiddenClass);
+    return;
+  }
+
+  const { blog: { name, isAdult }, trail } = await timelineObjectMemoized(postElement.dataset.id);
+
+  if (isAdult || localFlaggedBlogs.includes(name)) {
+    postElement.classList.add(hiddenClass);
+    return;
+  }
+
+  const reblogs = postElement.querySelectorAll(reblogSelector);
+  trail.forEach((trailItem, i) => {
+    if (trailItem.blog?.isAdult || localFlaggedBlogs.includes(trailItem.blog?.name)) {
+      reblogs[i].classList.add(hiddenClass);
     }
-
-    const { blog: { name, isAdult }, trail } = await timelineObjectMemoized(postElement.dataset.id);
-
-    if (isAdult || localFlaggedBlogs.includes(name)) {
-      postElement.classList.add(hiddenClass);
-      return;
-    }
-
-    const reblogs = postElement.querySelectorAll(reblogSelector);
-    trail.forEach((trailItem, i) => {
-      if (trailItem.blog?.isAdult || localFlaggedBlogs.includes(trailItem.blog?.name)) {
-        reblogs[i].classList.add(hiddenClass);
-      }
-    });
   });
-};
+});
 
 export const main = async function () {
   ({ blockingMode, localFlagging } = await getPreferences('cleanfeed'));
@@ -49,14 +46,12 @@ export const main = async function () {
 
   reblogSelector = await keyToCss('reblog');
   onNewPosts.addListener(processPosts);
-  processPosts();
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
   styleElement.remove();
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${hiddenClass}`).removeClass(hiddenClass);
 };
 

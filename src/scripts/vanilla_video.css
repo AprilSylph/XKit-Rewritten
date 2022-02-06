@@ -1,3 +1,1 @@
-.xkit-vanilla-video-player + div {
-  display: none !important;
-}
+.xkit-vanilla-video-player ~ * { display: none !important; }

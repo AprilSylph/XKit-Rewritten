@@ -1,18 +1,15 @@
-import { keyToClasses, keyToCss, descendantSelector } from '../util/css_map.js';
+import { keyToClasses, keyToCss, resolveExpressions } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { pageModifications } from '../util/mutations.js';
 
 let knightRiderLoaderSelector;
-let loaderSelector;
 let scrollToBottomButton;
 let scrollToBottomIcon;
 let active = false;
 
 const scrollToBottom = () => {
   window.scrollTo({ top: document.documentElement.scrollHeight });
-  const knightRiderLoaders = [...document.querySelectorAll(knightRiderLoaderSelector)];
-  const shouldKeepScrolling = knightRiderLoaders.some(element => element.matches(loaderSelector));
-  if (!shouldKeepScrolling) {
+  if (document.querySelector(knightRiderLoaderSelector) === null) {
     stopScrolling();
   }
 };
@@ -64,8 +61,7 @@ const addButtonToPage = async function ([scrollToTopButton]) {
 };
 
 export const main = async function () {
-  knightRiderLoaderSelector = await keyToCss('knightRiderLoader');
-  loaderSelector = await descendantSelector('main', 'loader', 'knightRiderLoader');
+  knightRiderLoaderSelector = await resolveExpressions`main ${keyToCss('loader')} ${keyToCss('knightRiderLoader')}`;
 
   const scrollToTopLabel = await translate('Scroll to top');
   pageModifications.register(`button[aria-label="${scrollToTopLabel}"]`, addButtonToPage);

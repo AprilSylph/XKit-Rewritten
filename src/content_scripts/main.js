@@ -81,6 +81,10 @@
     installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))
       .forEach(runScript);
+
+    const checkRepeatInitPath = getURL('/util/check_repeat_init.js');
+    const { checkRepeatInit } = await import(checkRepeatInitPath);
+    checkRepeatInit();
   };
 
   const waitForReactLoaded = () => new Promise(resolve => {

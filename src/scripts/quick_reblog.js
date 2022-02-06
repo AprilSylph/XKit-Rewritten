@@ -283,8 +283,8 @@ export const main = async function () {
       hashToUuid[hash] = uuid;
     }
 
-    const mainBlog = userBlogs[0].uuid;
-    accountKey = uuidToHash[mainBlog];
+    const mainBlog = userBlogs.find(blog => blog.primary === true);
+    accountKey = uuidToHash[mainBlog.uuid];
 
     const { [rememberedBlogStorageKey]: rememberedBlogs = {} } =
       await browser.storage.local.get(rememberedBlogStorageKey);

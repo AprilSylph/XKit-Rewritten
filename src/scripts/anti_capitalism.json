@@ -6,5 +6,12 @@
     "color": "#ffd800",
     "background_color": "#cd0000"
   },
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#anti-capitalism"
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#anti-capitalism",
+  "preferences": {
+    "allowFirstParty": {
+      "type": "checkbox",
+      "label": "Allow certain Tumblr-hosted ads",
+      "default": false
+    }
+  }
 }

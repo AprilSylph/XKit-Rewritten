@@ -30,7 +30,7 @@
     },
     "runOnPeepr": {
       "type": "checkbox",
-      "label": "Run in [user friendly description of Peepr goes here]",
+      "label": "Run on the blog view drawer",
       "default": false
     },
     "runOnBlogSubscriptions": {

@@ -17,9 +17,9 @@ let runOnPeepr;
 let runOnBlogSubscriptions;
 
 const lengthenTimeline = async (timeline) => {
-  const paginationCss = await keyToCss('manualPaginatorButtons');
+  const paginatorSelector = await keyToCss('manualPaginatorButtons');
 
-  if (!timeline.querySelector(paginationCss)) {
+  if (!timeline.querySelector(paginatorSelector)) {
     timeline.classList.add(lengthenedClass);
   }
 };
@@ -32,7 +32,8 @@ const processTimelines = () => {
       const onDashboard = timeline.dataset.timeline === '/v2/timeline/dashboard';
       const isSinglePostPeepr = timeline.dataset.timeline.includes('permalink');
       const onPeepr = timeline.closest('[role="dialog"]') !== null && isSinglePostPeepr === false;
-      const onBlogSubscriptions = timeline.dataset.timeline === '/v2/timeline' &&
+      const onBlogSubscriptions =
+        timeline.dataset.timeline === '/v2/timeline' &&
         timeline.dataset.which === 'blog_subscriptions';
 
       const shouldRun =

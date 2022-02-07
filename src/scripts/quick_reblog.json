@@ -46,6 +46,11 @@
       "label": "Suggest tags from the post being reblogged",
       "default": false
     },
+    "reblogTag": {
+      "type": "text",
+      "label": "Reblog tag",
+      "default": ""
+    },
     "queueTag": {
       "type": "text",
       "label": "Queue tag",

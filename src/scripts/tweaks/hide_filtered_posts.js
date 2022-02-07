@@ -1,31 +1,23 @@
-import { onNewPosts } from '../../util/mutations.js';
-import { buildStyle, filterPostElements } from '../../util/interface.js';
-
-import { timelineObjectMemoized } from '../../util/react_props.js';
-
-const excludeClass = 'xkit-tweaks-hide-filtered-posts-done';
-const includeFiltered = true;
+import { pageModifications } from '../../util/mutations.js';
+import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { buildStyle } from '../../util/interface.js';
 
 const hiddenClass = 'xkit-tweaks-hide-filtered-posts-hidden';
-const styleElement = buildStyle(`.${hiddenClass} article { display: none; }`);
+const styleElement = buildStyle(`.${hiddenClass} { display: none; }`);
 
-const processPosts = postElements => filterPostElements(postElements, { excludeClass, includeFiltered }).forEach(async postElement => {
-  const { filtered } = await timelineObjectMemoized(postElement.dataset.id);
-
-  if (filtered !== undefined && Object.keys(filtered).length !== 0) {
-    postElement.classList.add(hiddenClass);
-  }
-});
+const hideFilteredPosts = filteredScreens => filteredScreens
+  .map(filteredScreen => filteredScreen.closest('article'))
+  .forEach(article => article.classList.add(hiddenClass));
 
 export const main = async function () {
-  onNewPosts.addListener(processPosts);
+  const filteredScreenSelector = await resolveExpressions`article ${keyToCss('filteredScreen')}`;
+  pageModifications.register(filteredScreenSelector, hideFilteredPosts);
   document.head.append(styleElement);
 };
 
 export const clean = async function () {
-  onNewPosts.removeListener(processPosts);
+  pageModifications.unregister(hideFilteredPosts);
   styleElement.remove();
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${hiddenClass}`).removeClass(hiddenClass);
 };

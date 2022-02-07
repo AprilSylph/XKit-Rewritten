@@ -1,7 +1,7 @@
 import { buildStyle } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { pageModifications } from '../util/mutations.js';
-import { inject } from '../util/inject.js';
+import { injectVoid } from '../util/inject.js';
 import { keyToCss } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 
@@ -19,7 +19,7 @@ const buildCss = () => blockedPostTargetIDs.length === 0
   ? ''
   : blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
 
-const unburyTargetPostIds = async (notificationSelector) => {
+const unburyTargetPostIds = (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)]
     .filter(({ dataset: { targetPostId } }) => targetPostId === undefined)
     .forEach(async notificationElement => {
@@ -39,7 +39,7 @@ const unburyTargetPostIds = async (notificationSelector) => {
     });
 };
 
-const processNotifications = () => inject(unburyTargetPostIds, [notificationSelector]);
+const processNotifications = () => injectVoid(unburyTargetPostIds, [notificationSelector]);
 
 const onButtonClicked = async function ({ currentTarget }) {
   const postElement = currentTarget.closest('[data-id]');

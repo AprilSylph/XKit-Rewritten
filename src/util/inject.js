@@ -88,3 +88,23 @@ export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) =>
     script.remove();
   });
 });
+
+/**
+ * Injects a function into the page context, discarding its result.
+ *
+ * @param {Function} func - Function to run in the page context
+ * @param {Array} args - Array of arguments to pass to the function via spread
+ */
+export const injectVoid = (func, args = []) => {
+  const script = document.createElement('script');
+  const name = `xkit$${func.name || 'injected'}`;
+
+  script.setAttribute('nonce', nonce);
+  script.textContent = `{
+    const ${name} = ${func.toString()};
+    ${name}(...${JSON.stringify(args)})
+  }`;
+
+  document.documentElement.appendChild(script);
+  script.remove();
+};

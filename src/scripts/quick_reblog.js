@@ -53,6 +53,7 @@ const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
 const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 const uuidToHash = {};
+
 const renderTagSuggestions = () => {
   tagSuggestions.textContent = '';
   if (!showTagSuggestions) return;

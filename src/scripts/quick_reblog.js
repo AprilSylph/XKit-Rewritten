@@ -308,7 +308,7 @@ export const main = async function () {
 
   blogSelector.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;
-  quickTagsList.hidden = !quickTagsIntegration || !showTagsInput;
+  quickTagsList.hidden = !quickTagsIntegration;
   tagsInput.hidden = !showTagsInput;
 
   $(document.body).on('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);

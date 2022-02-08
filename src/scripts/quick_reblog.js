@@ -271,10 +271,6 @@ export const main = async function () {
   );
 
   if (rememberLastBlog) {
-    // const userBlogHashEntries = await Promise.all(userBlogs.map(async ({ uuid }) => [uuid, await sha256(uuid)]));
-    // userBlogHashes = Object.fromEntries(userBlogHashEntries);
-    // accountKey = userBlogHashEntries[0][1];
-
     uuidToHash = {};
     const hashToUuid = {};
     for (const { uuid } of userBlogs) {
@@ -291,16 +287,8 @@ export const main = async function () {
 
     const savedBlogHash = rememberedBlogs[accountKey];
 
-    console.log(userBlogs.map(({ name, uuid }) => ({ name, uuid })));
-    console.log('userBlogHashes', uuidToHash);
-    console.log('mainBlogHash', accountKey);
-    console.log('savedBlogHash', savedBlogHash);
-
-    // const [savedBlog] = userBlogHashEntries.find(([key, value]) => value === savedBlogHash) || [];
-
     if (savedBlogHash && hashToUuid[savedBlogHash]) {
       blogSelector.value = hashToUuid[savedBlogHash];
-      console.log('userblogUUIDs[savedBlogHash]', hashToUuid[savedBlogHash]);
     }
 
     blogSelector.addEventListener('change', updateRememberedBlog);

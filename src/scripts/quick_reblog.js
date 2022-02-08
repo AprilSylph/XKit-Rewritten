@@ -235,13 +235,13 @@ const sha256 = async (data) => {
   return hashHex;
 };
 
-const updateRememberedBlog = async event => {
+const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) => {
   if (!rememberLastBlog) return;
 
-  const { [rememberedBlogStorageKey]: rememberedBlogs = {} } =
-    await browser.storage.local.get(rememberedBlogStorageKey);
+  const {
+    [rememberedBlogStorageKey]: rememberedBlogs = {}
+  } = await browser.storage.local.get(rememberedBlogStorageKey);
 
-  const selectedBlog = event.target.value;
   const selectedBlogHash = blogHashes[selectedBlog];
 
   rememberedBlogs[accountKey] = selectedBlogHash;
@@ -274,11 +274,12 @@ export const main = async function () {
       blogHashes[uuid] = await sha256(uuid);
     }
 
-    const mainBlog = userBlogs.find(blog => blog.primary === true);
-    accountKey = blogHashes[mainBlog.uuid];
+    const { uuid: primaryUuid } = userBlogs.find(({ primary }) => primary === true);
+    accountKey = blogHashes[primaryUuid];
 
-    const { [rememberedBlogStorageKey]: rememberedBlogs = {} } =
-      await browser.storage.local.get(rememberedBlogStorageKey);
+    const {
+      [rememberedBlogStorageKey]: rememberedBlogs = {}
+    } = await browser.storage.local.get(rememberedBlogStorageKey);
 
     const savedBlogHash = rememberedBlogs[accountKey];
     const savedBlogUuid = Object.keys(blogHashes).find(uuid => blogHashes[uuid] === savedBlogHash);

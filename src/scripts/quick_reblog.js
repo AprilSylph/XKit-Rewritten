@@ -36,7 +36,6 @@ draftButton.dataset.state = 'draft';
 let lastPostID;
 let timeoutID;
 let suggestableTags;
-let uuidToHash;
 let accountKey;
 
 let popupPosition;
@@ -53,7 +52,7 @@ let alreadyRebloggedLimit;
 const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
 const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
-
+const uuidToHash = {};
 const renderTagSuggestions = () => {
   tagSuggestions.textContent = '';
   if (!showTagSuggestions) return;
@@ -270,7 +269,6 @@ export const main = async function () {
   );
 
   if (rememberLastBlog) {
-    uuidToHash = {};
     const hashToUuid = {};
     for (const { uuid } of userBlogs) {
       const hash = await sha256(uuid);

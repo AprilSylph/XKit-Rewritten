@@ -270,11 +270,8 @@ export const main = async function () {
   );
 
   if (rememberLastBlog) {
-    const hashToUuid = {};
     for (const { uuid } of userBlogs) {
-      const hash = await sha256(uuid);
-      uuidToHash[uuid] = hash;
-      hashToUuid[hash] = uuid;
+      uuidToHash[uuid] = await sha256(uuid);
     }
 
     const mainBlog = userBlogs.find(blog => blog.primary === true);
@@ -284,10 +281,8 @@ export const main = async function () {
       await browser.storage.local.get(rememberedBlogStorageKey);
 
     const savedBlogHash = rememberedBlogs[accountKey];
-
-    if (savedBlogHash && hashToUuid[savedBlogHash]) {
-      blogSelector.value = hashToUuid[savedBlogHash];
-    }
+    const savedBlogUuid = Object.keys(uuidToHash).find(uuid => uuidToHash[uuid] === savedBlogHash);
+    if (savedBlogUuid) blogSelector.value = savedBlogUuid;
 
     blogSelector.addEventListener('change', updateRememberedBlog);
   }

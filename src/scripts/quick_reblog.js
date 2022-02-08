@@ -236,8 +236,6 @@ const sha256 = async (data) => {
 };
 
 const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) => {
-  if (!rememberLastBlog) return;
-
   const {
     [rememberedBlogStorageKey]: rememberedBlogs = {}
   } = await browser.storage.local.get(rememberedBlogStorageKey);

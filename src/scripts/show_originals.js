@@ -6,36 +6,58 @@ import { keyToCss } from '../util/css_map.js';
 
 const excludeClass = 'xkit-show-originals-done';
 const hiddenClass = 'xkit-show-originals-hidden';
+const activeTimelineClass = 'xkit-show-originals-timeline';
 const lengthenedClass = 'xkit-show-originals-lengthened';
-
-const dashboardTimeline = '/v2/timeline/dashboard';
-const dashboardTimelineRegExp = new RegExp(dashboardTimeline);
-
-const lengthenTimelines = async () => {
-  const timeline =
-    document.querySelector(`[data-timeline="${dashboardTimeline}"]:not(.${excludeClass})`);
-
-  if (timeline) {
-    timeline.classList.add(excludeClass);
-    const paginationCss = await keyToCss('manualPaginatorButtons');
-
-    if (!timeline.querySelector(paginationCss)) {
-      timeline.classList.add(lengthenedClass);
-    }
-  }
-};
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
 let whitelistedUsernames;
+let runOnDashboard;
+let runOnPeepr;
+let runOnBlogSubscriptions;
+
+const lengthenTimeline = async (timeline) => {
+  const paginatorSelector = await keyToCss('manualPaginatorButtons');
+
+  if (!timeline.querySelector(paginatorSelector)) {
+    timeline.classList.add(lengthenedClass);
+  }
+};
+
+const processTimelines = () => {
+  [...document.querySelectorAll(`[data-timeline]:not(.${excludeClass})`)]
+    .forEach(timeline => {
+      timeline.classList.add(excludeClass);
+
+      const onDashboard = timeline.dataset.timeline === '/v2/timeline/dashboard';
+      const isSinglePostPeepr = timeline.dataset.timeline.includes('permalink');
+      const onPeepr = timeline.closest('[role="dialog"]') !== null && isSinglePostPeepr === false;
+      const onBlogSubscriptions =
+        timeline.dataset.timeline === '/v2/timeline' &&
+        timeline.dataset.which === 'blog_subscriptions';
+
+      const shouldRun =
+        (runOnDashboard && onDashboard) ||
+        (runOnPeepr && onPeepr) ||
+        (runOnBlogSubscriptions && onBlogSubscriptions);
+
+      if (shouldRun) {
+        timeline.classList.add(activeTimelineClass);
+        lengthenTimeline(timeline);
+      }
+    });
+};
 
 const processPosts = async function () {
   const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
 
   await exposeTimelines();
-  lengthenTimelines();
+  processTimelines();
 
-  getPostElements({ excludeClass, timeline: dashboardTimelineRegExp, includeFiltered: true }).forEach(async postElement => {
+  const postElements = getPostElements({ excludeClass, includeFiltered: true })
+    .filter(postElement => postElement.matches(`[data-timeline].${activeTimelineClass} div`));
+
+  postElements.forEach(async postElement => {
     const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);
 
     if (!rebloggedRootId) { return; }
@@ -48,7 +70,14 @@ const processPosts = async function () {
 };
 
 export const main = async function () {
-  ({ showOwnReblogs, showReblogsWithContributedContent, whitelistedUsernames } = await getPreferences('show_originals'));
+  ({
+    showOwnReblogs,
+    showReblogsWithContributedContent,
+    whitelistedUsernames,
+    runOnDashboard,
+    runOnPeepr,
+    runOnBlogSubscriptions
+  } = await getPreferences('show_originals'));
 
   onNewPosts.addListener(processPosts);
 };
@@ -58,6 +87,8 @@ export const clean = async function () {
 
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${hiddenClass}`).removeClass(hiddenClass);
+  $(`.${activeTimelineClass}`).removeClass(activeTimelineClass);
+  $(`.${lengthenedClass}`).removeClass(lengthenedClass);
 };
 
 export const stylesheet = true;

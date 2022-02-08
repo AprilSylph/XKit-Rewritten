@@ -22,6 +22,21 @@
       "type": "textarea",
       "label": "Blogs to show reblogs from (comma-separated)",
       "default": ""
+    },
+    "runOnDashboard": {
+      "type": "checkbox",
+      "label": "Run on the dashboard",
+      "default": true
+    },
+    "runOnPeepr": {
+      "type": "checkbox",
+      "label": "Run on the blog view drawer",
+      "default": false
+    },
+    "runOnBlogSubscriptions": {
+      "type": "checkbox",
+      "label": "Run in \"Your Blog Subscriptions\"",
+      "default": false
     }
   }
 }

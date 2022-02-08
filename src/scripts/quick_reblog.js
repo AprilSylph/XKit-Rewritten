@@ -96,6 +96,7 @@ const showPopupOnHover = ({ currentTarget }) => {
       blogSelector.value = blogSelector.options[0].value;
     }
     commentInput.value = '';
+    [...quickTagsList.children].forEach(({ dataset }) => delete dataset.checked);
     tagsInput.value = '';
     timelineObjectMemoized(thisPostID).then(({ tags, trail, content, layout, blogName, rebloggedRootName }) => {
       suggestableTags = tags;
@@ -208,12 +209,25 @@ const renderQuickTags = async function () {
 
   const { [quickTagsStorageKey]: tagBundles = [] } = await browser.storage.local.get(quickTagsStorageKey);
   tagBundles.forEach(tagBundle => {
+    const bundleTags = tagBundle.tags.split(',').map(tag => tag.trim().toLowerCase());
     const bundleButton = document.createElement('button');
     bundleButton.textContent = tagBundle.title;
-    bundleButton.addEventListener('click', event => {
-      tagsInput.value.trim() === ''
-        ? tagsInput.value = tagBundle.tags
-        : tagsInput.value += `, ${tagBundle.tags}`;
+    bundleButton.addEventListener('click', ({ currentTarget: { dataset } }) => {
+      const checked = dataset.checked === 'true';
+
+      if (checked) {
+        tagsInput.value = tagsInput.value
+          .split(',')
+          .map(tag => tag.trim())
+          .filter(tag => bundleTags.includes(tag.toLowerCase()) === false)
+          .join(', ');
+      } else {
+        tagsInput.value.trim() === ''
+          ? tagsInput.value = tagBundle.tags
+          : tagsInput.value += `, ${tagBundle.tags}`;
+      }
+
+      dataset.checked = !checked;
     });
 
     quickTagsList.appendChild(bundleButton);

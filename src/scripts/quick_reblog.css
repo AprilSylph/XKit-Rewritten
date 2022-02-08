@@ -62,7 +62,11 @@ div:first-child + span + #quick-reblog {
 }
 
 #quick-reblog .quick-tags button {
+  position: relative;
+
+  overflow: hidden;
   padding: 0.75ch 1ch;
+  padding-right: calc(1ch + 1em + 1ch);
   margin-bottom: 2px;
 
   background-color: rgb(var(--white));
@@ -70,6 +74,8 @@ div:first-child + span + #quick-reblog {
   font-size: inherit;
   line-height: inherit;
   text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   opacity: 0.65;
 }
@@ -77,6 +83,21 @@ div:first-child + span + #quick-reblog {
 #quick-reblog .quick-tags button:hover {
   background-color: rgb(var(--secondary-accent));
   opacity: 1;
+}
+
+#quick-reblog .quick-tags button[data-checked="true"]::after {
+  position: absolute;
+  top: 50%;
+  right: 1ch;
+  z-index: 1;
+  transform: translateY(-50%);
+
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+
+  content: "\2713";
+  line-height: 1;
 }
 
 #quick-reblog .action-buttons {

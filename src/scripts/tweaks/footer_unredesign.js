@@ -1,33 +1,42 @@
-import { keyToClasses, keyToCss } from '../../util/css_map.js';
+import { keyToClasses, keyToCss, resolveExpressions } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
 let footerRedesignClasses;
 let footerRedesignSelector;
 
-const styleElement = buildStyle(`
-.xkit-control-button-container {
-  margin-left: 20px;
-}
+const keyToNot = async function (...keys) {
+  const classes = await keyToClasses(...keys);
+  return classes.map(className => `:not(.${className})`).join('');
+};
 
-[role="dialog"] #quick-reblog,
-[role="dialog"] #quick-tags {
-  top: 50% !important;
-  bottom: unset !important;
-  right: 100% !important;
-  transform: translate(-20px, -50%) !important;
-}
+const styleElement = buildStyle();
+resolveExpressions`
+  ${keyToCss('postActivityWrapper')}${keyToNot('postActivityWrapperOpen')} {
+    margin-top: 0;
+  }
+  .xkit-control-button-container {
+    margin-left: 20px;
+  }
 
-@media only screen and (max-width: 650px) {
-  #quick-reblog,
-  #quick-tags {
+  [role="dialog"] #quick-reblog,
+  [role="dialog"] #quick-tags {
     top: 50% !important;
     bottom: unset !important;
     right: 100% !important;
     transform: translate(-20px, -50%) !important;
   }
-}
-`);
+
+  @media only screen and (max-width: 650px) {
+    #quick-reblog,
+    #quick-tags {
+      top: 50% !important;
+      bottom: unset !important;
+      right: 100% !important;
+      transform: translate(-20px, -50%) !important;
+    }
+  }
+`.then(css => { styleElement.textContent = css; console.log(styleElement.textContent); });
 
 const removeFooterRedesign = elements => {
   elements.forEach(element => {

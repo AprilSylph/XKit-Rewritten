@@ -1,4 +1,4 @@
-import { getPostElements } from '../util/interface.js';
+import { filterPostElements } from '../util/interface.js';
 import { timelineObjectMemoized, exposeTimelines } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -8,6 +8,7 @@ const excludeClass = 'xkit-show-originals-done';
 const hiddenClass = 'xkit-show-originals-hidden';
 const activeTimelineClass = 'xkit-show-originals-timeline';
 const lengthenedClass = 'xkit-show-originals-lengthened';
+const includeFiltered = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
@@ -48,25 +49,24 @@ const processTimelines = () => {
     });
 };
 
-const processPosts = async function () {
+const processPosts = async function (postElements) {
   const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
 
   await exposeTimelines();
   processTimelines();
 
-  const postElements = getPostElements({ excludeClass, includeFiltered: true })
-    .filter(postElement => postElement.matches(`[data-timeline].${activeTimelineClass} div`));
+  filterPostElements(postElements, { includeFiltered })
+    .filter(postElement => postElement.matches(`[data-timeline].${activeTimelineClass} div`))
+    .forEach(async postElement => {
+      const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);
 
-  postElements.forEach(async postElement => {
-    const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);
+      if (!rebloggedRootId) { return; }
+      if (showOwnReblogs && canEdit) { return; }
+      if (showReblogsWithContributedContent && content.length > 0) { return; }
+      if (whitelist.includes(blogName)) { return; }
 
-    if (!rebloggedRootId) { return; }
-    if (showOwnReblogs && canEdit) { return; }
-    if (showReblogsWithContributedContent && content.length > 0) { return; }
-    if (whitelist.includes(blogName)) { return; }
-
-    postElement.classList.add(hiddenClass);
-  });
+      postElement.classList.add(hiddenClass);
+    });
 };
 
 export const main = async function () {

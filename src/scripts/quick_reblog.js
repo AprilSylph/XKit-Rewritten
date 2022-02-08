@@ -36,12 +36,12 @@ draftButton.dataset.state = 'draft';
 let lastPostID;
 let timeoutID;
 let suggestableTags;
+let uuidToHash;
+let accountKey;
 
 let popupPosition;
 let showBlogSelector;
 let rememberLastBlog;
-let uuidToHash;
-let accountKey;
 let showCommentInput;
 let quickTagsIntegration;
 let showTagsInput;
@@ -245,7 +245,6 @@ const updateRememberedBlog = async event => {
   const selectedBlogHash = uuidToHash[selectedBlog];
 
   rememberedBlogs[accountKey] = selectedBlogHash;
-  console.log('setting', rememberedBlogs);
   browser.storage.local.set({ [rememberedBlogStorageKey]: rememberedBlogs });
 };
 

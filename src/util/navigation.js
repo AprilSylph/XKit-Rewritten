@@ -21,18 +21,15 @@ const waitForNavigation = async () => new Promise(resolve => {
 });
 
 let previousLocation = new URL(location);
-(async () => {
-  while (true) {
-    try {
-      await inject(waitForNavigation);
-    } catch (e) {
-      console.log(e);
-      break;
-    }
+
+const handleNavigationRecursive = () => {
+  inject(waitForNavigation).then(() => {
     const currentLocation = new URL(location);
     for (const callback of onNavigation.listeners) {
       callback(currentLocation, previousLocation);
     }
     previousLocation = currentLocation;
-  }
-})();
+    handleNavigationRecursive();
+  });
+};
+handleNavigationRecursive();

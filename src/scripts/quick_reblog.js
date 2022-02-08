@@ -36,6 +36,7 @@ draftButton.dataset.state = 'draft';
 let lastPostID;
 let timeoutID;
 let suggestableTags;
+let accountKey;
 
 let popupPosition;
 let showBlogSelector;
@@ -49,8 +50,10 @@ let queueTag;
 let alreadyRebloggedEnabled;
 let alreadyRebloggedLimit;
 
-const storageKey = 'quick_reblog.alreadyRebloggedList';
+const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
+const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
+const blogHashes = {};
 
 const renderTagSuggestions = () => {
   tagSuggestions.textContent = '';
@@ -160,13 +163,13 @@ const reblogPost = async function ({ currentTarget }) {
       notify(response.displayText);
 
       if (alreadyRebloggedEnabled) {
-        const { [storageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(storageKey);
+        const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(alreadyRebloggedStorageKey);
         const rootID = rebloggedRootId || postID;
 
         if (alreadyRebloggedList.includes(rootID) === false) {
           alreadyRebloggedList.push(rootID);
           alreadyRebloggedList.splice(0, alreadyRebloggedList.length - alreadyRebloggedLimit);
-          await browser.storage.local.set({ [storageKey]: alreadyRebloggedList });
+          await browser.storage.local.set({ [alreadyRebloggedStorageKey]: alreadyRebloggedList });
         }
       }
     }
@@ -183,7 +186,7 @@ const reblogPost = async function ({ currentTarget }) {
 });
 
 const processPosts = async function (postElements) {
-  const { [storageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(storageKey);
+  const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(alreadyRebloggedStorageKey);
   filterPostElements(postElements).forEach(async postElement => {
     const { id } = postElement.dataset;
     const { rebloggedRootId } = await timelineObjectMemoized(id);
@@ -223,6 +226,31 @@ const updateQuickTags = (changes, areaName) => {
   }
 };
 
+/**
+ * adapted from https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
+ *
+ * @param {string} data - String to hash
+ * @returns {Promise<string>} Hexadecimal string of a unique hash of the input
+ */
+const sha256 = async (data) => {
+  const msgUint8 = new TextEncoder().encode(data);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+};
+
+const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) => {
+  const {
+    [rememberedBlogStorageKey]: rememberedBlogs = {}
+  } = await browser.storage.local.get(rememberedBlogStorageKey);
+
+  const selectedBlogHash = blogHashes[selectedBlog];
+
+  rememberedBlogs[accountKey] = selectedBlogHash;
+  browser.storage.local.set({ [rememberedBlogStorageKey]: rememberedBlogs });
+};
+
 export const main = async function () {
   ({
     popupPosition,
@@ -245,6 +273,25 @@ export const main = async function () {
     ...userBlogs.map(({ name, uuid }) => Object.assign(document.createElement('option'), { value: uuid, textContent: name }))
   );
 
+  if (rememberLastBlog) {
+    for (const { uuid } of userBlogs) {
+      blogHashes[uuid] = await sha256(uuid);
+    }
+
+    const { uuid: primaryUuid } = userBlogs.find(({ primary }) => primary === true);
+    accountKey = blogHashes[primaryUuid];
+
+    const {
+      [rememberedBlogStorageKey]: rememberedBlogs = {}
+    } = await browser.storage.local.get(rememberedBlogStorageKey);
+
+    const savedBlogHash = rememberedBlogs[accountKey];
+    const savedBlogUuid = Object.keys(blogHashes).find(uuid => blogHashes[uuid] === savedBlogHash);
+    if (savedBlogUuid) blogSelector.value = savedBlogUuid;
+
+    blogSelector.addEventListener('change', updateRememberedBlog);
+  }
+
   blogSelector.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;
   quickTagsList.hidden = !quickTagsIntegration || !showTagsInput;
@@ -265,6 +312,8 @@ export const main = async function () {
 export const clean = async function () {
   $(document.body).off('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
   popupElement.remove();
+
+  blogSelector.removeEventListener('change', updateRememberedBlog);
 
   browser.storage.onChanged.removeListener(updateQuickTags);
   onNewPosts.removeListener(processPosts);

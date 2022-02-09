@@ -1,5 +1,5 @@
 import { inject } from './inject.js';
-import { showModal, modalCompleteButton } from './modals.js';
+import { showModal, modalCancelButton } from './modals.js';
 
 const currentVersion = browser.runtime.getManifest().version;
 
@@ -25,9 +25,16 @@ export const checkRepeatInit = inject(getRunningXkit, [currentVersion])
         title: 'XKit Rewritten has been initialized multiple times',
         message: [
           ...updateMessage,
-          'Hard refreshing this browser tab via the refresh button or f5 key is recommended.'
+          'Refreshing this browser tab is recommended to avoid unexpected behavior.'
         ],
-        buttons: [modalCompleteButton]
+        buttons: [modalCancelButton,
+          Object.assign(document.createElement('button'), {
+            textContent: 'Reload',
+            className: 'blue',
+            onclick: () => {
+              location.reload(true);
+            }
+          })]
       });
     }
   });

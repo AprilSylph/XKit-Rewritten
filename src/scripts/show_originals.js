@@ -70,6 +70,7 @@ const styleElement = buildStyle(`
   a.${buttonClass} {
     padding: 14px 16px;
     text-decoration: none;
+    text-transform: capitalize;
   }
   .${buttonClass}:hover {
     background: rgba(var(--white-on-dark),.13);
@@ -105,7 +106,7 @@ const addControls = async (timeline, location) => {
   onButton.dataset.mode = 'on';
   const offButton = Object.assign(document.createElement('a'), {
     className: `${buttonClass} offButton`,
-    textContent: await translate('All Posts'),
+    textContent: await translate('All posts'),
     onclick: handleClick
   });
   offButton.dataset.mode = 'off';

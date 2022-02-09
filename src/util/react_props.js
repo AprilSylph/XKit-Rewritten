@@ -1,7 +1,8 @@
 import { inject } from './inject.js';
 import { keyToCss, resolveExpressions } from './css_map.js';
 
-const cache = {};
+const permanentCache = {};
+const immediateCache = {};
 
 const unburyTimelineObject = async id => {
   const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
@@ -21,17 +22,23 @@ const unburyTimelineObject = async id => {
 /**
  * @param {string} postID - The post ID of an on-screen post
  * @returns {Promise<object>} - The post's buried timelineObject property (cached; use
- *  timelineObject if you need up-to-date properties that may have changed)
+ *  timelineObjectImmediate if you need up-to-date properties that may have changed)
  */
-export const timelineObjectMemoized = async postID => cache[postID] || timelineObject(postID);
+export const timelineObjectMemoized = async postID => permanentCache[postID] || timelineObject(postID);
 
 /**
  * @param {string} postID - The post ID of an on-screen post
- * @returns {Promise<object>} - The post's buried timelineObject property
+ * @returns {Promise<object>} - The post's buried timelineObject property (queried immediately)
  */
-export const timelineObject = async function (postID) {
-  cache[postID] = inject(unburyTimelineObject, [postID]);
-  return cache[postID];
+export const timelineObjectImmediate = async postID => immediateCache[postID] || timelineObject(postID);
+
+const timelineObject = async function (postID) {
+  const resultPromise = inject(unburyTimelineObject, [postID]);
+
+  immediateCache[postID] = resultPromise;
+  permanentCache[postID] = permanentCache[postID] ?? resultPromise;
+  resultPromise.then(() => { delete immediateCache[postID]; });
+  return resultPromise;
 };
 
 const unburyGivenPaths = async (selector) => {

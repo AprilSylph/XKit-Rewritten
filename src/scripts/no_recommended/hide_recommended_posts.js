@@ -1,6 +1,6 @@
 import { buildStyle, filterPostElements } from '../../util/interface.js';
 import { onNewPosts } from '../../util/mutations.js';
-import { exposeTimelines, timelineObject } from '../../util/react_props.js';
+import { exposeTimelines, timelineObjectImmediate } from '../../util/react_props.js';
 
 const excludeClass = 'xkit-no-recommended-posts-done';
 const hiddenClass = 'xkit-no-recommended-posts-hidden';
@@ -13,7 +13,7 @@ const processPosts = async function (postElements) {
   await exposeTimelines();
 
   filterPostElements(postElements, { excludeClass, timeline, includeFiltered }).forEach(async postElement => {
-    const { recommendationReason } = await timelineObject(postElement.dataset.id);
+    const { recommendationReason } = await timelineObjectImmediate(postElement.dataset.id);
     if (!recommendationReason) return;
 
     const { loggingReason } = recommendationReason;

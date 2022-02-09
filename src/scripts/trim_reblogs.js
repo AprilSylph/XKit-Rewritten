@@ -4,7 +4,7 @@ import { filterPostElements } from '../util/interface.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
-import { timelineObject, timelineObjectMemoized } from '../util/react_props.js';
+import { timelineObjectImmediate, timelineObjectMemoized } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-scissors-cut-line';
@@ -107,7 +107,7 @@ const processPosts = postElements => filterPostElements(postElements, { excludeC
   const editButton = postElement.querySelector('footer a[href*="/edit/"]');
   if (!editButton) { return; }
 
-  const { trail = [] } = await timelineObject(postElement.dataset.id);
+  const { trail = [] } = await timelineObjectImmediate(postElement.dataset.id);
   if (trail.length < 2) { return; }
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });

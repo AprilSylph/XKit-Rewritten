@@ -3,7 +3,7 @@ import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
 import { getPreferences } from '../util/preferences.js';
-import { timelineObjectMemoized, timelineObject, editPostFormTags } from '../util/react_props.js';
+import { timelineObjectMemoized, timelineObjectImmediate, editPostFormTags } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-price-tag-3-line';
@@ -68,7 +68,7 @@ const processPostForm = async function ([selectedTagsElement]) {
       response = {},
       state = response.state,
       askingName = response.askingName
-    } = await (postIsOnScreen ? timelineObject(postId) : apiFetch(`/v2/blog/${blogName}/posts/${postId}`));
+    } = await (postIsOnScreen ? timelineObjectImmediate(postId) : apiFetch(`/v2/blog/${blogName}/posts/${postId}`));
 
     if (state === 'submission') {
       const tagsToAdd = [];

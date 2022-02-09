@@ -1,5 +1,5 @@
 import { filterPostElements } from '../util/interface.js';
-import { timelineObject } from '../util/react_props.js';
+import { timelineObjectImmediate } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -17,7 +17,7 @@ let tagArray;
 const excludeClass = 'xkit-painter-done';
 
 const paint = postElements => filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
-  const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, tags } = await timelineObject(postElement.dataset.id);
+  const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, tags } = await timelineObjectImmediate(postElement.dataset.id);
 
   const coloursToApply = [];
 

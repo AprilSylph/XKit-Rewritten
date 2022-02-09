@@ -9,7 +9,7 @@ const getRunningXkit = async (currentVersion) => {
     value: currentVersion,
     writable: false,
     enumerable: false,
-    configurable: false
+    configurable: true
   });
   return runningVersion;
 };

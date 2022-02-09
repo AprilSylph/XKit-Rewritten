@@ -14,13 +14,12 @@ const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
 const buttonClass = 'xkit-show-originals-button';
 
-const storageKey = 'show_originals.rememberedBlogs';
+const storageKey = 'show_originals.activeLocations';
 const includeFiltered = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
-let whitelistedUsernames;
-
+let whitelist;
 let peeprBlacklist;
 
 const lengthenTimeline = async (timeline) => {
@@ -124,8 +123,6 @@ const addControls = async (timeline, location) => {
 const processPosts = async function (postElements) {
   processTimelines();
 
-  const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
-
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {
       const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);
@@ -140,13 +137,19 @@ const processPosts = async function (postElements) {
 };
 
 export const main = async function () {
+  let whitelistedUsernames;
   ({
     showOwnReblogs,
     showReblogsWithContributedContent,
     whitelistedUsernames
   } = await getPreferences('show_originals'));
 
-  peeprBlacklist = showOwnReblogs ? await getUserBlogNames() : [];
+  const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
+
+  peeprBlacklist = [
+    ...whitelist,
+    ...showOwnReblogs ? await getUserBlogNames() : []
+  ];
 
   onNewPosts.addListener(processPosts);
   document.head.appendChild(styleElement);

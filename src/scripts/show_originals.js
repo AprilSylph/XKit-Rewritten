@@ -56,7 +56,6 @@ const processPosts = async function (postElements) {
   processTimelines();
 
   filterPostElements(postElements, { includeFiltered })
-    .filter(postElement => postElement.matches(`[data-timeline].${activeTimelineClass} div`))
     .forEach(async postElement => {
       const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);
 

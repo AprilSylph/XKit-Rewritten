@@ -27,14 +27,16 @@ export const checkRepeatInit = inject(getRunningXkit, [currentVersion])
           ...updateMessage,
           'Refreshing this browser tab is recommended to avoid unexpected behavior.'
         ],
-        buttons: [modalCancelButton,
+        buttons: [
+          modalCancelButton,
           Object.assign(document.createElement('button'), {
             textContent: 'Reload',
             className: 'blue',
             onclick: () => {
               location.reload(true);
             }
-          })]
+          })
+        ]
       });
     }
   });

@@ -17,14 +17,15 @@ const getRunningXkit = async (currentVersion) => {
 export const checkRepeatInit = inject(getRunningXkit, [currentVersion])
   .then(result => {
     if (result) {
+      const updateMessage = result !== currentVersion
+        ? [`The extension appears to have been auto-updated to ${currentVersion}!`, document.createElement('br')]
+        : [];
+
       showModal({
         title: 'XKit Rewritten has been initialized multiple times',
         message: [
-          result === currentVersion
-            ? 'Not sure how this happened! Are you a developer?'
-            : `XKit Rewritten appears to been auto-updated to ${currentVersion}!`,
-          document.createElement('br'),
-          'Hard refreshing Tumblr via the refresh button or f5 key is recommended if you observe duplicate effects.'
+          ...updateMessage,
+          'Hard refreshing this browser tab via the refresh button or f5 key is recommended.'
         ],
         buttons: [modalCompleteButton]
       });

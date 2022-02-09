@@ -4,6 +4,7 @@ import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
+import { getUserBlogNames } from '../util/user_blogs.js';
 
 const excludeClass = 'xkit-show-originals-done';
 const hiddenClass = 'xkit-show-originals-hidden';
@@ -19,6 +20,8 @@ const includeFiltered = true;
 let showOwnReblogs;
 let showReblogsWithContributedContent;
 let whitelistedUsernames;
+
+let peeprBlacklist;
 
 const lengthenTimeline = async (timeline) => {
   const paginatorSelector = await keyToCss('manualPaginatorButtons');
@@ -36,8 +39,9 @@ const processTimelines = async () => {
 
       const on = {};
       on.dashboard = timeline.dataset.timeline === '/v2/timeline/dashboard';
+      const isOwnPeepr = peeprBlacklist.some(name => timeline.dataset.timeline === `/v2/blog/${name}/posts`);
       const isSinglePostPeepr = timeline.dataset.timeline.includes('permalink');
-      on.peepr = timeline.closest('[role="dialog"]') !== null && isSinglePostPeepr === false;
+      on.peepr = timeline.closest('[role="dialog"]') !== null && !isSinglePostPeepr && !isOwnPeepr;
       on.blogSubscriptions =
         timeline.dataset.timeline === '/v2/timeline' &&
         timeline.dataset.which === 'blog_subscriptions';
@@ -140,6 +144,8 @@ export const main = async function () {
     showReblogsWithContributedContent,
     whitelistedUsernames
   } = await getPreferences('show_originals'));
+
+  peeprBlacklist = showOwnReblogs ? await getUserBlogNames() : [];
 
   onNewPosts.addListener(processPosts);
   document.head.appendChild(styleElement);

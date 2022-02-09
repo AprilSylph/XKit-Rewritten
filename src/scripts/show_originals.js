@@ -94,9 +94,6 @@ const addControls = async (timeline, location) => {
     browser.storage.local.set({ [storageKey]: savedActive });
   };
 
-  let allPostsLabel = await translate('All posts');
-  if (allPostsLabel === 'All posts') allPostsLabel = 'All Posts';
-
   const controls = Object.assign(document.createElement('div'), {
     className: controlsClass
   });
@@ -108,7 +105,7 @@ const addControls = async (timeline, location) => {
   onButton.dataset.mode = 'on';
   const offButton = Object.assign(document.createElement('a'), {
     className: `${buttonClass} offButton`,
-    textContent: allPostsLabel,
+    textContent: await translate('All Posts'),
     onclick: handleClick
   });
   offButton.dataset.mode = 'off';

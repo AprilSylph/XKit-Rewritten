@@ -1,21 +1,24 @@
-import { filterPostElements } from '../util/interface.js';
+import { buildStyle, filterPostElements } from '../util/interface.js';
 import { timelineObjectMemoized, exposeTimelines } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
+import { translate } from '../util/language_data.js';
 
 const excludeClass = 'xkit-show-originals-done';
 const hiddenClass = 'xkit-show-originals-hidden';
 const activeTimelineClass = 'xkit-show-originals-timeline';
+const inactiveTimelineClass = 'xkit-show-originals-timeline-nope';
 const lengthenedClass = 'xkit-show-originals-lengthened';
+const controlsClass = 'xkit-show-originals-controls';
+const buttonClass = 'xkit-show-originals-button';
+
+const storageKey = 'show_originals.rememberedBlogs';
 const includeFiltered = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
 let whitelistedUsernames;
-let runOnDashboard;
-let runOnPeepr;
-let runOnBlogSubscriptions;
 
 const lengthenTimeline = async (timeline) => {
   const paginatorSelector = await keyToCss('manualPaginatorButtons');
@@ -25,35 +28,98 @@ const lengthenTimeline = async (timeline) => {
   }
 };
 
-const processTimelines = () => {
+const processTimelines = async () => {
+  await exposeTimelines();
   [...document.querySelectorAll(`[data-timeline]:not(.${excludeClass})`)]
-    .forEach(timeline => {
+    .forEach(async timeline => {
       timeline.classList.add(excludeClass);
 
-      const onDashboard = timeline.dataset.timeline === '/v2/timeline/dashboard';
+      const on = {};
+      on.dashboard = timeline.dataset.timeline === '/v2/timeline/dashboard';
       const isSinglePostPeepr = timeline.dataset.timeline.includes('permalink');
-      const onPeepr = timeline.closest('[role="dialog"]') !== null && isSinglePostPeepr === false;
-      const onBlogSubscriptions =
+      on.peepr = timeline.closest('[role="dialog"]') !== null && isSinglePostPeepr === false;
+      on.blogSubscriptions =
         timeline.dataset.timeline === '/v2/timeline' &&
         timeline.dataset.which === 'blog_subscriptions';
 
-      const shouldRun =
-        (runOnDashboard && onDashboard) ||
-        (runOnPeepr && onPeepr) ||
-        (runOnBlogSubscriptions && onBlogSubscriptions);
+      const location = Object.keys(on).find(location => on[location]);
+      if (location) {
+        const { [storageKey]: savedActive = {} } = await browser.storage.local.get(storageKey);
+        const active = savedActive[location] ?? true;
 
-      if (shouldRun) {
-        timeline.classList.add(activeTimelineClass);
+        timeline.classList.add(active ? activeTimelineClass : inactiveTimelineClass);
+        addControls(timeline, location);
         lengthenTimeline(timeline);
       }
     });
 };
 
-const processPosts = async function (postElements) {
-  const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
+const styleElement = buildStyle(`
+  .${controlsClass} {
+    color: RGB(var(--white-on-dark));
+    display: flex;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.333;
+    margin-bottom: 20px;
+  }
+  a.${buttonClass} {
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  .${buttonClass}:hover {
+    background: rgba(var(--white-on-dark),.13);
+  }
+  .${activeTimelineClass} a.onButton, .${inactiveTimelineClass} a.offButton {
+    box-shadow: inset 0 -2px 0 RGB(var(--accent));
+    color: RGB(var(--accent));
+  }
+`);
 
-  await exposeTimelines();
+const addControls = async (timeline, location) => {
+  const handleClick = async ({ currentTarget }) => {
+    const { mode } = currentTarget.dataset;
+    const active = mode === 'on';
+
+    const timeline = currentTarget.closest('[data-timeline]');
+    timeline.classList.add(active ? activeTimelineClass : inactiveTimelineClass);
+    timeline.classList.remove(active ? inactiveTimelineClass : activeTimelineClass);
+
+    const { [storageKey]: savedActive = {} } = await browser.storage.local.get(storageKey);
+    savedActive[location] = active;
+    browser.storage.local.set({ [storageKey]: savedActive });
+  };
+
+  const controls = Object.assign(document.createElement('div'), {
+    className: controlsClass
+  });
+  const onButton = Object.assign(document.createElement('a'), {
+    className: `${buttonClass} onButton`,
+    textContent: await translate('Original Posts'),
+    onclick: handleClick
+  });
+  onButton.dataset.mode = 'on';
+  const offButton = Object.assign(document.createElement('a'), {
+    className: `${buttonClass} offButton`,
+    textContent: await translate('All Posts'),
+    onclick: handleClick
+  });
+  offButton.dataset.mode = 'off';
+
+  controls.appendChild(onButton);
+  controls.appendChild(offButton);
+
+  if (location === 'blogSubscriptions') {
+    timeline.querySelector('[data-id]')?.before(controls);
+  } else {
+    timeline.querySelector('[data-id]')?.parentElement?.prepend(controls);
+  }
+};
+
+const processPosts = async function (postElements) {
   processTimelines();
+
+  const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
 
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {
@@ -72,17 +138,16 @@ export const main = async function () {
   ({
     showOwnReblogs,
     showReblogsWithContributedContent,
-    whitelistedUsernames,
-    runOnDashboard,
-    runOnPeepr,
-    runOnBlogSubscriptions
+    whitelistedUsernames
   } = await getPreferences('show_originals'));
 
   onNewPosts.addListener(processPosts);
+  document.head.appendChild(styleElement);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
+  styleElement.remove();
 
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${hiddenClass}`).removeClass(hiddenClass);

@@ -41,14 +41,16 @@ const processTimelines = async () => {
           timeline.dataset.which === 'blog_subscriptions'
       };
       const location = Object.keys(on).find(location => on[location]);
-      const disable = disabledBlogs.some(name => timeline.dataset.timeline.startsWith(`/v2/blog/${name}/posts`));
+      const disabled = disabledBlogs.some(name => timeline.dataset.timeline.startsWith(`/v2/blog/${name}/posts`));
 
-      if (location && !disable) {
+      if (location) {
         const { [storageKey]: savedActive = {} } = await browser.storage.local.get(storageKey);
         const active = savedActive[location] ?? true;
 
-        timeline.dataset.showOriginals = active ? 'on' : 'off';
-        addControls(timeline, location);
+        const status = active ? 'on' : 'off';
+        timeline.dataset.showOriginals = disabled ? 'disabled' : status;
+
+        addControls(timeline, location, disabled);
         lengthenTimeline(timeline);
       }
     });
@@ -71,14 +73,18 @@ const styleElement = buildStyle(`
   .${buttonClass}:hover {
     background: rgba(var(--white-on-dark),.13);
   }
-  [data-show-originals="on"] a.onButton, [data-show-originals="off"] a.offButton {
+  [data-show-originals="on"] a.onButton,
+  [data-show-originals="off"] a.offButton,
+  [data-show-originals="disabled"] a.offButton {
     box-shadow: inset 0 -2px 0 RGB(var(--accent));
     color: RGB(var(--accent));
   }
 `);
 
-const addControls = async (timeline, location) => {
+const addControls = async (timeline, location, disable) => {
   const handleClick = async ({ currentTarget }) => {
+    if (disable) return;
+
     const { mode } = currentTarget.dataset;
     const active = mode === 'on';
 
@@ -106,7 +112,7 @@ const addControls = async (timeline, location) => {
   });
   offButton.dataset.mode = 'off';
 
-  controls.appendChild(onButton);
+  if (!disable) controls.appendChild(onButton);
   controls.appendChild(offButton);
 
   if (location === 'blogSubscriptions') {

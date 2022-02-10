@@ -139,7 +139,7 @@ const reblogPost = async function ({ currentTarget }) {
   const tags = [
     ...tagsInput.value.split(','),
     ...reblogTag ? [reblogTag] : [],
-    ...(state === 'queue' && queueTag ? [queueTag] : [])
+    ...(state === 'queue' && queueTag) ? [queueTag] : []
   ].join(',');
   const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } = await timelineObjectMemoized(postID);
 

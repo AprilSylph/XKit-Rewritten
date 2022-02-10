@@ -6,7 +6,6 @@ import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { getPrimaryBlogName, getUserBlogNames } from '../util/user_blogs.js';
 
-const excludeClass = 'xkit-show-originals-done';
 const hiddenClass = 'xkit-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
@@ -148,7 +147,6 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
   styleElement.remove();
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${hiddenClass}`).removeClass(hiddenClass);
   $('[data-show-originals]').removeAttr('data-show-originals');
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);

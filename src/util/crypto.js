@@ -12,7 +12,7 @@ export const getRandomHexString = () => {
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
  * @param {string} data - A USVString containing the data to hash
- * @returns {Promise<string>} Hexadecimal string representing the data's SHA-265 digest
+ * @returns {Promise<string>} Hexadecimal string representing the data's SHA-256 digest
  */
 export const sha256 = async data => {
   const msgUint8 = new TextEncoder().encode(data);

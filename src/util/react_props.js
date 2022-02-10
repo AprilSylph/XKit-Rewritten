@@ -1,5 +1,5 @@
 import { inject } from './inject.js';
-import { keyToCss, resolveExpressions } from './css_map.js';
+import { keyToCss } from './css_map.js';
 
 const cache = {};
 
@@ -61,16 +61,21 @@ const unburyGivenPaths = async (selector) => {
   });
 };
 
+let exposedPromise;
+
 /**
  * Adds data-timeline attributes to all timeline elements on the page, set to the buried endpointApiRequest.givenPath property
  *
  * @returns {Promise<void>} Resolves when finished
  */
 export const exposeTimelines = async () => {
-  const timelineSelector = await resolveExpressions`${keyToCss('timeline')}:not([data-timeline])`;
-  if (document.querySelector(timelineSelector) !== null) {
-    return inject(unburyGivenPaths, [timelineSelector]);
+  const timelineSelector = await keyToCss('timeline');
+
+  if (!exposedPromise) {
+    exposedPromise = inject(unburyGivenPaths, [timelineSelector]);
+    queueMicrotask(() => { exposedPromise = null; });
   }
+  return exposedPromise;
 };
 
 const controlTagsInput = async ({ add, remove }) => {

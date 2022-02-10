@@ -11,10 +11,10 @@ const dimClass = 'xkit-seen-posts-seen';
 const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 
 const dimPosts = async function (postElements) {
+  await exposeTimelines();
+
   const storageKey = 'seen_posts.seenPosts';
   const { [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey);
-
-  await exposeTimelines();
 
   for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
     const { id } = postElement.dataset;

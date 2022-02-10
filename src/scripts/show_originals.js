@@ -11,7 +11,7 @@ const hiddenClass = 'xkit-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
 
-const storageKey = 'show_originals.activeLocations';
+const storageKey = 'show_originals.savedModes';
 const includeFiltered = true;
 
 let showOwnReblogs;
@@ -35,22 +35,21 @@ const processTimelines = async () => {
       const isSinglePostPeepr = timeline.dataset.timeline.includes('permalink');
       const on = {
         dashboard: timeline.dataset.timeline === '/v2/timeline/dashboard',
-        peepr: timeline.closest('[role="dialog"]') !== null && !isSinglePostPeepr,
+        peepr: timeline.closest('[role="dialog"]') !== null &&
+          !isSinglePostPeepr,
         blogSubscriptions: timeline.dataset.timeline === '/v2/timeline' &&
           timeline.dataset.which === 'blog_subscriptions'
       };
       const location = Object.keys(on).find(location => on[location]);
-      const disabled = disabledBlogs.some(name => timeline.dataset.timeline.startsWith(`/v2/blog/${name}/posts`));
+      const disabledBlog = disabledBlogs.some(name => timeline.dataset.timeline.startsWith(`/v2/blog/${name}/posts`));
 
       if (location && timeline.querySelector(`.${controlsClass}`) === null) {
         addControls(timeline, location, disabledBlog);
         lengthenTimeline(timeline);
 
-        const { [storageKey]: savedActive = {} } = await browser.storage.local.get(storageKey);
-        const active = savedActive[location] ?? true;
-
-        const status = active ? 'on' : 'off';
-        timeline.dataset.showOriginals = disabled ? 'disabled' : status;
+        const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
+        const mode = savedModes[location] ?? 'on';
+        timeline.dataset.showOriginals = disabledBlog ? 'disabled' : mode;
       }
     });
 };
@@ -80,19 +79,16 @@ const styleElement = buildStyle(`
   }
 `);
 
-const addControls = async (timeline, location, disable) => {
+const addControls = async (timeline, location, disabled) => {
   const handleClick = async ({ currentTarget }) => {
-    if (disable) return;
+    if (disabled) return;
 
     const { mode } = currentTarget.dataset;
-    const active = mode === 'on';
+    timeline.dataset.showOriginals = mode;
 
-    const timeline = currentTarget.closest('[data-timeline]');
-    timeline.dataset.showOriginals = active ? 'on' : 'off';
-
-    const { [storageKey]: savedActive = {} } = await browser.storage.local.get(storageKey);
-    savedActive[location] = active;
-    browser.storage.local.set({ [storageKey]: savedActive });
+    const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
+    savedModes[location] = mode;
+    browser.storage.local.set({ [storageKey]: savedModes });
   };
 
   const controls = Object.assign(document.createElement('div'), {
@@ -109,7 +105,7 @@ const addControls = async (timeline, location, disable) => {
   });
   offButton.dataset.mode = 'off';
 
-  if (!disable) controls.appendChild(onButton);
+  if (!disabled) controls.appendChild(onButton);
   controls.appendChild(offButton);
 
   if (location === 'blogSubscriptions') {

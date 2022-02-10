@@ -4,7 +4,7 @@ import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
-import { getUserBlogNames } from '../util/user_blogs.js';
+import { getPrimaryBlogName, getUserBlogNames } from '../util/user_blogs.js';
 
 const excludeClass = 'xkit-show-originals-done';
 const hiddenClass = 'xkit-show-originals-hidden';
@@ -17,6 +17,7 @@ const includeFiltered = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
+let primaryBlogName;
 let whitelist;
 let disabledBlogs;
 
@@ -127,10 +128,13 @@ const processPosts = async function (postElements) {
 
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {
-      const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);
+      const { rebloggedRootId, canEdit, content, blogName, isSubmission, postAuthor } =
+        await timelineObjectMemoized(postElement.dataset.id);
+
+      const isMyPost = canEdit && (isSubmission || postAuthor === primaryBlogName || postAuthor === undefined);
 
       if (!rebloggedRootId) { return; }
-      if (showOwnReblogs && canEdit) { return; }
+      if (showOwnReblogs && isMyPost) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
       if (whitelist.includes(blogName)) { return; }
 
@@ -148,6 +152,7 @@ export const main = async function () {
 
   whitelist = whitelistedUsernames.split(',').map(username => username.trim());
   disabledBlogs = [...whitelist, ...showOwnReblogs ? await getUserBlogNames() : []];
+  primaryBlogName = await getPrimaryBlogName();
 
   onNewPosts.addListener(processPosts);
   document.head.appendChild(styleElement);

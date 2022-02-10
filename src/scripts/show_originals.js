@@ -10,7 +10,6 @@ const excludeClass = 'xkit-show-originals-done';
 const hiddenClass = 'xkit-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
-const buttonClass = 'xkit-show-originals-button';
 
 const storageKey = 'show_originals.activeLocations';
 const includeFiltered = true;
@@ -67,17 +66,17 @@ const styleElement = buildStyle(`
     line-height: 1.333;
     margin-bottom: 20px;
   }
-  a.${buttonClass} {
+  .${controlsClass} a {
     padding: 14px 16px;
     text-decoration: none;
     text-transform: capitalize;
   }
-  .${buttonClass}:hover {
+  .${controlsClass} a:hover {
     background: rgba(var(--white-on-dark),.13);
   }
-  [data-show-originals="on"] a.onButton,
-  [data-show-originals="off"] a.offButton,
-  [data-show-originals="disabled"] a.offButton {
+  [data-show-originals="on"] .${controlsClass} a[data-mode="on"],
+  [data-show-originals="off"] .${controlsClass} a[data-mode="off"],
+  [data-show-originals="disabled"] .${controlsClass} a[data-mode="off"] {
     box-shadow: inset 0 -2px 0 RGB(var(--accent));
     color: RGB(var(--accent));
   }
@@ -102,13 +101,11 @@ const addControls = async (timeline, location, disable) => {
     className: controlsClass
   });
   const onButton = Object.assign(document.createElement('a'), {
-    className: `${buttonClass} onButton`,
     textContent: await translate('Original Posts'),
     onclick: handleClick
   });
   onButton.dataset.mode = 'on';
   const offButton = Object.assign(document.createElement('a'), {
-    className: `${buttonClass} offButton`,
     textContent: await translate('All posts'),
     onclick: handleClick
   });

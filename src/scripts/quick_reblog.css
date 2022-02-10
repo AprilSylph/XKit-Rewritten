@@ -64,7 +64,7 @@ div:first-child + span + #quick-reblog {
 #quick-reblog .quick-tags button {
   position: relative;
 
-  overflow: hidden;
+  overflow-x: hidden;
   padding: 0.75ch 1ch;
   padding-right: calc(1ch + 1em + 1ch);
   margin-bottom: 2px;

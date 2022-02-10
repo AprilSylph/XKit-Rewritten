@@ -144,7 +144,7 @@ export const main = async function () {
     whitelistedUsernames
   } = await getPreferences('show_originals'));
 
-  const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
+  whitelist = whitelistedUsernames.split(',').map(username => username.trim());
 
   peeprBlacklist = [
     ...whitelist,

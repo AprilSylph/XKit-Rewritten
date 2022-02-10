@@ -160,6 +160,7 @@ export const clean = async function () {
   $(`.${hiddenClass}`).removeClass(hiddenClass);
   $('[data-show-originals]').removeAttr('data-show-originals');
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
+  $(`.${controlsClass}`).remove();
 };
 
 export const stylesheet = true;

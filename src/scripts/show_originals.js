@@ -73,16 +73,14 @@ const styleElement = buildStyle(`
   }
   [data-show-originals="on"] .${controlsClass} a[data-mode="on"],
   [data-show-originals="off"] .${controlsClass} a[data-mode="off"],
-  [data-show-originals="disabled"] .${controlsClass} a[data-mode="off"] {
+  [data-show-originals="disabled"] .${controlsClass} a[data-mode="disabled"] {
     box-shadow: inset 0 -2px 0 RGB(var(--accent));
     color: RGB(var(--accent));
   }
 `);
 
-const addControls = async (timeline, location, disabled) => {
+const addControls = async (timeline, location, disabledBlog) => {
   const handleClick = async ({ currentTarget }) => {
-    if (disabled) return;
-
     const { mode } = currentTarget.dataset;
     timeline.dataset.showOriginals = mode;
 
@@ -91,22 +89,18 @@ const addControls = async (timeline, location, disabled) => {
     browser.storage.local.set({ [storageKey]: savedModes });
   };
 
-  const controls = Object.assign(document.createElement('div'), {
-    className: controlsClass
-  });
-  const onButton = Object.assign(document.createElement('a'), {
-    textContent: await translate('Original Posts'),
-    onclick: handleClick
-  });
-  onButton.dataset.mode = 'on';
-  const offButton = Object.assign(document.createElement('a'), {
-    textContent: await translate('All posts'),
-    onclick: handleClick
-  });
-  offButton.dataset.mode = 'off';
+  const controls = Object.assign(document.createElement('div'), { className: controlsClass });
 
-  if (!disabled) controls.appendChild(onButton);
-  controls.appendChild(offButton);
+  const createButton = (textContent, onclick, mode) => {
+    const button = Object.assign(document.createElement('a'), { textContent, onclick });
+    button.dataset.mode = mode;
+    return button;
+  };
+  const onButton = createButton(await translate('Original Posts'), handleClick, 'on');
+  const offButton = createButton(await translate('All posts'), handleClick, 'off');
+  const disabledBlogButton = createButton(await translate('All posts'), null, 'disabled');
+
+  controls.append(...disabledBlog ? [disabledBlogButton] : [onButton, offButton]);
 
   if (location === 'blogSubscriptions') {
     timeline.querySelector('[data-id]')?.before(controls);

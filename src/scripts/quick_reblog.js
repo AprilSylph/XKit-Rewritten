@@ -241,12 +241,13 @@ const updateQuickTags = (changes, areaName) => {
 };
 
 /**
- * adapted from https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
+ * Get a hexadecimal SHA-256 hash of a given string
  *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
  * @param {string} data - String to hash
  * @returns {Promise<string>} Hexadecimal string of a unique hash of the input
  */
-const sha256 = async (data) => {
+const sha256 = async data => {
   const msgUint8 = new TextEncoder().encode(data);
   const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
   const hashArray = Array.from(new Uint8Array(hashBuffer));

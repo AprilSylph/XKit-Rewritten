@@ -42,11 +42,9 @@ const processTimelines = async () => {
       const location = Object.keys(on).find(location => on[location]);
       const disabled = disabledBlogs.some(name => timeline.dataset.timeline.startsWith(`/v2/blog/${name}/posts`));
 
-      if (location) {
-        if (!timeline.querySelector(`.${controlsClass}`)) {
-          addControls(timeline, location, disabled);
-          lengthenTimeline(timeline);
-        }
+      if (location && timeline.querySelector(`.${controlsClass}`) === null) {
+        addControls(timeline, location, disabledBlog);
+        lengthenTimeline(timeline);
 
         const { [storageKey]: savedActive = {} } = await browser.storage.local.get(storageKey);
         const active = savedActive[location] ?? true;

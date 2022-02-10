@@ -1,4 +1,4 @@
-import { inject, injectVoid } from './inject.js';
+import { inject } from './inject.js';
 import { keyToCss, resolveExpressions } from './css_map.js';
 
 const cache = {};
@@ -34,7 +34,7 @@ export const timelineObject = async function (postID) {
   return cache[postID];
 };
 
-const unburyGivenPaths = (selector) => {
+const unburyGivenPaths = async (selector) => {
   [...document.querySelectorAll(selector)].forEach(timelineElement => {
     const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactFiber'));
     let fiber = timelineElement[reactKey];
@@ -59,11 +59,11 @@ const unburyGivenPaths = (selector) => {
 export const exposeTimelines = async () => {
   const timelineSelector = await resolveExpressions`${keyToCss('timeline')}:not([data-timeline])`;
   if (document.querySelector(timelineSelector) !== null) {
-    injectVoid(unburyGivenPaths, [timelineSelector]);
+    return inject(unburyGivenPaths, [timelineSelector]);
   }
 };
 
-const controlTagsInput = ({ add, remove }) => {
+const controlTagsInput = async ({ add, remove }) => {
   add = add.map(tag => tag.trim()).filter((tag, index, array) => array.indexOf(tag) === index);
 
   const selectedTagsElement = document.getElementById('selected-tags');
@@ -93,4 +93,4 @@ const controlTagsInput = ({ add, remove }) => {
  * @param {string[]} [options.remove] - Tags to remove
  * @returns {Promise<void>} Resolves when finished
  */
-export const editPostFormTags = ({ add = [], remove = [] }) => injectVoid(controlTagsInput, [{ add, remove }]);
+export const editPostFormTags = async ({ add = [], remove = [] }) => inject(controlTagsInput, [{ add, remove }]);

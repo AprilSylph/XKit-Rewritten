@@ -8,8 +8,6 @@ import { getUserBlogNames } from '../util/user_blogs.js';
 
 const excludeClass = 'xkit-show-originals-done';
 const hiddenClass = 'xkit-show-originals-hidden';
-const activeTimelineClass = 'xkit-show-originals-timeline';
-const inactiveTimelineClass = 'xkit-show-originals-timeline-nope';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
 const buttonClass = 'xkit-show-originals-button';
@@ -50,7 +48,7 @@ const processTimelines = async () => {
         const { [storageKey]: savedActive = {} } = await browser.storage.local.get(storageKey);
         const active = savedActive[location] ?? true;
 
-        timeline.classList.add(active ? activeTimelineClass : inactiveTimelineClass);
+        timeline.dataset.showOriginals = active ? 'on' : 'off';
         addControls(timeline, location);
         lengthenTimeline(timeline);
       }
@@ -74,7 +72,7 @@ const styleElement = buildStyle(`
   .${buttonClass}:hover {
     background: rgba(var(--white-on-dark),.13);
   }
-  .${activeTimelineClass} a.onButton, .${inactiveTimelineClass} a.offButton {
+  [data-show-originals="on"] a.onButton, [data-show-originals="off"] a.offButton {
     box-shadow: inset 0 -2px 0 RGB(var(--accent));
     color: RGB(var(--accent));
   }
@@ -86,8 +84,7 @@ const addControls = async (timeline, location) => {
     const active = mode === 'on';
 
     const timeline = currentTarget.closest('[data-timeline]');
-    timeline.classList.add(active ? activeTimelineClass : inactiveTimelineClass);
-    timeline.classList.remove(active ? inactiveTimelineClass : activeTimelineClass);
+    timeline.dataset.showOriginals = active ? 'on' : 'off';
 
     const { [storageKey]: savedActive = {} } = await browser.storage.local.get(storageKey);
     savedActive[location] = active;
@@ -161,7 +158,7 @@ export const clean = async function () {
 
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${hiddenClass}`).removeClass(hiddenClass);
-  $(`.${activeTimelineClass}`).removeClass(activeTimelineClass);
+  $('[data-show-originals]').removeAttr('data-show-originals');
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
 };
 

@@ -59,7 +59,7 @@ const unburyGivenPaths = async (selector) => {
 export const exposeTimelines = async () => {
   const timelineSelector = await resolveExpressions`${keyToCss('timeline')}:not([data-timeline])`;
   if (document.querySelector(timelineSelector) !== null) {
-    return inject(unburyGivenPaths, [timelineSelector]);
+    return inject(unburyGivenPaths, [timelineSelector], { returnsVoid: true });
   }
 };
 
@@ -93,4 +93,5 @@ const controlTagsInput = async ({ add, remove }) => {
  * @param {string[]} [options.remove] - Tags to remove
  * @returns {Promise<void>} Resolves when finished
  */
-export const editPostFormTags = async ({ add = [], remove = [] }) => inject(controlTagsInput, [{ add, remove }]);
+export const editPostFormTags = async ({ add = [], remove = [] }) =>
+  inject(controlTagsInput, [{ add, remove }], { returnsVoid: true });

@@ -76,7 +76,8 @@ const onBeforeRepaint = () => {
     const matchingElements = [
       ...addedNodes.filter(addedNode => addedNode.matches(selector)),
       ...addedNodes.flatMap(addedNode => [...addedNode.querySelectorAll(selector)])
-    ];
+    ].filter((value, index, array) => index === array.indexOf(value));
+
     if (matchingElements.length !== 0) {
       modifierFunction(matchingElements);
     }

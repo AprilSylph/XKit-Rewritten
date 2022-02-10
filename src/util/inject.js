@@ -1,9 +1,7 @@
+import { getRandomHexString } from './crypto.js';
+
 const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
-
-const typedArray = new Uint8Array(8);
-window.crypto.getRandomValues(typedArray);
-const injectKey = [...typedArray].map(number => number.toString(16).padStart(2, '0')).join('');
-
+const injectKey = getRandomHexString();
 const callbacks = new Map();
 
 let messagePort;

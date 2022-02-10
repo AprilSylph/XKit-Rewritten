@@ -1,5 +1,6 @@
-import { keyToClasses, keyToCss } from '../../util/css_map.js';
+import { keyToClasses, keyToCss, resolveExpressions } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
+import { translate } from '../../util/language_data.js';
 import { pageModifications } from '../../util/mutations.js';
 
 const removePaddingClass = 'xkit-footer-padding-fix';
@@ -8,10 +9,17 @@ let footerRedesignClasses;
 let footerRedesignSelector;
 let postActivityWrapperSelector;
 
-const styleElement = buildStyle(`
+const styleElement = buildStyle();
+
+resolveExpressions`
 .${removePaddingClass} {
   padding-bottom: 0;
 }
+
+article footer button[aria-label="${translate('Tip')}"] {
+  margin-left: var(--post-padding);
+}
+
 .xkit-control-button-container {
   margin-left: 20px;
 }
@@ -33,7 +41,7 @@ const styleElement = buildStyle(`
     transform: translate(-20px, -50%) !important;
   }
 }
-`);
+`.then(css => { styleElement.textContent = css; });
 
 const removeFooterRedesign = elements => {
   elements.forEach(element => {

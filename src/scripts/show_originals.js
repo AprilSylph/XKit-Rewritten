@@ -18,7 +18,7 @@ const includeFiltered = true;
 let showOwnReblogs;
 let showReblogsWithContributedContent;
 let whitelist;
-let peeprBlacklist;
+let disabledBlogs;
 
 const lengthenTimeline = async (timeline) => {
   const paginatorSelector = await keyToCss('manualPaginatorButtons');
@@ -34,17 +34,16 @@ const processTimelines = async () => {
     .forEach(async timeline => {
       timeline.classList.add(excludeClass);
 
-      const on = {};
-      on.dashboard = timeline.dataset.timeline === '/v2/timeline/dashboard';
-      const isOwnPeepr = peeprBlacklist.some(name => timeline.dataset.timeline === `/v2/blog/${name}/posts`);
-      const isSinglePostPeepr = timeline.dataset.timeline.includes('permalink');
-      on.peepr = timeline.closest('[role="dialog"]') !== null && !isSinglePostPeepr && !isOwnPeepr;
-      on.blogSubscriptions =
-        timeline.dataset.timeline === '/v2/timeline' &&
-        timeline.dataset.which === 'blog_subscriptions';
-
+      const on = {
+        dashboard: timeline.dataset.timeline === '/v2/timeline/dashboard',
+        peepr: timeline.closest('[role="dialog"]') !== null,
+        blogSubscriptions: timeline.dataset.timeline === '/v2/timeline' &&
+          timeline.dataset.which === 'blog_subscriptions'
+      };
       const location = Object.keys(on).find(location => on[location]);
-      if (location) {
+      const disable = disabledBlogs.some(name => timeline.dataset.timeline.startsWith(`/v2/blog/${name}/posts`));
+
+      if (location && !disable) {
         const { [storageKey]: savedActive = {} } = await browser.storage.local.get(storageKey);
         const active = savedActive[location] ?? true;
 
@@ -142,11 +141,7 @@ export const main = async function () {
   } = await getPreferences('show_originals'));
 
   whitelist = whitelistedUsernames.split(',').map(username => username.trim());
-
-  peeprBlacklist = [
-    ...whitelist,
-    ...showOwnReblogs ? await getUserBlogNames() : []
-  ];
+  disabledBlogs = [...whitelist, ...showOwnReblogs ? await getUserBlogNames() : []];
 
   onNewPosts.addListener(processPosts);
   document.head.appendChild(styleElement);

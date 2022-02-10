@@ -31,13 +31,12 @@ const lengthenTimeline = async (timeline) => {
 
 const processTimelines = async () => {
   await exposeTimelines();
-  [...document.querySelectorAll(`[data-timeline]:not(.${excludeClass})`)]
+  [...document.querySelectorAll('[data-timeline]')]
     .forEach(async timeline => {
-      timeline.classList.add(excludeClass);
-
+      const isSinglePostPeepr = timeline.dataset.timeline.includes('permalink');
       const on = {
         dashboard: timeline.dataset.timeline === '/v2/timeline/dashboard',
-        peepr: timeline.closest('[role="dialog"]') !== null,
+        peepr: timeline.closest('[role="dialog"]') !== null && !isSinglePostPeepr,
         blogSubscriptions: timeline.dataset.timeline === '/v2/timeline' &&
           timeline.dataset.which === 'blog_subscriptions'
       };
@@ -51,8 +50,10 @@ const processTimelines = async () => {
         const status = active ? 'on' : 'off';
         timeline.dataset.showOriginals = disabled ? 'disabled' : status;
 
-        addControls(timeline, location, disabled);
-        lengthenTimeline(timeline);
+        if (!timeline.querySelector(`.${controlsClass}`)) {
+          addControls(timeline, location, disabled);
+          lengthenTimeline(timeline);
+        }
       }
     });
 };

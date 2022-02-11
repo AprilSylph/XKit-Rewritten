@@ -79,8 +79,7 @@ const styleElement = buildStyle(`
 `);
 
 const addControls = async (timeline, location, disabledBlog) => {
-  const handleClick = async ({ currentTarget }) => {
-    const { mode } = currentTarget.dataset;
+  const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
     timeline.dataset.showOriginals = mode;
 
     const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);

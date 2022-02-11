@@ -141,29 +141,37 @@ div:first-child + span + #quick-reblog {
   background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
 }
 
-#quick-reblog button[data-state="published"] {
-  color: rgb(var(--blue));
+#quick-reblog button[data-state="published"] { color: rgb(var(--blue)); }
+#quick-reblog button[data-state="queue"] { color: rgb(var(--pink)); }
+#quick-reblog button[data-state="draft"] { color: rgb(var(--orange)); }
+
+.published svg[fill="rgba(var(--black), 0.65)"] { fill: rgb(var(--green)); }
+.queue svg[fill="rgba(var(--black), 0.65)"] { fill: rgb(var(--purple)); }
+.draft svg[fill="rgba(var(--black), 0.65)"] { fill: rgb(var(--red)); }
+
+:is(.published, .queue, .draft) a[role="button"] {
+  position: relative;
 }
 
-#quick-reblog button[data-state="queue"] {
-  color: rgb(var(--pink));
+:is(.published, .queue, .draft) a[role="button"]::after {
+  position: absolute;
+  bottom: -2px;
+  right: -4px;
+
+  display: inline-block;
+  padding: 2px;
+  border-radius: 100%;
+
+  background-color: rgb(var(--white));
+  content: "\2713";
+  font-size: 14px;
+  text-align: center;
+  line-height: 1;
 }
 
-#quick-reblog button[data-state="draft"] {
-  color: rgb(var(--orange));
-}
-
-.published svg[fill="rgba(var(--black), 0.65)"] {
-  fill: rgb(var(--green));
-}
-
-.queue svg[fill="rgba(var(--black), 0.65)"] {
-  fill: rgb(var(--purple));
-}
-
-.draft svg[fill="rgba(var(--black), 0.65)"] {
-  fill: rgb(var(--red));
-}
+.published a[role="button"]::after { color: rgb(var(--green)); }
+.queue a[role="button"]::after { color: rgb(var(--purple)); }
+.draft a[role="button"]::after { color: rgb(var(--red)); }
 
 /* XKit 7 override */
 

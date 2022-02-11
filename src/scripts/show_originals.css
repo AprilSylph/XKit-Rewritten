@@ -19,6 +19,9 @@
   text-decoration: none;
   text-transform: capitalize;
 }
+.xkit-show-originals-controls a:not([data-mode="disabled"]) {
+  cursor: pointer;
+}
 .xkit-show-originals-controls a:hover {
   background: rgba(var(--white-on-dark),.13);
 }

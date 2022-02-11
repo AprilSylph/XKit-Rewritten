@@ -15,9 +15,13 @@ resolveExpressions`
   padding-bottom: 0;
 }
 
-${keyToCss('noteCount')} {
+article footer > ${keyToCss('noteCount')} {
   align-items: center;
   gap: var(--post-padding);
+}
+
+article footer > ${keyToCss('controls')} {
+  margin-left: auto;
 }
 
 .xkit-control-button-container {

@@ -15,16 +15,8 @@ resolveExpressions`
   padding-bottom: 0;
 }
 
-/*
 ${keyToCss('noteCount')} {
-  align-items: flex-end;
-  flex-grow: 1;
-  padding-right: 0;
-}
-*/
-
-${keyToCss('noteCount')} {
-  align-items: flex-end;
+  align-items: center;
   gap: var(--post-padding);
 }
 

@@ -1,4 +1,4 @@
-import { buildStyle, filterPostElements } from '../util/interface.js';
+import { filterPostElements } from '../util/interface.js';
 import { timelineObjectMemoized, exposeTimelines } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -52,31 +52,6 @@ const processTimelines = async () => {
       }
     });
 };
-
-const styleElement = buildStyle(`
-  .${controlsClass} {
-    color: RGB(var(--white-on-dark));
-    display: flex;
-    font-size: 1.125rem;
-    font-weight: 700;
-    line-height: 1.333;
-    margin-bottom: 20px;
-  }
-  .${controlsClass} a {
-    padding: 14px 16px;
-    text-decoration: none;
-    text-transform: capitalize;
-  }
-  .${controlsClass} a:hover {
-    background: rgba(var(--white-on-dark),.13);
-  }
-  [data-show-originals="on"] .${controlsClass} a[data-mode="on"],
-  [data-show-originals="off"] .${controlsClass} a[data-mode="off"],
-  [data-show-originals="disabled"] .${controlsClass} a[data-mode="disabled"] {
-    box-shadow: inset 0 -2px 0 RGB(var(--accent));
-    color: RGB(var(--accent));
-  }
-`);
 
 const addControls = async (timeline, location, disabledBlog) => {
   const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
@@ -139,12 +114,10 @@ export const main = async function () {
   primaryBlogName = await getPrimaryBlogName();
 
   onNewPosts.addListener(processPosts);
-  document.head.appendChild(styleElement);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  styleElement.remove();
 
   $(`.${hiddenClass}`).removeClass(hiddenClass);
   $('[data-show-originals]').removeAttr('data-show-originals');

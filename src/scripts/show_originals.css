@@ -5,3 +5,26 @@
 .xkit-show-originals-lengthened {
   min-height: 100vh;
 }
+
+.xkit-show-originals-controls {
+  color: RGB(var(--white-on-dark));
+  display: flex;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.333;
+  margin-bottom: 20px;
+}
+.xkit-show-originals-controls a {
+  padding: 14px 16px;
+  text-decoration: none;
+  text-transform: capitalize;
+}
+.xkit-show-originals-controls a:hover {
+  background: rgba(var(--white-on-dark),.13);
+}
+[data-show-originals="on"] .xkit-show-originals-controls a[data-mode="on"],
+[data-show-originals="off"] .xkit-show-originals-controls a[data-mode="off"],
+[data-show-originals="disabled"] .xkit-show-originals-controls a[data-mode="disabled"] {
+  box-shadow: inset 0 -2px 0 RGB(var(--accent));
+  color: RGB(var(--accent));
+}

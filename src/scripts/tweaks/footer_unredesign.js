@@ -1,6 +1,5 @@
 import { keyToClasses, keyToCss, resolveExpressions } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
-import { translate } from '../../util/language_data.js';
 import { pageModifications } from '../../util/mutations.js';
 
 const removePaddingClass = 'xkit-footer-padding-fix';
@@ -16,8 +15,17 @@ resolveExpressions`
   padding-bottom: 0;
 }
 
-article footer button[aria-label="${translate('Tip')}"] {
-  margin-left: var(--post-padding);
+/*
+${keyToCss('noteCount')} {
+  align-items: flex-end;
+  flex-grow: 1;
+  padding-right: 0;
+}
+*/
+
+${keyToCss('noteCount')} {
+  align-items: flex-end;
+  gap: var(--post-padding);
 }
 
 .xkit-control-button-container {

@@ -20,6 +20,10 @@ ${keyToCss('noteCount')} {
   gap: var(--post-padding);
 }
 
+${keyToCss('controls')} {
+  margin-left: auto;
+}
+
 .xkit-control-button-container {
   margin-left: 20px;
 }

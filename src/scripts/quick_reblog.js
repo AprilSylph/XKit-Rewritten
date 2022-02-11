@@ -197,10 +197,8 @@ const processPosts = async function (postElements) {
 
     if (alreadyRebloggedList.includes(rootID)) {
       const reblogLink = postElement.querySelector('footer a[href*="/reblog/"]');
-      if (reblogLink !== null) {
-        const buttonDiv = reblogLink.parentNode;
-        makeButtonReblogged({ buttonDiv, state: 'published' });
-      }
+      const buttonDiv = reblogLink?.closest('div');
+      if (buttonDiv) makeButtonReblogged({ buttonDiv, state: 'published' });
     }
   });
 };

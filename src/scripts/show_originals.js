@@ -27,32 +27,6 @@ const lengthenTimeline = async (timeline) => {
   }
 };
 
-const processTimelines = async () => {
-  await exposeTimelines();
-  [...document.querySelectorAll('[data-timeline]')]
-    .forEach(async timeline => {
-      const isSinglePostPeepr = timeline.dataset.timeline.includes('permalink');
-      const on = {
-        dashboard: timeline.dataset.timeline === '/v2/timeline/dashboard',
-        peepr: timeline.closest('[role="dialog"]') !== null &&
-          !isSinglePostPeepr,
-        blogSubscriptions: timeline.dataset.timeline === '/v2/timeline' &&
-          timeline.dataset.which === 'blog_subscriptions'
-      };
-      const location = Object.keys(on).find(location => on[location]);
-      const disabledBlog = disabledBlogs.some(name => timeline.dataset.timeline.startsWith(`/v2/blog/${name}/posts`));
-
-      if (location && timeline.querySelector(`.${controlsClass}`) === null) {
-        addControls(timeline, location, disabledBlog);
-        lengthenTimeline(timeline);
-
-        const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
-        const mode = savedModes[location] ?? 'on';
-        timeline.dataset.showOriginals = disabledBlog ? 'disabled' : mode;
-      }
-    });
-};
-
 const addControls = async (timeline, location, disabledBlog) => {
   const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
     timeline.dataset.showOriginals = mode;
@@ -80,6 +54,32 @@ const addControls = async (timeline, location, disabledBlog) => {
   } else {
     timeline.querySelector('[data-id]')?.parentElement?.prepend(controls);
   }
+};
+
+const processTimelines = async () => {
+  await exposeTimelines();
+  [...document.querySelectorAll('[data-timeline]')]
+    .forEach(async timeline => {
+      const isSinglePostPeepr = timeline.dataset.timeline.includes('permalink');
+      const on = {
+        dashboard: timeline.dataset.timeline === '/v2/timeline/dashboard',
+        peepr: timeline.closest('[role="dialog"]') !== null &&
+          !isSinglePostPeepr,
+        blogSubscriptions: timeline.dataset.timeline === '/v2/timeline' &&
+          timeline.dataset.which === 'blog_subscriptions'
+      };
+      const location = Object.keys(on).find(location => on[location]);
+      const disabledBlog = disabledBlogs.some(name => timeline.dataset.timeline.startsWith(`/v2/blog/${name}/posts`));
+
+      if (location && timeline.querySelector(`.${controlsClass}`) === null) {
+        addControls(timeline, location, disabledBlog);
+        lengthenTimeline(timeline);
+
+        const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
+        const mode = savedModes[location] ?? 'on';
+        timeline.dataset.showOriginals = disabledBlog ? 'disabled' : mode;
+      }
+    });
 };
 
 const processPosts = async function (postElements) {

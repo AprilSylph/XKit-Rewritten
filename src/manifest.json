@@ -66,6 +66,14 @@
     }
   ],
 
+  "background": {
+    "scripts": [
+      "lib/browser-polyfill.min.js",
+      "background.js"
+    ],
+    "persistent": false
+  },
+
   "minimum_chrome_version": "88",
   "browser_specific_settings": {
     "gecko": {

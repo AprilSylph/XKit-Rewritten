@@ -1,7 +1,9 @@
 'use strict';
 
 {
-  const { getURL } = browser.runtime;
+  const { getURL, sendMessage } = browser.runtime;
+  const extensionInfoPromise = sendMessage('browser.management.getSelf');
+
   const redpop = [...document.scripts].some(({ src }) => src.includes('/pop/'));
   const isReactLoaded = () => document.querySelector('[data-rh]') === null;
 
@@ -72,7 +74,21 @@
     return installedScripts;
   };
 
+  const runDevOnly = async () => {
+    const extensionInfo = await extensionInfoPromise;
+    if (extensionInfo.installType === 'development') {
+      console.log('XKit extension info:', extensionInfo);
+
+      const notificationsPath = getURL('/util/notifications.js');
+      const { notify } = await import(notificationsPath);
+      window.onunhandledrejection = (event) => { notify(`XKit error: ${event.reason}`); };
+      notify('XKit Rewritten developer error messaging enabled!');
+    }
+  };
+
   const init = async function () {
+    await runDevOnly();
+
     browser.storage.onChanged.addListener(onStorageChanged);
 
     const installedScripts = await getInstalledScripts();

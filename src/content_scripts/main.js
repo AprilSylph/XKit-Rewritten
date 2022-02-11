@@ -81,7 +81,8 @@
 
       const notificationsPath = getURL('/util/notifications.js');
       const { notify } = await import(notificationsPath);
-      window.onunhandledrejection = (event) => { notify(`XKit error: ${event.reason}`); };
+      window.addEventListener('error', (event) => { notify(`XKit error: ${event.message}`); });
+      window.addEventListener('unhandledrejection', (event) => { notify(`XKit error: ${event.reason}`); });
       notify('XKit Rewritten developer error messaging enabled!');
     }
   };

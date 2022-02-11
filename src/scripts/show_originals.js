@@ -73,11 +73,12 @@ const processTimelines = async () => {
 
       if (location && timeline.querySelector(`.${controlsClass}`) === null) {
         addControls(timeline, location, disabledBlog);
-        lengthenTimeline(timeline);
+        if (disabledBlog) return;
 
+        lengthenTimeline(timeline);
         const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
         const mode = savedModes[location] ?? 'on';
-        timeline.dataset.showOriginals = disabledBlog ? 'disabled' : mode;
+        timeline.dataset.showOriginals = mode;
       }
     });
 };

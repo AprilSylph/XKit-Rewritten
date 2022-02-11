@@ -24,7 +24,7 @@
 }
 [data-show-originals="on"] .xkit-show-originals-controls a[data-mode="on"],
 [data-show-originals="off"] .xkit-show-originals-controls a[data-mode="off"],
-[data-show-originals="disabled"] .xkit-show-originals-controls a[data-mode="disabled"] {
+.xkit-show-originals-controls a[data-mode="disabled"] {
   box-shadow: inset 0 -2px 0 RGB(var(--accent));
   color: RGB(var(--accent));
 }

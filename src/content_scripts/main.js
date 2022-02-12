@@ -2,7 +2,6 @@
 
 {
   const { getURL, sendMessage } = browser.runtime;
-  const extensionInfoPromise = sendMessage('browser.management.getSelf');
 
   const redpop = [...document.scripts].some(({ src }) => src.includes('/pop/'));
   const isReactLoaded = () => document.querySelector('[data-rh]') === null;
@@ -75,7 +74,7 @@
   };
 
   const runDevOnly = async () => {
-    const extensionInfo = await extensionInfoPromise;
+    const extensionInfo = await sendMessage('browser.management.getSelf');
     if (extensionInfo.installType === 'development') {
       console.log('XKit extension info:', extensionInfo);
 
@@ -88,7 +87,7 @@
   };
 
   const init = async function () {
-    await runDevOnly();
+    await runDevOnly().catch(console.log);
 
     browser.storage.onChanged.addListener(onStorageChanged);
 

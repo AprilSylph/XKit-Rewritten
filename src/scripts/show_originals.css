@@ -14,20 +14,20 @@
   line-height: 1.333;
   margin-bottom: 20px;
 }
-.xkit-show-originals-controls a {
+.xkit-show-originals-controls > a {
   padding: 14px 16px;
   text-decoration: none;
   text-transform: capitalize;
 }
-.xkit-show-originals-controls a:not([data-mode="disabled"]) {
+.xkit-show-originals-controls > a:not([data-mode="disabled"]) {
   cursor: pointer;
 }
-.xkit-show-originals-controls a:hover {
+.xkit-show-originals-controls > a:hover {
   background: var(--blog-background-hover-color, rgba(var(--white-on-dark), .13));
 }
-[data-show-originals="on"] .xkit-show-originals-controls a[data-mode="on"],
-[data-show-originals="off"] .xkit-show-originals-controls a[data-mode="off"],
-.xkit-show-originals-controls a[data-mode="disabled"] {
+[data-show-originals="on"] .xkit-show-originals-controls > a[data-mode="on"],
+[data-show-originals="off"] .xkit-show-originals-controls > a[data-mode="off"],
+.xkit-show-originals-controls > a[data-mode="disabled"] {
   box-shadow: inset 0 -2px 0 var(--blog-link-color, rgb(var(--accent)));
   color: var(--blog-link-color, rgb(var(--accent)));
 }

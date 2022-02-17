@@ -57,12 +57,13 @@ const init = new Promise(resolve => {
 /**
  * @param {Function} asyncFunc - Asynchronous function to run in the page context
  * @param {Array} args - Array of arguments to pass to the function via spread
- * @param {object} [options] - Destructured
+ * @param {object} [options] - Injection options
  * @param {boolean} [options.returnsVoid] - If true, resolve immediately and discard the return value
  * @returns {Promise<any>} The return value of the async function, or the caught exception
  */
-export const inject = (asyncFunc, args = [], { returnsVoid = false } = {}) =>
-  returnsVoid ? injectVoid(asyncFunc, args) : injectWithReturn(asyncFunc, args);
+export const inject = (asyncFunc, args = [], { returnsVoid = false } = {}) => returnsVoid
+  ? injectVoid(asyncFunc, args)
+  : injectWithReturn(asyncFunc, args);
 
 const injectWithReturn = (asyncFunc, args = []) => new Promise((resolve, reject) => {
   const callbackId = Math.random();

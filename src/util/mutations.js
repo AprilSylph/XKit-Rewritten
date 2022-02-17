@@ -62,7 +62,7 @@ const onBeforeRepaint = () => {
   const addedNodes = mutationsPool
     .splice(0)
     .flatMap(({ addedNodes }) => [...addedNodes])
-    .filter(addedNode => addedNode instanceof Element);
+    .filter(addedNode => addedNode instanceof Element && addedNode.isConnected);
 
   if (addedNodes.length === 0) return;
 

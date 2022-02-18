@@ -3,20 +3,24 @@ import { translate } from '../util/language_data.js';
 import { pageModifications } from '../util/mutations.js';
 
 let knightRiderLoaderSelector;
+let peeprSelector;
+let timelineSelector;
 let scrollToBottomButton;
 let scrollToBottomIcon;
 let active = false;
+let scrollElement;
 
 const scrollToBottom = () => {
-  window.scrollTo({ top: document.documentElement.scrollHeight });
-  if (document.querySelector(knightRiderLoaderSelector) === null) {
+  scrollElement.scrollTo({ top: scrollElement.scrollHeight });
+  if (scrollElement.querySelector(knightRiderLoaderSelector) === null) {
     stopScrolling();
   }
 };
 const observer = new ResizeObserver(scrollToBottom);
 
 const startScrolling = () => {
-  observer.observe(document.documentElement);
+  scrollElement = document.querySelector(peeprSelector) || document.documentElement;
+  observer.observe(scrollElement.querySelector(timelineSelector));
   active = true;
   scrollToBottomIcon.style.fill = 'rgb(var(--yellow))';
   scrollToBottom();
@@ -61,7 +65,14 @@ const addButtonToPage = async function ([scrollToTopButton]) {
 };
 
 export const main = async function () {
-  knightRiderLoaderSelector = await resolveExpressions`main ${keyToCss('loader')} ${keyToCss('knightRiderLoader')}`;
+  knightRiderLoaderSelector = await resolveExpressions`
+    ${keyToCss('timeline')} ${keyToCss('loader')} ${keyToCss('knightRiderLoader')}
+  `;
+  peeprSelector = await resolveExpressions`
+    ${keyToCss('peepr')},
+    ${keyToCss('drawerContent')} > ${keyToCss('scrollContainer')}
+  `;
+  timelineSelector = await keyToCss('timeline');
 
   const scrollToTopLabel = await translate('Scroll to top');
   pageModifications.register(`button[aria-label="${scrollToTopLabel}"]`, addButtonToPage);

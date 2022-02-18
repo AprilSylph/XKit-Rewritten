@@ -61,22 +61,14 @@ const unburyGivenPaths = async (selector) => {
   });
 };
 
-let exposedPromise;
+const timelineSelector = keyToCss('timeline');
 
 /**
  * Adds data-timeline attributes to all timeline elements on the page, set to the buried endpointApiRequest.givenPath property
  *
  * @returns {Promise<void>} Resolves when finished
  */
-export const exposeTimelines = async () => {
-  const timelineSelector = await keyToCss('timeline');
-
-  if (!exposedPromise) {
-    exposedPromise = inject(unburyGivenPaths, [timelineSelector]);
-    queueMicrotask(() => { exposedPromise = null; });
-  }
-  return exposedPromise;
-};
+export const exposeTimelines = async () => inject(unburyGivenPaths, [await timelineSelector]);
 
 const controlTagsInput = async ({ add, remove }) => {
   add = add.map(tag => tag.trim()).filter((tag, index, array) => array.indexOf(tag) === index);

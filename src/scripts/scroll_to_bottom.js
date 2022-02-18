@@ -76,6 +76,7 @@ export const main = async function () {
 
   const scrollToTopLabel = await translate('Scroll to top');
   pageModifications.register(`button[aria-label="${scrollToTopLabel}"]`, addButtonToPage);
+  pageModifications.register(peeprSelector, stopScrolling);
 };
 
 export const clean = async function () {

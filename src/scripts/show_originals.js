@@ -112,11 +112,11 @@ export const main = async function () {
   } = await getPreferences('show_originals'));
 
   whitelist = whitelistedUsernames.split(',').map(username => username.trim());
-  const nonGroupUserBlogs = (await getUserBlogs())
+  const nonGroupUserBlogs = (await getUserBlogs().catch(() => []))
     .filter(blog => !blog.isGroupChannel)
     .map(blog => blog.name);
   disabledPeeprBlogs = [...whitelist, ...showOwnReblogs ? nonGroupUserBlogs : []];
-  primaryBlogName = await getPrimaryBlogName();
+  primaryBlogName = await getPrimaryBlogName().catch(() => undefined);
 
   onNewPosts.addListener(processPosts);
 };

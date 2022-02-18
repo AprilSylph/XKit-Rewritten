@@ -76,18 +76,17 @@
   const runDevOnly = async () => {
     const extensionInfo = await sendMessage('browser.management.getSelf');
     if (extensionInfo.installType === 'development') {
-      console.log('XKit extension info:', extensionInfo);
+      console.log('XKit Rewritten is loaded in development mode. Extension info:', extensionInfo);
 
       const notificationsPath = getURL('/util/notifications.js');
       const { notify } = await import(notificationsPath);
-      window.addEventListener('error', (event) => { notify(`XKit error: ${event.message}`); });
-      window.addEventListener('unhandledrejection', (event) => { notify(`XKit error: ${event.reason}`); });
-      notify('XKit Rewritten developer error messaging enabled!');
+      window.addEventListener('error', (event) => { notify(`XKit Rewritten error: ${event.message}`); });
+      window.addEventListener('unhandledrejection', (event) => { notify(`XKit Rewritten error: ${event.reason}`); });
     }
   };
 
   const init = async function () {
-    await runDevOnly().catch(console.log);
+    await runDevOnly().catch(console.error);
 
     browser.storage.onChanged.addListener(onStorageChanged);
 

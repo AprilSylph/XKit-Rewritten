@@ -14,7 +14,7 @@ const getRunningXkit = async (currentVersion) => {
   return runningVersion;
 };
 
-export const checkRepeatInit = inject(getRunningXkit, [currentVersion])
+export const checkRepeatInit = () => inject(getRunningXkit, [currentVersion])
   .then(result => {
     if (result) {
       const updateMessage = result !== currentVersion

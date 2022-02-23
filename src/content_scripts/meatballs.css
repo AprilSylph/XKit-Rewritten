@@ -16,6 +16,10 @@
   text-decoration: none;
 }
 
+[data-xkit-meatball-button][hidden] {
+  display: none;
+}
+
 [data-xkit-meatball-button] ~ [data-xkit-meatball-button] {
   border-top: none;
 }

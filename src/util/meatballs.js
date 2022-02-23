@@ -15,39 +15,40 @@ const meatballItems = {};
  */
 export const registerMeatballItem = function ({ id, label, onclick, postFilter }) {
   meatballItems[id] = { label, onclick, postFilter };
+  pageModifications.trigger(addMeatballItems);
 };
 
 export const unregisterMeatballItem = id => {
   delete meatballItems[id];
-  [...document.querySelectorAll('[data-xkit-meatball-button]')]
-    .filter(button => button.dataset.xkitMeatballButton === id)
-    .forEach(button => button.remove());
+  $(`[data-xkit-meatball-button="${id}"]`).remove();
 };
 
-keyToCss('meatballMenu').then(meatballMenuSelector => pageModifications.register(
-  `${postSelector} article header ${meatballMenuSelector}:not(.xkit-done)`,
-  meatballMenuElements => meatballMenuElements.forEach(meatballMenu => {
-    meatballMenu.classList.add('xkit-done');
-    const currentPost = meatballMenu.closest(postSelector);
+const addMeatballItems = meatballMenuElements => meatballMenuElements.forEach(meatballMenu => {
+  $(meatballMenu).children('[data-xkit-meatball-button]').remove();
+  const currentPost = meatballMenu.closest(postSelector);
 
-    Object.keys(meatballItems).sort().forEach(id => {
-      const { label, onclick, postFilter } = meatballItems[id];
+  Object.keys(meatballItems).sort().forEach(id => {
+    const { label, onclick, postFilter } = meatballItems[id];
 
-      const meatballItemButton = document.createElement('button');
-      Object.assign(meatballItemButton, { textContent: label, onclick, hidden: true });
-      meatballItemButton.dataset.xkitMeatballButton = id;
-      meatballMenu.appendChild(meatballItemButton);
+    const meatballItemButton = document.createElement('button');
+    Object.assign(meatballItemButton, { textContent: label, onclick, hidden: true });
+    meatballItemButton.dataset.xkitMeatballButton = id;
+    meatballMenu.appendChild(meatballItemButton);
 
-      if (postFilter instanceof Function) {
-        const shouldShowItem = postFilter(currentPost);
-        meatballItemButton.hidden = shouldShowItem !== true;
+    if (postFilter instanceof Function) {
+      const shouldShowItem = postFilter(currentPost);
+      meatballItemButton.hidden = shouldShowItem !== true;
 
-        if (shouldShowItem instanceof Promise) {
-          shouldShowItem.then(result => { meatballItemButton.hidden = result !== true; });
-        }
-      } else {
-        meatballItemButton.hidden = false;
+      if (shouldShowItem instanceof Promise) {
+        shouldShowItem.then(result => { meatballItemButton.hidden = result !== true; });
       }
-    });
-  })
+    } else {
+      meatballItemButton.hidden = false;
+    }
+  });
+});
+
+keyToCss('meatballMenu').then(meatballMenuSelector => pageModifications.register(
+  `${postSelector} article header ${meatballMenuSelector}`,
+  addMeatballItems
 ));

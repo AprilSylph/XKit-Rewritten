@@ -16,9 +16,9 @@ let blockedPostTargetIDs;
 let notificationSelector;
 
 const styleElement = buildStyle();
-const buildCss = () => blockedPostTargetIDs.length === 0
-  ? ''
-  : blockedPostTargetIDs.map(id => `[data-target-root-post-id="${id}"]`).join(', ').concat(' { display: none; }');
+const buildCss = () => `:is(${
+  blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')
+}) { display: none; }`;
 
 const unburyTargetPostIds = async (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)]

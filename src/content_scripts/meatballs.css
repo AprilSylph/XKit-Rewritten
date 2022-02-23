@@ -20,7 +20,7 @@
   display: none;
 }
 
-[data-xkit-meatball-button] ~ [data-xkit-meatball-button] {
+[data-xkit-meatball-button]:not([hidden]) ~ [data-xkit-meatball-button] {
   border-top: none;
 }
 

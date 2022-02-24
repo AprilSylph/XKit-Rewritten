@@ -24,6 +24,14 @@ const popupInput = Object.assign(document.createElement('input'), {
   autocomplete: 'off',
   onkeydown: event => event.stopPropagation()
 });
+const doSmartQuotes = ({ currentTarget }) => {
+  const { value } = currentTarget;
+  currentTarget.value = value
+    .replace(/^"/, '\u201C')
+    .replace(/ "/g, ' \u201C')
+    .replace(/"/g, '\u201D');
+};
+popupInput.addEventListener('input', doSmartQuotes);
 popupForm.appendChild(popupInput);
 
 const postOptionPopupElement = Object.assign(document.createElement('div'), { id: 'quick-tags-post-option' });

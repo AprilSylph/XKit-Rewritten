@@ -83,7 +83,16 @@ const updateTagSuggestions = () => {
   }
 };
 
+const doSmartQuotes = ({ currentTarget }) => {
+  const { value } = currentTarget;
+  currentTarget.value = value
+    .replace(/^"/, '\u201C')
+    .replace(/ "/g, ' \u201C')
+    .replace(/"/g, '\u201D');
+};
+
 tagsInput.addEventListener('input', updateTagSuggestions);
+tagsInput.addEventListener('input', doSmartQuotes);
 
 const showPopupOnHover = ({ currentTarget }) => {
   clearTimeout(timeoutID);

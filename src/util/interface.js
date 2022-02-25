@@ -21,7 +21,7 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
   }
 
   if (noPeepr) {
-    postElements = postElements.filter(postElement => postElement.matches('[role="dialog"] [tabindex="-1"][data-id]') === false);
+    postElements = postElements.filter(postElement => postElement.matches(`[role="dialog"] ${postSelector}`) === false);
   }
 
   if (!includeFiltered) {

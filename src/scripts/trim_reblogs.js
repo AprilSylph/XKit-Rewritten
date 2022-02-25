@@ -1,6 +1,6 @@
 import { createControlButtonTemplate, cloneControlButton } from '../util/control_buttons.js';
 import { keyToCss } from '../util/css_map.js';
-import { filterPostElements } from '../util/interface.js';
+import { filterPostElements, postSelector } from '../util/interface.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
@@ -16,7 +16,7 @@ let reblogSelector;
 let controlButtonTemplate;
 
 const onButtonClicked = async function ({ currentTarget }) {
-  const postElement = currentTarget.closest('[data-id]');
+  const postElement = currentTarget.closest(postSelector);
   const postId = postElement.dataset.id;
 
   const {

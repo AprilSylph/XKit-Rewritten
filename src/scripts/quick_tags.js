@@ -1,4 +1,5 @@
 import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
+import { postSelector } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
@@ -173,7 +174,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 };
 
 const processFormSubmit = function ({ currentTarget }) {
-  const postElement = currentTarget.closest('[data-id]');
+  const postElement = currentTarget.closest(postSelector);
   const inputTags = popupInput.value.split(',').map(inputTag => inputTag.trim());
 
   addTagsToPost({ postElement, inputTags });
@@ -183,7 +184,7 @@ const processFormSubmit = function ({ currentTarget }) {
 const processBundleClick = function ({ target }) {
   if (target.tagName !== 'BUTTON') { return; }
 
-  const postElement = target.closest('[data-id]');
+  const postElement = target.closest(postSelector);
   const inputTags = target.dataset.tags.split(',').map(inputTag => inputTag.trim());
 
   addTagsToPost({ postElement, inputTags });
@@ -214,7 +215,7 @@ postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 export const main = async function () {
   controlButtonTemplate = await createControlButtonTemplate(symbolId, buttonClass);
 
-  pageModifications.register('[data-id] footer a[href*="/edit/"]', addControlButtons);
+  pageModifications.register(`${postSelector} footer a[href*="/edit/"]`, addControlButtons);
   registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });
 
   populatePopups();

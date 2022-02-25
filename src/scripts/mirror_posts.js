@@ -1,3 +1,4 @@
+import { postSelector } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, modalCancelButton } from '../util/modals.js';
 import { timelineObjectMemoized } from '../util/react_props.js';
@@ -24,7 +25,7 @@ const archiveDotOrgButton = Object.assign(document.createElement('button'), {
 archiveDotOrgForm.append(archiveDotOrgInput, archiveDotOrgButton);
 
 const onButtonClicked = async function ({ currentTarget }) {
-  const postElement = currentTarget.closest('[data-id]');
+  const postElement = currentTarget.closest(postSelector);
   const postID = postElement.dataset.id;
 
   const { postUrl } = await timelineObjectMemoized(postID);

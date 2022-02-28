@@ -1,11 +1,21 @@
 import { keyToClasses, keyToCss, resolveExpressions } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { pageModifications } from '../util/mutations.js';
+import { buildStyle } from '../util/interface.js';
+
+const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
 
 let knightRiderLoaderSelector;
 let scrollToBottomButton;
 let scrollToBottomIcon;
 let active = false;
+
+const styleElement = buildStyle();
+resolveExpressions`
+  ${keyToCss('isPeeprShowing')} #${scrollToBottomButtonId} {
+    display: none;
+  }
+`.then(css => { styleElement.textContent = css; });
 
 const scrollToBottom = () => {
   window.scrollTo({ top: document.documentElement.scrollHeight });
@@ -49,6 +59,7 @@ const addButtonToPage = async function ([scrollToTopButton]) {
     scrollToBottomButton.style.marginTop = '0.5ch';
     scrollToBottomButton.style.transform = 'rotate(180deg)';
     scrollToBottomButton.addEventListener('click', onClick);
+    scrollToBottomButton.id = scrollToBottomButtonId;
 
     scrollToBottomIcon = scrollToBottomButton.querySelector('svg');
     scrollToBottomIcon.style.fill = active ? 'rgb(var(--yellow))' : '';
@@ -65,6 +76,7 @@ export const main = async function () {
 
   const scrollToTopLabel = await translate('Scroll to top');
   pageModifications.register(`button[aria-label="${scrollToTopLabel}"]`, addButtonToPage);
+  document.head.append(styleElement);
 };
 
 export const clean = async function () {
@@ -72,4 +84,5 @@ export const clean = async function () {
   pageModifications.unregister(checkForButtonRemoved);
   stopScrolling();
   scrollToBottomButton?.remove();
+  styleElement.remove();
 };

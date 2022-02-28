@@ -1,5 +1,5 @@
 import { inject } from './inject.js';
-import { keyToCss, resolveExpressions } from './css_map.js';
+import { keyToCss } from './css_map.js';
 
 const cache = {};
 
@@ -34,7 +34,7 @@ export const timelineObject = async function (postID) {
   return cache[postID];
 };
 
-const unburyGivenPaths = async (selector) => {
+const unburyGivenPaths = selector => {
   [...document.querySelectorAll(selector)].forEach(timelineElement => {
     const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactFiber'));
     let fiber = timelineElement[reactKey];
@@ -67,10 +67,8 @@ const unburyGivenPaths = async (selector) => {
  * @returns {Promise<void>} Resolves when finished
  */
 export const exposeTimelines = async () => {
-  const timelineSelector = await resolveExpressions`${keyToCss('timeline')}:not([data-timeline])`;
-  if (document.querySelector(timelineSelector) !== null) {
-    return inject(unburyGivenPaths, [timelineSelector]);
-  }
+  const timelineSelector = await keyToCss('timeline');
+  return inject(unburyGivenPaths, [timelineSelector]);
 };
 
 const controlTagsInput = async ({ add, remove }) => {

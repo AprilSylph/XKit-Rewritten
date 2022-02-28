@@ -1,6 +1,6 @@
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { filterPostElements } from '../util/interface.js';
-import { timelineObjectMemoized } from '../util/react_props.js';
+import { exposeTimelines, timelineObjectMemoized } from '../util/react_props.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { translate } from '../util/language_data.js';
@@ -8,7 +8,6 @@ import { translate } from '../util/language_data.js';
 const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
 
 const excludeClass = 'xkit-tag-tracking-plus-done';
-const noPeepr = true;
 const includeFiltered = true;
 
 let searchResultSelector;
@@ -16,17 +15,21 @@ let tagTextSelector;
 let tagsYouFollowString;
 
 const processPosts = async function (postElements) {
-  const { searchParams } = new URL(location);
-  if (!location.pathname.startsWith('/tagged/') || searchParams.get('sort') === 'top') {
+  const { pathname, searchParams } = new URL(location);
+  if (!pathname.startsWith('/tagged/') || searchParams.get('sort') === 'top') {
     return;
   }
 
-  const currentTag = decodeURIComponent(location.pathname.split('/')[2]);
+  const encodedCurrentTag = pathname.split('/')[2];
+  const currentTag = decodeURIComponent(encodedCurrentTag);
   const { response: { following } } = await apiFetch('/v2/user/tags/following', { queryParams: { tag: currentTag } });
   if (!following) { return; }
 
   const { [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey);
-  for (const postElement of filterPostElements(postElements, { excludeClass, noPeepr, includeFiltered })) {
+  const timeline = new RegExp(`/v2/hubs/${encodedCurrentTag}/timeline`);
+  await exposeTimelines();
+
+  for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
     const { timestamp } = await timelineObjectMemoized(postElement.dataset.id);
     const savedTimestamp = timestamps[currentTag] || 0;
 

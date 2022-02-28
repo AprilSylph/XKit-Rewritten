@@ -64,9 +64,10 @@ const processTimelines = async () => {
       const { timeline, which } = timelineElement.dataset;
 
       const isSinglePostPeepr = timeline.includes('permalink');
+
       const on = {
         dashboard: timeline === '/v2/timeline/dashboard',
-        peepr: timelineElement.closest('[role="dialog"]') !== null && !isSinglePostPeepr,
+        peepr: isInPeepr && !isSinglePostPeepr,
         blogSubscriptions: timeline === '/v2/timeline' && which === 'blog_subscriptions'
       };
       const location = Object.keys(on).find(location => on[location]);

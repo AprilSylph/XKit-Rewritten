@@ -68,7 +68,7 @@ const timelineSelector = keyToCss('timeline');
  *
  * @returns {Promise<void>} Resolves when finished
  */
-export const exposeTimelines = async () => inject(unburyGivenPaths, [await timelineSelector], { returnsVoid: true });
+export const exposeTimelines = async () => inject(unburyGivenPaths, [await timelineSelector]);
 
 const controlTagsInput = async ({ add, remove }) => {
   add = add.map(tag => tag.trim()).filter((tag, index, array) => array.indexOf(tag) === index);

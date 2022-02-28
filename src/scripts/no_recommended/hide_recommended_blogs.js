@@ -1,3 +1,4 @@
+import { keyToCss, resolveExpressions } from '../../util/css_map.js';
 import { pageModifications } from '../../util/mutations.js';
 import { translate } from '../../util/language_data.js';
 import { buildStyle } from '../../util/interface.js';
@@ -20,9 +21,7 @@ export const main = async function () {
   checkOutTheseBlogsLabel = await translate('Check out these blogs');
   pageModifications.register('aside > div > h1', hideDashboardRecommended);
 
-  const topBlogsLabel = await translate('Top %1$s blogs');
-  const [topBlogsPrefix, topBlogsSuffix] = topBlogsLabel.split('%1$s');
-  const topBlogsSelector = `aside ul${topBlogsPrefix ? `[aria-label^="${topBlogsPrefix}"]` : ''}${topBlogsSuffix ? `[aria-label$="${topBlogsSuffix}"]` : ''}`;
+  const topBlogsSelector = await resolveExpressions`${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
   pageModifications.register(topBlogsSelector, hideTagPageRecommended);
 
   document.head.append(styleElement);

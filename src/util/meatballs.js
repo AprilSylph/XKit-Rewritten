@@ -1,4 +1,5 @@
 import { keyToCss } from './css_map.js';
+import { postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 
 const meatballItems = {};
@@ -14,34 +15,40 @@ const meatballItems = {};
  */
 export const registerMeatballItem = function ({ id, label, onclick, postFilter }) {
   meatballItems[id] = { label, onclick, postFilter };
+  pageModifications.trigger(addMeatballItems);
 };
 
 export const unregisterMeatballItem = id => {
   delete meatballItems[id];
-  [...document.querySelectorAll('[data-xkit-meatball-button]')]
-    .filter(button => button.dataset.xkitMeatballButton === id)
-    .forEach(button => button.remove());
+  $(`[data-xkit-meatball-button="${id}"]`).remove();
 };
 
-keyToCss('meatballMenu').then(meatballMenuSelector => {
-  pageModifications.register(meatballMenuSelector, meatballMenuElements => {
-    meatballMenuElements
-      .filter(meatballMenu => meatballMenu.matches(`[tabindex="-1"][data-id] article header ${meatballMenu.tagName.toLowerCase()}`))
-      .filter(meatballMenu => meatballMenu.classList.contains('xkit-done') === false)
-      .forEach(meatballMenu => {
-        meatballMenu.classList.add('xkit-done');
+const addMeatballItems = meatballMenuElements => meatballMenuElements.forEach(meatballMenu => {
+  $(meatballMenu).children('[data-xkit-meatball-button]').remove();
+  const currentPost = meatballMenu.closest(postSelector);
 
-        Object.keys(meatballItems)
-          .sort()
-          .filter(id => meatballItems[id].postFilter === undefined || meatballItems[id].postFilter(meatballMenu.closest('[data-id]')))
-          .forEach(id => {
-            const { label, onclick } = meatballItems[id];
-            const meatballItemButton = document.createElement('button');
-            Object.assign(meatballItemButton, { textContent: label, onclick });
-            meatballItemButton.dataset.xkitMeatballButton = id;
+  Object.keys(meatballItems).sort().forEach(id => {
+    const { label, onclick, postFilter } = meatballItems[id];
 
-            meatballMenu.appendChild(meatballItemButton);
-          });
-      });
+    const meatballItemButton = document.createElement('button');
+    Object.assign(meatballItemButton, { textContent: label, onclick, hidden: true });
+    meatballItemButton.dataset.xkitMeatballButton = id;
+    meatballMenu.appendChild(meatballItemButton);
+
+    if (postFilter instanceof Function) {
+      const shouldShowItem = postFilter(currentPost);
+      meatballItemButton.hidden = shouldShowItem !== true;
+
+      if (shouldShowItem instanceof Promise) {
+        shouldShowItem.then(result => { meatballItemButton.hidden = result !== true; });
+      }
+    } else {
+      meatballItemButton.hidden = false;
+    }
   });
 });
+
+keyToCss('meatballMenu').then(meatballMenuSelector => pageModifications.register(
+  `${postSelector} article header ${meatballMenuSelector}`,
+  addMeatballItems
+));

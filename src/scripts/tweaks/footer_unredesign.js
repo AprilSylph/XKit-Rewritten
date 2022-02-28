@@ -1,4 +1,4 @@
-import { keyToClasses, keyToCss } from '../../util/css_map.js';
+import { keyToClasses, keyToCss, resolveExpressions } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
@@ -8,10 +8,22 @@ let footerRedesignClasses;
 let footerRedesignSelector;
 let postActivityWrapperSelector;
 
-const styleElement = buildStyle(`
+const styleElement = buildStyle();
+
+resolveExpressions`
 .${removePaddingClass} {
   padding-bottom: 0;
 }
+
+article footer > ${keyToCss('noteCount')} {
+  align-items: center;
+  gap: var(--post-padding);
+}
+
+article footer > ${keyToCss('controls')} {
+  margin-left: auto;
+}
+
 .xkit-control-button-container {
   margin-left: 20px;
 }
@@ -33,7 +45,7 @@ const styleElement = buildStyle(`
     transform: translate(-20px, -50%) !important;
   }
 }
-`);
+`.then(css => { styleElement.textContent = css; });
 
 const removeFooterRedesign = elements => {
   elements.forEach(element => {

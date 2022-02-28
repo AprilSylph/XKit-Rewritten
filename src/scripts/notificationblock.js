@@ -1,9 +1,10 @@
-import { buildStyle } from '../util/interface.js';
+import { buildStyle, postSelector } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { pageModifications } from '../util/mutations.js';
 import { inject } from '../util/inject.js';
 import { keyToCss } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
+import { timelineObjectMemoized } from '../util/react_props.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonBlockId = 'notificationblock-block';
@@ -15,22 +16,21 @@ let blockedPostTargetIDs;
 let notificationSelector;
 
 const styleElement = buildStyle();
-const buildCss = () => blockedPostTargetIDs.length === 0
-  ? ''
-  : blockedPostTargetIDs.map(id => `[data-target-post-id="${id}"]`).join(', ').concat(' { display: none; }');
+const buildCss = () => `:is(${
+  blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')
+}) { display: none; }`;
 
 const unburyTargetPostIds = async (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)]
-    .filter(({ dataset: { targetPostId } }) => targetPostId === undefined)
-    .forEach(async notificationElement => {
+    .forEach(notificationElement => {
       const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactFiber'));
       let fiber = notificationElement[reactKey];
 
       while (fiber !== null) {
         const { notification } = fiber.memoizedProps || {};
         if (notification !== undefined) {
-          const { targetPostId } = notification;
-          Object.assign(notificationElement.dataset, { targetPostId });
+          const { targetRootPostId, targetPostId } = notification;
+          notificationElement.dataset.targetRootPostId = targetRootPostId || targetPostId;
           break;
         } else {
           fiber = fiber.return;
@@ -42,10 +42,12 @@ const unburyTargetPostIds = async (notificationSelector) => {
 const processNotifications = () => inject(unburyTargetPostIds, [notificationSelector]);
 
 const onButtonClicked = async function ({ currentTarget }) {
-  const postElement = currentTarget.closest('[data-id]');
+  const postElement = currentTarget.closest(postSelector);
   const { id } = postElement.dataset;
 
-  const shouldBlockNotifications = blockedPostTargetIDs.includes(id) === false;
+  const { rebloggedRootId } = await timelineObjectMemoized(id);
+  const rootId = rebloggedRootId || id;
+  const shouldBlockNotifications = blockedPostTargetIDs.includes(rootId) === false;
 
   const title = shouldBlockNotifications
     ? 'Block this post\'s notifications?'
@@ -62,8 +64,8 @@ const onButtonClicked = async function ({ currentTarget }) {
     ? 'red'
     : 'blue';
   const saveNotificationPreference = shouldBlockNotifications
-    ? () => { blockedPostTargetIDs.push(id); browser.storage.local.set({ [storageKey]: blockedPostTargetIDs }); }
-    : () => browser.storage.local.set({ [storageKey]: blockedPostTargetIDs.filter(blockedId => blockedId !== id) });
+    ? () => { blockedPostTargetIDs.push(rootId); browser.storage.local.set({ [storageKey]: blockedPostTargetIDs }); }
+    : () => browser.storage.local.set({ [storageKey]: blockedPostTargetIDs.filter(blockedId => blockedId !== rootId) });
 
   showModal({
     title,
@@ -79,8 +81,17 @@ const onButtonClicked = async function ({ currentTarget }) {
   });
 };
 
-const blockPostFilter = postElement => postElement.querySelector('footer a[href*="/edit"]') !== null && blockedPostTargetIDs.includes(postElement.dataset.id) === false;
-const unblockPostFilter = ({ dataset: { id } }) => blockedPostTargetIDs.includes(id);
+const blockPostFilter = async ({ dataset: { id } }) => {
+  const { canEdit, rebloggedRootId } = await timelineObjectMemoized(id);
+  const rootId = rebloggedRootId || id;
+  return canEdit && blockedPostTargetIDs.includes(rootId) === false;
+};
+
+const unblockPostFilter = async ({ dataset: { id } }) => {
+  const { rebloggedRootId } = await timelineObjectMemoized(id);
+  const rootId = rebloggedRootId || id;
+  return blockedPostTargetIDs.includes(rootId);
+};
 
 export const onStorageChanged = (changes, areaName) => {
   if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {

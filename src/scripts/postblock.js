@@ -1,4 +1,4 @@
-import { filterPostElements } from '../util/interface.js';
+import { filterPostElements, postSelector } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObjectMemoized } from '../util/react_props.js';
@@ -27,7 +27,7 @@ const processPosts = async function (postElements) {
 };
 
 const onButtonClicked = async function ({ currentTarget }) {
-  const postElement = currentTarget.closest('[data-id]');
+  const postElement = currentTarget.closest(postSelector);
   const postID = postElement.dataset.id;
 
   const { rebloggedRootId } = await timelineObjectMemoized(postID);

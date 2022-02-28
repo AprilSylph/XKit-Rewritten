@@ -1,9 +1,11 @@
-import { keyToClasses } from '../../util/css_map.js';
-import { buildStyle } from '../../util/interface.js';
+import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { postSelector, buildStyle } from '../../util/interface.js';
 
 const styleElement = buildStyle();
-const cssTemplate = filteredScreen => `
-  [tabindex="-1"][data-id] .${filteredScreen} {
+const filteredScreenSelector = resolveExpressions`${postSelector}:not(${keyToCss('masonryTimelineObject')}) ${keyToCss('filteredScreen')}`;
+
+resolveExpressions`
+  ${filteredScreenSelector} {
     flex-direction: row;
     justify-content: space-between;
     overflow-x: auto;
@@ -12,11 +14,11 @@ const cssTemplate = filteredScreen => `
     padding-bottom: var(--post-header-vertical-padding);
   }
 
-  [tabindex="-1"][data-id] .${filteredScreen} > p {
+  ${filteredScreenSelector} > p {
     flex-shrink: 0;
   }
 
-  [tabindex="-1"][data-id] .${filteredScreen} > a {
+  ${filteredScreenSelector} > a {
     overflow: hidden;
     margin-right: auto;
     margin-left: 1ch;
@@ -25,22 +27,15 @@ const cssTemplate = filteredScreen => `
     white-space: nowrap;
   }
 
-  [tabindex="-1"][data-id] .${filteredScreen} > button {
+  ${filteredScreenSelector} > button {
     flex-shrink: 0;
     margin-left: 1ch;
   }
 
-  [tabindex="-1"][data-id] .${filteredScreen} > button > span {
+  ${filteredScreenSelector} > button > span {
     margin-top: 0;
   }
-`;
+`.then(css => { styleElement.textContent = css; });
 
-export const main = async function () {
-  const filteredScreenClasses = await keyToClasses('filteredScreen');
-  styleElement.textContent = filteredScreenClasses.map(cssTemplate).join('');
-  document.head.append(styleElement);
-};
-
-export const clean = async function () {
-  styleElement.remove();
-};
+export const main = async () => document.head.append(styleElement);
+export const clean = async () => styleElement.remove();

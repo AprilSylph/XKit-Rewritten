@@ -1,90 +1,57 @@
 const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
-
-const typedArray = new Uint8Array(8);
-window.crypto.getRandomValues(typedArray);
-const injectKey = [...typedArray].map(number => number.toString(16).padStart(2, '0')).join('');
-
-const callbacks = new Map();
-
-let messagePort;
-
-const messageHandler = function ({ data: { result, exception, xkitCallbackId } }) {
-  if (callbacks.has(xkitCallbackId)) {
-    const [resolve, reject] = callbacks.get(xkitCallbackId);
-    callbacks.delete(xkitCallbackId);
-
-    if (exception === undefined) {
-      resolve(JSON.parse(result || 'null'));
-    } else {
-      reject(Object.assign(new Error(), JSON.parse(exception)));
-    }
-  }
-};
-
-const init = new Promise(resolve => {
-  const receivePort = function ({ origin, data, ports: [receivedPort] }) {
-    if (origin === location.origin && data === injectKey) {
-      window.removeEventListener('message', receivePort);
-      messagePort = receivedPort;
-      messagePort.addEventListener('message', messageHandler);
-      messagePort.start();
-      resolve();
-    }
-  };
-  window.addEventListener('message', receivePort);
-
-  const initScript = document.createElement('script');
-  initScript.setAttribute('nonce', nonce);
-  initScript.textContent = `{
-    const channel = new MessageChannel();
-    Object.defineProperty(window, 'xkit$${injectKey}', {
-      value: { messagePort: channel.port1 },
-      writable: false,
-      enumerable: false,
-      configurable: false
-    });
-    window.postMessage(
-      '${injectKey}',
-      '${location.origin}',
-      [channel.port2]
-    );
-  }`;
-
-  document.documentElement.appendChild(initScript);
-  initScript.remove();
-});
+const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
 /**
- * @param {Function} asyncFunc - Asynchronous function to run in the page context
+ * @param {Function} func - Function to run in the page context (can be async)
  * @param {Array} args - Array of arguments to pass to the function via spread
- * @returns {Promise<any>} The return value of the async function, or the caught exception
+ * @returns {Promise<any>} The return value of the function, or the caught exception
  */
-export const inject = (asyncFunc, args = []) => new Promise((resolve, reject) => {
-  const callbackId = Math.random();
-  callbacks.set(callbackId, [resolve, reject]);
-
+export const inject = async (func, args = []) => {
   const script = document.createElement('script');
-  const name = `xkit$${asyncFunc.name || 'injected'}`;
+  const name = `xkit$${func.name || 'injected'}`;
+  const async = func instanceof AsyncFunction;
 
   script.setAttribute('nonce', nonce);
   script.textContent = `{
-    const ${name} = ${asyncFunc.toString()};
-    ${name}(...${JSON.stringify(args)})
-    .then(result => window.xkit$${injectKey}.messagePort.postMessage({
-      xkitCallbackId: ${callbackId},
-      result: JSON.stringify(result),
-    }))
-    .catch(exception => window.xkit$${injectKey}.messagePort.postMessage({
-      xkitCallbackId: ${callbackId},
-      exception: JSON.stringify(Object.assign({}, exception, {
-        message: exception.message,
-        stack: exception.stack,
-      })),
-    }))
+    const { dataset } = document.currentScript;
+    const ${name} = ${func.toString()};
+    const returnValue = ${name}(...${JSON.stringify(args)});
+    ${async
+      ? `returnValue
+          .then(result => { dataset.result = JSON.stringify(result || null); })
+          .catch(exception => { dataset.exception = JSON.stringify({
+            message: exception.message,
+            name: exception.name,
+            stack: exception.stack,
+            ...exception
+          })})
+        `
+      : 'dataset.result = JSON.stringify(returnValue || null);'
+    }
   }`;
 
-  init.then(() => {
+  if (async) {
+    return new Promise((resolve, reject) => {
+      const attributeObserver = new MutationObserver((mutations, observer) => {
+        if (mutations.some(({ attributeName }) => attributeName === 'data-result')) {
+          observer.disconnect();
+          resolve(JSON.parse(script.dataset.result));
+        } else if (mutations.some(({ attributeName }) => attributeName === 'data-exception')) {
+          observer.disconnect();
+          reject(JSON.parse(script.dataset.exception));
+        }
+      });
+
+      attributeObserver.observe(script, {
+        attributes: true,
+        attributeFilter: ['data-result', 'data-exception']
+      });
+      document.documentElement.append(script);
+      script.remove();
+    });
+  } else {
     document.documentElement.appendChild(script);
     script.remove();
-  });
-});
+    return JSON.parse(script.dataset.result);
+  }
+};

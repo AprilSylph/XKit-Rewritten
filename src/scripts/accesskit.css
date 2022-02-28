@@ -51,7 +51,9 @@ figure.accesskit-visible-alt-text {
 }
 
 figure.accesskit-visible-alt-text figcaption {
+  box-sizing: border-box;
   height: 100%;
+  min-width: calc((min(540px, 100vw) / 3) - (4px * 2));
   padding: var(--post-header-vertical-padding) var(--post-padding);
   overflow: hidden;
 

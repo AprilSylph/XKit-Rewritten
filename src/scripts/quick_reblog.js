@@ -1,6 +1,7 @@
+import { sha256 } from '../util/crypto.js';
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
-import { filterPostElements, postType } from '../util/interface.js';
+import { postSelector, filterPostElements, postType } from '../util/interface.js';
 import { getUserBlogs } from '../util/user_blogs.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -82,7 +83,16 @@ const updateTagSuggestions = () => {
   }
 };
 
+const doSmartQuotes = ({ currentTarget }) => {
+  const { value } = currentTarget;
+  currentTarget.value = value
+    .replace(/^"/, '\u201C')
+    .replace(/ "/g, ' \u201C')
+    .replace(/"/g, '\u201D');
+};
+
 tagsInput.addEventListener('input', updateTagSuggestions);
+tagsInput.addEventListener('input', doSmartQuotes);
 
 const showPopupOnHover = ({ currentTarget }) => {
   clearTimeout(timeoutID);
@@ -90,7 +100,7 @@ const showPopupOnHover = ({ currentTarget }) => {
   currentTarget.closest('div').appendChild(popupElement);
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
-  const thisPostID = currentTarget.closest('[data-id]').dataset.id;
+  const thisPostID = currentTarget.closest(postSelector).dataset.id;
   if (thisPostID !== lastPostID) {
     if (!rememberLastBlog) {
       blogSelector.value = blogSelector.options[0].value;
@@ -131,14 +141,14 @@ const reblogPost = async function ({ currentTarget }) {
   actionButtons.disabled = true;
   lastPostID = null;
 
-  const postID = currentTarget.closest('[data-id]').dataset.id;
+  const postID = currentTarget.closest(postSelector).dataset.id;
   const { state } = currentTarget.dataset;
 
   const blog = blogSelector.value;
   const tags = [
     ...tagsInput.value.split(','),
     ...reblogTag ? [reblogTag] : [],
-    ...(state === 'queue' && queueTag ? [queueTag] : [])
+    ...(state === 'queue' && queueTag) ? [queueTag] : []
   ].join(',');
   const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } = await timelineObjectMemoized(postID);
 
@@ -196,10 +206,8 @@ const processPosts = async function (postElements) {
 
     if (alreadyRebloggedList.includes(rootID)) {
       const reblogLink = postElement.querySelector('footer a[href*="/reblog/"]');
-      if (reblogLink !== null) {
-        const buttonDiv = reblogLink.parentNode;
-        makeButtonReblogged({ buttonDiv, state: 'published' });
-      }
+      const buttonDiv = reblogLink?.closest('div');
+      if (buttonDiv) makeButtonReblogged({ buttonDiv, state: 'published' });
     }
   });
 };
@@ -238,20 +246,6 @@ const updateQuickTags = (changes, areaName) => {
   if (areaName === 'local' && Object.keys(changes).includes(quickTagsStorageKey)) {
     renderQuickTags();
   }
-};
-
-/**
- * adapted from https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
- *
- * @param {string} data - String to hash
- * @returns {Promise<string>} Hexadecimal string of a unique hash of the input
- */
-const sha256 = async (data) => {
-  const msgUint8 = new TextEncoder().encode(data);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  return hashHex;
 };
 
 const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) => {
@@ -311,7 +305,7 @@ export const main = async function () {
   quickTagsList.hidden = !quickTagsIntegration;
   tagsInput.hidden = !showTagsInput;
 
-  $(document.body).on('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
+  $(document.body).on('mouseenter', `${postSelector} footer a[href*="/reblog/"]`, showPopupOnHover);
 
   if (quickTagsIntegration) {
     browser.storage.onChanged.addListener(updateQuickTags);
@@ -324,7 +318,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  $(document.body).off('mouseenter', '[data-id] footer a[href*="/reblog/"]', showPopupOnHover);
+  $(document.body).off('mouseenter', `${postSelector} footer a[href*="/reblog/"]`, showPopupOnHover);
   popupElement.remove();
 
   blogSelector.removeEventListener('change', updateRememberedBlog);

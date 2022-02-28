@@ -1,4 +1,4 @@
-import { buildStyle, filterPostElements } from '../util/interface.js';
+import { buildStyle, filterPostElements, postSelector } from '../util/interface.js';
 import { onNewPosts } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
 import { keyToCss } from '../util/css_map.js';
@@ -22,7 +22,7 @@ const expandButton = Object.assign(document.createElement('button'), {
 });
 
 const unshortenOnClick = ({ currentTarget }) => {
-  const postElement = currentTarget.closest('[data-id]');
+  const postElement = currentTarget.closest(postSelector);
   if (postElement.classList.contains(shortenClass) === false) {
     return;
   }

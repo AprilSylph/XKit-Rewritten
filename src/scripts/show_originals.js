@@ -63,6 +63,7 @@ const processTimelines = async () => {
     .forEach(async timelineElement => {
       const { timeline, which } = timelineElement.dataset;
 
+      const isInPeepr = getComputedStyle(timelineElement).getPropertyValue('--blog-title-color') !== '';
       const isSinglePostPeepr = timeline.includes('permalink');
 
       const on = {

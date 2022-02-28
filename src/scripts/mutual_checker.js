@@ -24,7 +24,7 @@ const addIcons = function (postElements) {
     .filter(postElement => postElement.querySelector(`.${mutualIconClass}`) === null)
     .forEach(postElement => postElement.classList.remove(excludeClass));
 
-  filterPostElements(postElements, { excludeClass, noPeepr: true, includeFiltered: true }).forEach(async postElement => {
+  filterPostElements(postElements, { excludeClass, includeFiltered: true }).forEach(async postElement => {
     const postAttribution = postElement.querySelector(postAttributionSelector);
     if (postAttribution === null) { return; }
 

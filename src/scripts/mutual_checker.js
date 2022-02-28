@@ -1,4 +1,4 @@
-import { postSelector, filterPostElements } from '../util/interface.js';
+import { filterPostElements } from '../util/interface.js';
 import { timelineObjectMemoized } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { getPrimaryBlogName } from '../util/user_blogs.js';
@@ -19,12 +19,15 @@ let primaryBlogName;
 let postAttributionSelector;
 let icon;
 
-const addIcons = function (postElements) {
-  [...document.querySelectorAll(`${postSelector}.${mutualsClass}`)]
-    .filter(postElement => postElement.querySelector(`.${mutualIconClass}`) === null)
-    .forEach(postElement => postElement.classList.remove(excludeClass));
+const needsReprocessing = postElement =>
+  postElement.classList.contains(mutualsClass) &&
+  postElement.querySelector(`.${mutualIconClass}`) === null;
 
-  filterPostElements(postElements, { excludeClass, includeFiltered: true }).forEach(async postElement => {
+const addIcons = function (postElements) {
+  filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
+    if (postElement.classList.contains(excludeClass) && !needsReprocessing(postElement)) return;
+    postElement.classList.add(excludeClass);
+
     const postAttribution = postElement.querySelector(postAttributionSelector);
     if (postAttribution === null) { return; }
 

@@ -5,7 +5,6 @@ import { getPrimaryBlogName } from '../util/user_blogs.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts } from '../util/mutations.js';
 
-const excludeClass = 'xkit-mutual-checker-done';
 const mutualIconClass = 'xkit-mutual-icon';
 const mutualsClass = 'from-mutual';
 
@@ -86,8 +85,7 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(addIcons);
 
-  $(`.${excludeClass}`)
-    .removeClass(excludeClass)
+  $(`.${mutualsClass}`)
     .removeClass(mutualsClass);
   $(`.${mutualIconClass}`).remove();
 };

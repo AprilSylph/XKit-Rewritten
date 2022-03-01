@@ -19,13 +19,13 @@ let primaryBlogName;
 let postAttributionSelector;
 let icon;
 
-const needsReprocessing = postElement =>
+const alreadyProcessed = postElement =>
   postElement.classList.contains(mutualsClass) &&
-  postElement.querySelector(`.${mutualIconClass}`) === null;
+  postElement.querySelector(`.${mutualIconClass}`);
 
 const addIcons = function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
-    if (needsReprocessing(postElement) === false) return;
+    if (alreadyProcessed(postElement)) return;
 
     const postAttribution = postElement.querySelector(postAttributionSelector);
     if (postAttribution === null) { return; }

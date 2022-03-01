@@ -85,8 +85,7 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(addIcons);
 
-  $(`.${mutualsClass}`)
-    .removeClass(mutualsClass);
+  $(`.${mutualsClass}`).removeClass(mutualsClass);
   $(`.${mutualIconClass}`).remove();
 };
 

@@ -3,7 +3,7 @@ const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
 /**
  * @param {Function} func - Function to run in the page context (can be async)
- * @param {Array} args - Array of arguments to pass to the function via spread
+ * @param {Array} [args] - Array of arguments to pass to the function via spread
  * @param {Element} [target] - Element to append script to; will be accessible as
  *                             document.currentScript.parentElement in the injected function.
  * @returns {Promise<any>} The return value of the function, or the caught exception

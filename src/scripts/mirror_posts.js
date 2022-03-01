@@ -1,7 +1,7 @@
 import { postSelector } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, modalCancelButton } from '../util/modals.js';
-import { timelineObjectMemoized } from '../util/react_props.js';
+import { timelineObject } from '../util/react_props.js';
 
 const meatballButtonId = 'mirror_posts';
 const meatballButtonLabel = 'Mirror this post';
@@ -26,9 +26,8 @@ archiveDotOrgForm.append(archiveDotOrgInput, archiveDotOrgButton);
 
 const onButtonClicked = async function ({ currentTarget }) {
   const postElement = currentTarget.closest(postSelector);
-  const postID = postElement.dataset.id;
 
-  const { postUrl } = await timelineObjectMemoized(postID);
+  const { postUrl } = await timelineObject(postElement);
   const ampUrl = `${postUrl}/amp`;
 
   const archiveTodayButton = Object.assign(document.createElement('button'), {

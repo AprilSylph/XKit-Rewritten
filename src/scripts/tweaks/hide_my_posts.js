@@ -1,7 +1,7 @@
 import { getPrimaryBlogName } from '../../util/user_blogs.js';
 import { onNewPosts } from '../../util/mutations.js';
 import { buildStyle, filterPostElements } from '../../util/interface.js';
-import { exposeTimelines, timelineObjectMemoized } from '../../util/react_props.js';
+import { exposeTimelines, timelineObject } from '../../util/react_props.js';
 
 const excludeClass = 'xkit-tweaks-hide-my-posts-done';
 const timeline = /\/v2\/timeline\/dashboard/;
@@ -14,7 +14,7 @@ let primaryBlogName;
 const processPosts = async function (postElements) {
   await exposeTimelines();
   filterPostElements(postElements, { excludeClass, timeline }).forEach(async postElement => {
-    const { canEdit, isSubmission, postAuthor } = await timelineObjectMemoized(postElement.dataset.id);
+    const { canEdit, isSubmission, postAuthor } = await timelineObject(postElement);
 
     if (canEdit && (isSubmission || postAuthor === primaryBlogName || postAuthor === undefined)) {
       postElement.classList.add(hiddenClass);

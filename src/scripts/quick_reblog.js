@@ -1,5 +1,5 @@
 import { sha256 } from '../util/crypto.js';
-import { timelineObjectMemoized } from '../util/react_props.js';
+import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { postSelector, filterPostElements, postType } from '../util/interface.js';
 import { getUserBlogs } from '../util/user_blogs.js';
@@ -100,7 +100,8 @@ const showPopupOnHover = ({ currentTarget }) => {
   currentTarget.closest('div').appendChild(popupElement);
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
-  const thisPostID = currentTarget.closest(postSelector).dataset.id;
+  const thisPost = currentTarget.closest(postSelector);
+  const thisPostID = thisPost.dataset.id;
   if (thisPostID !== lastPostID) {
     if (!rememberLastBlog) {
       blogSelector.value = blogSelector.options[0].value;
@@ -108,7 +109,7 @@ const showPopupOnHover = ({ currentTarget }) => {
     commentInput.value = '';
     [...quickTagsList.children].forEach(({ dataset }) => delete dataset.checked);
     tagsInput.value = '';
-    timelineObjectMemoized(thisPostID).then(({ tags, trail, content, layout, blogName, rebloggedRootName }) => {
+    timelineObject(thisPost).then(({ tags, trail, content, layout, blogName, rebloggedRootName }) => {
       suggestableTags = tags;
       if (blogName) suggestableTags.push(blogName);
       if (rebloggedRootName) suggestableTags.push(rebloggedRootName);
@@ -141,7 +142,8 @@ const reblogPost = async function ({ currentTarget }) {
   actionButtons.disabled = true;
   lastPostID = null;
 
-  const postID = currentTarget.closest(postSelector).dataset.id;
+  const postElement = currentTarget.closest(postSelector);
+  const postID = postElement.dataset.id;
   const { state } = currentTarget.dataset;
 
   const blog = blogSelector.value;
@@ -150,7 +152,7 @@ const reblogPost = async function ({ currentTarget }) {
     ...reblogTag ? [reblogTag] : [],
     ...(state === 'queue' && queueTag) ? [queueTag] : []
   ].join(',');
-  const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } = await timelineObjectMemoized(postID);
+  const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } = await timelineObject(postElement);
 
   const requestPath = `/v2/blog/${blog}/posts`;
 
@@ -200,7 +202,7 @@ const processPosts = async function (postElements) {
   const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(alreadyRebloggedStorageKey);
   filterPostElements(postElements).forEach(async postElement => {
     const { id } = postElement.dataset;
-    const { rebloggedRootId } = await timelineObjectMemoized(id);
+    const { rebloggedRootId } = await timelineObject(postElement);
 
     const rootID = rebloggedRootId || id;
 

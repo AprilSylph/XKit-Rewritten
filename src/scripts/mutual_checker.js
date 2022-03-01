@@ -25,8 +25,7 @@ const needsReprocessing = postElement =>
 
 const addIcons = function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
-    if (postElement.classList.contains(excludeClass) && !needsReprocessing(postElement)) return;
-    postElement.classList.add(excludeClass);
+    if (needsReprocessing(postElement) === false) return;
 
     const postAttribution = postElement.querySelector(postAttributionSelector);
     if (postAttribution === null) { return; }

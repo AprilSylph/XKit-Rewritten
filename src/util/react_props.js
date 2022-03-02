@@ -26,7 +26,7 @@ export const timelineObject = async function (postElement) {
   if (!timelineObjectCache.has(postElement)) {
     timelineObjectCache.set(postElement, inject(unburyTimelineObject, [], postElement));
   }
-  return cache.get(postElement);
+  return timelineObjectCache.get(postElement);
 };
 
 const unburyGivenPaths = selector => {

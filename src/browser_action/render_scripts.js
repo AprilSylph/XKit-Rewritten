@@ -132,12 +132,15 @@ const renderScripts = async function () {
   for (const scriptName of [...orderedEnabledScripts, ...disabledScripts]) {
     const url = getURL(`/scripts/${scriptName}.json`);
     const file = await fetch(url);
-    const { title = scriptName, description = '', icon = {}, help = '', preferences = {} } = await file.json();
+    const { title = scriptName, description = '', icon = {}, help = '', preferences = {}, relatedTerms = '' } = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 
+    const detailsElement = scriptTemplateClone.querySelector('details.script');
+
+    detailsElement.dataset.relatedTerms = relatedTerms;
+
     if (enabledScripts.includes(scriptName) === false) {
-      const detailsElement = scriptTemplateClone.querySelector('details.script');
       detailsElement.classList.add('disabled');
     }
 

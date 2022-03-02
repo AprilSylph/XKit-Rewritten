@@ -7,7 +7,7 @@
     "background_color": "#7c5cff"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#vanilla-audio",
-  "relatedTerms": [ "audio downloader", "audio plus", "audio+" ],
+  "relatedTerms": [ "Audio Downloader", "Audio Plus", "Audio+" ],
   "preferences": {
     "defaultVolume": {
       "type": "select",

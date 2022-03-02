@@ -7,7 +7,7 @@
     "background_color": "#849baf"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#seen-posts",
-  "relatedTerms": [ "read posts" ],
+  "relatedTerms": [ "Read Posts" ],
   "preferences": {
     "onlyDimAvatars": {
       "type": "checkbox",

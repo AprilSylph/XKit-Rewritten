@@ -7,7 +7,7 @@
     "background_color": "#F1615F"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#collapsed-queue",
-  "relatedTerms": [ "drafts plus", "drafts+", "enhanced queue" ],
+  "relatedTerms": [ "Drafts Plus", "Drafts+", "Enhanced Queue" ],
   "preferences": {
     "runInQueue": {
       "type": "checkbox",

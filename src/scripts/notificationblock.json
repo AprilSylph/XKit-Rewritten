@@ -1,11 +1,11 @@
 {
   "title": "NotificationBlock",
   "description": "Block a post's notifications",
-  "relatedTerms": [ "activity" ],
   "icon": {
     "class_name": "ri-notification-off-line",
     "color": "white",
     "background_color": "#f5223c"
   },
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#notificationblock"
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#notificationblock",
+  "relatedTerms": [ "activity" ]
 }

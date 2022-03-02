@@ -1,11 +1,11 @@
 {
   "title": "Mass Unliker",
   "description": "Clear your likes",
-  "relatedTerms": [ "delete likes" ],
   "icon": {
     "color": "white",
     "background_color": "#9d318b",
     "class_name": "ri-thumb-down-line"
   },
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#mass-unliker"
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#mass-unliker",
+  "relatedTerms": [ "delete likes" ]
 }

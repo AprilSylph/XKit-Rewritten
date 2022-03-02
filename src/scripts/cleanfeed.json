@@ -1,13 +1,13 @@
 {
   "title": "CleanFeed",
   "description": "Browse safely in public",
-  "relatedTerms": [ "nsfw" ],
   "icon": {
     "class_name": "ri-eye-off-line",
     "color": "white",
     "background_color": "#ff567e"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#cleanfeed",
+  "relatedTerms": [ "nsfw" ],
   "preferences": {
     "blockingMode": {
       "label": "Hide media from",

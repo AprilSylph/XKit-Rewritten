@@ -1,13 +1,13 @@
 {
   "title": "Seen Posts",
   "description": "Dim the posts you've seen already",
-  "relatedTerms": [ "read posts" ],
   "icon": {
     "class_name": "ri-eye-line",
     "color": "white",
     "background_color": "#849baf"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#seen-posts",
+  "relatedTerms": [ "read posts" ],
   "preferences": {
     "onlyDimAvatars": {
       "type": "checkbox",

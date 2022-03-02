@@ -1,13 +1,13 @@
 {
   "title": "Vanilla Video",
   "description": "Use the browser's controls for video posts",
-  "relatedTerms": [ "video downloader", "autoplay" ],
   "icon": {
     "class_name": "ri-movie-line",
     "color": "white",
     "background_color": "#ff62ce"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#vanilla-video",
+  "relatedTerms": [ "video downloader", "autoplay" ],
   "preferences": {
     "defaultVolume": {
       "type": "select",

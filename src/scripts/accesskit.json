@@ -1,13 +1,13 @@
 {
   "title": "AccessKit",
   "description": "Accessibility options for Tumblr",
-  "relatedTerms": [ "disable gifs" ],
   "icon": {
     "class_name": "ri-open-arm-line",
     "color": "white",
     "background_color": "#df46f6"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#accesskit",
+  "relatedTerms": [ "disable gifs" ],
   "preferences": {
     "disable_gifs": {
       "type": "checkbox",

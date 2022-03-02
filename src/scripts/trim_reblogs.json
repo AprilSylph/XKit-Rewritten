@@ -1,11 +1,11 @@
 {
   "title": "Trim Reblogs",
   "description": "Cut long threads down to size",
-  "relatedTerms": [ "editable reblogs" ],
   "icon": {
     "class_name": "ri-scissors-cut-line",
     "color": "white",
     "background_color": "#56bc8a"
   },
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#trim-reblogs"
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#trim-reblogs",
+  "relatedTerms": [ "editable reblogs" ]
 }

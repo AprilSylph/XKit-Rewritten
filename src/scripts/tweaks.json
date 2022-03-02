@@ -1,13 +1,13 @@
 {
   "title": "Tweaks",
   "description": "Miscellaneous dashboard options",
-  "relatedTerms": [ "blacklist" ],
   "icon": {
     "class_name": "ri-settings-5-line",
     "color": "white",
     "background_color": "#ecc84b"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks",
+  "relatedTerms": [ "blacklist" ],
   "preferences": {
     "footer_unredesign": {
       "type": "checkbox",

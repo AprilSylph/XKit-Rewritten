@@ -1,6 +1,7 @@
 {
   "title": "Mass Unliker",
   "description": "Clear your likes",
+  "relatedTerms": "delete likes",
   "icon": {
     "color": "white",
     "background_color": "#9d318b",

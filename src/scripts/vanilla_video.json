@@ -1,7 +1,7 @@
 {
   "title": "Vanilla Video",
   "description": "Use the browser's controls for video posts",
-  "relatedTerms": "video downloader",
+  "relatedTerms": "video downloader, autoplay",
   "icon": {
     "class_name": "ri-movie-line",
     "color": "white",

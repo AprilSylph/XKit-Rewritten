@@ -1,6 +1,7 @@
 {
   "title": "Seen Posts",
   "description": "Dim the posts you've seen already",
+  "relatedTerms": "read posts",
   "icon": {
     "class_name": "ri-eye-line",
     "color": "white",

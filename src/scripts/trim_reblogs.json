@@ -1,6 +1,7 @@
 {
   "title": "Trim Reblogs",
   "description": "Cut long threads down to size",
+  "relatedTerms": "editable reblogs",
   "icon": {
     "class_name": "ri-scissors-cut-line",
     "color": "white",

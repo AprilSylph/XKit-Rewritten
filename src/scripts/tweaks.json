@@ -1,6 +1,7 @@
 {
   "title": "Tweaks",
   "description": "Miscellaneous dashboard options",
+  "relatedTerms": "blacklist",
   "icon": {
     "class_name": "ri-settings-5-line",
     "color": "white",

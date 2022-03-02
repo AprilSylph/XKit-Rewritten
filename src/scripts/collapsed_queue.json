@@ -1,6 +1,7 @@
 {
   "title": "Collapsed Queue",
   "description": "Shorten posts in your queue",
+  "relatedTerms": "drafts plus, drafts+, enhanced queue",
   "icon": {
     "class_name": "ri-qr-scan-line",
     "color": "white",

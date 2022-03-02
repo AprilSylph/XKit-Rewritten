@@ -1,11 +1,10 @@
-import { postSelector, filterPostElements } from '../util/interface.js';
+import { filterPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { getPrimaryBlogName } from '../util/user_blogs.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts } from '../util/mutations.js';
 
-const excludeClass = 'xkit-mutual-checker-done';
 const mutualIconClass = 'xkit-mutual-icon';
 const mutualsClass = 'from-mutual';
 
@@ -19,12 +18,14 @@ let primaryBlogName;
 let postAttributionSelector;
 let icon;
 
-const addIcons = function (postElements) {
-  [...document.querySelectorAll(`${postSelector}.${mutualsClass}`)]
-    .filter(postElement => postElement.querySelector(`.${mutualIconClass}`) === null)
-    .forEach(postElement => postElement.classList.remove(excludeClass));
+const alreadyProcessed = postElement =>
+  postElement.classList.contains(mutualsClass) &&
+  postElement.querySelector(`.${mutualIconClass}`);
 
-  filterPostElements(postElements, { excludeClass, includeFiltered: true }).forEach(async postElement => {
+const addIcons = function (postElements) {
+  filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
+    if (alreadyProcessed(postElement)) return;
+
     const postAttribution = postElement.querySelector(postAttributionSelector);
     if (postAttribution === null) { return; }
 
@@ -84,9 +85,7 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(addIcons);
 
-  $(`.${excludeClass}`)
-    .removeClass(excludeClass)
-    .removeClass(mutualsClass);
+  $(`.${mutualsClass}`).removeClass(mutualsClass);
   $(`.${mutualIconClass}`).remove();
 };
 

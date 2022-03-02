@@ -7,6 +7,7 @@
     "background_color": "#ff62ce"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#vanilla-video",
+  "relatedTerms": [ "Video Downloader", "autoplay" ],
   "preferences": {
     "defaultVolume": {
       "type": "select",

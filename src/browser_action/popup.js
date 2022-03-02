@@ -19,7 +19,10 @@ document.getElementById('search').addEventListener('input', event => {
 
   [...document.querySelectorAll('details.script')]
     .forEach(detailsElement => {
-      if (detailsElement.textContent.toLowerCase().includes(query)) {
+      if (
+        detailsElement.textContent.toLowerCase().includes(query) ||
+        detailsElement.dataset.relatedTerms.toLowerCase().includes(query)
+      ) {
         detailsElement.classList.remove('search-hidden');
       } else {
         detailsElement.classList.add('search-hidden');

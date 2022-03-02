@@ -1,4 +1,4 @@
-const callback = () => { window.frameElement.height = document.documentElement.scrollHeight + 1; };
+const callback = () => { window.frameElement.height = document.documentElement.scrollHeight; };
 const observer = new ResizeObserver(callback);
 
 callback();

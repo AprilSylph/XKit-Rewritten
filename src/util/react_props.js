@@ -1,7 +1,7 @@
 import { inject } from './inject.js';
 import { keyToCss } from './css_map.js';
 
-const cache = new WeakMap();
+const timelineObjectCache = new WeakMap();
 
 const unburyTimelineObject = () => {
   const postElement = document.currentScript.parentElement;
@@ -23,8 +23,8 @@ const unburyTimelineObject = () => {
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
 export const timelineObject = async function (postElement) {
-  if (!cache.has(postElement)) {
-    cache.set(postElement, inject(unburyTimelineObject, [], postElement));
+  if (!timelineObjectCache.has(postElement)) {
+    timelineObjectCache.set(postElement, inject(unburyTimelineObject, [], postElement));
   }
   return cache.get(postElement);
 };

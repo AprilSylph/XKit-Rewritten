@@ -1,4 +1,5 @@
 import { keyToCss } from './css_map.js';
+import { buildSvg } from './remixicon.js';
 
 const toastContainer = Object.assign(document.createElement('div'), { id: 'xkit-toasts' });
 
@@ -22,16 +23,33 @@ const addToastContainerToPage = async () => {
   }
 };
 
+const createDismissButton = () => {
+  const button = Object.assign(document.createElement('button'), {
+    onclick: ({ currentTarget }) => currentTarget.parentElement.remove()
+  });
+  const svg = buildSvg('ri-close-fill');
+  button.appendChild(svg);
+  return button;
+};
+
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * @param {string} textContent - Text to display to the user as a notification
+ * @param {boolean} persistent - Whether to persist the notification until the user closes it
  */
-export const notify = async textContent => {
+export const notify = async (textContent, persistent = false) => {
   await addToastContainerToPage();
 
-  const toast = Object.assign(document.createElement('div'), { textContent, className: 'visible' });
+  const toast = Object.assign(document.createElement('div'), { className: 'visible' });
+  const text = Object.assign(document.createElement('div'), { textContent });
+  toast.append(text);
   toastContainer.append(toast);
+
+  if (persistent) {
+    toast.append(createDismissButton());
+    return;
+  }
 
   await sleep(4000);
   toast.classList.remove('visible');

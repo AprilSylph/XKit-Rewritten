@@ -18,6 +18,7 @@ html {
   font-size: 14px;
   scrollbar-color: rgb(var(--dark-grey)) transparent;
   scrollbar-width: thin;
+  overflow-y: hidden;
 }
 
 body {

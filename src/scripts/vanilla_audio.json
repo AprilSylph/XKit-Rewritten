@@ -1,7 +1,7 @@
 {
   "title": "Vanilla Audio",
   "description": "Use the browser's controls for audio posts",
-  "relatedTerms": "audio downloader, audio plus, audio+",
+  "relatedTerms": [ "audio downloader", "audio plus", "audio+" ],
   "icon": {
     "class_name": "ri-file-music-line",
     "color": "white",

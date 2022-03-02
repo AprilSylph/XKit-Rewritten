@@ -6,7 +6,7 @@
     "background_color": "#acd53a"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quick-reblog",
-  "relatedTerms": "one-click postage, one click postage, auto tagger, autotagger",
+  "relatedTerms": [ "one-click postage", "one click postage", "auto tagger", "autotagger" ],
   "preferences": {
     "popupPosition": {
       "type": "select",

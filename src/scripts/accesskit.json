@@ -1,7 +1,7 @@
 {
   "title": "AccessKit",
   "description": "Accessibility options for Tumblr",
-  "relatedTerms": "disable gifs",
+  "relatedTerms": [ "disable gifs" ],
   "icon": {
     "class_name": "ri-open-arm-line",
     "color": "white",

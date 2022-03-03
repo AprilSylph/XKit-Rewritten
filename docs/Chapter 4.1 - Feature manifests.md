@@ -1,6 +1,6 @@
 # Feature manifests
 
-Each feature requires a metadata file in order to be displayed to the user. Since none of the four top-level keys are technically required, you can leave this file as essentially empty (simply `{}`), but it must exist.
+Each feature requires a metadata file in order to be displayed in the configuration panel. Since none of the top-level keys are technically required, you can leave the file as essentially empty (simply `{}`), but it must exist and must be valid JSON.
 
 ## Supported keys
 

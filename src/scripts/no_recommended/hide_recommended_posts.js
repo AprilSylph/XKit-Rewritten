@@ -13,7 +13,7 @@ const processPosts = async function (postElements) {
   await exposeTimelines();
 
   filterPostElements(postElements, { excludeClass, timeline, includeFiltered }).forEach(async postElement => {
-    const { recommendationReason } = await timelineObject(postElement.dataset.id);
+    const { recommendationReason } = await timelineObject(postElement);
     if (!recommendationReason) return;
 
     const { loggingReason } = recommendationReason;

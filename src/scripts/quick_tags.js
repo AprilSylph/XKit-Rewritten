@@ -4,7 +4,7 @@ import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
 import { getPreferences } from '../util/preferences.js';
-import { timelineObjectMemoized, timelineObject, editPostFormTags } from '../util/react_props.js';
+import { timelineObject, editPostFormTags } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-price-tag-3-line';
@@ -71,13 +71,13 @@ const processPostForm = async function ([selectedTagsElement]) {
     });
   } else if ((answerTag || autoTagAsker) && location.pathname.startsWith('/edit')) {
     const [blogName, postId] = location.pathname.split('/').slice(2);
-    const postIsOnScreen = document.querySelector(`[tabindex="-1"][data-id="${postId}"]`) !== null;
+    const postOnScreen = document.querySelector(`[tabindex="-1"][data-id="${postId}"]`);
 
     const {
       response = {},
       state = response.state,
       askingName = response.askingName
-    } = await (postIsOnScreen ? timelineObject(postId) : apiFetch(`/v2/blog/${blogName}/posts/${postId}`));
+    } = await (postOnScreen ? timelineObject(postOnScreen) : apiFetch(`/v2/blog/${blogName}/posts/${postId}`));
 
     if (state === 'submission') {
       const tagsToAdd = [];
@@ -117,7 +117,7 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
 
 const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   const postId = postElement.dataset.id;
-  const { blog: { uuid } } = await timelineObjectMemoized(postId);
+  const { blog: { uuid } } = await timelineObject(postElement);
 
   const {
     response: {

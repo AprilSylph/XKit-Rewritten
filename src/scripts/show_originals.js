@@ -1,5 +1,5 @@
 import { filterPostElements } from '../util/interface.js';
-import { timelineObjectMemoized, exposeTimelines } from '../util/react_props.js';
+import { timelineObject, exposeTimelines } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
@@ -58,7 +58,7 @@ const processPosts = async function (postElements) {
   filterPostElements(postElements, { includeFiltered })
     .filter(postElement => postElement.matches(`[data-timeline].${activeTimelineClass} div`))
     .forEach(async postElement => {
-      const { rebloggedRootId, canEdit, content, blogName } = await timelineObjectMemoized(postElement.dataset.id);
+      const { rebloggedRootId, canEdit, content, blogName } = await timelineObject(postElement);
 
       if (!rebloggedRootId) { return; }
       if (showOwnReblogs && canEdit) { return; }

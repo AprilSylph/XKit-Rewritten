@@ -1,5 +1,5 @@
 import { filterPostElements } from '../util/interface.js';
-import { timelineObjectMemoized } from '../util/react_props.js';
+import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { getPrimaryBlogName } from '../util/user_blogs.js';
 import { keyToCss } from '../util/css_map.js';
@@ -34,7 +34,7 @@ const addIcons = function (postElements) {
     if (!blogName) return;
 
     if (following[blogName] === undefined) {
-      const { blog } = await timelineObjectMemoized(postElement.dataset.id);
+      const { blog } = await timelineObject(postElement);
       if (blogName === blog.name) {
         following[blogName] = Promise.resolve(blog.followed && !blog.isMember);
       } else {

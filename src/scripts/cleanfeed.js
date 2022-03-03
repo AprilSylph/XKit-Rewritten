@@ -2,7 +2,7 @@ import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { buildStyle, filterPostElements } from '../util/interface.js';
 import { translate } from '../util/language_data.js';
-import { timelineObjectMemoized } from '../util/react_props.js';
+import { timelineObject } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 
 const hiddenClass = 'xkit-cleanfeed-filtered';
@@ -21,7 +21,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
     return;
   }
 
-  const { blog: { name, isAdult }, trail } = await timelineObjectMemoized(postElement.dataset.id);
+  const { blog: { name, isAdult }, trail } = await timelineObject(postElement);
 
   if (isAdult || localFlaggedBlogs.includes(name)) {
     postElement.classList.add(hiddenClass);

@@ -17,7 +17,7 @@ let tagArray;
 const excludeClass = 'xkit-painter-done';
 
 const paint = postElements => filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
-  const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, tags } = await timelineObject(postElement.dataset.id);
+  const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, tags } = await timelineObject(postElement);
 
   const coloursToApply = [];
 

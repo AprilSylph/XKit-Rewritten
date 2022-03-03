@@ -1,7 +1,7 @@
 import { filterPostElements, postSelector } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
-import { timelineObjectMemoized } from '../util/react_props.js';
+import { timelineObject } from '../util/react_props.js';
 import { onNewPosts, pageModifications } from '../util/mutations.js';
 
 const meatballButtonId = 'postblock';
@@ -14,7 +14,7 @@ const processPosts = async function (postElements) {
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     const postID = postElement.dataset.id;
-    const { rebloggedRootId } = await timelineObjectMemoized(postID);
+    const { rebloggedRootId } = await timelineObject(postElement);
 
     const rootID = rebloggedRootId || postID;
 
@@ -30,7 +30,7 @@ const onButtonClicked = async function ({ currentTarget }) {
   const postElement = currentTarget.closest(postSelector);
   const postID = postElement.dataset.id;
 
-  const { rebloggedRootId } = await timelineObjectMemoized(postID);
+  const { rebloggedRootId } = await timelineObject(postElement);
   const rootID = rebloggedRootId || postID;
 
   showModal({

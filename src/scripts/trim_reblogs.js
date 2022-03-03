@@ -4,7 +4,7 @@ import { filterPostElements, postSelector } from '../util/interface.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
-import { timelineObject, timelineObjectMemoized } from '../util/react_props.js';
+import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-scissors-cut-line';
@@ -23,7 +23,7 @@ const onButtonClicked = async function ({ currentTarget }) {
     blog: { uuid },
     rebloggedRootUuid,
     rebloggedRootId
-  } = await timelineObjectMemoized(postId);
+  } = await timelineObject(postElement);
 
   if (rebloggedRootUuid && rebloggedRootId) {
     const { response: { shouldOpenInLegacy } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
@@ -107,7 +107,7 @@ const processPosts = postElements => filterPostElements(postElements, { excludeC
   const editButton = postElement.querySelector('footer a[href*="/edit/"]');
   if (!editButton) { return; }
 
-  const { trail = [] } = await timelineObject(postElement.dataset.id);
+  const { trail = [] } = await timelineObject(postElement);
   if (trail.length < 2) { return; }
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });

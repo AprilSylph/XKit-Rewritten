@@ -1,5 +1,5 @@
 import { getPostElements } from '../util/interface.js';
-import { timelineObjectMemoized } from '../util/react_props.js';
+import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { onNewPosts } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
@@ -110,7 +110,7 @@ const addPostTimestamps = async function () {
   getPostElements({ excludeClass: 'xkit-timestamps-done' }).forEach(async postElement => {
     const { id } = postElement.dataset;
 
-    const { timestamp, postUrl } = await timelineObjectMemoized(id);
+    const { timestamp, postUrl } = await timelineObject(postElement);
     cache[id] = Promise.resolve(timestamp);
 
     const noteCountElement = postElement.querySelector(noteCountSelector);
@@ -144,7 +144,7 @@ const removePostTimestamps = function () {
 
 const addReblogTimestamps = async function () {
   getPostElements({ excludeClass: 'xkit-reblog-timestamps-done' }).forEach(async postElement => {
-    let { trail } = await timelineObjectMemoized(postElement.dataset.id);
+    let { trail } = await timelineObject(postElement);
     if (!trail.length) {
       return;
     }

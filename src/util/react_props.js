@@ -1,10 +1,10 @@
 import { inject } from './inject.js';
 import { keyToCss } from './css_map.js';
 
-const cache = {};
+const timelineObjectCache = new WeakMap();
 
-const unburyTimelineObject = async id => {
-  const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
+const unburyTimelineObject = () => {
+  const postElement = document.currentScript.parentElement;
   const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
   let fiber = postElement[reactKey];
 
@@ -19,19 +19,14 @@ const unburyTimelineObject = async id => {
 };
 
 /**
- * @param {string} postID - The post ID of an on-screen post
- * @returns {Promise<object>} - The post's buried timelineObject property (cached; use
- *  timelineObject if you need up-to-date properties that may have changed)
- */
-export const timelineObjectMemoized = async postID => cache[postID] || timelineObject(postID);
-
-/**
- * @param {string} postID - The post ID of an on-screen post
+ * @param {Element} postElement - An on-screen post
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
-export const timelineObject = async function (postID) {
-  cache[postID] = inject(unburyTimelineObject, [postID]);
-  return cache[postID];
+export const timelineObject = async function (postElement) {
+  if (!timelineObjectCache.has(postElement)) {
+    timelineObjectCache.set(postElement, inject(unburyTimelineObject, [], postElement));
+  }
+  return timelineObjectCache.get(postElement);
 };
 
 const unburyGivenPaths = selector => {

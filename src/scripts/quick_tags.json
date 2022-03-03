@@ -7,6 +7,7 @@
     "background_color": "#eeb92b"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quick-tags",
+  "relatedTerms": [ "Auto Tagger", "AutoTagger", "XInbox" ],
   "preferences": {
     "originalPostTag": {
       "type": "text",

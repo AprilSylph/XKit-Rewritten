@@ -1,6 +1,6 @@
 # Feature manifests
 
-Each feature requires a metadata file in order to be displayed to the user. Since none of the four top-level keys are technically required, you can leave this file as essentially empty (simply `{}`), but it must exist.
+Each feature requires a metadata file in order to be displayed in the configuration panel. Since none of the top-level keys are technically required, you can leave the file as essentially empty (simply `{}`), but it must exist and must be valid JSON.
 
 ## Supported keys
 
@@ -45,6 +45,12 @@ The background colour of the feature icon. Defaults to pure white (`#ffffff`) if
 - Required: No
 
 URL which points to a usage guide or extended description for the feature.
+
+### `"relatedTerms"`
+- Type: Array
+- Required: No
+
+An optional array of strings related to this script that a user might search for. Case insensitive.
 
 ### `"preferences"`
 - Type: Object

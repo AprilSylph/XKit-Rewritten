@@ -31,6 +31,7 @@ The stylesheet file is a normal CSS file which, assuming the module file correct
     "color": "#33ff00",
     "background_color": "#000000"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#example",
   "relatedTerms": [ "hello world", "demonstration" ],
   "preferences": {
     "log": {

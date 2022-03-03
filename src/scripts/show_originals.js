@@ -92,7 +92,7 @@ const processPosts = async function (postElements) {
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {
       const { rebloggedRootId, canEdit, content, blogName, isSubmission, postAuthor } =
-        await timelineObjectMemoized(postElement.dataset.id);
+        await timelineObject(postElement);
 
       const isMyPost = canEdit && (isSubmission || postAuthor === primaryBlogName || postAuthor === undefined);
 

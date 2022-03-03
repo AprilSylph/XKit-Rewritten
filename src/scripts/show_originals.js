@@ -5,6 +5,7 @@ import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { getPrimaryBlogName, getUserBlogs } from '../util/user_blogs.js';
+import { postSelector } from '../util/interface.js';
 
 const hiddenClass = 'xkit-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
@@ -51,9 +52,9 @@ const addControls = async (timelineElement, location, disabled) => {
   controls.append(...disabled ? [disabledButton] : [onButton, offButton]);
 
   if (location === 'blogSubscriptions') {
-    timelineElement.querySelector('[data-id]')?.before(controls);
+    timelineElement.querySelector(postSelector)?.before(controls);
   } else {
-    timelineElement.querySelector('[data-id]')?.parentElement?.prepend(controls);
+    timelineElement.querySelector(postSelector)?.parentElement?.prepend(controls);
   }
 };
 

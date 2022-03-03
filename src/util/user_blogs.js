@@ -1,12 +1,12 @@
 import { apiFetch } from './tumblr_helpers.js';
 
-const data = apiFetch('/v2/user/info');
+const userInfo = apiFetch('/v2/user/info');
 
 /**
  * @returns {Promise<object[]>} - An array of blog objects the current user has post access to
  */
 export const getUserBlogs = async function () {
-  const { response: { user: { blogs } } } = await data;
+  const { response: { user: { blogs } } } = await userInfo;
   return blogs;
 };
 

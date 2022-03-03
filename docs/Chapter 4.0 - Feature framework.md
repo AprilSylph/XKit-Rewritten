@@ -31,6 +31,7 @@ The stylesheet file is a normal CSS file which, assuming the module file correct
     "color": "#33ff00",
     "background_color": "#000000"
   },
+  "relatedTerms": [ "hello world", "demonstration" ],
   "preferences": {
     "log": {
       "type": "checkbox",

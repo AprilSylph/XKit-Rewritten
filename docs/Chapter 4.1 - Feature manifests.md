@@ -46,6 +46,12 @@ The background colour of the feature icon. Defaults to pure white (`#ffffff`) if
 
 URL which points to a usage guide or extended description for the feature.
 
+### `"relatedTerms"`
+- Type: Array
+- Required: No
+
+An optional array of strings related to this script that a user might search for. Case insensitive.
+
 ### `"preferences"`
 - Type: Object
 - Required: No

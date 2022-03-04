@@ -24,6 +24,9 @@
     restartListeners[name] = onStorageChanged || function (changes, areaName) {
       if (areaName !== 'local') { return; }
 
+      const { enabledScripts } = changes;
+      if (enabledScripts && !enabledScripts.newValue.includes(name)) return;
+
       if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
         clean().then(main);
       }

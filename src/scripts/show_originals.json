@@ -11,12 +11,12 @@
     "showOwnReblogs": {
       "type": "checkbox",
       "label": "Always show my own reblogs",
-      "default": true
+      "default": false
     },
     "showReblogsWithContributedContent": {
       "type": "checkbox",
       "label": "Always show reblogs with contributed content",
-      "default": true
+      "default": false
     },
     "whitelistedUsernames": {
       "type": "textarea",

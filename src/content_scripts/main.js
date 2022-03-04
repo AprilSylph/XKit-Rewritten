@@ -21,13 +21,15 @@
       document.documentElement.appendChild(link);
     }
 
-    restartListeners[name] = onStorageChanged || function (changes, areaName) {
-      if (areaName !== 'local') { return; }
+    restartListeners[name] = function (changes, areaName) {
+      if (areaName !== 'local') return;
 
       const { enabledScripts } = changes;
       if (enabledScripts && !enabledScripts.newValue.includes(name)) return;
 
-      if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
+      if (onStorageChanged instanceof Function) {
+        onStorageChanged(changes, areaName);
+      } else if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
         clean().then(main);
       }
     };

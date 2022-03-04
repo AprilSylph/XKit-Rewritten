@@ -26,10 +26,6 @@ const cloneVideoElements = videoElements => videoElements.forEach(videoElement =
 });
 
 export const onStorageChanged = async function (changes, areaName) {
-  if (areaName !== 'local') {
-    return;
-  }
-
   const {
     'vanilla_video.preferences.defaultVolume': defaultVolumeChanges
   } = changes;

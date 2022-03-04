@@ -25,10 +25,6 @@ const addAudioControls = nativePlayers => nativePlayers.forEach(nativePlayer => 
 });
 
 export const onStorageChanged = async function (changes, areaName) {
-  if (areaName !== 'local') {
-    return;
-  }
-
   const {
     'vanilla_audio.preferences.defaultVolume': defaultVolumeChanges
   } = changes;

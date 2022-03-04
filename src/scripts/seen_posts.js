@@ -32,10 +32,6 @@ const dimPosts = async function (postElements) {
 };
 
 export const onStorageChanged = async function (changes, areaName) {
-  if (areaName !== 'local') {
-    return;
-  }
-
   const { 'seen_posts.preferences.onlyDimAvatars': onlyDimAvatarsChanges } = changes;
 
   if (onlyDimAvatarsChanges && onlyDimAvatarsChanges.oldValue !== undefined) {

@@ -215,10 +215,6 @@ const preferenceHandlers = {
 };
 
 export const onStorageChanged = async function (changes, areaName) {
-  if (areaName !== 'local') {
-    return;
-  }
-
   ({ alwaysShowYear, headerTimestamps, isoFormat, reblogTimestamps } = await getPreferences('timestamps'));
 
   const changesKeys = Object.keys(changes);

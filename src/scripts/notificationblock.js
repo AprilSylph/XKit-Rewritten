@@ -96,7 +96,7 @@ const unblockPostFilter = async (postElement) => {
 };
 
 export const onStorageChanged = (changes, areaName) => {
-  if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
+  if (Object.keys(changes).includes(storageKey)) {
     blockedPostTargetIDs = changes[storageKey].newValue;
     styleElement.textContent = buildCss();
   }

@@ -57,7 +57,7 @@ const blockPost = async rootID => {
 };
 
 export const onStorageChanged = async function (changes, areaName) {
-  if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
+  if (Object.keys(changes).includes(storageKey)) {
     pageModifications.trigger(processPosts);
   }
 };

@@ -13,10 +13,6 @@ const destroyOption = async function (name) {
 };
 
 export const onStorageChanged = async function (changes, areaName) {
-  if (areaName !== 'local') {
-    return;
-  }
-
   if (Object.keys(changes).some(key => key.startsWith('accesskit') && changes[key].oldValue !== undefined)) {
     const preferences = await getPreferences('accesskit');
 

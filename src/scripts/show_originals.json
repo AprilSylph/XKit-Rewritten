@@ -10,17 +10,17 @@
   "preferences": {
     "showOwnReblogs": {
       "type": "checkbox",
-      "label": "Show my own reblogs",
+      "label": "Always show my own reblogs",
       "default": true
     },
     "showReblogsWithContributedContent": {
       "type": "checkbox",
-      "label": "Show reblogs with contributed content",
+      "label": "Always show reblogs with contributed content",
       "default": true
     },
     "whitelistedUsernames": {
       "type": "textarea",
-      "label": "Blogs to show reblogs from (comma-separated)",
+      "label": "Always show reblogs from these blogs (comma-separated)",
       "default": ""
     }
   }

@@ -2,7 +2,7 @@ import { sha256 } from '../util/crypto.js';
 import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { postSelector, filterPostElements, postType } from '../util/interface.js';
-import { getUserBlogs } from '../util/user_blogs.js';
+import { getUserBlogs } from '../util/user.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';

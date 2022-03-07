@@ -1,4 +1,4 @@
-import { getPrimaryBlogName } from '../../util/user_blogs.js';
+import { getPrimaryBlogName } from '../../util/user.js';
 import { onNewPosts } from '../../util/mutations.js';
 import { buildStyle, filterPostElements } from '../../util/interface.js';
 import { exposeTimelines, timelineObject } from '../../util/react_props.js';

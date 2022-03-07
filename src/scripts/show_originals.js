@@ -4,7 +4,7 @@ import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
-import { getPrimaryBlogName, getUserBlogs } from '../util/user_blogs.js';
+import { getPrimaryBlogName, getUserBlogs } from '../util/user.js';
 
 const hiddenClass = 'xkit-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';

@@ -45,7 +45,7 @@
   margin-top: 15px;
 }
 
-#xkit-modal .buttons button {
+#xkit-modal .buttons :is(a, button) {
   padding: 0.75ch 1.5ch;
   border-radius: 3px;
   margin: 0 1ch;
@@ -56,12 +56,13 @@
 	font-size: 1rem;
 	font-weight: 700;
 	line-height: 1.5;
+  text-decoration: none;
 }
 
-#xkit-modal .buttons button.red {
+#xkit-modal .buttons :is(a, button).red {
   background-color: rgb(var(--red));
 }
 
-#xkit-modal .buttons button.blue {
+#xkit-modal .buttons :is(a, button).blue {
   background-color: rgb(var(--blue));
 }

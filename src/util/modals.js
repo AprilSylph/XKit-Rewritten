@@ -6,7 +6,7 @@ let lastFocusedElement;
  * @param {object} options - Destructured
  * @param {string} [options.title] - Prompt title
  * @param {(string|Node)[]} [options.message] - Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
- * @param {HTMLButtonElement[]} [options.buttons] - Array of buttons to be displayed in the modal
+ * @param {(HTMLAnchorElement|HTMLButtonElement)[]} [options.buttons] - Array of buttons to be displayed in the modal
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {
   const modalElement = Object.assign(document.createElement('div'), { id: 'xkit-modal', tabIndex: -1 });

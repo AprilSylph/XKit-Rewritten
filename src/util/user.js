@@ -1,6 +1,6 @@
 import { apiFetch } from './tumblr_helpers.js';
 
-const userInfo = apiFetch('/v2/user/info');
+export const userInfo = apiFetch('/v2/user/info');
 
 /**
  * @returns {Promise<object[]>} - An array of blog objects the current user has post access to

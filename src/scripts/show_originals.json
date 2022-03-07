@@ -1,6 +1,6 @@
 {
   "title": "Show Originals",
-  "description": "Hide reblogged posts on the dashboard",
+  "description": "Hide reblogged posts by default",
   "icon": {
     "class_name": "ri-focus-line",
     "color": "white",

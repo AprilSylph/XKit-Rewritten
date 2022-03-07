@@ -36,6 +36,7 @@
   font-weight: 400;
   line-height: 1.333;
   text-align: center;
+  white-space: pre-line;
 }
 
 #xkit-modal .buttons {

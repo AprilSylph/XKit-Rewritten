@@ -1,21 +1,23 @@
-import { filterPostElements } from '../util/interface.js';
+import { filterPostElements, postSelector } from '../util/interface.js';
 import { timelineObject, exposeTimelines } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
+import { translate } from '../util/language_data.js';
+import { getPrimaryBlogName, getUserBlogs } from '../util/user_blogs.js';
 
-const excludeClass = 'xkit-show-originals-done';
 const hiddenClass = 'xkit-show-originals-hidden';
-const activeTimelineClass = 'xkit-show-originals-timeline';
 const lengthenedClass = 'xkit-show-originals-lengthened';
+const controlsClass = 'xkit-show-originals-controls';
+
+const storageKey = 'show_originals.savedModes';
 const includeFiltered = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
-let whitelistedUsernames;
-let runOnDashboard;
-let runOnPeepr;
-let runOnBlogSubscriptions;
+let primaryBlogName;
+let whitelist;
+let disabledPeeprBlogs;
 
 const lengthenTimeline = async (timeline) => {
   const paginatorSelector = await keyToCss('manualPaginatorButtons');
@@ -25,43 +27,77 @@ const lengthenTimeline = async (timeline) => {
   }
 };
 
-const processTimelines = () => {
-  [...document.querySelectorAll(`[data-timeline]:not(.${excludeClass})`)]
-    .forEach(timeline => {
-      timeline.classList.add(excludeClass);
+const createButton = (textContent, onclick, mode) => {
+  const button = Object.assign(document.createElement('a'), { textContent, onclick });
+  button.dataset.mode = mode;
+  return button;
+};
 
-      const onDashboard = timeline.dataset.timeline === '/v2/timeline/dashboard';
-      const isSinglePostPeepr = timeline.dataset.timeline.includes('permalink');
-      const onPeepr = timeline.closest('[role="dialog"]') !== null && isSinglePostPeepr === false;
-      const onBlogSubscriptions =
-        timeline.dataset.timeline === '/v2/timeline' &&
-        timeline.dataset.which === 'blog_subscriptions';
+const addControls = async (timelineElement, location, disabled) => {
+  const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
+    timelineElement.dataset.showOriginals = mode;
 
-      const shouldRun =
-        (runOnDashboard && onDashboard) ||
-        (runOnPeepr && onPeepr) ||
-        (runOnBlogSubscriptions && onBlogSubscriptions);
+    const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
+    savedModes[location] = mode;
+    browser.storage.local.set({ [storageKey]: savedModes });
+  };
 
-      if (shouldRun) {
-        timeline.classList.add(activeTimelineClass);
-        lengthenTimeline(timeline);
+  const controls = Object.assign(document.createElement('div'), { className: controlsClass });
+
+  const onButton = createButton(await translate('Original Posts'), handleClick, 'on');
+  const offButton = createButton(await translate('All posts'), handleClick, 'off');
+  const disabledButton = createButton(await translate('All posts'), null, 'disabled');
+
+  controls.append(...disabled ? [disabledButton] : [onButton, offButton]);
+
+  if (location === 'blogSubscriptions') {
+    timelineElement.querySelector(postSelector)?.before(controls);
+  } else {
+    timelineElement.querySelector(postSelector)?.parentElement?.prepend(controls);
+  }
+};
+
+const processTimelines = async () => {
+  await exposeTimelines();
+  [...document.querySelectorAll('[data-timeline]')]
+    .forEach(async timelineElement => {
+      const { timeline, which } = timelineElement.dataset;
+
+      const isInPeepr = getComputedStyle(timelineElement).getPropertyValue('--blog-title-color') !== '';
+      const isSinglePostPeepr = timeline.includes('permalink');
+
+      const on = {
+        dashboard: timeline === '/v2/timeline/dashboard',
+        peepr: isInPeepr && !isSinglePostPeepr,
+        blogSubscriptions: timeline === '/v2/timeline' && which === 'blog_subscriptions'
+      };
+      const location = Object.keys(on).find(location => on[location]);
+      const isDisabledPeeprBlog = disabledPeeprBlogs.some(name => timeline.startsWith(`/v2/blog/${name}/posts`));
+
+      if (location && timelineElement.querySelector(`.${controlsClass}`) === null) {
+        addControls(timelineElement, location, isDisabledPeeprBlog);
+        if (isDisabledPeeprBlog) return;
+
+        lengthenTimeline(timelineElement);
+        const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
+        const mode = savedModes[location] ?? 'on';
+        timelineElement.dataset.showOriginals = mode;
       }
     });
 };
 
 const processPosts = async function (postElements) {
-  const whitelist = whitelistedUsernames.split(',').map(username => username.trim());
-
-  await exposeTimelines();
   processTimelines();
 
   filterPostElements(postElements, { includeFiltered })
-    .filter(postElement => postElement.matches(`[data-timeline].${activeTimelineClass} div`))
     .forEach(async postElement => {
-      const { rebloggedRootId, canEdit, content, blogName } = await timelineObject(postElement);
+      const { rebloggedRootId, canEdit, content, blogName, isSubmission, postAuthor } =
+        await timelineObject(postElement);
+
+      const isMyPost = canEdit && (isSubmission || postAuthor === primaryBlogName || postAuthor === undefined);
 
       if (!rebloggedRootId) { return; }
-      if (showOwnReblogs && canEdit) { return; }
+      if (showOwnReblogs && isMyPost) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
       if (whitelist.includes(blogName)) { return; }
 
@@ -70,14 +106,19 @@ const processPosts = async function (postElements) {
 };
 
 export const main = async function () {
+  let whitelistedUsernames;
   ({
     showOwnReblogs,
     showReblogsWithContributedContent,
-    whitelistedUsernames,
-    runOnDashboard,
-    runOnPeepr,
-    runOnBlogSubscriptions
+    whitelistedUsernames
   } = await getPreferences('show_originals'));
+
+  whitelist = whitelistedUsernames.split(',').map(username => username.trim());
+  const nonGroupUserBlogs = (await getUserBlogs().catch(() => []))
+    .filter(blog => !blog.isGroupChannel)
+    .map(blog => blog.name);
+  disabledPeeprBlogs = [...whitelist, ...showOwnReblogs ? nonGroupUserBlogs : []];
+  primaryBlogName = await getPrimaryBlogName().catch(() => undefined);
 
   onNewPosts.addListener(processPosts);
 };
@@ -85,10 +126,10 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${hiddenClass}`).removeClass(hiddenClass);
-  $(`.${activeTimelineClass}`).removeClass(activeTimelineClass);
+  $('[data-show-originals]').removeAttr('data-show-originals');
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
+  $(`.${controlsClass}`).remove();
 };
 
 export const stylesheet = true;

@@ -10,33 +10,18 @@
   "preferences": {
     "showOwnReblogs": {
       "type": "checkbox",
-      "label": "Show my own reblogs",
-      "default": true
+      "label": "Always show my own reblogs",
+      "default": false
     },
     "showReblogsWithContributedContent": {
       "type": "checkbox",
-      "label": "Show reblogs with contributed content",
-      "default": true
+      "label": "Always show reblogs with contributed content",
+      "default": false
     },
     "whitelistedUsernames": {
       "type": "textarea",
-      "label": "Blogs to show reblogs from (comma-separated)",
+      "label": "Always show reblogs from these blogs (comma-separated)",
       "default": ""
-    },
-    "runOnDashboard": {
-      "type": "checkbox",
-      "label": "Run on the dashboard",
-      "default": true
-    },
-    "runOnPeepr": {
-      "type": "checkbox",
-      "label": "Run on the blog view drawer",
-      "default": false
-    },
-    "runOnBlogSubscriptions": {
-      "type": "checkbox",
-      "label": "Run in \"Your Blog Subscriptions\"",
-      "default": false
     }
   }
 }

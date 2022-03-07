@@ -48,14 +48,15 @@
 #xkit-modal .buttons {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1em;
   margin-top: 15px;
 }
 
 #xkit-modal .buttons :is(a, button) {
   padding: 0.75ch 1.5ch;
   border-radius: 3px;
-  margin: 0 1ch;
 
   background-color: rgba(var(--white-on-dark), 0.65);
   color: rgb(var(--navy));

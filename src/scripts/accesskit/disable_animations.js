@@ -1,17 +1,23 @@
-import { keyToCss } from '../../util/css_map.js';
+import { keyToCss, resolveExpressions } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
-const className = 'accesskit-disable-animations';
-
 const styleElement = buildStyle();
-keyToCss('postLikeHeartAnimation').then(selector => { styleElement.textContent = `${selector} { display: none; }`; });
+const playPauseSelector = resolveExpressions`${keyToCss('overlayPoof')} ${keyToCss('overlay')} svg`;
 
-export const main = async () => {
-  document.body.classList.add(className);
-  document.head.append(styleElement);
-};
+resolveExpressions`
+:not(${playPauseSelector}) {
+  animation: none !important;
+  transition: none !important;
+}
 
-export const clean = async () => {
-  document.body.classList.remove(className);
-  styleElement.remove();
-};
+${playPauseSelector} {
+  animation-timing-function: steps(1, jump-both);
+}
+
+${keyToCss('postLikeHeartAnimation')} {
+  display: none;
+}
+`.then(css => { styleElement.textContent = css; });
+
+export const main = async () => document.head.append(styleElement);
+export const clean = async () => styleElement.remove();

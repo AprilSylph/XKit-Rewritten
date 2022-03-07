@@ -41,6 +41,10 @@
   white-space: pre-line;
 }
 
+#xkit-modal .message small {
+  font-size: 80%;
+}
+
 #xkit-modal .buttons {
   display: flex;
   flex-direction: row;

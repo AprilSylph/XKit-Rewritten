@@ -25,7 +25,10 @@ const showPremiumPlea = async () => {
   if (hasShownPlea) return;
 
   const { response: { user: { hasTumblrPremium, usedToHaveTumblrPremium } } } = await userInfo;
-  if (hasTumblrPremium || usedToHaveTumblrPremium) return;
+  if (hasTumblrPremium || usedToHaveTumblrPremium) {
+    browser.storage.local.set({ [storageKey]: true });
+    return;
+  }
 
   const goAwayButton = Object.assign(document.createElement('button'), {
     textContent: 'Go away'

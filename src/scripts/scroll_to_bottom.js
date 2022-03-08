@@ -83,6 +83,6 @@ export const clean = async function () {
   pageModifications.unregister(addButtonToPage);
   pageModifications.unregister(checkForButtonRemoved);
   stopScrolling();
-  $(`#${scrollToBottomButtonId}`).remove();
+  $(`[id="${scrollToBottomButtonId}"]`).remove();
   styleElement.remove();
 };

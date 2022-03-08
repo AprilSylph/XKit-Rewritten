@@ -22,7 +22,6 @@ const processVideoCTAs = videoCTAs => videoCTAs
 const showPremiumPlea = async () => {
   const storageKey = 'anti_capitalism.hasShownPlea';
   const { [storageKey]: hasShownPlea } = await browser.storage.local.get(storageKey);
-  browser.storage.local.set({ [storageKey]: true });
   if (hasShownPlea) return;
 
   const { response: { user: { hasTumblrPremium, usedToHaveTumblrPremium } } } = await userInfo;
@@ -55,6 +54,8 @@ const showPremiumPlea = async () => {
     ],
     buttons: [goAwayButton, premiumLink]
   });
+
+  browser.storage.local.set({ [storageKey]: true });
 };
 
 export const main = async () => {

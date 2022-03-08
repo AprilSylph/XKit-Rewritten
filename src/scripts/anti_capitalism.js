@@ -59,11 +59,12 @@ const showPremiumPlea = async () => {
 
 export const main = async () => {
   document.head.append(styleElement);
-  showPremiumPlea();
 
   listTimelineObjectInnerSelector = await keyToCss('listTimelineObjectInner');
   const videoCTASelector = await resolveExpressions`${listTimelineObjectInnerSelector}:first-child ${keyToCss('videoCTA')}`;
   pageModifications.register(videoCTASelector, processVideoCTAs);
+
+  showPremiumPlea().catch(() => {});
 };
 
 export const clean = async () => {

@@ -13,7 +13,8 @@ let active = false;
 const styleElement = buildStyle();
 resolveExpressions`
   ${keyToCss('isPeeprShowing')} #${scrollToBottomButtonId} {
-    display: none;
+    opacity: 0;
+    pointer-events: none;
   }
 `.then(css => { styleElement.textContent = css; });
 

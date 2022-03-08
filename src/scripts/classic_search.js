@@ -1,16 +1,14 @@
 import { getPreferences } from '../util/preferences.js';
 import { pageModifications } from '../util/mutations.js';
 
+const excludeClass = 'xkit-classic-search-done';
+const cloneClass = 'classic-search';
+const placeholderInputId = 'classic-search-placeholder';
+
 let newTab;
 
-let searchInputElement;
-let searchInputParent;
-
 const replaceSearchForm = function ([searchFormElement]) {
-  searchFormElement.classList.add('xkit-classic-search-done');
-
-  searchInputElement = searchFormElement.querySelector('input');
-  searchInputParent = searchInputElement.parentNode;
+  searchFormElement.classList.add(`${excludeClass}`);
 
   const searchFormElementClone = searchFormElement.cloneNode(true);
   searchFormElementClone.addEventListener('submit', event => {
@@ -25,23 +23,35 @@ const replaceSearchForm = function ([searchFormElement]) {
       location.assign(address);
     }
   });
-  searchFormElementClone.classList.add('classic-search');
-  searchFormElementClone.querySelector('input').replaceWith(searchInputElement);
+  searchFormElementClone.classList.add(cloneClass);
+
+  const realInputElement = searchFormElement.querySelector('input');
+  const cloneInputElement = searchFormElementClone.querySelector('input');
+  const placeholderElement = Object.assign(document.createElement('div'), { id: placeholderInputId });
+
+  realInputElement.replaceWith(placeholderElement);
+  cloneInputElement.replaceWith(realInputElement);
+
   searchFormElement.parentNode.prepend(searchFormElementClone);
 };
 
 export const main = async function () {
   ({ newTab } = await getPreferences('classic_search'));
 
-  pageModifications.register('form[role="search"][action="/search"]:not(.classic-search):not(.xkit-classic-search-done)', replaceSearchForm);
+  pageModifications.register(`form[role="search"][action="/search"]:not(.${cloneClass}):not(.${excludeClass})`, replaceSearchForm);
 };
 
 export const clean = async function () {
   pageModifications.unregister(replaceSearchForm);
 
-  searchInputParent.appendChild(searchInputElement);
-  $('.classic-search').remove();
-  $('.xkit-classic-search-done').removeClass('xkit-classic-search-done');
+  const searchFormElementClone = document.querySelector(`.${cloneClass}`);
+  const realInputElement = searchFormElementClone?.querySelector('input');
+  const placeholderElement = document.getElementById(placeholderInputId);
+
+  placeholderElement?.replaceWith(realInputElement);
+
+  searchFormElementClone?.remove();
+  $(`.${excludeClass}`).removeClass(excludeClass);
 };
 
 export const stylesheet = true;

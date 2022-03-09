@@ -1,3 +1,5 @@
+import { dom } from './dom.js';
+
 export const postSelector = '[tabindex="-1"][data-id]';
 
 /**
@@ -46,7 +48,7 @@ export const getPostElements = postFilterOptions => filterPostElements([...docum
  * @param {string} [css] - CSS rules to be included
  * @returns {HTMLStyleElement} Style element containing the provided CSS
  */
-export const buildStyle = (css = '') => Object.assign(document.createElement('style'), { className: 'xkit', textContent: css });
+export const buildStyle = (css = '') => dom('style', { class: 'xkit' }, null, [css]);
 
 /**
  * Determine a post's legacy type

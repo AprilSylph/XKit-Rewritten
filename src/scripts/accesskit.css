@@ -62,3 +62,7 @@ figure.accesskit-visible-alt-text figcaption {
   user-select: text;
   cursor: initial;
 }
+
+:any-link figure.accesskit-visible-alt-text figcaption {
+  cursor: inherit;
+}

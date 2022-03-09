@@ -58,4 +58,7 @@ figure.accesskit-visible-alt-text figcaption {
   line-height: 1.5;
   text-align: center;
   overflow-wrap: break-word;
+
+  user-select: text;
+  cursor: initial;
 }

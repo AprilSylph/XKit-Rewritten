@@ -1,8 +1,21 @@
 import { keyToCss } from './css_map.js';
+import { dom } from './dom.js';
 import { pageModifications } from './mutations.js';
 
-const sidebarItems = Object.assign(document.createElement('div'), { id: 'xkit-sidebar' });
+const sidebarItems = dom('div', { id: 'xkit-sidebar' });
 const conditions = new Map();
+
+const carrotSvg = dom('svg', {
+  xmlns: 'http://www.w3.org/2000/svg',
+  viewBox: '0 0 13 20.1',
+  width: '12',
+  height: '12'
+}, null, [
+  dom('path', {
+    xmlns: 'http://www.w3.org/2000/svg',
+    d: 'M0 2.9l7.2 7.2-7.1 7.1L3 20.1l7.1-7.1 2.9-2.9L2.9 0 0 2.9'
+  })
+]);
 
 /**
  * @typedef {object} sidebarRowOptions
@@ -16,36 +29,17 @@ const conditions = new Map();
  * @param {sidebarRowOptions} options - Sidebar row options
  * @returns {HTMLLIElement} The constructed sidebar row
  */
-const buildSidebarRow = function ({ label, onclick, count, carrot }) {
-  const sidebarListItem = document.createElement('li');
-
-  const button = document.createElement('button');
-  button.addEventListener('click', onclick);
-  sidebarListItem.append(button);
-
-  const labelSpan = Object.assign(document.createElement('span'), { textContent: label });
-  button.append(labelSpan);
-
-  if (count !== undefined) {
-    const countSpan = Object.assign(document.createElement('span'), {
-      className: 'count',
-      textContent: count
-    });
-    button.append(countSpan);
-  } else if (carrot === true) {
-    const carrotSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    carrotSvg.setAttribute('viewBox', '0 0 13 20.1');
-    carrotSvg.setAttribute('width', '12');
-    carrotSvg.setAttribute('height', '12');
-    button.append(carrotSvg);
-
-    const carrotPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    carrotPath.setAttribute('d', 'M0 2.9l7.2 7.2-7.1 7.1L3 20.1l7.1-7.1 2.9-2.9L2.9 0 0 2.9');
-    carrotSvg.append(carrotPath);
-  }
-
-  return sidebarListItem;
-};
+const buildSidebarRow = ({ label, onclick, count, carrot }) =>
+  dom('li', null, null, [
+    dom('button', null, { click: onclick }, [
+      dom('span', null, null, [label]),
+      count !== undefined
+        ? dom('span', { class: 'count' }, null, [count])
+        : carrot === true
+          ? carrotSvg.cloneNode(true)
+          : ''
+    ])
+  ]);
 
 /**
  * @param {object} options - Sidebar item options
@@ -56,19 +50,17 @@ const buildSidebarRow = function ({ label, onclick, count, carrot }) {
  * @returns {HTMLDivElement} The constructed sidebar item, for future referencing
  */
 export const addSidebarItem = function ({ id, title, rows, visibility }) {
-  const sidebarItem = Object.assign(document.createElement('div'), { id, className: 'xkit-sidebar-item' });
-  const sidebarTitle = Object.assign(document.createElement('h1'), { textContent: title });
-  const sidebarList = document.createElement('ul');
-
-  sidebarItems.append(sidebarItem);
-  sidebarItem.append(sidebarTitle, sidebarList);
-  sidebarList.append(...rows.map(buildSidebarRow));
+  const sidebarItem = dom('div', { id, class: 'xkit-sidebar-item' }, null, [
+    dom('h1', null, null, [title]),
+    dom('ul', null, null, rows.map(buildSidebarRow))
+  ]);
 
   if (visibility instanceof Function) {
     conditions.set(sidebarItem, visibility);
     conditions.hidden = visibility() === false;
   }
 
+  sidebarItems.append(sidebarItem);
   return sidebarItem;
 };
 

@@ -71,8 +71,7 @@
 	box-sizing: border-box;
 	padding-left: var(--post-padding);
 	padding-right: var(--post-padding);
-	margin-top: 10px;
-	margin-bottom: 10px;
+	margin-top: 12px;
 
 	font-family: var(--font-family);
 	font-size: 1rem;
@@ -85,14 +84,19 @@
   display: none !important;
 }
 
+.xkit-quick-tags-tags div {
+  margin: -2px -6px;
+}
+
 .xkit-quick-tags-tags a {
 	vertical-align: bottom;
 
 	display: inline-block;
-	margin-right: 11px;
+  padding: 2px 6px;
+	margin: -2px 0;
 
-	text-decoration: none;
 	color: rgba(var(--black), .65);
+	text-decoration: none;
 }
 
 .xkit-quick-tags-tags a:hover {

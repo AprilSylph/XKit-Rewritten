@@ -1,4 +1,5 @@
 import { keyToCss, resolveExpressions } from '../util/css_map.js';
+import { dom } from '../util/dom.js';
 import { buildStyle } from '../util/interface.js';
 import { hideModal, showModal } from '../util/modals.js';
 import { pageModifications } from '../util/mutations.js';
@@ -30,32 +31,26 @@ const showPremiumPlea = async () => {
     return;
   }
 
-  const goAwayButton = Object.assign(document.createElement('button'), {
-    textContent: 'Go away'
-  });
-  const premiumLink = Object.assign(document.createElement('a'), {
-    href: 'https://www.tumblr.com/settings/ad-free-browsing',
-    target: '_blank',
-    className: 'blue',
-    textContent: 'Tell me more'
-  });
-
-  goAwayButton.addEventListener('click', hideModal);
-  premiumLink.addEventListener('click', hideModal);
-
   showModal({
     title: 'Want to hide ads on all platforms?',
     message: [
-      `XKit can only hide ads on the web.
-
-      To hide ads on both the web and mobile apps, subscribe to Tumblr Ad-Free Browsing today for $4.99/month or $39.99/year!
-
-      Every subscription helps offset Tumblr's operating costs, which they need to do to stay up and running.`,
-      Object.assign(document.createElement('small'), {
-        textContent: '\n\nThis message will only be shown once. The link will open in a new tab.'
-      })
+      'XKit can only hide ads on the web.\n\n',
+      'To hide ads on both the web and mobile apps, subscribe to Tumblr Ad-Free Browsing today for $4.99/month or $39.99/year!\n\n',
+      'Every subscription helps offset Tumblr\u2019s operating costs, which they need to do to stay up and running.\n\n',
+      dom('small', null, null, ['This message will only be shown once. The link will open in a new tab.'])
     ],
-    buttons: [goAwayButton, premiumLink]
+    buttons: [
+      dom('button', null, { click: hideModal }, ['Go away']),
+      dom('a', {
+        class: 'blue',
+        href: 'https://www.tumblr.com/settings/ad-free-browsing',
+        target: '_blank'
+      }, {
+        click: hideModal
+      }, [
+        'Tell me more'
+      ])
+    ]
   });
 
   browser.storage.local.set({ [storageKey]: true });

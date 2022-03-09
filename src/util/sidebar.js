@@ -57,7 +57,7 @@ export const addSidebarItem = function ({ id, title, rows, visibility }) {
 
   if (visibility instanceof Function) {
     conditions.set(sidebarItem, visibility);
-    conditions.hidden = visibility() === false;
+    sidebarItem.hidden = !visibility();
   }
 
   sidebarItems.append(sidebarItem);
@@ -83,7 +83,7 @@ export const removeSidebarItem = id => {
 
     [...sidebarItems.children]
       .filter(sidebarItem => conditions.has(sidebarItem))
-      .forEach(sidebarItem => { sidebarItem.hidden = conditions.get(sidebarItem)() === false; });
+      .forEach(sidebarItem => { sidebarItem.hidden = !conditions.get(sidebarItem)(); });
 
     const firstSidebarItem = document.querySelector(sidebarItemSelector);
     const firstNavSubHeader = document.querySelector(navSubHeaderSelector);

@@ -1,6 +1,7 @@
 import { keyToCss } from './css_map.js';
+import { dom } from './dom.js';
 
-const toastContainer = Object.assign(document.createElement('div'), { id: 'xkit-toasts' });
+const toastContainer = dom('div', { id: 'xkit-toasts' });
 
 const drawerContentSelectorPromise = keyToCss('drawerContent');
 const sidebarSelectorPromise = keyToCss('sidebar');
@@ -30,7 +31,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 export const notify = async textContent => {
   await addToastContainerToPage();
 
-  const toast = Object.assign(document.createElement('div'), { textContent, className: 'visible' });
+  const toast = dom('div', { class: 'visible' }, null, [textContent]);
   toastContainer.append(toast);
 
   await sleep(4000);

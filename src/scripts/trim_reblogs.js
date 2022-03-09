@@ -116,7 +116,7 @@ const processPosts = postElements => filterPostElements(postElements, { excludeC
 
 export const main = async function () {
   reblogSelector = await keyToCss('reblog');
-  controlButtonTemplate = await createControlButtonTemplate(symbolId, buttonClass);
+  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
 
   onNewPosts.addListener(processPosts);
 };

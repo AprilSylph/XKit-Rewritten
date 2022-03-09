@@ -6,9 +6,9 @@ import { buildSvg } from './remixicon.js';
  *
  * @param {string} symbolId - The name of the RemixIcon to use
  * @param {string} buttonClass - An extra class to identify the extension that added the button
- * @returns {Promise<HTMLDivElement>} A button that can be cloned with cloneControlButton()
+ * @returns {HTMLDivElement} A button that can be cloned with cloneControlButton()
  */
-export const createControlButtonTemplate = async function (symbolId, buttonClass) {
+export const createControlButtonTemplate = function (symbolId, buttonClass) {
   return dom('div', { class: `xkit-control-button-container ${buttonClass}` }, null, [
     dom('button', { class: 'xkit-control-button' }, null, [
       dom('span', { class: 'xkit-control-button-inner', tabindex: '-1' }, null, [

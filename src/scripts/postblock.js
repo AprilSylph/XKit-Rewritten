@@ -3,6 +3,7 @@ import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
 import { onNewPosts, pageModifications } from '../util/mutations.js';
+import { dom } from '../util/dom.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
@@ -40,11 +41,7 @@ const onButtonClicked = async function ({ currentTarget }) {
     ],
     buttons: [
       modalCancelButton,
-      Object.assign(document.createElement('button'), {
-        textContent: 'Block this post',
-        className: 'red',
-        onclick: () => blockPost(rootID)
-      })
+      dom('button', { class: 'red' }, { click: () => blockPost(rootID) }, ['Block this post'])
     ]
   });
 };

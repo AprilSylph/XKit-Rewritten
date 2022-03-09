@@ -1,3 +1,5 @@
+import { dom } from './dom.js';
+
 const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
@@ -9,12 +11,10 @@ const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
  * @returns {Promise<any>} The return value of the function, or the caught exception
  */
 export const inject = async (func, args = [], target = document.documentElement) => {
-  const script = document.createElement('script');
   const name = `xkit$${func.name || 'injected'}`;
   const async = func instanceof AsyncFunction;
 
-  script.setAttribute('nonce', nonce);
-  script.textContent = `{
+  const script = dom('script', { nonce }, null, [`{
     const { dataset } = document.currentScript;
     const ${name} = ${func.toString()};
     const returnValue = ${name}(...${JSON.stringify(args)});
@@ -30,7 +30,7 @@ export const inject = async (func, args = [], target = document.documentElement)
         `
       : 'dataset.result = JSON.stringify(returnValue || null);'
     }
-  }`;
+  }`]);
 
   if (async) {
     return new Promise((resolve, reject) => {

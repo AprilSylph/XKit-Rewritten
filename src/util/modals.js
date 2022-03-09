@@ -1,3 +1,5 @@
+import { dom } from './dom.js';
+
 let lastFocusedElement;
 
 /**
@@ -9,28 +11,17 @@ let lastFocusedElement;
  * @param {(HTMLAnchorElement|HTMLButtonElement)[]} [options.buttons] - Array of buttons to be displayed in the modal
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {
-  const modalElement = Object.assign(document.createElement('div'), { id: 'xkit-modal', tabIndex: -1 });
-  modalElement.setAttribute('role', 'dialog');
-  modalElement.setAttribute('aria-modal', true);
-
-  const styleElement = Object.assign(document.createElement('style'), { textContent: 'body { overflow: hidden; }' });
-  modalElement.appendChild(styleElement);
-
-  if (title) {
-    const titleElement = Object.assign(document.createElement('h3'), {
-      className: 'title',
-      textContent: title
-    });
-    modalElement.appendChild(titleElement);
-  }
-
-  const messageElement = Object.assign(document.createElement('div'), { className: 'message' });
-  messageElement.append(...message);
-  modalElement.appendChild(messageElement);
-
-  const buttonsElement = Object.assign(document.createElement('div'), { className: 'buttons' });
-  buttonsElement.append(...buttons);
-  modalElement.appendChild(buttonsElement);
+  const modalElement = dom('div', {
+    id: 'xkit-modal',
+    tabindex: '-1',
+    role: 'dialog',
+    'aria-modal': 'true'
+  }, null, [
+    dom('style', null, null, ['body { overflow: hidden; }']),
+    title ? dom('h3', { class: 'title' }, null, [title]) : '',
+    dom('div', { class: 'message' }, null, message),
+    dom('div', { class: 'buttons' }, null, buttons)
+  ]);
 
   hideModal();
   document.getElementById('base-container')?.appendChild(modalElement);
@@ -40,18 +31,9 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
 };
 
 export const hideModal = () => {
-  const modalElement = document.getElementById('xkit-modal');
-  modalElement?.remove();
+  document.getElementById('xkit-modal')?.remove();
   lastFocusedElement?.focus();
 };
 
-export const modalCancelButton = Object.assign(document.createElement('button'), {
-  textContent: 'Cancel',
-  onclick: hideModal
-});
-
-export const modalCompleteButton = Object.assign(document.createElement('button'), {
-  textContent: 'OK',
-  className: 'blue',
-  onclick: hideModal
-});
+export const modalCancelButton = dom('button', null, { click: hideModal }, ['Cancel']);
+export const modalCompleteButton = dom('button', { class: 'blue' }, { click: hideModal }, ['OK']);

@@ -1,4 +1,5 @@
 import { keyToCss } from './css_map.js';
+import { dom } from './dom.js';
 import { postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 
@@ -30,10 +31,16 @@ const addMeatballItems = meatballMenuElements => meatballMenuElements.forEach(me
   Object.keys(meatballItems).sort().forEach(id => {
     const { label, onclick, postFilter } = meatballItems[id];
 
-    const meatballItemButton = document.createElement('button');
-    Object.assign(meatballItemButton, { textContent: label, onclick, hidden: true });
-    meatballItemButton.dataset.xkitMeatballButton = id;
-    meatballMenu.appendChild(meatballItemButton);
+    const meatballItemButton = dom('button', {
+      'data-xkit-meatball-button': id,
+      hidden: true
+    }, {
+      click: onclick
+    }, [
+      label
+    ]);
+
+    meatballMenu.append(meatballItemButton);
 
     if (postFilter instanceof Function) {
       const shouldShowItem = postFilter(currentPost);

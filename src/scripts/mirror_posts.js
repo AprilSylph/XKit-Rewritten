@@ -1,3 +1,4 @@
+import { dom } from '../util/dom.js';
 import { postSelector } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, modalCancelButton } from '../util/modals.js';
@@ -6,23 +7,15 @@ import { timelineObject } from '../util/react_props.js';
 const meatballButtonId = 'mirror_posts';
 const meatballButtonLabel = 'Mirror this post';
 
-const archiveDotOrgForm = Object.assign(document.createElement('form'), {
+const archiveDotOrgForm = dom('form', {
   method: 'post',
   action: 'https://web.archive.org/save',
   target: '_blank',
   tabindex: -1
-});
-const archiveDotOrgInput = Object.assign(document.createElement('input'), {
-  hidden: true,
-  name: 'url_preload',
-  type: 'text'
-});
-const archiveDotOrgButton = Object.assign(document.createElement('button'), {
-  className: 'blue',
-  textContent: 'Wayback Machine',
-  type: 'submit'
-});
-archiveDotOrgForm.append(archiveDotOrgInput, archiveDotOrgButton);
+}, null, [
+  dom('input', { hidden: true, name: 'url_preload', type: 'text' }),
+  dom('button', { class: 'blue', type: 'submit' }, null, ['Wayback Machine'])
+]);
 
 const onButtonClicked = async function ({ currentTarget }) {
   const postElement = currentTarget.closest(postSelector);
@@ -30,13 +23,14 @@ const onButtonClicked = async function ({ currentTarget }) {
   const { postUrl } = await timelineObject(postElement);
   const ampUrl = `${postUrl}/amp`;
 
-  const archiveTodayButton = Object.assign(document.createElement('button'), {
-    className: 'blue',
-    onclick: () => window.open(`https://archive.today/?run=1&url=${encodeURIComponent(ampUrl)}`, '_blank'),
-    textContent: 'archive.today'
-  });
+  const archiveTodayButton = dom(
+    'button',
+    { class: 'blue' },
+    { click: () => window.open(`https://archive.today/?run=1&url=${encodeURIComponent(ampUrl)}`, '_blank') },
+    ['archive.today']
+  );
 
-  archiveDotOrgInput.value = ampUrl;
+  archiveDotOrgForm.elements.url_preload.value = ampUrl;
 
   showModal({
     title: meatballButtonLabel,

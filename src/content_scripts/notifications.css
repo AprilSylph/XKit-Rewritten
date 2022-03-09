@@ -44,6 +44,6 @@
   border-bottom: 1px solid rgba(var(--white-on-dark), .13);
 }
 
-[role="dialog"] #xkit-toasts {
+[role="dialog"] #xkit-toasts[data-in-sidebar="false"] {
   position: absolute;
 }

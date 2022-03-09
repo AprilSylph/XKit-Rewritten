@@ -1,3 +1,4 @@
+import { dom } from './dom.js';
 import { buildSvg } from './remixicon.js';
 
 /**
@@ -8,22 +9,13 @@ import { buildSvg } from './remixicon.js';
  * @returns {Promise<HTMLDivElement>} A button that can be cloned with cloneControlButton()
  */
 export const createControlButtonTemplate = async function (symbolId, buttonClass) {
-  const controlButtonContainer = document.createElement('div');
-  controlButtonContainer.classList.add('xkit-control-button-container', buttonClass);
-
-  const controlButton = document.createElement('button');
-  controlButton.classList.add('xkit-control-button');
-  controlButtonContainer.appendChild(controlButton);
-
-  const controlButtonInner = document.createElement('span');
-  controlButtonInner.classList.add('xkit-control-button-inner');
-  controlButtonInner.tabIndex = -1;
-  controlButton.appendChild(controlButtonInner);
-
-  const svg = buildSvg(symbolId);
-  controlButtonInner.appendChild(svg);
-
-  return controlButtonContainer;
+  return dom('div', { class: `xkit-control-button-container ${buttonClass}` }, null, [
+    dom('button', { class: 'xkit-control-button' }, null, [
+      dom('span', { class: 'xkit-control-button-inner', tabindex: '-1' }, null, [
+        buildSvg(symbolId)
+      ])
+    ])
+  ]);
 };
 
 /**

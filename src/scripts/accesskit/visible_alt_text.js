@@ -29,6 +29,7 @@ const processImages = function (imageElements) {
     if (!shouldShowCaption) continue;
 
     const caption = Object.assign(document.createElement('figcaption'), { textContent: alt });
+    caption.addEventListener('click', event => event.stopPropagation());
     imageBlock.append(caption);
   }
 };

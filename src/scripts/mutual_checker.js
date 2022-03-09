@@ -4,6 +4,7 @@ import { apiFetch } from '../util/tumblr_helpers.js';
 import { getPrimaryBlogName } from '../util/user.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts } from '../util/mutations.js';
+import { dom } from '../util/dom.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
 const mutualsClass = 'from-mutual';
@@ -70,14 +71,14 @@ export const main = async function () {
   const today = new Date();
   const aprilFools = (today.getMonth() === 3 && today.getDate() === 1);
 
-  icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  icon.classList.add(mutualIconClass);
-  icon.setAttribute('viewBox', '0 0 1000 1000');
-  icon.setAttribute('fill', aprilFools ? '#00b8ff' : 'rgb(var(--black))');
-
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path.setAttribute('d', aprilFools ? aprilFoolsPath : regularPath);
-  icon.appendChild(path);
+  icon = dom('svg', {
+    xmlns: 'http://www.w3.org/2000/svg',
+    class: mutualIconClass,
+    viewBox: '0 0 1000 1000',
+    fill: aprilFools ? '#00b8ff' : 'rgb(var(--black))'
+  }, null, [
+    dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: aprilFools ? aprilFoolsPath : regularPath })
+  ]);
 
   onNewPosts.addListener(addIcons);
 };

@@ -5,6 +5,7 @@ import { inject } from '../util/inject.js';
 import { keyToCss } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
+import { dom } from '../util/dom.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonBlockId = 'notificationblock-block';
@@ -72,11 +73,12 @@ const onButtonClicked = async function ({ currentTarget }) {
     message,
     buttons: [
       modalCancelButton,
-      Object.assign(document.createElement('button'), {
-        textContent,
-        className,
-        onclick: () => { hideModal(); saveNotificationPreference(); }
-      })
+      dom('button', { class: className }, {
+        click () {
+          hideModal();
+          saveNotificationPreference();
+        }
+      }, [textContent])
     ]
   });
 };

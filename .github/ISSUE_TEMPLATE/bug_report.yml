@@ -13,21 +13,25 @@ body:
     attributes:
       label: Platform
       description: What operating system are you using? Please include the version.
-      placeholder: e.g. Windows 10 or macOS 11.6
+      placeholder: e.g. Windows 10 or macOS 11
     validations:
       required: true
   - type: input
     attributes:
       label: Browser
-      description: What browser are you using? Please include the exact version.
-      placeholder: e.g. Firefox 93.0b9 (64-bit)
+      description: |
+        What browser are you using? Please include the exact version.
+        You can usually find this under Help → About.
+      placeholder: e.g. Firefox 98.0 (64-bit)
     validations:
       required: true
   - type: input
     attributes:
       label: Addon version
-      description: What version of XKit Rewritten are you using?
-      placeholder: e.g. v0.9.0
+      description: |
+        What version of XKit Rewritten are you using?
+        This is found under XKit Control Panel → Links.
+      placeholder: e.g. v0.15.6
     validations:
       required: true
   - type: textarea

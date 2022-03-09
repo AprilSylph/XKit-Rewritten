@@ -1,11 +1,12 @@
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { showModal, modalCancelButton, modalCompleteButton } from '../util/modals.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
+import { dom } from '../util/dom.js';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const gatherStatusElement = document.createElement('span');
-const unlikeStatusElement = document.createElement('span');
+const gatherStatusElement = dom('span');
+const unlikeStatusElement = dom('span');
 
 const gatherLikes = async function () {
   const likes = [];
@@ -45,12 +46,9 @@ const unlikePosts = async function () {
   showModal({
     title: 'All done!',
     message: [
-      `Unliked ${unlikedCount} posts.`,
-      document.createElement('br'),
-      `Failed to unlike ${failureCount} posts.`,
-      document.createElement('br'),
-      document.createElement('br'),
-      'You may still have some likes due to quirks with the Tumblr API.'
+      `Unliked ${unlikedCount} posts.\n`,
+      `Failed to unlike ${failureCount} posts.\n\n`,
+      dom('small', null, null, ['You may still have some likes due to quirks with the Tumblr API.'])
     ],
     buttons: [
       modalCompleteButton
@@ -61,26 +59,26 @@ const unlikePosts = async function () {
 const modalWorkingOptions = {
   title: 'Clearing your likes...',
   message: [
-    'Do not navigate away from this page, or the process will be interrupted.',
-    document.createElement('br'),
-    document.createElement('br'),
+    dom('small', null, null, ['Do not navigate away from this page, or the process will be interrupted.\n\n']),
     gatherStatusElement,
-    document.createElement('br'),
-    document.createElement('br'),
+    '\n',
     unlikeStatusElement
   ]
 };
 
-const modalConfirmButton = Object.assign(document.createElement('button'), {
-  textContent: 'Clear my likes',
-  className: 'red',
-  onclick: () => {
-    gatherStatusElement.textContent = '';
-    unlikeStatusElement.textContent = '';
-    showModal(modalWorkingOptions);
-    unlikePosts();
-  }
-});
+const modalConfirmButton = dom(
+  'button',
+  { class: 'red' },
+  {
+    click () {
+      gatherStatusElement.textContent = '';
+      unlikeStatusElement.textContent = '';
+      showModal(modalWorkingOptions);
+      unlikePosts();
+    }
+  },
+  ['Clear my likes']
+);
 
 const modalPromptOptions = {
   title: 'Clear your likes?',

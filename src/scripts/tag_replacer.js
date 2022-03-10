@@ -50,7 +50,7 @@ const confirmReplaceTag = async event => {
   const { elements } = event.currentTarget;
 
   const uuid = elements.blog.value;
-  const tag = elements.oldTag.value.replace(/,/g, '');
+  const tag = elements.oldTag.value.replace(/,|"|#/g, '');
 
   const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag, limit: 1 } });
   if (!totalPosts) {
@@ -58,7 +58,7 @@ const confirmReplaceTag = async event => {
     return;
   }
 
-  const newTag = elements.newTag.value.replace(/"/g, '');
+  const newTag = elements.newTag.value.replace(/"|#/g, '');
   const remove = newTag === '';
 
   const newTags = newTag.split(',').map(tag => tag.trim());

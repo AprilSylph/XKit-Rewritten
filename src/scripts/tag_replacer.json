@@ -1,0 +1,9 @@
+{
+  "title": "Tag Replacer",
+  "description": "Replace old tags in bulk",
+  "icon": {
+    "class_name": "ri-swap-box-line",
+    "color": "white",
+    "background_color": "#fc4070"
+  }
+}

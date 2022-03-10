@@ -45,6 +45,38 @@
   font-size: 80%;
 }
 
+#xkit-modal .message form {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 476px;
+  padding: 1em;
+  border-radius: 8px;
+
+  background-color: rgb(var(--navy));
+  box-shadow: 0 0 1px rgba(var(--white-on-dark), .13);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+#xkit-modal .message form label {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1ex;
+
+  text-align: left;
+}
+
+#xkit-modal .message form :is(input[type="text"], select) {
+  box-sizing: border-box;
+  width: 220px;
+
+  font-size: .875rem;
+}
+
 #xkit-modal .buttons {
   display: flex;
   flex-direction: row;
@@ -54,12 +86,15 @@
   margin-top: 15px;
 }
 
-#xkit-modal .buttons :is(a, button) {
+#xkit-modal .buttons :is(a, button, input) {
   padding: 0.75ch 1.5ch;
+  border: none;
   border-radius: 3px;
 
+  appearance: none;
   background-color: rgba(var(--white-on-dark), 0.65);
   color: rgb(var(--navy));
+  cursor: pointer;
 	font-family: var(--font-family);
 	font-size: 1rem;
 	font-weight: 700;
@@ -67,10 +102,10 @@
   text-decoration: none;
 }
 
-#xkit-modal .buttons :is(a, button).red {
+#xkit-modal .buttons :is(a, button, input).red {
   background-color: rgb(var(--red));
 }
 
-#xkit-modal .buttons :is(a, button).blue {
+#xkit-modal .buttons :is(a, button, input).blue {
   background-color: rgb(var(--blue));
 }

@@ -1,0 +1,11 @@
+.tag-replacer-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 1em;
+  margin: 0.25rem 0;
+
+  background-color: rgb(var(--accent));
+  color: rgb(var(--navy));
+  font-size: 1rem;
+  line-height: 1.5;
+}

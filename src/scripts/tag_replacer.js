@@ -8,6 +8,7 @@ import { getUserBlogs } from '../util/user.js';
 const getPostsFormId = 'xkit-tag-replacer-get-posts';
 
 const createBlogOption = ({ name, title, uuid }) => dom('option', { value: uuid, title }, null, [name]);
+const createTagSpan = tag => dom('span', { class: 'tag-replacer-tag' }, null, [`#${tag}`]);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const showInitialPrompt = async () => {
@@ -66,8 +67,12 @@ const confirmReplaceTag = async event => {
   showModal({
     title: `${remove ? 'Remove' : 'Replace'} tags on ${totalPosts} posts?`,
     message: [
-      `The tag #${tag.toLowerCase()} will be `,
-      remove ? 'removed.' : `replaced with the ${newMultiple ? 'tags:\n' : 'tag: '}${newTags.map(tag => `#${tag}`).join(' ')}`
+      'The tag ',
+      createTagSpan(tag.toLowerCase()),
+      ' will be ',
+      ...remove
+        ? ['removed.']
+        : [`replaced with the ${newMultiple ? 'tags:\n' : 'tag: '}`, ...newTags.flatMap(tag => [createTagSpan(tag), ' '])]
     ],
     buttons: [
       modalCancelButton,
@@ -83,7 +88,7 @@ const confirmReplaceTag = async event => {
 
 const showTagNotFound = ({ tag }) => showModal({
   title: 'No posts found!',
-  message: [`It looks like you don't have any posts tagged #${tag}.`],
+  message: ['It looks like you don\'t have any posts tagged ', createTagSpan(tag), '.'],
   buttons: [modalCompleteButton]
 });
 
@@ -113,7 +118,7 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
     resource = response.links?.next?.href;
   }
 
-  gatherStatus.textContent = `Found ${taggedPosts.length} posts tagged #${tag}.`;
+  gatherStatus.textContent = `Found ${taggedPosts.length} posts.`;
 
   const taggedPostIds = taggedPosts.map(({ id }) => id);
   let appendedCount = 0;
@@ -135,7 +140,7 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
       });
 
       appendStatus.textContent = (appendedCount || appendedFailCount)
-        ? `\nAdded tags to ${appendedCount} posts (failed: ${appendedFailCount})...`
+        ? `\nAdded tags to ${appendedCount} posts... (failed: ${appendedFailCount})`
         : '';
     }
 
@@ -149,7 +154,7 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
     });
 
     removeStatus.textContent = (removedCount || removedFailCount)
-      ? `\nRemoved tags from ${removedCount} posts (failed: ${removedFailCount})...`
+      ? `\nRemoved tags from ${removedCount} posts... (failed: ${removedFailCount})`
       : '';
   }
 
@@ -179,3 +184,4 @@ const sidebarOptions = {
 
 export const main = async () => addSidebarItem(sidebarOptions);
 export const clean = async () => removeSidebarItem(sidebarOptions.id);
+export const stylesheet = true;

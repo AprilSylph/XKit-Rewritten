@@ -4,6 +4,7 @@ import { exposeTimelines, timelineObject } from '../util/react_props.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { translate } from '../util/language_data.js';
+import { dom } from '../util/dom.js';
 
 const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
 
@@ -53,10 +54,7 @@ const processTagLinks = async function ([searchResultElement]) {
   const tagLinkElements = searchResultElement.querySelectorAll('[data-followed-tags] ~ [href^="/tagged/"]');
 
   tagLinkElements.forEach(async tagLinkElement => {
-    const unreadCountElement = Object.assign(document.createElement('span'), {
-      style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65;',
-      innerHTML: '&ctdot;'
-    });
+    const unreadCountElement = dom('span', { style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65;' }, null, ['\u22EF']);
     tagLinkElement.firstElementChild.appendChild(unreadCountElement);
 
     const tag = tagLinkElement.querySelector(tagTextSelector).textContent;

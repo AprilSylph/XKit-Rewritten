@@ -127,9 +127,9 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
   while (resource) {
     await Promise.all([
       apiFetch(resource).then(({ response }) => {
-    taggedPosts.push(...response.posts);
-    gatherStatus.textContent = `Found ${taggedPosts.length} posts...`;
-    resource = response.links?.next?.href;
+        taggedPosts.push(...response.posts);
+        gatherStatus.textContent = `Found ${taggedPosts.length} posts...`;
+        resource = response.links?.next?.href;
       }),
       sleep(1000)
     ]);

@@ -101,7 +101,7 @@ const confirmReplaceTag = async event => {
 
 const showTagNotFound = ({ tag }) => showModal({
   title: 'No posts found!',
-  message: ['It looks like you don\'t have any posts tagged ', createTagSpan(tag), '.'],
+  message: ['It looks like you don\'t have any posts tagged ', createTagSpan(tag.toLowerCase()), '.'],
   buttons: [modalCompleteButton]
 });
 
@@ -144,31 +144,31 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
 
     if (newTag) {
       await Promise.all([
-        megaEdit(postIds, { mode: 'add', tags: [newTag] }),
+        megaEdit(postIds, { mode: 'add', tags: [newTag] }).then(() => {
+          appendedCount += postIds.length;
+        }).catch(() => {
+          appendedFailCount += postIds.length;
+        }).finally(() => {
+          appendStatus.textContent = (appendedCount || appendedFailCount)
+            ? `\nAdded tags to ${appendedCount} posts... (failed: ${appendedFailCount})`
+            : '';
+        }),
         sleep(1000)
-      ]).then(() => {
-        appendedCount += postIds.length;
-      }).catch(() => {
-        appendedFailCount += postIds.length;
-      });
-
-      appendStatus.textContent = (appendedCount || appendedFailCount)
-        ? `\nAdded tags to ${appendedCount} posts... (failed: ${appendedFailCount})`
-        : '';
+      ]);
     }
 
     await Promise.all([
-      megaEdit(postIds, { mode: 'remove', tags: [tag] }),
+      megaEdit(postIds, { mode: 'remove', tags: [tag] }).then(() => {
+        removedCount += postIds.length;
+      }).catch(() => {
+        removedFailCount += postIds.length;
+      }).finally(() => {
+        removeStatus.textContent = (removedCount || removedFailCount)
+          ? `\nRemoved tags from ${removedCount} posts... (failed: ${removedFailCount})`
+          : '';
+      }),
       sleep(1000)
-    ]).then(() => {
-      removedCount += postIds.length;
-    }).catch(() => {
-      removedFailCount += postIds.length;
-    });
-
-    removeStatus.textContent = (removedCount || removedFailCount)
-      ? `\nRemoved tags from ${removedCount} posts... (failed: ${removedFailCount})`
-      : '';
+    ]);
   }
 
   await sleep(1000);

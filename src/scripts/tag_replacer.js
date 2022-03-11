@@ -40,19 +40,26 @@ const showInitialPrompt = async () => {
     message: [initialForm],
     buttons: [
       modalCancelButton,
-      dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next...' })
+      dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' })
     ]
   });
 };
 
 const confirmReplaceTag = async event => {
   event.preventDefault();
+
+  const { submitter } = event;
+  if (submitter.matches('input[type="submit"]')) {
+    submitter.disabled = true;
+    submitter.value = 'Checking...';
+  }
+
   const { elements } = event.currentTarget;
 
   const uuid = elements.blog.value;
   const tag = elements.oldTag.value.replace(/,|"|#/g, '');
 
-  const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag, limit: 1 } });
+  const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag } });
   if (!totalPosts) {
     showTagNotFound({ tag });
     return;

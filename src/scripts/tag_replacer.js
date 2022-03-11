@@ -92,7 +92,7 @@ const confirmReplaceTag = async event => {
       dom(
         'button',
         { class: remove ? 'red' : 'blue' },
-        { click: () => replaceTag({ uuid, tag, newTag }) },
+        { click: () => replaceTag({ uuid, tag, newTag }).catch(showError) },
         [remove ? 'Remove it!' : 'Replace it!']
       )
     ]
@@ -102,6 +102,12 @@ const confirmReplaceTag = async event => {
 const showTagNotFound = ({ tag }) => showModal({
   title: 'No posts found!',
   message: ['It looks like you don\'t have any posts tagged ', createTagSpan(tag.toLowerCase()), '.'],
+  buttons: [modalCompleteButton]
+});
+
+const showError = exception => showModal({
+  title: 'Something went wrong.',
+  message: [exception.message],
   buttons: [modalCompleteButton]
 });
 

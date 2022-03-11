@@ -102,6 +102,11 @@
   text-decoration: none;
 }
 
+#xkit-modal .buttons :disabled {
+  cursor: not-allowed;
+  filter: grayscale(100%);
+}
+
 #xkit-modal .buttons :is(a, button, input).red {
   background-color: rgb(var(--red));
 }

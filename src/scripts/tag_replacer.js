@@ -21,11 +21,11 @@ const showInitialPrompt = async () => {
     ]),
     dom('label', null, null, [
       'Remove this tag:',
-      dom('input', { type: 'text', name: 'oldTag', required: true, placeholder: '(Required)', autocomplete: 'off' })
+      dom('input', { type: 'text', name: 'oldTag', required: true, placeholder: 'Required', autocomplete: 'off' })
     ]),
     dom('label', null, null, [
-      'Append this new tag:',
-      dom('input', { type: 'text', name: 'newTag', placeholder: 'Leave blank to delete', autocomplete: 'off' })
+      'Add this new tag:',
+      dom('input', { type: 'text', name: 'newTag', placeholder: 'Optional', autocomplete: 'off' })
     ])
   ]);
 
@@ -37,7 +37,13 @@ const showInitialPrompt = async () => {
 
   showModal({
     title: 'Replace what tag?',
-    message: [initialForm],
+    message: [
+      initialForm,
+      dom('small', null, null, [
+        'This tool uses the Mass Post Editor API to process posts in bulk.\n',
+        'Any new tags will be added to the end of each post\'s tags.'
+      ])
+    ],
     buttons: [
       modalCancelButton,
       dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' })

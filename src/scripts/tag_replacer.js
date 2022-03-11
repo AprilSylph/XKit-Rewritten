@@ -125,10 +125,14 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
   let resource = `/v2/blog/${uuid}/posts?${$.param({ tag, limit: 50 })}`;
 
   while (resource) {
-    const [{ response }] = await Promise.all([apiFetch(resource), sleep(1000)]);
+    await Promise.all([
+      apiFetch(resource).then(({ response }) => {
     taggedPosts.push(...response.posts);
     gatherStatus.textContent = `Found ${taggedPosts.length} posts...`;
     resource = response.links?.next?.href;
+      }),
+      sleep(1000)
+    ]);
   }
 
   gatherStatus.textContent = `Found ${taggedPosts.length} posts.`;

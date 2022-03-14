@@ -134,14 +134,13 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
     await Promise.all([
       apiFetch(resource).then(({ response }) => {
         taggedPosts.push(...response.posts);
-        gatherStatus.textContent = `Found ${taggedPosts.length} posts...`;
         resource = response.links?.next?.href;
+
+        gatherStatus.textContent = `Found ${taggedPosts.length} posts${resource ? '...' : '.'}`;
       }),
       sleep(1000)
     ]);
   }
-
-  gatherStatus.textContent = `Found ${taggedPosts.length} posts.`;
 
   const taggedPostIds = taggedPosts.map(({ id }) => id);
   let appendedCount = 0;

@@ -160,7 +160,7 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
         }).catch(() => {
           appendedFailCount += postIds.length;
         }).finally(() => {
-          appendStatus.textContent = `\nAdded new tags to ${appendedCount} posts... (failed: ${appendedFailCount})`;
+          appendStatus.textContent = `\nAdded new tags to ${appendedCount} posts... ${appendedFailCount ? `(failed: ${appendedFailCount})` : ''}`;
         }),
         sleep(1000)
       ]);
@@ -174,7 +174,7 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
       }).catch(() => {
         removedFailCount += postIds.length;
       }).finally(() => {
-        removeStatus.textContent = `\nRemoved old tags from ${removedCount} posts... (failed: ${removedFailCount})`;
+        removeStatus.textContent = `\nRemoved old tags from ${removedCount} posts... ${removedFailCount ? `(failed: ${removedFailCount})` : ''}`;
       }),
       sleep(1000)
     ]);
@@ -185,8 +185,8 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
   showModal({
     title: 'Thank you, come again!',
     message: [
-      newTag ? `Added new tags to ${appendedCount} posts (failed: ${appendedFailCount}).\n` : '',
-      `Removed old tags from ${removedCount} posts (failed: ${removedFailCount}).`
+      newTag ? `Added new tags to ${appendedCount} posts${appendedFailCount ? ` (failed: ${appendedFailCount})` : ''}.\n` : '',
+      `Removed old tags from ${removedCount} posts${removedFailCount ? ` (failed: ${removedFailCount})` : ''}.`
     ],
     buttons: [
       modalCompleteButton

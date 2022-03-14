@@ -153,7 +153,7 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
     const postIds = taggedPostIds.splice(0, 100);
 
     if (newTag) {
-      if (appendStatus.textContent === '') appendStatus.textContent = '\nAdding tags...';
+      if (appendStatus.textContent === '') appendStatus.textContent = '\nAdding new tags...';
 
       await Promise.all([
         megaEdit(postIds, { mode: 'add', tags: [newTag] }).then(() => {
@@ -161,13 +161,13 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
         }).catch(() => {
           appendedFailCount += postIds.length;
         }).finally(() => {
-          appendStatus.textContent = `\nAdded tags to ${appendedCount} posts... (failed: ${appendedFailCount})`;
+          appendStatus.textContent = `\nAdded new tags to ${appendedCount} posts... (failed: ${appendedFailCount})`;
         }),
         sleep(1000)
       ]);
     }
 
-    if (removeStatus.textContent === '') removeStatus.textContent = '\nRemoving tags...';
+    if (removeStatus.textContent === '') removeStatus.textContent = '\nRemoving old tags...';
 
     await Promise.all([
       megaEdit(postIds, { mode: 'remove', tags: [tag] }).then(() => {
@@ -175,7 +175,7 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
       }).catch(() => {
         removedFailCount += postIds.length;
       }).finally(() => {
-        removeStatus.textContent = `\nRemoved tags from ${removedCount} posts... (failed: ${removedFailCount})`;
+        removeStatus.textContent = `\nRemoved old tags from ${removedCount} posts... (failed: ${removedFailCount})`;
       }),
       sleep(1000)
     ]);
@@ -186,8 +186,8 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
   showModal({
     title: 'Thank you, come again!',
     message: [
-      newTag ? `Added tags to ${appendedCount} posts (failed: ${appendedFailCount}).\n` : '',
-      `Removed tags from ${removedCount} posts (failed: ${removedFailCount}).`
+      newTag ? `Added new tags to ${appendedCount} posts (failed: ${appendedFailCount}).\n` : '',
+      `Removed old tags from ${removedCount} posts (failed: ${removedFailCount}).`
     ],
     buttons: [
       modalCompleteButton

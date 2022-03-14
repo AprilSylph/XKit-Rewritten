@@ -153,19 +153,21 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
     const postIds = taggedPostIds.splice(0, 100);
 
     if (newTag) {
+      if (appendStatus.textContent === '') appendStatus.textContent = '\nAdding tags...';
+
       await Promise.all([
         megaEdit(postIds, { mode: 'add', tags: [newTag] }).then(() => {
           appendedCount += postIds.length;
         }).catch(() => {
           appendedFailCount += postIds.length;
         }).finally(() => {
-          appendStatus.textContent = (appendedCount || appendedFailCount)
-            ? `\nAdded tags to ${appendedCount} posts... (failed: ${appendedFailCount})`
-            : '';
+          appendStatus.textContent = `\nAdded tags to ${appendedCount} posts... (failed: ${appendedFailCount})`;
         }),
         sleep(1000)
       ]);
     }
+
+    if (removeStatus.textContent === '') removeStatus.textContent = '\nRemoving tags...';
 
     await Promise.all([
       megaEdit(postIds, { mode: 'remove', tags: [tag] }).then(() => {
@@ -173,9 +175,7 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
       }).catch(() => {
         removedFailCount += postIds.length;
       }).finally(() => {
-        removeStatus.textContent = (removedCount || removedFailCount)
-          ? `\nRemoved tags from ${removedCount} posts... (failed: ${removedFailCount})`
-          : '';
+        removeStatus.textContent = `\nRemoved tags from ${removedCount} posts... (failed: ${removedFailCount})`;
       }),
       sleep(1000)
     ]);

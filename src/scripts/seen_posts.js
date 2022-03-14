@@ -10,34 +10,36 @@ const includeFiltered = true;
 const dimClass = 'xkit-seen-posts-seen';
 const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 
-let seenPosts = [];
+let seenPostsCache = [];
 
-const markPosts = (postElements) => {
+const dimPosts = async function (unfilteredPostElements) {
+  await exposeTimelines();
+  const postElements = filterPostElements(unfilteredPostElements, { excludeClass, timeline, includeFiltered });
+
+  for (const postElement of postElements) {
+    const { id } = postElement.dataset;
+
+    if (seenPostsCache.includes(id)) {
+      postElement.classList.add(dimClass);
+    }
+  }
+
+  const storageKey = 'seen_posts.seenPosts';
+  const { [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey);
+
   for (const postElement of postElements) {
     const { id } = postElement.dataset;
 
     if (seenPosts.includes(id)) {
       postElement.classList.add(dimClass);
     } else {
-      postElement.classList.remove(dimClass);
       seenPosts.push(id);
     }
   }
-};
-
-const dimPosts = async function (unfilteredPostElements) {
-  await exposeTimelines();
-  const postElements = filterPostElements(unfilteredPostElements, { excludeClass, timeline, includeFiltered });
-
-  markPosts(postElements);
-
-  const storageKey = 'seen_posts.seenPosts';
-  ({ [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey));
-
-  markPosts(postElements);
 
   seenPosts.splice(0, seenPosts.length - 10000);
   browser.storage.local.set({ [storageKey]: seenPosts });
+  seenPostsCache = seenPosts;
 };
 
 export const onStorageChanged = async function (changes, areaName) {

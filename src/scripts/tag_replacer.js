@@ -25,7 +25,7 @@ const showInitialPrompt = async () => {
     ]),
     dom('label', null, null, [
       'Add this new tag:',
-      dom('input', { type: 'text', name: 'newTag', placeholder: 'Optional', autocomplete: 'off' })
+      dom('input', { type: 'text', name: 'newTag', placeholder: 'Optional, comma-separated', autocomplete: 'off' })
     ])
   ]);
 
@@ -77,6 +77,8 @@ const confirmReplaceTag = async event => {
   const newTags = newTag.split(',').map(tag => tag.trim());
   const newMultiple = newTags.length > 1;
 
+  const appendOnly = newTags.some(tag => tag.toLowerCase() === oldTag.toLowerCase());
+
   showModal({
     title: `${remove ? 'Remove' : 'Replace'} tags on ${totalPosts} posts?`,
     message: [
@@ -92,7 +94,7 @@ const confirmReplaceTag = async event => {
       dom(
         'button',
         { class: remove ? 'red' : 'blue' },
-        { click: () => replaceTag({ uuid, oldTag, newTag }).catch(showError) },
+        { click: () => replaceTag({ uuid, oldTag, newTag, appendOnly }).catch(showError) },
         [remove ? 'Remove it!' : 'Replace it!']
       )
     ]
@@ -111,7 +113,7 @@ const showError = exception => showModal({
   buttons: [modalCompleteButton]
 });
 
-const replaceTag = async ({ uuid, oldTag, newTag }) => {
+const replaceTag = async ({ uuid, oldTag, newTag, appendOnly }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const removeStatus = dom('span');
   const appendStatus = dom('span');
@@ -166,18 +168,20 @@ const replaceTag = async ({ uuid, oldTag, newTag }) => {
       ]);
     }
 
-    if (removeStatus.textContent === '') removeStatus.textContent = '\nRemoving old tags...';
+    if (!appendOnly) {
+      if (removeStatus.textContent === '') removeStatus.textContent = '\nRemoving old tags...';
 
-    await Promise.all([
-      megaEdit(postIds, { mode: 'remove', tags: [oldTag] }).then(() => {
-        removedCount += postIds.length;
-      }).catch(() => {
-        removedFailCount += postIds.length;
-      }).finally(() => {
-        removeStatus.textContent = `\nRemoved old tags from ${removedCount} posts... ${removedFailCount ? `(failed: ${removedFailCount})` : ''}`;
-      }),
-      sleep(1000)
-    ]);
+      await Promise.all([
+        megaEdit(postIds, { mode: 'remove', tags: [oldTag] }).then(() => {
+          removedCount += postIds.length;
+        }).catch(() => {
+          removedFailCount += postIds.length;
+        }).finally(() => {
+          removeStatus.textContent = `\nRemoved old tags from ${removedCount} posts... ${removedFailCount ? `(failed: ${removedFailCount})` : ''}`;
+        }),
+        sleep(1000)
+      ]);
+    }
   }
 
   await sleep(1000);
@@ -186,7 +190,7 @@ const replaceTag = async ({ uuid, oldTag, newTag }) => {
     title: 'Thank you, come again!',
     message: [
       newTag ? `Added new tags to ${appendedCount} posts${appendedFailCount ? ` (failed: ${appendedFailCount})` : ''}.\n` : '',
-      `Removed old tags from ${removedCount} posts${removedFailCount ? ` (failed: ${removedFailCount})` : ''}.`
+      !appendOnly ? `Removed old tags from ${removedCount} posts${removedFailCount ? ` (failed: ${removedFailCount})` : ''}.` : ''
     ],
     buttons: [
       modalCompleteButton

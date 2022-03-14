@@ -63,15 +63,15 @@ const confirmReplaceTag = async event => {
   const { elements } = event.currentTarget;
 
   const uuid = elements.blog.value;
-  const tag = elements.oldTag.value.replace(/,|"|#/g, '');
+  const oldTag = elements.oldTag.value.replace(/,|"|#/g, '').trim();
 
-  const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag } });
+  const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag: oldTag } });
   if (!totalPosts) {
-    showTagNotFound({ tag });
+    showTagNotFound({ tag: oldTag });
     return;
   }
 
-  const newTag = elements.newTag.value.replace(/"|#/g, '');
+  const newTag = elements.newTag.value.replace(/"|#/g, '').trim();
   const remove = newTag === '';
 
   const newTags = newTag.split(',').map(tag => tag.trim());
@@ -81,7 +81,7 @@ const confirmReplaceTag = async event => {
     title: `${remove ? 'Remove' : 'Replace'} tags on ${totalPosts} posts?`,
     message: [
       'The tag ',
-      createTagSpan(tag.toLowerCase()),
+      createTagSpan(oldTag.toLowerCase()),
       ' will be ',
       ...remove
         ? ['removed.']
@@ -92,7 +92,7 @@ const confirmReplaceTag = async event => {
       dom(
         'button',
         { class: remove ? 'red' : 'blue' },
-        { click: () => replaceTag({ uuid, tag, newTag }).catch(showError) },
+        { click: () => replaceTag({ uuid, oldTag, newTag }).catch(showError) },
         [remove ? 'Remove it!' : 'Replace it!']
       )
     ]
@@ -111,7 +111,7 @@ const showError = exception => showModal({
   buttons: [modalCompleteButton]
 });
 
-const replaceTag = async ({ uuid, tag, newTag }) => {
+const replaceTag = async ({ uuid, oldTag, newTag }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const removeStatus = dom('span');
   const appendStatus = dom('span');
@@ -128,7 +128,7 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
   });
 
   const taggedPosts = [];
-  let resource = `/v2/blog/${uuid}/posts?${$.param({ tag, limit: 50 })}`;
+  let resource = `/v2/blog/${uuid}/posts?${$.param({ tag: oldTag, limit: 50 })}`;
 
   while (resource) {
     await Promise.all([
@@ -169,7 +169,7 @@ const replaceTag = async ({ uuid, tag, newTag }) => {
     if (removeStatus.textContent === '') removeStatus.textContent = '\nRemoving old tags...';
 
     await Promise.all([
-      megaEdit(postIds, { mode: 'remove', tags: [tag] }).then(() => {
+      megaEdit(postIds, { mode: 'remove', tags: [oldTag] }).then(() => {
         removedCount += postIds.length;
       }).catch(() => {
         removedFailCount += postIds.length;

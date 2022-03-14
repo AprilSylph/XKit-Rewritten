@@ -1,6 +1,6 @@
 {
   "title": "TimeFormat",
-  "description": "Reformat native timestamps",
+  "description": "Reformat Tumblr's timestamps",
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#timeformat",
   "icon": {
     "class_name": "ri-history-line",

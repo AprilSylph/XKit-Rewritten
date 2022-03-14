@@ -8,7 +8,8 @@ import { getUserBlogs } from '../util/user.js';
 const getPostsFormId = 'xkit-tag-replacer-get-posts';
 
 const createBlogOption = ({ name, title, uuid }) => dom('option', { value: uuid, title }, null, [name]);
-const createTagSpan = tag => dom('span', { class: 'tag-replacer-tag' }, null, [`#${tag}`]);
+const createTagSpan = tag => dom('span', { class: 'tag-replacer-tag' }, null, [tag]);
+const createBlogSpan = name => dom('span', { class: 'tag-replacer-blog' }, null, [name]);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const showInitialPrompt = async () => {
@@ -17,7 +18,7 @@ const showInitialPrompt = async () => {
   const initialForm = dom('form', { id: getPostsFormId }, { submit: confirmReplaceTag }, [
     dom('label', null, null, [
       'Replace tags on:',
-      dom('select', { name: 'blog' }, null, userBlogs.map(createBlogOption))
+      dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption))
     ]),
     dom('label', null, null, [
       'Remove this tag:',
@@ -63,11 +64,12 @@ const confirmReplaceTag = async event => {
   const { elements } = event.currentTarget;
 
   const uuid = elements.blog.value;
+  const name = elements.blog.selectedOptions[0].textContent;
   const oldTag = elements.oldTag.value.replace(/,|"|#/g, '').trim();
 
   const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag: oldTag } });
   if (!totalPosts) {
-    showTagNotFound({ tag: oldTag });
+    showTagNotFound({ tag: oldTag, name });
     return;
   }
 
@@ -84,6 +86,8 @@ const confirmReplaceTag = async event => {
     message: [
       'The tag ',
       createTagSpan(oldTag.toLowerCase()),
+      ' on ',
+      createBlogSpan(name),
       ' will be ',
       ...remove
         ? ['removed.']
@@ -101,9 +105,9 @@ const confirmReplaceTag = async event => {
   });
 };
 
-const showTagNotFound = ({ tag }) => showModal({
+const showTagNotFound = ({ tag, name }) => showModal({
   title: 'No posts found!',
-  message: ['It looks like you don\'t have any posts tagged ', createTagSpan(tag.toLowerCase()), '.'],
+  message: ['It looks like you don\'t have any posts tagged ', createTagSpan(tag.toLowerCase()), ' on ', createBlogSpan(name), '.'],
   buttons: [modalCompleteButton]
 });
 

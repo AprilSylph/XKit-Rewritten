@@ -33,6 +33,7 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
 export const hideModal = () => {
   document.getElementById('xkit-modal')?.remove();
   lastFocusedElement?.focus();
+  lastFocusedElement = null;
 };
 
 export const modalCancelButton = dom('button', null, { click: hideModal }, ['Cancel']);

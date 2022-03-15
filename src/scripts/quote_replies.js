@@ -6,6 +6,8 @@ import { notify } from '../util/notifications.js';
 import { buildSvg } from '../util/remixicon.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
+const storageKey = 'quote_replies.currentResponseId';
+
 let activitySelector;
 
 const getNotificationProps = function () {
@@ -76,7 +78,8 @@ const quoteReply = async ({ id, summary, name, uuid, timestamp }) => {
     { type: 'text', text: '\u200B' }
   ];
 
-  await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags: reply.blog.name } });
+  const { response: { id: responseId } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags: reply.blog.name } });
+  await browser.storage.local.set({ [storageKey]: responseId });
   window.open(`/blog/${name}/drafts`);
 };
 
@@ -87,6 +90,13 @@ export const main = async function () {
 
   const notificationSelector = await resolveExpressions`section${keyToCss('notifications')} > ${keyToCss('notification')}`;
   pageModifications.register(notificationSelector, processNotifications);
+
+  const { [storageKey]: responseId } = await browser.storage.local.get(storageKey);
+  browser.storage.local.remove(storageKey);
+
+  if (responseId !== undefined && /^\/blog\/.+\/drafts/.test(location.pathname)) {
+    document.querySelector(`[href*="/edit/"][href$="/${responseId}"]`)?.click();
+  }
 };
 
 export const clean = async function () {

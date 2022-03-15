@@ -1,0 +1,9 @@
+{
+  "title": "Quote Replies",
+  "description": "Reply to replies from Activity",
+  "icon": {
+    "class_name": "ri-chat-quote-line",
+    "color": "white",
+    "background_color": "#00b8ff"
+  }
+}

@@ -1,7 +1,7 @@
 button.xkit-quote-replies {
   position: relative;
   align-self: center;
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 
   display: inline-flex;
   align-items: center;

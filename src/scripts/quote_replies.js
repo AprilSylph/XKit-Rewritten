@@ -7,6 +7,7 @@ import { buildSvg } from '../util/remixicon.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
 const storageKey = 'quote_replies.currentResponseId';
+const buttonClass = 'xkit-quote-replies';
 
 let activitySelector;
 
@@ -42,7 +43,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
 
   activityElement.after(dom(
     'button',
-    { class: 'xkit-quote-replies', title: 'Quote this reply' },
+    { class: buttonClass, title: 'Quote this reply' },
     {
       click () {
         this.disabled = true;
@@ -101,6 +102,7 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(processNotifications);
+  $(`.${buttonClass}`).remove();
 };
 
 export const stylesheet = true;

@@ -20,7 +20,7 @@ export const apiFetch = async function (...args) {
 
       // make sure every API request we make is telling Tumblr that we're XKit
       init.headers['X-XKit'] = '1';
-      window.tumblr.apiFetch(resource, init);
+      return window.tumblr.apiFetch(resource, init);
     },
     args
   );

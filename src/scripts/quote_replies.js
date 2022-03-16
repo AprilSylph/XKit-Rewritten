@@ -9,7 +9,10 @@ import { apiFetch } from '../util/tumblr_helpers.js';
 const storageKey = 'quote_replies.currentResponseId';
 const buttonClass = 'xkit-quote-replies';
 
+const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
+
 let activitySelector;
+let originalPostTag;
 
 const getNotificationProps = function () {
   const notificationElement = document.currentScript.parentElement;
@@ -78,8 +81,12 @@ const quoteReply = async ({ id, summary, name, uuid, timestamp }) => {
     Object.assign(reply.content[0], { subtype: 'indented' }),
     { type: 'text', text: '\u200B' }
   ];
+  const tags = [
+    ...originalPostTag ? [originalPostTag] : [],
+    reply.blog.name
+  ].join(',');
 
-  const { response: { id: responseId } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags: reply.blog.name } });
+  const { response: { id: responseId } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
   await browser.storage.local.set({ [storageKey]: responseId });
   window.open(`/blog/${name}/drafts`);
 };
@@ -88,6 +95,7 @@ const showError = exception => notify(exception.body?.errors?.[0]?.detail || exc
 
 export const main = async function () {
   activitySelector = await resolveExpressions`${keyToCss('notification')} > ${keyToCss('activity')}`;
+  ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
 
   const notificationSelector = await resolveExpressions`section${keyToCss('notifications')} > ${keyToCss('notification')}`;
   pageModifications.register(notificationSelector, processNotifications);
@@ -103,6 +111,12 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(processNotifications);
   $(`.${buttonClass}`).remove();
+};
+
+export const onStorageChanged = async function (changes) {
+  if (Object.keys(changes).includes(originalPostTagStorageKey)) {
+    ({ [originalPostTagStorageKey]: { newValue: originalPostTag } } = changes);
+  }
 };
 
 export const stylesheet = true;

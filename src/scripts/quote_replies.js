@@ -88,9 +88,14 @@ const quoteReply = async ({ id, summary, name, uuid, timestamp }) => {
     ...tagReplyingBlog ? [reply.blog.name] : []
   ].join(',');
 
-  const { response: { id: responseId } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
+  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
   await browser.storage.local.set({ [storageKey]: responseId });
-  window.open(`/blog/${name}/drafts`);
+
+  const openedTab = window.open(`/blog/${name}/drafts`);
+  if (openedTab === null) {
+    browser.storage.local.remove(storageKey);
+    notify(displayText);
+  }
 };
 
 const showError = exception => notify(exception.body?.errors?.[0]?.detail || exception.message);

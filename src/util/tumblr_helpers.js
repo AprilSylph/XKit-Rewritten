@@ -7,16 +7,8 @@ import { inject } from './inject.js';
  */
 export const apiFetch = async function (...args) {
   return inject(
-    async (resource, init) => {
-      // make sure init is an object we can modify
-      if (typeof init !== 'object' || init === null) {
-        init = {};
-      }
-
-      // make sure init.headers is an object we can modify
-      if (typeof init.headers !== 'object' || init.headers === null) {
-        init.headers = {};
-      }
+    async (resource, init = {}) => {
+      init.headers ??= {}; 
 
       // make sure every API request we make is telling Tumblr that we're XKit
       init.headers['X-XKit'] = '1';

@@ -1,9 +1,16 @@
 {
   "title": "Quote Replies",
-  "description": "Reply to replies from Activity",
+  "description": "Reply to replies from the Activity page",
   "icon": {
     "class_name": "ri-chat-quote-line",
     "color": "white",
     "background_color": "#00b8ff"
+  },
+  "preferences": {
+    "tagReplyingBlog": {
+      "type": "checkbox",
+      "label": "Automatically tag the quoted user",
+      "default": false
+    }
   }
 }

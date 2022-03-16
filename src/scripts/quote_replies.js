@@ -3,6 +3,7 @@ import { dom } from '../util/dom.js';
 import { inject } from '../util/inject.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
+import { getPreferences } from '../util/preferences.js';
 import { buildSvg } from '../util/remixicon.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
@@ -13,6 +14,7 @@ const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
 
 let activitySelector;
 let originalPostTag;
+let tagReplyingBlog;
 
 const getNotificationProps = function () {
   const notificationElement = document.currentScript.parentElement;
@@ -83,7 +85,7 @@ const quoteReply = async ({ id, summary, name, uuid, timestamp }) => {
   ];
   const tags = [
     ...originalPostTag ? [originalPostTag] : [],
-    reply.blog.name
+    ...tagReplyingBlog ? [reply.blog.name] : []
   ].join(',');
 
   const { response: { id: responseId } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
@@ -96,6 +98,7 @@ const showError = exception => notify(exception.body?.errors?.[0]?.detail || exc
 export const main = async function () {
   activitySelector = await resolveExpressions`${keyToCss('notification')} > ${keyToCss('activity')}`;
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
+  ({ tagReplyingBlog } = await getPreferences('quote_replies'));
 
   const notificationSelector = await resolveExpressions`section${keyToCss('notifications')} > ${keyToCss('notification')}`;
   pageModifications.register(notificationSelector, processNotifications);
@@ -116,6 +119,10 @@ export const clean = async function () {
 export const onStorageChanged = async function (changes) {
   if (Object.keys(changes).includes(originalPostTagStorageKey)) {
     ({ [originalPostTagStorageKey]: { newValue: originalPostTag } } = changes);
+  }
+
+  if (Object.keys(changes).some(key => key.startsWith('quote_replies.preferences'))) {
+    ({ tagReplyingBlog } = await getPreferences('quote_replies'));
   }
 };
 

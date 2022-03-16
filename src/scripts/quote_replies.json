@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#00b8ff"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quote-replies",
   "preferences": {
     "tagReplyingBlog": {
       "type": "checkbox",

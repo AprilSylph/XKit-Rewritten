@@ -3,7 +3,8 @@ import { pageModifications } from './mutations.js';
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 
-const excludeClass = 'xkit-post-actions-done';
+// Remove outdated post options when loading module
+$('.xkit-post-option').remove();
 
 const fakePostActions = dom('div', { class: 'xkit-post-actions' });
 const postOptions = {};
@@ -12,12 +13,11 @@ let postActionsSelector;
 let postFormButtonSelector;
 
 const addPostOptions = ([postFormButton]) => {
-  if (!postFormButton || postFormButton.classList.contains(excludeClass)) { return; }
-  postFormButton.classList.add(excludeClass);
+  if (!postFormButton) { return; }
 
   const postActions = document.querySelector(postActionsSelector);
   if (!postActions) {
-    fakePostActions.textContent = '';
+    fakePostActions.replaceChildren();
     postFormButton.parentNode.insertBefore(fakePostActions, postFormButton);
   }
 
@@ -48,7 +48,6 @@ export const registerPostOption = async function (id, { symbolId, onclick }) {
     dom('button', null, { click: onclick }, [buildSvg(symbolId)])
   ]);
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
   pageModifications.trigger(addPostOptions);
 };
 

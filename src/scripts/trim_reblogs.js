@@ -9,7 +9,6 @@ import { apiFetch } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-scissors-cut-line';
 const buttonClass = 'xkit-trim-reblogs-button';
-const excludeClass = 'xkit-trim-reblogs-done';
 
 let reblogSelector;
 
@@ -103,7 +102,10 @@ const onButtonClicked = async function ({ currentTarget }) {
   });
 };
 
-const processPosts = postElements => filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
+const processPosts = postElements => filterPostElements(postElements).forEach(async postElement => {
+  const existingButton = postElement.querySelector(`.${buttonClass}`);
+  if (existingButton !== null) { return; }
+
   const editButton = postElement.querySelector('footer a[href*="/edit/"]');
   if (!editButton) { return; }
 
@@ -123,7 +125,5 @@ export const main = async function () {
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-
   $(`.${buttonClass}`).remove();
-  $(`.${excludeClass}`).removeClass(excludeClass);
 };

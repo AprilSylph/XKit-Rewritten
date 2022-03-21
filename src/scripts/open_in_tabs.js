@@ -7,7 +7,7 @@ const onClickBlogViewLink = event => {
   const { pathname } = new URL(event.target.href);
   const [blogName, postId] = pathname.split('/').slice(3);
 
-  window.open(`https://${blogName}.tumblr.com/post/${postId}`);
+  window.open(`https://${blogName}.tumblr.com/${postId ? `post/${postId}` : ''}`);
 };
 
 export const main = async function () {

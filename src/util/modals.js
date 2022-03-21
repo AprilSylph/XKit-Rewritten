@@ -1,5 +1,8 @@
 import { dom } from './dom.js';
 
+// Remove any outdated modal when loading module
+document.getElementById('xkit-modal')?.remove();
+
 let lastFocusedElement;
 
 /**

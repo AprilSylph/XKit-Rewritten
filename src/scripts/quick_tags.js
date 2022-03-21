@@ -200,9 +200,8 @@ const processPostOptionBundleClick = function ({ target }) {
 
 const addControlButtons = function (editButtons) {
   editButtons
-    .filter(({ classList }) => classList.contains(excludeClass) === false)
+    .filter(editButton => editButton.matches(`.${buttonClass} ~ div a[href*="/edit/"]`) === false)
     .forEach(editButton => {
-      editButton.classList.add(excludeClass);
       const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
       editButton.parentNode.parentNode.insertBefore(clonedControlButton, editButton.parentNode);
     });

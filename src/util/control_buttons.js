@@ -1,6 +1,9 @@
 import { dom } from './dom.js';
 import { buildSvg } from './remixicon.js';
 
+// Remove outdated buttons when loading module
+$('.xkit-control-button-container').remove();
+
 /**
  * Create a button template that can be cloned with cloneControlButton() for inserting into the controls of a post.
  *

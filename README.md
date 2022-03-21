@@ -10,7 +10,7 @@ The enhancement suite for Tumblr's new web interface.
 
 ## Screenshots
 
-![](https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/master/assets/screenshots/1.png) | ![](https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/master/assets/screenshots/2.png) | ![](https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/master/assets/screenshots/4.png)
+![](https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/a3cffead334766a45f232382bdbfe481b6ce2187/assets/screenshots/1.png) | ![](https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/a170237968b8a31d503f25ef23803e5d4c0edc9b/assets/screenshots/2.png) | ![](https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/a170237968b8a31d503f25ef23803e5d4c0edc9b/assets/screenshots/4.png)
 -- | -- | --
 
 ## Installation

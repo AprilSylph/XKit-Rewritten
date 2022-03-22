@@ -1,0 +1,9 @@
+{
+  "title": "Mass Deleter",
+  "description": "Clear your queue",
+  "icon": {
+    "class_name": "ri-delete-bin-6-line",
+    "color": "white",
+    "background_color": "#9d318b"
+  }
+}

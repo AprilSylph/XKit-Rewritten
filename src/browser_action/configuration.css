@@ -115,8 +115,18 @@ label[for="filter"] {
   text-decoration: none;
 }
 
-.script .help:not([href]) {
+.script .help:not([href]) i {
   display: none;
+}
+
+.script .help:not([href])::before {
+  padding: 0 1ex;
+  border-radius: 1em;
+
+  background-color: orange;
+  color: rgb(var(--white));
+  content: 'New!';
+  line-height: 1.5;
 }
 
 .script .help i {

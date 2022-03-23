@@ -136,7 +136,7 @@ const showClearQueuePrompt = () => showModal({
   ],
   buttons: [
     modalCancelButton,
-    dom('button', { class: 'blue' }, { click: () => clearQueue().catch(showError) }, ['Clear it!'])
+    dom('button', { class: 'red' }, { click: () => clearQueue().catch(showError) }, ['Clear it!'])
   ]
 });
 

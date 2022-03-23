@@ -1,6 +1,6 @@
 {
   "title": "Mass Deleter",
-  "description": "Clear your queue",
+  "description": "Delete drafts or clear your queue",
   "icon": {
     "class_name": "ri-delete-bin-6-line",
     "color": "white",

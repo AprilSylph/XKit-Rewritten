@@ -94,6 +94,8 @@ const deleteDrafts = async function ({ blogName, before }) {
   let deleteCount = 0;
   let failCount = 0;
 
+  deleteCountElement.textContent = 'Deleting drafts...';
+
   while (draftIds.length !== 0) {
     const postIds = draftIds.splice(0, 100);
     await Promise.all([
@@ -178,6 +180,8 @@ const clearQueue = async function () {
 
   let deleteCount = 0;
   let failCount = 0;
+
+  deleteCountElement.textContent = 'Deleting queued posts...';
 
   while (queuedPostIds.length !== 0) {
     const postIds = queuedPostIds.splice(0, 100);

@@ -1,4 +1,5 @@
 import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
+import { keyToCss } from '../util/css_map.js';
 import { postSelector } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
@@ -15,6 +16,9 @@ const tagsClass = 'xkit-quick-tags-tags';
 let originalPostTag;
 let answerTag;
 let autoTagAsker;
+
+let controlButtonTemplate;
+let controlIconSelector;
 
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-tags' });
 const popupForm = Object.assign(document.createElement('form'), {
@@ -36,8 +40,6 @@ popupInput.addEventListener('input', doSmartQuotes);
 popupForm.appendChild(popupInput);
 
 const postOptionPopupElement = Object.assign(document.createElement('div'), { id: 'quick-tags-post-option' });
-
-let controlButtonTemplate;
 
 const storageKey = 'quick_tags.preferences.tagBundles';
 
@@ -203,7 +205,8 @@ const addControlButtons = function (editButtons) {
     .filter(editButton => editButton.matches(`.${buttonClass} ~ div a[href*="/edit/"]`) === false)
     .forEach(editButton => {
       const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
-      editButton.parentNode.parentNode.insertBefore(clonedControlButton, editButton.parentNode);
+      const controlIcon = editButton.closest(controlIconSelector);
+      controlIcon.before(clonedControlButton);
     });
 };
 
@@ -213,8 +216,9 @@ postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 
 export const main = async function () {
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
+  controlIconSelector = await keyToCss('controlIcon');
 
-  pageModifications.register(`${postSelector} footer a[href*="/edit/"]`, addControlButtons);
+  pageModifications.register(`${postSelector} footer ${controlIconSelector} a[href*="/edit/"]`, addControlButtons);
   registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });
 
   populatePopups();

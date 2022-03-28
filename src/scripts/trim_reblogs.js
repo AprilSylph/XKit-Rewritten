@@ -10,6 +10,7 @@ import { apiFetch } from '../util/tumblr_helpers.js';
 const symbolId = 'ri-scissors-cut-line';
 const buttonClass = 'xkit-trim-reblogs-button';
 
+let controlIconSelector;
 let reblogSelector;
 
 let controlButtonTemplate;
@@ -106,17 +107,19 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const existingButton = postElement.querySelector(`.${buttonClass}`);
   if (existingButton !== null) { return; }
 
-  const editButton = postElement.querySelector('footer a[href*="/edit/"]');
+  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"]`);
   if (!editButton) { return; }
 
   const { trail = [] } = await timelineObject(postElement);
   if (trail.length < 2) { return; }
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });
-  editButton.parentNode.parentNode.insertBefore(clonedControlButton, editButton.parentNode);
+  const controlIcon = editButton.closest(controlIconSelector);
+  controlIcon.before(clonedControlButton);
 });
 
 export const main = async function () {
+  controlIconSelector = await keyToCss('controlIcon');
   reblogSelector = await keyToCss('reblog');
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
 

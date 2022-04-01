@@ -17,13 +17,18 @@ const pauseGif = function (gifElement) {
     const gifLabel = document.createElement('p');
     gifLabel.className = 'xkit-gif-label';
 
-    gifElement.parentNode.prepend(canvas, gifLabel);
+    gifElement.parentNode.append(canvas, gifLabel);
   };
 };
 
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
-    if (gifElement.parentNode.querySelector('.xkit-paused-gif') !== null) {
+    const pausedGifElements = [
+      ...gifElement.parentNode.querySelectorAll('.xkit-paused-gif'),
+      ...gifElement.parentNode.querySelectorAll('.xkit-gif-label')
+    ];
+    if (pausedGifElements.length) {
+      gifElement.after(...pausedGifElements);
       return;
     }
 

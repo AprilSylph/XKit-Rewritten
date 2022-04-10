@@ -2,6 +2,24 @@ import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 import { postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
+import { inject } from './inject.js';
+import { timelineObject } from './react_props.js';
+
+const postHeaderSelector = `${postSelector} article > header`;
+
+const testHeaderElement = (selector) => {
+  const postElement = document.currentScript.parentElement;
+  const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
+  let fiber = postElement[reactKey];
+
+  while (fiber !== null) {
+    if (fiber.elementType === 'header') {
+      return fiber.stateNode.matches(selector);
+    } else {
+      fiber = fiber.return;
+    }
+  }
+};
 
 const meatballItems = {};
 
@@ -12,7 +30,7 @@ const meatballItems = {};
  * @param {string} options.id - Identifier for this button (must be unique)
  * @param {string} options.label - Button text to display
  * @param {Function} options.onclick - Button click listener function
- * @param {Function} [options.postFilter] - Filter function, called with the post element being actioned on. Must return true for button to be added
+ * @param {Function} [options.postFilter] - Filter function, called with the timelineObject data of the post element being actioned on. Must return true for button to be added
  */
 export const registerMeatballItem = function ({ id, label, onclick, postFilter }) {
   meatballItems[id] = { label, onclick, postFilter };
@@ -24,9 +42,13 @@ export const unregisterMeatballItem = id => {
   $(`[data-xkit-meatball-button="${id}"]`).remove();
 };
 
-const addMeatballItems = meatballMenuElements => meatballMenuElements.forEach(meatballMenu => {
+const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
+  const inPostHeader = await inject(testHeaderElement, [postHeaderSelector], meatballMenu);
+  if (!inPostHeader) return;
+
+  const __timelineObjectData = await timelineObject(meatballMenu);
+
   $(meatballMenu).children('[data-xkit-meatball-button]').remove();
-  const currentPost = meatballMenu.closest(postSelector);
 
   Object.keys(meatballItems).sort().forEach(id => {
     const { label, onclick, postFilter } = meatballItems[id];
@@ -39,11 +61,12 @@ const addMeatballItems = meatballMenuElements => meatballMenuElements.forEach(me
     }, [
       label
     ]);
+    meatballItemButton.__timelineObjectData = __timelineObjectData;
 
     meatballMenu.append(meatballItemButton);
 
     if (postFilter instanceof Function) {
-      const shouldShowItem = postFilter(currentPost);
+      const shouldShowItem = postFilter(__timelineObjectData);
       meatballItemButton.hidden = shouldShowItem !== true;
 
       if (shouldShowItem instanceof Promise) {
@@ -55,7 +78,6 @@ const addMeatballItems = meatballMenuElements => meatballMenuElements.forEach(me
   });
 });
 
-keyToCss('meatballMenu').then(meatballMenuSelector => pageModifications.register(
-  `${postSelector} article header ${meatballMenuSelector}`,
-  addMeatballItems
-));
+keyToCss('meatballMenu').then(meatballMenuSelector =>
+  pageModifications.register(meatballMenuSelector, addMeatballItems)
+);

@@ -1,10 +1,9 @@
-import { buildStyle, postSelector } from '../util/interface.js';
+import { buildStyle } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { pageModifications } from '../util/mutations.js';
 import { inject } from '../util/inject.js';
 import { keyToCss } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
-import { timelineObject } from '../util/react_props.js';
 import { dom } from '../util/dom.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
@@ -43,10 +42,7 @@ const unburyTargetPostIds = async (notificationSelector) => {
 const processNotifications = () => inject(unburyTargetPostIds, [notificationSelector]);
 
 const onButtonClicked = async function ({ currentTarget }) {
-  const postElement = currentTarget.closest(postSelector);
-  const { id } = postElement.dataset;
-
-  const { rebloggedRootId } = await timelineObject(postElement);
+  const { id, rebloggedRootId } = currentTarget.__timelineObjectData;
   const rootId = rebloggedRootId || id;
   const shouldBlockNotifications = blockedPostTargetIDs.includes(rootId) === false;
 
@@ -83,16 +79,12 @@ const onButtonClicked = async function ({ currentTarget }) {
   });
 };
 
-const blockPostFilter = async (postElement) => {
-  const { id } = postElement.dataset;
-  const { canEdit, rebloggedRootId } = await timelineObject(postElement);
+const blockPostFilter = async ({ id, canEdit, rebloggedRootId }) => {
   const rootId = rebloggedRootId || id;
   return canEdit && blockedPostTargetIDs.includes(rootId) === false;
 };
 
-const unblockPostFilter = async (postElement) => {
-  const { id } = postElement.dataset;
-  const { rebloggedRootId } = await timelineObject(postElement);
+const unblockPostFilter = async ({ id, rebloggedRootId }) => {
   const rootId = rebloggedRootId || id;
   return blockedPostTargetIDs.includes(rootId);
 };

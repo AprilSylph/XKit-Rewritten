@@ -46,7 +46,7 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
   const inPostHeader = await inject(testHeaderElement, [postHeaderSelector], meatballMenu);
   if (!inPostHeader) return;
 
-  const timelineObjectData = await timelineObject(meatballMenu);
+  const __timelineObjectData = await timelineObject(meatballMenu);
 
   $(meatballMenu).children('[data-xkit-meatball-button]').remove();
 
@@ -61,12 +61,12 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
     }, [
       label
     ]);
-    meatballItemButton.timelineObjectData = timelineObjectData;
+    meatballItemButton.__timelineObjectData = __timelineObjectData;
 
     meatballMenu.append(meatballItemButton);
 
     if (postFilter instanceof Function) {
-      const shouldShowItem = postFilter(timelineObjectData);
+      const shouldShowItem = postFilter(__timelineObjectData);
       meatballItemButton.hidden = shouldShowItem !== true;
 
       if (shouldShowItem instanceof Promise) {

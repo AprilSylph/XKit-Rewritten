@@ -42,7 +42,7 @@ const unburyTargetPostIds = async (notificationSelector) => {
 const processNotifications = () => inject(unburyTargetPostIds, [notificationSelector]);
 
 const onButtonClicked = async function ({ currentTarget }) {
-  const { id, rebloggedRootId } = currentTarget.timelineObjectData;
+  const { id, rebloggedRootId } = currentTarget.__timelineObjectData;
   const rootId = rebloggedRootId || id;
   const shouldBlockNotifications = blockedPostTargetIDs.includes(rootId) === false;
 

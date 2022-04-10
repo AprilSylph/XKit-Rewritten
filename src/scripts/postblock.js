@@ -28,7 +28,7 @@ const processPosts = async function (postElements) {
 };
 
 const onButtonClicked = async function ({ currentTarget }) {
-  const { id, rebloggedRootId } = currentTarget.timelineObjectData;
+  const { id, rebloggedRootId } = currentTarget.__timelineObjectData;
   const rootID = rebloggedRootId || id;
 
   showModal({

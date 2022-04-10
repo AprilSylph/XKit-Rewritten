@@ -16,7 +16,7 @@ const archiveDotOrgForm = dom('form', {
 ]);
 
 const onButtonClicked = async function ({ currentTarget }) {
-  const { postUrl } = currentTarget.timelineObjectData;
+  const { postUrl } = currentTarget.__timelineObjectData;
   const ampUrl = `${postUrl}/amp`;
 
   const archiveTodayButton = dom(

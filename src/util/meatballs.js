@@ -5,7 +5,7 @@ import { pageModifications } from './mutations.js';
 import { inject } from './inject.js';
 import { timelineObject } from './react_props.js';
 
-const postHeaderSelector = `${postSelector} article header`;
+const postHeaderSelector = `${postSelector} article > header`;
 
 const testHeaderElement = (selector) => {
   const postElement = document.currentScript.parentElement;

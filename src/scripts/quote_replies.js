@@ -72,7 +72,7 @@ const quoteReply = async ({ id, summary, name, uuid, timestamp }) => {
   if (!reply) throw new Error('No replies found on target post.');
   if (Math.floor(reply.timestamp) !== timestamp) throw new Error('Reply not found.');
 
-  const text = `@${reply.blog.name} replied to your post \u201C${summary}\u201D:`;
+  const text = `@${reply.blog.name} replied to your post \u201C${summary.replace(/\n/g, ' ')}\u201D:`;
   const formatting = [
     { start: 0, end: reply.blog.name.length + 1, type: 'mention', blog: { uuid: reply.blog.uuid } },
     { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: `https://${name}.tumblr.com/post/${id}` }

@@ -59,7 +59,7 @@ const processBackgroundGifs = function (gifBackgroundElements) {
 export const main = async function () {
   document.body.classList.add(className);
   const gifImage = await resolveExpressions`
-    :is(figure, ${keyToCss('tagImage')}) img[srcset*=".gif"]
+    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]
   `;
   pageModifications.register(gifImage, processGifs);
 

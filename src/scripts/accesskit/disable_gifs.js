@@ -1,5 +1,5 @@
 import { pageModifications } from '../../util/mutations.js';
-import { keyToCss } from '../../util/css_map.js';
+import { keyToCss, resolveExpressions } from '../../util/css_map.js';
 
 const className = 'accesskit-disable-gifs';
 
@@ -58,11 +58,14 @@ const processBackgroundGifs = function (gifBackgroundElements) {
 
 export const main = async function () {
   document.body.classList.add(className);
-  const gifImageContainer = `:is(figure, ${await keyToCss('tagImage')})`;
-  const gifImage = `${gifImageContainer} img[srcset*=".gif"]`;
+  const gifImage = await resolveExpressions`
+    :is(figure, ${keyToCss('tagImage')}) img[srcset*=".gif"]
+  `;
   pageModifications.register(gifImage, processGifs);
 
-  const gifBackgroundImage = `[style*=".gif"]${await keyToCss('communityHeaderImage')}`;
+  const gifBackgroundImage = await resolveExpressions`
+    ${keyToCss('communityHeaderImage')}[style*=".gif"]
+  `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 };
 

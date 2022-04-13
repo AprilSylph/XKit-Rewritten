@@ -71,6 +71,7 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(processGifs);
+  pageModifications.unregister(processBackgroundGifs);
   document.body.classList.remove(className);
 
   $('.xkit-paused-gif, .xkit-gif-label').remove();

@@ -64,7 +64,7 @@ export const main = async function () {
   pageModifications.register(gifImage, processGifs);
 
   const gifBackgroundImage = await resolveExpressions`
-    ${keyToCss('communityHeaderImage')}[style*=".gif"]
+    ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 };

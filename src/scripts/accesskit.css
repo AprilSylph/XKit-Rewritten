@@ -26,6 +26,14 @@
   display: none;
 }
 
+.xkit-paused-background-gif:not(:hover) {
+  background-image: none !important;
+  background-color: rgb(var(--secondary-accent));
+}
+
+.xkit-paused-background-gif:not(:hover) > div {
+  color: rgb(var(--black));
+}
 
 body.accesskit-blue-links article a[target="_blank"][href^="https://t.umblr.com/redirect"],
 body.accesskit-blue-links article a[target="_blank"][href^="https://href.li/"] {

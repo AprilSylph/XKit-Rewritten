@@ -41,11 +41,29 @@ const processGifs = function (gifElements) {
   });
 };
 
+const processBackgroundGifs = function (gifBackgroundElements) {
+  gifBackgroundElements.forEach(gifBackgroundElement => {
+    gifBackgroundElement.classList.add('xkit-paused-background-gif');
+    const pausedGifElements = [
+      ...gifBackgroundElement.querySelectorAll('.xkit-gif-label')
+    ];
+    if (pausedGifElements.length) {
+      return;
+    }
+    const gifLabel = document.createElement('p');
+    gifLabel.className = 'xkit-gif-label';
+    gifBackgroundElement.append(gifLabel);
+  });
+};
+
 export const main = async function () {
   document.body.classList.add(className);
   const gifImageContainer = `:is(figure, ${await keyToCss('tagImage')})`;
   const gifImage = `${gifImageContainer} img[srcset*=".gif"]`;
   pageModifications.register(gifImage, processGifs);
+
+  const gifBackgroundImage = `[style*=".gif"]${await keyToCss('communityHeaderImage')}`;
+  pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 };
 
 export const clean = async function () {
@@ -54,4 +72,5 @@ export const clean = async function () {
 
   $('.xkit-paused-gif, .xkit-gif-label').remove();
   $('.xkit-accesskit-disabled-gif').removeClass('xkit-accesskit-disabled-gif');
+  $('.xkit-paused-background-gif').removeClass('xkit-paused-background-gif');
 };

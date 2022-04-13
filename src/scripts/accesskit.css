@@ -21,8 +21,8 @@
   position: absolute;
 }
 
-figure:hover .xkit-paused-gif,
-figure:hover .xkit-gif-label {
+*:hover > .xkit-paused-gif,
+*:hover > .xkit-gif-label {
   display: none;
 }
 

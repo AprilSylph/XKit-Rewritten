@@ -13,22 +13,16 @@ article footer ${keyToCss('footerRow')} {
 }
 article footer ${keyToCss('controls')} {
   justify-content: flex-end;
-  padding: 0;
-  padding-right: var(--post-padding);
+  padding: 0 var(--post-padding) 0 0;
+  margin: 0 0 0 auto;
   border: none;
-  margin: 0;
 }
 article footer ${keyToCss('controlIcon')} {
   margin-left: 20px;
 }
-
 article footer ${keyToCss('noteCount')} {
   align-items: center;
   gap: var(--post-padding);
-}
-
-article footer ${keyToCss('controls')} {
-  margin-left: auto;
 }
 
 .xkit-control-button-container {

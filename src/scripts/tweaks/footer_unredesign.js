@@ -1,21 +1,33 @@
 import { keyToCss, resolveExpressions } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
-const removePaddingClass = 'xkit-footer-padding-fix';
-
 const styleElement = buildStyle();
 
 resolveExpressions`
-.${removePaddingClass} {
-  padding-bottom: 0;
+article footer ${keyToCss('footerRow')} {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+article footer ${keyToCss('controls')} {
+  justify-content: flex-end;
+  padding: 0;
+  padding-right: var(--post-padding);
+  border: none;
+  margin: 0;
+}
+article footer ${keyToCss('controlIcon')} {
+  margin-left: 20px;
 }
 
-article footer > ${keyToCss('noteCount')} {
+article footer ${keyToCss('noteCount')} {
   align-items: center;
   gap: var(--post-padding);
 }
 
-article footer > ${keyToCss('controls')} {
+article footer ${keyToCss('controls')} {
   margin-left: auto;
 }
 
@@ -48,5 +60,4 @@ export const main = async function () {
 
 export const clean = async function () {
   styleElement.remove();
-  $(`.${removePaddingClass}`).removeClass(removePaddingClass);
 };

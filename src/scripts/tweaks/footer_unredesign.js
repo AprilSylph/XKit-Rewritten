@@ -1,12 +1,7 @@
-import { keyToClasses, keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss, resolveExpressions } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
-import { pageModifications } from '../../util/mutations.js';
 
 const removePaddingClass = 'xkit-footer-padding-fix';
-
-let footerRedesignClasses;
-let footerRedesignSelector;
-let postActivityWrapperSelector;
 
 const styleElement = buildStyle();
 
@@ -47,29 +42,11 @@ article footer > ${keyToCss('controls')} {
 }
 `.then(css => { styleElement.textContent = css; });
 
-const removeFooterRedesign = elements => {
-  elements.forEach(element => {
-    element.dataset.oldClassName = element.className;
-    element.classList.remove(...footerRedesignClasses);
-    if (element.querySelector(postActivityWrapperSelector)) {
-      element.classList.add(removePaddingClass);
-    }
-  });
-};
-
 export const main = async function () {
-  footerRedesignClasses = await keyToClasses('footerRedesign');
-  footerRedesignSelector = await keyToCss('footerRedesign');
-  postActivityWrapperSelector = await keyToCss('postActivityWrapper');
-  pageModifications.register(footerRedesignSelector, removeFooterRedesign);
   document.head.append(styleElement);
 };
 
 export const clean = async function () {
   styleElement.remove();
-  pageModifications.unregister(removeFooterRedesign);
-  $('[data-old-class-name]')
-    .attr('class', function () { return this.dataset.oldClassName; })
-    .removeAttr('data-old-class-name');
   $(`.${removePaddingClass}`).removeClass(removePaddingClass);
 };

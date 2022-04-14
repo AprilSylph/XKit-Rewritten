@@ -17,16 +17,12 @@ article footer ${keyToCss('controls')} {
   margin: 0 0 0 auto;
   border: none;
 }
-article footer ${keyToCss('controlIcon')} {
+article footer ${keyToCss('controlIcon')}, .xkit-control-button-container {
   margin-left: 20px;
 }
 article footer ${keyToCss('noteCount')} {
   align-items: center;
   gap: var(--post-padding);
-}
-
-.xkit-control-button-container {
-  margin-left: 20px;
 }
 
 [role="dialog"] #quick-reblog,
@@ -48,10 +44,5 @@ article footer ${keyToCss('noteCount')} {
 }
 `.then(css => { styleElement.textContent = css; });
 
-export const main = async function () {
-  document.head.append(styleElement);
-};
-
-export const clean = async function () {
-  styleElement.remove();
-};
+export const main = async () => document.head.append(styleElement);
+export const clean = async () => styleElement.remove();

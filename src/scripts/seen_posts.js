@@ -10,33 +10,28 @@ const includeFiltered = true;
 const dimClass = 'xkit-seen-posts-seen';
 const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 
+const storageKey = 'seen_posts.seenPosts';
 let seenPosts = [];
+
+const markPosts = (postElements) => {
+  for (const postElement of postElements) {
+    const { id } = postElement.dataset;
+    if (seenPosts.includes(id)) {
+      postElement.classList.add(dimClass);
+    }
+  }
+};
 
 const dimPosts = async function (elements) {
   await exposeTimelines();
   const postElements = filterPostElements(elements, { excludeClass, timeline, includeFiltered });
+  const postIds = postElements.map(postElement => postElement.dataset.id);
+  markPosts(postElements);
 
-  for (const postElement of postElements) {
-    const { id } = postElement.dataset;
-
-    if (seenPosts.includes(id)) {
-      postElement.classList.add(dimClass);
-    }
-  }
-
-  const storageKey = 'seen_posts.seenPosts';
   ({ [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey));
+  markPosts(postElements);
 
-  for (const postElement of postElements) {
-    const { id } = postElement.dataset;
-
-    if (seenPosts.includes(id)) {
-      postElement.classList.add(dimClass);
-    } else {
-      seenPosts.push(id);
-    }
-  }
-
+  seenPosts.push(...postIds.filter(id => !seenPosts.includes(id)));
   seenPosts.splice(0, seenPosts.length - 10000);
   browser.storage.local.set({ [storageKey]: seenPosts });
 };

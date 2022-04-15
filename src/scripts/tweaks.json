@@ -50,6 +50,11 @@
       "label": "Hide the note type badges in post footers",
       "default": false
     },
+    "hide_blaze": {
+      "type": "checkbox",
+      "label": "Hide the blaze button in post footers",
+      "default": false
+    },
     "hide_filtered_posts": {
       "type": "checkbox",
       "label": "Hide filtered posts entirely",

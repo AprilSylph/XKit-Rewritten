@@ -25,12 +25,14 @@ article footer ${keyToCss('noteCount')} {
   gap: var(--post-padding);
 }
 
-[role="dialog"] #quick-reblog,
-[role="dialog"] #quick-tags {
-  top: 50% !important;
-  bottom: unset !important;
-  right: 100% !important;
-  transform: translate(-20px, -50%) !important;
+@media only screen and (max-width: 1145px) {
+  [role="dialog"] #quick-reblog,
+  [role="dialog"] #quick-tags {
+    top: 50% !important;
+    bottom: unset !important;
+    right: 100% !important;
+    transform: translate(-20px, -50%) !important;
+  }
 }
 
 @media only screen and (max-width: 650px) {

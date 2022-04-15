@@ -9,7 +9,7 @@ article footer ${keyToCss('footerRow')} {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  margin-bottom: 12px;
+  padding-bottom: 12px;
 }
 article footer ${keyToCss('controls')} {
   justify-content: flex-end;

@@ -1,6 +1,6 @@
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
-import { modalCancelButton, modalCompleteButton, showModal } from '../util/modals.js';
+import { modalCompleteButton, showModal } from '../util/modals.js';
 import { dom } from '../util/dom.js';
 
 const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, { dateStyle: 'short', timeStyle: 'short' });
@@ -23,8 +23,7 @@ const buildLimitRow = ([type, { description, limit, remaining, resetAt }]) => do
 const checkUserLimits = () => {
   showModal({
     title: 'Limit Checker',
-    message: ['Hold on while the data is fetched...'],
-    buttons: [modalCancelButton]
+    message: ['Hold on while the data is fetched...']
   });
 
   return Promise.all([apiFetch('/v2/user/limits'), sleep(1000)]);

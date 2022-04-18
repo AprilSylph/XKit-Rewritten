@@ -25,13 +25,15 @@ const markPosts = (postElements) => {
 const dimPosts = async function (elements) {
   await exposeTimelines();
   const postElements = filterPostElements(elements, { excludeClass, timeline, includeFiltered });
-  const postIds = postElements.map(postElement => postElement.dataset.id);
   markPosts(postElements);
 
   ({ [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey));
   markPosts(postElements);
 
-  seenPosts.push(...postIds.filter(id => !seenPosts.includes(id)));
+  const newPostIds = postElements
+    .map(postElement => postElement.dataset.id)
+    .filter(id => !seenPosts.includes(id));
+  seenPosts.push(...newPostIds);
   seenPosts.splice(0, seenPosts.length - 10000);
   browser.storage.local.set({ [storageKey]: seenPosts });
 };

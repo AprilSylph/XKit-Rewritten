@@ -17,7 +17,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(po
 export const main = async function () {
   document.head.append(styleElement);
   controlIconSelector = await keyToCss('controlIcon');
-  const blazeLabel = await translate('Reblog');
+  const blazeLabel = await translate('Blaze');
   blazeIconSelector = `${controlIconSelector} [aria-label="${blazeLabel}"]`;
 
   onNewPosts.addListener(processPosts);

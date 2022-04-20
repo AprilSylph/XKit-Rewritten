@@ -17,6 +17,10 @@ ${playPauseSelector} {
 ${keyToCss('postLikeHeartAnimation')} {
   display: none;
 }
+
+canvas#fire-everywhere {
+  display: none;
+}
 `.then(css => { styleElement.textContent = css; });
 
 export const main = async () => document.head.append(styleElement);

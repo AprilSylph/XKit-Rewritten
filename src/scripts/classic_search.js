@@ -3,14 +3,22 @@ import { pageModifications } from '../util/mutations.js';
 
 const excludeClass = 'xkit-classic-search-done';
 const cloneClass = 'classic-search';
-const placeholderInputId = 'classic-search-placeholder';
 
 let newTab;
 
-const replaceSearchForm = function ([searchFormElement]) {
-  searchFormElement.classList.add(`${excludeClass}`);
+const swapNodes = (first, second) => {
+  const temporary = document.createElement('div');
+  first.replaceWith(temporary);
+  second.replaceWith(first);
+  temporary.replaceWith(second);
+};
 
+const replaceSearchForm = function ([searchFormElement]) {
   const searchFormElementClone = searchFormElement.cloneNode(true);
+
+  searchFormElement.classList.add(excludeClass);
+  searchFormElementClone.classList.add(cloneClass);
+
   searchFormElementClone.addEventListener('submit', event => {
     event.preventDefault();
 
@@ -23,14 +31,10 @@ const replaceSearchForm = function ([searchFormElement]) {
       location.assign(address);
     }
   });
-  searchFormElementClone.classList.add(cloneClass);
 
-  const realInputElement = searchFormElement.querySelector('input');
+  const inputElement = searchFormElement.querySelector('input');
   const cloneInputElement = searchFormElementClone.querySelector('input');
-  const placeholderElement = Object.assign(document.createElement('div'), { id: placeholderInputId });
-
-  realInputElement.replaceWith(placeholderElement);
-  cloneInputElement.replaceWith(realInputElement);
+  swapNodes(inputElement, cloneInputElement);
 
   searchFormElement.parentNode.prepend(searchFormElementClone);
 };
@@ -44,11 +48,14 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(replaceSearchForm);
 
+  const searchFormElement = document.querySelector(`.${excludeClass}`);
   const searchFormElementClone = document.querySelector(`.${cloneClass}`);
-  const realInputElement = searchFormElementClone?.querySelector('input');
-  const placeholderElement = document.getElementById(placeholderInputId);
 
-  placeholderElement?.replaceWith(realInputElement);
+  if (searchFormElement && searchFormElementClone) {
+    const inputElement = searchFormElement.querySelector('input');
+    const cloneInputElement = searchFormElementClone.querySelector('input');
+    swapNodes(inputElement, cloneInputElement);
+  }
 
   searchFormElementClone?.remove();
   $(`.${excludeClass}`).removeClass(excludeClass);

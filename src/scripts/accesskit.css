@@ -26,7 +26,9 @@
 }
 
 *:hover > .xkit-paused-gif,
-*:hover > .xkit-paused-gif-label {
+*:hover > .xkit-gif-label,
+.xkit-paused-gif-container:hover .xkit-paused-gif,
+.xkit-paused-gif-container:hover .xkit-gif-label {
   display: none;
 }
 

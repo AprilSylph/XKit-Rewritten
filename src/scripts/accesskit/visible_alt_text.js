@@ -8,7 +8,6 @@ let mode;
 
 let imageBlockSelector;
 let imageString;
-let blockEditorContainerSelector;
 
 const styleElement = buildStyle();
 const processedClass = 'accesskit-visible-alt-text';
@@ -16,8 +15,6 @@ const processedClass = 'accesskit-visible-alt-text';
 const processImages = function (imageElements) {
   const imageBlocks = new Map();
   imageElements.forEach(imageElement => {
-    if (imageElement.closest(blockEditorContainerSelector)) return;
-
     const { alt } = imageElement;
     const imageBlock = imageElement.closest(imageBlockSelector);
     if (imageBlock !== null) imageBlocks.set(imageBlock, alt);
@@ -56,7 +53,6 @@ export const main = async function () {
   ({ visible_alt_text_mode: mode } = await getPreferences('accesskit'));
   imageBlockSelector = await keyToCss('imageBlock');
   imageString = await translate('Image');
-  blockEditorContainerSelector = await keyToCss('blockEditorContainer');
 
   const imageBlockLinkSelector = await keyToCss('imageBlockLink');
   const imageBlockButtonInnerSelector = await resolveExpressions`${keyToCss('imageBlockButton')} ${keyToCss('buttonInner')}`;

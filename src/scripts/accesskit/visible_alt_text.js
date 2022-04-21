@@ -17,7 +17,7 @@ const processImages = function (imageElements) {
   imageElements.forEach(imageElement => {
     const { alt } = imageElement;
     const imageBlock = imageElement.closest(imageBlockSelector);
-    if (imageBlock !== null) imageBlocks.set(imageBlock, alt);
+    imageBlocks.set(imageBlock, alt);
   });
 
   for (const [imageBlock, alt] of imageBlocks) {
@@ -60,7 +60,7 @@ export const main = async function () {
   styleElement.textContent = `${imageBlockLinkSelector}, ${imageBlockButtonInnerSelector} { height: 100%; }`;
   document.head.append(styleElement);
 
-  pageModifications.register('img[alt]', processImages);
+  pageModifications.register(`article ${imageBlockSelector} img[alt]`, processImages);
 
   browser.storage.onChanged.addListener(onStorageChanged);
 };

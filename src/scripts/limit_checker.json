@@ -1,0 +1,10 @@
+{
+  "title": "Limit Checker",
+  "description": "Check post limit and more",
+  "icon": {
+    "class_name": "ri-timer-line",
+    "color": "white",
+    "background_color": "#ff4930"
+  },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#limit-checker"
+}

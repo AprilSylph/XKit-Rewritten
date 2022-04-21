@@ -23,18 +23,16 @@ const pathnames = {
 export const megaEdit = async function (postIds, options) {
   const pathname = pathnames[options.mode];
 
-  if (!formKey) {
-    formKey = await fetch('https://www.tumblr.com/about').then(response => {
-      if (response.ok) {
-        return response.text();
-      } else {
-        throw Object.assign(new Error(response.status), { response });
-      }
-    }).then(responseText => {
-      const responseDocument = (new DOMParser()).parseFromString(responseText, 'text/html');
-      return responseDocument.getElementById('tumblr_form_key').getAttribute('content');
-    }).catch(console.error);
-  }
+  formKey ??= await fetch('https://www.tumblr.com/neue_web/iframe/new/text').then(response => {
+    if (response.ok) {
+      return response.text();
+    } else {
+      throw Object.assign(new Error(response.status), { response });
+    }
+  }).then(responseText => {
+    const responseDocument = (new DOMParser()).parseFromString(responseText, 'text/html');
+    return responseDocument.getElementById('tumblr_form_key').getAttribute('content');
+  }).catch(console.error);
 
   const requestBody = {
     post_ids: postIds.join(','),

@@ -5,6 +5,7 @@ const styleElement = buildStyle();
 styleElement.media = '(min-width: 990px)';
 
 const container = resolveExpressions`${keyToCss('bluespaceLayout')} > ${keyToCss('container')}`;
+const reblog = resolveExpressions`${keyToCss('post')} ${keyToCss('reblog')}`;
 const videoBlock = keyToCss('videoBlock');
 const queueSettings = keyToCss('queueSettings');
 
@@ -26,6 +27,7 @@ resolveExpressions`
   ${container} > :first-child > main article { max-width: 100%; }
   ${container} > :first-child > main article > * { max-width: 100%; }
 
+  ${reblog} { max-width: none; }
   ${videoBlock} { max-width: none; }
   ${videoBlock} iframe { max-width: none !important; }
 

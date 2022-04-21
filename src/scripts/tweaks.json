@@ -9,19 +9,14 @@
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks",
   "relatedTerms": [ "Blacklist", "Separator" ],
   "preferences": {
-    "footer_unredesign": {
-      "type": "checkbox",
-      "label": "Attempt to revert the post footer redesign",
-      "default": false
-    },
-    "hide_note_count_types": {
-      "type": "checkbox",
-      "label": "Hide the note type badges next to the note count",
-      "default": false
-    },
     "slim_filtered_screens": {
       "type": "checkbox",
       "label": "Use a slim layout for filtered posts",
+      "default": false
+    },
+    "footer_unredesign": {
+      "type": "checkbox",
+      "label": "Use a slim layout for post footers",
       "default": false
     },
     "highlight_contributed_content": {
@@ -49,6 +44,11 @@
       "label": "Hide mini-follow buttons on posts",
       "default": false,
       "inherit": "tweaks.preferences.subtle_follow"
+    },
+    "hide_note_count_types": {
+      "type": "checkbox",
+      "label": "Hide the note type badges in post footers",
+      "default": false
     },
     "hide_filtered_posts": {
       "type": "checkbox",

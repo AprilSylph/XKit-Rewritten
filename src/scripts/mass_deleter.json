@@ -1,0 +1,10 @@
+{
+  "title": "Mass Deleter",
+  "description": "Delete drafts or clear your queue",
+  "icon": {
+    "class_name": "ri-delete-bin-6-line",
+    "color": "white",
+    "background_color": "#9d318b"
+  },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#mass-deleter"
+}

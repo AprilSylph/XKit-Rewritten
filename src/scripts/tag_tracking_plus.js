@@ -1,6 +1,6 @@
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { filterPostElements } from '../util/interface.js';
-import { exposeTimelines, timelineObject } from '../util/react_props.js';
+import { timelineObject } from '../util/react_props.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { translate } from '../util/language_data.js';
@@ -28,7 +28,6 @@ const processPosts = async function (postElements) {
 
   const { [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey);
   const timeline = new RegExp(`/v2/hubs/${encodedCurrentTag}/timeline`);
-  await exposeTimelines();
 
   for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
     const { timestamp } = await timelineObject(postElement);

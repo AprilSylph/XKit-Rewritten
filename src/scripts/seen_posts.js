@@ -1,5 +1,4 @@
 import { filterPostElements } from '../util/interface.js';
-import { exposeTimelines } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 
@@ -23,7 +22,6 @@ const markPosts = (postElements) => {
 };
 
 const dimPosts = async function (elements) {
-  await exposeTimelines();
   const postElements = filterPostElements(elements, { excludeClass, timeline, includeFiltered });
   markPosts(postElements);
 

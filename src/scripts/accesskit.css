@@ -2,7 +2,6 @@
   position: absolute;
   top: 1ch;
   right: 1ch;
-  z-index: 1;
 
   height: 1em;
   padding: 5px;
@@ -20,7 +19,6 @@
 
 .xkit-paused-gif {
   position: absolute;
-  z-index: 1;
 }
 
 figure:hover .xkit-paused-gif,
@@ -61,8 +59,4 @@ figure.accesskit-visible-alt-text figcaption {
 
   user-select: text;
   cursor: initial;
-}
-
-:any-link figure.accesskit-visible-alt-text figcaption {
-  cursor: inherit;
 }

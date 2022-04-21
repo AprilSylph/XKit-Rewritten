@@ -9,6 +9,4 @@
 .gitattributes  export-ignore
 .gitignore      export-ignore
 
-src/lib/*                   linguist-vendored=true
-src/lib/remixicon/*         linguist-vendored=true
-src/lib/remixicon_svg.json  linguist-generated=true
+src/lib/**      linguist-vendored=true

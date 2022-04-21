@@ -1,5 +1,5 @@
 import { filterPostElements, postSelector } from '../util/interface.js';
-import { timelineObject, exposeTimelines } from '../util/react_props.js';
+import { timelineObject } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
@@ -33,57 +33,68 @@ const createButton = (textContent, onclick, mode) => {
   return button;
 };
 
-const addControls = async (timelineElement, location, disabled) => {
+const addControls = async (timelineElement, location) => {
+  const controls = Object.assign(document.createElement('div'), { className: controlsClass });
+  controls.dataset.location = location;
+
+  const firstPost = timelineElement.querySelector(postSelector);
+  location === 'blogSubscriptions'
+    ? firstPost?.before(controls)
+    : firstPost?.parentElement?.prepend(controls);
+
   const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
-    timelineElement.dataset.showOriginals = mode;
+    controls.dataset.showOriginals = mode;
 
     const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
     savedModes[location] = mode;
     browser.storage.local.set({ [storageKey]: savedModes });
   };
 
-  const controls = Object.assign(document.createElement('div'), { className: controlsClass });
-
   const onButton = createButton(await translate('Original Posts'), handleClick, 'on');
   const offButton = createButton(await translate('All posts'), handleClick, 'off');
   const disabledButton = createButton(await translate('All posts'), null, 'disabled');
 
-  controls.append(...disabled ? [disabledButton] : [onButton, offButton]);
-
-  if (location === 'blogSubscriptions') {
-    timelineElement.querySelector(postSelector)?.before(controls);
+  if (location === 'disabled') {
+    controls.append(disabledButton);
   } else {
-    timelineElement.querySelector(postSelector)?.parentElement?.prepend(controls);
+    controls.append(onButton, offButton);
+
+    lengthenTimeline(timelineElement);
+    const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
+    const mode = savedModes[location] ?? 'on';
+    controls.dataset.showOriginals = mode;
   }
 };
 
+const getLocation = timelineElement => {
+  const { timeline, which } = timelineElement.dataset;
+
+  const isInPeepr = getComputedStyle(timelineElement).getPropertyValue('--blog-title-color') !== '';
+  const isSinglePostPeepr = timeline.includes('permalink');
+
+  const on = {
+    dashboard: timeline === '/v2/timeline/dashboard',
+    peepr: isInPeepr && !isSinglePostPeepr,
+    blogSubscriptions: timeline === '/v2/timeline' && which === 'blog_subscriptions'
+  };
+  const location = Object.keys(on).find(location => on[location]);
+  const isDisabledPeeprBlog = disabledPeeprBlogs.some(name => timeline.startsWith(`/v2/blog/${name}/posts`));
+
+  if (!location || isSinglePostPeepr) return undefined;
+  if (isDisabledPeeprBlog) return 'disabled';
+  return location;
+};
+
 const processTimelines = async () => {
-  await exposeTimelines();
-  [...document.querySelectorAll('[data-timeline]')]
-    .forEach(async timelineElement => {
-      const { timeline, which } = timelineElement.dataset;
+  [...document.querySelectorAll('[data-timeline]')].forEach(async timelineElement => {
+    const location = getLocation(timelineElement);
 
-      const isInPeepr = getComputedStyle(timelineElement).getPropertyValue('--blog-title-color') !== '';
-      const isSinglePostPeepr = timeline.includes('permalink');
-
-      const on = {
-        dashboard: timeline === '/v2/timeline/dashboard',
-        peepr: isInPeepr && !isSinglePostPeepr,
-        blogSubscriptions: timeline === '/v2/timeline' && which === 'blog_subscriptions'
-      };
-      const location = Object.keys(on).find(location => on[location]);
-      const isDisabledPeeprBlog = disabledPeeprBlogs.some(name => timeline.startsWith(`/v2/blog/${name}/posts`));
-
-      if (location && timelineElement.querySelector(`.${controlsClass}`) === null) {
-        addControls(timelineElement, location, isDisabledPeeprBlog);
-        if (isDisabledPeeprBlog) return;
-
-        lengthenTimeline(timelineElement);
-        const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
-        const mode = savedModes[location] ?? 'on';
-        timelineElement.dataset.showOriginals = mode;
-      }
-    });
+    const currentControls = timelineElement.querySelector(`.${controlsClass}`);
+    if (currentControls?.dataset?.location !== location) {
+      currentControls?.remove();
+      if (location) addControls(timelineElement, location);
+    }
+  });
 };
 
 const processPosts = async function (postElements) {

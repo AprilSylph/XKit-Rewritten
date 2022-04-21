@@ -1,5 +1,8 @@
 import { dom } from './dom.js';
 
+// Remove any outdated modal when loading module
+document.getElementById('xkit-modal')?.remove();
+
 let lastFocusedElement;
 
 /**
@@ -33,6 +36,7 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
 export const hideModal = () => {
   document.getElementById('xkit-modal')?.remove();
   lastFocusedElement?.focus();
+  lastFocusedElement = null;
 };
 
 export const modalCancelButton = dom('button', null, { click: hideModal }, ['Cancel']);

@@ -1,5 +1,4 @@
 import { filterPostElements } from '../util/interface.js';
-import { exposeTimelines } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
@@ -12,8 +11,6 @@ let timelineRegex;
 let footerSelector;
 
 const processPosts = async function (postElements) {
-  await exposeTimelines();
-
   filterPostElements(postElements, { excludeClass, timeline: timelineRegex }).forEach(async postElement => {
     const headerElement = postElement.querySelector('header');
     const footerElement = postElement.querySelector(footerSelector);

@@ -1,39 +1,38 @@
-import { keyToClasses, keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss, resolveExpressions } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
-import { pageModifications } from '../../util/mutations.js';
-
-const removePaddingClass = 'xkit-footer-padding-fix';
-
-let footerRedesignClasses;
-let footerRedesignSelector;
-let postActivityWrapperSelector;
 
 const styleElement = buildStyle();
 
 resolveExpressions`
-.${removePaddingClass} {
-  padding-bottom: 0;
+article footer ${keyToCss('footerRow')} {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-bottom: 12px;
 }
-
-article footer > ${keyToCss('noteCount')} {
+article footer ${keyToCss('controls')} {
+  justify-content: flex-end;
+  padding: 0 var(--post-padding) 0 0;
+  margin: 0 0 0 auto;
+  border: none;
+}
+article footer ${keyToCss('controlIcon')}, .xkit-control-button-container {
+  margin-left: 20px;
+}
+article footer ${keyToCss('noteCount')} {
   align-items: center;
   gap: var(--post-padding);
 }
 
-article footer > ${keyToCss('controls')} {
-  margin-left: auto;
-}
-
-.xkit-control-button-container {
-  margin-left: 20px;
-}
-
-[role="dialog"] #quick-reblog,
-[role="dialog"] #quick-tags {
-  top: 50% !important;
-  bottom: unset !important;
-  right: 100% !important;
-  transform: translate(-20px, -50%) !important;
+@media only screen and (max-width: 1145px) {
+  [role="dialog"] #quick-reblog,
+  [role="dialog"] #quick-tags {
+    top: 50% !important;
+    bottom: unset !important;
+    right: 100% !important;
+    transform: translate(-20px, -50%) !important;
+  }
 }
 
 @media only screen and (max-width: 650px) {
@@ -47,29 +46,5 @@ article footer > ${keyToCss('controls')} {
 }
 `.then(css => { styleElement.textContent = css; });
 
-const removeFooterRedesign = elements => {
-  elements.forEach(element => {
-    element.dataset.oldClassName = element.className;
-    element.classList.remove(...footerRedesignClasses);
-    if (element.querySelector(postActivityWrapperSelector)) {
-      element.classList.add(removePaddingClass);
-    }
-  });
-};
-
-export const main = async function () {
-  footerRedesignClasses = await keyToClasses('footerRedesign');
-  footerRedesignSelector = await keyToCss('footerRedesign');
-  postActivityWrapperSelector = await keyToCss('postActivityWrapper');
-  pageModifications.register(footerRedesignSelector, removeFooterRedesign);
-  document.head.append(styleElement);
-};
-
-export const clean = async function () {
-  styleElement.remove();
-  pageModifications.unregister(removeFooterRedesign);
-  $('[data-old-class-name]')
-    .attr('class', function () { return this.dataset.oldClassName; })
-    .removeAttr('data-old-class-name');
-  $(`.${removePaddingClass}`).removeClass(removePaddingClass);
-};
+export const main = async () => document.head.append(styleElement);
+export const clean = async () => styleElement.remove();

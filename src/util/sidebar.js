@@ -60,7 +60,11 @@ export const addSidebarItem = function ({ id, title, rows, visibility }) {
     sidebarItem.hidden = !visibility();
   }
 
-  sidebarItems.append(sidebarItem);
+  sidebarItems.replaceChildren(...[
+    ...sidebarItems.children,
+    sidebarItem
+  ].sort(({ id: firstId }, { id: secondId }) => firstId.localeCompare(secondId)));
+
   return sidebarItem;
 };
 

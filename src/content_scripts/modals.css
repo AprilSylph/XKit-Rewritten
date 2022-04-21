@@ -45,19 +45,22 @@
   font-size: 80%;
 }
 
-#xkit-modal .message form {
+#xkit-modal .message :is(form, table) {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
   width: 476px;
-  padding: 1em;
   border-radius: 8px;
 
   background-color: rgb(var(--navy));
   box-shadow: 0 0 1px rgba(var(--white-on-dark), .13);
   font-size: 1rem;
   line-height: 1.5;
+}
+
+#xkit-modal .message form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em;
 }
 
 #xkit-modal .message form label {
@@ -75,6 +78,20 @@
   width: 220px;
 
   font-size: .875rem;
+}
+
+#xkit-modal .message table {
+  border-collapse: separate;
+  border-spacing: 1ch;
+  text-align: left;
+}
+
+#xkit-modal .message table th {
+  font-weight: bold;
+}
+
+#xkit-modal .message table td[title] {
+  cursor: help;
 }
 
 #xkit-modal .buttons {

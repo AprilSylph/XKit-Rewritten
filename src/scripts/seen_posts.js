@@ -1,5 +1,4 @@
 import { filterPostElements } from '../util/interface.js';
-import { exposeTimelines } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 
@@ -13,8 +12,6 @@ const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 const dimPosts = async function (postElements) {
   const storageKey = 'seen_posts.seenPosts';
   const { [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey);
-
-  await exposeTimelines();
 
   for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
     const { id } = postElement.dataset;

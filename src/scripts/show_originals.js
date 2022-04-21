@@ -1,5 +1,5 @@
 import { filterPostElements, postSelector } from '../util/interface.js';
-import { timelineObject, exposeTimelines } from '../util/react_props.js';
+import { timelineObject } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
@@ -86,7 +86,6 @@ const getLocation = timelineElement => {
 };
 
 const processTimelines = async () => {
-  await exposeTimelines();
   [...document.querySelectorAll('[data-timeline]')].forEach(async timelineElement => {
     const location = getLocation(timelineElement);
 

@@ -1,5 +1,4 @@
 import { inject } from './inject.js';
-import { keyToCss } from './css_map.js';
 
 const timelineObjectCache = new WeakMap();
 
@@ -27,43 +26,6 @@ export const timelineObject = async function (postElement) {
     timelineObjectCache.set(postElement, inject(unburyTimelineObject, [], postElement));
   }
   return timelineObjectCache.get(postElement);
-};
-
-const unburyGivenPaths = selector => {
-  [...document.querySelectorAll(selector)].forEach(timelineElement => {
-    const reactKey = Object.keys(timelineElement).find(key => key.startsWith('__reactFiber'));
-    let fiber = timelineElement[reactKey];
-
-    while (fiber !== null) {
-      const { endpointApiRequest } = fiber.memoizedProps || {};
-      if (endpointApiRequest !== undefined) {
-        timelineElement.dataset.timeline = endpointApiRequest.givenPath;
-
-        // distinguishes between the timelines in 'secret' dashboards:
-        // tumblr.com/timeline/blog_subscriptions
-        // tumblr.com/timeline/crushes
-        // tumblr.com/timeline/what_you_missed
-        // tumblr.com/timeline/trending
-        const which = endpointApiRequest?.options?.queryParams?.which;
-        if (which) {
-          timelineElement.dataset.which = which;
-        }
-        break;
-      } else {
-        fiber = fiber.return;
-      }
-    }
-  });
-};
-
-/**
- * Adds data-timeline attributes to all timeline elements on the page, set to the buried endpointApiRequest.givenPath property
- *
- * @returns {Promise<void>} Resolves when finished
- */
-export const exposeTimelines = async () => {
-  const timelineSelector = await keyToCss('timeline');
-  return inject(unburyGivenPaths, [timelineSelector]);
 };
 
 const controlTagsInput = async ({ add, remove }) => {

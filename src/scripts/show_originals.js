@@ -1,4 +1,4 @@
-import { filterPostElements, postSelector } from '../util/interface.js';
+import { filterPostElements, postSelector, blogViewSelector } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -69,7 +69,7 @@ const addControls = async (timelineElement, location) => {
 const getLocation = timelineElement => {
   const { timeline, which } = timelineElement.dataset;
 
-  const isInPeepr = getComputedStyle(timelineElement).getPropertyValue('--blog-title-color') !== '';
+  const isInPeepr = timelineElement.matches(blogViewSelector);
   const isSinglePostPeepr = timeline.includes('permalink');
 
   const on = {

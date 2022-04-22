@@ -24,6 +24,11 @@
       "label": "Highlight contributed content on reblogs",
       "default": false
     },
+    "show_all_tags": {
+      "type": "checkbox",
+      "label": "Show every line of tags by default",
+      "default": false
+    },
     "caught_up_line": {
       "type": "checkbox",
       "label": "Turn \"You're caught up\" into a separating line",

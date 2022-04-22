@@ -17,7 +17,7 @@ let showOwnReblogs;
 let showReblogsWithContributedContent;
 let primaryBlogName;
 let whitelist;
-let disabledPeeprBlogs;
+let disabledBlogs;
 
 const lengthenTimeline = async (timeline) => {
   const paginatorSelector = await keyToCss('manualPaginatorButtons');
@@ -69,19 +69,19 @@ const addControls = async (timelineElement, location) => {
 const getLocation = timelineElement => {
   const { timeline, which } = timelineElement.dataset;
 
-  const isInPeepr = timelineElement.matches(blogViewSelector);
-  const isSinglePostPeepr = timeline.includes('permalink');
+  const isInBlogView = timelineElement.matches(blogViewSelector);
+  const isSinglePostBlogView = timeline.includes('permalink');
 
   const on = {
     dashboard: timeline === '/v2/timeline/dashboard',
-    peepr: isInPeepr && !isSinglePostPeepr,
+    peepr: isInBlogView && !isSinglePostBlogView,
     blogSubscriptions: timeline === '/v2/timeline' && which === 'blog_subscriptions'
   };
   const location = Object.keys(on).find(location => on[location]);
-  const isDisabledPeeprBlog = disabledPeeprBlogs.some(name => timeline.startsWith(`/v2/blog/${name}/posts`));
+  const isDisabledBlog = disabledBlogs.some(name => timeline.startsWith(`/v2/blog/${name}/posts`));
 
-  if (!location || isSinglePostPeepr) return undefined;
-  if (isDisabledPeeprBlog) return 'disabled';
+  if (!location || isSinglePostBlogView) return undefined;
+  if (isDisabledBlog) return 'disabled';
   return location;
 };
 
@@ -128,7 +128,7 @@ export const main = async function () {
   const nonGroupUserBlogs = (await getUserBlogs().catch(() => []))
     .filter(blog => !blog.isGroupChannel)
     .map(blog => blog.name);
-  disabledPeeprBlogs = [...whitelist, ...showOwnReblogs ? nonGroupUserBlogs : []];
+  disabledBlogs = [...whitelist, ...showOwnReblogs ? nonGroupUserBlogs : []];
   primaryBlogName = await getPrimaryBlogName().catch(() => undefined);
 
   onNewPosts.addListener(processPosts);

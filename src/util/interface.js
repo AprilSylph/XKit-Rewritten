@@ -1,12 +1,13 @@
 import { dom } from './dom.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
+export const blogViewSelector = '[style*="--blog-title-color"] *';
 
 /**
  * @typedef {object} PostFilterOptions
  * @property {string} [excludeClass] - Classname to exclude and add
  * @property {RegExp} [timeline] - Filter results to matching [data-timeline] children
- * @property {boolean} [noPeepr] - Whether to exclude posts in [role="dialog"]
+ * @property {boolean} [noPeepr] - Whether to exclude posts in the blog view modal
  * @property {boolean} [includeFiltered] - Whether to include filtered posts
  */
 
@@ -23,7 +24,7 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
   }
 
   if (noPeepr) {
-    postElements = postElements.filter(postElement => postElement.matches(`[role="dialog"] ${postSelector}`) === false);
+    postElements = postElements.filter(postElement => postElement.matches(blogViewSelector) === false);
   }
 
   if (!includeFiltered) {

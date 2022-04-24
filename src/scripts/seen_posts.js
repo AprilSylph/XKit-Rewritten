@@ -9,10 +9,10 @@ const includeFiltered = true;
 const dimClass = 'xkit-seen-posts-seen';
 const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 
-const dimPosts = async function (postElements) {
-  const storageKey = 'seen_posts.seenPosts';
-  const { [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey);
+const storageKey = 'seen_posts.seenPosts';
+let seenPosts = [];
 
+const dimPosts = function (postElements) {
   for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
     const { id } = postElement.dataset;
 
@@ -29,16 +29,25 @@ const dimPosts = async function (postElements) {
 };
 
 export const onStorageChanged = async function (changes, areaName) {
-  const { 'seen_posts.preferences.onlyDimAvatars': onlyDimAvatarsChanges } = changes;
+  const {
+    'seen_posts.preferences.onlyDimAvatars': onlyDimAvatarsChanges,
+    [storageKey]: seenPostsChanges
+  } = changes;
 
   if (onlyDimAvatarsChanges && onlyDimAvatarsChanges.oldValue !== undefined) {
     const { newValue: onlyDimAvatars } = onlyDimAvatarsChanges;
     const addOrRemove = onlyDimAvatars ? 'add' : 'remove';
     document.body.classList[addOrRemove](onlyDimAvatarsClass);
   }
+
+  if (seenPostsChanges) {
+    ({ newValue: seenPosts } = seenPostsChanges);
+  }
 };
 
 export const main = async function () {
+  ({ [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey));
+
   const { onlyDimAvatars } = await getPreferences('seen_posts');
   if (onlyDimAvatars) {
     document.body.classList.add(onlyDimAvatarsClass);

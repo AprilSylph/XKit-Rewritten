@@ -4,7 +4,7 @@ import { buildStyle } from '../../util/interface.js';
 const styleElement = buildStyle();
 resolveExpressions`
 ${keyToCss('tags')}${keyToCss('collapsed')} {
-  max-height: inherit;
+  max-height: none;
 }
 ${keyToCss('seeAll')} {
   display: none;

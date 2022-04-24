@@ -10,7 +10,7 @@ let maxHeight;
 let tagsSelector;
 
 const excludeClass = 'xkit-shorten-posts-done';
-const noPeepr = true;
+const noBlogView = true;
 
 const shortenClass = 'xkit-shorten-posts-shortened';
 const tagsClass = 'xkit-shorten-posts-tags';
@@ -35,7 +35,7 @@ const unshortenOnClick = ({ currentTarget }) => {
   currentTarget.remove();
 };
 
-const shortenPosts = postElements => filterPostElements(postElements, { excludeClass, noPeepr }).forEach(postElement => {
+const shortenPosts = postElements => filterPostElements(postElements, { excludeClass, noBlogView }).forEach(postElement => {
   if (postElement.getBoundingClientRect().height > (window.innerHeight * maxHeight)) {
     postElement.classList.add(shortenClass);
 

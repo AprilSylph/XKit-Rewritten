@@ -9,7 +9,7 @@
     "webstore-upload": "chrome-webstore-upload upload --source=src/ --auto-publish"
   },
   "devDependencies": {
-    "chrome-webstore-upload-cli": "^2.0.1",
+    "chrome-webstore-upload-cli": "^2.1.0",
     "eslint": "^7.32.0",
     "eslint-config-semistandard": "^16.0.0",
     "eslint-config-standard": "^16.0.3",

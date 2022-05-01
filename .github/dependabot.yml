@@ -4,9 +4,13 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+      time: "09:00"
+      timezone: "Europe/London"
     labels: [ ]
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "monthly"
+      time: "09:00"
+      timezone: "Europe/London"
     labels: [ ]

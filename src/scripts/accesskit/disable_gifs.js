@@ -15,7 +15,7 @@ const pauseGif = function (gifElement) {
     canvas.getContext('2d').drawImage(image, 0, 0);
 
     const gifLabel = document.createElement('p');
-    gifLabel.className = 'xkit-gif-label';
+    gifLabel.className = 'xkit-paused-gif-label';
 
     gifElement.parentNode.append(canvas, gifLabel);
   };
@@ -25,7 +25,7 @@ const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
     const pausedGifElements = [
       ...gifElement.parentNode.querySelectorAll('.xkit-paused-gif'),
-      ...gifElement.parentNode.querySelectorAll('.xkit-gif-label')
+      ...gifElement.parentNode.querySelectorAll('.xkit-paused-gif-label')
     ];
     if (pausedGifElements.length) {
       gifElement.after(...pausedGifElements);
@@ -49,6 +49,6 @@ export const clean = async function () {
   pageModifications.unregister(processGifs);
   document.body.classList.remove(className);
 
-  $('.xkit-paused-gif, .xkit-gif-label').remove();
+  $('.xkit-paused-gif, .xkit-paused-gif-label').remove();
   $('.xkit-accesskit-disabled-gif').removeClass('xkit-accesskit-disabled-gif');
 };

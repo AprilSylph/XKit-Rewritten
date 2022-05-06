@@ -45,13 +45,13 @@ const processBackgroundGifs = function (gifBackgroundElements) {
   gifBackgroundElements.forEach(gifBackgroundElement => {
     gifBackgroundElement.classList.add('xkit-paused-background-gif');
     const pausedGifElements = [
-      ...gifBackgroundElement.querySelectorAll('.xkit-gif-label')
+      ...gifBackgroundElement.querySelectorAll('.xkit-paused-gif-label')
     ];
     if (pausedGifElements.length) {
       return;
     }
     const gifLabel = document.createElement('p');
-    gifLabel.className = 'xkit-gif-label';
+    gifLabel.className = 'xkit-paused-gif-label';
     gifBackgroundElement.append(gifLabel);
   });
 };

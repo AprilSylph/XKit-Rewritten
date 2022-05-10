@@ -5,6 +5,7 @@ import { getPrimaryBlogName } from '../util/user.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
+import { getPreferences } from '../util/preferences.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
 const mutualsClass = 'from-mutual';
@@ -17,6 +18,7 @@ const mutuals = {};
 
 let primaryBlogName;
 let postAttributionSelector;
+let showOnlyMutuals;
 let icon;
 
 const alreadyProcessed = postElement =>
@@ -58,11 +60,16 @@ const addIcons = function (postElements) {
     if (isMutual) {
       postElement.classList.add(mutualsClass);
       postAttribution.prepend(icon.cloneNode(true));
+    } else  if(showOnlyMutuals){
+      postElement.classList.add('no-mutual');
+    } else if(!showOnlyMutuals){
+      postElement.classList.remove('no-mutual');
     }
   });
 };
 
 export const main = async function () {
+  ({ showOnlyMutuals } = await getPreferences('mutual_checker'));
   primaryBlogName = await getPrimaryBlogName();
   following[primaryBlogName] = Promise.resolve(false);
 

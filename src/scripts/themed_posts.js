@@ -7,6 +7,8 @@ const styleElement = buildStyle();
 const blogs = new Set();
 let blacklist;
 
+const defaultBackgroundColor = '#FAFAFA';
+
 const hexToRGB = (hex) => {
   const chars = hex.replace('#', '').split('');
   const splitnum = chars.length > 3 ? 2 : 1;
@@ -26,12 +28,19 @@ const processPosts = async function (postElements) {
 
     if (blacklist.includes(name)) return;
 
+    let backgroundColorHex = hexToRGB(backgroundColor);
+    const titleColorHex = hexToRGB(titleColor);
+
+    if (backgroundColor === defaultBackgroundColor) {
+      backgroundColorHex = '255, 255, 255';
+    }
+
     if (!blogs.has(name)) {
       blogs.add(name);
       styleElement.textContent += `
         [data-xkit-themed="${name}"] {
-          --white: ${hexToRGB(backgroundColor)};
-          --black: ${hexToRGB(titleColor)};
+          --white: ${backgroundColorHex};
+          --black: ${titleColorHex};
         }
       `;
     }

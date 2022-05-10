@@ -7,6 +7,8 @@ import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 
+const alreadyRebloggedClass = 'alreadyReblogged';
+
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-reblog' });
 const blogSelector = document.createElement('select');
 const commentInput = Object.assign(document.createElement('input'), {
@@ -133,6 +135,7 @@ const removePopupOnLeave = () => {
 const makeButtonReblogged = ({ buttonDiv, state }) => {
   ['published', 'queue', 'draft'].forEach(className => buttonDiv.classList.remove(className));
   buttonDiv.classList.add(state);
+  buttonDiv.closest(postSelector)?.classList?.add(alreadyRebloggedClass);
 };
 
 const reblogPost = async function ({ currentTarget }) {
@@ -320,6 +323,8 @@ export const main = async function () {
 };
 
 export const clean = async function () {
+  $(`.${alreadyRebloggedClass}`).removeClass(alreadyRebloggedClass);
+
   $(document.body).off('mouseenter', `${postSelector} footer a[href*="/reblog/"]`, showPopupOnHover);
   popupElement.remove();
 

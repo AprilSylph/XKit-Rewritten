@@ -60,7 +60,7 @@ const addIcons = function (postElements) {
     if (isMutual) {
       postElement.classList.add(mutualsClass);
       postAttribution.prepend(icon.cloneNode(true));
-    } else if(showOnlyMutuals) {
+    } else if (showOnlyMutuals) {
       postElement.classList.add('no-mutual');
     } else if (!showOnlyMutuals) {
       postElement.classList.remove('no-mutual');

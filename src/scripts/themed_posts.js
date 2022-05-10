@@ -29,13 +29,13 @@ const processPosts = async function (postElements) {
     if (!blogs.has(name)) {
       blogs.add(name);
       styleElement.textContent += `
-        .xkit-themed-${name} {
+        [data-xkit-themed="${name}"] {
           --white: ${hexToRGB(backgroundColor)};
           --black: ${hexToRGB(titleColor)};
         }
       `;
     }
-    postElement.classList.add(`xkit-themed-${name}`);
+    postElement.dataset.xkitThemed = name;
   });
 };
 
@@ -47,9 +47,9 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  blogs.forEach(name => $(`.xkit-themed-${name}`).removeAttr(`xkit-themed-${name}`));
-  blogs.clear();
+  $('[data-xkit-themed]').removeAttr('data-xkit-themed');
   styleElement.remove();
+  blogs.clear();
   styleElement.textContent = '';
   onNewPosts.removeListener(processPosts);
 };

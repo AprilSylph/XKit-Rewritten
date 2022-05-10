@@ -1,12 +1,13 @@
 import { dom } from './dom.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
+export const blogViewSelector = '[style*="--blog-title-color"] *';
 
 /**
  * @typedef {object} PostFilterOptions
  * @property {string} [excludeClass] - Classname to exclude and add
  * @property {RegExp} [timeline] - Filter results to matching [data-timeline] children
- * @property {boolean} [noPeepr] - Whether to exclude posts in [role="dialog"]
+ * @property {boolean} [noBlogView] - Whether to exclude posts in the blog view modal
  * @property {boolean} [includeFiltered] - Whether to include filtered posts
  */
 
@@ -15,15 +16,15 @@ export const postSelector = '[tabindex="-1"][data-id]';
  * @param {PostFilterOptions} [postFilterOptions] - Post filter options
  * @returns {HTMLDivElement[]} Matching post elements
  */
-export const filterPostElements = function (postElements, { excludeClass, timeline, noPeepr = false, includeFiltered = false } = {}) {
+export const filterPostElements = function (postElements, { excludeClass, timeline, noBlogView = false, includeFiltered = false } = {}) {
   postElements = postElements.map(element => element.closest(postSelector)).filter(Boolean);
 
   if (timeline instanceof RegExp) {
     postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]')?.dataset.timeline));
   }
 
-  if (noPeepr) {
-    postElements = postElements.filter(postElement => postElement.matches(`[role="dialog"] ${postSelector}`) === false);
+  if (noBlogView) {
+    postElements = postElements.filter(postElement => postElement.matches(blogViewSelector) === false);
   }
 
   if (!includeFiltered) {

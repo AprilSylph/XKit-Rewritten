@@ -1,4 +1,4 @@
-.xkit-gif-label {
+.xkit-paused-gif-label {
   position: absolute;
   top: 1ch;
   right: 1ch;
@@ -13,7 +13,7 @@
   line-height: 1em;
 }
 
-.xkit-gif-label::before {
+.xkit-paused-gif-label::before {
   content: "GIF";
 }
 
@@ -22,7 +22,7 @@
 }
 
 figure:hover .xkit-paused-gif,
-figure:hover .xkit-gif-label {
+figure:hover .xkit-paused-gif-label {
   display: none;
 }
 

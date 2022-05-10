@@ -1,4 +1,4 @@
-import { buildStyle, filterPostElements } from '../util/interface.js';
+import { buildStyle, filterPostElements, blogViewSelector } from '../util/interface.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { timelineObject } from '../util/react_props.js';
@@ -19,7 +19,7 @@ const hexToRGB = (hex) => {
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
-    if (postElement.matches('[style*="--blog-title-color"] *')) return;
+    if (postElement.matches(blogViewSelector)) return;
 
     const { blog: { name, theme: { backgroundColor, titleColor } } } =
       await timelineObject(postElement);

@@ -91,8 +91,20 @@ const doSmartQuotes = ({ currentTarget }) => {
     .replace(/"/g, '\u201D');
 };
 
+const checkLength = ({ currentTarget }) => {
+  const { value } = currentTarget;
+  const tags = value.split(',').map(tag => tag.trim());
+  if (tags.some(tag => tag.length > 140)) {
+    tagsInput.setCustomValidity('Tag is longer than 140 characters!');
+    tagsInput.reportValidity();
+  } else {
+    tagsInput.setCustomValidity('');
+  }
+};
+
 tagsInput.addEventListener('input', updateTagSuggestions);
 tagsInput.addEventListener('input', doSmartQuotes);
+tagsInput.addEventListener('input', checkLength);
 
 const showPopupOnHover = ({ currentTarget }) => {
   clearTimeout(timeoutID);

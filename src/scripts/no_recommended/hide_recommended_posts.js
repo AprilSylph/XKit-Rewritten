@@ -7,7 +7,7 @@ const hiddenClass = 'xkit-no-recommended-posts-hidden';
 const timeline = /\/v2\/timeline\/dashboard/;
 const includeFiltered = true;
 
-const styleElement = buildStyle(`.${hiddenClass} article { display: none; }`);
+const styleElement = buildStyle(`.${hiddenClass} > * { display: none; }`);
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { excludeClass, timeline, includeFiltered }).forEach(async postElement => {

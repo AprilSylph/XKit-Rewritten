@@ -7,7 +7,7 @@ const excludeClass = 'xkit-tweaks-hide-my-posts-done';
 const timeline = /\/v2\/timeline\/dashboard/;
 
 const hiddenClass = 'xkit-tweaks-hide-my-posts-hidden';
-const styleElement = buildStyle(`.${hiddenClass} article { display: none; }`);
+const styleElement = buildStyle(`.${hiddenClass} > * { display: none; }`);
 
 let primaryBlogName;
 

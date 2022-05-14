@@ -28,19 +28,19 @@ const processPosts = async function (postElements) {
 
     if (blacklist.includes(name)) return;
 
-    let backgroundColorHex = hexToRGB(backgroundColor);
-    const titleColorHex = hexToRGB(titleColor);
+    let backgroundColorRGB = hexToRGB(backgroundColor);
+    const titleColorRGB = hexToRGB(titleColor);
 
     if (backgroundColor === defaultBackgroundColor) {
-      backgroundColorHex = '255, 255, 255';
+      backgroundColorRGB = '255, 255, 255';
     }
 
     if (!blogs.has(name)) {
       blogs.add(name);
       styleElement.textContent += `
         [data-xkit-themed="${name}"] {
-          --white: ${backgroundColorHex};
-          --black: ${titleColorHex};
+          --white: ${backgroundColorRGB};
+          --black: ${titleColorRGB};
         }
       `;
     }
@@ -56,9 +56,12 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  $('[data-xkit-themed]').removeAttr('data-xkit-themed');
-  styleElement.remove();
-  blogs.clear();
-  styleElement.textContent = '';
   onNewPosts.removeListener(processPosts);
+
+  styleElement.remove();
+  styleElement.textContent = '';
+
+  $('[data-xkit-themed]').removeAttr('data-xkit-themed');
+
+  blogs.clear();
 };

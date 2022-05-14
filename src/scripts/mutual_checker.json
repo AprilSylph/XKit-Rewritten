@@ -10,7 +10,7 @@
   "preferences": {
     "showOnlyMutuals": {
       "type": "checkbox",
-      "label": "Only show mutuals on dashboard",
+      "label": "Only show posts from mutuals on dashboard",
       "default": false
     }
   }

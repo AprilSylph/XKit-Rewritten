@@ -63,9 +63,10 @@ const addIcons = function (postElements) {
       postAttribution.prepend(icon.cloneNode(true));
     } else if (showOnlyMutuals) {
       postElement.classList.add(hiddenClass);
-    } else if (!showOnlyMutuals) {
-      postElement.classList.remove(hiddenClass);
     }
+    // else if (!showOnlyMutuals) {
+    //  postElement.classList.remove(hiddenClass);
+    //}
   });
 };
 
@@ -95,6 +96,7 @@ export const clean = async function () {
   onNewPosts.removeListener(addIcons);
 
   $(`.${mutualsClass}`).removeClass(mutualsClass);
+  $(`.${hiddenClass}`).removeClass(hiddenClass);
   $(`.${mutualIconClass}`).remove();
 };
 

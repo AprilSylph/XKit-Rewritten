@@ -64,9 +64,6 @@ const addIcons = function (postElements) {
     } else if (showOnlyMutuals) {
       postElement.classList.add(hiddenClass);
     }
-    // else if (!showOnlyMutuals) {
-    //  postElement.classList.remove(hiddenClass);
-    //}
   });
 };
 

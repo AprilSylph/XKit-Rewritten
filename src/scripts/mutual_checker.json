@@ -6,5 +6,12 @@
     "color": "white",
     "background_color": "#777777"
   },
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#mutual-checker"
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#mutual-checker",
+  "preferences": {
+    "showOnlyMutuals": {
+      "type": "checkbox",
+      "label": "Only show posts from mutuals on the dashboard",
+      "default": false
+    }
+  }
 }

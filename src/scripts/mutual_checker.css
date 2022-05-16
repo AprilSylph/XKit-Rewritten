@@ -6,3 +6,7 @@ svg.xkit-mutual-icon {
   margin-left: 0;
 	margin-right: 0.5ch;
 }
+
+[data-timeline="/v2/timeline/dashboard"] .xkit-mutual-checker-hidden article {
+  display: none;
+}

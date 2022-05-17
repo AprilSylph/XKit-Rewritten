@@ -65,6 +65,11 @@
       "label": "Hide my own posts on the dashboard",
       "default": false
     },
+    "hide_liked_posts": {
+      "type": "checkbox",
+      "label": "Hide posts that I've liked on the dashboard",
+      "default": false
+    },
     "hide_follower_counts": {
       "type": "checkbox",
       "label": "Hide my follower count where possible",

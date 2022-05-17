@@ -1,10 +1,10 @@
 import { filterPostElements, postSelector, blogViewSelector } from '../util/interface.js';
-import { timelineObject } from '../util/react_props.js';
+import { isMyPost, timelineObject } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
-import { getPrimaryBlogName, getUserBlogs } from '../util/user.js';
+import { getUserBlogs } from '../util/user.js';
 
 const hiddenClass = 'xkit-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
@@ -15,7 +15,6 @@ const includeFiltered = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
-let primaryBlogName;
 let whitelist;
 let disabledBlogs;
 
@@ -102,13 +101,11 @@ const processPosts = async function (postElements) {
 
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {
-      const { rebloggedRootId, canEdit, content, blogName, isSubmission, postAuthor } =
-        await timelineObject(postElement);
-
-      const isMyPost = canEdit && (isSubmission || postAuthor === primaryBlogName || postAuthor === undefined);
+      const { rebloggedRootId, content, blogName } = await timelineObject(postElement);
+      const myPost = await isMyPost(postElement);
 
       if (!rebloggedRootId) { return; }
-      if (showOwnReblogs && isMyPost) { return; }
+      if (showOwnReblogs && myPost) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
       if (whitelist.includes(blogName)) { return; }
 
@@ -129,7 +126,6 @@ export const main = async function () {
     .filter(blog => !blog.isGroupChannel)
     .map(blog => blog.name);
   disabledBlogs = [...whitelist, ...showOwnReblogs ? nonGroupUserBlogs : []];
-  primaryBlogName = await getPrimaryBlogName().catch(() => undefined);
 
   onNewPosts.addListener(processPosts);
 };

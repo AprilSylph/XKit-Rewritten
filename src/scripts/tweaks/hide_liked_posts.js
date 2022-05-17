@@ -1,7 +1,6 @@
-import { getPrimaryBlogName } from '../../util/user.js';
 import { onNewPosts } from '../../util/mutations.js';
 import { buildStyle, filterPostElements } from '../../util/interface.js';
-import { timelineObject } from '../../util/react_props.js';
+import { isMyPost } from '../../util/react_props.js';
 import { keyToCss, resolveExpressions } from '../../util/css_map.js';
 
 const timeline = /\/v2\/timeline\/dashboard/;
@@ -9,22 +8,19 @@ const timeline = /\/v2\/timeline\/dashboard/;
 const hiddenClass = 'xkit-tweaks-hide-liked-posts-hidden';
 const styleElement = buildStyle(`.${hiddenClass} article { display: none; }`);
 
-let primaryBlogName;
 let likedSelector;
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { timeline }).forEach(async postElement => {
-    const { canEdit, isSubmission, postAuthor } = await timelineObject(postElement);
-    const isMyPost = canEdit && (isSubmission || postAuthor === primaryBlogName || postAuthor === undefined);
+    const myPost = await isMyPost(postElement);
 
-    if (postElement.querySelector(likedSelector) && isMyPost === false) {
+    if (postElement.querySelector(likedSelector) && myPost === false) {
       postElement.classList.add(hiddenClass);
     }
   });
 };
 
 export const main = async function () {
-  primaryBlogName = await getPrimaryBlogName();
   likedSelector = await resolveExpressions`footer ${keyToCss('liked')}`;
 
   onNewPosts.addListener(processPosts);

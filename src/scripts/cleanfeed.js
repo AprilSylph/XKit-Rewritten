@@ -40,8 +40,9 @@ export const main = async function () {
   ({ blockingMode, localFlagging } = await getPreferences('cleanfeed'));
   localFlaggedBlogs = localFlagging.split(',').map(username => username.trim());
 
-  const avatarText = await translate('Avatar');
-  styleElement.textContent = localFlaggedBlogs.map(username => `[title="${username}"] img[alt="${avatarText}"] { filter: blur(20px); }`).join('');
+  styleElement.textContent = localFlaggedBlogs
+    .map(username => `[title="${username}"] img[alt="${translate('Avatar')}"] { filter: blur(20px); }`)
+    .join('');
   document.head.append(styleElement);
 
   reblogSelector = await keyToCss('reblog');

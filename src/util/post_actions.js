@@ -9,13 +9,10 @@ $('.xkit-post-option').remove();
 const fakePostActions = dom('div', { class: 'xkit-post-actions' });
 const postOptions = {};
 
-let postActionsSelector;
-let postFormButtonSelector;
-
 const addPostOptions = ([postFormButton]) => {
   if (!postFormButton) { return; }
 
-  const postActions = document.querySelector(postActionsSelector);
+  const postActions = document.querySelector(keyToCss('postActions'));
   if (!postActions) {
     fakePostActions.replaceChildren();
     postFormButton.parentNode.insertBefore(fakePostActions, postFormButton);
@@ -27,13 +24,7 @@ const addPostOptions = ([postFormButton]) => {
     if (!target.contains(postOption)) { target.prepend(postOption); }
   });
 };
-
-(async () => {
-  postActionsSelector = await keyToCss('postActions');
-  postFormButtonSelector = await keyToCss('postFormButton');
-
-  pageModifications.register(postFormButtonSelector, addPostOptions);
-})();
+pageModifications.register(keyToCss('postFormButton'), addPostOptions);
 
 /**
  * Create and register a button to add to the new post form

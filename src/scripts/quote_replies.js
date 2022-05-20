@@ -1,4 +1,4 @@
-import { keyToCss, resolveExpressions } from '../util/css_map.js';
+import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { inject } from '../util/inject.js';
 import { pageModifications } from '../util/mutations.js';
@@ -12,7 +12,6 @@ const buttonClass = 'xkit-quote-replies';
 
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
 
-let activitySelector;
 let originalPostTag;
 let tagReplyingBlog;
 
@@ -43,7 +42,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
 
   if (type !== 'reply') return;
 
-  const activityElement = notification.querySelector(activitySelector);
+  const activityElement = notification.querySelector(`${keyToCss('notification')} > ${keyToCss('activity')}`);
   if (!activityElement) return;
 
   activityElement.after(dom(
@@ -101,11 +100,10 @@ const quoteReply = async ({ id, summary, name, uuid, timestamp }) => {
 const showError = exception => notify(exception.body?.errors?.[0]?.detail || exception.message);
 
 export const main = async function () {
-  activitySelector = await resolveExpressions`${keyToCss('notification')} > ${keyToCss('activity')}`;
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
   ({ tagReplyingBlog } = await getPreferences('quote_replies'));
 
-  const notificationSelector = await resolveExpressions`section${keyToCss('notifications')} > ${keyToCss('notification')}`;
+  const notificationSelector = `section${keyToCss('notifications')} > ${keyToCss('notification')}`;
   pageModifications.register(notificationSelector, processNotifications);
 
   const { [storageKey]: responseId } = await browser.storage.local.get(storageKey);

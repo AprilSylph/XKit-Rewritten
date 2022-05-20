@@ -1,22 +1,22 @@
-import { keyToClasses, keyToCss, resolveExpressions } from '../util/css_map.js';
+import { keyToClasses, keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { pageModifications } from '../util/mutations.js';
 import { buildStyle } from '../util/interface.js';
 
 const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
 
-let knightRiderLoaderSelector;
+const knightRiderLoaderSelector = `main ${keyToCss('loader')} ${keyToCss('knightRiderLoader')}`;
+
 let scrollToBottomButton;
 let scrollToBottomIcon;
 let active = false;
 
-const styleElement = buildStyle();
-resolveExpressions`
+const styleElement = buildStyle(`
   ${keyToCss('isPeeprShowing')} #${scrollToBottomButtonId} {
     opacity: 0;
     pointer-events: none;
   }
-`.then(css => { styleElement.textContent = css; });
+`);
 
 const scrollToBottom = () => {
   window.scrollTo({ top: document.documentElement.scrollHeight });
@@ -52,10 +52,8 @@ const checkForButtonRemoved = () => {
 
 const addButtonToPage = async function ([scrollToTopButton]) {
   if (!scrollToBottomButton) {
-    const hiddenClasses = await keyToClasses('hidden');
-
     scrollToBottomButton = scrollToTopButton.cloneNode(true);
-    hiddenClasses.forEach(className => scrollToBottomButton.classList.remove(className));
+    keyToClasses('hidden').forEach(className => scrollToBottomButton.classList.remove(className));
     scrollToBottomButton.removeAttribute('aria-label');
     scrollToBottomButton.style.marginTop = '0.5ch';
     scrollToBottomButton.style.transform = 'rotate(180deg)';
@@ -73,8 +71,6 @@ const addButtonToPage = async function ([scrollToTopButton]) {
 };
 
 export const main = async function () {
-  knightRiderLoaderSelector = await resolveExpressions`main ${keyToCss('loader')} ${keyToCss('knightRiderLoader')}`;
-
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
   document.head.append(styleElement);
 };

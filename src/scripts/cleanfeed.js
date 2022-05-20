@@ -13,7 +13,6 @@ let blockingMode;
 let localFlagging;
 
 let localFlaggedBlogs;
-let reblogSelector;
 
 const processPosts = postElements => filterPostElements(postElements).forEach(async postElement => {
   if (blockingMode === 'all') {
@@ -28,7 +27,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
     return;
   }
 
-  const reblogs = postElement.querySelectorAll(reblogSelector);
+  const reblogs = postElement.querySelectorAll(keyToCss('reblog'));
   trail.forEach((trailItem, i) => {
     if (trailItem.blog?.isAdult || localFlaggedBlogs.includes(trailItem.blog?.name)) {
       reblogs[i].classList.add(hiddenClass);
@@ -45,7 +44,6 @@ export const main = async function () {
     .join('');
   document.head.append(styleElement);
 
-  reblogSelector = await keyToCss('reblog');
   onNewPosts.addListener(processPosts);
 };
 

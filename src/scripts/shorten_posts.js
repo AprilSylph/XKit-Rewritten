@@ -7,8 +7,6 @@ import { dom } from '../util/dom.js';
 let showTags;
 let maxHeight;
 
-let tagsSelector;
-
 const excludeClass = 'xkit-shorten-posts-done';
 const noBlogView = true;
 
@@ -40,7 +38,7 @@ const shortenPosts = postElements => filterPostElements(postElements, { excludeC
     postElement.classList.add(shortenClass);
 
     if (showTags) {
-      const tagsElement = postElement.querySelector(tagsSelector);
+      const tagsElement = postElement.querySelector(keyToCss('tags'));
       if (tagsElement) {
         const tagsClone = tagsElement.cloneNode(true);
         tagsClone.classList.add(tagsClass);
@@ -60,8 +58,6 @@ export const main = async function () {
 
   styleElement.textContent = `body { --xkit-shorten-posts-max-height: ${maxHeight}; }`;
   document.head.append(styleElement);
-
-  tagsSelector = await keyToCss('tags');
 
   onNewPosts.addListener(shortenPosts);
 };

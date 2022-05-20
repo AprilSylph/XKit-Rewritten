@@ -8,12 +8,11 @@ const wrapperClass = 'xkit-collapsed-queue-wrapper';
 const containerClass = 'xkit-collapsed-queue-container';
 
 let timelineRegex;
-let footerSelector;
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { excludeClass, timeline: timelineRegex }).forEach(async postElement => {
     const headerElement = postElement.querySelector('header');
-    const footerElement = postElement.querySelector(footerSelector);
+    const footerElement = postElement.querySelector(keyToCss('footerWrapper'));
 
     const wrapper = Object.assign(document.createElement('div'), { className: wrapperClass });
     const container = Object.assign(document.createElement('div'), { className: containerClass });
@@ -33,8 +32,6 @@ export const main = async function () {
     ...runInDrafts ? ['draft'] : []
   ].join('|');
   timelineRegex = new RegExp(`/v2/blog/[^/]+/posts/(${regexGroup})`);
-
-  footerSelector = await keyToCss('footerWrapper');
 
   onNewPosts.addListener(processPosts);
 };

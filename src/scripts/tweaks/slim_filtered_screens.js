@@ -1,10 +1,9 @@
-import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { postSelector, buildStyle } from '../../util/interface.js';
 
-const styleElement = buildStyle();
-const filteredScreenSelector = resolveExpressions`${postSelector}:not(${keyToCss('masonryTimelineObject')}) ${keyToCss('filteredScreen')}`;
+const filteredScreenSelector = `${postSelector}:not(${keyToCss('masonryTimelineObject')}) ${keyToCss('filteredScreen')}`;
 
-resolveExpressions`
+const styleElement = buildStyle(`
   ${filteredScreenSelector} {
     flex-direction: row;
     justify-content: space-between;
@@ -35,7 +34,7 @@ resolveExpressions`
   ${filteredScreenSelector} > button > span {
     margin-top: 0;
   }
-`.then(css => { styleElement.textContent = css; });
+`);
 
 export const main = async () => document.head.append(styleElement);
 export const clean = async () => styleElement.remove();

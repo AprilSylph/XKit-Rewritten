@@ -18,7 +18,6 @@ let answerTag;
 let autoTagAsker;
 
 let controlButtonTemplate;
-let controlIconSelector;
 
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-tags' });
 const popupForm = Object.assign(document.createElement('form'), {
@@ -205,7 +204,7 @@ const addControlButtons = function (editButtons) {
     .filter(editButton => editButton.matches(`.${buttonClass} ~ div a[href*="/edit/"]`) === false)
     .forEach(editButton => {
       const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
-      const controlIcon = editButton.closest(controlIconSelector);
+      const controlIcon = editButton.closest(keyToCss('controlIcon'));
       controlIcon.before(clonedControlButton);
     });
 };
@@ -216,9 +215,8 @@ postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 
 export const main = async function () {
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
-  controlIconSelector = await keyToCss('controlIcon');
 
-  pageModifications.register(`${postSelector} footer ${controlIconSelector} a[href*="/edit/"]`, addControlButtons);
+  pageModifications.register(`${postSelector} footer ${keyToCss('controlIcon')} a[href*="/edit/"]`, addControlButtons);
   registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });
 
   populatePopups();

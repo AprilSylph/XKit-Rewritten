@@ -1,4 +1,4 @@
-import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
@@ -15,10 +15,8 @@ const styleElement = buildStyle(`
   }
 `);
 
-let listTimelineObjectSelector;
-
 const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
-  .map(tagChicletCarouselItem => tagChicletCarouselItem.closest(listTimelineObjectSelector))
+  .map(tagChicletCarouselItem => tagChicletCarouselItem.closest(keyToCss('listTimelineObject')))
   .filter((element, index, array) => array.indexOf(element) === index)
   .forEach(listTimelineObject => {
     listTimelineObject.classList.add(borderClass);
@@ -28,8 +26,7 @@ const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
 export const main = async function () {
   document.head.append(styleElement);
 
-  listTimelineObjectSelector = await keyToCss('listTimelineObject');
-  const tagChicletCarouselItemSelector = await resolveExpressions`${listTimelineObjectSelector} ${keyToCss('tagChicletCarouselItem')}`;
+  const tagChicletCarouselItemSelector = `${keyToCss('listTimelineObject')} ${keyToCss('tagChicletCarouselItem')}`;
   pageModifications.register(tagChicletCarouselItemSelector, createCaughtUpLine);
 };
 

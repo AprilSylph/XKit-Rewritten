@@ -77,8 +77,8 @@ export const removeSidebarItem = id => {
 };
 
 (async () => {
-  const sidebarItemSelector = await keyToCss('sidebarItem');
-  const navSubHeaderSelector = await keyToCss('navSubHeader');
+  const sidebarItemSelector = keyToCss('sidebarItem');
+  const navSubHeaderSelector = keyToCss('navSubHeader');
 
   const addSidebarToPage = () => {
     if (document.body.contains(sidebarItems)) { return; }

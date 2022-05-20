@@ -1,4 +1,4 @@
-import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
@@ -6,12 +6,9 @@ const hiddenClass = 'xkit-no-recommended-tag-carousels-hidden';
 
 const styleElement = buildStyle(`.${hiddenClass} > div { display: none; }`);
 
-let tagCardCarouselItemSelector;
-let listTimelineObjectSelector;
-
 const hideTagCarousels = carouselWrappers => carouselWrappers
-  .filter(carouselWrapper => carouselWrapper.querySelector(tagCardCarouselItemSelector) !== null)
-  .map(carouselWrapper => carouselWrapper.closest(listTimelineObjectSelector))
+  .filter(carouselWrapper => carouselWrapper.querySelector(keyToCss('tagCardCarouselItem')) !== null)
+  .map(carouselWrapper => carouselWrapper.closest(keyToCss('listTimelineObject')))
   .forEach(listTimelineObject => {
     listTimelineObject.classList.add(hiddenClass);
     listTimelineObject.previousElementSibling.classList.add(hiddenClass);
@@ -20,9 +17,7 @@ const hideTagCarousels = carouselWrappers => carouselWrappers
 export const main = async function () {
   document.head.append(styleElement);
 
-  tagCardCarouselItemSelector = await keyToCss('tagCardCarouselItem');
-  listTimelineObjectSelector = await keyToCss('listTimelineObject');
-  const carouselWrapperSelector = await resolveExpressions`${listTimelineObjectSelector} ${keyToCss('carouselWrapper')}`;
+  const carouselWrapperSelector = `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')}`;
   pageModifications.register(carouselWrapperSelector, hideTagCarousels);
 };
 

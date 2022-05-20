@@ -1,15 +1,12 @@
-import { keyToCss, resolveExpressions } from '../util/css_map.js';
+import { keyToCss } from '../util/css_map.js';
 import { buildStyle } from '../util/interface.js';
 
-const styleElement = buildStyle();
-styleElement.media = '(min-width: 990px)';
-
-const container = resolveExpressions`${keyToCss('bluespaceLayout')} > ${keyToCss('container')}`;
-const reblog = resolveExpressions`${keyToCss('post')} ${keyToCss('reblog')}`;
+const container = `${keyToCss('bluespaceLayout')} > ${keyToCss('container')}`;
+const reblog = `${keyToCss('post')} ${keyToCss('reblog')}`;
 const videoBlock = keyToCss('videoBlock');
 const queueSettings = keyToCss('queueSettings');
 
-resolveExpressions`
+const styleElement = buildStyle(`
   #base-container > div > div > header,
   ${container} {
     max-width: 100vw;
@@ -35,7 +32,9 @@ resolveExpressions`
     box-sizing: border-box;
     width: calc(100% - ${625 - 540}px);
   }
-`.then(styles => { styleElement.textContent = styles; });
+`);
+
+styleElement.media = '(min-width: 990px)';
 
 export const main = async () => document.head.append(styleElement);
 export const clean = async () => styleElement.remove();

@@ -1,5 +1,5 @@
 import { pageModifications } from '../../util/mutations.js';
-import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
 const hiddenClass = 'xkit-tweaks-hide-filtered-posts-hidden';
@@ -10,7 +10,7 @@ const hideFilteredPosts = filteredScreens => filteredScreens
   .forEach(article => article.classList.add(hiddenClass));
 
 export const main = async function () {
-  const filteredScreenSelector = await resolveExpressions`article ${keyToCss('filteredScreen')}`;
+  const filteredScreenSelector = `article ${keyToCss('filteredScreen')}`;
   pageModifications.register(filteredScreenSelector, hideFilteredPosts);
   document.head.append(styleElement);
 };

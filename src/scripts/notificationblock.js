@@ -12,8 +12,9 @@ const meatballButtonBlockLabel = 'Block notifications';
 const meatballButtonUnblockId = 'notificationblock-unblock';
 const meatballButtonUnblockLabel = 'Unblock notifications';
 
+const notificationSelector = keyToCss('notification');
+
 let blockedPostTargetIDs;
-let notificationSelector;
 
 const styleElement = buildStyle();
 const buildCss = () => `:is(${
@@ -101,7 +102,6 @@ export const main = async function () {
   styleElement.textContent = buildCss();
   document.head.append(styleElement);
 
-  notificationSelector = await keyToCss('notification');
   pageModifications.register(notificationSelector, processNotifications);
 
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });

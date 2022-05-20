@@ -18,7 +18,6 @@ const following = {};
 const mutuals = {};
 
 let primaryBlogName;
-let postAttributionSelector;
 let showOnlyMutuals;
 let icon;
 
@@ -30,7 +29,7 @@ const addIcons = function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (alreadyProcessed(postElement)) return;
 
-    const postAttribution = postElement.querySelector(postAttributionSelector);
+    const postAttribution = postElement.querySelector(keyToCss('postAttribution'));
     if (postAttribution === null) { return; }
 
     const blogLink = postAttribution.querySelector('a');
@@ -71,8 +70,6 @@ export const main = async function () {
   ({ showOnlyMutuals } = await getPreferences('mutual_checker'));
   primaryBlogName = await getPrimaryBlogName();
   following[primaryBlogName] = Promise.resolve(false);
-
-  postAttributionSelector = await keyToCss('postAttribution');
 
   const today = new Date();
   const aprilFools = (today.getMonth() === 3 && today.getDate() === 1);

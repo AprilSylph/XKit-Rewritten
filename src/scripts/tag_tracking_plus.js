@@ -11,9 +11,6 @@ const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
 const excludeClass = 'xkit-tag-tracking-plus-done';
 const includeFiltered = true;
 
-let searchResultSelector;
-let tagTextSelector;
-
 const processPosts = async function (postElements) {
   const { pathname, searchParams } = new URL(location);
   if (!pathname.startsWith('/tagged/') || searchParams.get('sort') === 'top') {
@@ -55,7 +52,7 @@ const processTagLinks = async function ([searchResultElement]) {
     const unreadCountElement = dom('span', { style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65;' }, null, ['\u22EF']);
     tagLinkElement.firstElementChild.appendChild(unreadCountElement);
 
-    const tag = tagLinkElement.querySelector(tagTextSelector).textContent;
+    const tag = tagLinkElement.querySelector(keyToCss('tagText')).textContent;
     const savedTimestamp = timestamps[tag] || 0;
 
     const { response: { timeline: { elements = [], links } } } = await apiFetch(`/v2/hubs/${tag}/timeline`, { queryParams: { limit: 20, sort: 'recent' } });
@@ -79,11 +76,8 @@ const processTagLinks = async function ([searchResultElement]) {
 };
 
 export const main = async function () {
-  searchResultSelector = await keyToCss('searchResult');
-  tagTextSelector = await keyToCss('tagText');
-
   onNewPosts.addListener(processPosts);
-  pageModifications.register(searchResultSelector, processTagLinks);
+  pageModifications.register(keyToCss('searchResult'), processTagLinks);
 };
 
 export const clean = async function () {

@@ -5,9 +5,6 @@ import { onNewPosts } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
 import { keyToCss } from '../util/css_map.js';
 
-let noteCountSelector;
-let reblogHeaderSelector;
-
 let alwaysShowYear;
 let headerTimestamps;
 let isoFormat;
@@ -113,7 +110,7 @@ const addPostTimestamps = async function () {
     const { timestamp, postUrl } = await timelineObject(postElement);
     cache[id] = Promise.resolve(timestamp);
 
-    const noteCountElement = postElement.querySelector(noteCountSelector);
+    const noteCountElement = postElement.querySelector(keyToCss('noteCount'));
 
     const relativeTimeString = constructRelativeTimeString(timestamp);
 
@@ -149,7 +146,7 @@ const addReblogTimestamps = async function () {
       return;
     }
 
-    const reblogHeaders = postElement.querySelectorAll(reblogHeaderSelector);
+    const reblogHeaders = postElement.querySelectorAll(keyToCss('reblogHeader'));
 
     if (reblogTimestamps === 'op') {
       trail = [trail[0]];
@@ -228,9 +225,6 @@ export const onStorageChanged = async function (changes, areaName) {
 
 export const main = async function () {
   ({ alwaysShowYear, headerTimestamps, isoFormat, reblogTimestamps } = await getPreferences('timestamps'));
-
-  noteCountSelector = await keyToCss('noteCount');
-  reblogHeaderSelector = await keyToCss('reblogHeader');
 
   onNewPosts.addListener(addPostTimestamps);
 

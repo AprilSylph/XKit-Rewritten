@@ -2,8 +2,6 @@ import { keyToCss } from '../util/css_map.js';
 import { getPreferences } from '../util/preferences.js';
 import { pageModifications } from '../util/mutations.js';
 
-let trackInfoSelector;
-
 let defaultVolume;
 
 const excludeClass = 'xkit-vanilla-audio-done';
@@ -15,7 +13,7 @@ const addAudioControls = nativePlayers => nativePlayers.forEach(nativePlayer => 
   const audio = nativePlayer.querySelector('audio');
   if (audio === null) return;
 
-  const trackInfo = nativePlayer.querySelector(trackInfoSelector);
+  const trackInfo = nativePlayer.querySelector(keyToCss('trackInfo'));
   trackInfo?.classList.add('trackInfo');
 
   const audioClone = audio.cloneNode(true);
@@ -35,11 +33,9 @@ export const onStorageChanged = async function (changes, areaName) {
 };
 
 export const main = async function () {
-  trackInfoSelector = await keyToCss('trackInfo');
   ({ defaultVolume } = await getPreferences('vanilla_audio'));
 
-  const nativePlayerSelector = await keyToCss('nativePlayer');
-  pageModifications.register(nativePlayerSelector, addAudioControls);
+  pageModifications.register(keyToCss('nativePlayer'), addAudioControls);
 };
 
 export const clean = async function () {

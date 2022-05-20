@@ -78,6 +78,4 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
   });
 });
 
-keyToCss('meatballMenu').then(meatballMenuSelector =>
-  pageModifications.register(meatballMenuSelector, addMeatballItems)
-);
+pageModifications.register(keyToCss('meatballMenu'), addMeatballItems);

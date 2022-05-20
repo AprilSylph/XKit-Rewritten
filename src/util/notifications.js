@@ -3,12 +3,9 @@ import { dom } from './dom.js';
 
 const toastContainer = dom('div', { id: 'xkit-toasts' });
 
-const drawerContentSelectorPromise = keyToCss('drawerContent');
-const sidebarSelectorPromise = keyToCss('sidebar');
-
 const addToastContainerToPage = async () => {
-  const drawerContentSelector = await drawerContentSelectorPromise;
-  const sidebarSelector = await sidebarSelectorPromise;
+  const drawerContentSelector = keyToCss('drawerContent');
+  const sidebarSelector = keyToCss('sidebar');
 
   const targetNode = [
     document.body.querySelector(`${drawerContentSelector} ${sidebarSelector}`),

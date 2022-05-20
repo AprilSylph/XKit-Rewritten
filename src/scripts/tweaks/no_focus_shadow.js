@@ -5,8 +5,10 @@ const cssTemplate = selector => `${selector} { box-shadow: none !important; }`;
 const styleElement = buildStyle();
 
 export const main = async function () {
-  const listTimelineObjectClasses = await keyToClasses('listTimelineObject');
-  const selector = listTimelineObjectClasses.map(className => `.${className}:focus > div`).join(',');
+  const selector = keyToClasses('listTimelineObject')
+    .map(className => `.${className}:focus > div`)
+    .join(',');
+
   styleElement.textContent = cssTemplate(selector);
   document.head.append(styleElement);
 };

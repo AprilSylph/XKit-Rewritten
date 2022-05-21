@@ -57,7 +57,7 @@
     },
     "hide_footer_tooltips": {
       "type": "checkbox",
-      "label": "Hide the tooltips for the post footer control buttons",
+      "label": "Hide control button tooltips in the post footer",
       "default": false
     },
     "hide_filtered_posts": {

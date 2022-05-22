@@ -5,20 +5,17 @@ import { buildStyle } from '../../util/interface.js';
 
 const hiddenClass = 'xkit-no-recommended-blogs-hidden';
 
-let checkOutTheseBlogsLabel;
-
 const styleElement = buildStyle(`.${hiddenClass} { display: none; }`);
 
 const hideDashboardRecommended = function (sidebarTitles) {
   sidebarTitles
-    .filter(h1 => h1.textContent === checkOutTheseBlogsLabel)
+    .filter(h1 => h1.textContent === translate('Check out these blogs'))
     .forEach(h1 => h1.parentNode.classList.add(hiddenClass));
 };
 
 const hideTagPageRecommended = topBlogsLists => topBlogsLists.forEach(ul => ul.parentNode.classList.add(hiddenClass));
 
 export const main = async function () {
-  checkOutTheseBlogsLabel = await translate('Check out these blogs');
   pageModifications.register('aside > div > h1', hideDashboardRecommended);
 
   const topBlogsSelector = await resolveExpressions`${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;

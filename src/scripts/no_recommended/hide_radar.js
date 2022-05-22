@@ -4,18 +4,15 @@ import { buildStyle } from '../../util/interface.js';
 
 const hiddenClass = 'xkit-no-recommended-radar-hidden';
 
-let radarLabel;
-
 const styleElement = buildStyle(`.${hiddenClass} { display: none; }`);
 
 const checkForRadar = function (sidebarTitles) {
   sidebarTitles
-    .filter(h1 => h1.textContent === radarLabel)
+    .filter(h1 => h1.textContent === translate('Radar'))
     .forEach(h1 => h1.parentNode.classList.add(hiddenClass));
 };
 
 export const main = async function () {
-  radarLabel = await translate('Radar');
   pageModifications.register('aside > div > h1', checkForRadar);
   document.head.append(styleElement);
 };

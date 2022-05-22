@@ -47,4 +47,3 @@ export const apiFetch = async function (...args) {
 };
 
 export const getCssMap = inject(async () => window.tumblr.getCssMap());
-export const getLanguageData = inject(async () => window.tumblr.languageData);

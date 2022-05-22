@@ -7,7 +7,6 @@ import { getPreferences } from '../../util/preferences.js';
 let mode;
 
 let imageBlockSelector;
-let imageString;
 
 const styleElement = buildStyle();
 const processedClass = 'accesskit-visible-alt-text';
@@ -24,7 +23,7 @@ const processImages = function (imageElements) {
     if (imageBlock.classList.contains(processedClass)) continue;
     imageBlock.classList.add(processedClass);
 
-    const isDefaultAltText = alt === imageString || alt === 'image';
+    const isDefaultAltText = alt === translate('Image') || alt === 'image';
     const shouldShowCaption = mode === 'show' || !isDefaultAltText;
     if (!shouldShowCaption) continue;
 
@@ -52,7 +51,6 @@ const onStorageChanged = async function (changes, areaName) {
 export const main = async function () {
   ({ visible_alt_text_mode: mode } = await getPreferences('accesskit'));
   imageBlockSelector = await keyToCss('imageBlock');
-  imageString = await translate('Image');
 
   const imageBlockLinkSelector = await keyToCss('imageBlockLink');
   const imageBlockButtonInnerSelector = await resolveExpressions`${keyToCss('imageBlockButton')} ${keyToCss('buttonInner')}`;

@@ -10,13 +10,11 @@ let blacklist;
 const defaultBackgroundColor = '#FAFAFA';
 
 const hexToRGB = (hex) => {
-  const chars = hex.replace('#', '').split('');
-  const splitnum = chars.length > 3 ? 2 : 1;
-  const arr = [];
-  while (chars.length) {
-    arr.push(parseInt(chars.splice(0, splitnum).join(''), 16));
-  }
-  return arr.join(', ');
+  const { red, green, blue } = hex.match(/^#(?<red>[A-Fa-f0-9]{1,2})(?<green>[A-Fa-f0-9]{1,2})(?<blue>[A-Fa-f0-9]{1,2})$/).groups;
+  return [red, green, blue]
+    .map(color => color.padEnd(2, color))
+    .map(color => parseInt(color, 16))
+    .join(', ');
 };
 
 const processPosts = async function (postElements) {

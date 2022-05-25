@@ -19,6 +19,7 @@
 
 .xkit-paused-gif {
   position: absolute;
+  visibility: visible;
 }
 
 figure:hover .xkit-paused-gif,

@@ -1,4 +1,5 @@
 import { pageModifications } from '../../util/mutations.js';
+import { keyToCss } from '../../util/css_map.js';
 
 const className = 'accesskit-disable-gifs';
 
@@ -42,7 +43,7 @@ const processGifs = function (gifElements) {
 
 export const main = async function () {
   document.body.classList.add(className);
-  pageModifications.register('figure img[srcset*=".gif"]', processGifs);
+  pageModifications.register(`figure img[srcset*=".gif"]:not(${await keyToCss('poster')})`, processGifs);
 };
 
 export const clean = async function () {

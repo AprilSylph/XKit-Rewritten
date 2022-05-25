@@ -1,4 +1,4 @@
-import { getPrimaryBlogName } from '../../util/user.js';
+import { primaryBlogName } from '../../util/user.js';
 import { onNewPosts } from '../../util/mutations.js';
 import { buildStyle, filterPostElements } from '../../util/interface.js';
 import { timelineObject } from '../../util/react_props.js';
@@ -9,7 +9,6 @@ const timeline = /\/v2\/timeline\/dashboard/;
 const hiddenClass = 'xkit-tweaks-hide-liked-posts-hidden';
 const styleElement = buildStyle(`.${hiddenClass} article { display: none; }`);
 
-let primaryBlogName;
 let likedSelector;
 
 const processPosts = async function (postElements) {
@@ -24,7 +23,6 @@ const processPosts = async function (postElements) {
 };
 
 export const main = async function () {
-  primaryBlogName = await getPrimaryBlogName();
   likedSelector = await resolveExpressions`footer ${keyToCss('liked')}`;
 
   onNewPosts.addListener(processPosts);

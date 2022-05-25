@@ -1,7 +1,7 @@
 import { filterPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
-import { getPrimaryBlogName } from '../util/user.js';
+import { primaryBlogName } from '../util/user.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
@@ -17,7 +17,6 @@ const aprilFoolsPath = 'M858 352q-6-14-8-35-2-12-4-38-3-38-6-54-7-28-22-43t-43-2
 const following = {};
 const mutuals = {};
 
-let primaryBlogName;
 let postAttributionSelector;
 let showOnlyMutuals;
 let icon;
@@ -68,8 +67,9 @@ const addIcons = function (postElements) {
 };
 
 export const main = async function () {
+  if (primaryBlogName === undefined) return;
+
   ({ showOnlyMutuals } = await getPreferences('mutual_checker'));
-  primaryBlogName = await getPrimaryBlogName();
   following[primaryBlogName] = Promise.resolve(false);
 
   postAttributionSelector = await keyToCss('postAttribution');

@@ -1,4 +1,4 @@
-import { getPrimaryBlogName } from '../../util/user.js';
+import { primaryBlogName } from '../../util/user.js';
 import { onNewPosts } from '../../util/mutations.js';
 import { buildStyle, filterPostElements } from '../../util/interface.js';
 import { timelineObject } from '../../util/react_props.js';
@@ -8,8 +8,6 @@ const timeline = /\/v2\/timeline\/dashboard/;
 
 const hiddenClass = 'xkit-tweaks-hide-my-posts-hidden';
 const styleElement = buildStyle(`.${hiddenClass} article { display: none; }`);
-
-let primaryBlogName;
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { excludeClass, timeline }).forEach(async postElement => {
@@ -22,8 +20,6 @@ const processPosts = async function (postElements) {
 };
 
 export const main = async function () {
-  primaryBlogName = await getPrimaryBlogName();
-
   onNewPosts.addListener(processPosts);
   document.head.append(styleElement);
 };

@@ -21,20 +21,18 @@ const processPosts = async function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (postElement.matches(blogViewSelector)) return;
 
-    const { blog: { name, theme: { backgroundColor, titleColor } } } =
-      await timelineObject(postElement);
+    const { blog: { name, theme } } = await timelineObject(postElement);
 
     if (blacklist.includes(name)) return;
 
-    let backgroundColorRGB = hexToRGB(backgroundColor);
-    const titleColorRGB = hexToRGB(titleColor);
-
-    if (backgroundColor === defaultBackgroundColor) {
-      backgroundColorRGB = '255, 255, 255';
-    }
-
     if (!blogs.has(name)) {
       blogs.add(name);
+
+      const { backgroundColor, titleColor } = theme;
+
+      const backgroundColorRGB = hexToRGB(backgroundColor);
+      const titleColorRGB = hexToRGB(titleColor);
+
       styleElement.textContent += `
         [data-xkit-themed="${name}"] {
           --white: ${backgroundColorRGB};
@@ -42,6 +40,8 @@ const processPosts = async function (postElements) {
         }
       `;
     }
+
+    postElement.dataset.xkitThemed = name;
     postElement.dataset.xkitThemed = name;
   });
 };

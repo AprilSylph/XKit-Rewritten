@@ -7,8 +7,6 @@ const styleElement = buildStyle();
 const blogs = new Set();
 let blacklist;
 
-const defaultBackgroundColor = '#FAFAFA';
-
 const hexToRGB = (hex) => {
   const { red, green, blue } = hex.match(/^#(?<red>[A-Fa-f0-9]{1,2})(?<green>[A-Fa-f0-9]{1,2})(?<blue>[A-Fa-f0-9]{1,2})$/).groups;
   return [red, green, blue]

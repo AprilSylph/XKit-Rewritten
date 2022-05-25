@@ -42,7 +42,6 @@ const processPosts = async function (postElements) {
     }
 
     postElement.dataset.xkitThemed = name;
-    postElement.dataset.xkitThemed = name;
   });
 };
 

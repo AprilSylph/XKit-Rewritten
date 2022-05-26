@@ -50,9 +50,9 @@ const addControls = async (timelineElement, location) => {
     browser.storage.local.set({ [storageKey]: savedModes });
   };
 
-  const onButton = createButton(await translate('Original Posts'), handleClick, 'on');
-  const offButton = createButton(await translate('All posts'), handleClick, 'off');
-  const disabledButton = createButton(await translate('All posts'), null, 'disabled');
+  const onButton = createButton(translate('Original Posts'), handleClick, 'on');
+  const offButton = createButton(translate('All posts'), handleClick, 'off');
+  const disabledButton = createButton(translate('All posts'), null, 'disabled');
 
   if (location === 'disabled') {
     controls.append(disabledButton);

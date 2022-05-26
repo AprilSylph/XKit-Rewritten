@@ -6,7 +6,7 @@ import { getCssMap } from './tumblr_helpers.js';
  */
 export const keyToClasses = async function (...keys) {
   const cssMap = await getCssMap;
-  return keys.flatMap(key => cssMap[key]);
+  return keys.flatMap(key => cssMap[key]).filter(Boolean);
 };
 
 /**

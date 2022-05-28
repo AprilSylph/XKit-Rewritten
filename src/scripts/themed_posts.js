@@ -6,9 +6,10 @@ import { timelineObject } from '../util/react_props.js';
 const styleElement = buildStyle();
 const blogs = new Set();
 let blacklist;
+const groupsFromHex = /^#(?<red>[A-Fa-f0-9]{1,2})(?<green>[A-Fa-f0-9]{1,2})(?<blue>[A-Fa-f0-9]{1,2})$/;
 
 const hexToRGB = (hex) => {
-  const { red, green, blue } = hex.match(/^#(?<red>[A-Fa-f0-9]{1,2})(?<green>[A-Fa-f0-9]{1,2})(?<blue>[A-Fa-f0-9]{1,2})$/).groups;
+  const { red, green, blue } = hex.match(groupsFromHex).groups;
   return [red, green, blue]
     .map(color => color.padEnd(2, color))
     .map(color => parseInt(color, 16))

@@ -1,5 +1,5 @@
 import { inject } from './inject.js';
-import { getPrimaryBlogName } from './user.js';
+import { primaryBlogName } from './user.js';
 
 const timelineObjectCache = new WeakMap();
 
@@ -29,7 +29,6 @@ export const timelineObject = async function (postElement) {
   return timelineObjectCache.get(postElement);
 };
 
-const primaryBlogName = await getPrimaryBlogName().catch(() => undefined);
 export const isMyPost = async (postElement) => {
   const { canEdit, isSubmission, postAuthor } = await timelineObject(postElement);
   return canEdit && (isSubmission || postAuthor === primaryBlogName || postAuthor === undefined);

@@ -1,10 +1,9 @@
-import { getLanguageData } from './tumblr_helpers.js';
+import { inject } from './inject.js';
+
+export const languageData = await inject(() => window.tumblr.languageData);
 
 /**
  * @param {string} rootString - The English string to translate
- * @returns {Promise<string>} - The translated string in the current Tumblr locale
+ * @returns {string} - The translated string in the current Tumblr locale
  */
-export const translate = async function (rootString) {
-  const languageData = await getLanguageData;
-  return languageData.translations[rootString] || rootString;
-};
+export const translate = rootString => languageData.translations[rootString] || rootString;

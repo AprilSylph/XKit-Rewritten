@@ -55,6 +55,11 @@
       "label": "Hide the note type badges in post footers",
       "default": false
     },
+    "hide_footer_tooltips": {
+      "type": "checkbox",
+      "label": "Hide control button tooltips in the post footer",
+      "default": false
+    },
     "hide_filtered_posts": {
       "type": "checkbox",
       "label": "Hide filtered posts entirely",

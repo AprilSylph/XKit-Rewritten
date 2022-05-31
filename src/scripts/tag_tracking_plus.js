@@ -13,7 +13,6 @@ const includeFiltered = true;
 
 let searchResultSelector;
 let tagTextSelector;
-let tagsYouFollowString;
 
 const processPosts = async function (postElements) {
   const { pathname, searchParams } = new URL(location);
@@ -46,7 +45,7 @@ const processTagLinks = async function ([searchResultElement]) {
 
   const { [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey);
 
-  const tagsYouFollowHeading = [...searchResultElement.querySelectorAll('h3')].find(h3 => h3.textContent === tagsYouFollowString);
+  const tagsYouFollowHeading = [...searchResultElement.querySelectorAll('h3')].find(h3 => h3.textContent === translate('Tags you follow'));
   if (!tagsYouFollowHeading) { return; }
   tagsYouFollowHeading.dataset.followedTags = true;
 
@@ -82,7 +81,6 @@ const processTagLinks = async function ([searchResultElement]) {
 export const main = async function () {
   searchResultSelector = await keyToCss('searchResult');
   tagTextSelector = await keyToCss('tagText');
-  tagsYouFollowString = await translate('Tags you follow');
 
   onNewPosts.addListener(processPosts);
   pageModifications.register(searchResultSelector, processTagLinks);

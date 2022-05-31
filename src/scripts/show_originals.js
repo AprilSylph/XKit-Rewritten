@@ -4,7 +4,7 @@ import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
-import { getUserBlogs } from '../util/user.js';
+import { userBlogs } from '../util/user.js';
 
 const hiddenClass = 'xkit-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
@@ -49,9 +49,9 @@ const addControls = async (timelineElement, location) => {
     browser.storage.local.set({ [storageKey]: savedModes });
   };
 
-  const onButton = createButton(await translate('Original Posts'), handleClick, 'on');
-  const offButton = createButton(await translate('All posts'), handleClick, 'off');
-  const disabledButton = createButton(await translate('All posts'), null, 'disabled');
+  const onButton = createButton(translate('Original Posts'), handleClick, 'on');
+  const offButton = createButton(translate('All posts'), handleClick, 'off');
+  const disabledButton = createButton(translate('All posts'), null, 'disabled');
 
   if (location === 'disabled') {
     controls.append(disabledButton);
@@ -122,7 +122,7 @@ export const main = async function () {
   } = await getPreferences('show_originals'));
 
   whitelist = whitelistedUsernames.split(',').map(username => username.trim());
-  const nonGroupUserBlogs = (await getUserBlogs().catch(() => []))
+  const nonGroupUserBlogs = userBlogs
     .filter(blog => !blog.isGroupChannel)
     .map(blog => blog.name);
   disabledBlogs = [...whitelist, ...showOwnReblogs ? nonGroupUserBlogs : []];

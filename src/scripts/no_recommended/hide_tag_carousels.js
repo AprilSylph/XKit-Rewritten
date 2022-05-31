@@ -4,7 +4,11 @@ import { pageModifications } from '../../util/mutations.js';
 
 const hiddenClass = 'xkit-no-recommended-tag-carousels-hidden';
 
-const styleElement = buildStyle(`.${hiddenClass} > div { display: none; }`);
+const styleElement = buildStyle(`
+  .${hiddenClass} { position: relative; }
+  .${hiddenClass} > div { visibility: hidden; position: absolute; max-width: 100%; }
+  .${hiddenClass} > div img, .${hiddenClass} > div canvas { visibility: hidden; }
+`);
 
 let tagCardCarouselItemSelector;
 let listTimelineObjectSelector;

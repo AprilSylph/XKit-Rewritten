@@ -19,6 +19,9 @@
 
 .xkit-paused-gif {
   position: absolute;
+  visibility: visible;
+
+  background-color: rgb(var(--white));
 }
 
 figure:hover .xkit-paused-gif,

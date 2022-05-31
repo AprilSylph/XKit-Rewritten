@@ -3,7 +3,7 @@ import { megaEdit } from '../util/mega_editor.js';
 import { showModal, modalCancelButton, modalCompleteButton } from '../util/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
-import { getUserBlogs } from '../util/user.js';
+import { userBlogs } from '../util/user.js';
 
 const getPostsFormId = 'xkit-tag-replacer-get-posts';
 
@@ -13,8 +13,6 @@ const createBlogSpan = name => dom('span', { class: 'tag-replacer-blog' }, null,
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const showInitialPrompt = async () => {
-  const userBlogs = await getUserBlogs();
-
   const initialForm = dom('form', { id: getPostsFormId }, { submit: confirmReplaceTag }, [
     dom('label', null, null, [
       'Replace tags on:',

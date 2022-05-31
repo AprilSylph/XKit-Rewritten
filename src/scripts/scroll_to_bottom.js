@@ -75,8 +75,7 @@ const addButtonToPage = async function ([scrollToTopButton]) {
 export const main = async function () {
   knightRiderLoaderSelector = await resolveExpressions`main ${keyToCss('loader')} ${keyToCss('knightRiderLoader')}`;
 
-  const scrollToTopLabel = await translate('Scroll to top');
-  pageModifications.register(`button[aria-label="${scrollToTopLabel}"]`, addButtonToPage);
+  pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
   document.head.append(styleElement);
 };
 

@@ -4,7 +4,7 @@ import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
-import { getPrimaryBlogName, getUserBlogs } from '../util/user.js';
+import { primaryBlogName, userBlogs } from '../util/user.js';
 
 const hiddenClass = 'xkit-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
@@ -15,7 +15,6 @@ const includeFiltered = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
-let primaryBlogName;
 let whitelist;
 let disabledBlogs;
 
@@ -125,11 +124,10 @@ export const main = async function () {
   } = await getPreferences('show_originals'));
 
   whitelist = whitelistedUsernames.split(',').map(username => username.trim());
-  const nonGroupUserBlogs = (await getUserBlogs().catch(() => []))
+  const nonGroupUserBlogs = userBlogs
     .filter(blog => !blog.isGroupChannel)
     .map(blog => blog.name);
   disabledBlogs = [...whitelist, ...showOwnReblogs ? nonGroupUserBlogs : []];
-  primaryBlogName = await getPrimaryBlogName().catch(() => undefined);
 
   onNewPosts.addListener(processPosts);
 };

@@ -1,35 +1,28 @@
 import { apiFetch } from './tumblr_helpers.js';
 
-export const userInfo = apiFetch('/v2/user/info');
+const fetchedUserInfo = await apiFetch('/v2/user/info').catch(() => ({ response: {} }));
 
 /**
- * @returns {Promise<object[]>} - An array of blog objects the current user has post access to
+ * {object?} userInfo - The contents of the /v2/user/info API endpoint
  */
-export const getUserBlogs = async function () {
-  const { response: { user: { blogs } } } = await userInfo;
-  return blogs;
-};
+export const userInfo = fetchedUserInfo.response.user;
 
 /**
- * @returns {Promise<string[]>} - An array of blog names the current user has post access to
+ * {object[]} userBlogs - An array of blog objects the current user has post access to
  */
-export const getUserBlogNames = async function () {
-  const blogs = await getUserBlogs();
-  return blogs.map(blog => blog.name);
-};
+export const userBlogs = userInfo?.blogs ?? [];
 
 /**
- * @returns {Promise<object>} - The primary ("main") blog for the user
+ * {string[]} userBlogNames - An array of blog names the current user has post access to
  */
-export const getPrimaryBlog = async function () {
-  const blogs = await getUserBlogs();
-  return blogs.find(blog => blog.primary === true);
-};
+export const userBlogNames = userBlogs.map(blog => blog.name);
 
 /**
- * @returns {Promise<string>} - The name of the user's primary blog
+ * {object?} primaryBlog - The primary ("main") blog for the user
  */
-export const getPrimaryBlogName = async function () {
-  const primaryBlog = await getPrimaryBlog();
-  return primaryBlog.name;
-};
+export const primaryBlog = userBlogs.find(blog => blog.primary === true);
+
+/**
+ * {string?} primaryBlogName - The name of the user's primary blog
+ */
+export const primaryBlogName = primaryBlog?.name;

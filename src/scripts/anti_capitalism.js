@@ -25,7 +25,8 @@ const showPremiumPlea = async () => {
   const { [storageKey]: hasShownPlea } = await browser.storage.local.get(storageKey);
   if (hasShownPlea) return;
 
-  const { response: { user: { hasTumblrPremium, usedToHaveTumblrPremium } } } = await userInfo;
+  if (userInfo === undefined) return;
+  const { hasTumblrPremium, usedToHaveTumblrPremium } = userInfo;
   if (hasTumblrPremium || usedToHaveTumblrPremium) {
     browser.storage.local.set({ [storageKey]: true });
     return;

@@ -37,6 +37,17 @@ const doSmartQuotes = ({ currentTarget }) => {
     .replace(/"/g, '\u201D');
 };
 popupInput.addEventListener('input', doSmartQuotes);
+const checkLength = ({ currentTarget }) => {
+  const { value } = currentTarget;
+  const tags = value.split(',').map(tag => tag.trim());
+  if (tags.some(tag => tag.length > 140)) {
+    popupInput.setCustomValidity('Tag is longer than 140 characters!');
+    popupInput.reportValidity();
+  } else {
+    popupInput.setCustomValidity('');
+  }
+};
+popupInput.addEventListener('input', checkLength);
 popupForm.appendChild(popupInput);
 
 const postOptionPopupElement = Object.assign(document.createElement('div'), { id: 'quick-tags-post-option' });

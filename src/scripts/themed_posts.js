@@ -5,8 +5,9 @@ import { timelineObject } from '../util/react_props.js';
 
 const styleElement = buildStyle();
 const blogs = new Set();
-let blacklist;
 const groupsFromHex = /^#(?<red>[A-Fa-f0-9]{1,2})(?<green>[A-Fa-f0-9]{1,2})(?<blue>[A-Fa-f0-9]{1,2})$/;
+
+let blacklist;
 
 const hexToRGB = (hex) => {
   const { red, green, blue } = hex.match(groupsFromHex).groups;
@@ -27,15 +28,22 @@ const processPosts = async function (postElements) {
     if (!blogs.has(name)) {
       blogs.add(name);
 
-      const { backgroundColor, titleColor } = theme;
+      const {
+        backgroundColor,
+        titleColor,
+        linkColor
+      } = theme;
 
       const backgroundColorRGB = hexToRGB(backgroundColor);
       const titleColorRGB = hexToRGB(titleColor);
+      const linkColorRGB = hexToRGB(linkColor);
 
       styleElement.textContent += `
         [data-xkit-themed="${name}"] {
           --white: ${backgroundColorRGB};
           --black: ${titleColorRGB};
+          --accent: ${linkColorRGB};
+          --color-primary-link: rgb(var(--accent));
         }
       `;
     }
@@ -47,6 +55,7 @@ const processPosts = async function (postElements) {
 export const main = async function () {
   const { blacklistedUsernames } = await getPreferences('themed_posts');
   blacklist = blacklistedUsernames.split(',').map(username => username.trim());
+
   document.head.append(styleElement);
   onNewPosts.addListener(processPosts);
 };

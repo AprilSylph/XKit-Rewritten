@@ -7,6 +7,11 @@
     "background_color": "#a14546"
   },
   "preferences": {
+    "enableOnPeepr": {
+      "type": "checkbox",
+      "label": "Enable theming on the blog view",
+      "default": false
+    },
     "blacklistedUsernames": {
       "type": "textarea",
       "label": "Disable theming on these blogs (comma-separated)",

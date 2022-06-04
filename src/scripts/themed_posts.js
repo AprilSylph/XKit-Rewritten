@@ -7,6 +7,9 @@ const styleElement = buildStyle();
 const blogs = new Set();
 const groupsFromHex = /^#(?<red>[A-Fa-f0-9]{1,2})(?<green>[A-Fa-f0-9]{1,2})(?<blue>[A-Fa-f0-9]{1,2})$/;
 
+let enableOnPeepr;
+let blacklistedUsernames;
+
 let blacklist;
 
 const hexToRGB = (hex) => {
@@ -19,7 +22,7 @@ const hexToRGB = (hex) => {
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
-    if (postElement.matches(blogViewSelector)) return;
+    if (postElement.matches(blogViewSelector) && !enableOnPeepr) return;
 
     const { blog: { name, theme } } = await timelineObject(postElement);
 
@@ -53,7 +56,7 @@ const processPosts = async function (postElements) {
 };
 
 export const main = async function () {
-  const { blacklistedUsernames } = await getPreferences('themed_posts');
+  ({ enableOnPeepr, blacklistedUsernames } = await getPreferences('themed_posts'));
   blacklist = blacklistedUsernames.split(',').map(username => username.trim());
 
   document.head.append(styleElement);

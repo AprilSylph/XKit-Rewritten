@@ -4,7 +4,7 @@
   "icon": {
     "class_name": "ri-palette-line",
     "color": "white",
-    "background_color": "#a14546"
+    "background_color": "peru"
   },
   "preferences": {
     "enableOnPeepr": {

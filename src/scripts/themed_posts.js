@@ -81,11 +81,8 @@ export const main = async function () {
 
   styleElement.textContent += `
     article ${reblogSelector} {
-      box-shadow: 0px 15px 0px 0px RGB(var(--white));
-    }
-    article ${await keyToCss('holder')} {
-      padding-bottom: 15px;
-      margin-bottom: -15px;
+      margin-top: 0;
+      padding-bottom: 1px;
     }
   `;
 

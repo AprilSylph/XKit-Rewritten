@@ -26,3 +26,13 @@ export const primaryBlog = userBlogs.find(blog => blog.primary === true);
  * {string?} primaryBlogName - The name of the user's primary blog
  */
 export const primaryBlogName = primaryBlog?.name;
+
+/**
+ * {object[]} adminBlogs - An array of blog objects the current user is admin of
+ */
+export const adminBlogs = userInfo?.blogs?.filter(blog => blog.admin) ?? [];
+
+/**
+ * {string[]} adminBlogNames - An array of blog names the current user is admin of
+ */
+export const adminBlogNames = adminBlogs.map(blog => blog.name);

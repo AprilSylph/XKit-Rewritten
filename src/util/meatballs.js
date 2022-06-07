@@ -8,9 +8,9 @@ import { timelineObject } from './react_props.js';
 const postHeaderSelector = `${postSelector} article > header`;
 
 const testHeaderElement = (selector) => {
-  const postElement = document.currentScript.parentElement;
-  const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
-  let fiber = postElement[reactKey];
+  const menuElement = document.currentScript.parentElement;
+  const reactKey = Object.keys(menuElement).find(key => key.startsWith('__reactFiber'));
+  let fiber = menuElement[reactKey];
 
   while (fiber !== null) {
     if (fiber.elementType === 'header') {

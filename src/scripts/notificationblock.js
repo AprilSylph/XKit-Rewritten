@@ -80,12 +80,9 @@ const onButtonClicked = async function ({ currentTarget }) {
   });
 };
 
-const blockPostFilter = async ({ blog, rebloggedFromName, id, rebloggedRootId }) => {
+const blockPostFilter = async ({ blog, id, rebloggedRootId }) => {
   const rootId = rebloggedRootId || id;
-  return (
-    (userBlogNames.includes(blog.name) || userBlogNames.includes(rebloggedFromName)) &&
-    blockedPostTargetIDs.includes(rootId) === false
-  );
+  return userBlogNames.includes(blog.name) && blockedPostTargetIDs.includes(rootId) === false;
 };
 
 const unblockPostFilter = async ({ id, rebloggedRootId }) => {

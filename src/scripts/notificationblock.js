@@ -80,9 +80,12 @@ const onButtonClicked = async function ({ currentTarget }) {
   });
 };
 
-const blockPostFilter = async ({ blog, id, rebloggedRootId }) => {
+const blockPostFilter = async ({ blogName, rebloggedRootName, rebloggedFromName, id, rebloggedRootId }) => {
   const rootId = rebloggedRootId || id;
-  return userBlogNames.includes(blog.name) && blockedPostTargetIDs.includes(rootId) === false;
+  const yourOriginalPost = userBlogNames.includes(rebloggedRootName);
+  const yourReblog = userBlogNames.includes(blogName) || userBlogNames.includes(rebloggedFromName);
+
+  return (yourOriginalPost || yourReblog) && blockedPostTargetIDs.includes(rootId) === false;
 };
 
 const unblockPostFilter = async ({ id, rebloggedRootId }) => {

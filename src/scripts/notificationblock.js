@@ -5,6 +5,7 @@ import { inject } from '../util/inject.js';
 import { keyToCss } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { dom } from '../util/dom.js';
+import { userBlogNames } from '../util/user.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonBlockId = 'notificationblock-block';
@@ -79,9 +80,13 @@ const onButtonClicked = async function ({ currentTarget }) {
   });
 };
 
-const blockPostFilter = async ({ id, canEdit, rebloggedRootId }) => {
+const blockPostFilter = async ({ blogName, rebloggedRootName, rebloggedFromName, id, rebloggedRootId }) => {
   const rootId = rebloggedRootId || id;
-  return canEdit && blockedPostTargetIDs.includes(rootId) === false;
+  const canReceiveActivity = userBlogNames.includes(blogName) ||
+    userBlogNames.includes(rebloggedFromName) ||
+    userBlogNames.includes(rebloggedRootName);
+
+  return canReceiveActivity && blockedPostTargetIDs.includes(rootId) === false;
 };
 
 const unblockPostFilter = async ({ id, rebloggedRootId }) => {

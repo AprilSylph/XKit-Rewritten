@@ -1,5 +1,5 @@
 import { pageModifications } from '../../util/mutations.js';
-import { keyToCss } from '../../util/css_map.js';
+import { keyToCss, resolveExpressions } from '../../util/css_map.js';
 
 const className = 'accesskit-disable-gifs';
 
@@ -41,15 +41,40 @@ const processGifs = function (gifElements) {
   });
 };
 
+const processBackgroundGifs = function (gifBackgroundElements) {
+  gifBackgroundElements.forEach(gifBackgroundElement => {
+    gifBackgroundElement.classList.add('xkit-paused-background-gif');
+    const pausedGifElements = [
+      ...gifBackgroundElement.querySelectorAll('.xkit-paused-gif-label')
+    ];
+    if (pausedGifElements.length) {
+      return;
+    }
+    const gifLabel = document.createElement('p');
+    gifLabel.className = 'xkit-paused-gif-label';
+    gifBackgroundElement.append(gifLabel);
+  });
+};
+
 export const main = async function () {
   document.body.classList.add(className);
-  pageModifications.register(`figure img[srcset*=".gif"]:not(${await keyToCss('poster')})`, processGifs);
+  const gifImage = await resolveExpressions`
+    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+  `;
+  pageModifications.register(gifImage, processGifs);
+
+  const gifBackgroundImage = await resolveExpressions`
+    ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
+  `;
+  pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 };
 
 export const clean = async function () {
   pageModifications.unregister(processGifs);
+  pageModifications.unregister(processBackgroundGifs);
   document.body.classList.remove(className);
 
   $('.xkit-paused-gif, .xkit-paused-gif-label').remove();
   $('.xkit-accesskit-disabled-gif').removeClass('xkit-accesskit-disabled-gif');
+  $('.xkit-paused-background-gif').removeClass('xkit-paused-background-gif');
 };

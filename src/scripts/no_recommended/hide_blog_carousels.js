@@ -1,4 +1,4 @@
-import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { buildStyle, postSelector } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
@@ -10,7 +10,8 @@ const styleElement = buildStyle(`
   .${hiddenClass} > div img, .${hiddenClass} > div canvas { visibility: hidden; }
 `);
 
-let listTimelineObjectSelector;
+const listTimelineObjectSelector = keyToCss('listTimelineObject');
+const blogCarouselSelector = `${postSelector} ~ ${listTimelineObjectSelector} ${keyToCss('blogCarousel')}`;
 
 const hideBlogCarousels = blogCarousels => blogCarousels
   .map(blogCarousel => blogCarousel.closest(listTimelineObjectSelector))
@@ -21,9 +22,6 @@ const hideBlogCarousels = blogCarousels => blogCarousels
 
 export const main = async function () {
   document.head.append(styleElement);
-
-  listTimelineObjectSelector = await keyToCss('listTimelineObject');
-  const blogCarouselSelector = await resolveExpressions`${postSelector} ~ ${listTimelineObjectSelector} ${keyToCss('blogCarousel')}`;
   pageModifications.register(blogCarouselSelector, hideBlogCarousels);
 };
 

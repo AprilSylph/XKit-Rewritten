@@ -45,5 +45,3 @@ export const apiFetch = async function (...args) {
     args
   );
 };
-
-export const getCssMap = inject(async () => window.tumblr.getCssMap());

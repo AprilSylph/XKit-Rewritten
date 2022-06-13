@@ -5,8 +5,8 @@ import { onNewPosts } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
 import { keyToCss } from '../util/css_map.js';
 
-let noteCountSelector;
-let reblogHeaderSelector;
+const noteCountSelector = keyToCss('noteCount');
+const reblogHeaderSelector = keyToCss('reblogHeader');
 
 let alwaysShowYear;
 let headerTimestamps;
@@ -228,9 +228,6 @@ export const onStorageChanged = async function (changes, areaName) {
 
 export const main = async function () {
   ({ alwaysShowYear, headerTimestamps, isoFormat, reblogTimestamps } = await getPreferences('timestamps'));
-
-  noteCountSelector = await keyToCss('noteCount');
-  reblogHeaderSelector = await keyToCss('reblogHeader');
 
   onNewPosts.addListener(addPostTimestamps);
 

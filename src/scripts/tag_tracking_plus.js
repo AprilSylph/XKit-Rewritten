@@ -11,8 +11,8 @@ const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
 const excludeClass = 'xkit-tag-tracking-plus-done';
 const includeFiltered = true;
 
-let searchResultSelector;
-let tagTextSelector;
+const searchResultSelector = keyToCss('searchResult');
+const tagTextSelector = keyToCss('tagText');
 
 const processPosts = async function (postElements) {
   const { pathname, searchParams } = new URL(location);
@@ -79,9 +79,6 @@ const processTagLinks = async function ([searchResultElement]) {
 };
 
 export const main = async function () {
-  searchResultSelector = await keyToCss('searchResult');
-  tagTextSelector = await keyToCss('tagText');
-
   onNewPosts.addListener(processPosts);
   pageModifications.register(searchResultSelector, processTagLinks);
 };

@@ -1,15 +1,14 @@
-import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
-const styleElement = buildStyle();
-resolveExpressions`
+const styleElement = buildStyle(`
 ${keyToCss('tags')}${keyToCss('collapsed')} {
   max-height: none;
 }
 ${keyToCss('seeAll')} {
   display: none;
 }
-`.then(css => { styleElement.textContent = css; });
+`);
 
 export const main = async function () {
   document.head.append(styleElement);

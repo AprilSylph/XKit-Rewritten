@@ -1,4 +1,4 @@
-import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { translate } from '../../util/language_data.js';
 import { pageModifications } from '../../util/mutations.js';
@@ -6,9 +6,11 @@ import { getPreferences } from '../../util/preferences.js';
 
 let mode;
 
-let imageBlockSelector;
+const imageBlockSelector = keyToCss('imageBlock');
+const imageBlockLinkSelector = keyToCss('imageBlockLink');
+const imageBlockButtonInnerSelector = `${keyToCss('imageBlockButton')} ${keyToCss('buttonInner')}`;
 
-const styleElement = buildStyle();
+const styleElement = buildStyle(`${imageBlockLinkSelector}, ${imageBlockButtonInnerSelector} { height: 100%; }`);
 const processedClass = 'accesskit-visible-alt-text';
 
 const processImages = function (imageElements) {
@@ -50,16 +52,9 @@ const onStorageChanged = async function (changes, areaName) {
 
 export const main = async function () {
   ({ visible_alt_text_mode: mode } = await getPreferences('accesskit'));
-  imageBlockSelector = await keyToCss('imageBlock');
 
-  const imageBlockLinkSelector = await keyToCss('imageBlockLink');
-  const imageBlockButtonInnerSelector = await resolveExpressions`${keyToCss('imageBlockButton')} ${keyToCss('buttonInner')}`;
-  // Ensure proper styling for image attributions and images in rows
-  styleElement.textContent = `${imageBlockLinkSelector}, ${imageBlockButtonInnerSelector} { height: 100%; }`;
   document.head.append(styleElement);
-
   pageModifications.register(`article ${imageBlockSelector} img[alt]`, processImages);
-
   browser.storage.onChanged.addListener(onStorageChanged);
 };
 

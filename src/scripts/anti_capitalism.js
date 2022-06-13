@@ -1,4 +1,4 @@
-import { keyToCss, resolveExpressions } from '../util/css_map.js';
+import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { buildStyle } from '../util/interface.js';
 import { hideModal, showModal } from '../util/modals.js';
@@ -7,13 +7,14 @@ import { userInfo } from '../util/user.js';
 
 const hiddenClass = 'xkit-anti-capitalism-hidden';
 
-let listTimelineObjectInnerSelector;
+const listTimelineObjectInnerSelector = keyToCss('listTimelineObjectInner');
 
-const styleElement = buildStyle(`.${hiddenClass} { display: none !important; }\n`);
-keyToCss('adTimelineObject', 'instreamAd', 'mrecContainer', 'nativeIponWebAd', 'takeoverBanner')
-  .then(selector => {
-    styleElement.textContent += `${selector} { display: none !important; }`;
-  });
+const styleElement = buildStyle(`
+.${hiddenClass},
+${keyToCss('adTimelineObject', 'instreamAd', 'mrecContainer', 'nativeIponWebAd', 'takeoverBanner')} {
+  display: none !important;
+}`
+);
 
 const processVideoCTAs = videoCTAs => videoCTAs
   .map(videoCTA => videoCTA.closest(listTimelineObjectInnerSelector))
@@ -59,16 +60,12 @@ const showPremiumPlea = async () => {
 
 export const main = async () => {
   document.head.append(styleElement);
-
-  listTimelineObjectInnerSelector = await keyToCss('listTimelineObjectInner');
-  const videoCTASelector = await resolveExpressions`${listTimelineObjectInnerSelector}:first-child ${keyToCss('videoCTA')}`;
-  pageModifications.register(videoCTASelector, processVideoCTAs);
-
+  pageModifications.register(`${listTimelineObjectInnerSelector}:first-child ${keyToCss('videoCTA')}`, processVideoCTAs);
   showPremiumPlea().catch(() => {});
 };
 
 export const clean = async () => {
-  styleElement.remove();
   pageModifications.unregister(processVideoCTAs);
+  styleElement.remove();
   $(`.${hiddenClass}`).removeClass(hiddenClass);
 };

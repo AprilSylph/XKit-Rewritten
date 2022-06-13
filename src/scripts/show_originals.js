@@ -19,9 +19,7 @@ let whitelist;
 let disabledBlogs;
 
 const lengthenTimeline = async (timeline) => {
-  const paginatorSelector = await keyToCss('manualPaginatorButtons');
-
-  if (!timeline.querySelector(paginatorSelector)) {
+  if (!timeline.querySelector(keyToCss('manualPaginatorButtons'))) {
     timeline.classList.add(lengthenedClass);
   }
 };

@@ -1,4 +1,4 @@
-import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { pageModifications } from '../../util/mutations.js';
 import { translate } from '../../util/language_data.js';
 import { buildStyle } from '../../util/interface.js';
@@ -18,7 +18,7 @@ const hideTagPageRecommended = topBlogsLists => topBlogsLists.forEach(ul => ul.p
 export const main = async function () {
   pageModifications.register('aside > div > h1', hideDashboardRecommended);
 
-  const topBlogsSelector = await resolveExpressions`${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
+  const topBlogsSelector = `${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
   pageModifications.register(topBlogsSelector, hideTagPageRecommended);
 
   document.head.append(styleElement);

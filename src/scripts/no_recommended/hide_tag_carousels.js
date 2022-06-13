@@ -1,4 +1,4 @@
-import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
@@ -10,8 +10,9 @@ const styleElement = buildStyle(`
   .${hiddenClass} > div img, .${hiddenClass} > div canvas { visibility: hidden; }
 `);
 
-let tagCardCarouselItemSelector;
-let listTimelineObjectSelector;
+const tagCardCarouselItemSelector = keyToCss('tagCardCarouselItem');
+const listTimelineObjectSelector = keyToCss('listTimelineObject');
+const carouselWrapperSelector = `${listTimelineObjectSelector} ${keyToCss('carouselWrapper')}`;
 
 const hideTagCarousels = carouselWrappers => carouselWrappers
   .filter(carouselWrapper => carouselWrapper.querySelector(tagCardCarouselItemSelector) !== null)
@@ -23,10 +24,6 @@ const hideTagCarousels = carouselWrappers => carouselWrappers
 
 export const main = async function () {
   document.head.append(styleElement);
-
-  tagCardCarouselItemSelector = await keyToCss('tagCardCarouselItem');
-  listTimelineObjectSelector = await keyToCss('listTimelineObject');
-  const carouselWrapperSelector = await resolveExpressions`${listTimelineObjectSelector} ${keyToCss('carouselWrapper')}`;
   pageModifications.register(carouselWrapperSelector, hideTagCarousels);
 };
 

@@ -1,10 +1,9 @@
-import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
-const styleElement = buildStyle();
-const playPauseSelector = resolveExpressions`${keyToCss('overlayPoof')} ${keyToCss('overlay')} svg`;
+const playPauseSelector = `${keyToCss('overlayPoof')} ${keyToCss('overlay')} svg`;
 
-resolveExpressions`
+const styleElement = buildStyle(`
 :not(${playPauseSelector}) {
   animation: none !important;
   transition: none !important;
@@ -21,7 +20,7 @@ ${keyToCss('postLikeHeartAnimation')} {
 canvas#fire-everywhere {
   display: none;
 }
-`.then(css => { styleElement.textContent = css; });
+`);
 
 export const main = async () => document.head.append(styleElement);
 export const clean = async () => styleElement.remove();

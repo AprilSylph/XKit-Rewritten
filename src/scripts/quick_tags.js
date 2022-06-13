@@ -12,13 +12,13 @@ const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
 const excludeClass = 'xkit-quick-tags-done';
 const tagsClass = 'xkit-quick-tags-tags';
+const controlIconSelector = keyToCss('controlIcon');
 
 let originalPostTag;
 let answerTag;
 let autoTagAsker;
 
 let controlButtonTemplate;
-let controlIconSelector;
 
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-tags' });
 const popupForm = Object.assign(document.createElement('form'), {
@@ -227,7 +227,6 @@ postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 
 export const main = async function () {
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
-  controlIconSelector = await keyToCss('controlIcon');
 
   pageModifications.register(`${postSelector} footer ${controlIconSelector} a[href*="/edit/"]`, addControlButtons);
   registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });

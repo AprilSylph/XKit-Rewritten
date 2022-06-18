@@ -33,6 +33,11 @@
       "label": "Hide related posts in the photo lightbox",
       "default": false
     },
+    "hide_liked_related_posts": {
+      "type": "checkbox",
+      "label": "Hide related posts after you like a post",
+      "default": false
+    },
     "hide_recommended_blogs": {
       "type": "checkbox",
       "label": "Hide recommended blogs in the sidebar",

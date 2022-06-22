@@ -60,7 +60,7 @@ const showPremiumPlea = async () => {
 
 export const main = async () => {
   document.head.append(styleElement);
-  pageModifications.register(`${listTimelineObjectInnerSelector}:first-child ${keyToCss('videoCTA')}`, processVideoCTAs);
+  pageModifications.register(`${listTimelineObjectInnerSelector}:first-child ${keyToCss('videoCTA', 'videoImageCTA')}`, processVideoCTAs);
   showPremiumPlea().catch(() => {});
 };
 

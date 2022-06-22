@@ -1,20 +1,15 @@
-import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
-const styleElement = buildStyle();
+const flexLayoutSelector = `${keyToCss('glass')} ${keyToCss('flexLayout')}`;
+const mainSectionSelector = `${flexLayoutSelector} > ${keyToCss('mainSection')}`;
+const relatedPostsSectionSelector = `${flexLayoutSelector} > ${keyToCss('relatedPostsSection')}`;
 
-export const main = async function () {
-  const flexLayoutSelector = await resolveExpressions`${keyToCss('glass')} ${keyToCss('flexLayout')}`;
-  const mainSectionSelector = await resolveExpressions`${flexLayoutSelector} > ${keyToCss('mainSection')}`;
-  const relatedPostsSectionSelector = await resolveExpressions`${flexLayoutSelector} > ${keyToCss('relatedPostsSection')}`;
+const styleElement = buildStyle(`
+${flexLayoutSelector} { align-items: center; justify-content: center; margin-top: 0; }
+${mainSectionSelector} { height: unset; margin: auto; }
+${relatedPostsSectionSelector} { display: none; }
+`);
 
-  styleElement.textContent = `
-    ${flexLayoutSelector} { align-items: center; justify-content: center; margin-top: 0; }
-    ${mainSectionSelector} { height: unset; margin: auto; }
-    ${relatedPostsSectionSelector} { display: none; }
-  `;
-
-  document.head.append(styleElement);
-};
-
+export const main = async () => document.head.append(styleElement);
 export const clean = async () => styleElement.remove();

@@ -1,9 +1,7 @@
-import { keyToCss, resolveExpressions } from '../../util/css_map.js';
+import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
-const styleElement = buildStyle();
-
-resolveExpressions`
+const styleElement = buildStyle(`
 article footer ${keyToCss('footerRow')} {
   display: flex;
   justify-content: space-between;
@@ -44,7 +42,7 @@ article footer ${keyToCss('noteCount')} {
     transform: translate(-20px, -50%) !important;
   }
 }
-`.then(css => { styleElement.textContent = css; });
+`);
 
 export const main = async () => document.head.append(styleElement);
 export const clean = async () => styleElement.remove();

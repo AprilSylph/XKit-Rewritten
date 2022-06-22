@@ -6,14 +6,12 @@ import { timelineObject } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 
 const hiddenClass = 'xkit-cleanfeed-filtered';
-
 const styleElement = buildStyle();
+const reblogSelector = keyToCss('reblog');
 
 let blockingMode;
 let localFlagging;
-
 let localFlaggedBlogs;
-let reblogSelector;
 
 const processPosts = postElements => filterPostElements(postElements).forEach(async postElement => {
   if (blockingMode === 'all') {
@@ -44,8 +42,6 @@ export const main = async function () {
     .map(username => `[title="${username}"] img[alt="${translate('Avatar')}"] { filter: blur(20px); }`)
     .join('');
   document.head.append(styleElement);
-
-  reblogSelector = await keyToCss('reblog');
   onNewPosts.addListener(processPosts);
 };
 

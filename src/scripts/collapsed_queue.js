@@ -6,9 +6,9 @@ import { keyToCss } from '../util/css_map.js';
 const excludeClass = 'xkit-collapsed-queue-done';
 const wrapperClass = 'xkit-collapsed-queue-wrapper';
 const containerClass = 'xkit-collapsed-queue-container';
+const footerSelector = keyToCss('footerWrapper');
 
 let timelineRegex;
-let footerSelector;
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { excludeClass, timeline: timelineRegex }).forEach(async postElement => {
@@ -33,8 +33,6 @@ export const main = async function () {
     ...runInDrafts ? ['draft'] : []
   ].join('|');
   timelineRegex = new RegExp(`/v2/blog/[^/]+/posts/(${regexGroup})`);
-
-  footerSelector = await keyToCss('footerWrapper');
 
   onNewPosts.addListener(processPosts);
 };

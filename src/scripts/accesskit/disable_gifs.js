@@ -1,6 +1,7 @@
 import { pageModifications } from '../../util/mutations.js';
 import { keyToCss } from '../../util/css_map.js';
 import { dom } from '../../util/dom.js';
+import { postSelector } from '../../util/interface.js';
 
 const className = 'accesskit-disable-gifs';
 
@@ -85,7 +86,7 @@ export const main = async function () {
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 
-  pageModifications.register(await keyToCss('rows'), processRows);
+  pageModifications.register(`${postSelector} ${keyToCss('rows')}`, processRows);
 };
 
 export const clean = async function () {

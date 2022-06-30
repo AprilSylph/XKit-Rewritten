@@ -1,5 +1,7 @@
 import { pageModifications } from '../../util/mutations.js';
 import { keyToCss } from '../../util/css_map.js';
+import { dom } from '../../util/dom.js';
+import { postSelector } from '../../util/interface.js';
 
 const className = 'accesskit-disable-gifs';
 
@@ -56,6 +58,22 @@ const processBackgroundGifs = function (gifBackgroundElements) {
   });
 };
 
+const processRows = function (rowsElements) {
+  rowsElements.forEach(rowsElement => {
+    [...rowsElement.children].forEach(row => {
+      if (!row.querySelector('figure')) return;
+
+      if (row.previousElementSibling?.classList?.contains('xkit-paused-gif-container')) {
+        row.previousElementSibling.append(row);
+      } else {
+        const wrapper = dom('div', { class: 'xkit-paused-gif-container' });
+        row.replaceWith(wrapper);
+        wrapper.append(row);
+      }
+    });
+  });
+};
+
 export const main = async function () {
   document.body.classList.add(className);
   const gifImage = `
@@ -67,12 +85,19 @@ export const main = async function () {
     ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
+
+  pageModifications.register(`${postSelector} ${keyToCss('rows')}`, processRows);
 };
 
 export const clean = async function () {
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
+  pageModifications.unregister(processRows);
   document.body.classList.remove(className);
+
+  [...document.querySelectorAll('.xkit-paused-gif-container')].forEach(wrapper =>
+    wrapper.replaceWith(...wrapper.children)
+  );
 
   $('.xkit-paused-gif, .xkit-paused-gif-label').remove();
   $('.xkit-accesskit-disabled-gif').removeClass('xkit-accesskit-disabled-gif');

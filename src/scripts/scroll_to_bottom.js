@@ -4,6 +4,7 @@ import { pageModifications } from '../util/mutations.js';
 import { buildStyle } from '../util/interface.js';
 
 const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
+$(`[id="${scrollToBottomButtonId}"]`).remove();
 
 const knightRiderLoaderSelector = `main ${keyToCss('loader')} ${keyToCss('knightRiderLoader')}`;
 
@@ -81,6 +82,6 @@ export const clean = async function () {
   pageModifications.unregister(addButtonToPage);
   pageModifications.unregister(checkForButtonRemoved);
   stopScrolling();
-  $(`[id="${scrollToBottomButtonId}"]`).remove();
+  scrollToBottomButton?.remove();
   styleElement.remove();
 };

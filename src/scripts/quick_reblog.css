@@ -171,6 +171,13 @@ div:first-child + span + #quick-reblog {
   line-height: 1;
 }
 
+@media (max-width: 989px) {
+  :is(.published, .queue, .draft) a[role="button"]::after {
+    bottom: calc((27px / 2) - 2px);
+    right: calc((27px / 2) - 4px);
+  }
+}
+
 .published a[role="button"]::after { color: rgb(var(--green)); }
 .queue a[role="button"]::after { color: rgb(var(--purple)); }
 .draft a[role="button"]::after { color: rgb(var(--red)); }

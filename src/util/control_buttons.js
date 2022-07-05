@@ -38,4 +38,5 @@ export const cloneControlButton = function (template, events) {
 };
 
 const styleElement = buildStyle(`${keyToCss('postFooterSecondRedesign')} .xkit-control-button-container { margin-left: 20px; }`);
+styleElement.media = '(min-width: 990px)';
 document.head.append(styleElement);

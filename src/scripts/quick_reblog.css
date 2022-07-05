@@ -145,9 +145,9 @@ div:first-child + span + #quick-reblog {
 #quick-reblog button[data-state="queue"] { color: rgb(var(--pink)); }
 #quick-reblog button[data-state="draft"] { color: rgb(var(--orange)); }
 
-.published svg[fill="rgba(var(--black), 0.65)"] { fill: rgb(var(--green)); }
-.queue svg[fill="rgba(var(--black), 0.65)"] { fill: rgb(var(--purple)); }
-.draft svg[fill="rgba(var(--black), 0.65)"] { fill: rgb(var(--red)); }
+.published svg[style*="--black"] use { --icon-color-primary: rgb(var(--green)); }
+.queue svg[style*="--black"] use { --icon-color-primary: rgb(var(--purple)); }
+.draft svg[style*="--black"] use { --icon-color-primary: rgb(var(--red)); }
 
 :is(.published, .queue, .draft) a[role="button"] {
   position: relative;

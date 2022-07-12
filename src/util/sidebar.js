@@ -76,31 +76,29 @@ export const removeSidebarItem = id => {
   sidebarItem.remove();
 };
 
-(async () => {
-  const sidebarItemSelector = await keyToCss('sidebarItem');
-  const navSubHeaderSelector = await keyToCss('navSubHeader');
+const sidebarItemSelector = keyToCss('sidebarItem');
+const navSubHeaderSelector = keyToCss('navSubHeader');
 
-  const addSidebarToPage = () => {
-    if (document.body.contains(sidebarItems)) { return; }
-    const outdatedSidebarItems = document.getElementById('xkit-sidebar');
-    outdatedSidebarItems?.remove();
+const addSidebarToPage = () => {
+  if (document.body.contains(sidebarItems)) { return; }
+  const outdatedSidebarItems = document.getElementById('xkit-sidebar');
+  outdatedSidebarItems?.remove();
 
-    [...sidebarItems.children]
-      .filter(sidebarItem => conditions.has(sidebarItem))
-      .forEach(sidebarItem => { sidebarItem.hidden = !conditions.get(sidebarItem)(); });
+  [...sidebarItems.children]
+    .filter(sidebarItem => conditions.has(sidebarItem))
+    .forEach(sidebarItem => { sidebarItem.hidden = !conditions.get(sidebarItem)(); });
 
-    const firstSidebarItem = document.querySelector(sidebarItemSelector);
-    const firstNavSubHeader = document.querySelector(navSubHeaderSelector);
+  const firstSidebarItem = document.querySelector(sidebarItemSelector);
+  const firstNavSubHeader = document.querySelector(navSubHeaderSelector);
 
-    if (firstSidebarItem) {
-      const target = getComputedStyle(firstSidebarItem).position === 'sticky'
-        ? firstSidebarItem
-        : firstSidebarItem.nextElementSibling;
-      firstSidebarItem.parentNode.insertBefore(sidebarItems, target);
-    } else if (firstNavSubHeader) {
-      firstNavSubHeader.parentNode.insertBefore(sidebarItems, firstNavSubHeader);
-    }
-  };
+  if (firstSidebarItem) {
+    const target = getComputedStyle(firstSidebarItem).position === 'sticky'
+      ? firstSidebarItem
+      : firstSidebarItem.nextElementSibling;
+    firstSidebarItem.parentNode.insertBefore(sidebarItems, target);
+  } else if (firstNavSubHeader) {
+    firstNavSubHeader.parentNode.insertBefore(sidebarItems, firstNavSubHeader);
+  }
+};
 
-  pageModifications.register(`${sidebarItemSelector}, ${navSubHeaderSelector}`, addSidebarToPage);
-})();
+pageModifications.register(`${sidebarItemSelector}, ${navSubHeaderSelector}`, addSidebarToPage);

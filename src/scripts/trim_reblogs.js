@@ -10,8 +10,8 @@ import { apiFetch } from '../util/tumblr_helpers.js';
 const symbolId = 'ri-scissors-cut-line';
 const buttonClass = 'xkit-trim-reblogs-button';
 
-let controlIconSelector;
-let reblogSelector;
+const controlIconSelector = keyToCss('controlIcon');
+const reblogSelector = keyToCss('reblog');
 
 let controlButtonTemplate;
 
@@ -119,10 +119,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
 });
 
 export const main = async function () {
-  controlIconSelector = await keyToCss('controlIcon');
-  reblogSelector = await keyToCss('reblog');
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
-
   onNewPosts.addListener(processPosts);
 };
 

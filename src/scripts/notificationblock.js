@@ -5,15 +5,16 @@ import { inject } from '../util/inject.js';
 import { keyToCss } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { dom } from '../util/dom.js';
+import { userBlogNames } from '../util/user.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonBlockId = 'notificationblock-block';
 const meatballButtonBlockLabel = 'Block notifications';
 const meatballButtonUnblockId = 'notificationblock-unblock';
 const meatballButtonUnblockLabel = 'Unblock notifications';
+const notificationSelector = keyToCss('notification');
 
 let blockedPostTargetIDs;
-let notificationSelector;
 
 const styleElement = buildStyle();
 const buildCss = () => `:is(${
@@ -79,9 +80,13 @@ const onButtonClicked = async function ({ currentTarget }) {
   });
 };
 
-const blockPostFilter = async ({ id, canEdit, rebloggedRootId }) => {
+const blockPostFilter = async ({ blogName, rebloggedRootName, rebloggedFromName, id, rebloggedRootId }) => {
   const rootId = rebloggedRootId || id;
-  return canEdit && blockedPostTargetIDs.includes(rootId) === false;
+  const canReceiveActivity = userBlogNames.includes(blogName) ||
+    userBlogNames.includes(rebloggedFromName) ||
+    userBlogNames.includes(rebloggedRootName);
+
+  return canReceiveActivity && blockedPostTargetIDs.includes(rootId) === false;
 };
 
 const unblockPostFilter = async ({ id, rebloggedRootId }) => {
@@ -101,7 +106,6 @@ export const main = async function () {
   styleElement.textContent = buildCss();
   document.head.append(styleElement);
 
-  notificationSelector = await keyToCss('notification');
   pageModifications.register(notificationSelector, processNotifications);
 
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });

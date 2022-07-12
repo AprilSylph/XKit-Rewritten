@@ -9,6 +9,7 @@
 
   background-color: rgb(var(--black));
   color: rgb(var(--white));
+  font-size: 1rem;
   font-weight: bold;
   line-height: 1em;
 }
@@ -24,11 +25,21 @@
   background-color: rgb(var(--white));
 }
 
-figure:hover .xkit-paused-gif,
-figure:hover .xkit-paused-gif-label {
+*:hover > .xkit-paused-gif,
+*:hover > .xkit-paused-gif-label,
+.xkit-paused-gif-container:hover .xkit-paused-gif,
+.xkit-paused-gif-container:hover .xkit-paused-gif-label {
   display: none;
 }
 
+.xkit-paused-background-gif:not(:hover) {
+  background-image: none !important;
+  background-color: rgb(var(--secondary-accent));
+}
+
+.xkit-paused-background-gif:not(:hover) > div {
+  color: rgb(var(--black));
+}
 
 body.accesskit-blue-links article a[target="_blank"][href^="https://t.umblr.com/redirect"],
 body.accesskit-blue-links article a[target="_blank"][href^="https://href.li/"] {

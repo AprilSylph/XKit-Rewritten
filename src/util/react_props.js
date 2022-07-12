@@ -1,4 +1,5 @@
 import { inject } from './inject.js';
+import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
 const timelineObjectCache = new WeakMap();
 
@@ -26,6 +27,26 @@ export const timelineObject = async function (postElement) {
     timelineObjectCache.set(postElement, inject(unburyTimelineObject, [], postElement));
   }
   return timelineObjectCache.get(postElement);
+};
+
+export const isMyPost = async (postElement) => {
+  const { blog, isSubmission, postAuthor } = await timelineObject(postElement);
+  const userIsMember = userBlogNames.includes(blog.name);
+  const userIsAdmin = adminBlogNames.includes(blog.name);
+
+  // Post belongs to the user's primary blog
+  if (blog.name === primaryBlogName) return true;
+
+  // Post belongs to the user's single-member sideblog
+  if (postAuthor === undefined && userIsMember) return true;
+
+  // Post was created by the user on a group blog
+  if (postAuthor === primaryBlogName && !isSubmission) return true;
+
+  // Submission belongs to group blog which the user is admin of
+  if (isSubmission && userIsAdmin) return true;
+
+  return false;
 };
 
 const controlTagsInput = async ({ add, remove }) => {

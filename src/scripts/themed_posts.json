@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "peru"
   },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#themed-posts",
   "preferences": {
     "reblogTrailTheming": {
       "type": "checkbox",

@@ -1,5 +1,7 @@
 import { pageModifications } from '../../util/mutations.js';
 import { keyToCss } from '../../util/css_map.js';
+import { dom } from '../../util/dom.js';
+import { postSelector } from '../../util/interface.js';
 
 const className = 'accesskit-disable-gifs';
 
@@ -41,15 +43,63 @@ const processGifs = function (gifElements) {
   });
 };
 
+const processBackgroundGifs = function (gifBackgroundElements) {
+  gifBackgroundElements.forEach(gifBackgroundElement => {
+    gifBackgroundElement.classList.add('xkit-paused-background-gif');
+    const pausedGifElements = [
+      ...gifBackgroundElement.querySelectorAll('.xkit-paused-gif-label')
+    ];
+    if (pausedGifElements.length) {
+      return;
+    }
+    const gifLabel = document.createElement('p');
+    gifLabel.className = 'xkit-paused-gif-label';
+    gifBackgroundElement.append(gifLabel);
+  });
+};
+
+const processRows = function (rowsElements) {
+  rowsElements.forEach(rowsElement => {
+    [...rowsElement.children].forEach(row => {
+      if (!row.querySelector('figure')) return;
+
+      if (row.previousElementSibling?.classList?.contains('xkit-paused-gif-container')) {
+        row.previousElementSibling.append(row);
+      } else {
+        const wrapper = dom('div', { class: 'xkit-paused-gif-container' });
+        row.replaceWith(wrapper);
+        wrapper.append(row);
+      }
+    });
+  });
+};
+
 export const main = async function () {
   document.body.classList.add(className);
-  pageModifications.register(`figure img[srcset*=".gif"]:not(${await keyToCss('poster')})`, processGifs);
+  const gifImage = `
+    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+  `;
+  pageModifications.register(gifImage, processGifs);
+
+  const gifBackgroundImage = `
+    ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
+  `;
+  pageModifications.register(gifBackgroundImage, processBackgroundGifs);
+
+  pageModifications.register(`${postSelector} ${keyToCss('rows')}`, processRows);
 };
 
 export const clean = async function () {
   pageModifications.unregister(processGifs);
+  pageModifications.unregister(processBackgroundGifs);
+  pageModifications.unregister(processRows);
   document.body.classList.remove(className);
+
+  [...document.querySelectorAll('.xkit-paused-gif-container')].forEach(wrapper =>
+    wrapper.replaceWith(...wrapper.children)
+  );
 
   $('.xkit-paused-gif, .xkit-paused-gif-label').remove();
   $('.xkit-accesskit-disabled-gif').removeClass('xkit-accesskit-disabled-gif');
+  $('.xkit-paused-background-gif').removeClass('xkit-paused-background-gif');
 };

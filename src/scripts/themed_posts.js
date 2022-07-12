@@ -77,7 +77,7 @@ export const main = async function () {
   ({ reblogTrailTheming, enableOnPeepr, blacklistedUsernames } = await getPreferences('themed_posts'));
   blacklist = blacklistedUsernames.split(',').map(username => username.trim());
 
-  reblogSelector = await keyToCss('reblog');
+  reblogSelector = keyToCss('reblog');
 
   styleElement.textContent += `
     article ${reblogSelector} {

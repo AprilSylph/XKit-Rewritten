@@ -81,7 +81,7 @@ export const main = async function () {
 
   styleElement.textContent += `
     article ${reblogSelector} {
-      overflow-y: hidden;
+      display: flow-root;
       margin-top: 0;
     }
 

@@ -81,8 +81,12 @@ export const main = async function () {
 
   styleElement.textContent += `
     article ${reblogSelector} {
+      overflow-y: hidden;
       margin-top: 0;
-      padding-bottom: 1px;
+    }
+
+    article ${reblogSelector}:not(:last-child) > :last-child {
+      margin-bottom: 15px;
     }
   `;
 

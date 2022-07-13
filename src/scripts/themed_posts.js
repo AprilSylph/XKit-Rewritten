@@ -1,4 +1,4 @@
-import { buildStyle, filterPostElements, blogViewSelector } from '../util/interface.js';
+import { buildStyle, filterPostElements, blogViewSelector, postSelector } from '../util/interface.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { timelineObject } from '../util/react_props.js';
@@ -78,12 +78,12 @@ export const main = async function () {
 
   if (reblogTrailTheming) {
     styleElement.textContent += `
-      article ${reblogSelector} {
+      ${postSelector} ${reblogSelector} {
         display: flow-root;
         margin-top: 0;
       }
 
-      article ${reblogSelector}:not(:last-child) > :last-child {
+      ${postSelector} ${reblogSelector}:not(:last-child) > :last-child {
         margin-bottom: 15px;
       }
     `;

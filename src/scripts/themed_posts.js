@@ -7,8 +7,7 @@ import { keyToCss } from '../util/css_map.js';
 const styleElement = buildStyle();
 const blogs = new Set();
 const groupsFromHex = /^#(?<red>[A-Fa-f0-9]{1,2})(?<green>[A-Fa-f0-9]{1,2})(?<blue>[A-Fa-f0-9]{1,2})$/;
-
-let reblogSelector;
+const reblogSelector = keyToCss('reblog');
 
 let enableOnPeepr;
 let blacklistedUsernames;
@@ -76,8 +75,6 @@ const processPosts = async function (postElements) {
 export const main = async function () {
   ({ reblogTrailTheming, enableOnPeepr, blacklistedUsernames } = await getPreferences('themed_posts'));
   blacklist = blacklistedUsernames.split(',').map(username => username.trim());
-
-  reblogSelector = keyToCss('reblog');
 
   styleElement.textContent += `
     article ${reblogSelector} {

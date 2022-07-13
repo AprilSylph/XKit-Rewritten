@@ -76,16 +76,18 @@ export const main = async function () {
   ({ reblogTrailTheming, enableOnPeepr, blacklistedUsernames } = await getPreferences('themed_posts'));
   blacklist = blacklistedUsernames.split(',').map(username => username.trim());
 
-  styleElement.textContent += `
-    article ${reblogSelector} {
-      display: flow-root;
-      margin-top: 0;
-    }
+  if (reblogTrailTheming) {
+    styleElement.textContent += `
+      article ${reblogSelector} {
+        display: flow-root;
+        margin-top: 0;
+      }
 
-    article ${reblogSelector}:not(:last-child) > :last-child {
-      margin-bottom: 15px;
-    }
-  `;
+      article ${reblogSelector}:not(:last-child) > :last-child {
+        margin-bottom: 15px;
+      }
+    `;
+  }
 
   document.head.append(styleElement);
   onNewPosts.addListener(processPosts);

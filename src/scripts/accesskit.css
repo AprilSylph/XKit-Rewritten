@@ -64,7 +64,7 @@ figure.accesskit-visible-alt-text figcaption {
   padding: var(--post-header-vertical-padding) var(--post-padding);
   overflow: hidden;
 
-  background-color: rgb(var(--secondary-accent));
+  background-color: rgba(var(--black),.07);
   color: rgb(var(--black));
   font-size: .875rem;
   line-height: 1.5;

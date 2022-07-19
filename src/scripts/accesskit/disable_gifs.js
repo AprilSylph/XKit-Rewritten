@@ -1,11 +1,34 @@
 import { pageModifications } from '../../util/mutations.js';
 import { keyToCss } from '../../util/css_map.js';
 import { dom } from '../../util/dom.js';
-import { postSelector } from '../../util/interface.js';
+import { buildStyle, postSelector } from '../../util/interface.js';
 
 const className = 'accesskit-disable-gifs';
 
-const pauseGif = function (gifElement) {
+const styleElement = buildStyle(`
+  figure ${keyToCss('poster')} {
+    visibility: visible !important;
+    background-color: rgb(var(--white));
+  }
+
+  figure:hover > ${keyToCss('poster')},
+  .xkit-paused-gif-container:hover ${keyToCss('poster')} {
+    display: none;
+  }
+`);
+
+const processPosters = function (posterElements) {
+  posterElements.forEach(posterElement => {
+    if (posterElement.parentNode.querySelector('.xkit-paused-gif-label') === null) {
+      const gifLabel = document.createElement('p');
+      gifLabel.className = 'xkit-paused-gif-label';
+
+      posterElement.parentNode.append(gifLabel);
+    }
+  });
+};
+
+const pauseGifLegacy = function (gifElement) {
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
@@ -24,7 +47,7 @@ const pauseGif = function (gifElement) {
   };
 };
 
-const processGifs = function (gifElements) {
+const processGifsLegacy = function (gifElements) {
   gifElements.forEach(gifElement => {
     const pausedGifElements = [
       ...gifElement.parentNode.querySelectorAll('.xkit-paused-gif'),
@@ -36,9 +59,9 @@ const processGifs = function (gifElements) {
     }
 
     if (gifElement.complete && gifElement.currentSrc) {
-      pauseGif(gifElement);
+      pauseGifLegacy(gifElement);
     } else {
-      gifElement.onload = () => pauseGif(gifElement);
+      gifElement.onload = () => pauseGifLegacy(gifElement);
     }
   });
 };
@@ -76,10 +99,14 @@ const processRows = function (rowsElements) {
 
 export const main = async function () {
   document.body.classList.add(className);
-  const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+  document.head.append(styleElement);
+
+  pageModifications.register(`figure ${keyToCss('poster')}`, processPosters);
+
+  const gifImageLegacy = `
+    ${keyToCss('tagImage', 'takeoverBanner')} img[srcset*=".gif"]:not(${keyToCss('poster')})
   `;
-  pageModifications.register(gifImage, processGifs);
+  pageModifications.register(gifImageLegacy, processGifsLegacy);
 
   const gifBackgroundImage = `
     ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
@@ -90,7 +117,9 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  pageModifications.unregister(processGifs);
+  styleElement.remove();
+
+  pageModifications.unregister(processGifsLegacy);
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);
   document.body.classList.remove(className);

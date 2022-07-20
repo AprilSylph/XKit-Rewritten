@@ -20,16 +20,6 @@
 
 .xkit-paused-gif {
   position: absolute;
-  visibility: visible;
-
-  background-color: rgb(var(--white));
-}
-
-*:hover > .xkit-paused-gif,
-*:hover > .xkit-paused-gif-label,
-.xkit-paused-gif-container:hover .xkit-paused-gif,
-.xkit-paused-gif-container:hover .xkit-paused-gif-label {
-  display: none;
 }
 
 .xkit-paused-background-gif:not(:hover) {

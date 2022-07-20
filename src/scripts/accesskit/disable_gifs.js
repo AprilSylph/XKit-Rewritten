@@ -5,14 +5,16 @@ import { buildStyle, postSelector } from '../../util/interface.js';
 
 const className = 'accesskit-disable-gifs';
 
+const hoverContainer = `${keyToCss('placeholder')}, .xkit-paused-gif-container`;
+const disabledElement = `.xkit-paused-gif, .xkit-paused-gif-label, ${keyToCss('poster')}`;
+
 const styleElement = buildStyle(`
-  figure ${keyToCss('poster')} {
+  figure ${keyToCss('poster')}, .xkit-paused-gif {
     visibility: visible !important;
     background-color: rgb(var(--white));
   }
 
-  figure:hover ${keyToCss('poster')},
-  .xkit-paused-gif-container:hover ${keyToCss('poster')} {
+  :is(${hoverContainer}):hover :is(${disabledElement}) {
     display: none;
   }
 `);

@@ -5,7 +5,7 @@ import { buildStyle, postSelector } from '../../util/interface.js';
 
 const className = 'accesskit-disable-gifs';
 
-const hoverContainer = `${keyToCss('placeholder')}, .xkit-paused-gif-container`;
+const hoverContainer = `${keyToCss('placeholder')}, .xkit-paused-gif-container, ${keyToCss('postCard')}`;
 const disabledElement = `.xkit-paused-gif, .xkit-paused-gif-label, ${keyToCss('poster')}`;
 
 const styleElement = buildStyle(`

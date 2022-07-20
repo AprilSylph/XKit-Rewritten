@@ -34,6 +34,11 @@
       "label": "Turn \"You're caught up\" into a separating line",
       "default": false
     },
+    "unsticky_timeline_controls": {
+      "type": "checkbox",
+      "label": "Remove the sticky effect from the timeline controls (\"following / for you\")",
+      "default": false
+    },
     "no_focus_shadow": {
       "type": "checkbox",
       "label": "Remove the coloured shadow from focused posts",

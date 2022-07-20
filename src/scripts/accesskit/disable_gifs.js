@@ -11,7 +11,7 @@ const styleElement = buildStyle(`
     background-color: rgb(var(--white));
   }
 
-  figure:hover > ${keyToCss('poster')},
+  figure:hover ${keyToCss('poster')},
   .xkit-paused-gif-container:hover ${keyToCss('poster')} {
     display: none;
   }

@@ -5,11 +5,13 @@ import { buildStyle, postSelector } from '../../util/interface.js';
 
 const className = 'accesskit-disable-gifs';
 
+const posterSelector = `figure ${keyToCss('poster')}`;
+
 const hoverContainer = `${keyToCss('placeholder')}, .xkit-paused-gif-container, ${keyToCss('postCard')}`;
-const disabledElement = `.xkit-paused-gif, .xkit-paused-gif-label, ${keyToCss('poster')}`;
+const disabledElement = `.xkit-paused-gif, .xkit-paused-gif-label, ${posterSelector}`;
 
 const styleElement = buildStyle(`
-  figure ${keyToCss('poster')}, .xkit-paused-gif {
+  ${posterSelector}, .xkit-paused-gif {
     visibility: visible !important;
     background-color: rgb(var(--white));
   }
@@ -103,7 +105,7 @@ export const main = async function () {
   document.body.classList.add(className);
   document.head.append(styleElement);
 
-  pageModifications.register(`figure ${keyToCss('poster')}`, processPosters);
+  pageModifications.register(posterSelector, processPosters);
 
   const gifImageLegacy = `
     ${keyToCss('tagImage', 'takeoverBanner')} img[srcset*=".gif"]:not(${keyToCss('poster')})

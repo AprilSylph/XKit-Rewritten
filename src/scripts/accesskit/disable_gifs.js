@@ -108,7 +108,7 @@ export const main = async function () {
   pageModifications.register(posterSelector, processPosters);
 
   const gifImageLegacy = `
-    ${keyToCss('tagImage', 'takeoverBanner')} img[srcset*=".gif"]:not(${keyToCss('poster')})
+    ${keyToCss('tagImage', 'takeoverBanner', 'blogCard')} img[srcset*=".gif"]:not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImageLegacy, processGifsLegacy);
 

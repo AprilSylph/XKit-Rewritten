@@ -34,9 +34,9 @@
       "label": "Turn \"You're caught up\" into a separating line",
       "default": false
     },
-    "unsticky_timeline_controls": {
+    "unsticky_tab_bar": {
       "type": "checkbox",
-      "label": "Remove the sticky effect from the timeline controls (\"following / for you\")",
+      "label": "Remove the sticky effect from the dashboard tab bar",
       "default": false
     },
     "no_focus_shadow": {

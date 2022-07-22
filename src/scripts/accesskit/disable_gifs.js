@@ -1,11 +1,38 @@
 import { pageModifications } from '../../util/mutations.js';
 import { keyToCss } from '../../util/css_map.js';
 import { dom } from '../../util/dom.js';
-import { postSelector } from '../../util/interface.js';
+import { buildStyle, postSelector } from '../../util/interface.js';
 
 const className = 'accesskit-disable-gifs';
 
-const pauseGif = function (gifElement) {
+const posterSelector = `figure ${keyToCss('poster')}`;
+
+const hoverContainer = `${keyToCss('placeholder')}, .xkit-paused-gif-container, ${keyToCss('postCard')}`;
+const disabledElement = `.xkit-paused-gif, .xkit-paused-gif-label, ${posterSelector}`;
+
+const styleElement = buildStyle(`
+  ${posterSelector}, .xkit-paused-gif {
+    visibility: visible !important;
+    background-color: rgb(var(--white));
+  }
+
+  :is(${hoverContainer}):hover :is(${disabledElement}) {
+    display: none;
+  }
+`);
+
+const processPosters = function (posterElements) {
+  posterElements.forEach(posterElement => {
+    if (posterElement.parentNode.querySelector('.xkit-paused-gif-label') === null) {
+      const gifLabel = document.createElement('p');
+      gifLabel.className = 'xkit-paused-gif-label';
+
+      posterElement.parentNode.append(gifLabel);
+    }
+  });
+};
+
+const pauseGifLegacy = function (gifElement) {
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
@@ -24,7 +51,7 @@ const pauseGif = function (gifElement) {
   };
 };
 
-const processGifs = function (gifElements) {
+const processGifsLegacy = function (gifElements) {
   gifElements.forEach(gifElement => {
     const pausedGifElements = [
       ...gifElement.parentNode.querySelectorAll('.xkit-paused-gif'),
@@ -36,9 +63,9 @@ const processGifs = function (gifElements) {
     }
 
     if (gifElement.complete && gifElement.currentSrc) {
-      pauseGif(gifElement);
+      pauseGifLegacy(gifElement);
     } else {
-      gifElement.onload = () => pauseGif(gifElement);
+      gifElement.onload = () => pauseGifLegacy(gifElement);
     }
   });
 };
@@ -76,10 +103,14 @@ const processRows = function (rowsElements) {
 
 export const main = async function () {
   document.body.classList.add(className);
-  const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+  document.head.append(styleElement);
+
+  pageModifications.register(posterSelector, processPosters);
+
+  const gifImageLegacy = `
+    ${keyToCss('tagImage', 'takeoverBanner', 'blogCard')} :is(img[srcset*=".gif"], video[src]):not(${keyToCss('poster')})
   `;
-  pageModifications.register(gifImage, processGifs);
+  pageModifications.register(gifImageLegacy, processGifsLegacy);
 
   const gifBackgroundImage = `
     ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
@@ -90,7 +121,9 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  pageModifications.unregister(processGifs);
+  styleElement.remove();
+
+  pageModifications.unregister(processGifsLegacy);
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);
   document.body.classList.remove(className);

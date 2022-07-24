@@ -7,7 +7,7 @@ const hiddenClass = 'xkit-no-recommended-blog-carousels-hidden';
 const styleElement = buildStyle(`
   .${hiddenClass} { position: relative; }
   .${hiddenClass} > div { visibility: hidden; position: absolute; max-width: 100%; }
-  .${hiddenClass} > div ${keyToCss('visible', 'poster')}, .${hiddenClass} > div canvas { display: none }
+  .${hiddenClass} > div :is(img, video, canvas) { display: none }
 `);
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');

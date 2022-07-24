@@ -39,6 +39,11 @@
       "label": "Remove the coloured shadow from focused posts",
       "default": false
     },
+    "unsticky_tab_bar": {
+      "type": "checkbox",
+      "label": "Remove the sticky effect from the dashboard tab bar",
+      "default": false
+    },
     "unsticky_post_avatars": {
       "type": "checkbox",
       "label": "Remove sticky effect from post avatars",

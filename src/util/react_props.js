@@ -29,6 +29,34 @@ export const timelineObject = async function (postElement) {
   return timelineObjectCache.get(postElement);
 };
 
+const relatedPostsCache = new WeakMap();
+
+const unburyRelatedPosts = () => {
+  const recommendationElement = document.currentScript.parentElement;
+  const reactKey = Object.keys(recommendationElement).find(key => key.startsWith('__reactFiber'));
+  let fiber = recommendationElement[reactKey];
+
+  while (fiber !== null) {
+    const { relatedPostsContext } = fiber.memoizedProps || {};
+    if (relatedPostsContext !== undefined) {
+      return relatedPostsContext.relatedPosts;
+    } else {
+      fiber = fiber.return;
+    }
+  }
+};
+
+/**
+ * @param {Element} recommendationElement - (todo: describe this with the canonical feature name)
+ * @returns {Promise<object>} - The element's buried relatedPosts property
+ */
+export const relatedPosts = async function (recommendationElement) {
+  if (!relatedPostsCache.has(recommendationElement)) {
+    relatedPostsCache.set(recommendationElement, inject(unburyRelatedPosts, [], recommendationElement));
+  }
+  return relatedPostsCache.get(recommendationElement);
+};
+
 export const isMyPost = async (postElement) => {
   const { blog, isSubmission, postAuthor } = await timelineObject(postElement);
   const userIsMember = userBlogNames.includes(blog.name);

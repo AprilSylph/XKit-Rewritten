@@ -1,7 +1,7 @@
 import { keyToCss } from '../../util/css_map.js';
-import { buildStyle, postSelector } from '../../util/interface.js';
-import { translate } from '../../util/language_data.js';
+import { buildStyle } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
+import { relatedPosts } from '../../util/react_props.js';
 
 const hiddenClass = 'xkit-no-recommended-related-posts-hidden';
 
@@ -12,20 +12,20 @@ const styleElement = buildStyle(`
 `);
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
-const titleSelector = `${postSelector} + ${listTimelineObjectSelector} ${keyToCss('titleObject')}`;
-const moreLikeThis = translate('More like this');
 
-const hideRelatedRows = titleObjects => titleObjects
-  .filter(titleObject => titleObject.innerText === moreLikeThis)
-  .map(titleObject => titleObject.closest(listTimelineObjectSelector))
-  .forEach(listTimelineObject => {
-    listTimelineObject.classList.add(hiddenClass);
-    listTimelineObject.nextElementSibling.classList.add(hiddenClass);
+const hideRelatedRows = chicletRows => chicletRows
+  .forEach(async chicletRow => {
+    const relatedPostsData = await relatedPosts(chicletRow);
+    if (relatedPostsData) {
+      const listTimelineObject = chicletRow.closest(listTimelineObjectSelector);
+      listTimelineObject.classList.add(hiddenClass);
+      listTimelineObject.previousElementSibling.classList.add(hiddenClass);
+    }
   });
 
 export const main = async function () {
   document.head.append(styleElement);
-  pageModifications.register(titleSelector, hideRelatedRows);
+  pageModifications.register(keyToCss('chicletRow'), hideRelatedRows);
 };
 
 export const clean = async function () {

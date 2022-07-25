@@ -41,7 +41,7 @@
     },
     "visible_alt_text": {
       "type": "checkbox",
-      "label": "Show alt text as captions below images",
+      "label": "Move alt text to captions below images",
       "default": false
     },
     "visible_alt_text_mode": {

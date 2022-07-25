@@ -26,7 +26,9 @@
 }
 
 *:hover > .xkit-paused-gif,
-*:hover > .xkit-paused-gif-label {
+*:hover > .xkit-paused-gif-label,
+.xkit-paused-gif-container:hover .xkit-paused-gif,
+.xkit-paused-gif-container:hover .xkit-paused-gif-label {
   display: none;
 }
 
@@ -62,7 +64,7 @@ figure.accesskit-visible-alt-text figcaption {
   padding: var(--post-header-vertical-padding) var(--post-padding);
   overflow: hidden;
 
-  background-color: rgb(var(--secondary-accent));
+  background-color: rgba(var(--black),.07);
   color: rgb(var(--black));
   font-size: .875rem;
   line-height: 1.5;

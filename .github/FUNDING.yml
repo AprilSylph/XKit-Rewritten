@@ -1,2 +1,4 @@
-github: [eslint, standard]
-custom: https://donate.mozilla.org/
+custom:
+  - https://github.com/sponsors/eslint
+  - https://github.com/sponsors/standard
+  - https://donate.mozilla.org/

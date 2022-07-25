@@ -8,6 +8,11 @@
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#themed-posts",
   "preferences": {
+    "reblogTrailTheming": {
+      "type": "checkbox",
+      "label": "Theme every reblog trail item individually",
+      "default": false
+    },
     "enableOnPeepr": {
       "type": "checkbox",
       "label": "Enable theming on the blog view",

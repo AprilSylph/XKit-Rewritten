@@ -6,12 +6,21 @@ import { getPreferences } from '../../util/preferences.js';
 
 let mode;
 
+const processedClass = 'accesskit-visible-alt-text';
+
 const imageBlockSelector = keyToCss('imageBlock');
 const imageBlockLinkSelector = keyToCss('imageBlockLink');
 const imageBlockButtonInnerSelector = `${keyToCss('imageBlockButton')} ${keyToCss('buttonInner')}`;
 
-const styleElement = buildStyle(`${imageBlockLinkSelector}, ${imageBlockButtonInnerSelector} { height: 100%; }`);
-const processedClass = 'accesskit-visible-alt-text';
+const styleElement = buildStyle(`
+${imageBlockLinkSelector}, ${imageBlockButtonInnerSelector} {
+  height: 100%;
+}
+
+.${processedClass} ${keyToCss('altTextHelper')} {
+  display: none;
+}
+`);
 
 const processImages = function (imageElements) {
   const imageBlocks = new Map();

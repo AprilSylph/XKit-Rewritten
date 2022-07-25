@@ -8,7 +8,7 @@ const hiddenClass = 'xkit-no-recommended-related-posts-hidden';
 const styleElement = buildStyle(`
   .${hiddenClass} { position: relative; }
   .${hiddenClass} > div { visibility: hidden; position: absolute; max-width: 100%; }
-  .${hiddenClass} > div img, .${hiddenClass} > div canvas { visibility: hidden; }
+  .${hiddenClass} > div :is(img, video, canvas) { display: none }
 `);
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');

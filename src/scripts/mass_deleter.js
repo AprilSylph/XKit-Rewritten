@@ -166,7 +166,11 @@ const clearQueue = async function () {
   while (resource) {
     await Promise.all([
       apiFetch(resource).then(({ response }) => {
-        queuedPosts.push(...response.posts.filter(({ queuedState }) => queuedState === 'queued'));
+        const posts = response.posts
+          .filter(({ canEdit }) => canEdit === true)
+          .filter(({ queuedState }) => queuedState === 'queued');
+
+        queuedPosts.push(...posts);
         resource = response.links?.next?.href;
 
         foundPostsElement.textContent = `Found ${queuedPosts.length} queued posts${resource ? '...' : '.'}`;

@@ -1,0 +1,16 @@
+{
+  "title": "Mute",
+  "description": "",
+  "icon": {
+    "class_name": "ri-volume-mute-line",
+    "color": "white",
+    "background_color": "#C20044"
+  },
+  "preferences": {
+    "manageBlockedPosts": {
+      "type": "iframe",
+      "label": "Manage muted users",
+      "src": "/scripts/mute/options/index.html"
+    }
+  }
+}

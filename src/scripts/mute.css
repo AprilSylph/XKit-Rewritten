@@ -1,0 +1,25 @@
+.xkit-mute-active .xkit-mute-hidden article {
+  /* display: none; */
+  opacity: 0.5;
+}
+
+.xkit-mute-lengthened {
+  min-height: 100vh;
+}
+
+.xkit-mute-warning {
+  text-align: center;
+  background-color: rgba(var(--white-on-dark),.07);
+  color: rgba(var(--white-on-dark),.65);
+  padding: 25px 20px;
+  font-weight: 700;
+  border-radius: 3px;
+}
+
+.xkit-mute-warning ~ * {
+  visibility: hidden !important;
+}
+
+.xkit-mute-warning ~ * :is(img, video, canvas) {
+  display: none;
+}

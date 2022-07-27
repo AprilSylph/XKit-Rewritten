@@ -14,7 +14,8 @@ const gatherLikes = async function () {
 
   while (resource) {
     const { response } = await apiFetch(resource);
-    likes.push(...response.likedPosts);
+    const posts = response.likedPosts.filter(({ reblogKey }) => reblogKey);
+    likes.push(...posts);
     gatherStatusElement.textContent = `Found ${likes.length} liked posts...`;
     resource = response.links?.next?.href;
   }

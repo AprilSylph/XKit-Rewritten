@@ -76,7 +76,11 @@ const deleteDrafts = async function ({ blogName, before }) {
   while (resource) {
     await Promise.all([
       apiFetch(resource).then(({ response }) => {
-        drafts.push(...response.posts.filter(({ timestamp }) => timestamp < before));
+        const posts = response.posts
+          .filter(({ canEdit }) => canEdit === true)
+          .filter(({ timestamp }) => timestamp < before);
+
+        drafts.push(...posts);
         resource = response.links?.next?.href;
 
         foundPostsElement.textContent = `Found ${drafts.length} drafts${resource ? '...' : '.'}`;

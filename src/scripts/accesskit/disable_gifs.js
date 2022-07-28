@@ -7,7 +7,7 @@ const className = 'accesskit-disable-gifs';
 
 const posterSelector = `figure ${keyToCss('poster')}`;
 
-const hoverContainer = `${keyToCss('placeholder')}, .xkit-paused-gif-container, ${keyToCss('postCard')}`;
+const hoverContainer = `${keyToCss('placeholder', 'takeoverBanner', 'postCard')}, .xkit-paused-gif-container`;
 const disabledElement = `.xkit-paused-gif, .xkit-paused-gif-label, ${posterSelector}`;
 
 const styleElement = buildStyle(`

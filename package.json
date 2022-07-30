@@ -2,11 +2,10 @@
   "license": "GPL-3.0",
   "repository": "github:AprilSylph/XKit-Rewritten",
   "scripts": {
-    "test": "eslint . && web-ext lint",
-    "lint-webextension": "web-ext lint",
-    "build-webextension": "web-ext build",
-    "sign-webextension": "web-ext sign",
-    "webstore-upload": "chrome-webstore-upload upload --source=src/ --auto-publish"
+    "test": "web-ext lint",
+    "posttest": "eslint src/",
+    "start": "web-ext run",
+    "build": "web-ext build"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^2.1.0",

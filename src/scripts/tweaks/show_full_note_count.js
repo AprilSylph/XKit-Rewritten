@@ -4,12 +4,8 @@ import { buildStyle, postSelector } from '../../util/interface.js';
 import { timelineObject } from '../../util/react_props.js';
 import { keyToCss } from '../../util/css_map.js';
 
-const createNumberFormat = async () => {
-  const locale = document.documentElement.lang;
-  return new Intl.NumberFormat(locale);
-};
-
-const numberFormat = await createNumberFormat().catch(() => new Intl.NumberFormat());
+const { lang } = document.documentElement;
+const numberFormat = new Intl.NumberFormat(lang);
 
 const notes = translate('notes');
 const note = translate('note');

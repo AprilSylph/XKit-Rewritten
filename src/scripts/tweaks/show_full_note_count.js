@@ -1,12 +1,11 @@
 import { pageModifications } from '../../util/mutations.js';
-import { translate, languageData } from '../../util/language_data.js';
+import { translate } from '../../util/language_data.js';
 import { buildStyle, postSelector } from '../../util/interface.js';
 import { timelineObject } from '../../util/react_props.js';
 import { keyToCss } from '../../util/css_map.js';
 
 const createNumberFormat = async () => {
-  const { code } = await languageData;
-  const locale = code.replaceAll('_', '-');
+  const locale = document.documentElement.lang;
   return new Intl.NumberFormat(locale);
 };
 

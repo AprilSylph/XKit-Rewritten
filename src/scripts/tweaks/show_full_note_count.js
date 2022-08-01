@@ -1,6 +1,6 @@
 import { pageModifications } from '../../util/mutations.js';
 import { translate, languageData } from '../../util/language_data.js';
-import { buildStyle } from '../../util/interface.js';
+import { buildStyle, postSelector } from '../../util/interface.js';
 import { timelineObject } from '../../util/react_props.js';
 import { keyToCss } from '../../util/css_map.js';
 
@@ -28,7 +28,8 @@ const styleElement = buildStyle(`
 
 const formatNoteElements = function (noteElements) {
   noteElements.forEach(async noteElement => {
-    const { noteCount } = await timelineObject(noteElement);
+    const postElement = noteElement.closest(postSelector) ?? noteElement.closest('article');
+    const { noteCount } = await timelineObject(postElement);
     if (!noteCount) return;
 
     const label = noteCount === 1 ? note : notes;

@@ -1,10 +1,16 @@
 import { pageModifications } from '../../util/mutations.js';
-import { translate } from '../../util/language_data.js';
+import { translate, languageData } from '../../util/language_data.js';
 import { buildStyle } from '../../util/interface.js';
 import { timelineObject } from '../../util/react_props.js';
 import { keyToCss } from '../../util/css_map.js';
 
-const numberFormat = new Intl.NumberFormat();
+const createNumberFormat = async () => {
+  const { code } = await languageData;
+  const locale = code.replaceAll('_', '-');
+  return new Intl.NumberFormat(locale);
+};
+
+const numberFormat = await createNumberFormat().catch(() => new Intl.NumberFormat());
 
 const notes = translate('notes');
 const note = translate('note');

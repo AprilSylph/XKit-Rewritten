@@ -9,8 +9,8 @@
 
 .xkit-mute-warning {
   text-align: center;
-  background-color: rgba(var(--white-on-dark),.07);
-  color: rgba(var(--white-on-dark),.65);
+  background-color: var(--blog-link-color-15);
+  color: var(--blog-link-color);
   padding: 25px 20px;
   font-weight: 700;
   border-radius: 3px;

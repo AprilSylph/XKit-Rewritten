@@ -18,6 +18,8 @@ const storageKey = 'mute.mutedblogs';
 
 let mutedBlogs = {};
 
+const dismissedWarnings = new Set();
+
 const lengthenTimeline = async (timeline) => {
   if (!timeline.querySelector(keyToCss('manualPaginatorButtons'))) {
     timeline.classList.add(lengthenedClass);
@@ -25,37 +27,36 @@ const lengthenTimeline = async (timeline) => {
 };
 
 const updateWarningElement = (timelineElement, timeline) => {
-  if (timelineElement.dataset.xkitRemovedTimelineWarning === timeline) return;
+  if (dismissedWarnings.has(timeline)) return;
 
   const currentWarningElement = timelineElement.previousElementSibling?.classList?.contains(warningClass)
     ? timelineElement.previousElementSibling
     : null;
 
-  if (currentWarningElement) {
-    if (currentWarningElement.dataset.cachedTimeline === timeline) {
-      return;
-    } else {
-      currentWarningElement.remove();
-    }
-  }
-  // TODO: more reliable check if current blog is muted (currently susceptible to stored outdated blognames)
-  const currentBlogUuidOrName = timeline.split('/')[3];
-  const mutedBlogEntry = Object.entries(mutedBlogs).find(([uuid, [name]]) => uuid === currentBlogUuidOrName || name === currentBlogUuidOrName);
+  if (currentWarningElement === null || currentWarningElement.dataset.forTimeline !== timeline) {
+    currentWarningElement?.remove();
 
-  if (mutedBlogEntry) {
-    const [, [name]] = mutedBlogEntry;
-    const warningElement = dom('div', { class: warningClass }, null, [
-      `You have muted ${name}!`,
-      dom('br'),
-      dom(
-        'button',
-        null,
-        { click: () => { warningElement.remove(); timelineElement.dataset.xkitRemovedTimelineWarning = timeline; } },
-        'show posts anyway'
-      )
-    ]);
-    warningElement.dataset.cachedTimeline = timeline;
-    timelineElement.before(warningElement);
+    // TODO: more reliable check if current blog is muted (currently susceptible to stored outdated blognames)
+    const mutedBlogEntry = Object.entries(mutedBlogs).find(
+      ([uuid, [name]]) =>
+        timeline.startsWith(`/v2/blog/${uuid}/`) || timeline.startsWith(`/v2/blog/${name}/`)
+    );
+
+    if (mutedBlogEntry) {
+      const [, [name]] = mutedBlogEntry;
+      const warningElement = dom('div', { class: warningClass }, null, [
+        `You have muted ${name}!`,
+        dom('br'),
+        dom(
+          'button',
+          null,
+          { click: () => { warningElement.remove(); dismissedWarnings.add(timeline); } },
+          'show posts anyway'
+        )
+      ]);
+      warningElement.dataset.forTimeline = timeline;
+      timelineElement.before(warningElement);
+    }
   }
 };
 

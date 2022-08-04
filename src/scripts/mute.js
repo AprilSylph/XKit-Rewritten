@@ -1,61 +1,116 @@
-import { filterPostElements, blogViewSelector } from '../util/interface.js';
+import { filterPostElements, blogViewSelector, buildStyle } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
-import { onNewPosts, pageModifications } from '../util/mutations.js';
+import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 
 const meatballButtonId = 'mute';
 const meatballButtonLabel = 'Mute options';
 
-const activeClass = 'xkit-mute-active';
-const hiddenClass = 'xkit-mute-hidden';
-const lengthenedClass = 'xkit-mute-lengthened';
 const warningClass = 'xkit-mute-warning';
+const lengthenedClass = 'xkit-mute-lengthened';
+const controlsClass = 'xkit-mute-controls';
 
 const storageKey = 'mute.mutedblogs';
 
 let mutedBlogs = {};
+const dismissedUuids = new Set();
 
-const dismissedWarnings = new Set();
+const styleElement = buildStyle();
 
-const lengthenTimeline = async (timeline) => {
+const buildSelectorString = excludedUuid => {
+  const selectors = [];
+  Object.entries(mutedBlogs).forEach(([uuid, [name, mode]]) => {
+    if (uuid === excludedUuid) return;
+
+    if (['all', 'original'].includes(mode)) {
+      selectors.push(`[data-xkit-mute-original-uuid="${uuid}"]`);
+    }
+    if (['all', 'reblogged'].includes(mode)) {
+      selectors.push(`[data-xkit-mute-reblog-uuid="${uuid}"]`);
+    }
+  });
+  return `:is(${selectors.join(', ')})`;
+};
+
+const updateStyleElement = () => {
+  styleElement.textContent = '';
+
+  styleElement.textContent += `
+   [data-mute="on"] + [data-timeline] ${buildSelectorString()} article {
+      /* display: none; */
+      opacity: 0.5;
+    }
+  `;
+
+  dismissedUuids.forEach(uuid => {
+    styleElement.textContent += `
+      [data-mute="except ${uuid}"] + [data-timeline] ${buildSelectorString(uuid)} article {
+        /* display: none; */
+        opacity: 0.5;
+      }
+   `;
+  });
+};
+
+const lengthenTimeline = async timeline => {
   if (!timeline.querySelector(keyToCss('manualPaginatorButtons'))) {
     timeline.classList.add(lengthenedClass);
   }
 };
 
-const updateWarningElement = (timelineElement, timeline) => {
-  if (dismissedWarnings.has(timeline)) return;
+const addControls = (timelineElement, timeline) => {
+  const isSingleBlog = timeline.startsWith('/v2/blog/');
+  const isInBlogView = timelineElement.matches(blogViewSelector);
+  const isChannel = isSingleBlog === true && isInBlogView === false;
 
-  const currentWarningElement = timelineElement.previousElementSibling?.classList?.contains(warningClass)
-    ? timelineElement.previousElementSibling
-    : null;
+  const controls = dom('div', { class: controlsClass });
+  controls.dataset.forTimeline = timeline;
+  controls.dataset.mute = 'on';
+  timelineElement.before(controls);
 
-  if (currentWarningElement === null || currentWarningElement.dataset.forTimeline !== timeline) {
-    currentWarningElement?.remove();
+  if (isChannel) {
+    controls.dataset.mute = 'off';
+    return;
+  }
 
-    // TODO: more reliable check if current blog is muted (currently susceptible to stored outdated blognames)
-    const mutedBlogEntry = Object.entries(mutedBlogs).find(
-      ([uuid, [name]]) =>
-        timeline.startsWith(`/v2/blog/${uuid}/`) || timeline.startsWith(`/v2/blog/${name}/`)
-    );
+  // TODO: more reliable check if current blog is muted (currently susceptible to stored outdated blognames)
+  const mutedBlogEntry = Object.entries(mutedBlogs).find(
+    ([uuid, [name]]) =>
+      timeline.startsWith(`/v2/blog/${uuid}/`) || timeline.startsWith(`/v2/blog/${name}/`)
+  );
 
-    if (mutedBlogEntry) {
-      const [, [name]] = mutedBlogEntry;
-      const warningElement = dom('div', { class: warningClass }, null, [
-        `You have muted ${name}!`,
-        dom('br'),
-        dom(
-          'button',
-          null,
-          { click: () => { warningElement.remove(); dismissedWarnings.add(timeline); } },
-          'show posts anyway'
-        )
-      ]);
-      warningElement.dataset.forTimeline = timeline;
-      timelineElement.before(warningElement);
+  if (mutedBlogEntry) {
+    const [uuid, [name, mode]] = mutedBlogEntry;
+
+    if (mode === 'all') {
+      controls.dataset.mute = `except ${uuid}`;
+
+      if (!dismissedUuids.has(uuid)) {
+        controls.classList.add(warningClass);
+        controls.replaceChildren(
+          ...[
+            `You have muted all posts from ${name}!`,
+            dom('br'),
+            dom(
+              'button',
+              null,
+              {
+                click: () => {
+                  controls.classList.remove(warningClass);
+                  controls.replaceChildren([]);
+
+                  dismissedUuids.add(uuid);
+                  updateStyleElement();
+                }
+              },
+              'show posts anyway'
+            )
+          ]
+        );
+      }
     }
   }
 };
@@ -63,20 +118,16 @@ const updateWarningElement = (timelineElement, timeline) => {
 const processTimelines = async () => {
   [...document.querySelectorAll('[data-timeline]')].forEach(async timelineElement => {
     const timeline = timelineElement.dataset.timeline;
-    const isSingleBlog = timeline.startsWith('/v2/blog/');
-    const isInBlogView = timelineElement.matches(blogViewSelector);
-    const isChannel = isSingleBlog === true && isInBlogView === false;
 
-    console.log({ timelineElement, timeline, isBlogView: isSingleBlog, isInBlogView, isChannel });
+    const currentControls = timelineElement.previousElementSibling?.classList?.contains(controlsClass)
+      ? timelineElement.previousElementSibling
+      : null;
 
-    if (isChannel) return;
-
-    if (isInBlogView && timelineElement.closest(keyToCss('moreContent')) === null) {
-      updateWarningElement(timelineElement, timeline);
+    if (currentControls?.dataset?.forTimeline !== timeline) {
+      currentControls?.remove();
+      addControls(timelineElement, timeline);
+      lengthenTimeline(timelineElement);
     }
-
-    lengthenTimeline(timelineElement);
-    timelineElement.classList.add(activeClass);
   });
 };
 
@@ -84,30 +135,18 @@ const processPosts = async function (postElements) {
   processTimelines();
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
-    // eslint-disable-next-line prefer-const
-    let { blog: { name, uuid }, rebloggedRootName, rebloggedRootUuid, content } = await timelineObject(postElement);
+    const { blog: { uuid }, rebloggedRootUuid, content } = await timelineObject(postElement);
 
     // should there be a setting such that reblogs with contributed content count?
     // eslint-disable-next-line no-unused-vars
     const contributedContent = content.length > 0;
     const isRebloggedPost = Boolean(rebloggedRootUuid);
 
-    // don't hide based on currently viewed blog if warning is dismissed; still mute others
-    const currentTimeline = postElement.closest('[data-timeline]').dataset.timeline;
-    if (currentTimeline.startsWith(`/v2/blog/${name}/`) || currentTimeline.startsWith(`/v2/blog/${uuid}/`)) uuid = undefined;
-    if (currentTimeline.startsWith(`/v2/blog/${rebloggedRootName}/`) || currentTimeline.startsWith(`/v2/blog/${rebloggedRootUuid}/`)) rebloggedRootUuid = undefined;
-
-    const blogMode = mutedBlogs[uuid]?.[1];
-    const rootMode = mutedBlogs[rebloggedRootUuid]?.[1];
-
     if (isRebloggedPost) {
-      if (['all', 'reblogged'].includes(blogMode) || ['all', 'original'].includes(rootMode)) {
-        postElement.classList.add(hiddenClass);
-      }
+      postElement.dataset.xkitMuteReblogUuid = uuid;
+      postElement.dataset.xkitMuteOriginalUuid = rebloggedRootUuid;
     } else {
-      if (['all', 'original'].includes(blogMode)) {
-        postElement.classList.add(hiddenClass);
-      }
+      postElement.dataset.xkitMuteOriginalUuid = uuid;
     }
   });
 };
@@ -117,7 +156,7 @@ const onButtonClicked = async function ({ currentTarget }) {
 
   const currentMode = mutedBlogs[uuid]?.[1];
 
-  const createRadioElement = (value) =>
+  const createRadioElement = value =>
     dom('label', null, null, [
       dom('input', { type: 'radio', name: 'muteOption', value }),
       `Hide ${value} posts`
@@ -167,30 +206,36 @@ export const onStorageChanged = async function (changes, areaName) {
 
   if (mutedBlogsChanges) {
     ({ newValue: mutedBlogs } = mutedBlogsChanges);
-    $(`.${hiddenClass}`).removeClass(hiddenClass);
-    // clean up warnings and data attributes from updateWarningElement
 
-    pageModifications.trigger(processPosts);
+    $(`.${controlsClass}`).remove();
+    processTimelines();
+    updateStyleElement();
   }
 };
 
 export const main = async function () {
   ({ [storageKey]: mutedBlogs = {} } = await browser.storage.local.get(storageKey));
 
-  registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
+  updateStyleElement();
+  document.head.append(styleElement);
+  registerMeatballItem({
+    id: meatballButtonId,
+    label: meatballButtonLabel,
+    onclick: onButtonClicked
+  });
   onNewPosts.addListener(processPosts);
 };
 
 export const clean = async function () {
+  styleElement.remove();
   unregisterMeatballItem(meatballButtonId);
   onNewPosts.removeListener(processPosts);
 
-  $(`.${activeClass}`).removeClass(activeClass);
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
-  $(`.${warningClass}`).remove();
+  $(`.${controlsClass}`).remove();
 
-  // clean up data attributes from updateWarningElement
+  $('[data-xkit-mute-original-uuid]').removeAttr('data-xkit-mute-original-uuid');
+  $('[data-xkit-mute-reblog-uuid]').removeAttr('data-xkit-mute-reblog-uuid');
 };
 
 export const stylesheet = true;

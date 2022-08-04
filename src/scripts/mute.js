@@ -226,6 +226,8 @@ export const clean = async function () {
   $(`.${controlsClass}`).remove();
   $('[data-xkit-mute-original-uuid]').removeAttr('data-xkit-mute-original-uuid');
   $('[data-xkit-mute-reblog-uuid]').removeAttr('data-xkit-mute-reblog-uuid');
+
+  dismissedWarningUuids.clear();
 };
 
 export const stylesheet = true;

@@ -16,11 +16,11 @@ const controlsClass = 'xkit-mute-controls';
 const storageKey = 'mute.mutedblogs';
 
 let mutedBlogs = {};
-const dismissedUuids = new Set();
+const dismissedWarningUuids = new Set();
 
 const styleElement = buildStyle();
 
-const buildSelectorString = excludedUuid => {
+const buildPostSelector = excludedUuid => {
   const selectors = [];
   Object.entries(mutedBlogs).forEach(([uuid, [name, mode]]) => {
     if (uuid === excludedUuid) return;
@@ -37,17 +37,15 @@ const buildSelectorString = excludedUuid => {
 
 const updateStyleElement = () => {
   styleElement.textContent = '';
-
   styleElement.textContent += `
-   [data-mute="on"] + [data-timeline] ${buildSelectorString()} article {
+   [data-mute="on"] + [data-timeline] ${buildPostSelector()} article {
       /* display: none; */
       opacity: 0.5;
     }
   `;
-
-  dismissedUuids.forEach(uuid => {
+  dismissedWarningUuids.forEach(uuid => {
     styleElement.textContent += `
-      [data-mute="except ${uuid}"] + [data-timeline] ${buildSelectorString(uuid)} article {
+      [data-mute="except ${uuid}"] + [data-timeline] ${buildPostSelector(uuid)} article {
         /* display: none; */
         opacity: 0.5;
       }
@@ -55,7 +53,7 @@ const updateStyleElement = () => {
   });
 };
 
-const lengthenTimeline = async timeline => {
+const lengthenTimeline = timeline => {
   if (!timeline.querySelector(keyToCss('manualPaginatorButtons'))) {
     timeline.classList.add(lengthenedClass);
   }
@@ -88,35 +86,28 @@ const addControls = (timelineElement, timeline) => {
     if (mode === 'all') {
       controls.dataset.mute = `except ${uuid}`;
 
-      if (!dismissedUuids.has(uuid)) {
-        controls.classList.add(warningClass);
-        controls.replaceChildren(
-          ...[
-            `You have muted all posts from ${name}!`,
-            dom('br'),
-            dom(
-              'button',
-              null,
-              {
-                click: () => {
-                  controls.classList.remove(warningClass);
-                  controls.replaceChildren([]);
+      if (!dismissedWarningUuids.has(uuid)) {
+        const dismissWarning = () => {
+          dismissedWarningUuids.add(uuid);
+          updateStyleElement();
 
-                  dismissedUuids.add(uuid);
-                  updateStyleElement();
-                }
-              },
-              'show posts anyway'
-            )
-          ]
-        );
+          controls.classList.remove(warningClass);
+          controls.replaceChildren([]);
+        };
+
+        controls.classList.add(warningClass);
+        controls.replaceChildren(...[
+          `You have muted all posts from ${name}!`,
+          dom('br'),
+          dom('button', null, { click: dismissWarning }, 'show posts anyway')
+        ]);
       }
     }
   }
 };
 
-const processTimelines = async () => {
-  [...document.querySelectorAll('[data-timeline]')].forEach(async timelineElement => {
+const processTimelines = () => {
+  [...document.querySelectorAll('[data-timeline]')].forEach(timelineElement => {
     const timeline = timelineElement.dataset.timeline;
 
     const currentControls = timelineElement.previousElementSibling?.classList?.contains(controlsClass)
@@ -131,7 +122,7 @@ const processTimelines = async () => {
   });
 };
 
-const processPosts = async function (postElements) {
+const processPosts = function (postElements) {
   processTimelines();
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
@@ -151,7 +142,7 @@ const processPosts = async function (postElements) {
   });
 };
 
-const onButtonClicked = async function ({ currentTarget }) {
+const onMeatballButtonClicked = function ({ currentTarget }) {
   const { blog: { name, uuid } } = currentTarget.__timelineObjectData;
 
   const currentMode = mutedBlogs[uuid]?.[1];
@@ -221,7 +212,7 @@ export const main = async function () {
   registerMeatballItem({
     id: meatballButtonId,
     label: meatballButtonLabel,
-    onclick: onButtonClicked
+    onclick: onMeatballButtonClicked
   });
   onNewPosts.addListener(processPosts);
 };
@@ -233,7 +224,6 @@ export const clean = async function () {
 
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
   $(`.${controlsClass}`).remove();
-
   $('[data-xkit-mute-original-uuid]').removeAttr('data-xkit-mute-original-uuid');
   $('[data-xkit-mute-reblog-uuid]').removeAttr('data-xkit-mute-reblog-uuid');
 };

@@ -1,0 +1,9 @@
+{
+  "title": "Find Inactives",
+  "description": "",
+  "icon": {
+    "class_name": "ri-zzz-line",
+    "color": "white",
+    "background_color": "#f42c60"
+  }
+}

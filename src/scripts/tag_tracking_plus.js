@@ -61,7 +61,9 @@ const processTagLinks = async function ([searchResultElement]) {
     const { response: { timeline: { elements = [], links } } } = await apiFetch(`/v2/hubs/${tag}/timeline`, { queryParams: { limit: 20, sort: 'recent' } });
     const posts = elements.filter(
       ({ objectType, tags, recommendedSource }) =>
-        objectType === 'post' && tags.includes(tag) && recommendedSource === null
+        objectType === 'post' &&
+        tags.some(postTag => postTag.toLowerCase() === tag.toLowerCase()) &&
+        recommendedSource === null
     );
     let unreadCount = 0;
 

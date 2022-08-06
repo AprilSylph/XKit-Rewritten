@@ -137,7 +137,7 @@ const replaceTag = async ({ uuid, oldTag, newTag, appendOnly }) => {
   while (resource) {
     await Promise.all([
       apiFetch(resource).then(({ response }) => {
-        const posts = response.posts.filter(({ canEdit, tags }) => canEdit === true && tags.includes(oldTag));
+        const posts = response.posts.filter(({ canEdit, tags }) => canEdit === true && tags.some(tag => tag.toLowerCase() === oldTag.toLowerCase()));
         taggedPosts.push(...posts);
         resource = response.links?.next?.href;
 

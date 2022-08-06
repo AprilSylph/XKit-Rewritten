@@ -59,7 +59,10 @@ const processTagLinks = async function ([searchResultElement]) {
     const savedTimestamp = timestamps[tag] || 0;
 
     const { response: { timeline: { elements = [], links } } } = await apiFetch(`/v2/hubs/${tag}/timeline`, { queryParams: { limit: 20, sort: 'recent' } });
-    const posts = elements.filter(({ objectType, tags }) => objectType === 'post' && tags.includes(tag));
+    const posts = elements.filter(
+      ({ objectType, tags, recommendedSource }) =>
+        objectType === 'post' && tags.includes(tag) && recommendedSource === null
+    );
     let unreadCount = 0;
 
     for (const { timestamp } of posts) {

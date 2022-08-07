@@ -1,6 +1,4 @@
-import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
-import { buildStyle } from './interface.js';
 import { buildSvg } from './remixicon.js';
 
 // Remove outdated buttons when loading module
@@ -36,7 +34,3 @@ export const cloneControlButton = function (template, events) {
   Object.entries(events).forEach(([type, listener]) => newButton.addEventListener(type, listener));
   return newButton;
 };
-
-const styleElement = buildStyle(`${keyToCss('postFooterSecondRedesign')} .xkit-control-button-container { margin-left: 20px; }`);
-styleElement.media = '(min-width: 990px)';
-document.head.append(styleElement);

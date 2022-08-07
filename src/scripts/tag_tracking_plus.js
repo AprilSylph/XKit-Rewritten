@@ -29,13 +29,18 @@ const processPosts = async function (postElements) {
   const timeline = new RegExp(`/v2/hubs/${encodedCurrentTag}/timeline`);
 
   for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
-    const { timestamp } = await timelineObject(postElement);
-    const savedTimestamp = timestamps[currentTag] || 0;
+    const { tags, timestamp } = await timelineObject(postElement);
 
+    if (tags.every(tag => tag.toLowerCase() !== currentTag.toLowerCase())) {
+      continue;
+    }
+
+    const savedTimestamp = timestamps[currentTag] || 0;
     if (timestamp > savedTimestamp) {
       timestamps[currentTag] = timestamp;
     }
   }
+
   browser.storage.local.set({ [storageKey]: timestamps });
 };
 

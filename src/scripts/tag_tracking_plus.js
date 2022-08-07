@@ -29,13 +29,18 @@ const processPosts = async function (postElements) {
   const timeline = new RegExp(`/v2/hubs/${encodedCurrentTag}/timeline`);
 
   for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
-    const { timestamp } = await timelineObject(postElement);
-    const savedTimestamp = timestamps[currentTag] || 0;
+    const { tags, timestamp } = await timelineObject(postElement);
 
+    if (tags.every(tag => tag.toLowerCase() !== currentTag.toLowerCase())) {
+      continue;
+    }
+
+    const savedTimestamp = timestamps[currentTag] || 0;
     if (timestamp > savedTimestamp) {
       timestamps[currentTag] = timestamp;
     }
   }
+
   browser.storage.local.set({ [storageKey]: timestamps });
 };
 
@@ -59,7 +64,12 @@ const processTagLinks = async function ([searchResultElement]) {
     const savedTimestamp = timestamps[tag] || 0;
 
     const { response: { timeline: { elements = [], links } } } = await apiFetch(`/v2/hubs/${tag}/timeline`, { queryParams: { limit: 20, sort: 'recent' } });
-    const posts = elements.filter(({ objectType }) => objectType === 'post');
+    const posts = elements.filter(
+      ({ objectType, tags, recommendedSource }) =>
+        objectType === 'post' &&
+        tags.some(postTag => postTag.toLowerCase() === tag.toLowerCase()) &&
+        recommendedSource === null
+    );
     let unreadCount = 0;
 
     for (const { timestamp } of posts) {

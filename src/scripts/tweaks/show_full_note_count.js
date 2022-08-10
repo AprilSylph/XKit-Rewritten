@@ -38,7 +38,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  styleElement.remove();
   pageModifications.unregister(formatNoteElements);
+  styleElement.remove();
   $('[data-full-notes]').removeAttr('data-full-notes');
 };

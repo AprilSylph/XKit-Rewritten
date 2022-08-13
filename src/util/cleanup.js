@@ -24,26 +24,28 @@ export const removeClass = (...classNames) =>
   );
 
 /**
- * Removes the given data attribute from all elements on the current page that have it.
- * i.e. jQuery $(`[data-${dashStylename}]`).removeAttr(`data-${dashStylename}`);
+ * Removes the given attribute from all elements on the current page that have it.
+ * i.e. jQuery $(`[${dashStylename}]`).removeAttr(dashStylename);
  *
- * @param {...string} dashStylenames - one or more data attributes to remove, in dash-style
+ * @param {...string} attributes - one or more attributes to remove, in dash-style
  * @returns {void}
  */
-export const removeAttr = (...dashStylenames) =>
-  dashStylenames.forEach(dashStylename =>
-    [...document.querySelectorAll(`[data-${dashStylename}]`)].forEach(element =>
-      element.removeAttribute(`data-${dashStylename}`)
+export const removeAttr = (...attributes) =>
+  attributes.forEach(attribute =>
+    [...document.querySelectorAll(`[${attribute}]`)].forEach(element =>
+      element.removeAttribute(attribute)
     )
   );
+
+const dashStyle = string => string.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
 
 /**
  * Removes the given data attribute from all elements on the current page that have it.
  *
- * @param {...string} camelCaseNames - one or more data attributes to remove, in camelCase
+ * @param {...string} dataAttributes - one or more data attributes to remove, in camelCase
  * @returns {void}
  */
-export const removeDataset = (...camelCaseNames) =>
-  camelCaseNames.forEach(camelCaseName =>
-    removeAttr(camelCaseName.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`))
+export const removeDataset = (...dataAttributes) =>
+  dataAttributes.forEach(dataAttribute =>
+    removeAttr(`data-${dashStyle(dataAttribute)}`)
   );

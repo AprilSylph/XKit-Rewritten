@@ -2,10 +2,10 @@ import { buildSvg } from './remixicon.js';
 import { pageModifications } from './mutations.js';
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
-import { remove } from './cleanup.js';
+import { removeElementsByClassName } from './cleanup.js';
 
 // Remove outdated post options when loading module
-remove('xkit-post-option');
+removeElementsByClassName('xkit-post-option');
 
 const fakePostActions = dom('div', { class: 'xkit-post-actions' });
 const postOptions = {};

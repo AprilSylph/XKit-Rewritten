@@ -1,9 +1,9 @@
-import { remove } from './cleanup.js';
+import { removeElementsByClassName } from './cleanup.js';
 import { dom } from './dom.js';
 import { buildSvg } from './remixicon.js';
 
 // Remove outdated buttons when loading module
-remove('xkit-control-button-container');
+removeElementsByClassName('xkit-control-button-container');
 
 /**
  * Create a button template that can be cloned with cloneControlButton() for inserting into the controls of a post.

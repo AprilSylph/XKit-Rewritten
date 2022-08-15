@@ -1,6 +1,6 @@
 import { getPreferences } from '../util/preferences.js';
 import { pageModifications } from '../util/mutations.js';
-import { remove } from '../util/cleanup.js';
+import { removeElementsByClassName } from '../util/cleanup.js';
 
 const vanillaVideoClass = 'xkit-vanilla-video-player';
 
@@ -43,7 +43,7 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(cloneVideoElements);
-  remove(vanillaVideoClass);
+  removeElementsByClassName(vanillaVideoClass);
 };
 
 export const stylesheet = true;

@@ -6,7 +6,7 @@ import { keyToCss } from '../util/css_map.js';
 import { onNewPosts } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
 import { getPreferences } from '../util/preferences.js';
-import { remove, removeClass } from '../util/cleanup.js';
+import { removeElementsByClassName, removeClass } from '../util/cleanup.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenClass = 'xkit-mutual-checker-hidden';
@@ -92,7 +92,7 @@ export const clean = async function () {
   onNewPosts.removeListener(addIcons);
 
   removeClass(mutualsClass, hiddenClass);
-  remove(mutualIconClass);
+  removeElementsByClassName(mutualIconClass);
 };
 
 export const stylesheet = true;

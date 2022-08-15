@@ -1,4 +1,4 @@
-import { remove, removeClass } from '../util/cleanup.js';
+import { removeElementsByClassName, removeClass } from '../util/cleanup.js';
 import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
 import { keyToCss } from '../util/css_map.js';
 import { postSelector } from '../util/interface.js';
@@ -248,7 +248,7 @@ export const clean = async function () {
   unregisterPostOption('quick-tags');
 
   removeClass(excludeClass);
-  remove(buttonClass, tagsClass);
+  removeElementsByClassName(buttonClass, tagsClass);
 };
 
 export const stylesheet = true;

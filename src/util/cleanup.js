@@ -5,7 +5,7 @@
  * @param {...string} classNames - one or more class names to select elements to remove
  * @returns {void}
  */
-export const remove = (...classNames) =>
+export const removeElementsByClassName = (...classNames) =>
   [...document.querySelectorAll(classNames.map(className => `.${className}`).join(','))]
     .forEach(element => element.remove());
 

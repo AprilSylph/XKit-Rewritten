@@ -2,7 +2,7 @@ import { pageModifications } from '../../util/mutations.js';
 import { keyToCss } from '../../util/css_map.js';
 import { dom } from '../../util/dom.js';
 import { postSelector } from '../../util/interface.js';
-import { remove, removeClass } from '../../util/cleanup.js';
+import { removeElementsByClassName, removeClass } from '../../util/cleanup.js';
 
 const className = 'accesskit-disable-gifs';
 
@@ -100,6 +100,6 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children)
   );
 
-  remove('xkit-paused-gif', 'xkit-paused-gif-label');
+  removeElementsByClassName('xkit-paused-gif', 'xkit-paused-gif-label');
   removeClass('xkit-accesskit-disabled-gif', 'xkit-paused-background-gif');
 };

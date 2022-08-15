@@ -1,6 +1,6 @@
 import { getPreferences } from '../util/preferences.js';
 import { pageModifications } from '../util/mutations.js';
-import { remove, removeClass } from '../util/cleanup.js';
+import { removeElementsByClassName, removeClass } from '../util/cleanup.js';
 
 let newTab;
 
@@ -41,7 +41,7 @@ export const clean = async function () {
   pageModifications.unregister(replaceSearchForm);
 
   searchInputParent.appendChild(searchInputElement);
-  remove('classic-search');
+  removeElementsByClassName('classic-search');
   removeClass('xkit-classic-search-done');
 };
 

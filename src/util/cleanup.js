@@ -19,7 +19,7 @@ export const removeElementsByClassName = (...classNames) =>
   getElementsByClassName(...classNames).forEach(element => element.remove());
 
 /**
- * Removes the given css class from all elements on the current page that have it.
+ * Remove the given css class from all elements on the current page that have it.
  * i.e. jQuery $(`.${className}`).removeClass(className);
  *
  * @param {...string} classNames - one or more class names to remove
@@ -31,7 +31,7 @@ export const removeClass = (...classNames) =>
   );
 
 /**
- * Removes the given attribute from all elements on the current page that have it.
+ * Remove the given attribute from all elements on the current page that have it.
  * i.e. jQuery $(`[${dashStylename}]`).removeAttr(dashStylename);
  *
  * @param {...string} attributes - one or more attributes to remove, in dash-style
@@ -47,12 +47,10 @@ export const removeAttr = (...attributes) =>
 const dashStyle = string => string.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
 
 /**
- * Removes the given data attribute from all elements on the current page that have it.
+ * Remove the given data attribute from all elements on the current page that have it.
  *
  * @param {...string} dataAttributes - one or more data attributes to remove, in camelCase
  * @returns {void}
  */
 export const removeDataset = (...dataAttributes) =>
-  dataAttributes.forEach(dataAttribute =>
-    removeAttr(`data-${dashStyle(dataAttribute)}`)
-  );
+  dataAttributes.forEach(dataAttribute => removeAttr(`data-${dashStyle(dataAttribute)}`));

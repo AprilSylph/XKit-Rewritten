@@ -1,13 +1,22 @@
 /**
- * Removes all elements on the current page with the given css class.
+ * Get all elements on the current page with the given css class.
+ * (Elements may be returned more than once if called with multiple class names.)
+ *
+ * @param  {...string} classNames - one or more class names to select elements
+ * @returns {Element[]} All elements on the page with the given classnames
+ */
+const getElementsByClassName = (...classNames) =>
+  classNames.flatMap(className => [...document.getElementsByClassName(className)]);
+
+/**
+ * Remove all elements on the current page with the given css class.
  * i.e. jQuery $(`.${className}`).remove();
  *
  * @param {...string} classNames - one or more class names to select elements to remove
  * @returns {void}
  */
 export const removeElementsByClassName = (...classNames) =>
-  [...document.querySelectorAll(classNames.map(className => `.${className}`).join(','))]
-    .forEach(element => element.remove());
+  getElementsByClassName(...classNames).forEach(element => element.remove());
 
 /**
  * Removes the given css class from all elements on the current page that have it.
@@ -18,9 +27,7 @@ export const removeElementsByClassName = (...classNames) =>
  */
 export const removeClass = (...classNames) =>
   classNames.forEach(className =>
-    [...document.querySelectorAll(`.${className}`)].forEach(element =>
-      element.classList.remove(className)
-    )
+    getElementsByClassName(className).forEach(element => element.classList.remove(className))
   );
 
 /**

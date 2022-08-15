@@ -1,3 +1,4 @@
+import { removeClass } from '../util/cleanup.js';
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { buildStyle } from '../util/interface.js';
@@ -67,5 +68,5 @@ export const main = async () => {
 export const clean = async () => {
   pageModifications.unregister(processVideoCTAs);
   styleElement.remove();
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  removeClass(hiddenClass);
 };

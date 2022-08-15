@@ -4,6 +4,7 @@ import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
 import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
+import { removeClass } from '../util/cleanup.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
@@ -66,7 +67,7 @@ export const clean = async function () {
   unregisterMeatballItem(meatballButtonId);
   onNewPosts.removeListener(processPosts);
 
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  removeClass(hiddenClass);
 };
 
 export const stylesheet = true;

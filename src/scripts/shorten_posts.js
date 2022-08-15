@@ -3,6 +3,7 @@ import { onNewPosts } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
+import { remove, removeClass } from '../util/cleanup.js';
 
 let showTags;
 let maxHeight;
@@ -69,9 +70,8 @@ export const clean = async function () {
 
   styleElement.remove();
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
-  $(`.${shortenClass}`).removeClass(shortenClass);
-  $(`.${tagsClass}, .${buttonClass}`).remove();
+  removeClass(excludeClass, shortenClass);
+  remove(tagsClass, buttonClass);
 };
 
 export const stylesheet = true;

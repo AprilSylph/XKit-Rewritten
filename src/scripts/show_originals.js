@@ -5,6 +5,7 @@ import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { userBlogs } from '../util/user.js';
+import { remove, removeClass, removeDataset } from '../util/cleanup.js';
 
 const hiddenClass = 'xkit-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
@@ -131,10 +132,9 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
-  $('[data-show-originals]').removeAttr('data-show-originals');
-  $(`.${lengthenedClass}`).removeClass(lengthenedClass);
-  $(`.${controlsClass}`).remove();
+  removeClass(hiddenClass, lengthenedClass);
+  removeDataset('showOriginals');
+  remove(controlsClass);
 };
 
 export const stylesheet = true;

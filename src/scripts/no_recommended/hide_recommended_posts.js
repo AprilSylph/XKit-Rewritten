@@ -1,3 +1,4 @@
+import { removeClass } from '../../util/cleanup.js';
 import { buildStyle, filterPostElements } from '../../util/interface.js';
 import { onNewPosts } from '../../util/mutations.js';
 import { timelineObject } from '../../util/react_props.js';
@@ -32,7 +33,6 @@ export const main = async function () {
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  $(`.${excludeClass}`).removeClass(excludeClass);
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  removeClass(hiddenClass, excludeClass);
   styleElement.remove();
 };

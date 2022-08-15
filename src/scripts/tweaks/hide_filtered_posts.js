@@ -1,6 +1,7 @@
 import { pageModifications } from '../../util/mutations.js';
 import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
+import { removeClass } from '../../util/cleanup.js';
 
 const hiddenClass = 'xkit-tweaks-hide-filtered-posts-hidden';
 const styleElement = buildStyle(`.${hiddenClass} { display: none; }`);
@@ -19,5 +20,5 @@ export const clean = async function () {
   pageModifications.unregister(hideFilteredPosts);
   styleElement.remove();
 
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  removeClass(hiddenClass);
 };

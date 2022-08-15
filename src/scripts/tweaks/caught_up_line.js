@@ -1,3 +1,4 @@
+import { removeClass } from '../../util/cleanup.js';
 import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
@@ -34,6 +35,5 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(createCaughtUpLine);
   styleElement.remove();
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
-  $(`.${borderClass}`).removeClass(borderClass);
+  removeClass(hiddenClass, borderClass);
 };

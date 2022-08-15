@@ -3,6 +3,7 @@ import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
+import { removeClass } from '../util/cleanup.js';
 
 let ownColour;
 let originalColour;
@@ -65,7 +66,7 @@ const strip = function () {
     .css('border-top', '')
     .css('border-image-source', '')
     .css('border-image-slice', '');
-  $(`.${excludeClass}`).removeClass(excludeClass);
+  removeClass(excludeClass);
 };
 
 export const main = async function () {

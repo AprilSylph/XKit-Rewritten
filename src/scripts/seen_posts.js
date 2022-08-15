@@ -1,6 +1,7 @@
 import { filterPostElements } from '../util/interface.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
+import { removeClass } from '../util/cleanup.js';
 
 const excludeClass = 'xkit-seen-posts-done';
 const timeline = /\/v2\/timeline\/dashboard/;
@@ -58,9 +59,7 @@ export const main = async function () {
 
 export const clean = async function () {
   onNewPosts.removeListener(dimPosts);
-  $(`.${excludeClass}`).removeClass(excludeClass);
-  $(`.${dimClass}`).removeClass(dimClass);
-  $(`.${onlyDimAvatarsClass}`).removeClass(onlyDimAvatarsClass);
+  removeClass(excludeClass, removeClass, onlyDimAvatarsClass);
 };
 
 export const stylesheet = true;

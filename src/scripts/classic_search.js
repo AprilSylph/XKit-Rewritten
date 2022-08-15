@@ -1,5 +1,6 @@
 import { getPreferences } from '../util/preferences.js';
 import { pageModifications } from '../util/mutations.js';
+import { remove, removeClass } from '../util/cleanup.js';
 
 let newTab;
 
@@ -40,8 +41,8 @@ export const clean = async function () {
   pageModifications.unregister(replaceSearchForm);
 
   searchInputParent.appendChild(searchInputElement);
-  $('.classic-search').remove();
-  $('.xkit-classic-search-done').removeClass('xkit-classic-search-done');
+  remove('classic-search');
+  removeClass('xkit-classic-search-done');
 };
 
 export const stylesheet = true;

@@ -1,3 +1,4 @@
+import { remove } from '../util/cleanup.js';
 import { createControlButtonTemplate, cloneControlButton } from '../util/control_buttons.js';
 import { keyToCss } from '../util/css_map.js';
 import { filterPostElements, postSelector } from '../util/interface.js';
@@ -125,5 +126,5 @@ export const main = async function () {
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  $(`.${buttonClass}`).remove();
+  remove(buttonClass);
 };

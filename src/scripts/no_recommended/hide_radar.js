@@ -1,6 +1,7 @@
 import { pageModifications } from '../../util/mutations.js';
 import { translate } from '../../util/language_data.js';
 import { buildStyle } from '../../util/interface.js';
+import { removeClass } from '../../util/cleanup.js';
 
 const hiddenClass = 'xkit-no-recommended-radar-hidden';
 
@@ -20,5 +21,5 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(checkForRadar);
   styleElement.remove();
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  removeClass(hiddenClass);
 };

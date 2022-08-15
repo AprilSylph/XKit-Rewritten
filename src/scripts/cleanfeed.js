@@ -4,6 +4,7 @@ import { buildStyle, filterPostElements } from '../util/interface.js';
 import { translate } from '../util/language_data.js';
 import { timelineObject } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
+import { removeClass } from '../util/cleanup.js';
 
 const hiddenClass = 'xkit-cleanfeed-filtered';
 const styleElement = buildStyle();
@@ -49,7 +50,7 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
   styleElement.remove();
 
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  removeClass(hiddenClass);
 };
 
 export const stylesheet = true;

@@ -1,6 +1,7 @@
 import { onNewPosts } from '../../util/mutations.js';
 import { buildStyle, filterPostElements } from '../../util/interface.js';
 import { isMyPost } from '../../util/react_props.js';
+import { removeClass } from '../../util/cleanup.js';
 
 const excludeClass = 'xkit-tweaks-hide-my-posts-done';
 const timeline = /\/v2\/timeline\/dashboard/;
@@ -27,6 +28,5 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
   styleElement.remove();
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  removeClass(excludeClass, hiddenClass);
 };

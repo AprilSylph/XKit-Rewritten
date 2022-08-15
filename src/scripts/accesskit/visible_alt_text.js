@@ -1,3 +1,4 @@
+import { removeClass } from '../../util/cleanup.js';
 import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { translate } from '../../util/language_data.js';
@@ -55,7 +56,7 @@ const onStorageChanged = async function (changes, areaName) {
 
   mode = modeChanges.newValue;
   $(`.${processedClass} figcaption`).remove();
-  $(`.${processedClass}`).removeClass(processedClass);
+  removeClass(processedClass);
   pageModifications.trigger(processImages);
 };
 
@@ -74,5 +75,5 @@ export const clean = async function () {
   styleElement.remove();
 
   $(`.${processedClass} figcaption`).remove();
-  $(`.${processedClass}`).removeClass(processedClass);
+  removeClass(processedClass);
 };

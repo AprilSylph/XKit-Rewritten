@@ -3,6 +3,7 @@ import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { timelineObject } from '../util/react_props.js';
 import { keyToCss } from '../util/css_map.js';
+import { removeDataset } from '../util/cleanup.js';
 
 const styleElement = buildStyle();
 const blogs = new Set();
@@ -99,7 +100,7 @@ export const clean = async function () {
   styleElement.remove();
   styleElement.textContent = '';
 
-  $('[data-xkit-themed]').removeAttr('data-xkit-themed');
+  removeDataset('xkitThemed');
 
   blogs.clear();
 };

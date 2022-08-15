@@ -3,6 +3,7 @@ import { translate } from '../../util/language_data.js';
 import { buildStyle, postSelector } from '../../util/interface.js';
 import { timelineObject } from '../../util/react_props.js';
 import { keyToCss } from '../../util/css_map.js';
+import { removeDataset } from '../../util/cleanup.js';
 
 const { lang } = document.documentElement;
 const numberFormat = new Intl.NumberFormat(lang);
@@ -40,5 +41,5 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(formatNoteElements);
   styleElement.remove();
-  $('[data-full-notes]').removeAttr('data-full-notes');
+  removeDataset('fullNotes');
 };

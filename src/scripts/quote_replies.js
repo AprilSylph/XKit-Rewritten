@@ -1,3 +1,4 @@
+import { remove } from '../util/cleanup.js';
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { inject } from '../util/inject.js';
@@ -118,7 +119,7 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(processNotifications);
-  $(`.${buttonClass}`).remove();
+  remove(buttonClass);
 };
 
 export const onStorageChanged = async function (changes) {

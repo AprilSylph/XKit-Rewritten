@@ -1,4 +1,5 @@
 import moment from '../lib/moment.js';
+import { removeDataset } from '../util/cleanup.js';
 import { pageModifications } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
 
@@ -46,7 +47,7 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(formatTimeElements);
-  $('[data-formatted-time]').removeAttr('data-formatted-time');
+  removeDataset('formattedTime');
 };
 
 export const stylesheet = true;

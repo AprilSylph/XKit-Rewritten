@@ -2,6 +2,7 @@ import { keyToCss } from '../../util/css_map.js';
 import { pageModifications } from '../../util/mutations.js';
 import { translate } from '../../util/language_data.js';
 import { buildStyle } from '../../util/interface.js';
+import { removeClass } from '../../util/cleanup.js';
 
 const hiddenClass = 'xkit-no-recommended-blogs-hidden';
 
@@ -28,5 +29,5 @@ export const clean = async function () {
   pageModifications.unregister(hideDashboardRecommended);
   pageModifications.unregister(hideTagPageRecommended);
   styleElement.remove();
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  removeClass(hiddenClass);
 };

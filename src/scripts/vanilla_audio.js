@@ -1,6 +1,7 @@
 import { keyToCss } from '../util/css_map.js';
 import { getPreferences } from '../util/preferences.js';
 import { pageModifications } from '../util/mutations.js';
+import { removeClass } from '../util/cleanup.js';
 
 const trackInfoSelector = keyToCss('trackInfo');
 
@@ -42,7 +43,7 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(addAudioControls);
   $(`.${excludeClass} + audio[controls]`).remove();
-  $(`.${excludeClass}`).removeClass(excludeClass);
+  removeClass(excludeClass);
 };
 
 export const stylesheet = true;

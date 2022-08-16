@@ -16,7 +16,7 @@
     },
     "boring_tag_chiclets": {
       "type": "checkbox",
-      "label": "De-animate the \"You're caught up\" carousel",
+      "label": "De-animate the dashboard \"caught up\" carousel",
       "default": false
     },
     "disable_animations": {

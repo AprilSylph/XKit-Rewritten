@@ -45,7 +45,7 @@ const confirmDeleteDrafts = event => {
 
   showModal({
     title: 'Delete drafts?',
-    message: [`Every draft on this blog dated before ${beforeString} will be deleted.`],
+    message: [`Every draft on this blog dated before ${beforeString} will be deleted.`, '\n', `unix timestamp (s): ${before}`],
     buttons: [
       modalCancelButton,
       dom(

@@ -1,4 +1,4 @@
-import { filterPostElements, blogViewSelector } from '../util/interface.js';
+import { filterPostElements, blogViewSelector, postSelector } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
@@ -25,6 +25,48 @@ const lengthenTimeline = timeline => {
   }
 };
 
+const getCurrentUuid = async (timelineElement, timeline) => {
+  const uuidOrName = timeline.split('/')?.[3];
+
+  if (uuidOrName.startsWith('t:')) return uuidOrName;
+
+  const posts = [...timelineElement.querySelectorAll(postSelector)];
+  for (const post of posts) {
+    const { blog: { name, uuid } } = await timelineObject(post);
+    if (name === uuidOrName || uuid === uuidOrName) return uuid;
+  }
+
+  throw new Error(`could not determine UUID of timeline ${timeline}`);
+};
+
+const processBlogSpecificTimeline = async (timelineElement, timeline) => {
+  const currentUuid = await getCurrentUuid(timelineElement, timeline);
+
+  const mutedBlogEntry = Object.entries(mutedBlogs).find(([uuid]) => currentUuid === uuid);
+
+  if (mutedBlogEntry) {
+    const [uuid, [name, mode]] = mutedBlogEntry;
+
+    if (mode === 'all') {
+      timelineElement.dataset.muteExcludedUuid = uuid;
+
+      if (!dismissedWarningUuids.has(uuid)) {
+        const warningElement = dom('div', { class: warningClass }, null, [
+          `You have muted all posts from ${name}!`,
+          dom('br'),
+          dom('button', null, {
+            click: () => {
+              dismissedWarningUuids.add(uuid);
+              warningElement.remove();
+            }
+          }, 'show posts anyway')
+        ]);
+        timelineElement.before(warningElement);
+      }
+    }
+  }
+};
+
 const processTimelines = () => {
   [...document.querySelectorAll('[data-timeline]')].forEach(timelineElement => {
     const { timeline, muteProcessedTimeline } = timelineElement.dataset;
@@ -43,32 +85,8 @@ const processTimelines = () => {
       }
       delete timelineElement.dataset.muteExcludedUuid;
 
-      // TODO: more reliable check if current blog is muted (currently susceptible to stored outdated blognames)
-      const mutedBlogEntry = Object.entries(mutedBlogs).find(
-        ([uuid, [name]]) =>
-          timeline.startsWith(`/v2/blog/${uuid}/`) || timeline.startsWith(`/v2/blog/${name}/`)
-      );
-
-      if (mutedBlogEntry) {
-        const [uuid, [name, mode]] = mutedBlogEntry;
-
-        if (mode === 'all') {
-          timelineElement.dataset.muteExcludedUuid = uuid;
-
-          if (!dismissedWarningUuids.has(uuid)) {
-            const warningElement = dom('div', { class: warningClass }, null, [
-              `You have muted all posts from ${name}!`,
-              dom('br'),
-              dom('button', null, {
-                click: () => {
-                  dismissedWarningUuids.add(uuid);
-                  warningElement.remove();
-                }
-              }, 'show posts anyway')
-            ]);
-            timelineElement.before(warningElement);
-          }
-        }
+      if (timeline.startsWith('/v2/blog/')) {
+        processBlogSpecificTimeline(timelineElement, timeline);
       }
     }
   });

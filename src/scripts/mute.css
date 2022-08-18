@@ -8,12 +8,19 @@
 }
 
 .xkit-mute-warning {
-  text-align: center;
-  background-color: var(--blog-link-color-15);
-  color: var(--blog-link-color);
   padding: 25px 20px;
-  font-weight: 700;
   border-radius: 3px;
+
+  background-color: var(--blog-title-color-15);
+  color: var(--blog-title-color);
+
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.5em;
+}
+
+.xkit-mute-warning button {
+  color: var(--blog-link-color);
 }
 
 .xkit-mute-warning ~ * {

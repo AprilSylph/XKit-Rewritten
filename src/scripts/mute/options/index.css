@@ -31,11 +31,8 @@ body {
 }
 
 header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 1em;
+  font-weight: bold;
 }
 
 #muted-blogs {
@@ -48,12 +45,17 @@ header {
 }
 
 .muted-blog {
+  padding: 1ch 0;
+  border-top: 1px solid rgb(var(--grey));
+
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 1ch 0;
-  border-top: 1px solid rgb(var(--grey));
+}
+
+.muted-blog > a {
+  flex: 1;
 }
 
 .muted-blog button {

@@ -16,7 +16,7 @@
       <li class="muted-blog">
         <a target="_blank"></a>
         <span>
-          <select data-post-id="">
+          <select>
             <option value="all">All Posts</option>
             <option value="original">Original Posts</option>
             <option value="reblogged">Reblogged Posts</option>
@@ -27,7 +27,11 @@
     </template>
     <main>
       <header>Your muted blogs:</header>
-      <div id="no-muted-blogs">No muted blogs! Use the meatballs menu on a post to mute a blog.</div>
+      <div id="no-muted-blogs">
+        <em>
+          No muted blogs! Use the meatballs menu on any post to mute the blog that posted it.
+        </em>
+      </div>
       <ul id="muted-blogs"></ul>
     </main>
   </body>

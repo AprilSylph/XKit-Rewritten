@@ -2,32 +2,47 @@ const mutedBlogList = document.getElementById('muted-blogs');
 const noMutedBlogText = document.getElementById('no-muted-blogs');
 const mutedBlogTemplate = document.getElementById('muted-blog');
 
-const storageKey = 'mute.mutedblogs';
+const namesStorageKey = 'mute.names';
+const mutedBlogsEntriesStorageKey = 'mute.mutedBlogEntries';
+
+const getNames = async () => {
+  const { [namesStorageKey]: names = {} } = await browser.storage.local.get(namesStorageKey);
+  return names;
+};
+const getMutedBlogs = async () => {
+  const { [mutedBlogsEntriesStorageKey]: mutedBlogsEntries } = await browser.storage.local.get(mutedBlogsEntriesStorageKey);
+  return Object.fromEntries(mutedBlogsEntries ?? []);
+};
+const setMutedBlogs = mutedBlogs =>
+  browser.storage.local.set({ [mutedBlogsEntriesStorageKey]: Object.entries(mutedBlogs) });
 
 const unmuteUser = async function ({ currentTarget }) {
-  const { [storageKey]: mutedBlogs = {} } = await browser.storage.local.get(storageKey);
+  const mutedBlogs = await getMutedBlogs();
+
   const { uuid } = currentTarget.closest('li').dataset;
 
   delete mutedBlogs[uuid];
-  browser.storage.local.set({ [storageKey]: mutedBlogs });
+  setMutedBlogs(mutedBlogs);
 };
 
 const updateMode = async function (event) {
-  const { [storageKey]: mutedBlogs = {} } = await browser.storage.local.get(storageKey);
-  const { uuid, name } = event.target.closest('li').dataset;
+  const mutedBlogs = await getMutedBlogs();
+
+  const { uuid } = event.target.closest('li').dataset;
   const { value } = event.target;
 
-  mutedBlogs[uuid] = [name, value];
-  browser.storage.local.set({ [storageKey]: mutedBlogs });
+  mutedBlogs[uuid] = value;
+  setMutedBlogs(mutedBlogs);
 };
 
 const renderMutedBlogs = async function () {
-  const { [storageKey]: mutedblogs = [] } = await browser.storage.local.get(storageKey);
+  const mutedBlogs = await getMutedBlogs();
+  const names = await getNames();
 
   mutedBlogList.textContent = '';
   noMutedBlogText.style.display = Object.entries(mutedBlogs).length ? 'none' : 'block';
 
-  for (const [uuid, [name, mode]] of Object.entries(mutedblogs)) {
+  for (const [uuid, mode] of Object.entries(mutedBlogs)) {
     const templateClone = mutedBlogTemplate.content.cloneNode(true);
     const li = templateClone.querySelector('li');
     const linkElement = templateClone.querySelector('a');
@@ -35,9 +50,8 @@ const renderMutedBlogs = async function () {
     const unmuteButton = templateClone.querySelector('button');
 
     li.dataset.uuid = uuid;
-    li.dataset.name = name;
 
-    linkElement.textContent = name;
+    linkElement.textContent = names[uuid] ?? uuid;
     linkElement.href = `https://www.tumblr.com/blog/view/${uuid}`;
 
     modeSelect.value = mode;
@@ -50,7 +64,11 @@ const renderMutedBlogs = async function () {
 };
 
 browser.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
+  if (
+    areaName === 'local' &&
+    (Object.keys(changes).includes(mutedBlogsEntriesStorageKey) ||
+      Object.keys(changes).includes(namesStorageKey))
+  ) {
     renderMutedBlogs();
   }
 });

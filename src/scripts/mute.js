@@ -14,9 +14,12 @@ const activeClass = 'xkit-mute-active';
 const warningClass = 'xkit-mute-warning';
 const lengthenedClass = 'xkit-mute-lengthened';
 
-const storageKey = 'mute.mutedblogs';
+const namesStorageKey = 'mute.names';
+const mutedBlogsEntriesStorageKey = 'mute.mutedBlogEntries';
 
+let names = {};
 let mutedBlogs = {};
+
 const dismissedWarningUuids = new Set();
 
 const lengthenTimeline = timeline => {
@@ -25,44 +28,34 @@ const lengthenTimeline = timeline => {
   }
 };
 
-const getCurrentUuid = async (timelineElement, timeline) => {
+const getNameAndUuid = async (timelineElement, timeline) => {
   const uuidOrName = timeline.split('/')?.[3];
-
-  if (uuidOrName.startsWith('t:')) return uuidOrName;
-
   const posts = [...timelineElement.querySelectorAll(postSelector)];
   for (const post of posts) {
     const { blog: { name, uuid } } = await timelineObject(post);
-    if (name === uuidOrName || uuid === uuidOrName) return uuid;
+    if ([name, uuid].includes(uuidOrName)) return [name, uuid];
   }
-
-  throw new Error(`could not determine UUID of timeline ${timeline}`);
+  throw new Error(`could not determine blog name / UUID for timeline with ${timeline}`);
 };
 
 const processBlogSpecificTimeline = async (timelineElement, timeline) => {
-  const currentUuid = await getCurrentUuid(timelineElement, timeline);
+  const [name, uuid] = await getNameAndUuid(timelineElement, timeline);
 
-  const mutedBlogEntry = Object.entries(mutedBlogs).find(([uuid]) => currentUuid === uuid);
+  if (mutedBlogs[uuid] === 'all') {
+    timelineElement.dataset.muteExcludedUuid = uuid;
 
-  if (mutedBlogEntry) {
-    const [uuid, [name, mode]] = mutedBlogEntry;
-
-    if (mode === 'all') {
-      timelineElement.dataset.muteExcludedUuid = uuid;
-
-      if (!dismissedWarningUuids.has(uuid)) {
-        const warningElement = dom('div', { class: warningClass }, null, [
-          `You have muted all posts from ${name}!`,
-          dom('br'),
-          dom('button', null, {
-            click: () => {
-              dismissedWarningUuids.add(uuid);
-              warningElement.remove();
-            }
-          }, 'show posts anyway')
-        ]);
-        timelineElement.before(warningElement);
-      }
+    if (!dismissedWarningUuids.has(uuid)) {
+      const warningElement = dom('div', { class: warningClass }, null, [
+        `You have muted all posts from ${name}!`,
+        dom('br'),
+        dom('button', null, {
+          click: () => {
+            dismissedWarningUuids.add(uuid);
+            warningElement.remove();
+          }
+        }, 'show posts anyway')
+      ]);
+      timelineElement.before(warningElement);
     }
   }
 };
@@ -92,12 +85,26 @@ const processTimelines = () => {
   });
 };
 
+const updateNames = () => {
+  Object.keys(names).forEach(uuid => {
+    if (!mutedBlogs[uuid]) {
+      delete names[uuid];
+    }
+  });
+  browser.storage.local.set({ [namesStorageKey]: names });
+};
+
 const processPosts = function (postElements) {
   processTimelines();
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
-    const { blog: { uuid }, rebloggedRootUuid, content } = await timelineObject(postElement);
+    const { blog: { name, uuid }, rebloggedRootUuid, content } = await timelineObject(postElement);
     const { muteExcludedUuid } = postElement.closest('[data-timeline]').dataset;
+
+    if (mutedBlogs[uuid] && names[uuid] !== name) {
+      names[uuid] = name;
+      updateNames();
+    }
 
     // should there be a setting such that reblogs with contributed content count?
     // eslint-disable-next-line no-unused-vars
@@ -107,10 +114,10 @@ const processPosts = function (postElements) {
     const originalUuid = isRebloggedPost ? rebloggedRootUuid : uuid;
     const reblogUuid = isRebloggedPost ? uuid : null;
 
-    if (originalUuid !== muteExcludedUuid && ['all', 'original'].includes(mutedBlogs[originalUuid]?.[1])) {
+    if (originalUuid !== muteExcludedUuid && ['all', 'original'].includes(mutedBlogs[originalUuid])) {
       postElement.classList.add(hiddenClass);
     }
-    if (reblogUuid !== muteExcludedUuid && ['all', 'reblogged'].includes(mutedBlogs[reblogUuid]?.[1])) {
+    if (reblogUuid !== muteExcludedUuid && ['all', 'reblogged'].includes(mutedBlogs[reblogUuid])) {
       postElement.classList.add(hiddenClass);
     }
   });
@@ -119,7 +126,7 @@ const processPosts = function (postElements) {
 const onMeatballButtonClicked = function ({ currentTarget }) {
   const { blog: { name, uuid } } = currentTarget.__timelineObjectData;
 
-  const currentMode = mutedBlogs[uuid]?.[1];
+  const currentMode = mutedBlogs[uuid];
 
   const createRadioElement = value =>
     dom('label', null, null, [
@@ -153,24 +160,35 @@ const muteUser = event => {
   const { value } = event.currentTarget.elements.muteOption;
   if (value === '') return;
 
-  mutedBlogs[uuid] = [name, value];
-  browser.storage.local.set({ [storageKey]: mutedBlogs });
+  mutedBlogs[uuid] = value;
+  names[uuid] = name;
+
+  browser.storage.local.set({ [mutedBlogsEntriesStorageKey]: Object.entries(mutedBlogs) });
+  browser.storage.local.set({ [namesStorageKey]: names });
 
   hideModal();
 };
 
 const unmuteUser = uuid => {
   delete mutedBlogs[uuid];
-  browser.storage.local.set({ [storageKey]: mutedBlogs });
+  browser.storage.local.set({ [mutedBlogsEntriesStorageKey]: Object.entries(mutedBlogs) });
 
   hideModal();
 };
 
 export const onStorageChanged = async function (changes, areaName) {
-  const { [storageKey]: mutedBlogsChanges } = changes;
+  const {
+    [namesStorageKey]: namesChanges,
+    [mutedBlogsEntriesStorageKey]: mutedBlogsEntriesChanges
+  } = changes;
 
-  if (mutedBlogsChanges) {
-    ({ newValue: mutedBlogs } = mutedBlogsChanges);
+  if (namesChanges) {
+    ({ newValue: names } = namesChanges);
+  }
+
+  if (mutedBlogsEntriesChanges) {
+    const { newValue: mutedBlogsEntries } = mutedBlogsEntriesChanges;
+    mutedBlogs = Object.fromEntries(mutedBlogsEntries ?? []);
 
     $(`.${hiddenClass}`).removeClass(hiddenClass);
     $(`.${warningClass}`).remove();
@@ -181,7 +199,9 @@ export const onStorageChanged = async function (changes, areaName) {
 };
 
 export const main = async function () {
-  ({ [storageKey]: mutedBlogs = {} } = await browser.storage.local.get(storageKey));
+  ({ [namesStorageKey]: names = {} } = await browser.storage.local.get(namesStorageKey));
+  const { [mutedBlogsEntriesStorageKey]: mutedBlogsEntries } = await browser.storage.local.get(mutedBlogsEntriesStorageKey);
+  mutedBlogs = Object.fromEntries(mutedBlogsEntries ?? []);
 
   registerMeatballItem({
     id: meatballButtonId,

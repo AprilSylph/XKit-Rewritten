@@ -1,4 +1,5 @@
 const mutedBlogList = document.getElementById('muted-blogs');
+const noMutedBlogText = document.getElementById('no-muted-blogs');
 const mutedBlogTemplate = document.getElementById('muted-blog');
 
 const storageKey = 'mute.mutedblogs';
@@ -24,6 +25,7 @@ const renderMutedBlogs = async function () {
   const { [storageKey]: mutedblogs = [] } = await browser.storage.local.get(storageKey);
 
   mutedBlogList.textContent = '';
+  noMutedBlogText.style.display = Object.entries(mutedBlogs).length ? 'none' : 'block';
 
   for (const [uuid, [name, mode]] of Object.entries(mutedblogs)) {
     const templateClone = mutedBlogTemplate.content.cloneNode(true);

@@ -60,8 +60,8 @@ const processBlogSpecificTimeline = async (timelineElement, timeline) => {
   }
 };
 
-const processTimelines = () => {
-  [...document.querySelectorAll('[data-timeline]')].forEach(timelineElement => {
+const processTimelines = async () => {
+  for (const timelineElement of [...document.querySelectorAll('[data-timeline]')]) {
     const { timeline, muteProcessedTimeline } = timelineElement.dataset;
 
     const alreadyProcessed = timeline === muteProcessedTimeline;
@@ -79,10 +79,10 @@ const processTimelines = () => {
       delete timelineElement.dataset.muteExcludedUuid;
 
       if (timeline.startsWith('/v2/blog/')) {
-        processBlogSpecificTimeline(timelineElement, timeline);
+        await processBlogSpecificTimeline(timelineElement, timeline);
       }
     }
-  });
+  }
 };
 
 const updateNames = () => {
@@ -94,8 +94,8 @@ const updateNames = () => {
   browser.storage.local.set({ [namesStorageKey]: names });
 };
 
-const processPosts = function (postElements) {
-  processTimelines();
+const processPosts = async function (postElements) {
+  await processTimelines();
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     const { blog: { name, uuid }, rebloggedRootUuid, content } = await timelineObject(postElement);

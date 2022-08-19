@@ -35,7 +35,7 @@ const constructRelativeTimeString = function (unixTime) {
 const sidebarOptions = {
   id: 'find-inactives',
   title: 'Find Inactives',
-  rows: [{ label: 'Find Inactives', onclick: () => showFetchBlogs(), carrot: true }],
+  rows: [{ label: 'Find inactive blogs', onclick: () => showFetchBlogs(), carrot: true }],
   visibility: () => /\/following/.test(location.pathname)
 };
 
@@ -62,6 +62,11 @@ const styleElement = buildStyle(`
 
   .${sliderClass} {
     width: ${width / 2}px;
+  }
+
+  .${buttonClass} {
+    font-size: inherit;
+    text-decoration: underline;
   }
 
   .${tableContainerClass} {
@@ -238,7 +243,7 @@ const showSelectBlogs = blogs => {
   );
 
   const createButton = (text, onClick) =>
-    dom('a', { class: buttonClass }, { click: onClick }, [text]);
+    dom('button', { class: buttonClass }, { click: onClick }, [text]);
 
   const selectNoneButton = createButton('none', () =>
     visibleBlogs.forEach(({ checkbox }) => {
@@ -261,21 +266,27 @@ const showSelectBlogs = blogs => {
     if (selectedBlogs.length) {
       showConfirmBlogs(selectedBlogs, render);
     } else {
-      // todo: something better than this
-      alert('no blogs selected! use the slider and checkboxes.');
+      showModal({
+        title: 'Nothing selected!',
+        message: ['Select the checkboxes next to blogs you want to unfollow and try again.'],
+        buttons: [dom('button', null, { click: render }, ['Back'])]
+      });
     }
   };
 
   const render = () =>
     showModal({
-      title: 'Select inactive blogs',
+      title: 'Select Inactive Blogs',
       message: [
-        'Use the slider to select a time range!',
+        dom('small', null, null, [
+          'Use the slider to display blogs with no posts after the selected date.'
+        ]),
         canvasElement,
         slider,
         selectionInfo,
+        dom('div', { style: 'height: 0.5em' }),
         dom('div', null, null, [
-          'Select: ',
+          'select: ',
           selectNoneButton,
           ' / ',
           selectAllNoMutualsButton,
@@ -286,7 +297,7 @@ const showSelectBlogs = blogs => {
       ],
       buttons: [
         modalCancelButton,
-        dom('button', { class: 'blue' }, { click: onClickContinue }, ['Continue'])
+        dom('button', { class: 'blue' }, { click: onClickContinue }, ['Unfollow Selected'])
       ]
     });
 
@@ -337,33 +348,3 @@ export const clean = async () => {
   styleElement.remove();
   removeSidebarItem(sidebarOptions.id);
 };
-
-// pageModifications.register(`main ${keyToCss('blogRow')}`, processBlogRows);
-
-// pageModifications.unregister(processBlogRows);
-
-// const unburyBlog = () => {
-//   const postElement = document.currentScript.parentElement;
-//   const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
-//   let fiber = postElement[reactKey];
-
-//   while (fiber !== null) {
-//     const { blog } = fiber.memoizedProps || {};
-//     if (blog !== undefined) {
-//       return blog;
-//     } else {
-//       fiber = fiber.return;
-//     }
-//   }
-// };
-
-// const processBlogRows = blogRows =>
-//   blogRows.forEach(async blogRow => {
-//     const blog = await inject(unburyBlog, [], blogRow);
-//     if (blog) {
-//       const { updated, name } = blog;
-//       console.log('hi', updated, moment.unix(updated).fromNow(), name, blog);
-//     } else {
-//       console.log('no', blogRow);
-//     }
-//   });

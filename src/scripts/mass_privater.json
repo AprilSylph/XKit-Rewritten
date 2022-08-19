@@ -1,0 +1,9 @@
+{
+  "title": "Mass Privater",
+  "description": "",
+  "icon": {
+    "class_name": "ri-lock-2-line",
+    "color": "white",
+    "background_color": "#000000"
+  }
+}

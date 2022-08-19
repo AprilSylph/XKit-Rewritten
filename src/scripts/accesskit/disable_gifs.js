@@ -11,14 +11,14 @@ const hoverContainer = `${keyToCss('placeholder', 'takeoverBanner', 'postCard')}
 const disabledElement = `.xkit-paused-gif, .xkit-paused-gif-label, ${posterSelector}`;
 
 const styleElement = buildStyle(`
-  ${posterSelector}, .xkit-paused-gif {
-    visibility: visible !important;
-    background-color: rgb(var(--white));
-  }
+${posterSelector}, .xkit-paused-gif {
+  visibility: visible !important;
+  background-color: rgb(var(--white));
+}
 
-  :is(${hoverContainer}):hover :is(${disabledElement}) {
-    display: none;
-  }
+:is(${hoverContainer}):hover :is(${disabledElement}) {
+  display: none;
+}
 `);
 
 const processPosters = function (posterElements) {

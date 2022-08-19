@@ -284,7 +284,7 @@ const sidebarOptions = {
     onclick: showInitialPrompt,
     carrot: true
   }],
-  visibility: () => /\/blog\/.+/.test(location.pathname)
+  visibility: () => /^\/blog\/[^/]+\/?$/.test(location.pathname)
 };
 
 export const main = async () => addSidebarItem(sidebarOptions);

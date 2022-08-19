@@ -1,4 +1,3 @@
-import moment from '../lib/moment.js';
 import { dom } from '../util/dom.js';
 import { buildStyle } from '../util/interface.js';
 import { modalCancelButton, showModal } from '../util/modals.js';
@@ -7,6 +6,31 @@ import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+const relativeTimeFormat = new Intl.RelativeTimeFormat(document.documentElement.lang, { style: 'long' });
+const thresholds = [
+  { unit: 'year', denominator: 31557600 },
+  { unit: 'month', denominator: 2629800 },
+  { unit: 'week', denominator: 604800 },
+  { unit: 'day', denominator: 86400 },
+  { unit: 'hour', denominator: 3600 },
+  { unit: 'minute', denominator: 60 },
+  { unit: 'second', denominator: 1 }
+];
+const constructRelativeTimeString = function (unixTime) {
+  const now = Math.trunc(new Date().getTime() / 1000);
+  const unixDiff = unixTime - now;
+  const unixDiffAbsolute = Math.abs(unixDiff);
+
+  for (const { unit, denominator } of thresholds) {
+    if (unixDiffAbsolute >= denominator) {
+      const value = Math.trunc(unixDiff / denominator);
+      return relativeTimeFormat.format(value, unit);
+    }
+  }
+
+  return relativeTimeFormat.format(-0, 'second');
+};
 
 const sidebarOptions = {
   id: 'find-inactives',
@@ -124,8 +148,6 @@ const showSelectBlogs = blogs => {
   const minTime = Math.min(...allTimes, maxTime - ONE_YEAR);
   const dateRange = maxTime - minTime;
 
-  const nowMoment = moment();
-
   const timeToX = time => ((time - minTime) * innerWidth) / dateRange + border;
 
   blogs.forEach(blog => {
@@ -145,7 +167,7 @@ const showSelectBlogs = blogs => {
       null,
       [blog.name]
     );
-    const relativeUpdated = blog.updated ? moment.unix(blog.updated).from(nowMoment) : 'never';
+    const relativeUpdated = blog.updated ? constructRelativeTimeString(blog.updated) : 'never';
 
     blog.selectTableRow = dom('tr', null, null, [
       dom('td', null, null, [followingIcon]),
@@ -201,7 +223,7 @@ const showSelectBlogs = blogs => {
       });
 
     const blogsString = visibleBlogs.length === 1 ? 'blog is' : 'blogs are';
-    const relativeTime = moment.unix(sliderTime).from(nowMoment);
+    const relativeTime = constructRelativeTimeString(sliderTime);
     selectionInfo.textContent = `${visibleBlogs.length} followed ${blogsString} inactive since ${relativeTime}`;
 
     table.replaceChildren(...visibleBlogs.map(({ selectTableRow }) => selectTableRow));

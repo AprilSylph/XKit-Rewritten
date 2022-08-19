@@ -2,7 +2,7 @@
  * Get all elements on the current page with the given css class.
  * (Elements may be returned more than once if called with multiple class names.)
  *
- * @param  {...string} classNames - one or more class names to select elements
+ * @param  {...string} classNames - One or more class names to select elements
  * @returns {Element[]} All elements on the page with the given classnames
  */
 const getElementsByClassName = (...classNames) =>
@@ -12,7 +12,7 @@ const getElementsByClassName = (...classNames) =>
  * Remove all elements on the current page with the given css class.
  * i.e. jQuery $(`.${className}`).remove();
  *
- * @param {...string} classNames - one or more class names to select elements to remove
+ * @param {...string} classNames - One or more class names to select elements to remove
  * @returns {void}
  */
 export const removeElementsByClassName = (...classNames) =>
@@ -22,7 +22,7 @@ export const removeElementsByClassName = (...classNames) =>
  * Remove the given css class from all elements on the current page that have it.
  * i.e. jQuery $(`.${className}`).removeClass(className);
  *
- * @param {...string} classNames - one or more class names to remove
+ * @param {...string} classNames - One or more class names to remove
  * @returns {void}
  */
 export const removeClass = (...classNames) =>
@@ -34,7 +34,7 @@ export const removeClass = (...classNames) =>
  * Remove the given attribute from all elements on the current page that have it.
  * i.e. jQuery $(`[${dashStylename}]`).removeAttr(dashStylename);
  *
- * @param {...string} attributes - one or more attributes to remove, in dash-style
+ * @param {...string} attributes - One or more attributes to remove, in dash-style
  * @returns {void}
  */
 export const removeAttr = (...attributes) =>
@@ -49,7 +49,7 @@ const dashStyle = string => string.replace(/[A-Z]/g, letter => `-${letter.toLowe
 /**
  * Remove the given data attribute from all elements on the current page that have it.
  *
- * @param {...string} dataAttributes - one or more data attributes to remove, in camelCase
+ * @param {...string} dataAttributes - One or more data attributes to remove, in camelCase
  * @returns {void}
  */
 export const removeDataset = (...dataAttributes) =>

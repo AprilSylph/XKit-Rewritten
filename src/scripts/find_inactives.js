@@ -54,45 +54,45 @@ const confirmContainerClass = 'xkit-find-inactives-confirm-container';
 const avatarClass = 'xkit-find-inactives-avatar';
 
 const styleElement = buildStyle(`
-  .${canvasClass} {
-    width: ${width / 2}px;
-    height: ${height / 2}px;
-    border-radius: ${border / 2}px;
-  }
+.${canvasClass} {
+  width: ${width / 2}px;
+  height: ${height / 2}px;
+  border-radius: ${border / 2}px;
+}
 
-  .${sliderClass} {
-    width: ${width / 2}px;
-  }
+.${sliderClass} {
+  width: ${width / 2}px;
+}
 
-  .${buttonClass} {
-    font-size: inherit;
-    text-decoration: underline;
-  }
+.${buttonClass} {
+  font-size: inherit;
+  text-decoration: underline;
+}
 
-  .${tableContainerClass} {
-    height: 300px;
-    overflow: auto;
-  }
+.${tableContainerClass} {
+  height: 300px;
+  overflow: auto;
+}
 
-  .${tableContainerClass} svg, .${confirmContainerClass} svg {
-    width: 12px;
-    height: 12px;
-    --icon-color-primary:RGB(var(--green));
-  }
+.${tableContainerClass} svg, .${confirmContainerClass} svg {
+  width: 12px;
+  height: 12px;
+  --icon-color-primary:RGB(var(--green));
+}
 
-  .${avatarClass} {
-    width: 1rem;
-    height: 1rem;
-  }
+.${avatarClass} {
+  width: 1rem;
+  height: 1rem;
+}
 
-  .${confirmContainerClass} {
-    max-height: 300px;
-    overflow: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem 1rem;
-  }
+.${confirmContainerClass} {
+  max-height: 300px;
+  overflow: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+}
 `);
 
 const computedStyle = getComputedStyle(document.documentElement);

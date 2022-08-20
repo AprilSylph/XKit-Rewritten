@@ -5,17 +5,21 @@ import { buildStyle } from '../util/interface.js';
 
 const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
 $(`[id="${scrollToBottomButtonId}"]`).remove();
+const activeClass = 'xkit-scroll-to-bottom-active';
 
 const knightRiderLoaderSelector = `main ${keyToCss('loader')} ${keyToCss('knightRiderLoader')}`;
 
 let scrollToBottomButton;
-let scrollToBottomIcon;
 let active = false;
 
 const styleElement = buildStyle(`
 ${keyToCss('isPeeprShowing')} #${scrollToBottomButtonId} {
   opacity: 0;
   pointer-events: none;
+}
+
+.${activeClass} svg use {
+  --icon-color-primary: rgb(var(--yellow));
 }
 `);
 
@@ -30,14 +34,14 @@ const observer = new ResizeObserver(scrollToBottom);
 const startScrolling = () => {
   observer.observe(document.documentElement);
   active = true;
-  scrollToBottomIcon.style.fill = 'rgb(var(--yellow))';
+  scrollToBottomButton.classList.add(activeClass);
   scrollToBottom();
 };
 
 const stopScrolling = () => {
   observer.disconnect();
   active = false;
-  if (scrollToBottomIcon) scrollToBottomIcon.style.fill = '';
+  scrollToBottomButton?.classList.remove(activeClass);
 };
 
 const onClick = () => active ? stopScrolling() : startScrolling();
@@ -63,8 +67,7 @@ const addButtonToPage = async function ([scrollToTopButton]) {
     scrollToBottomButton.addEventListener('click', onClick);
     scrollToBottomButton.id = scrollToBottomButtonId;
 
-    scrollToBottomIcon = scrollToBottomButton.querySelector('svg');
-    scrollToBottomIcon.style.fill = active ? 'rgb(var(--yellow))' : '';
+    scrollToBottomButton.classList[active ? 'add' : 'remove'](activeClass);
   }
 
   scrollToTopButton.after(scrollToBottomButton);

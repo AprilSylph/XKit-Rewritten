@@ -1,13 +1,13 @@
 import { keyToClasses, keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { pageModifications } from '../util/mutations.js';
-import { buildStyle } from '../util/interface.js';
+import { blogViewSelector, buildStyle } from '../util/interface.js';
 
 const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
 $(`[id="${scrollToBottomButtonId}"]`).remove();
 const activeClass = 'xkit-scroll-to-bottom-active';
 
-const knightRiderLoaderSelector = `main ${keyToCss('loader')} ${keyToCss('knightRiderLoader')}`;
+const loaderSelector = `${keyToCss('timeline')} > ${keyToCss('loader')}`;
 
 let scrollToBottomButton;
 let active = false;
@@ -25,7 +25,10 @@ ${keyToCss('isPeeprShowing')} #${scrollToBottomButtonId} {
 
 const scrollToBottom = () => {
   window.scrollTo({ top: document.documentElement.scrollHeight });
-  if (document.querySelector(knightRiderLoaderSelector) === null) {
+  const loaders = [...document.querySelectorAll(loaderSelector)]
+    .filter(element => element.matches(blogViewSelector) === false);
+
+  if (loaders.length === 0) {
     stopScrolling();
   }
 };

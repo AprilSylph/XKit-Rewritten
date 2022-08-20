@@ -7,7 +7,10 @@ const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
 $(`[id="${scrollToBottomButtonId}"]`).remove();
 const activeClass = 'xkit-scroll-to-bottom-active';
 
-const loaderSelector = `${keyToCss('timeline')} > ${keyToCss('loader')}`;
+const loaderSelector = `
+${keyToCss('timeline', 'blogRows')} > ${keyToCss('loader')},
+${keyToCss('notifications')} + ${keyToCss('loader')}
+`;
 
 let scrollToBottomButton;
 let active = false;

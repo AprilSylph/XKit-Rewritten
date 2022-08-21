@@ -1,0 +1,9 @@
+{
+  "title": "original activity demo",
+  "description": "",
+  "icon": {
+    "class_name": "ri-focus-line",
+    "color": "white",
+    "background_color": "#000000"
+  }
+}

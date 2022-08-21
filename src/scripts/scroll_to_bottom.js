@@ -30,9 +30,7 @@ const scrollToBottom = () => {
   const loaders = [...document.querySelectorAll(loaderSelector)]
     .filter(element => element.matches(blogViewSelector) === false);
 
-  const glassContainerOpen = document.getElementById('glass-container')?.hasChildNodes();
-
-  if (loaders.length === 0 || glassContainerOpen) {
+  if (loaders.length === 0) {
     stopScrolling();
   }
 };

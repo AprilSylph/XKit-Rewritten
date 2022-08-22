@@ -82,6 +82,7 @@ div:first-child + span + #quick-reblog {
 
 #quick-reblog select {
   padding-left: 0.5ch;
+  min-width: 0%;
 
   font-family: var(--font-family);
   font-weight: bold;

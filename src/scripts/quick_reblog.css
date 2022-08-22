@@ -87,6 +87,20 @@ div:first-child + span + #quick-reblog {
   font-weight: bold;
 }
 
+#quick-reblog .select-container {
+  display: flex;
+}
+
+#quick-reblog .avatar {
+  flex: none;
+  height: 26px;
+  width: 26px;
+  margin: 4px 0 4px 4px;
+
+  background-size: cover;
+  border-radius: 2px;
+}
+
 #quick-reblog .quick-tags {
   font-size: .875rem;
   line-height: 1.125;

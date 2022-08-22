@@ -22,6 +22,11 @@
       "label": "Show the blog selector",
       "default": true
     },
+    "showBlogAvatar": {
+      "type": "checkbox",
+      "label": "Show your avatar next to the blog selector",
+      "default": true
+    },
     "rememberLastBlog": {
       "type": "checkbox",
       "label": "Remember the last selected blog in the popup",

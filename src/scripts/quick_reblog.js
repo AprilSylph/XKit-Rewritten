@@ -44,7 +44,6 @@ let accountKey;
 
 let popupPosition;
 let showBlogSelector;
-let showBlogAvatar;
 let rememberLastBlog;
 let showCommentInput;
 let quickTagsIntegration;
@@ -290,7 +289,6 @@ export const main = async function () {
   ({
     popupPosition,
     showBlogSelector,
-    showBlogAvatar,
     rememberLastBlog,
     showCommentInput,
     quickTagsIntegration,
@@ -329,7 +327,6 @@ export const main = async function () {
   renderBlogAvatar();
 
   blogSelectorContainer.hidden = !showBlogSelector;
-  blogAvatar.hidden = !showBlogAvatar;
   commentInput.hidden = !showCommentInput;
   quickTagsList.hidden = !quickTagsIntegration;
   tagsInput.hidden = !showTagsInput;

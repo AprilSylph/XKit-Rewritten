@@ -1,6 +1,6 @@
 import { dom } from '../util/dom.js';
 import { buildStyle } from '../util/interface.js';
-import { modalCancelButton, showModal } from '../util/modals.js';
+import { hideModal, modalCancelButton, showModal } from '../util/modals.js';
 import { buildSvg } from '../util/remixicon.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
@@ -320,22 +320,59 @@ const showConfirmBlogs = (blogs, goBack) => {
     ],
     buttons: [
       dom('button', null, { click: goBack }, ['Go back']),
-      dom('button', { class: 'red' }, { click: () => showUnfollowBlogs(blogs) }, ['Unfollow'])
+      dom('button', { class: 'red' }, { click: () => unfollowBlogs(blogs) }, ['Unfollow'])
     ]
   });
 };
 
-const showUnfollowBlogs = async blogs => {
-  const unfollowedBlogsElement = dom('span', null, null, ['Unfollowed 0 blogs...']);
+const unfollowBlogs = async blogs => {
+  const blogNames = blogs.map(({ name }) => name);
+  const unfollowStatus = dom('span', null, null, ['Unfollowed 0 blogs...']);
   showModal({
     title: 'Unfollowing blogs...',
     message: [
-      dom('small', null, null, ['Please wait.']),
+      dom('small', null, null, ['Do not navigate away from this page.']),
       dom('br'),
       dom('br'),
-      unfollowedBlogsElement
+      unfollowStatus
     ],
     buttons: [modalCancelButton]
+  });
+
+  const succeeded = [];
+  const failed = [];
+
+  // temp
+  // const pretendApiFetch = async blogName => {
+  //   if (Math.random() < 0.1) throw new Error('fake error');
+  //   console.log('pretended to unfollow: ', blogName);
+  // };
+
+  for (const blogName of blogNames) {
+    await Promise.all([
+      apiFetch('/v2/user/unfollow', { method: 'POST', body: { url: `https://${blogName}.tumblr.com/` } }).then(() => {
+        succeeded.push(blogName);
+      }).catch(() => {
+        failed.push(blogName);
+      }).finally(() => {
+        unfollowStatus.textContent = `Unfollowed ${succeeded.length} blogs... ${failed.length ? `(failed: ${failed.length})` : ''}`;
+      }),
+      sleep(1000)
+    ]);
+  }
+
+  if (failed.length) console.error('Find Inactives failed to unfollow:', failed.join(', '));
+
+  showModal({
+    title: 'All done!',
+    message: [
+      `Unfollowed ${succeeded.length} blogs${failed.length ? ` (failed: ${failed.length})` : ''}.\n`,
+      'Refresh the page to see the result.'
+    ],
+    buttons: [
+      dom('button', null, { click: hideModal }, ['Close']),
+      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh'])
+    ]
   });
 };
 

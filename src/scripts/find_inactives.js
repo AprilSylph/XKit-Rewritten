@@ -118,26 +118,18 @@ const showFetchBlogs = async () => {
   let resource =
     '/v2/user/following?fields[blogs]=name,avatar,title,updated,?is_following_you';
 
-  // todo: remove this; for testing only
-  // let count = 0;
-
   while (resource) {
     await Promise.all([
       apiFetch(resource).then(({ response }) => {
         blogs.push(...response.blogs);
         resource = response.links?.next?.href;
 
-        // todo: remove this; for testing only
-        // if (count++ > 3) resource = null;
-
         foundBlogsElement.textContent = `Found ${blogs.length} blogs${resource ? '...' : '.'}`;
       }),
       sleep(500)
     ]);
   }
-
   blogs.sort((a, b) => b.updated - a.updated);
-  console.log(blogs);
 
   showSelectBlogs(blogs);
 };
@@ -341,12 +333,6 @@ const unfollowBlogs = async blogs => {
 
   const succeeded = [];
   const failed = [];
-
-  // temp
-  // const pretendApiFetch = async blogName => {
-  //   if (Math.random() < 0.1) throw new Error('fake error');
-  //   console.log('pretended to unfollow: ', blogName);
-  // };
 
   for (const blogName of blogNames) {
     await Promise.all([

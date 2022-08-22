@@ -307,7 +307,6 @@ export const main = async function () {
   blogSelector.replaceChildren(
     ...userBlogs.map(({ name, uuid }) => Object.assign(document.createElement('option'), { value: uuid, textContent: name }))
   );
-  renderBlogAvatar();
 
   if (rememberLastBlog) {
     for (const { uuid } of userBlogs) {
@@ -327,6 +326,7 @@ export const main = async function () {
 
     blogSelector.addEventListener('change', updateRememberedBlog);
   }
+  renderBlogAvatar();
 
   blogSelectorContainer.hidden = !showBlogSelector;
   blogAvatar.hidden = !showBlogAvatar;

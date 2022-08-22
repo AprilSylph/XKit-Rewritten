@@ -1,3 +1,20 @@
 .xkit-postblock-hidden article {
   display: none;
 }
+
+.xkit-postblock-warning {
+  padding: 25px 20px;
+  border-radius: 3px;
+  margin-bottom: var(--post-padding);
+
+  background-color: var(--blog-title-color-15);
+  color: var(--blog-title-color);
+
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.5em;
+}
+
+.xkit-postblock-warning button {
+  color: var(--blog-link-color);
+}

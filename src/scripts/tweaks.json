@@ -46,7 +46,7 @@
     },
     "unsticky_post_avatars": {
       "type": "checkbox",
-      "label": "Remove sticky effect from post avatars",
+      "label": "Remove the sticky effect from post avatars",
       "default": false
     },
     "hide_mini_follow": {

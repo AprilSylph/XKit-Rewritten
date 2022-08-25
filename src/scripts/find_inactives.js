@@ -254,7 +254,7 @@ const showSelectBlogs = blogs => {
   );
 
   const onClickContinue = () => {
-    const selectedBlogs = visibleBlogs.filter(({ checkbox }) => checkbox.checked);
+    const selectedBlogs = visibleBlogs.filter(({ checkbox }) => checkbox.checked).reverse();
     if (selectedBlogs.length) {
       showConfirmBlogs(selectedBlogs, render);
     } else {

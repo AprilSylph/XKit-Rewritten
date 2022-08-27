@@ -4,6 +4,8 @@ import { modalCancelButton, modalCompleteButton, showModal } from '../util/modal
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
+const timezoneOffsetMs = new Date().getTimezoneOffset() * 60000;
+
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const createNowString = () => {
   const now = new Date();
@@ -37,8 +39,9 @@ const confirmDeleteDrafts = event => {
 
   const blogName = location.pathname.split('/')[2];
   const { elements } = event.currentTarget;
-  const beforeString = elements.before.valueAsDate.toLocaleString();
-  const before = elements.before.valueAsNumber / 1000;
+  const beforeMs = elements.before.valueAsNumber + timezoneOffsetMs;
+  const beforeString = new Date(beforeMs).toLocaleString();
+  const before = beforeMs / 1000;
 
   showModal({
     title: 'Delete drafts?',

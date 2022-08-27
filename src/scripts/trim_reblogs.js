@@ -25,7 +25,7 @@ const onButtonClicked = async function ({ currentTarget }) {
     rebloggedRootId
   } = await timelineObject(postElement);
 
-  let unsureOfLegacyStatus = true;
+  let unsureOfLegacyStatus;
 
   if (rebloggedRootUuid && rebloggedRootId) {
     try {
@@ -35,7 +35,9 @@ const onButtonClicked = async function ({ currentTarget }) {
         return;
       }
       unsureOfLegacyStatus = false;
-    } catch (e) {}
+    } catch (exception) {
+      unsureOfLegacyStatus = true;
+    }
   }
 
   const {

@@ -38,7 +38,7 @@ export const onStorageChanged = async function (changes, areaName) {
 
 export const main = async function () {
   ({ defaultVolume } = await getPreferences('vanilla_video'));
-  pageModifications.register(`${keyToCss('videoPlayer')} video:not([src], .${vanillaVideoClass})`, cloneVideoElements);
+  pageModifications.register(`${keyToCss('videoPlayer')} video:not(.${vanillaVideoClass})`, cloneVideoElements);
 };
 
 export const clean = async function () {

@@ -31,7 +31,7 @@
     },
     "caught_up_line": {
       "type": "checkbox",
-      "label": "Turn \"You're caught up\" into a separating line",
+      "label": "Turn the Changes/Shop/etc. links carousel into a separating line",
       "default": false
     },
     "no_focus_shadow": {

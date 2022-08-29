@@ -17,7 +17,8 @@ let active = false;
 
 const styleElement = buildStyle(`
 ${keyToCss('isPeeprShowing')} #${scrollToBottomButtonId} {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .${activeClass} svg use {

@@ -3,10 +3,15 @@ import { pageModifications } from '../../util/mutations.js';
 
 const tagChicletVideoSelector = `${keyToCss('tagChicletWrapper')} > video`;
 
-const processTagChicletVideos = videos => videos.forEach(video => video.pause());
+const processTagChicletVideos = videos =>
+  videos.forEach(video => {
+    video.pause();
+    video.currentTime = 0;
+  });
 
-export const main = async () =>
+export const main = async () => {
   pageModifications.register(tagChicletVideoSelector, processTagChicletVideos);
+};
 
 export const clean = async () => {
   pageModifications.unregister(processTagChicletVideos);

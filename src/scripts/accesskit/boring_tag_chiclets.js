@@ -1,9 +1,9 @@
 import { keyToCss } from '../../util/css_map.js';
 import { pageModifications } from '../../util/mutations.js';
 
-const processtagChicletVideos = videos => videos.forEach(video => video.pause());
+const processTagChicletVideos = videos => videos.forEach(video => video.pause());
 
 export const main = async () =>
-  pageModifications.register(`${keyToCss('tagChicletWrapper')} > video`, processtagChicletVideos);
+  pageModifications.register(`${keyToCss('tagChicletWrapper')} > video`, processTagChicletVideos);
 
-export const clean = async () => pageModifications.unregister(processtagChicletVideos);
+export const clean = async () => pageModifications.unregister(processTagChicletVideos);

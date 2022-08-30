@@ -1,18 +1,19 @@
 import { keyToCss } from '../../util/css_map.js';
-import { buildStyle } from '../../util/interface.js';
+import { pageModifications } from '../../util/mutations.js';
 
-const styleElement = buildStyle(`
-${keyToCss('tagChicletWrapper')} {
-  background-image: none !important;
-  color: rgb(var(--black));
-  background-color: rgb(var(--secondary-accent));
-}
+const tagChicletVideoSelector = `${keyToCss('tagChicletWrapper')} > video`;
 
-${keyToCss('tagChicletWrapper')} > video,
-${keyToCss('tagChicletWrapper')} > ${keyToCss('tagChicletBgShader')} {
-  display: none !important;
-}
-`);
+const processTagChicletVideos = videos =>
+  videos.forEach(video => {
+    video.pause();
+    video.currentTime = 0;
+  });
 
-export const main = async () => document.head.append(styleElement);
-export const clean = async () => styleElement.remove();
+export const main = async () => {
+  pageModifications.register(tagChicletVideoSelector, processTagChicletVideos);
+};
+
+export const clean = async () => {
+  pageModifications.unregister(processTagChicletVideos);
+  [...document.querySelectorAll(tagChicletVideoSelector)].forEach(video => video.play());
+};

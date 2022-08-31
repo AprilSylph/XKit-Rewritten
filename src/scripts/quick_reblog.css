@@ -80,13 +80,18 @@ div:first-child + span + #quick-reblog {
   border-radius: 0;
   color: inherit;
   background-color: inherit;
-  padding: 1ch;
   margin-bottom: 2px;
 }
 
+#quick-reblog input {
+  padding: 1ch;
+}
+
 #quick-reblog select {
-  padding-left: 0.5ch;
-  min-width: 0%;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   font-family: var(--font-family);
   font-weight: bold;
@@ -94,13 +99,14 @@ div:first-child + span + #quick-reblog {
 
 #quick-reblog .select-container {
   display: flex;
+  padding: 4px;
 }
 
 #quick-reblog .avatar {
   flex: none;
   height: 26px;
   width: 26px;
-  margin: 4px 0 4px 4px;
+  margin-right: 2px;
 
   background-size: cover;
   border-radius: 2px;

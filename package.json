@@ -24,7 +24,7 @@
     "normalize.css": "^8.0.1",
     "remixicon": "^2.5.0",
     "spectrum-colorpicker": "^1.8.1",
-    "webextension-polyfill": "^0.9.0"
+    "webextension-polyfill": "^0.10.0"
   },
   "webExt": {
     "sourceDir": "src/",

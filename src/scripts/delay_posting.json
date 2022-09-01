@@ -1,0 +1,16 @@
+{
+  "title": "Delay Posting",
+  "description": "",
+  "icon": {
+    "class_name": "ri-timer-flash-line",
+    "color": "white",
+    "background_color": "#bb1f69"
+  },
+  "preferences": {
+    "delaySeconds": {
+      "type": "text",
+      "label": "Seconds to delay",
+      "default": "120"
+    }
+  }
+}

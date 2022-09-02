@@ -21,10 +21,10 @@ jobs:
         run: npm ci
 
       - name: Lint WebExtension
-        run: npm run lint-webextension
+        run: npm test --ignore-scripts
 
       - name: Sign WebExtension
-        run: npm run sign-webextension
+        run: npx web-ext sign
         continue-on-error: true
         env:
           WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
@@ -46,7 +46,7 @@ jobs:
         run: npm ci
 
       - name: Upload to Web Store
-        run: npm run webstore-upload
+        run: npx chrome-webstore-upload upload --source=src/ --auto-publish
         env:
           EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}

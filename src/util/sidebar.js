@@ -2,6 +2,8 @@ import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 import { pageModifications } from './mutations.js';
 
+$('#xkit-sidebar').remove();
+
 const sidebarItems = dom('div', { id: 'xkit-sidebar' });
 const conditions = new Map();
 
@@ -80,10 +82,6 @@ const sidebarItemSelector = keyToCss('sidebarItem');
 const navSubHeaderSelector = keyToCss('navSubHeader');
 
 const addSidebarToPage = () => {
-  if (document.body.contains(sidebarItems)) { return; }
-  const outdatedSidebarItems = document.getElementById('xkit-sidebar');
-  outdatedSidebarItems?.remove();
-
   [...sidebarItems.children]
     .filter(sidebarItem => conditions.has(sidebarItem))
     .forEach(sidebarItem => { sidebarItem.hidden = !conditions.get(sidebarItem)(); });

@@ -19,7 +19,7 @@ let blockedPostTargetIDs;
 const styleElement = buildStyle();
 const buildCss = () => `:is(${
   blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')
-}) { display: none; }`;
+}) { display: none !important; }`;
 
 const unburyTargetPostIds = async (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)]

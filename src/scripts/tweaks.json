@@ -14,14 +14,14 @@
       "label": "Use a slim layout for filtered posts",
       "default": false
     },
-    "footer_unredesign": {
-      "type": "checkbox",
-      "label": "Use a slim layout for post footers",
-      "default": false
-    },
     "highlight_contributed_content": {
       "type": "checkbox",
       "label": "Highlight contributed content on reblogs",
+      "default": false
+    },
+    "show_full_note_count": {
+      "type": "checkbox",
+      "label": "Show the full note count on posts",
       "default": false
     },
     "show_all_tags": {
@@ -31,7 +31,7 @@
     },
     "caught_up_line": {
       "type": "checkbox",
-      "label": "Turn \"You're caught up\" into a separating line",
+      "label": "Turn the Changes/Shop/etc. links carousel into a separating line",
       "default": false
     },
     "no_focus_shadow": {
@@ -46,7 +46,7 @@
     },
     "unsticky_post_avatars": {
       "type": "checkbox",
-      "label": "Remove sticky effect from post avatars",
+      "label": "Remove the sticky effect from post avatars",
       "default": false
     },
     "hide_mini_follow": {
@@ -54,11 +54,6 @@
       "label": "Hide mini-follow buttons on posts",
       "default": false,
       "inherit": "tweaks.preferences.subtle_follow"
-    },
-    "hide_note_count_types": {
-      "type": "checkbox",
-      "label": "Hide the note type badges in post footers",
-      "default": false
     },
     "hide_footer_tooltips": {
       "type": "checkbox",

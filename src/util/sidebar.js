@@ -1,5 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { blogViewSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 
 $('#xkit-sidebar').remove();
@@ -89,12 +90,12 @@ const addSidebarToPage = () => {
   const firstSidebarItem = document.querySelector(sidebarItemSelector);
   const firstNavSubHeader = document.querySelector(navSubHeaderSelector);
 
-  if (firstSidebarItem) {
+  if (firstSidebarItem && firstSidebarItem.matches(blogViewSelector) === false) {
     const target = getComputedStyle(firstSidebarItem).position === 'sticky'
       ? firstSidebarItem
       : firstSidebarItem.nextElementSibling;
     firstSidebarItem.parentNode.insertBefore(sidebarItems, target);
-  } else if (firstNavSubHeader) {
+  } else if (firstNavSubHeader && firstNavSubHeader.matches(blogViewSelector) === false) {
     firstNavSubHeader.parentNode.insertBefore(sidebarItems, firstNavSubHeader);
   }
 };

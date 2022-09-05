@@ -4,6 +4,7 @@ import { inject } from '../util/inject.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { getPreferences } from '../util/preferences.js';
+import { editPostFormStatus } from '../util/react_props.js';
 import { buildSvg } from '../util/remixicon.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
@@ -16,6 +17,8 @@ const activitySelector = `${keyToCss('notification')} > ${keyToCss('activity')}`
 
 let originalPostTag;
 let tagReplyingBlog;
+
+const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
 
 const getNotificationProps = function () {
   const notificationElement = document.currentScript.parentElement;
@@ -113,6 +116,13 @@ export const main = async function () {
 
   if (responseId !== undefined && /^\/blog\/.+\/drafts/.test(location.pathname)) {
     document.querySelector(`[href*="/edit/"][href$="/${responseId}"]`)?.click();
+
+    const setPostNow = () => {
+      pageModifications.unregister(setPostNow);
+      editPostFormStatus('now');
+    };
+    pageModifications.register(`${keyToCss('postFormButton')} button`, setPostNow);
+    sleep(5000).then(() => pageModifications.unregister(setPostNow));
   }
 };
 

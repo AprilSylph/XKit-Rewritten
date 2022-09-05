@@ -1,3 +1,4 @@
+import { keyToCss } from './css_map.js';
 import { inject } from './inject.js';
 import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
@@ -80,3 +81,45 @@ const controlTagsInput = async ({ add, remove }) => {
  * @returns {Promise<void>} Resolves when finished
  */
 export const editPostFormTags = async ({ add = [], remove = [] }) => inject(controlTagsInput, [{ add, remove }]);
+
+const controlPostFormStatus = (status, publishOnMs) => {
+  const button = document.currentScript.parentElement;
+  const reactKey = Object.keys(button).find(key => key.startsWith('__reactFiber'));
+
+  const isScheduled = status === 'scheduled';
+  let fiber = button[reactKey];
+  while (fiber !== null) {
+    if (fiber.stateNode?.state?.isDatePickerVisible !== undefined) {
+      fiber.stateNode.setState({ isDatePickerVisible: isScheduled });
+      break;
+    } else {
+      fiber = fiber.return;
+    }
+  }
+
+  fiber = button[reactKey];
+  while (fiber !== null) {
+    if (fiber.stateNode?.setFormPostStatus && fiber.stateNode?.onChangePublishOnValue) {
+      fiber.stateNode.setFormPostStatus(status);
+      if (status === 'schedule' && publishOnMs) {
+        fiber.stateNode.onChangePublishOnValue(new Date(publishOnMs));
+      }
+      break;
+    } else {
+      fiber = fiber.return;
+    }
+  }
+};
+
+/**
+ * Manipulate post form submit button status
+ *
+ * @param {'now'|'queue'|'draft'|'private'|'schedule'} status - Mode to set the post form submit button to
+ * @param {Date?} publishOn - Date value to set the post schedule to, if status is "schedule"
+ */
+export const editPostFormStatus = async (status, publishOn) => {
+  const button = document.querySelector(`${keyToCss('postFormButton')} button`);
+  if (!button) throw new Error('Missing button element to edit post form status');
+
+  await inject(controlPostFormStatus, [status, publishOn?.getTime()], button);
+};

@@ -1,3 +1,4 @@
+import { keyToCss } from '../util/css_map.js';
 import { inject } from '../util/inject.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
 import { getPreferences } from '../util/preferences.js';
@@ -5,22 +6,38 @@ import { getPreferences } from '../util/preferences.js';
 const symbolId = 'ri-timer-flash-line';
 let delayMs;
 
-const editPostSchedule = publishOnMs => {
-  const selectedTagsElement = document.getElementById('selected-tags');
-  if (!selectedTagsElement) return;
+const controlPostFormStatus = (status, publishOn) => {
+  const button = document.currentScript.parentElement;
+  const reactKey = Object.keys(document.currentScript.parentElement).find(key => key.startsWith('__reactFiber'));
 
-  const reactKey = Object.keys(selectedTagsElement).find(key => key.startsWith('__reactFiber'));
-  let fiber = selectedTagsElement[reactKey];
-
+  const isScheduled = status === 'scheduled';
+  let fiber = button[reactKey];
   while (fiber !== null) {
-    if (fiber.stateNode?.setFormPostStatus && fiber.stateNode?.onChangePublishOnValue) {
-      fiber.stateNode.setFormPostStatus('scheduled');
-      fiber.stateNode.onChangePublishOnValue(new Date(publishOnMs));
+    if (fiber.stateNode?.state?.isDatePickerVisible !== undefined) {
+      fiber.stateNode.setState({ isDatePickerVisible: isScheduled });
       break;
     } else {
       fiber = fiber.return;
     }
   }
+
+  fiber = button[reactKey];
+  while (fiber !== null) {
+    if (fiber.stateNode?.setFormPostStatus && fiber.stateNode?.onChangePublishOnValue) {
+      fiber.stateNode.setFormPostStatus(status);
+      if (publishOn) fiber.stateNode.onChangePublishOnValue(new Date(publishOn));
+      break;
+    } else {
+      fiber = fiber.return;
+    }
+  }
+};
+
+const editPostFormStatus = (status, publishOn) => {
+  const button = document.querySelector(`${keyToCss('postFormButton')} button`);
+  if (!button) throw new Error('Missing button element to edit post form status');
+
+  inject(controlPostFormStatus, [status, publishOn], button);
 };
 
 export const main = async function () {
@@ -29,7 +46,7 @@ export const main = async function () {
 
   registerPostOption('delay-posting', {
     symbolId,
-    onclick: () => inject(editPostSchedule, [Date.now() + delayMs])
+    onclick: () => editPostFormStatus('scheduled', Date.now() + delayMs)
   });
 };
 

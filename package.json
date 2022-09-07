@@ -9,14 +9,14 @@
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^2.1.0",
-    "eslint": "^8.21.0",
+    "eslint": "^8.23.0",
     "eslint-config-semistandard": "^17.0.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsdoc": "^39.3.3",
-    "eslint-plugin-n": "^15.2.4",
-    "eslint-plugin-promise": "^6.0.0",
-    "web-ext": "^7.1.1"
+    "eslint-plugin-jsdoc": "^39.3.6",
+    "eslint-plugin-n": "^15.2.5",
+    "eslint-plugin-promise": "^6.0.1",
+    "web-ext": "^7.2.0"
   },
   "dependencies": {
     "jquery": "^3.6.0",

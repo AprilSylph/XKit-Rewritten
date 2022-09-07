@@ -6,6 +6,7 @@ import { userBlogs } from '../util/user.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
+import { translate } from '../util/language_data.js';
 import { dom } from '../util/dom.js';
 
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-reblog' });
@@ -58,6 +59,11 @@ const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
 const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 const blogHashes = {};
+
+const reblogButtonSelector = `
+${postSelector} footer a[href*="/reblog/"],
+${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
+`;
 
 const renderBlogAvatar = async () => {
   const { value: selectedUuid } = blogSelector;
@@ -231,7 +237,7 @@ const processPosts = async function (postElements) {
     const rootID = rebloggedRootId || id;
 
     if (alreadyRebloggedList.includes(rootID)) {
-      const reblogLink = postElement.querySelector('footer a[href*="/reblog/"]');
+      const reblogLink = postElement.querySelector(reblogButtonSelector);
       const buttonDiv = reblogLink?.closest('div');
       if (buttonDiv) makeButtonReblogged({ buttonDiv, state: 'published' });
     }
@@ -331,7 +337,7 @@ export const main = async function () {
   quickTagsList.hidden = !quickTagsIntegration;
   tagsInput.hidden = !showTagsInput;
 
-  $(document.body).on('mouseenter', `${postSelector} footer a[href*="/reblog/"]`, showPopupOnHover);
+  $(document.body).on('mouseenter', reblogButtonSelector, showPopupOnHover);
 
   if (quickTagsIntegration) {
     browser.storage.onChanged.addListener(updateQuickTags);
@@ -344,7 +350,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  $(document.body).off('mouseenter', `${postSelector} footer a[href*="/reblog/"]`, showPopupOnHover);
+  $(document.body).off('mouseenter', reblogButtonSelector, showPopupOnHover);
   popupElement.remove();
 
   blogSelector.removeEventListener('change', updateRememberedBlog);

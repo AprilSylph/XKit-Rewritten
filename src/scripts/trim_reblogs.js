@@ -26,11 +26,18 @@ const onButtonClicked = async function ({ currentTarget }) {
     rebloggedRootId
   } = await timelineObject(postElement);
 
+  let unsureOfLegacyStatus;
+
   if (rebloggedRootUuid && rebloggedRootId) {
-    const { response: { shouldOpenInLegacy } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
-    if (shouldOpenInLegacy) {
-      notify('Legacy posts cannot be trimmed.');
-      return;
+    try {
+      const { response: { shouldOpenInLegacy } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
+      if (shouldOpenInLegacy) {
+        notify('Legacy posts cannot be trimmed.');
+        return;
+      }
+      unsureOfLegacyStatus = false;
+    } catch (exception) {
+      unsureOfLegacyStatus = true;
     }
   }
 
@@ -63,7 +70,10 @@ const onButtonClicked = async function ({ currentTarget }) {
   showModal({
     title: 'Trim this post?',
     message: [
-      'All but the last trail item will be removed.'
+      'All but the last trail item will be removed.',
+      ...(unsureOfLegacyStatus
+        ? ['\n\n', "Warning: XKit can't tell if this post originated from the legacy post editor. Trimming may fail if so."]
+        : [])
     ],
     buttons: [
       modalCancelButton,

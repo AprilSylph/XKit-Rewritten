@@ -89,6 +89,11 @@
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",
       "default": false
+    },
+    "disable_like_shortcut": {
+      "type": "checkbox",
+      "label": "Disable the L-to-like keyboard shortcut",
+      "default": false
     }
   }
 }

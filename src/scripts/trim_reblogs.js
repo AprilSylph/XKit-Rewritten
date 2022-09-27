@@ -1,5 +1,6 @@
 import { createControlButtonTemplate, cloneControlButton } from '../util/control_buttons.js';
 import { keyToCss } from '../util/css_map.js';
+import { dom } from '../util/dom.js';
 import { filterPostElements, postSelector } from '../util/interface.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -15,8 +16,8 @@ const reblogSelector = keyToCss('reblog');
 
 let controlButtonTemplate;
 
-const onButtonClicked = async function ({ currentTarget }) {
-  const postElement = currentTarget.closest(postSelector);
+const onButtonClicked = async function ({ currentTarget: controlButton }) {
+  const postElement = controlButton.closest(postSelector);
   const postId = postElement.dataset.id;
 
   const {
@@ -66,6 +67,36 @@ const onButtonClicked = async function ({ currentTarget }) {
 
   excludeTrailItems.pop();
 
+  const onClickTrim = async () => {
+    hideModal();
+
+    try {
+      const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
+        method: 'PUT',
+        body: {
+          content,
+          layout,
+          state,
+          publish_on: publishOn,
+          date,
+          tags: tags.join(','),
+          slug,
+          exclude_trail_items: excludeTrailItems
+        }
+      });
+      notify(displayText);
+
+      controlButton.remove();
+
+      const reblogs = [...postElement.querySelectorAll(reblogSelector)];
+      excludeTrailItems
+        .map(i => reblogs[i])
+        .forEach(reblog => reblog.remove());
+    } catch ({ body }) {
+      notify(body.errors[0].detail);
+    }
+  };
+
   showModal({
     title: 'Trim this post?',
     message: [
@@ -76,39 +107,7 @@ const onButtonClicked = async function ({ currentTarget }) {
     ],
     buttons: [
       modalCancelButton,
-      Object.assign(document.createElement('button'), {
-        textContent: 'Trim!',
-        className: 'blue',
-        onclick: async () => {
-          hideModal();
-
-          try {
-            const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
-              method: 'PUT',
-              body: {
-                content,
-                layout,
-                state,
-                publish_on: publishOn,
-                date,
-                tags: tags.join(','),
-                slug,
-                exclude_trail_items: excludeTrailItems
-              }
-            });
-            notify(displayText);
-
-            currentTarget.remove();
-
-            const reblogs = [...postElement.querySelectorAll(reblogSelector)];
-            excludeTrailItems
-              .map(i => reblogs[i])
-              .forEach(reblog => reblog.remove());
-          } catch ({ body }) {
-            notify(body.errors[0].detail);
-          }
-        }
-      })
+      dom('button', { class: 'blue' }, { click: onClickTrim }, ['Trim!'])
     ]
   });
 };

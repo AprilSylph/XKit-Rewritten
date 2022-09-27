@@ -43,7 +43,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
 
   const {
     response: {
-      content = {},
+      content = [],
       layout,
       state = 'published',
       publishOn,

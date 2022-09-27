@@ -1,0 +1,38 @@
+.xkit-trim-reblogs-preview {
+  padding: 1em;
+  max-height: 280px;
+  overflow-y: scroll;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 1em;
+}
+
+.xkit-trim-reblogs-preview > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 0.5em;
+}
+
+.xkit-trim-reblogs-preview > div > input:checked ~ * {
+  opacity: 0.5;
+  filter: grayscale(1);
+  text-decoration: line-through;
+}
+
+.xkit-trim-reblogs-avatar-preview {
+  width: 38px;
+  height: 38px;
+  border-radius: 3px;
+  flex: none;
+
+  background-size: cover;
+}
+
+.xkit-trim-reblogs-text-preview {
+  text-align: left;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}

@@ -45,3 +45,26 @@ export const apiFetch = async function (...args) {
     args
   );
 };
+
+const controlSoftNavigation = location => {
+  const element = document.currentScript.parentElement;
+  const reactKey = Object.keys(element).find(key => key.startsWith('__reactFiber'));
+  let fiber = element[reactKey];
+
+  while (fiber !== null) {
+    const { navigate } = fiber.memoizedProps || {};
+    if (navigate !== undefined) {
+      navigate(location);
+      return;
+    } else {
+      fiber = fiber.return;
+    }
+  }
+};
+
+export const softNavigate = location =>
+  inject(
+    controlSoftNavigation,
+    [location],
+    document.querySelector('form[role="search"][action="/search"]')
+  );

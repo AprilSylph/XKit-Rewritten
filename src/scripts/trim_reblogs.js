@@ -1,5 +1,6 @@
 import { createControlButtonTemplate, cloneControlButton } from '../util/control_buttons.js';
 import { keyToCss } from '../util/css_map.js';
+import { dom } from '../util/dom.js';
 import { filterPostElements, postSelector } from '../util/interface.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -31,8 +32,20 @@ const onButtonClicked = async function ({ currentTarget }) {
     try {
       const { response: { shouldOpenInLegacy } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
       if (shouldOpenInLegacy) {
-        notify('Legacy posts cannot be trimmed.');
-        return;
+        await new Promise(resolve => {
+          showModal({
+            title: 'Note: Legacy post',
+            message: [
+              'The root post of this thread was originally created with the legacy post editor.',
+              '\n\n',
+              'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
+            ],
+            buttons: [
+              modalCancelButton,
+              dom('button', { class: 'blue' }, { click: () => resolve() }, ['Continue'])
+            ]
+          });
+        });
       }
       unsureOfLegacyStatus = false;
     } catch (exception) {

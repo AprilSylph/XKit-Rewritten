@@ -1,6 +1,6 @@
 import { filterPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, softNavigate } from '../util/tumblr_helpers.js';
 import { primaryBlogName } from '../util/user.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -59,7 +59,9 @@ const addIcons = function (postElements) {
     const isMutual = await mutuals[blogName];
     if (isMutual) {
       postElement.classList.add(mutualsClass);
-      postAttribution.prepend(icon.cloneNode(true));
+      const iconClone = icon.cloneNode(true);
+      iconClone.addEventListener('click', () => softNavigate(`/${blogName}`));
+      postAttribution.prepend(iconClone);
     } else if (showOnlyMutuals) {
       postElement.classList.add(hiddenClass);
     }

@@ -1,3 +1,4 @@
+import { keyToCss } from './css_map.js';
 import { inject } from './inject.js';
 
 /**
@@ -66,5 +67,5 @@ export const softNavigate = location =>
   inject(
     controlSoftNavigation,
     [location],
-    document.querySelector('form[role="search"][action="/search"]')
+    document.querySelector(keyToCss('bluespaceLayout'))
   );

@@ -58,7 +58,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     }
   } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
 
-  if (trail?.length < 2) {
+  if (!trail?.length) {
     notify('This post is too short to trim!');
     return;
   }
@@ -86,10 +86,6 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
 
   const trailData = trail.map(createPreviewItem);
   trailData.slice(0, -1).forEach(({ checkbox }) => { checkbox.checked = true; });
-
-  // do we want to allow users to trim everything off?
-  // this would sort of be like legacy editable reblogs
-  trailData.slice(-1).forEach(({ checkbox }) => { checkbox.disabled = true; });
 
   const contentData = content.length
     ? [createPreviewItem({ blog, content, disableCheckbox: true })]
@@ -164,7 +160,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   if (!editButton) { return; }
 
   const { trail = [] } = await timelineObject(postElement);
-  if (trail.length < 2) { return; }
+  if (!trail.length) { return; }
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });
   const controlIcon = editButton.closest(controlIconSelector);

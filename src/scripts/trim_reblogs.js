@@ -68,7 +68,8 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   const createPreviewItem = ({ blog, brokenBlog, content, disableCheckbox = false }) => {
     const { avatar } = blog ?? brokenBlog ?? blogPlaceholder;
     const { url } = avatar[avatar.length - 1];
-    const contentTextStrings = content.map(({ text }) => text).filter(Boolean).slice(0, 4);
+    let contentTextStrings = content.map(({ text }) => text).filter(Boolean).slice(0, 4);
+    if (!contentTextStrings.length) contentTextStrings = ['···'];
 
     const checkbox = dom('input', { type: 'checkbox' });
     if (disableCheckbox) {

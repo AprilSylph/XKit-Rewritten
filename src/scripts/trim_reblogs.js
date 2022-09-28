@@ -139,7 +139,9 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
 
   trailData.forEach(({ checkbox }) => {
     checkbox.addEventListener('input', () => {
-      trimButton.disabled = !trailData.some(({ checkbox }) => checkbox.checked);
+      const nothingSelected = trailData.every(({ checkbox }) => !checkbox.checked);
+      const postWillBeEmpty = trailData.every(({ checkbox }) => checkbox.checked) && !content.length;
+      trimButton.disabled = nothingSelected || postWillBeEmpty;
     });
   });
 

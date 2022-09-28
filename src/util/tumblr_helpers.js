@@ -61,6 +61,7 @@ const controlSoftNavigation = location => {
       fiber = fiber.return;
     }
   }
+  window.open(location);
 };
 
 export const softNavigate = location =>

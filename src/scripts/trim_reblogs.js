@@ -19,6 +19,8 @@ const reblogSelector = keyToCss('reblog');
 
 let controlButtonTemplate;
 
+const blogPlaceholder = { avatar: [{ url: '' }] };
+
 const onButtonClicked = async function ({ currentTarget: controlButton }) {
   const postElement = controlButton.closest(postSelector);
   const postId = postElement.dataset.id;
@@ -63,7 +65,8 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     return;
   }
 
-  const createPreviewItem = ({ blog: { avatar }, content, disableCheckbox = false }) => {
+  const createPreviewItem = ({ blog, brokenBlog, content, disableCheckbox = false }) => {
+    const { avatar } = blog ?? brokenBlog ?? blogPlaceholder;
     const { url } = avatar[avatar.length - 1];
     const contentTextStrings = content.map(({ text }) => text).filter(Boolean).slice(0, 4);
 

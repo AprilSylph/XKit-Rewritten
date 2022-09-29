@@ -1,3 +1,23 @@
+@keyframes placed {
+  from {
+    transform: rotate3d(1, 0, 0, 90deg) translateZ(calc(var(--client-height) / 2));
+  }
+
+  to {
+    transform: rotate3d(1, 0, 0, 0deg) translateZ(calc(var(--client-height) / 2));
+  }
+}
+
+@keyframes drop {
+  from {
+    margin-bottom: 0;
+  }
+
+  to {
+    margin-bottom: calc(var(--client-height) * -1);
+  }
+}
+
 #xkit-toasts {
   position: fixed;
   bottom: 0;
@@ -30,18 +50,33 @@
 }
 
 #xkit-toasts[data-in-sidebar="true"] {
+  display: flex;
+  flex-direction: column-reverse;
   width: 320px;
   margin-bottom: 1ch;
 }
 
 #xkit-toasts[data-in-sidebar="true"] div {
+  --client-height: 1.5em;
   border-top: none;
-
   text-align: left;
 }
 
-#xkit-toasts[data-in-sidebar="true"] div:not(:last-child) {
-  border-bottom: 1px solid rgba(var(--white-on-dark), .13);
+#xkit-toasts[data-in-sidebar="true"] div.visible {
+  animation-name: placed;
+  animation-timing-function: linear;
+  animation-duration: 500ms;
+}
+
+#xkit-toasts[data-in-sidebar="true"] div:not(.visible) {
+  animation-name: drop;
+  animation-timing-function: linear;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+#xkit-toasts[data-in-sidebar="true"] div:not(:first-child) {
+  box-shadow: inset 0 -1px 0 rgba(var(--white-on-dark), .13);
 }
 
 [role="dialog"] #xkit-toasts[data-in-sidebar="false"] {

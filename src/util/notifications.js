@@ -33,6 +33,7 @@ export const notify = async textContent => {
 
   const toast = dom('div', { class: 'visible' }, null, [textContent]);
   toastContainer.append(toast);
+  toast.style.setProperty('--client-height', `${toast.clientHeight}px`);
 
   await sleep(4000);
   toast.classList.remove('visible');

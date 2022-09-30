@@ -17,6 +17,7 @@ const flagButtonClass = 'xkit-community-label-flag-button';
 const miniButtonClass = 'xkit-community-label-mini-button';
 const warningClass = 'xkit-community-label-warning';
 const warningTextClass = 'xkit-community-label-warning-text';
+const alwaysExpandClass = 'xkit-community-label-always-expand';
 
 const flagId = 'ri-flag-2-line';
 const categoryData = [
@@ -59,7 +60,7 @@ const styleElement = buildStyle(`
     display: none;
   }
 
-  [data-community-labelled] .${miniButtonClass} {
+  [data-community-labelled] .${miniButtonClass}, .${alwaysExpandClass} .${miniButtonClass} {
     display: block;
     ${sizeStyle}
     transform: scale(0.7);
@@ -250,9 +251,10 @@ const processPosts = postElements =>
 
 export const main = async function () {
   document.head.append(styleElement);
-  const { quickLabel } = await getPreferences('community_labeler');
+  const { quickLabel, alwaysExpand } = await getPreferences('community_labeler');
   if (quickLabel) {
     onNewPosts.addListener(processPosts);
+    alwaysExpand && document.body.classList.add(alwaysExpandClass);
   }
 };
 
@@ -263,6 +265,7 @@ export const clean = async function () {
   $(`.${containerClass}`).remove();
   $(`.${warningClass}`).remove();
   $('[data-community-labelled]').removeAttr('data-community-labelled');
+  document.body.classList.remove(alwaysExpandClass);
 
   editedPostStates = new WeakMap();
   throttle = false;

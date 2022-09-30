@@ -12,6 +12,11 @@
       "type": "checkbox",
       "label": "Show quick label buttons on your (original) posts",
       "default": true
+    },
+    "alwaysExpand": {
+      "type": "checkbox",
+      "label": "Always expand the quick label options",
+      "default": false
     }
   }
 }

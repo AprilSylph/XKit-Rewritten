@@ -59,7 +59,7 @@ const styleElement = buildStyle(`
     display: none;
   }
 
-  [data-community-labelled] .${miniButtonClass}, .${containerClass}:hover .${miniButtonClass} {
+  [data-community-labelled] .${miniButtonClass} {
     display: block;
     ${sizeStyle}
     transform: scale(0.7);

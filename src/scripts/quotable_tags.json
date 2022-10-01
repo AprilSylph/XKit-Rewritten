@@ -1,0 +1,9 @@
+{
+  "title": "Quotable Tags",
+  "description": "Write “double quotes” in post tags",
+  "icon": {
+    "class_name": "ri-double-quotes-l",
+    "color": "white",
+    "background_color": "#ac445d"
+  }
+}

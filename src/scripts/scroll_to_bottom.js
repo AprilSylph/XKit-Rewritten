@@ -11,6 +11,7 @@ const loaderSelector = `
 ${keyToCss('timeline', 'blogRows')} > ${keyToCss('loader')},
 ${keyToCss('notifications')} + ${keyToCss('loader')}
 `;
+const knightRiderLoaderSelector = `:is(${loaderSelector}) > ${keyToCss('knightRiderLoader')}`;
 
 let scrollToBottomButton;
 let active = false;
@@ -28,7 +29,7 @@ ${keyToCss('isPeeprShowing')} #${scrollToBottomButtonId} {
 
 const scrollToBottom = () => {
   window.scrollTo({ top: document.documentElement.scrollHeight });
-  const loaders = [...document.querySelectorAll(loaderSelector)]
+  const loaders = [...document.querySelectorAll(knightRiderLoaderSelector)]
     .filter(element => element.matches(blogViewSelector) === false);
 
   if (loaders.length === 0) {

@@ -28,14 +28,7 @@ const styleElement = buildStyle(`
 
 const processEditors = editors =>
   editors.forEach(editor => {
-    const observerCallback = mutations => {
-      // const mutatedImages =
-      //   mutations.some(mutation => mutation.type === 'attributes') ||
-      //   mutations
-      //     .flatMap(({ addedNodes }) => [...addedNodes])
-      //     .filter(addedNode => addedNode instanceof Element)
-      //     .some(element => element.matches('img') || element.querySelector('img'));
-
+    const observerCallback = () => {
       [...editor.querySelectorAll('figure[data-no-alt-text]')].forEach(element => {
         delete element.dataset.noAltText;
       });

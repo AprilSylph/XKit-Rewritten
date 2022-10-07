@@ -52,6 +52,11 @@
         { "value": "hide", "label": "Only show image descriptions" }
       ],
       "default": "show"
+    },
+    "alt_text_reminder": {
+      "type": "checkbox",
+      "label": "Remind me to add alt text to images",
+      "default": false
     }
   }
 }

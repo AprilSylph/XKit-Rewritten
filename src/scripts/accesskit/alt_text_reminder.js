@@ -24,6 +24,10 @@ const styleElement = buildStyle(`
     font-size: var(--base-font-size);
     font-weight: 500;
   }
+
+  figure[data-no-alt-text] ${keyToCss('imageOptionsWrapper')} {
+    display: unset !important;
+  }
 `);
 
 const processEditors = editors =>

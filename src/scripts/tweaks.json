@@ -92,7 +92,7 @@
     },
     "hide_after_post_popup": {
       "type": "checkbox",
-      "label": "Hide the the popups that appear after posting",
+      "label": "Hide the new post celebration banner",
       "default": false
     }
   }

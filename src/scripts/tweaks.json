@@ -89,6 +89,11 @@
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",
       "default": false
+    },
+    "hide_after_post_popup": {
+      "type": "checkbox",
+      "label": "Hide the the popups that appear after posting",
+      "default": false
     }
   }
 }

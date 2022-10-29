@@ -1,5 +1,4 @@
 import { postSelector } from './interface.js';
-const rootNode = document.getElementById('root');
 
 const mutationsPool = [];
 let repaintQueued = false;
@@ -39,12 +38,12 @@ export const pageModifications = Object.freeze({
     if (!selector) return;
 
     if (modifierFunction.length === 0) {
-      const shouldRun = rootNode.querySelector(selector) !== null;
+      const shouldRun = document.body.querySelector(selector) !== null;
       if (shouldRun) modifierFunction();
       return;
     }
 
-    const matchingElements = [...rootNode.querySelectorAll(selector)];
+    const matchingElements = [...document.body.querySelectorAll(selector)];
     if (matchingElements.length !== 0) {
       modifierFunction(matchingElements);
     }
@@ -92,4 +91,4 @@ const observer = new MutationObserver(mutations => {
   }
 });
 
-observer.observe(rootNode, { childList: true, subtree: true });
+observer.observe(document.body, { childList: true, subtree: true });

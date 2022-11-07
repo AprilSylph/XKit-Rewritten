@@ -121,11 +121,22 @@ const togglePopupDisplay = async function ({ target, currentTarget }) {
   currentTarget[appendOrRemove](popupElement);
 };
 
+const appendWithoutViewportOverflow = (element, target) => {
+  element.classList.remove('above');
+  target.appendChild(element);
+  if (element.getBoundingClientRect().bottom > document.documentElement.clientHeight) {
+    element.classList.add('above');
+  }
+};
+
 const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) {
   if (target === postOptionPopupElement || postOptionPopupElement.contains(target)) { return; }
 
-  const appendOrRemove = currentTarget.contains(postOptionPopupElement) ? 'removeChild' : 'appendChild';
-  currentTarget[appendOrRemove](postOptionPopupElement);
+  if (currentTarget.contains(postOptionPopupElement)) {
+    currentTarget.removeChild(postOptionPopupElement);
+  } else {
+    appendWithoutViewportOverflow(postOptionPopupElement, currentTarget);
+  }
 };
 
 const addTagsToPost = async function ({ postElement, inputTags = [] }) {

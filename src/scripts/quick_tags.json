@@ -9,6 +9,15 @@
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quick-tags",
   "relatedTerms": [ "Auto Tagger", "AutoTagger", "XInbox" ],
   "preferences": {
+    "popupPosition": {
+      "type": "select",
+      "label": "Popup position",
+      "options": [
+        { "value": "above", "label": "Above button" },
+        { "value": "below", "label": "Below button" }
+      ],
+      "default": "below"
+    },
     "originalPostTag": {
       "type": "text",
       "label": "Original post tag",

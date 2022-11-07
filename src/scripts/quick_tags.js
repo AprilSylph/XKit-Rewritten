@@ -14,6 +14,7 @@ const excludeClass = 'xkit-quick-tags-done';
 const tagsClass = 'xkit-quick-tags-tags';
 const controlIconSelector = keyToCss('controlIcon');
 
+let popupPosition;
 let originalPostTag;
 let answerTag;
 let autoTagAsker;
@@ -105,7 +106,8 @@ export const onStorageChanged = async function (changes, areaName) {
   if (Object.keys(changes).some(key => key.startsWith('quick_tags'))) {
     if (Object.keys(changes).includes(storageKey)) populatePopups();
 
-    ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+    ({ popupPosition, originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+    postOptionPopupElement.className = popupPosition;
     if (originalPostTag || answerTag || autoTagAsker) {
       pageModifications.register('#selected-tags', processPostForm);
     } else {
@@ -233,7 +235,8 @@ export const main = async function () {
 
   populatePopups();
 
-  ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+  ({ popupPosition, originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+  postOptionPopupElement.className = popupPosition;
   if (originalPostTag || answerTag || autoTagAsker) {
     pageModifications.register('#selected-tags', processPostForm);
   }

@@ -27,6 +27,10 @@
   transform: translate(50%, 12px);
 }
 
+#quick-tags-post-option.above {
+  transform: translate(50%, calc(-100% - 12px - 22px));
+}
+
 @media (max-width: 650px) {
   #quick-tags {
     top: 50%;

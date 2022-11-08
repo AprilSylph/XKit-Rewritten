@@ -114,19 +114,19 @@ export const onStorageChanged = async function (changes, areaName) {
   }
 };
 
-const togglePopupDisplay = async function ({ target, currentTarget }) {
-  if (target === popupElement || popupElement.contains(target)) { return; }
-
-  const appendOrRemove = currentTarget.contains(popupElement) ? 'removeChild' : 'appendChild';
-  currentTarget[appendOrRemove](popupElement);
-};
-
 const appendWithoutViewportOverflow = (element, target) => {
   element.classList.remove('above');
   target.appendChild(element);
   if (element.getBoundingClientRect().bottom > document.documentElement.clientHeight) {
     element.classList.add('above');
   }
+};
+
+const togglePopupDisplay = async function ({ target, currentTarget }) {
+  if (target === popupElement || popupElement.contains(target)) { return; }
+
+  const appendOrRemove = currentTarget.contains(popupElement) ? 'removeChild' : 'appendChild';
+  currentTarget[appendOrRemove](popupElement);
 };
 
 const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) {

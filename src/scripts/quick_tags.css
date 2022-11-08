@@ -33,6 +33,7 @@
   transform: translate(50%, -12px);
 }
 
+/* left mobile */
 @media (max-width: 650px) {
   #quick-tags {
     top: 50%;
@@ -41,6 +42,7 @@
   }
 }
 
+/* bottom mobile */
 @media (min-width: 650px) {
   #quick-tags {
     top: 100%;
@@ -49,12 +51,14 @@
   }
 }
 
+/* bottom desktop; also bottom desktop modal */
 @media (min-width: 990px) {
   #quick-tags {
     transform: translate(50%, 12px);
   }
 }
 
+/* left modal mobile */
 @media (max-width: 990px) {
   [role="dialog"] #quick-tags {
     top: 50%;
@@ -63,6 +67,7 @@
   }
 }
 
+/* left modal desktop */
 @media (min-width: 990px) and (max-width: 1145px) {
   [role="dialog"] #quick-tags {
     top: 50%;

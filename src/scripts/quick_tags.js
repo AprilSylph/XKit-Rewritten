@@ -115,10 +115,10 @@ export const onStorageChanged = async function (changes, areaName) {
 };
 
 const appendWithoutViewportOverflow = (element, target) => {
-  element.classList.remove('above');
+  element.className = 'below';
   target.appendChild(element);
   if (element.getBoundingClientRect().bottom > document.documentElement.clientHeight) {
-    element.classList.add('above');
+    element.className = 'above';
   }
 };
 

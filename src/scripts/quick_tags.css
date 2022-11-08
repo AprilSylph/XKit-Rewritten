@@ -21,14 +21,16 @@
   font-weight: normal;
 }
 
-#quick-tags-post-option {
+#quick-tags-post-option.below {
   top: 100%;
   right: 50%;
   transform: translate(50%, 12px);
 }
 
 #quick-tags-post-option.above {
-  transform: translate(50%, calc(-100% - 12px - 22px));
+  bottom: 100%;
+  right: 50%;
+  transform: translate(50%, -12px);
 }
 
 @media (max-width: 650px) {

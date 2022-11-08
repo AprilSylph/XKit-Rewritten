@@ -125,8 +125,11 @@ const appendWithoutViewportOverflow = (element, target) => {
 const togglePopupDisplay = async function ({ target, currentTarget }) {
   if (target === popupElement || popupElement.contains(target)) { return; }
 
-  const appendOrRemove = currentTarget.contains(popupElement) ? 'removeChild' : 'appendChild';
-  currentTarget[appendOrRemove](popupElement);
+  if (currentTarget.contains(popupElement)) {
+    currentTarget.removeChild(popupElement);
+  } else {
+    appendWithoutViewportOverflow(popupElement, currentTarget);
+  }
 };
 
 const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) {

@@ -42,19 +42,31 @@
   }
 }
 
-/* bottom mobile */
+/* top/bottom mobile */
 @media (min-width: 650px) {
-  #quick-tags {
+  #quick-tags.below {
     top: 100%;
+    right: 50%;
+    transform: translateX(50%);
+  }
+  #quick-tags.above {
+    bottom: 100%;
     right: 50%;
     transform: translateX(50%);
   }
 }
 
-/* bottom desktop; also bottom desktop modal */
+/* top/bottom desktop; also bottom desktop modal */
 @media (min-width: 990px) {
-  #quick-tags {
+  #quick-tags.below {
+    top: 100%;
+    right: 50%;
     transform: translate(50%, 12px);
+  }
+  #quick-tags.above {
+    bottom: 100%;
+    right: 50%;
+    transform: translate(50%, -12px);
   }
 }
 

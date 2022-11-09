@@ -36,49 +36,33 @@
 #quick-tags {
   --icon-spacing: 12px;
 }
-
 @media (max-width: 990px) {
   #quick-tags {
     --icon-spacing: 0px;
   }
 }
 
-#quick-tags {
-  --inset-left: 50% 100% auto auto;
-  --transform-left: translate(calc(0px - var(--icon-spacing)), -50%);
-
-  --inset-below: 100% 50% auto auto;
-  --transform-below: translate(50%, var(--icon-spacing));
-
-  --inset-above: auto 50% 100% auto;
-  --transform-above: translate(50%, calc(0px - var(--icon-spacing)));
-}
-
-/* left */
-@media (max-width: 650px) {
-  #quick-tags {
-    inset: var(--inset-left);
-    transform: var(--transform-left);
-  }
-}
-
-/* top/bottom */
 @media (min-width: 650px) {
   #quick-tags.below {
-    inset: var(--inset-below);
-    transform: var(--transform-below);
+    inset: 100% 50% auto auto;
+    transform: translate(50%, var(--icon-spacing));
   }
   #quick-tags.above {
-    inset: var(--inset-above);
-    transform: var(--transform-above);
+    inset: auto 50% 100% auto;
+    transform: translate(50%, calc(0px - var(--icon-spacing)));
   }
 }
 
-/* left modal */
+@media (max-width: 650px) {
+  #quick-tags {
+    inset: 50% 100% auto auto;
+    transform: translate(calc(0px - var(--icon-spacing)), -50%);
+  }
+}
 @media (max-width: 1145px) {
   [role="dialog"] #quick-tags {
-    inset: var(--inset-left);
-    transform: var(--transform-left);
+    inset: 50% 100% auto auto;
+    transform: translate(calc(0px - var(--icon-spacing)), -50%);
   }
 }
 

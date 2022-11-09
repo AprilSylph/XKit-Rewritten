@@ -34,64 +34,51 @@
 }
 
 #quick-tags {
-  --inset-left: 50% 100% auto auto;
-  --transform-left-mobile: translate(0, -50%);
-  --transform-left-desktop: translate(-20px, -50%);
-
-  --inset-below: 100% 50% auto auto;
-  --transform-below-mobile: translate(50%, 0);
-  --transform-below-desktop: translate(50%, 12px);
-
-  --inset-above: auto 50% 100% auto;
-  --transform-above-mobile: translate(50%, 0);
-  --transform-above-desktop: translate(50%, -12px);
+  --icon-spacing: 12px;
 }
 
-/* left mobile */
+@media (max-width: 990px) {
+  #quick-tags {
+    --icon-spacing: 0px;
+  }
+}
+
+#quick-tags {
+  --inset-left: 50% 100% auto auto;
+  --transform-left: translate(calc(0px - var(--icon-spacing)), -50%);
+
+  --inset-below: 100% 50% auto auto;
+  --transform-below: translate(50%, var(--icon-spacing));
+
+  --inset-above: auto 50% 100% auto;
+  --transform-above: translate(50%, calc(0px - var(--icon-spacing)));
+}
+
+/* left */
 @media (max-width: 650px) {
   #quick-tags {
     inset: var(--inset-left);
-    transform: var(--transform-left-mobile);
+    transform: var(--transform-left);
   }
 }
 
-/* top/bottom mobile */
+/* top/bottom */
 @media (min-width: 650px) {
   #quick-tags.below {
     inset: var(--inset-below);
-    transform: var(--transform-below-mobile);
+    transform: var(--transform-below);
   }
   #quick-tags.above {
     inset: var(--inset-above);
-    transform: var(--transform-above-mobile);
+    transform: var(--transform-above);
   }
 }
 
-/* top/bottom desktop; also bottom desktop modal */
-@media (min-width: 990px) {
-  #quick-tags.below {
-    inset: var(--inset-below);
-    transform: var(--transform-below-desktop);
-  }
-  #quick-tags.above {
-    inset: var(--inset-above);
-    transform: var(--transform-above-desktop);
-  }
-}
-
-/* left modal mobile */
-@media (max-width: 990px) {
+/* left modal */
+@media (max-width: 1145px) {
   [role="dialog"] #quick-tags {
     inset: var(--inset-left);
-    transform: var(--transform-left-mobile);
-  }
-}
-
-/* left modal desktop */
-@media (min-width: 990px) and (max-width: 1145px) {
-  [role="dialog"] #quick-tags {
-    inset: var(--inset-left);
-    transform: var(--transform-left-desktop);
+    transform: var(--transform-left);
   }
 }
 

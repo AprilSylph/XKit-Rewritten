@@ -6,5 +6,17 @@
     "color": "white",
     "background_color": "#c538ff"
   },
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tag-tracking"
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tag-tracking",
+  "preferences": {
+    "showUnread": {
+      "type": "select",
+      "label": "Show unread counts",
+      "options": [
+        { "value": "both", "label": "Both in search & sidebar" },
+        { "value": "search", "label": "Only in the search dropdown" },
+        { "value": "sidebar", "label": "Only in the sidebar" }
+      ],
+      "default": "both"
+    }
+  }
 }

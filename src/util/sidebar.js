@@ -37,7 +37,7 @@ const buildSidebarRow = ({ label, onclick, count, carrot }) =>
     dom('button', null, { click: onclick }, [
       dom('span', null, null, [label]),
       count !== undefined
-        ? dom('span', { class: 'count' }, null, [count])
+        ? dom('span', { class: 'count', 'data-count-for': label }, null, [count])
         : carrot === true
           ? carrotSvg.cloneNode(true)
           : ''

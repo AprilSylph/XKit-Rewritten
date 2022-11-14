@@ -181,10 +181,7 @@ const renderScripts = async function () {
   scriptsDiv.append(...scriptClones);
 };
 
-renderScripts().then(() => {
-  const main = document.querySelector('main');
-  main.style.minWidth = `${main.getBoundingClientRect().width}px`;
-});
+renderScripts();
 
 configSectionLink.addEventListener('click', ({ currentTarget }) => {
   if (currentTarget.classList.contains('outdated')) {

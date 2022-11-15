@@ -7,9 +7,12 @@ import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { translate } from '../util/language_data.js';
+import { dom } from '../util/dom.js';
 
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-reblog' });
 const blogSelector = document.createElement('select');
+const blogAvatar = dom('div', { class: 'avatar' });
+const blogSelectorContainer = dom('div', { class: 'select-container' }, null, [blogAvatar, blogSelector]);
 const commentInput = Object.assign(document.createElement('input'), {
   placeholder: 'Comment',
   autocomplete: 'off',
@@ -33,7 +36,7 @@ const queueButton = Object.assign(document.createElement('button'), { textConten
 queueButton.dataset.state = 'queue';
 const draftButton = Object.assign(document.createElement('button'), { textContent: 'Draft' });
 draftButton.dataset.state = 'draft';
-[blogSelector, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons].forEach(element => popupElement.appendChild(element));
+[blogSelectorContainer, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons].forEach(element => popupElement.appendChild(element));
 
 let lastPostID;
 let timeoutID;
@@ -61,6 +64,14 @@ const reblogButtonSelector = `
 ${postSelector} footer a[href*="/reblog/"],
 ${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
 `;
+
+const renderBlogAvatar = async () => {
+  const { value: selectedUuid } = blogSelector;
+  const { avatar } = userBlogs.find(({ uuid }) => uuid === selectedUuid);
+  const { url } = avatar[avatar.length - 1];
+  blogAvatar.style.backgroundImage = `url(${url})`;
+};
+blogSelector.addEventListener('change', renderBlogAvatar);
 
 const renderTagSuggestions = () => {
   tagSuggestions.textContent = '';
@@ -123,6 +134,7 @@ const showPopupOnHover = ({ currentTarget }) => {
   if (thisPostID !== lastPostID) {
     if (!rememberLastBlog) {
       blogSelector.value = blogSelector.options[0].value;
+      renderBlogAvatar();
     }
     commentInput.value = '';
     [...quickTagsList.children].forEach(({ dataset }) => delete dataset.checked);
@@ -318,8 +330,9 @@ export const main = async function () {
 
     blogSelector.addEventListener('change', updateRememberedBlog);
   }
+  renderBlogAvatar();
 
-  blogSelector.hidden = !showBlogSelector;
+  blogSelectorContainer.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;
   quickTagsList.hidden = !quickTagsIntegration;
   tagsInput.hidden = !showTagsInput;

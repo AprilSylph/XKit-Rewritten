@@ -17,6 +17,8 @@ const writeEnabled = async function ({ currentTarget }) {
   const detailsElement = currentTarget.closest('details');
   let { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
+  detailsElement.open = checked;
+
   if (checked) {
     enabledScripts.push(id);
     detailsElement.classList.remove('disabled');

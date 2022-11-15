@@ -17,7 +17,8 @@ const writeEnabled = async function ({ currentTarget }) {
   const detailsElement = currentTarget.closest('details');
   let { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
-  detailsElement.open = checked;
+  const hasPreferences = detailsElement.querySelector('.preferences:not(:empty)');
+  if (hasPreferences) detailsElement.open = checked;
 
   if (checked) {
     enabledScripts.push(id);

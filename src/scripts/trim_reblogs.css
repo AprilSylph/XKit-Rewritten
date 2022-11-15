@@ -1,21 +1,29 @@
 .xkit-trim-reblogs-preview {
+  box-sizing: border-box;
+  max-height: 50vh;
+  overflow-y: auto;
   padding: 1em;
-  max-height: 280px;
-  overflow-y: scroll;
+  margin-top: 1em;
 
   display: flex;
   flex-direction: column;
-  row-gap: 1em;
+  row-gap: 1ch;
+
+  background-color: rgb(var(--navy));
+  border-radius: 8px;
+  box-shadow: 0 0 1px rgba(var(--white-on-dark), .13);
 }
 
-.xkit-trim-reblogs-preview > div {
+.xkit-trim-reblogs-preview label {
   display: flex;
   flex-direction: row;
   align-items: center;
-  column-gap: 0.5em;
+  column-gap: 1ch;
+
+  user-select: none;
 }
 
-.xkit-trim-reblogs-preview > div > input:checked ~ * {
+.xkit-trim-reblogs-preview input:checked ~ * {
   opacity: 0.5;
   filter: grayscale(1);
   text-decoration: line-through;
@@ -26,13 +34,23 @@
   height: 38px;
   border-radius: 3px;
   flex: none;
-
-  background-size: cover;
 }
 
 .xkit-trim-reblogs-text-preview {
-  text-align: left;
-  white-space: nowrap;
   overflow-x: hidden;
+  text-align: left;
+}
+
+.xkit-trim-reblogs-text-preview :is(p, strong) {
+  margin: 0;
+  overflow-x: inherit;
+
+  font-size: 1rem;
+  line-height: 1.5;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.xkit-trim-reblogs-text-preview strong {
+  font-size: 0.875rem;
 }

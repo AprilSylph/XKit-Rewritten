@@ -19,7 +19,10 @@ const reblogSelector = keyToCss('reblog');
 
 let controlButtonTemplate;
 
-const blogPlaceholder = { avatar: [{ url: '' }] };
+const blogPlaceholder = {
+  avatar: [{ url: 'https://assets.tumblr.com/pop/src/assets/images/avatar/anonymous_avatar_96-223fabe0.png' }],
+  name: 'anonymous'
+};
 
 const onButtonClicked = async function ({ currentTarget: controlButton }) {
   const postElement = controlButton.closest(postSelector);
@@ -66,10 +69,9 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   }
 
   const createPreviewItem = ({ blog, brokenBlog, content, disableCheckbox = false }) => {
-    const { avatar } = blog ?? brokenBlog ?? blogPlaceholder;
-    const { url } = avatar[avatar.length - 1];
-    let contentTextStrings = content.map(({ text }) => text).filter(Boolean).slice(0, 4);
-    if (!contentTextStrings.length) contentTextStrings = ['···'];
+    const { avatar, name } = blog ?? brokenBlog ?? blogPlaceholder;
+    const { url: src } = avatar[avatar.length - 1];
+    const textContent = content.map(({ text }) => text).find(Boolean);
 
     const checkbox = dom('input', { type: 'checkbox' });
     if (disableCheckbox) {
@@ -77,14 +79,15 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       checkbox.style = 'visibility: hidden';
     }
 
-    const avatarElement = dom('div', { class: avatarPreviewClass, style: `background-image: url(${url})` });
-    const textElement = dom(
-      'div',
-      { style: 'overflow-x: hidden;' },
-      null,
-      contentTextStrings.map(text => dom('div', { class: textPreviewClass }, null, [text]))
-    );
-    const wrapper = dom('div', null, null, [checkbox, avatarElement, textElement]);
+    const wrapper = dom('label', null, null, [
+      checkbox,
+      dom('img', { class: avatarPreviewClass, src }),
+      dom('div', { class: textPreviewClass }, null, [
+        dom('strong', null, null, [name]),
+        dom('p', null, null, [textContent])
+      ])
+    ]);
+
     return { wrapper, checkbox };
   };
 

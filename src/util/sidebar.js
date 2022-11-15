@@ -79,25 +79,33 @@ export const removeSidebarItem = id => {
   sidebarItem.remove();
 };
 
-const sidebarItemSelector = keyToCss('sidebarItem');
+const mrecContainerSelector = `${keyToCss('mrecContainer')} *`;
+
+// Sidebar on explore/search/hubs
+const desktopContainerSelector = `aside ${keyToCss('desktopContainer', 'summary')}`;
+// Sidebar on most other desktop pages
+const sidebarItemSelector = keyToCss('sidebarItem', 'sidebarContent');
+// Mobile drawer
 const navSubHeaderSelector = keyToCss('navSubHeader');
 
-const addSidebarToPage = () => {
+const addSidebarToPage = (siblingCandidates) => {
   [...sidebarItems.children]
     .filter(sidebarItem => conditions.has(sidebarItem))
     .forEach(sidebarItem => { sidebarItem.hidden = !conditions.get(sidebarItem)(); });
 
-  const firstSidebarItem = document.querySelector(sidebarItemSelector);
-  const firstNavSubHeader = document.querySelector(navSubHeaderSelector);
+  const target = siblingCandidates
+    .filter(target => !target.matches(blogViewSelector))
+    .filter(target => !target.matches(mrecContainerSelector))[0]
+    ?.parentElement
+    ?.firstElementChild;
 
-  if (firstSidebarItem && firstSidebarItem.matches(blogViewSelector) === false) {
-    const target = getComputedStyle(firstSidebarItem).position === 'sticky'
-      ? firstSidebarItem
-      : firstSidebarItem.nextElementSibling;
-    firstSidebarItem.parentNode.insertBefore(sidebarItems, target);
-  } else if (firstNavSubHeader && firstNavSubHeader.matches(blogViewSelector) === false) {
-    firstNavSubHeader.parentNode.insertBefore(sidebarItems, firstNavSubHeader);
-  }
+  if (!target || target === sidebarItems) return;
+
+  const insertAbove = getComputedStyle(target).position === 'sticky' ||
+    target.matches(desktopContainerSelector) ||
+    target.matches(navSubHeaderSelector);
+
+  target[insertAbove ? 'before' : 'after'](sidebarItems);
 };
 
-pageModifications.register(`${sidebarItemSelector}, ${navSubHeaderSelector}`, addSidebarToPage);
+pageModifications.register(`${desktopContainerSelector}, ${sidebarItemSelector}, ${navSubHeaderSelector}`, addSidebarToPage);

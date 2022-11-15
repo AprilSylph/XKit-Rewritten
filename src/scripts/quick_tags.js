@@ -114,18 +114,32 @@ export const onStorageChanged = async function (changes, areaName) {
   }
 };
 
+const appendWithoutViewportOverflow = (element, target) => {
+  element.className = 'below';
+  target.appendChild(element);
+  if (element.getBoundingClientRect().bottom > document.documentElement.clientHeight) {
+    element.className = 'above';
+  }
+};
+
 const togglePopupDisplay = async function ({ target, currentTarget }) {
   if (target === popupElement || popupElement.contains(target)) { return; }
 
-  const appendOrRemove = currentTarget.contains(popupElement) ? 'removeChild' : 'appendChild';
-  currentTarget[appendOrRemove](popupElement);
+  if (currentTarget.contains(popupElement)) {
+    currentTarget.removeChild(popupElement);
+  } else {
+    appendWithoutViewportOverflow(popupElement, currentTarget);
+  }
 };
 
 const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) {
   if (target === postOptionPopupElement || postOptionPopupElement.contains(target)) { return; }
 
-  const appendOrRemove = currentTarget.contains(postOptionPopupElement) ? 'removeChild' : 'appendChild';
-  currentTarget[appendOrRemove](postOptionPopupElement);
+  if (currentTarget.contains(postOptionPopupElement)) {
+    currentTarget.removeChild(postOptionPopupElement);
+  } else {
+    appendWithoutViewportOverflow(postOptionPopupElement, currentTarget);
+  }
 };
 
 const addTagsToPost = async function ({ postElement, inputTags = [] }) {

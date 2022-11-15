@@ -40,8 +40,20 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     try {
       const { response: { shouldOpenInLegacy } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
       if (shouldOpenInLegacy) {
-        notify('Legacy posts cannot be trimmed.');
-        return;
+        await new Promise(resolve => {
+          showModal({
+            title: 'Note: Legacy post',
+            message: [
+              'The root post of this thread was originally created with the legacy post editor.',
+              '\n\n',
+              'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
+            ],
+            buttons: [
+              modalCancelButton,
+              dom('button', { class: 'blue' }, { click: () => resolve() }, ['Continue'])
+            ]
+          });
+        });
       }
       unsureOfLegacyStatus = false;
     } catch (exception) {

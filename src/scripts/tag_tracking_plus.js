@@ -19,6 +19,8 @@ const trackedTagsData = await apiFetch('/v2/user/tags') ?? {};
 const trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
 const unreadCounts = new Map();
 
+let sidebarItem;
+
 const refreshCount = async function (tag) {
   if (!trackedTags.includes(tag)) return;
 
@@ -55,7 +57,13 @@ const refreshCount = async function (tag) {
   const showPlus = unreadCount === posts.length && links?.next;
   const unreadCountString = `${unreadCount}${showPlus ? '+' : ''}`;
 
-  $(`[data-count-for="#${tag}"]`).text(unreadCountString);
+  [document, ...(!sidebarItem || document.contains(sidebarItem) ? [] : [sidebarItem])]
+    .flatMap(node => [...node.querySelectorAll(`[data-count-for="#${tag}"]`)])
+    .filter((value, index, array) => array.indexOf(value) === index)
+    .forEach(unreadCountElement => {
+      unreadCountElement.textContent = unreadCountString;
+    });
+
   unreadCounts.set(tag, unreadCountString);
 };
 
@@ -131,7 +139,7 @@ export const main = async function () {
     pageModifications.register(tagLinkSelector, processTagLinks);
   }
   if (showUnread === 'both' || showUnread === 'sidebar') {
-    addSidebarItem({
+    sidebarItem = addSidebarItem({
       id: 'tag-tracking-plus',
       title: 'Tag Tracking+',
       rows: trackedTags.map(tag => ({
@@ -154,4 +162,5 @@ export const clean = async function () {
   $(`${tagLinkSelector} [data-count-for]`).remove();
 
   unreadCounts.clear();
+  sidebarItem = undefined;
 };

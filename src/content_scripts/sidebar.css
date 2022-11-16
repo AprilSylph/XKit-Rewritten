@@ -43,6 +43,10 @@
 }
 
 .xkit-sidebar-item li {
+  padding: 0 10px;
+}
+
+.xkit-sidebar-item li:only-child {
   padding: 5px 10px;
 }
 

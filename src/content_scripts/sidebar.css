@@ -46,6 +46,10 @@
   padding: 5px 10px;
 }
 
+.xkit-sidebar-item .many-rows li {
+  padding: 0 10px;
+}
+
 .xkit-sidebar-item li:hover {
   background-color: rgba(var(--white-on-dark), 0.07);
 }

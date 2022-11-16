@@ -55,7 +55,7 @@ const buildSidebarRow = ({ label, onclick, count, carrot }) =>
 export const addSidebarItem = function ({ id, title, rows, visibility }) {
   const sidebarItem = dom('div', { id, class: 'xkit-sidebar-item' }, null, [
     dom('h1', null, null, [title]),
-    dom('ul', null, null, rows.map(buildSidebarRow))
+    dom('ul', rows.length > 2 ? { class: 'many-rows' } : null, null, rows.map(buildSidebarRow))
   ]);
 
   if (visibility instanceof Function) {

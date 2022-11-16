@@ -1,85 +1,87 @@
-import { cloneControlButton } from '../util/control_buttons.js';
+import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
-import { buildStyle, filterPostElements } from '../util/interface.js';
+import { filterPostElements, postSelector } from '../util/interface.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { getPreferences } from '../util/preferences.js';
 import { timelineObject } from '../util/react_props.js';
-import { buildSvg } from '../util/remixicon.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
-// need clarification from staff if you're supposed to be able to community label a reblog
-const DO_NOT_PROCESS_REBLOGS = true;
+// remove this probably
+const DO_NOT_PROCESS_REBLOGS = false;
 
-const containerClass = 'xkit-community-label-container';
-const flagButtonClass = 'xkit-community-label-flag-button';
-const miniButtonClass = 'xkit-community-label-mini-button';
-const warningClass = 'xkit-community-label-warning';
-const warningTextClass = 'xkit-community-label-warning-text';
-const alwaysExpandClass = 'xkit-community-label-always-expand';
+const buttonClass = 'xkit-quick-flags-button';
+const excludeClass = 'xkit-quick-flags-done';
+const warningClass = 'xkit-quick-flags-warning';
+const warningTextClass = 'xkit-quick-flags-warning-text';
 
-const flagId = 'ri-flag-2-line';
-const categoryData = [
-  ['drug_use', 'ri-goblet-fill', 'Drug and Alcohol Addiction'],
-  ['violence', 'ri-slice-line', 'Violence'],
-  ['sexual_themes', 'ri-heart-line', 'Sexual Themes']
-];
+const symbolId = 'ri-flag-2-line';
+
+let controlButtonTemplate;
 
 let editedPostStates = new WeakMap();
 
-const activeButtonSelector = `[data-community-labelled] .${flagButtonClass},
-${categoryData
-  .map(([category]) => `[data-community-labelled*="${category}"] [data-category="${category}"]`)
-  .join(', ')}
-`;
+const data = [
+  ['Mature (no category)', undefined, dom('input', { type: 'checkbox' })],
+  ['Drug/Alcohol Addiction', 'drug_use', dom('input', { type: 'checkbox' })],
+  ['Violence', 'violence', dom('input', { type: 'checkbox' })],
+  ['Sexual Themes', 'sexual_themes', dom('input', { type: 'checkbox' })]
+];
 
-// I am bad at css
-const sizeStyle = 'width: 24px; height: 24px;';
+const buttons = data.map(([text, category, checkbox]) => {
+  const button = dom('label', null, null, [checkbox, text]);
+  if (category) checkbox.value = category;
+  return button;
+});
 
-// what color to use for button highlight?
-// red and accent are each invisible on at least one palette :|
-const styleElement = buildStyle(`
-  :is(${activeButtonSelector}) svg {
-    fill: rgb(var(--red));
+const updateCheckboxes = ({ hasCommunityLabel, categories }) => {
+  data.forEach(([text, category, checkbox]) => {
+    checkbox.indeterminate = false;
+    if (category) {
+      checkbox.checked = categories.includes(category);
+    } else {
+      checkbox.checked = hasCommunityLabel;
+    }
+  });
+};
+
+const popupElement = dom('div', { id: 'quick-flags' }, null, buttons);
+
+// extract this?
+const appendWithoutViewportOverflow = (element, target) => {
+  element.className = 'below';
+  target.appendChild(element);
+  if (element.getBoundingClientRect().bottom > document.documentElement.clientHeight) {
+    element.className = 'above';
+  }
+};
+
+const togglePopupDisplay = async function ({ target, currentTarget }) {
+  if (target === popupElement || popupElement.contains(target)) {
+    return;
   }
 
-  .${containerClass} {
-    display: flex;
-    border-radius: 16px;
-    padding: 4px;
-    background-color: rgb(var(--secondary-accent));
-  }
+  if (currentTarget.contains(popupElement)) {
+    currentTarget.removeChild(popupElement);
+  } else {
+    appendWithoutViewportOverflow(popupElement, currentTarget);
 
-  .${flagButtonClass} {
-    ${sizeStyle}
-     margin: 0px 5px;
-  }
+    const postElement = target.closest(postSelector);
 
-  .${miniButtonClass} {
-    display: none;
+    updateCheckboxes(editedPostStates.get(postElement));
   }
+};
 
-  [data-community-labelled] .${miniButtonClass}, .${alwaysExpandClass} .${miniButtonClass} {
-    display: block;
-    ${sizeStyle}
-    transform: scale(0.7);
-  }
+let throttle = false;
 
-  .${warningClass} {
-    background-color: rgb(var(--secondary-accent));
-    line-height: 1;
-    display: flex;
-  }
-
-  .${warningTextClass} {
-    margin: 0.5em auto;
-  }
-`);
-
-const handleClick = async (category, postElement) => {
+const handleClick = async (checkbox, category) => {
   if (throttle) return;
   throttle = true;
+
+  checkbox.indeterminate = true;
+
+  const postElement = checkbox.closest(postSelector);
 
   const { hasCommunityLabel: currentHasCommunityLabel, categories: currentCategories } =
     editedPostStates.get(postElement);
@@ -98,16 +100,6 @@ const handleClick = async (category, postElement) => {
   }
   await setLabelsOnPost({ postElement, hasCommunityLabel, categories });
   throttle = false;
-};
-
-// refactor: maybe don't use a dataset for rendering?
-const updateButtonStatus = postElement => {
-  const { hasCommunityLabel, categories } = editedPostStates.get(postElement);
-  if (hasCommunityLabel) {
-    postElement.dataset.communityLabelled = categories.join(',');
-  } else {
-    delete postElement.dataset.communityLabelled;
-  }
 };
 
 const setLabelsOnPost = async function ({ postElement, hasCommunityLabel, categories }) {
@@ -164,7 +156,7 @@ const setLabelsOnPost = async function ({ postElement, hasCommunityLabel, catego
 
 const onSuccess = async ({ postElement, hasCommunityLabel, categories }) => {
   editedPostStates.set(postElement, { hasCommunityLabel, categories });
-  updateButtonStatus(postElement);
+  updateCheckboxes({ hasCommunityLabel, categories });
 
   const {
     communityLabels: {
@@ -191,30 +183,14 @@ const onSuccess = async ({ postElement, hasCommunityLabel, categories }) => {
   }
 };
 
-export const createButtonTemplate = function (symbolId, className, text) {
-  return dom('div', { class: className, title: `Toggle community label: ${text}` }, null, [
-    dom('button', { class: 'xkit-control-button', style: sizeStyle }, null, [
-      dom(
-        'span',
-        { class: 'xkit-control-button-inner', style: sizeStyle, tabindex: '-1' },
-        null,
-        [buildSvg(symbolId)]
-      )
-    ])
-  ]);
-};
-
-const flagButtonTemplate = createButtonTemplate(flagId, flagButtonClass, 'Mature');
-const miniButtonTemplates = categoryData.map(([category, iconId, text]) => {
-  const template = createButtonTemplate(iconId, miniButtonClass, text);
-  template.dataset.category = category;
-  return [template, category];
+data.forEach(([text, category, checkbox]) => {
+  checkbox.addEventListener('change', () => handleClick(checkbox, category));
 });
 
-let throttle = false;
-
+// remove excludeclass?
+// https://github.com/aprilsylph/XKit-Rewritten/commit/77ef1dd556992b1ef610633509ff7c136e2854c2 ????
 const processPosts = postElements =>
-  filterPostElements(postElements).forEach(async postElement => {
+  filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
     const {
       rebloggedRootId,
       canEdit,
@@ -228,47 +204,36 @@ const processPosts = postElements =>
       `footer ${keyToCss('controlIcon')} a[href*="/edit/"]`
     );
     if (!editButton) return;
-    const controls = editButton.closest(keyToCss('controls'));
 
-    const clonedControlButton = cloneControlButton(flagButtonTemplate, {
-      click: () => handleClick(undefined, postElement)
+    const clonedControlButton = cloneControlButton(controlButtonTemplate, {
+      click: togglePopupDisplay
     });
-    const clonedMiniButtons = miniButtonTemplates.map(([miniTemplate, category]) =>
-      cloneControlButton(miniTemplate, {
-        click: () => handleClick(category, postElement)
-      })
-    );
-
-    const container = dom('div', { class: containerClass }, null, [
-      clonedControlButton,
-      ...clonedMiniButtons
-    ]);
-    controls.prepend(container);
+    const controlIcon = editButton.closest(keyToCss('controlIcon'));
+    controlIcon.before(clonedControlButton);
 
     editedPostStates.set(postElement, { hasCommunityLabel, categories });
-    updateButtonStatus(postElement);
   });
 
 export const main = async function () {
-  document.head.append(styleElement);
-  const { quickLabel, alwaysExpand } = await getPreferences('community_labeler');
+  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
+
+  const { quickLabel } = await getPreferences('quick_flags');
   if (quickLabel) {
     onNewPosts.addListener(processPosts);
-    alwaysExpand && document.body.classList.add(alwaysExpandClass);
   }
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  styleElement.remove();
-  $(`.${containerClass}`).remove();
   $(`.${warningClass}`).remove();
   $('[data-community-labelled]').removeAttr('data-community-labelled');
-  document.body.classList.remove(alwaysExpandClass);
+  $(`.${excludeClass}`).removeClass(excludeClass);
 
   editedPostStates = new WeakMap();
   throttle = false;
 
   // maybe other stuff
 };
+
+export const stylesheet = true;

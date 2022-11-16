@@ -1,0 +1,77 @@
+#quick-flags {
+  position: absolute;
+  z-index: 97;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 250px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 2px;
+  border-radius: 3px;
+
+  background-color: rgb(var(--white));
+  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, .5);
+  color: rgb(var(--black));
+  font-family: var(--font-family);
+  font-size: .875rem;
+  font-weight: normal;
+}
+
+#quick-flags {
+  --icon-spacing: 12px;
+}
+@media (max-width: 990px) {
+  #quick-flags {
+    --icon-spacing: 0px;
+  }
+}
+
+@media (min-width: 650px) {
+  #quick-flags.below {
+    inset: 100% 50% auto auto;
+    transform: translate(50%, var(--icon-spacing));
+  }
+  #quick-flags.above {
+    inset: auto 50% 100% auto;
+    transform: translate(50%, calc(0px - var(--icon-spacing)));
+  }
+}
+
+@media (max-width: 650px) {
+  #quick-flags {
+    inset: 50% 100% auto auto;
+    transform: translate(calc(0px - var(--icon-spacing)), -50%);
+  }
+}
+@media (max-width: 1145px) {
+  [role="dialog"] #quick-flags {
+    inset: 50% 100% auto auto;
+    transform: translate(calc(0px - var(--icon-spacing)), -50%);
+  }
+}
+
+#quick-flags label {
+  padding: 1ch;
+
+  background-color: inherit;
+  color: inherit;
+  font: inherit;
+  text-align: initial;
+}
+
+#quick-flags label:not(:last-child) {
+  margin-bottom: 2px;
+}
+
+.xkit-quick-flags-warning {
+  background-color: rgb(var(--secondary-accent));
+  line-height: 1;
+  display: flex;
+}
+
+.xkit-quick-flags-warning-text {
+  margin: 0.5em auto;
+}

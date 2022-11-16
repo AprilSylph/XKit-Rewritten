@@ -116,7 +116,7 @@ const setLabelsOnPost = async function ({ postElement, hasCommunityLabel, catego
 
   const {
     response: {
-      content = {},
+      content = [],
       layout,
       state = 'published',
       publishOn,

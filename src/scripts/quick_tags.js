@@ -148,7 +148,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 
   const {
     response: {
-      content = {},
+      content = [],
       layout,
       state = 'published',
       publishOn,

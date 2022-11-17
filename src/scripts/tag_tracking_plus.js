@@ -64,7 +64,9 @@ const refreshCount = async function (tag) {
     .filter((value, index, array) => array.indexOf(value) === index)
     .forEach(unreadCountElement => {
       unreadCountElement.textContent = unreadCountString;
-      unreadCountElement.closest('li').dataset.new = unreadCountString !== '0';
+      if (unreadCountElement.closest('li')) {
+        unreadCountElement.closest('li').dataset.new = unreadCountString !== '0';
+      }
     });
 
   if (sidebarItem) {

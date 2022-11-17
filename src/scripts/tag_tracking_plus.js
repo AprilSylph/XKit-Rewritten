@@ -57,14 +57,21 @@ const refreshCount = async function (tag) {
   const showPlus = unreadCount === posts.length && links?.next;
   const unreadCountString = `${unreadCount}${showPlus ? '+' : ''}`;
 
+  unreadCounts.set(tag, unreadCountString);
+
   [document, ...(!sidebarItem || document.contains(sidebarItem) ? [] : [sidebarItem])]
     .flatMap(node => [...node.querySelectorAll(`[data-count-for="#${tag}"]`)])
     .filter((value, index, array) => array.indexOf(value) === index)
     .forEach(unreadCountElement => {
       unreadCountElement.textContent = unreadCountString;
+      unreadCountElement.closest('li').dataset.new = unreadCountString !== '0';
     });
 
-  unreadCounts.set(tag, unreadCountString);
+  if (sidebarItem) {
+    sidebarItem.dataset.hasNew = [...unreadCounts.values()].some(
+      unreadCountString => unreadCountString !== '0'
+    );
+  }
 };
 
 const refreshAllCounts = async (isFirstRun = false) => {
@@ -134,7 +141,7 @@ export const main = async function () {
   onNewPosts.addListener(processPosts);
   refreshAllCounts(true).then(startRefreshInterval);
 
-  const { showUnread } = await getPreferences('tag_tracking_plus');
+  const { showUnread, onlyShowNew } = await getPreferences('tag_tracking_plus');
   if (showUnread === 'both' || showUnread === 'search') {
     pageModifications.register(tagLinkSelector, processTagLinks);
   }
@@ -148,6 +155,8 @@ export const main = async function () {
         count: '\u22EF'
       }))
     });
+
+    onlyShowNew && sidebarItem.classList.add('only-show-new');
   }
 
   onNewPosts.addListener(processPosts);
@@ -164,3 +173,5 @@ export const clean = async function () {
   unreadCounts.clear();
   sidebarItem = undefined;
 };
+
+export const stylesheet = true;

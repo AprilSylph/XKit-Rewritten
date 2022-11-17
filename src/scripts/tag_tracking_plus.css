@@ -10,7 +10,19 @@
   color: rgba(var(--white-on-dark), 0.6);
 }
 
-#tag-tracking-plus.only-show-new:not([data-has-new="true"]) ul:not(:empty)::after {
+#tag-tracking-plus.only-show-new[data-loading="true"] ul:not(:empty)::after {
+  content: 'loading...';
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 36px;
+  padding: 5px 10px;
+  color: rgba(var(--white-on-dark), 0.6);
+}
+
+#tag-tracking-plus.only-show-new[data-loading="false"][data-has-new="false"] ul:not(:empty)::after {
   content: 'No unread tags';
 
   display: flex;

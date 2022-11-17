@@ -57,8 +57,6 @@ const refreshCount = async function (tag) {
   const showPlus = unreadCount === posts.length && links?.next;
   const unreadCountString = `${unreadCount}${showPlus ? '+' : ''}`;
 
-  unreadCounts.set(tag, unreadCountString);
-
   [document, ...(!sidebarItem || document.contains(sidebarItem) ? [] : [sidebarItem])]
     .flatMap(node => [...node.querySelectorAll(`[data-count-for="#${tag}"]`)])
     .filter((value, index, array) => array.indexOf(value) === index)
@@ -69,9 +67,17 @@ const refreshCount = async function (tag) {
       }
     });
 
+  unreadCounts.set(tag, unreadCountString);
+  updateSidebarStatus();
+};
+
+const updateSidebarStatus = () => {
   if (sidebarItem) {
+    sidebarItem.dataset.loading = [...unreadCounts.values()].some(
+      unreadCountString => unreadCountString === undefined
+    );
     sidebarItem.dataset.hasNew = [...unreadCounts.values()].some(
-      unreadCountString => unreadCountString !== '0'
+      unreadCountString => unreadCountString && unreadCountString !== '0'
     );
   }
 };
@@ -140,8 +146,7 @@ const processTagLinks = function (tagLinkElements) {
 };
 
 export const main = async function () {
-  onNewPosts.addListener(processPosts);
-  refreshAllCounts(true).then(startRefreshInterval);
+  trackedTags.forEach(tag => unreadCounts.set(tag, undefined));
 
   const { showUnread, onlyShowNew } = await getPreferences('tag_tracking_plus');
   if (showUnread === 'both' || showUnread === 'search') {
@@ -159,9 +164,11 @@ export const main = async function () {
     });
 
     onlyShowNew && sidebarItem.classList.add('only-show-new');
+    updateSidebarStatus();
   }
 
   onNewPosts.addListener(processPosts);
+  refreshAllCounts(true).then(startRefreshInterval);
 };
 
 export const clean = async function () {

@@ -4,15 +4,10 @@ import { pageModifications } from '../../util/mutations.js';
 
 const hiddenClass = 'xkit-no-recommended-blog-carousels-hidden';
 
-/*
 const styleElement = buildStyle(`
   .${hiddenClass} { position: relative; }
   .${hiddenClass} > div { visibility: hidden; position: absolute; max-width: 100%; }
   .${hiddenClass} > div :is(img, video, canvas) { display: none }
-`);
-*/
-const styleElement = buildStyle(`
-  .${hiddenClass} { outline: 1px solid red; }
 `);
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');

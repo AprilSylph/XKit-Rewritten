@@ -187,7 +187,6 @@ const showError = exception => showModal({
 
 const privatePosts = async ({ uuid, name, tags, before }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
-  const removeStatus = dom('span');
   const privateStatus = dom('span');
 
   showModal({
@@ -196,8 +195,7 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
       dom('small', null, null, ['Do not navigate away from this page.']),
       '\n\n',
       gatherStatus,
-      privateStatus,
-      removeStatus
+      privateStatus
     ]
   });
 

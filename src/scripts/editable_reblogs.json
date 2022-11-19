@@ -1,0 +1,10 @@
+{
+  "title": "Editable Reblogs",
+  "description": "yes really",
+  "icon": {
+    "class_name": "ri-edit-box-line",
+    "color": "white",
+    "background_color": "#000000"
+  },
+  "relatedTerms": [ "Trim Reblogs", "Editable Reblogs" ]
+}

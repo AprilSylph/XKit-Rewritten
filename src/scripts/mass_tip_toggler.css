@@ -1,0 +1,23 @@
+.mass-tip-toggler-tag,
+.mass-tip-toggler-blog {
+  display: inline-block;
+
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.mass-tip-toggler-tag {
+  padding: 0 0.5em;
+  border-radius: 1em;
+  margin: 0.25rem 0;
+
+  background-color: rgb(var(--accent));
+  color: rgb(var(--navy));
+}
+
+.mass-tip-toggler-blog {
+  font-weight: 700;
+}
+
+.mass-tip-toggler-tag::before { content: '#'; }
+.mass-tip-toggler-blog::before { content: '@'; }

@@ -1,0 +1,9 @@
+{
+  "title": "Mass Tip Toggler",
+  "description": "",
+  "icon": {
+    "class_name": "ri-currency-line",
+    "color": "white",
+    "background_color": "#000000"
+  }
+}

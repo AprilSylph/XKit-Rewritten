@@ -50,7 +50,7 @@ export const main = async () => {
     maxPostWidth
       .trim()
       .replace('%', 'vw')
-      .replace(/(?<=\d)$/, 'px') || '100vw'
+      .replace(/^(\d+)$/, '$&px') || '100vw'
   );
   document.head.append(styleElement);
 };

@@ -8,9 +8,6 @@ import { getPreferences } from '../util/preferences.js';
 import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
-// remove this probably
-const DO_NOT_PROCESS_REBLOGS = false;
-
 const buttonClass = 'xkit-quick-flags-button';
 const excludeClass = 'xkit-quick-flags-done';
 const warningClass = 'xkit-quick-flags-warning';
@@ -22,22 +19,19 @@ let controlButtonTemplate;
 
 let editedPostStates = new WeakMap();
 
-const data = [
-  ['Mature (no category)', undefined, dom('input', { type: 'checkbox' })],
+const popupData = [
+  ['Community Label: Mature', undefined, dom('input', { type: 'checkbox' })],
   ['Drug/Alcohol Addiction', 'drug_use', dom('input', { type: 'checkbox' })],
   ['Violence', 'violence', dom('input', { type: 'checkbox' })],
   ['Sexual Themes', 'sexual_themes', dom('input', { type: 'checkbox' })]
 ];
 
-const buttons = data.map(([text, category, checkbox]) => {
-  const button = dom('label', null, null, [checkbox, text]);
-  if (category) checkbox.value = category;
-  return button;
-});
+const checkboxes = popupData.map(([text, category, checkbox]) => checkbox);
 
 const updateCheckboxes = ({ hasCommunityLabel, categories }) => {
-  data.forEach(([text, category, checkbox]) => {
+  popupData.forEach(([text, category, checkbox]) => {
     checkbox.indeterminate = false;
+    checkbox.disabled = false;
     if (category) {
       checkbox.checked = categories.includes(category);
     } else {
@@ -46,6 +40,11 @@ const updateCheckboxes = ({ hasCommunityLabel, categories }) => {
   });
 };
 
+const buttons = popupData.map(([text, category, checkbox]) => {
+  const button = dom('label', !category ? { class: 'no-category' } : null, null, [checkbox, text]);
+  if (category) checkbox.value = category;
+  return button;
+});
 const popupElement = dom('div', { id: 'quick-flags' }, null, buttons);
 
 // extract this?
@@ -68,19 +67,11 @@ const togglePopupDisplay = async function ({ target, currentTarget }) {
     appendWithoutViewportOverflow(popupElement, currentTarget);
 
     const postElement = target.closest(postSelector);
-
     updateCheckboxes(editedPostStates.get(postElement));
   }
 };
 
-let throttle = false;
-
-const handleClick = async (checkbox, category) => {
-  if (throttle) return;
-  throttle = true;
-
-  checkbox.indeterminate = true;
-
+const handlePopupClick = async (checkbox, category) => {
   const postElement = checkbox.closest(postSelector);
 
   const { hasCommunityLabel: currentHasCommunityLabel, categories: currentCategories } =
@@ -98,22 +89,28 @@ const handleClick = async (checkbox, category) => {
     hasCommunityLabel = !currentHasCommunityLabel;
     categories = [];
   }
-  await setLabelsOnPost({ postElement, hasCommunityLabel, categories });
-  throttle = false;
+  const {
+    id,
+    blog: { uuid }
+  } = await timelineObject(postElement);
+
+  try {
+    await setLabelsOnPost({ id, uuid, hasCommunityLabel, categories });
+  } catch ({ body }) {
+    notify(body?.errors?.[0]?.detail);
+    return;
+  }
+  await onPopupSuccess({ postElement, hasCommunityLabel, categories });
 };
 
-const setLabelsOnPost = async function ({ postElement, hasCommunityLabel, categories }) {
+const setLabelsOnPost = async function ({ id, uuid, hasCommunityLabel, categories }) {
   if (!hasCommunityLabel && Boolean(categories.length)) {
     throw new Error(
       `Invalid label combination: ${JSON.stringify({ hasCommunityLabel, categories })}`
     );
   }
 
-  const postId = postElement.dataset.id;
-  const {
-    blog: { uuid }
-  } = await timelineObject(postElement);
-
+  // todo: extract this if adding mass edit mode
   const {
     response: {
       content = [],
@@ -125,36 +122,30 @@ const setLabelsOnPost = async function ({ postElement, hasCommunityLabel, catego
       sourceUrlRaw,
       slug = ''
     }
-  } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
+  } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
 
-  try {
-    const {
-      response: { displayText }
-    } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
-      method: 'PUT',
-      body: {
-        content,
-        layout,
-        state,
-        publish_on: publishOn,
-        date,
-        tags: tags.join(','),
-        source_url: sourceUrlRaw,
-        slug,
-        has_community_label: hasCommunityLabel,
-        community_label_categories: categories
-      }
-    });
+  const {
+    response: { displayText }
+  } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`, {
+    method: 'PUT',
+    body: {
+      content,
+      layout,
+      state,
+      publish_on: publishOn,
+      date,
+      tags: tags.join(','),
+      source_url: sourceUrlRaw,
+      slug,
+      has_community_label: hasCommunityLabel,
+      community_label_categories: categories
+    }
+  });
 
-    notify(displayText);
-
-    await onSuccess({ postElement, hasCommunityLabel, categories });
-  } catch ({ body }) {
-    notify(body.errors[0].detail);
-  }
+  notify(displayText);
 };
 
-const onSuccess = async ({ postElement, hasCommunityLabel, categories }) => {
+const onPopupSuccess = async ({ postElement, hasCommunityLabel, categories }) => {
   editedPostStates.set(postElement, { hasCommunityLabel, categories });
   updateCheckboxes({ hasCommunityLabel, categories });
 
@@ -183,8 +174,12 @@ const onSuccess = async ({ postElement, hasCommunityLabel, categories }) => {
   }
 };
 
-data.forEach(([text, category, checkbox]) => {
-  checkbox.addEventListener('change', () => handleClick(checkbox, category));
+popupData.forEach(([text, category, checkbox]) => {
+  checkbox.addEventListener('change', () => {
+    checkbox.indeterminate = true;
+    checkboxes.forEach(checkbox => { checkbox.disabled = true; });
+    handlePopupClick(checkbox, category);
+  });
 });
 
 // remove excludeclass?
@@ -192,12 +187,10 @@ data.forEach(([text, category, checkbox]) => {
 const processPosts = postElements =>
   filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
     const {
-      rebloggedRootId,
       canEdit,
       communityLabels: { hasCommunityLabel, categories }
     } = await timelineObject(postElement);
 
-    if (rebloggedRootId && DO_NOT_PROCESS_REBLOGS) return;
     if (!canEdit) return;
 
     const editButton = postElement.querySelector(
@@ -226,14 +219,12 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
+  popupElement.remove();
+  $(`.${buttonClass}`).remove();
   $(`.${warningClass}`).remove();
-  $('[data-community-labelled]').removeAttr('data-community-labelled');
   $(`.${excludeClass}`).removeClass(excludeClass);
 
   editedPostStates = new WeakMap();
-  throttle = false;
-
-  // maybe other stuff
 };
 
 export const stylesheet = true;

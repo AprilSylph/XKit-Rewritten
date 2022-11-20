@@ -53,6 +53,10 @@
   }
 }
 
+#quick-flags input {
+  margin: 0 1ch 0 0;
+}
+
 #quick-flags label {
   padding: 1ch;
 
@@ -64,6 +68,10 @@
 
 #quick-flags label:not(:last-child) {
   margin-bottom: 2px;
+}
+
+#quick-flags label.no-category {
+  font-weight: bold;
 }
 
 .xkit-quick-flags-warning {

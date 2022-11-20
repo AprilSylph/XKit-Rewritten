@@ -18,8 +18,6 @@ const timers = new Map();
 const observer = new IntersectionObserver(
   (entries) => entries.forEach(({ isIntersecting, target: articleElement }) => {
     if (isIntersecting) {
-      articleElement.style.border = '3px solid green';
-
       if (!timers.has(articleElement)) {
         timers.set(articleElement, setTimeout(() => markAsSeen(articleElement), 300));
       }
@@ -32,15 +30,13 @@ const observer = new IntersectionObserver(
 );
 
 const markAsSeen = (articleElement) => {
-  articleElement.style.border = '3px solid blue';
-
   observer.unobserve(articleElement);
   timers.delete(articleElement);
 
   const postElement = articleElement.closest(postSelector);
   seenPosts.push(postElement.dataset.id);
   seenPosts.splice(0, seenPosts.length - 10000);
-  // browser.storage.local.set({ [storageKey]: seenPosts });
+  browser.storage.local.set({ [storageKey]: seenPosts });
 };
 
 const dimPosts = function (postElements) {
@@ -48,10 +44,8 @@ const dimPosts = function (postElements) {
     const { id } = postElement.dataset;
 
     if (seenPosts.includes(id)) {
-      postElement.style.border = '3px dotted purple';
       postElement.classList.add(dimClass);
     } else {
-      postElement.style.border = '5px dotted orange';
       observer.observe(postElement.querySelector('article'));
     }
   }

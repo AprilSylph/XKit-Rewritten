@@ -2,6 +2,7 @@ import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { buildStyle } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
+import { getPreferences } from '../util/preferences.js';
 import { userBlogs } from '../util/user.js';
 
 const styleElement = buildStyle(`
@@ -40,22 +41,28 @@ const styleElement = buildStyle(`
   }
 `);
 
-const avatarElements = userBlogs.map(({ name, avatar, theme: { avatarShape } }) => {
-  const { url } = avatar[avatar.length - 1];
-  return dom('a', { href: `/blog/${name}`, title: name }, null, [
-    dom('img', { class: `xkit-header-avatar ${avatarShape}`, src: url })
-  ]);
-});
-
-const headerBlogElement = dom('div', { id: 'xkit-header-blogs' }, null, [
-  dom('div', { id: 'xkit-header-blogs-inner' }, null, avatarElements)
-]);
+let headerBlogElement;
 
 const processRightMenu = ([rightMenu]) => {
   rightMenu.before(headerBlogElement);
 };
 
 export const main = async function () {
+  const { maxBlogs } = await getPreferences('header_blogs');
+
+  const avatarElements = userBlogs
+    .slice(0, Number.parseInt(maxBlogs, 10) || Infinity)
+    .map(({ name, avatar, theme: { avatarShape } }) => {
+      const { url } = avatar[avatar.length - 1];
+      return dom('a', { href: `/blog/${name}`, title: name }, null, [
+        dom('img', { class: `xkit-header-avatar ${avatarShape}`, src: url })
+      ]);
+    });
+
+  headerBlogElement = dom('div', { id: 'xkit-header-blogs' }, null, [
+    dom('div', { id: 'xkit-header-blogs-inner' }, null, avatarElements)
+  ]);
+
   document.head.append(styleElement);
   pageModifications.register(`header > ${keyToCss('menuRight')}`, processRightMenu);
 };

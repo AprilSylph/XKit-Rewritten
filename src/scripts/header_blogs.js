@@ -2,10 +2,7 @@ import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { buildStyle } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
-import { getPreferences } from '../util/preferences.js';
 import { userBlogs } from '../util/user.js';
-
-let shapeMode;
 
 const styleElement = buildStyle(`
   .xkit-header-avatar {
@@ -13,11 +10,11 @@ const styleElement = buildStyle(`
     width: 26px;
   }
 
-  #xkit-header-blogs[data-shape="circle"] .xkit-header-avatar {
+  .xkit-header-avatar.circle {
     border-radius: 13px;
   }
 
-  #xkit-header-blogs[data-shape="square"] .xkit-header-avatar {
+  .xkit-header-avatar.square {
     border-radius: 3px;
   }
 
@@ -42,10 +39,10 @@ const styleElement = buildStyle(`
   }
 `);
 
-const avatarElements = userBlogs.map(({ name, avatar }) => {
+const avatarElements = userBlogs.map(({ name, avatar, theme: { avatarShape } }) => {
   const { url } = avatar[avatar.length - 1];
   return dom('a', { href: `/blog/${name}`, title: name }, null, [
-    dom('img', { class: 'xkit-header-avatar', src: url })
+    dom('img', { class: `xkit-header-avatar ${avatarShape}`, src: url })
   ]);
 });
 
@@ -59,10 +56,6 @@ const processRightMenu = ([rightMenu]) => {
 
 export const main = async function () {
   document.head.append(styleElement);
-  ({ shapeMode } = await getPreferences('header_blogs'));
-
-  headerBlogElement.dataset.shape = shapeMode;
-
   pageModifications.register(`header > ${keyToCss('menuRight')}`, processRightMenu);
 };
 

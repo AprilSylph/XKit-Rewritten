@@ -1,12 +1,13 @@
 import { keyToCss } from '../util/css_map.js';
 import { buildStyle } from '../util/interface.js';
+import { getPreferences } from '../util/preferences.js';
 
 const container = `${keyToCss('bluespaceLayout')} > ${keyToCss('container')}`;
 const reblog = `${keyToCss('post')} ${keyToCss('reblog')}`;
 const videoBlock = keyToCss('videoBlock');
 const queueSettings = keyToCss('queueSettings');
 
-const maxPostWidth = '640px';
+const cssVar = '--panorama-max-width';
 
 const styleElement = buildStyle(`
 #base-container > div > div > header,
@@ -22,7 +23,7 @@ ${container} {
 
 ${container} > :first-child {
   min-width: 0;
-  max-width: calc(${maxPostWidth} + 85px);
+  max-width: calc(var(${cssVar}) + 85px);
   flex: 1;
 }
 
@@ -41,5 +42,20 @@ ${queueSettings} {
 `);
 styleElement.media = '(min-width: 990px)';
 
-export const main = async () => document.head.append(styleElement);
-export const clean = async () => styleElement.remove();
+export const main = async () => {
+  const { maxPostWidth } = await getPreferences('panorama');
+
+  document.body.style.setProperty(
+    cssVar,
+    maxPostWidth
+      .trim()
+      .replace('%', 'vw')
+      .replace(/(?<=\d)$/, 'px') || '100vw'
+  );
+  document.head.append(styleElement);
+};
+
+export const clean = async () => {
+  document.body.style.removeProperty(cssVar);
+  styleElement.remove();
+};

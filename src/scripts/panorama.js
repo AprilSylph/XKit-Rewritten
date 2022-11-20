@@ -21,7 +21,7 @@ ${container} {
   justify-content: center;
 }
 
-${container} > :first-child {
+${container} > :first-child:not(${keyToCss('scrollContainer')}) {
   min-width: 0;
   max-width: max(var(${cssVar}) + 85px, 385px);
   flex: 1;

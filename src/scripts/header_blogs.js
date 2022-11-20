@@ -21,17 +21,18 @@ const styleElement = buildStyle(`
   #xkit-header-blogs {
     overflow: hidden;
     flex: 1.5;
+    max-width: max-content;
   }
 
   #xkit-header-blogs-inner {
     display: flex;
     flex-wrap: wrap;
-    justify-content: right;
+    justify-content: space-evenly;
 
     height: 26px;
 
     column-gap: 12px;
-    margin: 0px 16px;
+    margin: 0px 12px;
   }
 
   header > ${keyToCss('menuRight')} > ${keyToCss('container')}:empty {

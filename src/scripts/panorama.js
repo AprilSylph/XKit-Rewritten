@@ -6,6 +6,8 @@ const reblog = `${keyToCss('post')} ${keyToCss('reblog')}`;
 const videoBlock = keyToCss('videoBlock');
 const queueSettings = keyToCss('queueSettings');
 
+const maxPostWidth = '640px';
+
 const styleElement = buildStyle(`
 #base-container > div > div > header,
 ${container} {
@@ -14,9 +16,13 @@ ${container} {
   padding-right: 30px;
 }
 
+${container} {
+  justify-content: center;
+}
+
 ${container} > :first-child {
   min-width: 0;
-  max-width: none;
+  max-width: calc(${maxPostWidth} + 85px);
   flex: 1;
 }
 

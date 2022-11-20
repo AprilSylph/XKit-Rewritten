@@ -1,0 +1,21 @@
+{
+  "title": "Header Blogs",
+  "description": "Show your blogs in the header",
+  "icon": {
+    "class_name": "ri-account-circle-line",
+    "color": "white",
+    "background_color": "#000000"
+  },
+  "relatedTerms": [ "Header Options" ],
+  "preferences": {
+    "shapeMode": {
+      "label": "Avatar Shape",
+      "type": "select",
+      "options": [
+        { "value": "circle", "label": "Circle" },
+        { "value": "square", "label": "Square" }
+      ],
+      "default": "circle"
+    }
+  }
+}

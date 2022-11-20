@@ -23,7 +23,7 @@ ${container} {
 
 ${container} > :first-child {
   min-width: 0;
-  max-width: calc(var(${cssVar}) + 85px);
+  max-width: max(var(${cssVar}) + 85px, 385px);
   flex: 1;
 }
 

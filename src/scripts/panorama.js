@@ -6,27 +6,21 @@ const reblog = `${keyToCss('post')} ${keyToCss('reblog')}`;
 const videoBlock = keyToCss('videoBlock');
 const queueSettings = keyToCss('queueSettings');
 
-const maxPostWidth = '640px';
-
 const styleElement = buildStyle(`
 #base-container > div > div > header,
 ${container} {
-  max-width: min(100vw, 1716px);
+  max-width: 100vw;
   padding-left: ${85 - 64}px;
   padding-right: 30px;
 }
 
-${container} {
-  justify-content: center;
-}
-
 ${container} > :first-child {
   min-width: 0;
-  max-width: ${maxPostWidth};
-  padding-left: ${625 - 540}px;
+  max-width: none;
   flex: 1;
 }
-${container} > :first-child > main { max-width: none; }
+
+${container} > :first-child > main { max-width: calc(100% - ${625 - 540}px); }
 ${container} > :first-child > main article { max-width: 100%; }
 ${container} > :first-child > main article > * { max-width: 100%; }
 
@@ -36,7 +30,7 @@ ${videoBlock} iframe { max-width: none !important; }
 
 ${queueSettings} {
   box-sizing: border-box;
-  width: 100%;
+  width: calc(100% - ${625 - 540}px);
 }
 `);
 styleElement.media = '(min-width: 990px)';

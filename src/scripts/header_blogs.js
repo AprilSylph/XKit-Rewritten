@@ -13,11 +13,11 @@ const styleElement = buildStyle(`
     width: 26px;
   }
 
-  #xkit-header-blogs.circle .xkit-header-avatar {
+  #xkit-header-blogs[data-shape="circle"] .xkit-header-avatar {
     border-radius: 13px;
   }
 
-  #xkit-header-blogs.square .xkit-header-avatar {
+  #xkit-header-blogs[data-shape="square"] .xkit-header-avatar {
     border-radius: 3px;
   }
 
@@ -61,7 +61,7 @@ export const main = async function () {
   document.head.append(styleElement);
   ({ shapeMode } = await getPreferences('header_blogs'));
 
-  headerBlogElement.classList.add(shapeMode);
+  headerBlogElement.dataset.shape = shapeMode;
 
   pageModifications.register(`header > ${keyToCss('menuRight')}`, processRightMenu);
 };

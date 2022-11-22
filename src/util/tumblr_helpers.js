@@ -45,3 +45,13 @@ export const apiFetch = async function (...args) {
     args
   );
 };
+
+export const navigate = location =>
+  inject(location => window.tumblr.navigate(location), [location]);
+
+export const onClickNavigate = (location) =>
+  (event) => {
+    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+    event.preventDefault();
+    navigate(location);
+  };

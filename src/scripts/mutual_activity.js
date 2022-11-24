@@ -16,6 +16,8 @@ const glassContainerSelector = '#glass-container';
 const applyFiltersSelector = `${glassContainerSelector} ${keyToCss('button')}${keyToCss('default')}`;
 
 const hiddenDialogClass = 'xkit-mutual-activity-dialog-hidden';
+// const mutualActivityClass = 'xkit-mutual-activity';
+let activated = false;
 
 const styleElement = buildStyle();
 const buildCss = () =>
@@ -49,11 +51,13 @@ const enableFilter = () => {
 
   notificationSection.dispatchEvent(scrollEvent);
   pageModifications.register(notificationSelector, processNotifications);
+  activated = true;
 };
 
 const disableFilter = () => {
   pageModifications.unregister(processNotifications);
   styleElement.remove();
+  activated = false;
 };
 
 const toggleFilter = ({ target }) => {
@@ -67,7 +71,7 @@ const createToggleButton = () => {
   console.log('createToggleButton');
   const mutualActivity = Object.assign(document.createElement('span'), { className: 'mutual-activity' });
   const mutualActivityLabel = Object.assign(document.createElement('label'), { className: 'mutual-activity', textContent: 'Mutuals only', for: 'mutual-activity' });
-  const mutualActivityToggleButton = Object.assign(document.createElement('input'), { className: 'mutual-activity toggle-button', type: 'checkbox', name: 'mutual-activity' });
+  const mutualActivityToggleButton = Object.assign(document.createElement('input'), { className: 'mutual-activity toggle-button', type: 'checkbox', name: 'mutual-activity', checked: activated });
   mutualActivity.appendChild(mutualActivityLabel);
   mutualActivity.appendChild(mutualActivityToggleButton);
 
@@ -79,8 +83,6 @@ const createToggleButton = () => {
 };
 
 export const main = async () => {
-  createToggleButton();
-
   pageModifications.register('.usqcu', createToggleButton);
 };
 

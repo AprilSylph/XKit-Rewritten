@@ -1,0 +1,32 @@
+@import "../lib/toggle-button.css";
+
+.xkit-mutual-activity-dialog-hidden {
+    display: none;
+}
+
+span.filter-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+input[type="checkbox"].mutual-activity.toggle-button {
+  --in-content-button-background: #9da6af54;
+  --in-content-button-background-hover: rgb(var(--secondary-accent));
+  --in-content-button-background-active: rgb(var(--accent));
+  --in-content-primary-button-background: rgb(var(--accent));
+  --in-content-primary-button-background-hover: rgb(var(--accent));
+  --in-content-primary-button-background-active:  rgb(var(--secondary-accent));
+}
+
+span.mutual-activity {
+  display: flex;
+  align-items: center;
+  padding-right: 1.0em;
+}
+
+label.mutual-activity {
+  padding-right: 0.4em;
+  color: rgb(var(--accent);
+}

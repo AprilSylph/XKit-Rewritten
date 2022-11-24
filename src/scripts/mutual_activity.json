@@ -1,0 +1,10 @@
+{
+  "title": "Mutual Activity",
+  "description": "Toggle to only view mutuals in the activity feed",
+  "icon": {
+    "class_name": "ri-spam-3-line",
+    "color": "white",
+    "background_color": "#800020"
+  },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#true-blocklist"
+}

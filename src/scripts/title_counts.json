@@ -1,0 +1,20 @@
+{
+  "title": "Title Count Options",
+  "description": "",
+  "icon": {
+    "class_name": "ri-chat-follow-up-line",
+    "color": "white",
+    "background_color": "#000000"
+  },
+  "preferences": {
+    "mode": {
+      "type": "select",
+      "label": "mode",
+      "options": [
+        { "value": "notifications", "label": "notifications" },
+        { "value": "none", "label": "none" }
+      ],
+      "default": "notifications"
+    }
+  }
+}

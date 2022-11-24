@@ -46,7 +46,7 @@ const onTitleChanged = async (...args) => {
 
     const count = notificationCount + unopenedGifts + unreadMessagesCount;
 
-    title.textContent = currentTitle.replace(countRegex, count ? `(${count}) ` : '');
+    title.textContent = `${count ? `(${count}) ` : ''}${currentTitle.replace(countRegex, '')}`;
   } else {
     title.textContent = currentTitle.replace(countRegex, '');
     console.log('mode none');

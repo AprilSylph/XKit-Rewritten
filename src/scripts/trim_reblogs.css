@@ -56,3 +56,35 @@
 .xkit-trim-reblogs-text-preview strong {
   font-size: 0.875rem;
 }
+
+.xkit-trim-reblogs-editor-info {
+  padding: 0.5em;
+
+  color: rgba(var(--white-on-dark), 0.85);
+  line-height: 1.5;
+  border-radius: 0.5em;
+  outline: 1px dashed rgba(var(--white-on-dark), 0.85);
+  backdrop-filter: blur(2px);
+}
+
+.xkit-trim-reblogs-editor-info > svg {
+  float: right;
+
+  height: 2.8em;
+  width: 2.8em;
+  margin: 0.1em;
+
+  fill: rgba(var(--white-on-dark), 0.65);
+}
+
+.xkit-trim-reblogs-editor-info-wrapper:not(:hover) > .xkit-trim-reblogs-editor-info {
+  visibility: hidden;
+}
+
+.xkit-trim-reblogs-editor-info-wrapper {
+  position: absolute;
+
+  right: 0;
+  width: 300%;
+  margin-top: 1em;
+}

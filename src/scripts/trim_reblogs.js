@@ -3,9 +3,10 @@ import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { filterPostElements, postSelector } from '../util/interface.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
-import { onNewPosts } from '../util/mutations.js';
+import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { timelineObject } from '../util/react_props.js';
+import { buildSvg } from '../util/remixicon.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-scissors-cut-line';
@@ -188,9 +189,23 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   controlIcon.before(clonedControlButton);
 });
 
+const showEditorInfo = async ([avatarWrapper]) => {
+  const info = dom('div', { class: 'xkit-trim-reblogs-editor-info' }, null, [
+    buildSvg(symbolId),
+      `Looking for Trim Reblogs? Draft or publish your reblog with your addition, then click the
+        scissors button on the resulting post!`
+  ]);
+  const infoWrapper = dom('div', { class: 'xkit-trim-reblogs-editor-info-wrapper' }, null, [info]);
+  avatarWrapper.after(infoWrapper);
+};
+
 export const main = async function () {
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
   onNewPosts.addListener(processPosts);
+  pageModifications.register(
+    `${keyToCss('postContainer')} ${keyToCss('avatarWrapper')}${keyToCss('sticky')}`,
+    showEditorInfo
+  );
 };
 
 export const clean = async function () {

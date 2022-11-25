@@ -22,12 +22,10 @@ const unburyPollerContext = () => {
 
 const countRegex = /^\(\d+\) /;
 
-const onTitleChanged = async (...args) => {
+const updateTitleCount = async (...args) => {
   console.log('onTitleChanged', args);
-  observer?.disconnect();
 
-  const title = document.head.querySelector('title');
-  const currentTitle = title.textContent;
+  let count = 0;
 
   if (mode === 'notifications') {
     const {
@@ -35,7 +33,9 @@ const onTitleChanged = async (...args) => {
       unopenedGifts = 0,
       unreadMessagesCount = 0,
       unseenPosts = 0
-    } = await inject(unburyPollerContext, [], document.querySelector('header'));
+    } = document.querySelector('header')
+      ? await inject(unburyPollerContext, [], document.querySelector('header'))
+      : {};
 
     console.log('pollerContext', {
       notificationCount,
@@ -44,35 +44,34 @@ const onTitleChanged = async (...args) => {
       unseenPosts
     });
 
-    const count = notificationCount + unopenedGifts + unreadMessagesCount;
-
-    title.textContent = `${count ? `(${count}) ` : ''}${currentTitle.replace(countRegex, '')}`;
-  } else {
-    title.textContent = currentTitle.replace(countRegex, '');
-    console.log('mode none');
+    count = notificationCount + unopenedGifts + unreadMessagesCount;
   }
 
-  observer?.observe(title, { characterData: true, subtree: true });
-  debouncedOnTitleChanged();
+  observer?.disconnect();
+
+  const titleElement = document.head.querySelector('title');
+  const currentTitle = titleElement.textContent;
+  titleElement.textContent = `${count ? `(${count}) ` : ''}${currentTitle.replace(countRegex, '')}`;
+
+  observer?.observe(titleElement, { characterData: true, subtree: true });
+  observer?.observe(document.head, { childList: true });
+  delayedUpdateTitleCount();
 };
 
-const debounce = (func, ms) => {
-  let timeoutID;
-  return (...args) => {
-    clearTimeout(timeoutID);
-    timeoutID = setTimeout(() => func(...args), ms);
-  };
+let timeoutID;
+const delayedUpdateTitleCount = (...args) => {
+  clearTimeout(timeoutID);
+  timeoutID = setTimeout(() => updateTitleCount(...args), 35000);
 };
-
-const debouncedOnTitleChanged = debounce(onTitleChanged, 35000);
 
 export const main = async () => {
   ({ mode } = await getPreferences('title_counts'));
-  observer = new MutationObserver(onTitleChanged);
-  onTitleChanged();
+  observer = new MutationObserver(updateTitleCount);
+  updateTitleCount();
 };
 
 export const clean = async () => {
+  clearTimeout(timeoutID);
   observer.disconnect();
   observer = undefined;
 };

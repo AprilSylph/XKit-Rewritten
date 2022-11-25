@@ -19,8 +19,8 @@ const CLOSE_FILTER_DIALOG_SELECTOR = '[aria-label="Close"]';
 const ACTIVITY_POPOVER_SELECTOR = keyToCss('activityPopover');
 const ACTIVITY_BODY_SELECTOR = '.usqcu';
 
-const HIDDEN_DIALOG_CLASS = 'xkit-mutual-activity-dialog-hidden';
 const MUTUAL_ACTIVITY_CLASS = 'xkit-mutual-activity';
+const HIDDEN_DIALOG_CLASS = `${MUTUAL_ACTIVITY_CLASS}-dialog-hidden`;
 const FILTER_CONTAINER_CLASS = `${MUTUAL_ACTIVITY_CLASS}-filter-container`;
 const IS_ACTIVATED_STORAGE_KEY = 'mutualActivity.isActivated';
 

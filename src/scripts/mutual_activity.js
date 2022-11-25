@@ -12,7 +12,9 @@ const filterButtonSelector = `${statsContainerSelector} > ${miniHeadingSelector}
 const rollupCheckboxSelector = '[aria-labelledby="rollups"]';
 const checkboxStateSelector = keyToCss('box');
 const glassContainerSelector = '#glass-container';
-const applyFiltersSelector = `${glassContainerSelector} ${keyToCss('button')}${keyToCss('default')}`;
+const applyFiltersSelector = `${glassContainerSelector} ${keyToCss(
+  'button'
+)}${keyToCss('default')}`;
 const closeFilterDialogSelector = '[aria-label="Close"]';
 const activityPopoverSelector = keyToCss('activityPopover');
 
@@ -20,7 +22,9 @@ const hiddenDialogClass = 'xkit-mutual-activity-dialog-hidden';
 const mutualActivityClass = 'xkit-mutual-activity';
 const IS_ACTIVATED_STORAGE_KEY = 'mutualActivity.isActivated';
 
-const nonMutualStyleElement = buildStyle(`:not(${activityPopoverSelector}) :is(${notificationSelector}):not(${followedSelector}){ display: none !important; }`);
+const nonMutualStyleElement = buildStyle(
+  `:not(${activityPopoverSelector}) :is(${notificationSelector}):not(${followedSelector}){ display: none !important; }`
+);
 
 const disableGroupNotifications = async () => {
   const glassContainer = document.querySelector(glassContainerSelector);
@@ -29,7 +33,10 @@ const disableGroupNotifications = async () => {
   filterButton.click();
   filterButton.setAttribute('disabled', true);
 
-  const checkboxState = document.querySelector(`${rollupCheckboxSelector} + ${checkboxStateSelector}`).childElementCount > 0;
+  const checkboxState =
+    document.querySelector(
+      `${rollupCheckboxSelector} + ${checkboxStateSelector}`
+    ).childElementCount > 0;
 
   if (checkboxState) {
     document.querySelector(rollupCheckboxSelector).click();
@@ -67,7 +74,8 @@ const toggleFilter = async ({ target }) => {
 };
 
 const createToggleButton = async () => {
-  const { [IS_ACTIVATED_STORAGE_KEY]: isActivated = false } = await browser.storage.local.get(IS_ACTIVATED_STORAGE_KEY);
+  const { [IS_ACTIVATED_STORAGE_KEY]: isActivated = false } =
+    await browser.storage.local.get(IS_ACTIVATED_STORAGE_KEY);
 
   if (document.querySelector('.usqcu') === null) {
     return;
@@ -75,9 +83,23 @@ const createToggleButton = async () => {
 
   toggleFilter({ target: { checked: isActivated } });
 
-  const mutualActivity = Object.assign(document.createElement('span'), { className: mutualActivityClass });
-  const mutualActivityLabel = Object.assign(document.createElement('label'), { className: mutualActivityClass, textContent: 'Mutuals only', for: mutualActivityClass });
-  const mutualActivityToggleButton = Object.assign(document.createElement('input'), { className: `${mutualActivityClass} toggle-button`, type: 'checkbox', name: mutualActivityClass, checked: isActivated });
+  const mutualActivity = Object.assign(document.createElement('span'), {
+    className: mutualActivityClass
+  });
+  const mutualActivityLabel = Object.assign(document.createElement('label'), {
+    className: mutualActivityClass,
+    textContent: 'Mutuals only',
+    for: mutualActivityClass
+  });
+  const mutualActivityToggleButton = Object.assign(
+    document.createElement('input'),
+    {
+      className: `${mutualActivityClass} toggle-button`,
+      type: 'checkbox',
+      name: mutualActivityClass,
+      checked: isActivated
+    }
+  );
 
   mutualActivity.appendChild(mutualActivityLabel);
   mutualActivity.appendChild(mutualActivityToggleButton);

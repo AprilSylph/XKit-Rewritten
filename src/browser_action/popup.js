@@ -1,4 +1,4 @@
-import { localizeHtml } from '../util/localization';
+import { localizeHtml } from '../util/localization.js';
 
 const checkForNoResults = function () {
   const nothingFound =
@@ -61,4 +61,7 @@ const params = new URLSearchParams(location.search);
 const pageIsEmbedded = params.get('embedded') === 'true';
 document.getElementById('embedded-banner').hidden = !pageIsEmbedded;
 
-document.getElementsByTagName('*').forEach(localizeHtml);
+const allElements = document.getElementsByTagName('*');
+for (const htmlElement of allElements) {
+  localizeHtml(htmlElement);
+}

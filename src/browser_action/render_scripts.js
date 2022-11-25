@@ -1,4 +1,4 @@
-import { getLocalizedMessage } from '../util/localization';
+import { getLocalizedMessage } from '../util/localization.js';
 
 const configSection = document.getElementById('configuration');
 const configSectionLink = document.querySelector('a[href="#configuration"]');
@@ -163,8 +163,8 @@ const renderScripts = async function () {
     if (description !== '') {
       // We'll check to ensure that the description for a script does
       // not request to be localized.
-      if (description.substring(0, 7) === '__MSG_') {
-        const localKeyDesc = description.substring(7);
+      if (description.substring(0, 6) === '__MSG_') {
+        const localKeyDesc = description.substring(6);
         description = getLocalizedMessage(localKeyDesc, localKeyDesc);
       }
       const descriptionParagraph = scriptTemplateClone.querySelector('p.description');

@@ -1,3 +1,5 @@
+import { localizeHtml } from '../util/localization';
+
 const checkForNoResults = function () {
   const nothingFound =
     [...document.querySelectorAll('details.script')]
@@ -58,3 +60,5 @@ versionElement.textContent = browser.runtime.getManifest().version;
 const params = new URLSearchParams(location.search);
 const pageIsEmbedded = params.get('embedded') === 'true';
 document.getElementById('embedded-banner').hidden = !pageIsEmbedded;
+
+document.getElementsByTagName('*').forEach(localizeHtml);

@@ -1,0 +1,91 @@
+{
+    "popup_title": {
+        "message": "XKit Control Panel",
+        "description": "Page title for the control panel"
+    },
+    "popup_embedded_banner": {
+        "message": "XKit Rewritten can also be configured via the button in the browser toolbar.",
+        "description": "Inform the user of an alternate configuration method"
+    },
+    "popup_button_configuration": {
+        "message": "Configuration"
+    },
+    "popup_button_backup": {
+        "message": "Backup"
+    },
+    "popup_button_links": {
+        "message": "Links"
+    },
+    "popup_search_placeholder": {
+        "message": "Search"
+    },
+    "popup_filter_label": {
+        "message": "Filter by"
+    },
+    "popup_filter_option_all": {
+        "message": "All"
+    },
+    "popup_filter_option_enabled": {
+        "message": "Enabled"
+    },
+    "popup_filter_option_disabled": {
+        "message": "Disabled"
+    },
+    "popup_search_no_results": {
+        "message": "No results found."
+    },
+    "popup_export_title": {
+        "message": "Export"
+    },
+    "popup_export_copy": {
+        "message": "Copy All"
+    },
+    "popup_export_download": {
+        "message": "Download"
+    },
+    "popup_import_title": {
+        "message": "Import"
+    },
+    "popup_import_instructions": {
+        "message": "Paste the contents of your saved backup here."
+    },
+    "popup_help_title": {
+        "message": "Help & information"
+    }, 
+    "popup_help_guide": {
+        "message": "User guide"
+    },
+    "popup_help_support": {
+        "message": "Support & discussion"
+    },
+    "popup_help_changelog": {
+        "message": "Changelog"
+    },
+    "popup_involved_title": {
+        "message": "Get involved"
+    },
+    "popup_involved_source": {
+        "message": "Source code"
+    },
+    "popup_involved_issue": {
+        "message": "Issue tracker"
+    },
+    "popup_involved_bugs": {
+        "message": "Known bugs"
+    },
+    "popup_involved_suggest": {
+        "message": "Suggested features"
+    },
+    "popup_related_title": {
+        "message": "Related projects"
+    },
+    "popup_related_palettes": {
+        "message": "Palettes for Tumblr"
+    },
+    "popup_related_outbox": {
+        "message": "Outbox for Tumblr"
+    },
+    "popup_related_filtering": {
+        "message": "Filtering+ for Tumblr"
+    }
+}

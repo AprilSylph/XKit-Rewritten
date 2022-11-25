@@ -14,12 +14,13 @@ const checkboxStateSelector = keyToCss('box');
 const glassContainerSelector = '#glass-container';
 const applyFiltersSelector = `${glassContainerSelector} ${keyToCss('button')}${keyToCss('default')}`;
 const closeFilterDialogSelector = '[aria-label="Close"]';
+const activityPopoverSelector = keyToCss('activityPopover');
 
 const hiddenDialogClass = 'xkit-mutual-activity-dialog-hidden';
 const mutualActivityClass = 'xkit-mutual-activity';
 const IS_ACTIVATED_STORAGE_KEY = 'mutualActivity.isActivated';
 
-const nonMutualStyleElement = buildStyle(`:is(${notificationSelector}):not(${followedSelector}){ display: none !important; }`);
+const nonMutualStyleElement = buildStyle(`:not(${activityPopoverSelector}) :is(${notificationSelector}):not(${followedSelector}){ display: none !important; }`);
 
 const disableGroupNotifications = async () => {
   const glassContainer = document.querySelector(glassContainerSelector);

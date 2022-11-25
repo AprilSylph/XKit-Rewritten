@@ -16,7 +16,6 @@ const APPLY_FILTERS_SELECTOR = `${GLASS_CONTAINER_SELECTOR} ${keyToCss(
   'button'
 )}${keyToCss('default')}`;
 const CLOSE_FILTER_DIALOG_SELECTOR = '[aria-label="Close"]';
-const ACTIVITY_POPOVER_SELECTOR = keyToCss('activityPopover');
 const ACTIVITY_BODY_SELECTOR = '.usqcu';
 
 const MUTUAL_ACTIVITY_CLASS = 'xkit-mutual-activity';
@@ -25,7 +24,7 @@ const FILTER_CONTAINER_CLASS = `${MUTUAL_ACTIVITY_CLASS}-filter-container`;
 const IS_ACTIVATED_STORAGE_KEY = 'mutualActivity.isActivated';
 
 const nonMutualStyleElement = buildStyle(
-  `:not(${ACTIVITY_POPOVER_SELECTOR}) ${NOTIFICATION_SELECTOR}:not(${FOLLOWED_SELECTOR}){ display: none !important; }`
+  `${NOTIFICATION_SECTION_SELECTOR} ${NOTIFICATION_SELECTOR}:not(${FOLLOWED_SELECTOR}){ display: none !important; }`
 );
 
 const disableGroupNotifications = async () => {

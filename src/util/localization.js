@@ -8,19 +8,11 @@
  * @returns {string} Either the localization for the messageId if the browser can be identified, otherwise the defaultMessage.
  */
 export function getLocalizedMessage (messageId, defaultMessage) {
-  if (typeof chrome !== 'undefined') {
-    // Could be either Chrome or Firefox
-    if (typeof browser !== 'undefined') {
-      // Confirmed to be Firefox. Use browser.
-      return browser.i18n.getMessage(messageId);
-    }
-    // Must be Chrome. Use chrome.
-    return chrome.i18n.getMessage(messageId);
-  } else if (typeof browser !== 'undefined') {
-    // Must be Edge. Use browser.
-    return browser.i18n.getMessage(messageId);
+  const localMessage = browser.i18n.getMessage(messageId);
+  if (typeof localMessage !== 'undefined' && localMessage !== '') {
+    // Unknown browser. Return the default message.
+    return defaultMessage;
   }
-  // Unknown browser. Return the default message.
   return defaultMessage;
 }
 

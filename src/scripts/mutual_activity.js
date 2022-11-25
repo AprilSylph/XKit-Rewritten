@@ -20,6 +20,7 @@ const activityPopoverSelector = keyToCss('activityPopover');
 
 const hiddenDialogClass = 'xkit-mutual-activity-dialog-hidden';
 const mutualActivityClass = 'xkit-mutual-activity';
+const filterContainerClass = `${mutualActivityClass}-filter-container`;
 const IS_ACTIVATED_STORAGE_KEY = 'mutualActivity.isActivated';
 
 const nonMutualStyleElement = buildStyle(
@@ -106,7 +107,7 @@ const createToggleButton = async () => {
 
   const activityBar = document.querySelector(filterButtonSelector);
 
-  $(activityBar).wrap('<span class="filter-container"></span>');
+  $(activityBar).wrap(`<span class="${filterContainerClass}"></span>`);
   $(activityBar).before(mutualActivity);
 
   mutualActivity.addEventListener('input', toggleFilter);
@@ -114,7 +115,7 @@ const createToggleButton = async () => {
 
 const removeToggleButton = () => {
   document.querySelector(`span.${mutualActivityClass}`)?.remove();
-  $(filterButtonSelector).unwrap('span.filter-container');
+  $(filterButtonSelector).unwrap(`span.${filterContainerClass}`);
 };
 
 export const main = async () => {

@@ -10,8 +10,7 @@
 export function getLocalizedMessage (messageId, defaultMessage) {
   const localMessage = browser.i18n.getMessage(messageId);
   if (typeof localMessage !== 'undefined' && localMessage !== '') {
-    // Unknown browser. Return the default message.
-    return defaultMessage;
+    return localMessage;
   }
   return defaultMessage;
 }

@@ -1,6 +1,6 @@
 {
   "title": "Mirror Posts",
-  "description": "Back up posts to public archives",
+  "description": "__MSG_script_desc_mirror_posts",
   "icon": {
     "class_name": "ri-file-copy-line",
     "color": "white",

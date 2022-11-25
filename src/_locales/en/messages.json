@@ -87,5 +87,98 @@
     },
     "popup_related_filtering": {
         "message": "Filtering+ for Tumblr"
+    },
+    "script_desc_accesskit": {
+        "message": "Accessibility options for Tumblr"
+    },
+    "script_desc_anti_capitalism": {
+        "message": "Hide advertisement containers"
+    },
+    "script_desc_classic_search": {
+        "message": "Go to tagged pages easily"
+    },
+    "script_desc_cleanfeed": {
+        "message": "Browse safely in public"
+    },
+    "script_desc_collapsed_queue": {
+        "message": "Shorten posts in your queue"
+    },
+    "script_desc_limit_checker": {
+        "message": "Check post limit and more"
+    },
+    "script_desc_mass_deleter": {
+        "message": "Delete drafts or clear your queue"
+    },
+    "script_desc_mass_unliker": {
+        "message": "Clear your likes"
+    },
+    "script_desc_mirror_posts": {
+        "message": "Back up posts to public archives"
+    },
+    "script_desc_mutual_checker": {
+        "message": "See who follows you back"
+    },
+    "script_desc_no_recommended": {
+        "message": "Focus only on what you follow"
+    },
+    "script_desc_notificationblock": {
+        "message": "Block a post's notifications"
+    },
+    "script_desc_open_in_tabs": {
+        "message": "Open blogs in new tabs"
+    },
+    "script_desc_painter": {
+        "message": "Add colour to your dashboard posts"
+    },
+    "script_desc_panorama": {
+        "message": "Widescreen dashboard"
+    },
+    "script_desc_postblock": {
+        "message": "Disappear all instances of a post"
+    },
+    "script_desc_quick_tags": {
+        "message": "Add tags to posts easily"
+    },
+    "script_desc_quote_replies": {
+        "message": "Reply to replies from the Activity page"
+    },
+    "script_desc_scroll_to_bottom": {
+        "message": "Load ALL the posts!"
+    },
+    "script_desc_seen_posts": {
+        "message": "Dim the posts you've seen already"
+    },
+    "script_desc_shorten_posts": {
+        "message": "Limit the length of posts on your dash"
+    },
+    "script_desc_show_originals": {
+        "message": "Hide reblogged posts by default"
+    },
+    "script_desc_tag_replacer": {
+        "message": "Replace old tags in bulk"
+    },
+    "script_desc_tag_tracking_plus": {
+        "message": "Unread counts on followed tags"
+    },
+    "script_desc_themed_posts": {
+        "message": "Use users' theme colors for posts"
+    },
+    "script_desc_timeformat": {
+        "message": "Reformat Tumblr's timestamps"
+    },
+    "script_desc_timestamps": {
+        "message": "See when a post was made"
+    },
+    "script_desc_trim_reblogs": {
+        "message": "Cut long threads down to size"
+    },
+    "script_desc_tweaks": {
+        "message": "Miscellaneous dashboard options"
+    },
+    "script_desc_vanilla_audio": {
+        "message": "Use the browser's controls for audio posts"
+    },
+    "script_desc_vanilla_video": {
+        "message": "Use the browser's controls for video posts"
     }
 }

@@ -1,6 +1,6 @@
 {
   "title": "Scroll to Bottom",
-  "description": "Load ALL the posts!",
+  "description": "__MSG_script_desc_scroll_to_bottom",
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#scroll-to-bottom",
   "icon": {
     "class_name": "ri-download-fill",

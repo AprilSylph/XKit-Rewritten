@@ -1,6 +1,6 @@
 {
   "title": "Quote Replies",
-  "description": "Reply to replies from the Activity page",
+  "description": "__MSG_script_desc_quote_replies",
   "icon": {
     "class_name": "ri-chat-quote-line",
     "color": "white",

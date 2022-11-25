@@ -1,6 +1,6 @@
 {
   "title": "Open In Tabs",
-  "description": "Open blogs in new tabs",
+  "description": "__MSG_script_desc_open_in_tabs",
   "icon": {
     "class_name": "ri-add-box-line",
     "color": "white",

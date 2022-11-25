@@ -1,6 +1,6 @@
 {
   "title": "Vanilla Audio",
-  "description": "Use the browser's controls for audio posts",
+  "description": "__MSG_script_desc_vanilla_audio",
   "icon": {
     "class_name": "ri-file-music-line",
     "color": "white",

@@ -1,6 +1,6 @@
 {
   "title": "CleanFeed",
-  "description": "Browse safely in public",
+  "description": "__MSG_script_desc_cleanfeed",
   "icon": {
     "class_name": "ri-eye-off-line",
     "color": "white",

@@ -1,6 +1,6 @@
 {
   "title": "Themed Posts",
-  "description": "Use users' theme colors for posts",
+  "description": "__MSG_script_desc_themed_posts",
   "icon": {
     "class_name": "ri-palette-line",
     "color": "white",

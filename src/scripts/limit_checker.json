@@ -1,6 +1,6 @@
 {
   "title": "Limit Checker",
-  "description": "Check post limit and more",
+  "description": "__MSG_script_desc_limit_checker",
   "icon": {
     "class_name": "ri-timer-line",
     "color": "white",

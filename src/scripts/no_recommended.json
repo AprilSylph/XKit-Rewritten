@@ -1,6 +1,6 @@
 {
   "title": "No Recommended",
-  "description": "Focus only on what you follow",
+  "description": "__MSG_script_desc_no_recommended",
   "icon": {
     "class_name": "ri-delete-row",
     "color": "white",

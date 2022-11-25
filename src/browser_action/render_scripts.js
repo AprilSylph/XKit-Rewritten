@@ -1,3 +1,5 @@
+import { getLocalizedMessage } from '../util/localization';
+
 const configSection = document.getElementById('configuration');
 const configSectionLink = document.querySelector('a[href="#configuration"]');
 const scriptsDiv = configSection.querySelector('.scripts');
@@ -135,7 +137,7 @@ const renderScripts = async function () {
   for (const scriptName of [...orderedEnabledScripts, ...disabledScripts]) {
     const url = getURL(`/scripts/${scriptName}.json`);
     const file = await fetch(url);
-    const { title = scriptName, description = '', icon = {}, help = '', relatedTerms = [], preferences = {} } = await file.json();
+    let { title = scriptName, description = '', icon = {}, help = '', relatedTerms = [], preferences = {} } = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 
@@ -159,6 +161,12 @@ const renderScripts = async function () {
     titleHeading.textContent = title;
 
     if (description !== '') {
+      // We'll check to ensure that the description for a script does
+      // not request to be localized.
+      if (description.substring(0, 7) === '__MSG_') {
+        const localKeyDesc = description.substring(7);
+        description = getLocalizedMessage(localKeyDesc, localKeyDesc);
+      }
       const descriptionParagraph = scriptTemplateClone.querySelector('p.description');
       descriptionParagraph.textContent = description;
     }

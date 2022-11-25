@@ -1,6 +1,6 @@
 {
   "title": "Show Originals",
-  "description": "Hide reblogged posts by default",
+  "description": "__MSG_script_desc_show_originals",
   "icon": {
     "class_name": "ri-focus-line",
     "color": "white",

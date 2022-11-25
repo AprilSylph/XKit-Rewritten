@@ -1,6 +1,6 @@
 {
   "title": "Shorten Posts",
-  "description": "Limit the length of posts on your dash",
+  "description": "__MSG_script_desc_shorten_posts",
   "icon": {
     "class_name": "ri-merge-cells-vertical",
     "color": "white",

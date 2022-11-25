@@ -4,7 +4,7 @@
     display: none;
 }
 
-span..xkit-mutual-activity-filter-container {
+span.xkit-mutual-activity-filter-container {
   display: flex;
   flex-direction: row;
   align-items: center;

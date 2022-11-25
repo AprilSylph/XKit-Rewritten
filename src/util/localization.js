@@ -9,10 +9,7 @@
  */
 export function getLocalizedMessage (messageId, defaultMessage) {
   const localMessage = browser.i18n.getMessage(messageId);
-  if (typeof localMessage !== 'undefined' && localMessage !== '') {
-    return localMessage;
-  }
-  return defaultMessage;
+  return localMessage || defaultMessage;
 }
 
 /**

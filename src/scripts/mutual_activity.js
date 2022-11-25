@@ -17,6 +17,7 @@ const applyFiltersSelector = `${glassContainerSelector} ${keyToCss(
 )}${keyToCss('default')}`;
 const closeFilterDialogSelector = '[aria-label="Close"]';
 const activityPopoverSelector = keyToCss('activityPopover');
+const activityBodySelector = '.usqcu';
 
 const hiddenDialogClass = 'xkit-mutual-activity-dialog-hidden';
 const mutualActivityClass = 'xkit-mutual-activity';
@@ -119,7 +120,7 @@ const removeToggleButton = () => {
 };
 
 export const main = async () => {
-  pageModifications.register('.usqcu', createToggleButton);
+  pageModifications.register(activityBodySelector, createToggleButton);
 };
 
 export const clean = async () => {

@@ -12,6 +12,7 @@ span.filter-container {
 }
 
 input[type="checkbox"].xkit-mutual-activity.toggle-button {
+  cursor: pointer;
   --in-content-button-background: #9da6af54;
   --in-content-button-background-hover: rgb(var(--secondary-accent));
   --in-content-button-background-active: rgb(var(--accent));

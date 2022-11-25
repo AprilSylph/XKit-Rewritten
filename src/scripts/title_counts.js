@@ -10,7 +10,7 @@ const unburyPollerContext = () => {
   let fiber = postElement[reactKey];
 
   while (fiber) {
-    const { pollerContext } = fiber.memoizedProps || {};
+    const { pollerContext } = fiber.stateNode?.props || {};
     if (pollerContext !== undefined) {
       console.log(fiber);
       return pollerContext;

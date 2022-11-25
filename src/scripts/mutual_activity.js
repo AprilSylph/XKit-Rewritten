@@ -2,59 +2,59 @@ import { keyToCss } from '../util/css_map.js';
 import { buildStyle } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
 
-const notificationSectionSelector = keyToCss('notifications');
-const notificationSelector = keyToCss('notification');
-const followedSelector = keyToCss('followed');
-const miniHeadingSelector = keyToCss('miniHeading');
-const statsContainerSelector = keyToCss('statsContainer');
-const buttonSelector = keyToCss('button');
-const filterButtonSelector = `${statsContainerSelector} > ${miniHeadingSelector} ${buttonSelector}`;
-const rollupCheckboxSelector = '[aria-labelledby="rollups"]';
-const checkboxStateSelector = keyToCss('box');
-const glassContainerSelector = '#glass-container';
-const applyFiltersSelector = `${glassContainerSelector} ${keyToCss(
+const NOTIFICATION_SECTION_SELECTOR = keyToCss('notifications');
+const NOTIFICATION_SELECTOR = keyToCss('notification');
+const FOLLOWED_SELECTOR = keyToCss('followed');
+const MINI_HEADING_SELECTOR = keyToCss('miniHeading');
+const STATS_CONTAINER_SELECTOR = keyToCss('statsContainer');
+const BUTTON_SELECTOR = keyToCss('button');
+const FILTER_BUTTON_SELECTOR = `${STATS_CONTAINER_SELECTOR} > ${MINI_HEADING_SELECTOR} ${BUTTON_SELECTOR}`;
+const ROLLUP_CHECKBOX_SELECTOR = '[aria-labelledby="rollups"]';
+const CHECKBOX_STATE_SELECTOR = keyToCss('box');
+const GLASS_CONTAINER_SELECTOR = '#glass-container';
+const APPLY_FILTERS_SELECTOR = `${GLASS_CONTAINER_SELECTOR} ${keyToCss(
   'button'
 )}${keyToCss('default')}`;
-const closeFilterDialogSelector = '[aria-label="Close"]';
-const activityPopoverSelector = keyToCss('activityPopover');
-const activityBodySelector = '.usqcu';
+const CLOSE_FILTER_DIALOG_SELECTOR = '[aria-label="Close"]';
+const ACTIVITY_POPOVER_SELECTOR = keyToCss('activityPopover');
+const ACTIVITY_BODY_SELECTOR = '.usqcu';
 
-const hiddenDialogClass = 'xkit-mutual-activity-dialog-hidden';
-const mutualActivityClass = 'xkit-mutual-activity';
-const filterContainerClass = `${mutualActivityClass}-filter-container`;
+const HIDDEN_DIALOG_CLASS = 'xkit-mutual-activity-dialog-hidden';
+const MUTUAL_ACTIVITY_CLASS = 'xkit-mutual-activity';
+const FILTER_CONTAINER_CLASS = `${MUTUAL_ACTIVITY_CLASS}-filter-container`;
 const IS_ACTIVATED_STORAGE_KEY = 'mutualActivity.isActivated';
 
 const nonMutualStyleElement = buildStyle(
-  `:not(${activityPopoverSelector}) :is(${notificationSelector}):not(${followedSelector}){ display: none !important; }`
+  `:not(${ACTIVITY_POPOVER_SELECTOR}) :is(${NOTIFICATION_SELECTOR}):not(${FOLLOWED_SELECTOR}){ display: none !important; }`
 );
 
 const disableGroupNotifications = async () => {
-  const glassContainer = document.querySelector(glassContainerSelector);
-  const filterButton = document.querySelector(filterButtonSelector);
-  glassContainer.classList.add(hiddenDialogClass);
+  const glassContainer = document.querySelector(GLASS_CONTAINER_SELECTOR);
+  const filterButton = document.querySelector(FILTER_BUTTON_SELECTOR);
+  glassContainer.classList.add(HIDDEN_DIALOG_CLASS);
   filterButton.click();
   filterButton.setAttribute('disabled', true);
 
   const checkboxState =
     document.querySelector(
-      `${rollupCheckboxSelector} + ${checkboxStateSelector}`
+      `${ROLLUP_CHECKBOX_SELECTOR} + ${CHECKBOX_STATE_SELECTOR}`
     ).childElementCount > 0;
 
   if (checkboxState) {
-    document.querySelector(rollupCheckboxSelector).click();
-    document.querySelector(applyFiltersSelector).click();
+    document.querySelector(ROLLUP_CHECKBOX_SELECTOR).click();
+    document.querySelector(APPLY_FILTERS_SELECTOR).click();
   } else {
-    document.querySelector(closeFilterDialogSelector).click();
+    document.querySelector(CLOSE_FILTER_DIALOG_SELECTOR).click();
   }
 
-  glassContainer.classList.remove(hiddenDialogClass);
+  glassContainer.classList.remove(HIDDEN_DIALOG_CLASS);
   filterButton.removeAttribute('disabled');
 };
 
 const enableFilter = () => {
   document.head.append(nonMutualStyleElement);
   const notificationSection = document.querySelector(
-    notificationSectionSelector
+    NOTIFICATION_SECTION_SELECTOR
   );
   const scrollEvent = new Event('scroll', {
     bubbles: true
@@ -86,19 +86,19 @@ const createToggleButton = async () => {
   toggleFilter({ target: { checked: isActivated } });
 
   const mutualActivity = Object.assign(document.createElement('span'), {
-    className: mutualActivityClass
+    className: MUTUAL_ACTIVITY_CLASS
   });
   const mutualActivityLabel = Object.assign(document.createElement('label'), {
-    className: mutualActivityClass,
+    className: MUTUAL_ACTIVITY_CLASS,
     textContent: 'Mutuals only',
-    for: mutualActivityClass
+    for: MUTUAL_ACTIVITY_CLASS
   });
   const mutualActivityToggleButton = Object.assign(
     document.createElement('input'),
     {
-      className: `${mutualActivityClass} toggle-button`,
+      className: `${MUTUAL_ACTIVITY_CLASS} toggle-button`,
       type: 'checkbox',
-      name: mutualActivityClass,
+      name: MUTUAL_ACTIVITY_CLASS,
       checked: isActivated
     }
   );
@@ -106,21 +106,21 @@ const createToggleButton = async () => {
   mutualActivity.appendChild(mutualActivityLabel);
   mutualActivity.appendChild(mutualActivityToggleButton);
 
-  const activityBar = document.querySelector(filterButtonSelector);
+  const activityBar = document.querySelector(FILTER_BUTTON_SELECTOR);
 
-  $(activityBar).wrap(`<span class="${filterContainerClass}"></span>`);
+  $(activityBar).wrap(`<span class="${FILTER_CONTAINER_CLASS}"></span>`);
   $(activityBar).before(mutualActivity);
 
   mutualActivity.addEventListener('input', toggleFilter);
 };
 
 const removeToggleButton = () => {
-  document.querySelector(`span.${mutualActivityClass}`)?.remove();
-  $(filterButtonSelector).unwrap(`span.${filterContainerClass}`);
+  document.querySelector(`span.${MUTUAL_ACTIVITY_CLASS}`)?.remove();
+  $(FILTER_BUTTON_SELECTOR).unwrap(`span.${FILTER_CONTAINER_CLASS}`);
 };
 
 export const main = async () => {
-  pageModifications.register(activityBodySelector, createToggleButton);
+  pageModifications.register(ACTIVITY_BODY_SELECTOR, createToggleButton);
 };
 
 export const clean = async () => {

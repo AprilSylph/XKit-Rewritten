@@ -11,7 +11,7 @@ span.filter-container {
   justify-content: space-between;
 }
 
-input[type="checkbox"].mutual-activity.toggle-button {
+input[type="checkbox"].xkit-mutual-activity.toggle-button {
   --in-content-button-background: #9da6af54;
   --in-content-button-background-hover: rgb(var(--secondary-accent));
   --in-content-button-background-active: rgb(var(--accent));
@@ -20,13 +20,13 @@ input[type="checkbox"].mutual-activity.toggle-button {
   --in-content-primary-button-background-active:  rgb(var(--secondary-accent));
 }
 
-span.mutual-activity {
+span.xkit-mutual-activity {
   display: flex;
   align-items: center;
   padding-right: 1.0em;
 }
 
-label.mutual-activity {
+label.xkit-mutual-activity {
   padding-right: 0.4em;
   color: rgb(var(--accent);
 }

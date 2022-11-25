@@ -9,38 +9,37 @@ const followedSelector = keyToCss('followed');
 const miniHeadingSelector = keyToCss('miniHeading');
 const statsContainerSelector = keyToCss('statsContainer');
 const buttonSelector = keyToCss('button');
-const activityBarSelector = `${statsContainerSelector} > ${miniHeadingSelector} ${buttonSelector}`;
+const filterButtonSelector = `${statsContainerSelector} > ${miniHeadingSelector} ${buttonSelector}`;
 const rollupSelector = keyToCss('rollup');
 const rollupCheckboxSelector = '[aria-labelledby="rollups"]';
 const glassContainerSelector = '#glass-container';
 const applyFiltersSelector = `${glassContainerSelector} ${keyToCss('button')}${keyToCss('default')}`;
 
 const hiddenDialogClass = 'xkit-mutual-activity-dialog-hidden';
-// const mutualActivityClass = 'xkit-mutual-activity';
-let activated = false;
+const mutualActivityClass = 'xkit-mutual-activity';
+const IS_ACTIVATED_STORAGE_KEY = 'mutualActivity.isActivated';
 
 const styleElement = buildStyle();
 const buildCss = () =>
   `:is(${notificationSelector}):not(${followedSelector}){ display: none !important; }`;
 
-const findRolledUpNotifications = async (rollupSelector, activityBarSelector, rollupCheckboxSelector, applyFiltersSelector, glassContainerSelector, hiddenDialogClass) => {
+const findRolledUpNotifications = async (rollupSelector, filterButtonSelector, rollupCheckboxSelector, applyFiltersSelector, glassContainerSelector, hiddenDialogClass) => {
   if (document.querySelectorAll(rollupSelector).length > 0) {
     const clickEvent = new Event('click', {
       bubbles: true
     });
 
     document.querySelector(glassContainerSelector).classList.add(hiddenDialogClass);
-    document.querySelector(activityBarSelector).dispatchEvent(clickEvent);
+    document.querySelector(filterButtonSelector).dispatchEvent(clickEvent);
     document.querySelector(rollupCheckboxSelector).click();
     document.querySelector(applyFiltersSelector).click();
     document.querySelector(glassContainerSelector).classList.remove(hiddenDialogClass);
   }
 };
 
-const processNotifications = () => inject(findRolledUpNotifications, [rollupSelector, activityBarSelector, rollupCheckboxSelector, applyFiltersSelector, glassContainerSelector, hiddenDialogClass]);
+const processNotifications = () => inject(findRolledUpNotifications, [rollupSelector, filterButtonSelector, rollupCheckboxSelector, applyFiltersSelector, glassContainerSelector, hiddenDialogClass]);
 
 const enableFilter = () => {
-  styleElement.textContent = buildCss();
   document.head.append(styleElement);
   const notificationSection = document.querySelector(
     notificationSectionSelector
@@ -51,43 +50,52 @@ const enableFilter = () => {
 
   notificationSection.dispatchEvent(scrollEvent);
   pageModifications.register(notificationSelector, processNotifications);
-  activated = true;
+  browser.storage.local.set({ [IS_ACTIVATED_STORAGE_KEY]: true });
 };
 
 const disableFilter = () => {
   pageModifications.unregister(processNotifications);
   styleElement.remove();
-  activated = false;
+  browser.storage.local.set({ [IS_ACTIVATED_STORAGE_KEY]: false });
 };
 
 const toggleFilter = ({ target }) => {
   target?.checked ? enableFilter() : disableFilter();
 };
 
-const createToggleButton = () => {
+const createToggleButton = async () => {
+  const { [IS_ACTIVATED_STORAGE_KEY]: isActivated = false } = await browser.storage.local.get(IS_ACTIVATED_STORAGE_KEY);
   if (document.querySelector('.usqcu') === null) {
     return;
   }
-  console.log('createToggleButton');
-  const mutualActivity = Object.assign(document.createElement('span'), { className: 'mutual-activity' });
-  const mutualActivityLabel = Object.assign(document.createElement('label'), { className: 'mutual-activity', textContent: 'Mutuals only', for: 'mutual-activity' });
-  const mutualActivityToggleButton = Object.assign(document.createElement('input'), { className: 'mutual-activity toggle-button', type: 'checkbox', name: 'mutual-activity', checked: activated });
+
+  toggleFilter({ target: { checked: isActivated } });
+  const mutualActivity = Object.assign(document.createElement('span'), { className: mutualActivityClass });
+  const mutualActivityLabel = Object.assign(document.createElement('label'), { className: mutualActivityClass, textContent: 'Mutuals only', for: mutualActivityClass });
+  const mutualActivityToggleButton = Object.assign(document.createElement('input'), { className: `${mutualActivityClass} toggle-button`, type: 'checkbox', name: mutualActivityClass, checked: isActivated });
   mutualActivity.appendChild(mutualActivityLabel);
   mutualActivity.appendChild(mutualActivityToggleButton);
 
-  const activityBar = document.querySelector(activityBarSelector);
+  const activityBar = document.querySelector(filterButtonSelector);
   $(activityBar).wrap('<span class="filter-container"></span>');
   $(activityBar).before(mutualActivity);
 
   mutualActivity.addEventListener('input', toggleFilter);
 };
 
+const removeToggleButton = () => {
+  document.querySelector(`span.${mutualActivityClass}`)?.remove();
+  $(filterButtonSelector).unwrap('span.filter-container');
+};
+
 export const main = async () => {
+  styleElement.textContent = buildCss();
   pageModifications.register('.usqcu', createToggleButton);
 };
 
 export const clean = async () => {
   disableFilter();
+  removeToggleButton();
   pageModifications.unregister(createToggleButton);
 };
 

@@ -25,7 +25,7 @@ const FILTER_CONTAINER_CLASS = `${MUTUAL_ACTIVITY_CLASS}-filter-container`;
 const IS_ACTIVATED_STORAGE_KEY = 'mutualActivity.isActivated';
 
 const nonMutualStyleElement = buildStyle(
-  `:not(${ACTIVITY_POPOVER_SELECTOR}) :is(${NOTIFICATION_SELECTOR}):not(${FOLLOWED_SELECTOR}){ display: none !important; }`
+  `:not(${ACTIVITY_POPOVER_SELECTOR}) ${NOTIFICATION_SELECTOR}:not(${FOLLOWED_SELECTOR}){ display: none !important; }`
 );
 
 const disableGroupNotifications = async () => {

@@ -5,7 +5,7 @@ import { filterPostElements, postSelector } from '../util/interface.js';
 import { showModal, modalCancelButton, hideModal } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { timelineObject } from '../util/react_props.js';
-import { apiFetch, softNavigate } from '../util/tumblr_helpers.js';
+import { apiFetch, navigate } from '../util/tumblr_helpers.js';
 import { primaryBlogName } from '../util/user.js';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -157,7 +157,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     }
     await sleep(1500);
     hideModal();
-    softNavigate(`/edit/${primaryBlogName}/${id}`);
+    navigate(`/edit/${primaryBlogName}/${id}`);
   } catch (e) {
     console.log(e);
   }

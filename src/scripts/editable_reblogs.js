@@ -22,6 +22,43 @@ let controlButtonTemplate;
 //   name: 'anonymous'
 // };
 
+const trailToNPF = (trail, skipFirstFewItems = 0) => {
+  const trailToInclude = trail.slice(skipFirstFewItems);
+  if (trailToInclude.length === 0) {
+    throw new Error('generateEditableContent error, post is too big or something');
+  }
+
+  const newContent = trailToInclude.flatMap(
+    ({ blog, content, layout, post: { id, timestamp } }) => [
+      {
+        type: 'text',
+        subtype: 'heading2',
+        text: `${blog.name}:`,
+        formatting: [
+          { type: 'bold', start: 0, end: blog.name.length + 1 },
+          {
+            type: 'link',
+            start: 0,
+            end: blog.name.length,
+            url: `tumblr.com/${blog.name}/${id}`
+          }
+        ]
+      },
+      ...content,
+      { type: 'text', text: '-------------------------------------' }
+    ]
+  );
+
+  // npf layout concat + block id manipulation + readmore removal goes here
+  const newLayout = [];
+
+  // if (there are too many blocks) {
+  //   return generateEditableContent(skipFirstFewItems + 1)
+  // }
+
+  return { newContent, newLayout };
+};
+
 const onButtonClicked = async function ({ currentTarget: controlButton }) {
   // TODO: blog selection
   const targetBlog = primaryBlogName;
@@ -92,44 +129,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
 
   const trailWithNew = [...trail, ...newTrailItem];
 
-  const generateEditableContent = (skipFirstFewItems = 0) => {
-    const trailToInclude = trailWithNew.slice(skipFirstFewItems);
-    if (trailToInclude.length === 0) {
-      throw new Error('generateEditableContent error, post is too big or something');
-    }
-
-    const newContent = trailToInclude.flatMap(
-      ({ blog, content, layout, post: { id, timestamp } }) => [
-        {
-          type: 'text',
-          subtype: 'heading2',
-          text: `${blog.name}:`,
-          formatting: [
-            { type: 'bold', start: 0, end: blog.name.length + 1 },
-            {
-              type: 'link',
-              start: 0,
-              end: blog.name.length,
-              url: `tumblr.com/${blog.name}/${id}`
-            }
-          ]
-        },
-        ...content,
-        { type: 'text', text: '-------------------------------------' }
-      ]
-    );
-
-    // npf layout concat + block id manipulation + readmore removal goes here
-    const newLayout = [];
-
-    // if (there are too many blocks) {
-    //   return generateEditableContent(skipFirstFewItems + 1)
-    // }
-
-    return { newContent, newLayout };
-  };
-
-  const { newContent, newLayout } = generateEditableContent();
+  const { newContent, newLayout } = trailToNPF(trailWithNew);
 
   const excludeTrailItems = [...trailWithNew.keys()];
 

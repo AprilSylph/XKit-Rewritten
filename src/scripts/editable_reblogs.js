@@ -4,6 +4,7 @@ import { dom } from '../util/dom.js';
 import { filterPostElements, postSelector } from '../util/interface.js';
 import { showModal, modalCancelButton, hideModal } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
+import { notify } from '../util/notifications.js';
 import { timelineObject } from '../util/react_props.js';
 import { apiFetch, navigate } from '../util/tumblr_helpers.js';
 import { primaryBlogName } from '../util/user.js';
@@ -17,44 +18,179 @@ const controlIconSelector = keyToCss('controlIcon');
 
 let controlButtonTemplate;
 
-// const blogPlaceholder = {
-//   avatar: [{ url: 'https://assets.tumblr.com/pop/src/assets/images/avatar/anonymous_avatar_96-223fabe0.png' }],
-//   name: 'anonymous'
-// };
+const TOTAL_CONTENT_BLOCKS_LIMIT = 1000;
+const SPECIFIC_LIMITS = {
+  link: 10,
+  image: 30,
+  video: 10,
+  audio: 10
+};
 
-const trailToNPF = (trail, skipFirstFewItems = 0) => {
-  const trailToInclude = trail.slice(skipFirstFewItems);
-  if (trailToInclude.length === 0) {
-    throw new Error('generateEditableContent error, post is too big or something');
+// unsupported: 'paywall'
+const supportedContentTypes = ['text', 'image', 'link', 'audio', 'video'];
+
+const createFallbackContent = (type, label) => {
+  const text = `[${label} ${type} block]`;
+  return {
+    type: 'text',
+    text,
+    formatting: [{ type: 'color', start: 0, end: text.length, hex: '#ff4930' }]
+  };
+};
+
+const isValidRowsLayout = ({ type, display }, layout, content) => {
+  if (type !== 'rows') return false;
+
+  if (!Array.isArray(display)) {
+    console.error('Invalid block layout!', layout, content);
+    return false;
   }
 
-  const newContent = trailToInclude.flatMap(
-    ({ blog, content, layout, post: { id, timestamp } }) => [
-      {
-        type: 'text',
-        subtype: 'heading2',
-        text: `${blog.name}:`,
-        formatting: [
-          { type: 'bold', start: 0, end: blog.name.length + 1 },
-          {
-            type: 'link',
-            start: 0,
-            end: blog.name.length,
-            url: `tumblr.com/${blog.name}/${id}`
-          }
-        ]
-      },
-      ...content,
-      { type: 'text', text: '-------------------------------------' }
-    ]
+  const allReferencedIndexes = display.flatMap(({ blocks }) => blocks).sort();
+  const valid =
+    allReferencedIndexes.length === content.length &&
+    allReferencedIndexes.every((value, index) => value === index);
+
+  if (!valid) {
+    console.error('Invalid block layout!', layout, content);
+    return false;
+  }
+
+  // dunno how to test this
+  const hasCarousel = display.some(({ mode }) => mode?.type === 'carousel');
+  if (hasCarousel) {
+    console.error('Block has carousel!', layout, content);
+    return false;
+  }
+  return true;
+};
+
+const createFallbackLayout = content => ({
+  type: 'rows',
+  display: content.map((value, index) => ({ blocks: [index] }))
+});
+
+// currently supported layout block types: 'rows', 'ask'
+const processTrailItem = ({ blog, brokenBlog, content: inputContent = [], layout = [] }) => {
+  const blogName = blog?.name ?? brokenBlog?.name;
+  const content = inputContent.map(block => {
+    if (!supportedContentTypes.includes(block.type)) {
+      return createFallbackContent(block.type, 'unsupported');
+    }
+    if (['video', 'audio'].includes(block.type) && block.provider === 'tumblr') {
+      return createFallbackContent(block.type, 'unsupported');
+    }
+    return block;
+  });
+
+  const rowsLayout =
+    layout.find(object => isValidRowsLayout(object, layout, content)) ??
+    createFallbackLayout(content);
+
+  // display-data-with-embedded-content
+  const data = rowsLayout.display.map(({ blocks }) => {
+    const contentArray = blocks.map(i => content[i]);
+    return { blocks: contentArray };
+  });
+
+  const askLayout = layout.find(({ type }) => type === 'ask');
+  if (askLayout) {
+    const askingBlog =
+      askLayout.attribution?.blog?.name ??
+      askLayout.attribution?.brokenBlog?.name;
+
+    const createLabel = text => ({
+      type: 'text',
+      text,
+      formatting: [{ type: 'bold', start: 0, end: text.length }]
+    });
+
+    const askLabel = createLabel(`${askingBlog ?? 'anonymous'} asked:`);
+    const answerLabel = createLabel(`${blogName ?? 'anonymous'} answered:`);
+
+    data.splice(0, 0, { blocks: [askLabel] });
+
+    // incremented due to previous splice
+    const lastIndexInAsk = Math.max(...askLayout.blocks) + 1;
+
+    data.splice(lastIndexInAsk + 1, 0, { blocks: [answerLabel] });
+  }
+  return data;
+};
+
+const trailToNPF = (trailInput, skipTrailItems = 0) => {
+  if (trailInput.length === skipTrailItems) {
+    throw new Error('Post is too large');
+  }
+  const trail = JSON.parse(JSON.stringify(trailInput.slice(skipTrailItems)));
+
+  // display-data-with-embedded-content
+  const data = trail.flatMap(trailItem => {
+    const { blog, brokenBlog, post } = trailItem;
+    const blogName = blog?.name ?? brokenBlog?.name;
+
+    const headerText = `${blogName ?? 'anonymous'}:`;
+    const headerLabel = {
+      type: 'text',
+      subtype: 'heading2',
+      text: headerText,
+      formatting: [
+        { type: 'bold', start: 0, end: headerText.length },
+        {
+          type: 'link',
+          start: 0,
+          end: headerText.length - 1,
+          url: blogName && post?.id ? `tumblr.com/${blogName}/${post.id}` : ''
+        }
+      ]
+    };
+    const footerLabel = { type: 'text', text: '-------------------------------------' };
+
+    return [
+      { blocks: [headerLabel] },
+      ...processTrailItem(trailItem),
+      { blocks: [footerLabel] }
+    ];
+  });
+
+  const totalBlockCount = data.reduce((prev, cur) => prev + cur.blocks.length, 0);
+  if (totalBlockCount > TOTAL_CONTENT_BLOCKS_LIMIT) {
+    return trailToNPF(trailInput, skipTrailItems + 1);
+  }
+
+  const enforceBlockTypeLimit = (typeToCheck, limit) => {
+    const blocksOfType = data.reduce(
+      (prev, cur) => prev + cur.blocks.filter(({ type }) => type === typeToCheck).length,
+      0
+    );
+    if (blocksOfType > limit) {
+      const firstObjectWithType = data.find(({ blocks }) =>
+        blocks.some(({ type }) => type === typeToCheck)
+      );
+      firstObjectWithType.blocks = [createFallbackContent(typeToCheck, 'removed')];
+      enforceBlockTypeLimit(typeToCheck, limit);
+    }
+  };
+
+  Object.entries(SPECIFIC_LIMITS).forEach(([typeToCheck, limit]) =>
+    enforceBlockTypeLimit(typeToCheck, limit)
   );
 
-  // npf layout concat + block id manipulation + readmore removal goes here
-  const newLayout = [];
-
-  // if (there are too many blocks) {
-  //   return generateEditableContent(skipFirstFewItems + 1)
-  // }
+  // convert display-data-with-embedded content back to layout and content
+  const newContent = [];
+  const newDisplay = data.map(({ blocks: contentArray }) => {
+    const idsArray = contentArray.map(contentItem => {
+      newContent.push(contentItem);
+      return newContent.length - 1;
+    });
+    return { blocks: idsArray };
+  });
+  const newLayout = [
+    {
+      type: 'rows',
+      display: newDisplay
+    }
+  ];
 
   return { newContent, newLayout };
 };
@@ -152,14 +288,24 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     if (meta.status === 201) {
       showModal({
         title: displayText,
-        message: [`will navigate to draft ${id} now`]
+        message: [`Navigating to draft ${id}...`]
       });
     }
     await sleep(1500);
     hideModal();
-    navigate(`/edit/${primaryBlogName}/${id}`);
-  } catch (e) {
-    console.log(e);
+    navigate(`/edit/${targetBlog}/${id}`);
+  } catch (error) {
+    console.error(error);
+    if (error?.body?.errors?.[0]) {
+      showModal({
+        title: `Error: ${error?.body?.errors?.[0].title}`,
+        message: [error?.body?.errors?.[0]?.detail],
+        buttons: [modalCancelButton]
+      });
+    } else {
+      hideModal();
+      notify(String(error));
+    }
   }
 };
 
@@ -173,7 +319,6 @@ const processPosts = postElements =>
     const reblogIcon = postElement.querySelector(
       `footer ${controlIconSelector} use[href="#managed-icon__reblog"]`
     );
-    console.log(reblogIcon);
     if (!reblogIcon) {
       return;
     }

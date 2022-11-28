@@ -1,10 +1,12 @@
 import { keyToCss } from '../util/css_map.js';
 import { buildStyle } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
+import { getPreferences } from '../util/preferences.js';
 
 const NOTIFICATION_SECTION_SELECTOR = keyToCss('notifications');
 const NOTIFICATION_SELECTOR = keyToCss('notification');
 const FOLLOWED_SELECTOR = keyToCss('followed');
+const ROLLUP_SELECTOR = keyToCss('rollup');
 const MINI_HEADING_SELECTOR = keyToCss('miniHeading');
 const STATS_CONTAINER_SELECTOR = keyToCss('statsContainer');
 const BUTTON_SELECTOR = keyToCss('button');
@@ -21,33 +23,50 @@ const ACTIVITY_BODY_SELECTOR = '.usqcu';
 const MUTUAL_ACTIVITY_CLASS = 'xkit-mutual-activity';
 const HIDDEN_DIALOG_CLASS = `${MUTUAL_ACTIVITY_CLASS}-dialog-hidden`;
 const FILTER_CONTAINER_CLASS = `${MUTUAL_ACTIVITY_CLASS}-filter-container`;
-const IS_ACTIVATED_STORAGE_KEY = 'mutualActivity.isActivated';
+
+const MUTUAL_ACTIVITY_STORAGE_KEY = 'mutual_activity';
+const IS_ACTIVATED_STORAGE_KEY = `${MUTUAL_ACTIVITY_STORAGE_KEY}.isActivated`;
+const SHOW_GROUPED_NOTIFICATIONS_PREFERENCE_KEY = 'showGroupedNotifications';
 
 const nonMutualStyleElement = buildStyle(
-  `${NOTIFICATION_SECTION_SELECTOR} ${NOTIFICATION_SELECTOR}:not(${FOLLOWED_SELECTOR}){ display: none !important; }`
+  `${NOTIFICATION_SECTION_SELECTOR} ${NOTIFICATION_SELECTOR}:not(${FOLLOWED_SELECTOR}, ${ROLLUP_SELECTOR}){ display: none !important; }`
 );
 
-const disableGroupNotifications = async () => {
-  const glassContainer = document.querySelector(GLASS_CONTAINER_SELECTOR);
-  const filterButton = document.querySelector(FILTER_BUTTON_SELECTOR);
+const openFilterDialog = (glassContainer, filterButton) => {
   glassContainer.classList.add(HIDDEN_DIALOG_CLASS);
   filterButton.click();
   filterButton.setAttribute('disabled', true);
+};
 
-  const checkboxState =
-    document.querySelector(
-      `${ROLLUP_CHECKBOX_SELECTOR} + ${CHECKBOX_STATE_SELECTOR}`
-    ).childElementCount > 0;
+const closeFilterDialog = (glassContainer, filterButton) => {
+  glassContainer.classList.remove(HIDDEN_DIALOG_CLASS);
+  filterButton.removeAttribute('disabled');
+};
 
-  if (checkboxState) {
+const toggleRollupCheckbox = (shouldToggleCheckbox) => {
+  if (shouldToggleCheckbox) {
     document.querySelector(ROLLUP_CHECKBOX_SELECTOR).click();
     document.querySelector(APPLY_FILTERS_SELECTOR).click();
   } else {
     document.querySelector(CLOSE_FILTER_DIALOG_SELECTOR).click();
   }
+};
 
-  glassContainer.classList.remove(HIDDEN_DIALOG_CLASS);
-  filterButton.removeAttribute('disabled');
+const getRollupCheckboxState = () =>
+  document.querySelector(
+    `${ROLLUP_CHECKBOX_SELECTOR} + ${CHECKBOX_STATE_SELECTOR}`
+  ).childElementCount > 0;
+
+const toggleGroupedNotifications = async () => {
+  const { showGroupedNotifications } = await getPreferences(
+    MUTUAL_ACTIVITY_STORAGE_KEY
+  );
+  const glassContainer = document.querySelector(GLASS_CONTAINER_SELECTOR);
+  const filterButton = document.querySelector(FILTER_BUTTON_SELECTOR);
+
+  openFilterDialog(glassContainer, filterButton);
+  toggleRollupCheckbox(getRollupCheckboxState() !== showGroupedNotifications);
+  closeFilterDialog(glassContainer, filterButton);
 };
 
 const enableFilter = () => {
@@ -60,13 +79,14 @@ const enableFilter = () => {
   });
 
   notificationSection.dispatchEvent(scrollEvent);
-  disableGroupNotifications();
+  toggleGroupedNotifications();
 
   browser.storage.local.set({ [IS_ACTIVATED_STORAGE_KEY]: true });
 };
 
 const disableFilter = () => {
   nonMutualStyleElement.remove();
+  toggleGroupedNotifications();
   browser.storage.local.set({ [IS_ACTIVATED_STORAGE_KEY]: false });
 };
 
@@ -78,7 +98,7 @@ const createToggleButton = async () => {
   const { [IS_ACTIVATED_STORAGE_KEY]: isActivated = false } =
     await browser.storage.local.get(IS_ACTIVATED_STORAGE_KEY);
 
-  if (document.querySelector('.usqcu') === null) {
+  if (document.querySelector(ACTIVITY_BODY_SELECTOR) === null) {
     return;
   }
 
@@ -116,6 +136,22 @@ const createToggleButton = async () => {
 const removeToggleButton = () => {
   document.querySelector(`span.${MUTUAL_ACTIVITY_CLASS}`)?.remove();
   $(FILTER_BUTTON_SELECTOR).unwrap(`span.${FILTER_CONTAINER_CLASS}`);
+};
+
+export const onStorageChanged = async (changes) => {
+  const {
+    [`${MUTUAL_ACTIVITY_STORAGE_KEY}.preferences.${SHOW_GROUPED_NOTIFICATIONS_PREFERENCE_KEY}`]:
+      showGroupedNotificationsChanges
+  } = changes;
+
+  if (
+    showGroupedNotificationsChanges &&
+    showGroupedNotificationsChanges.oldValue !== undefined
+  ) {
+    if (document.querySelector(ACTIVITY_BODY_SELECTOR) !== null) {
+      toggleGroupedNotifications();
+    }
+  }
 };
 
 export const main = async () => {

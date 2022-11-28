@@ -45,3 +45,45 @@ export const apiFetch = async function (...args) {
     args
   );
 };
+
+const snakeToCamel = word => word.replace(/_(.)/g, (match, g1) => g1.toUpperCase());
+
+/**
+ * @see https://github.com/tumblr/docs/blob/master/api.md#postspost-id---editing-a-post-neue-post-format
+ * @see https://github.com/tumblr/docs/blob/master/api.md#posts---createreblog-a-post-neue-post-format
+ */
+const editRequestParams = [
+  'content',
+  'layout',
+  'state',
+  'publish_on',
+  'date',
+  'tags',
+  'source_url',
+  'send_to_twitter',
+  'slug',
+  'interactability_reblog',
+
+  // not currently documented
+  'can_be_tipped',
+  'has_community_label',
+  'community_label_categories'
+].map(snakeToCamel);
+
+/**
+ * Create an NPF edit request body.
+ *
+ * @param {object} postData - camelCased /posts/{post-id} GET request response JSON
+ * @returns {object} editRequestBody - camelCased /posts/{post-id} PUT request body parameters
+ */
+export const createEditRequestBody = postData => {
+  const { tags, sourceUrlRaw, ...rest } = postData;
+
+  const entries = Object.entries({
+    ...rest,
+    tags: tags.join(','),
+    sourceUrl: sourceUrlRaw
+  });
+
+  return Object.fromEntries(entries.filter(([key, value]) => editRequestParams.includes(key)));
+};

@@ -15,9 +15,8 @@ const ROLLUP_CHECKBOX_SELECTOR = '[aria-labelledby="rollups"]';
 const CHECKBOX_STATE_SELECTOR = `${ROLLUP_CHECKBOX_SELECTOR} + ${keyToCss(
   'box'
 )}`;
-const GLASS_CONTAINER_SELECTOR = '#glass-container';
 const GLASS_CONTAINER_DIALOG_SELECTOR = keyToCss('glass');
-const APPLY_FILTERS_SELECTOR = `${GLASS_CONTAINER_SELECTOR} ${keyToCss(
+const APPLY_FILTERS_SELECTOR = `#glass-container ${keyToCss(
   'button'
 )}${keyToCss('default')}`;
 const CLOSE_FILTER_DIALOG_SELECTOR = '[aria-label="Close"]';
@@ -26,7 +25,6 @@ const GROUP_SIMILAR_SECTION_SELECTOR = `${keyToCss('section')}:nth-child(1)`;
 const GROUP_SIMILAR_LABEL_SELECTOR = 'label#rollups';
 
 const MUTUAL_ACTIVITY_CLASS = 'xkit-mutual-activity';
-const HIDDEN_DIALOG_CLASS = `${MUTUAL_ACTIVITY_CLASS}-dialog-hidden`;
 const FILTER_CONTAINER_CLASS = `${MUTUAL_ACTIVITY_CLASS}-filter-container`;
 
 const MUTUAL_ACTIVITY_STORAGE_KEY = 'mutual_activity';
@@ -62,17 +60,6 @@ const nonMutualStyleElement = buildStyle(
 )`
 );
 
-const openFilterDialog = (glassContainer, filterButton) => {
-  glassContainer.classList.add(HIDDEN_DIALOG_CLASS);
-  filterButton.click();
-  filterButton.setAttribute('disabled', true);
-};
-
-const closeFilterDialog = (glassContainer, filterButton) => {
-  glassContainer.classList.remove(HIDDEN_DIALOG_CLASS);
-  filterButton.removeAttribute('disabled');
-};
-
 const toggleRollupCheckbox = (shouldToggleCheckbox) => {
   if (shouldToggleCheckbox) {
     document.querySelector(ROLLUP_CHECKBOX_SELECTOR).click();
@@ -92,15 +79,13 @@ const toggleGroupedNotifications = async () => {
   const { showGroupedNotifications } = await getPreferences(
     MUTUAL_ACTIVITY_STORAGE_KEY
   );
-  const glassContainer = document.querySelector(GLASS_CONTAINER_SELECTOR);
   const filterButton = document.querySelector(FILTER_BUTTON_SELECTOR);
 
   if (!isFilterDialogOpen()) {
-    openFilterDialog(glassContainer, filterButton);
+    filterButton.click();
   }
 
   toggleRollupCheckbox(getRollupCheckboxState() !== showGroupedNotifications);
-  closeFilterDialog(glassContainer, filterButton);
 };
 
 const setIsActivated = async (isActivated) => {
@@ -112,6 +97,7 @@ const getIsActivated = () =>
 
 const enableFilter = () => {
   document.head.append(nonMutualStyleElement);
+
   const notificationSection = document.querySelector(
     NOTIFICATION_SECTION_SELECTOR
   );

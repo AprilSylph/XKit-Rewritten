@@ -121,7 +121,7 @@ const toggleFilter = async ({ target }) => {
 };
 
 const isOnActivityPage = () =>
-  document.querySelector(NOTIFICATION_SECTION_SELECTOR) !== null;
+  document.querySelector(FILTER_BUTTON_SELECTOR) !== null;
 
 const createToggleButton = async () => {
   if (!isOnActivityPage()) {
@@ -178,7 +178,7 @@ export const onStorageChanged = async (changes) => {
 };
 
 export const main = async () =>
-  pageModifications.register(NOTIFICATION_SECTION_SELECTOR, createToggleButton);
+  pageModifications.register(FILTER_BUTTON_SELECTOR, createToggleButton);
 
 export const clean = async () => {
   disableFilter();

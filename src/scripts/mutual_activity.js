@@ -123,7 +123,7 @@ const toggleFilter = async ({ target }) => {
 const isOnActivityPage = () =>
   document.querySelector(FILTER_BUTTON_SELECTOR) !== null;
 
-const createToggleButton = async () => {
+const createToggleButton = async ([filterButton]) => {
   if (!isOnActivityPage()) {
     return;
   }
@@ -154,7 +154,7 @@ const createToggleButton = async () => {
     ]
   );
 
-  $(FILTER_BUTTON_SELECTOR).before(mutualActivity);
+  filterButton.before(mutualActivity);
 };
 
 const removeToggleButton = () => {

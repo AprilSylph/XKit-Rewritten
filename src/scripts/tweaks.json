@@ -7,7 +7,7 @@
     "background_color": "#ecc84b"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks",
-  "relatedTerms": [ "Blacklist", "Separator" ],
+  "relatedTerms": ["Blacklist", "Separator"],
   "preferences": {
     "slim_filtered_screens": {
       "type": "checkbox",
@@ -88,6 +88,11 @@
     "no_where_were_we": {
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",
+      "default": false
+    },
+    "respect_theme": {
+      "type": "checkbox",
+      "label": "Respect the user's theme on blog pages",
       "default": false
     }
   }

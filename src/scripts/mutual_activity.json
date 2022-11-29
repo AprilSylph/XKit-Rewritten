@@ -14,5 +14,5 @@
       "default": false
     }
   },
-  "relatedTerms": ["activity", "notification", "mutual", "feed", "hide"]
+  "relatedTerms": ["notification", "feed", "hide", "filter"]
 }

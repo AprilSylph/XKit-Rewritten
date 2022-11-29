@@ -33,7 +33,7 @@ const IS_ACTIVATED_STORAGE_KEY = `${MUTUAL_ACTIVITY_STORAGE_KEY}.isActivated`;
 const SHOW_GROUPED_NOTIFICATIONS_PREFERENCE_KEY = 'showGroupedNotifications';
 
 const nonMutualStyleElement = buildStyle(
-  `${NOTIFICATION_SECTION_SELECTOR} ${NOTIFICATION_SELECTOR}:not(${FOLLOWED_SELECTOR}, ${ROLLUP_SELECTOR}){
+  `${NOTIFICATION_SECTION_SELECTOR} ${NOTIFICATION_SELECTOR}:not(${FOLLOWED_SELECTOR}, ${ROLLUP_SELECTOR}) {
      display: none !important;
   }
 
@@ -58,7 +58,7 @@ const nonMutualStyleElement = buildStyle(
   ${GROUP_SIMILAR_SECTION_SELECTOR}::after {
     content: "⚠️ Controlled by XKit Mutual Activity";
   }
-)`
+`
 );
 
 const toggleRollupCheckbox = (shouldToggleCheckbox) => {

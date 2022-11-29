@@ -9,6 +9,8 @@ span.xkit-mutual-activity-filter-container {
 
 span.xkit-mutual-activity {
   display: flex;
+  flex: 1;
+  justify-content: flex-end;
   align-items: center;
   padding-right: 0.6em;
 }

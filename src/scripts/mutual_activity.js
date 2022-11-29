@@ -134,26 +134,28 @@ const createToggleButton = async () => {
 
   toggleFilter({ target: { checked: isActivated } });
 
-  const mutualActivity = dom('span', { class: MUTUAL_ACTIVITY_CLASS }, null, [
-    buildSvg('ri-team-line'),
-    dom(
-      'label',
-      { class: MUTUAL_ACTIVITY_CLASS, for: MUTUAL_ACTIVITY_CLASS },
-      null,
-      ['Mutuals only']
-    ),
-    Object.assign(document.createElement('input'), {
-      className: `${MUTUAL_ACTIVITY_CLASS} toggle-button`,
-      type: 'checkbox',
-      name: MUTUAL_ACTIVITY_CLASS,
-      checked: isActivated
-    })
-  ]);
-  const activityBar = document.querySelector(FILTER_BUTTON_SELECTOR);
+  const mutualActivity = dom(
+    'span',
+    { class: MUTUAL_ACTIVITY_CLASS },
+    { input: toggleFilter },
+    [
+      buildSvg('ri-team-line'),
+      dom(
+        'label',
+        { class: MUTUAL_ACTIVITY_CLASS, for: MUTUAL_ACTIVITY_CLASS },
+        null,
+        ['Mutuals only']
+      ),
+      Object.assign(document.createElement('input'), {
+        className: `${MUTUAL_ACTIVITY_CLASS} toggle-button`,
+        type: 'checkbox',
+        name: MUTUAL_ACTIVITY_CLASS,
+        checked: isActivated
+      })
+    ]
+  );
 
-  $(activityBar).wrap(`<span class="${FILTER_CONTAINER_CLASS}"></span>`);
-  $(activityBar).before(mutualActivity);
-  mutualActivity.addEventListener('input', toggleFilter);
+  $(FILTER_BUTTON_SELECTOR).before(mutualActivity);
 };
 
 const removeToggleButton = () => {

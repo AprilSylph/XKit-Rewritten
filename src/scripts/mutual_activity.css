@@ -7,6 +7,24 @@ span.xkit-mutual-activity-filter-container {
   justify-content: space-between;
 }
 
+span.xkit-mutual-activity {
+  display: flex;
+  align-items: center;
+  padding-right: 0.6em;
+}
+
+span.xkit-mutual-activity svg {
+  width: 21.5px;
+  height: 21.5px;
+  padding-right: 0.2em;
+  fill: rgb(var(--accent));
+}
+
+label.xkit-mutual-activity {
+  padding-right: 0.3em;
+  color: rgb(var(--accent));
+}
+
 input[type="checkbox"].xkit-mutual-activity.toggle-button {
   cursor: pointer;
   --in-content-button-background: #9da6af54;
@@ -15,15 +33,4 @@ input[type="checkbox"].xkit-mutual-activity.toggle-button {
   --in-content-primary-button-background: rgb(var(--accent));
   --in-content-primary-button-background-hover: rgb(var(--accent));
   --in-content-primary-button-background-active:  rgb(var(--secondary-accent));
-}
-
-span.xkit-mutual-activity {
-  display: flex;
-  align-items: center;
-  padding-right: 1.0em;
-}
-
-label.xkit-mutual-activity {
-  padding-right: 0.4em;
-  color: rgb(var(--accent));
 }

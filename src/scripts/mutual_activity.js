@@ -3,6 +3,7 @@ import { buildStyle } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
 import { dom } from '../util/dom.js';
+import { buildSvg } from '../util/remixicon.js';
 
 const NOTIFICATION_SECTION_SELECTOR = keyToCss('notifications');
 const NOTIFICATION_SELECTOR = keyToCss('notification');
@@ -134,11 +135,14 @@ const createToggleButton = async () => {
   toggleFilter({ target: { checked: isActivated } });
 
   const mutualActivity = dom('span', { class: MUTUAL_ACTIVITY_CLASS }, null, [
+    buildSvg('ri-team-line'),
     dom(
       'label',
       { class: MUTUAL_ACTIVITY_CLASS, for: MUTUAL_ACTIVITY_CLASS },
       null,
-      ['Mutuals only']
+      [
+        'Mutuals only'
+      ]
     ),
     dom(
       'input',

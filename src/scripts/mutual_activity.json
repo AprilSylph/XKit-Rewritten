@@ -3,7 +3,7 @@
   "description": "Toggle to only view mutuals in the activity feed",
   "icon": {
     "class_name": "ri-team-line",
-    "color": "#cf43ed",
+    "color": "#e84740",
     "background_color": "#000000"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#Mutual-Activity",

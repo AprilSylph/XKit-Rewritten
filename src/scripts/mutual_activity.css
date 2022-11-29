@@ -1,12 +1,5 @@
 @import "../lib/toggle-button.css";
 
-span.xkit-mutual-activity-filter-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-
 span.xkit-mutual-activity {
   display: flex;
   flex: 1;

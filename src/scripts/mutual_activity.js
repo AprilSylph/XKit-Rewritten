@@ -26,7 +26,6 @@ const GROUP_SIMILAR_SECTION_SELECTOR = `${keyToCss('section')}:nth-child(1)`;
 const GROUP_SIMILAR_LABEL_SELECTOR = 'label#rollups';
 
 const MUTUAL_ACTIVITY_CLASS = 'xkit-mutual-activity';
-const FILTER_CONTAINER_CLASS = `${MUTUAL_ACTIVITY_CLASS}-filter-container`;
 
 const MUTUAL_ACTIVITY_STORAGE_KEY = 'mutual_activity';
 const IS_ACTIVATED_STORAGE_KEY = `${MUTUAL_ACTIVITY_STORAGE_KEY}.isActivated`;
@@ -160,7 +159,6 @@ const createToggleButton = async () => {
 
 const removeToggleButton = () => {
   document.querySelector(`span.${MUTUAL_ACTIVITY_CLASS}`)?.remove();
-  $(FILTER_BUTTON_SELECTOR).unwrap(`span.${FILTER_CONTAINER_CLASS}`);
 };
 
 export const onStorageChanged = async (changes) => {

@@ -2,6 +2,7 @@ import { keyToCss } from '../util/css_map.js';
 import { buildStyle } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
+import { dom } from '../util/dom.js';
 
 const NOTIFICATION_SECTION_SELECTOR = keyToCss('notifications');
 const NOTIFICATION_SELECTOR = keyToCss('notification');
@@ -132,33 +133,30 @@ const createToggleButton = async () => {
 
   toggleFilter({ target: { checked: isActivated } });
 
-  const mutualActivity = Object.assign(document.createElement('span'), {
-    className: MUTUAL_ACTIVITY_CLASS
-  });
-  const mutualActivityLabel = Object.assign(document.createElement('label'), {
-    className: MUTUAL_ACTIVITY_CLASS,
-    textContent: 'Mutuals only',
-    for: MUTUAL_ACTIVITY_CLASS
-  });
-  const mutualActivityToggleButton = Object.assign(
-    document.createElement('input'),
-    {
-      className: `${MUTUAL_ACTIVITY_CLASS} toggle-button`,
-      type: 'checkbox',
-      name: MUTUAL_ACTIVITY_CLASS,
-      checked: isActivated
-    }
-  );
-
-  mutualActivity.appendChild(mutualActivityLabel);
-  mutualActivity.appendChild(mutualActivityToggleButton);
-
+  const mutualActivity = dom('span', { class: MUTUAL_ACTIVITY_CLASS }, null, [
+    dom(
+      'label',
+      { class: MUTUAL_ACTIVITY_CLASS, for: MUTUAL_ACTIVITY_CLASS },
+      null,
+      ['Mutuals only']
+    ),
+    dom(
+      'input',
+      {
+        type: 'checkbox',
+        class: `${MUTUAL_ACTIVITY_CLASS} toggle-button`,
+        name: MUTUAL_ACTIVITY_CLASS,
+        checked: isActivated
+      },
+      {
+        input: toggleFilter
+      }
+    )
+  ]);
   const activityBar = document.querySelector(FILTER_BUTTON_SELECTOR);
 
   $(activityBar).wrap(`<span class="${FILTER_CONTAINER_CLASS}"></span>`);
   $(activityBar).before(mutualActivity);
-
-  mutualActivity.addEventListener('input', toggleFilter);
 };
 
 const removeToggleButton = () => {

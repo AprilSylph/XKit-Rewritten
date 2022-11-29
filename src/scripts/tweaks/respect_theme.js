@@ -1,9 +1,7 @@
-import { buildStyle } from '../../util/interface.js';
-
-const BLOG_POST_BODY_SELECTOR = '[style*="--blog-title-color"]';
+import { buildStyle, blogBodySelector } from '../../util/interface.js';
 
 const styleElement = buildStyle(`
-  ${BLOG_POST_BODY_SELECTOR} {
+  ${blogBodySelector} {
     --black: inherit !important;
     --white: inherit !important;
     --white-on-dark: inherit !important;

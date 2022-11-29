@@ -125,12 +125,12 @@ const isOnActivityPage = () =>
   document.querySelector(NOTIFICATION_SECTION_SELECTOR) !== null;
 
 const createToggleButton = async () => {
-  const { [IS_ACTIVATED_STORAGE_KEY]: isActivated = false } =
-    await getIsActivated();
-
   if (!isOnActivityPage()) {
     return;
   }
+
+  const { [IS_ACTIVATED_STORAGE_KEY]: isActivated = false } =
+    await getIsActivated();
 
   toggleFilter({ target: { checked: isActivated } });
 

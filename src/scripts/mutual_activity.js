@@ -20,7 +20,6 @@ const APPLY_FILTERS_SELECTOR = `#glass-container ${keyToCss(
   'button'
 )}${keyToCss('default')}`;
 const CLOSE_FILTER_DIALOG_SELECTOR = '[aria-label="Close"]';
-const ACTIVITY_BODY_SELECTOR = '.usqcu';
 const GROUP_SIMILAR_SECTION_SELECTOR = `${keyToCss('section')}:nth-child(1)`;
 const GROUP_SIMILAR_LABEL_SELECTOR = 'label#rollups';
 
@@ -89,7 +88,7 @@ const toggleGroupedNotifications = async () => {
 };
 
 const setIsActivated = async (isActivated) => {
-  browser.storage.local.set({ [IS_ACTIVATED_STORAGE_KEY]: isActivated });
+  await browser.storage.local.set({ [IS_ACTIVATED_STORAGE_KEY]: isActivated });
 };
 
 const getIsActivated = () =>
@@ -121,15 +120,15 @@ const toggleFilter = async ({ target }) => {
 };
 
 const isOnActivityPage = () =>
-  document.querySelector(ACTIVITY_BODY_SELECTOR) !== null;
+  document.querySelector(NOTIFICATION_SECTION_SELECTOR) !== null;
 
 const createToggleButton = async () => {
-  const { [IS_ACTIVATED_STORAGE_KEY]: isActivated = false } =
-    await getIsActivated();
-
   if (!isOnActivityPage()) {
     return;
   }
+
+  const { [IS_ACTIVATED_STORAGE_KEY]: isActivated = false } =
+    await getIsActivated();
 
   toggleFilter({ target: { checked: isActivated } });
 
@@ -183,9 +182,8 @@ export const onStorageChanged = async (changes) => {
   }
 };
 
-export const main = async () => {
-  pageModifications.register(ACTIVITY_BODY_SELECTOR, createToggleButton);
-};
+export const main = async () =>
+  pageModifications.register(NOTIFICATION_SECTION_SELECTOR, createToggleButton);
 
 export const clean = async () => {
   disableFilter();

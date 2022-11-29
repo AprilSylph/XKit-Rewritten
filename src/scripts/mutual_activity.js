@@ -186,9 +186,10 @@ export const main = async () =>
   pageModifications.register(NOTIFICATION_SECTION_SELECTOR, createToggleButton);
 
 export const clean = async () => {
-  disableFilter();
+  nonMutualStyleElement.remove();
   removeToggleButton();
   pageModifications.unregister(createToggleButton);
+  browser.storage.local.remove(IS_ACTIVATED_STORAGE_KEY);
 };
 
 export const stylesheet = true;

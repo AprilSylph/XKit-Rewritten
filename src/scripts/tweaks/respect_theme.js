@@ -1,10 +1,10 @@
 import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
-const BLOG_POST_BODY_SELECTOR = keyToCss('scrollContainer', 'isModal');
+const BLOG_POST_BODY_SELECTOR = keyToCss('scrollContainer', 'isModal', 'isServer');
 
 const styleElement = buildStyle(`
- ${BLOG_POST_BODY_SELECTOR} {
+  ${BLOG_POST_BODY_SELECTOR} {
     --black: inherit !important;
     --white: inherit !important;
     --white-on-dark: inherit !important;
@@ -23,10 +23,6 @@ const styleElement = buildStyle(`
   }
 `);
 
-export const main = async function () {
-  document.head.append(styleElement);
-};
+export const main = async () => document.head.append(styleElement);
 
-export const clean = async function () {
-  styleElement.remove();
-};
+export const clean = async () => styleElement.remove();

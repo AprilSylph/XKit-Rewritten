@@ -1,7 +1,6 @@
-import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
-const BLOG_POST_BODY_SELECTOR = keyToCss('scrollContainer', 'isModal', 'isServer');
+const BLOG_POST_BODY_SELECTOR = '[style*="--blog-title-color"]';
 
 const styleElement = buildStyle(`
   ${BLOG_POST_BODY_SELECTOR} {

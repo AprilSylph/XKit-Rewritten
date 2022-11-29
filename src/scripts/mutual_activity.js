@@ -125,12 +125,12 @@ const isOnActivityPage = () =>
   document.querySelector(NOTIFICATION_SECTION_SELECTOR) !== null;
 
 const createToggleButton = async () => {
+  const { [IS_ACTIVATED_STORAGE_KEY]: isActivated = false } =
+    await getIsActivated();
+
   if (!isOnActivityPage()) {
     return;
   }
-
-  const { [IS_ACTIVATED_STORAGE_KEY]: isActivated = false } =
-    await getIsActivated();
 
   toggleFilter({ target: { checked: isActivated } });
 
@@ -140,27 +140,20 @@ const createToggleButton = async () => {
       'label',
       { class: MUTUAL_ACTIVITY_CLASS, for: MUTUAL_ACTIVITY_CLASS },
       null,
-      [
-        'Mutuals only'
-      ]
+      ['Mutuals only']
     ),
-    dom(
-      'input',
-      {
-        type: 'checkbox',
-        class: `${MUTUAL_ACTIVITY_CLASS} toggle-button`,
-        name: MUTUAL_ACTIVITY_CLASS,
-        checked: isActivated
-      },
-      {
-        input: toggleFilter
-      }
-    )
+    Object.assign(document.createElement('input'), {
+      className: `${MUTUAL_ACTIVITY_CLASS} toggle-button`,
+      type: 'checkbox',
+      name: MUTUAL_ACTIVITY_CLASS,
+      checked: isActivated
+    })
   ]);
   const activityBar = document.querySelector(FILTER_BUTTON_SELECTOR);
 
   $(activityBar).wrap(`<span class="${FILTER_CONTAINER_CLASS}"></span>`);
   $(activityBar).before(mutualActivity);
+  mutualActivity.addEventListener('input', toggleFilter);
 };
 
 const removeToggleButton = () => {
@@ -188,10 +181,9 @@ export const main = async () =>
   pageModifications.register(NOTIFICATION_SECTION_SELECTOR, createToggleButton);
 
 export const clean = async () => {
-  nonMutualStyleElement.remove();
+  disableFilter();
   removeToggleButton();
   pageModifications.unregister(createToggleButton);
-  browser.storage.local.remove(IS_ACTIVATED_STORAGE_KEY);
 };
 
 export const stylesheet = true;

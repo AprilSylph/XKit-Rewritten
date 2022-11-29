@@ -1,9 +1,5 @@
 @import "../lib/toggle-button.css";
 
-.xkit-mutual-activity-dialog-hidden {
-    display: none;
-}
-
 span.xkit-mutual-activity-filter-container {
   display: flex;
   flex-direction: row;

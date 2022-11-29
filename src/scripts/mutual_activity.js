@@ -36,18 +36,18 @@ const nonMutualStyleElement = buildStyle(
      display: none !important;
   }
 
-  ${ROLLUP_CHECKBOX_SELECTOR} {
+  ${GROUP_SIMILAR_SECTION_SELECTOR} ${ROLLUP_CHECKBOX_SELECTOR} {
     pointer-events: none;
     cursor: not-allowed;
   }
 
-  ${CHECKBOX_STATE_SELECTOR} {
-    background-color: grey;
+  ${GROUP_SIMILAR_SECTION_SELECTOR} ${CHECKBOX_STATE_SELECTOR} {
+    background-color: rgba(var(--black), 0.40) !important;
     cursor: not-allowed;
   }
 
   ${GROUP_SIMILAR_LABEL_SELECTOR} {
-    color: grey;
+    color: rgba(var(--black), 0.40) !important;
   }
 
   ${GROUP_SIMILAR_SECTION_SELECTOR} {

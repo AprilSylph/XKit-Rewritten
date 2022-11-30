@@ -10,7 +10,9 @@ const NOTIFICATION_SECTION_SELECTOR = keyToCss('notifications');
 const NOTIFICATION_SELECTOR = keyToCss('notification');
 const FOLLOWED_SELECTOR = keyToCss('followed');
 const ROLLUP_SELECTOR = keyToCss('rollup');
-const FILTER_BUTTON_SELECTOR = `${keyToCss('statsContainer')} > ${keyToCss('miniHeading')} ${keyToCss('button')}`;
+const FILTER_BUTTON_SELECTOR = `${keyToCss('statsContainer')} > ${keyToCss(
+  'miniHeading'
+)} ${keyToCss('button')}`;
 const ROLLUP_CHECKBOX_SELECTOR = `[aria-labelledby="${translate('rollups')}"]`;
 const CHECKBOX_STATE_SELECTOR = `${ROLLUP_CHECKBOX_SELECTOR} + ${keyToCss(
   'box'

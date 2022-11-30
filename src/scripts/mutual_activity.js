@@ -7,15 +7,21 @@ import { buildSvg } from '../util/remixicon.js';
 import { translate } from '../util/language_data.js';
 
 const NOTIFICATION_SECTION_SELECTOR = keyToCss('notifications');
-const FILTER_BUTTON_SELECTOR = `${keyToCss('statsContainer')} > ${keyToCss(
-  'miniHeading'
-)} ${keyToCss('button')}`;
+const NOTIFICATION_SELECTOR = keyToCss('notification');
+const FOLLOWED_SELECTOR = keyToCss('followed');
+const ROLLUP_SELECTOR = keyToCss('rollup');
+const FILTER_BUTTON_SELECTOR = `${keyToCss('statsContainer')} > ${keyToCss('miniHeading')} ${keyToCss('button')}`;
 const ROLLUP_CHECKBOX_SELECTOR = `[aria-labelledby="${translate('rollups')}"]`;
 const CHECKBOX_STATE_SELECTOR = `${ROLLUP_CHECKBOX_SELECTOR} + ${keyToCss(
   'box'
 )}`;
+const GLASS_CONTAINER_DIALOG_SELECTOR = keyToCss('glass');
+const APPLY_FILTERS_SELECTOR = `${GLASS_CONTAINER_DIALOG_SELECTOR} ${keyToCss(
+  'button'
+)}${keyToCss('default')}`;
 const CLOSE_FILTER_DIALOG_SELECTOR = `[aria-label="${translate('Close')}"]`;
 const GROUP_SIMILAR_SECTION_SELECTOR = `${keyToCss('section')}:nth-child(1)`;
+const GROUP_SIMILAR_LABEL_SELECTOR = 'label#rollups';
 
 const MUTUAL_ACTIVITY_CLASS = 'xkit-mutual-activity';
 
@@ -23,10 +29,10 @@ const MUTUAL_ACTIVITY_STORAGE_KEY = 'mutual_activity';
 const IS_ACTIVATED_STORAGE_KEY = `${MUTUAL_ACTIVITY_STORAGE_KEY}.isActivated`;
 const SHOW_GROUPED_NOTIFICATIONS_PREFERENCE_KEY = 'showGroupedNotifications';
 
+console.log(APPLY_FILTERS_SELECTOR);
+
 const nonMutualStyleElement = buildStyle(
-  `${NOTIFICATION_SECTION_SELECTOR} ${keyToCss('notification')}:not(${keyToCss(
-    'followed'
-  )}, ${keyToCss('rollup')}) {
+  `${NOTIFICATION_SECTION_SELECTOR} ${NOTIFICATION_SELECTOR}:not(${FOLLOWED_SELECTOR}, ${ROLLUP_SELECTOR}) {
      display: none !important;
   }
 
@@ -40,7 +46,7 @@ const nonMutualStyleElement = buildStyle(
     cursor: not-allowed;
   }
 
-  label#rollups {
+  ${GROUP_SIMILAR_LABEL_SELECTOR} {
     color: rgba(var(--black), 0.40) !important;
   }
 
@@ -57,11 +63,7 @@ const nonMutualStyleElement = buildStyle(
 const toggleRollupCheckbox = (shouldToggleCheckbox) => {
   if (shouldToggleCheckbox) {
     document.querySelector(ROLLUP_CHECKBOX_SELECTOR).click();
-    document
-      .querySelector(
-        `#glass-container ${keyToCss('button')}${keyToCss('default')}`
-      )
-      .click();
+    document.querySelector(APPLY_FILTERS_SELECTOR).click();
   } else {
     document.querySelector(CLOSE_FILTER_DIALOG_SELECTOR).click();
   }
@@ -71,7 +73,7 @@ const getRollupCheckboxState = () =>
   document.querySelector(CHECKBOX_STATE_SELECTOR).childElementCount > 0;
 
 const isFilterDialogOpen = () =>
-  document.querySelector(keyToCss('glass')) !== null;
+  document.querySelector(GLASS_CONTAINER_DIALOG_SELECTOR) !== null;
 
 const toggleGroupedNotifications = async () => {
   const { showGroupedNotifications } = await getPreferences(

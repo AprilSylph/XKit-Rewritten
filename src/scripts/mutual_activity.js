@@ -31,8 +31,6 @@ const MUTUAL_ACTIVITY_STORAGE_KEY = 'mutual_activity';
 const IS_ACTIVATED_STORAGE_KEY = `${MUTUAL_ACTIVITY_STORAGE_KEY}.isActivated`;
 const SHOW_GROUPED_NOTIFICATIONS_PREFERENCE_KEY = 'showGroupedNotifications';
 
-console.log(APPLY_FILTERS_SELECTOR);
-
 const nonMutualStyleElement = buildStyle(
   `${NOTIFICATION_SECTION_SELECTOR} ${NOTIFICATION_SELECTOR}:not(${FOLLOWED_SELECTOR}, ${ROLLUP_SELECTOR}) {
      display: none !important;

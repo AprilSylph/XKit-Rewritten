@@ -86,7 +86,7 @@ export const main = async function () {
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 
-  pageModifications.register(`${postSelector} ${keyToCss('rows')}`, processRows);
+  pageModifications.register(`${keyToCss('reblog')} ${keyToCss('rows')}`, processRows);
 };
 
 export const clean = async function () {

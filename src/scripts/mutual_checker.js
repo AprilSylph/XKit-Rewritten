@@ -104,6 +104,7 @@ export const main = async function () {
     viewBox: '0 0 1000 1000',
     fill: aprilFools ? '#00b8ff' : 'currentColor'
   }, null, [
+    dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, ['Following each other']),
     dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: aprilFools ? aprilFoolsPath : regularPath })
   ]);
 

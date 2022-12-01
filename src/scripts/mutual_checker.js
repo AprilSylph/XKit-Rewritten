@@ -3,7 +3,7 @@ import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { primaryBlogName } from '../util/user.js';
 import { keyToCss } from '../util/css_map.js';
-import { onNewPosts } from '../util/mutations.js';
+import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
 import { getPreferences } from '../util/preferences.js';
 
@@ -25,7 +25,7 @@ const alreadyProcessed = postElement =>
   postElement.classList.contains(mutualsClass) &&
   postElement.querySelector(`.${mutualIconClass}`);
 
-const addIcons = function (postElements) {
+const processPosts = function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (alreadyProcessed(postElement)) return;
 
@@ -51,11 +51,25 @@ const addIcons = function (postElements) {
   });
 };
 
-const getIsFollowing = async (blogName, postElement) => {
-  const { blog } = await timelineObject(postElement);
+const processBlogCardLinks = blogCardLinks =>
+  blogCardLinks.forEach(async blogCardLink => {
+    const blogName = blogCardLink?.textContent;
+    if (!blogName) return;
+
+    const followingBlog = await getIsFollowing(blogName, blogCardLink);
+    if (!followingBlog) return;
+
+    const isMutual = await getIsFollowingYou(blogName);
+    if (isMutual) {
+      blogCardLink.prepend(icon.cloneNode(true));
+    }
+  });
+
+const getIsFollowing = async (blogName, element) => {
+  const { blog } = await timelineObject(element) ?? {};
 
   if (following[blogName] === undefined) {
-    if (blogName === blog.name) {
+    if (blogName === blog?.name) {
       following[blogName] = Promise.resolve(blog.followed && !blog.isMember);
     } else {
       following[blogName] = apiFetch(`/v2/blog/${blogName}/info`)
@@ -88,16 +102,18 @@ export const main = async function () {
     xmlns: 'http://www.w3.org/2000/svg',
     class: mutualIconClass,
     viewBox: '0 0 1000 1000',
-    fill: aprilFools ? '#00b8ff' : 'rgb(var(--black))'
+    fill: aprilFools ? '#00b8ff' : 'currentColor'
   }, null, [
     dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: aprilFools ? aprilFoolsPath : regularPath })
   ]);
 
-  onNewPosts.addListener(addIcons);
+  onNewPosts.addListener(processPosts);
+  pageModifications.register(keyToCss('blogLinkShort'), processBlogCardLinks);
 };
 
 export const clean = async function () {
-  onNewPosts.removeListener(addIcons);
+  onNewPosts.removeListener(processPosts);
+  pageModifications.unregister(processBlogCardLinks);
 
   $(`.${mutualsClass}`).removeClass(mutualsClass);
   $(`.${hiddenClass}`).removeClass(hiddenClass);

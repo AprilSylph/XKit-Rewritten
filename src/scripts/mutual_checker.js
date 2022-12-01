@@ -52,8 +52,9 @@ const addIcons = function (postElements) {
 };
 
 const getIsFollowing = async (blogName, postElement) => {
+  const { blog } = await timelineObject(postElement);
+
   if (following[blogName] === undefined) {
-    const { blog } = await timelineObject(postElement);
     if (blogName === blog.name) {
       following[blogName] = Promise.resolve(blog.followed && !blog.isMember);
     } else {

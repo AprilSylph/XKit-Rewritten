@@ -4,7 +4,7 @@ import { timelineObject } from '../../util/react_props.js';
 
 const excludeClass = 'xkit-no-recommended-posts-done';
 const hiddenClass = 'xkit-no-recommended-posts-hidden';
-const timeline = /\/v2\/timeline\/dashboard/;
+const timeline = '/v2/timeline/dashboard';
 const includeFiltered = true;
 
 const styleElement = buildStyle(`.${hiddenClass} article { display: none; }`);

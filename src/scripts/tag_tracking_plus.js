@@ -91,7 +91,7 @@ const processPosts = async function (postElements) {
   if (!trackedTags.includes(currentTag)) return;
 
   const { [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey);
-  const timeline = new RegExp(`/v2/hubs/${encodedCurrentTag}/timeline`);
+  const timeline = `/v2/hubs/${encodedCurrentTag}/timeline`;
 
   for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
     const { tags, timestamp } = await timelineObject(postElement);

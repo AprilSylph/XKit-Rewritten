@@ -2,7 +2,7 @@ import { onNewPosts } from '../../util/mutations.js';
 import { buildStyle, filterPostElements } from '../../util/interface.js';
 import { isMyPost, timelineObject } from '../../util/react_props.js';
 
-const timeline = '/v2/timeline/dashboard';
+const timeline = /\/v2\/timeline\/dashboard/;
 
 const hiddenClass = 'xkit-tweaks-hide-liked-posts-hidden';
 const styleElement = buildStyle(`.${hiddenClass} article { display: none; }`);

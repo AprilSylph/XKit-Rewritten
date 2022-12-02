@@ -3,7 +3,7 @@ import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 
 const excludeClass = 'xkit-seen-posts-done';
-const timeline = '/v2/timeline/dashboard';
+const timeline = /\/v2\/timeline\/dashboard/;
 const includeFiltered = true;
 
 const dimClass = 'xkit-seen-posts-seen';

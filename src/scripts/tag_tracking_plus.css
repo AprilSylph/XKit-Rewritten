@@ -4,7 +4,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
   min-height: 36px;
   padding: 5px 10px;
   color: rgba(var(--white-on-dark), 0.6);
@@ -16,7 +15,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
   min-height: 36px;
   padding: 5px 10px;
   color: rgba(var(--white-on-dark), 0.6);
@@ -28,7 +26,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
   min-height: 36px;
   padding: 5px 10px;
   color: rgba(var(--white-on-dark), 0.6);

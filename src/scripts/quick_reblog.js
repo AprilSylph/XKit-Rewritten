@@ -291,6 +291,12 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
   browser.storage.local.set({ [rememberedBlogStorageKey]: rememberedBlogs });
 };
 
+const preventLongPressMenu = (event) => {
+  if (event.pointerType === 'touch') {
+    event.preventDefault();
+  }
+};
+
 export const main = async function () {
   ({
     popupPosition,
@@ -338,6 +344,7 @@ export const main = async function () {
   tagsInput.hidden = !showTagsInput;
 
   $(document.body).on('mouseenter', reblogButtonSelector, showPopupOnHover);
+  $(document.body).on('contextmenu', reblogButtonSelector, preventLongPressMenu);
 
   if (quickTagsIntegration) {
     browser.storage.onChanged.addListener(updateQuickTags);
@@ -351,6 +358,7 @@ export const main = async function () {
 
 export const clean = async function () {
   $(document.body).off('mouseenter', reblogButtonSelector, showPopupOnHover);
+  $(document.body).off('contextmenu', reblogButtonSelector, preventLongPressMenu);
   popupElement.remove();
 
   blogSelector.removeEventListener('change', updateRememberedBlog);

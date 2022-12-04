@@ -291,8 +291,19 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
   browser.storage.local.set({ [rememberedBlogStorageKey]: rememberedBlogs });
 };
 
-const preventLongPressMenu = (event) => {
-  if (event.pointerType === 'touch') {
+/**
+ * Chromium passes a full PointerEvent here; Firefox passes a MouseEvent.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/contextmenu_event
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/mozInputSource
+ */
+const MOZ_SOURCE_TOUCH = 5;
+
+const preventLongPressMenu = ({ originalEvent: event }) => {
+  const isTouchEvent = event.pointerType === 'touch';
+  const firefoxIsTouchEvent = event.mozInputSource === MOZ_SOURCE_TOUCH;
+
+  if (isTouchEvent || firefoxIsTouchEvent) {
     event.preventDefault();
   }
 };

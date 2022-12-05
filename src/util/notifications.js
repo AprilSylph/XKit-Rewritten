@@ -6,7 +6,7 @@ const toastContainer = dom('div', { id: 'xkit-toasts' });
 const drawerContentSelectorPromise = keyToCss('drawerContent');
 const sidebarSelectorPromise = keyToCss('sidebar');
 
-const addToastContainerToPage = async () => {
+export const addToastContainerToPage = async () => {
   const drawerContentSelector = await drawerContentSelectorPromise;
   const sidebarSelector = await sidebarSelectorPromise;
 
@@ -21,6 +21,8 @@ const addToastContainerToPage = async () => {
     toastContainer.dataset.inSidebar = targetNode.matches(sidebarSelector);
     targetNode.append(toastContainer);
   }
+
+  return toastContainer;
 };
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));

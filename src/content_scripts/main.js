@@ -85,29 +85,9 @@
     const installedScripts = await getInstalledScripts();
     const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
-    const warningElements = new Set();
-
     installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))
-      .forEach((scriptName) => {
-        const warningElement = document.createElement('div');
-        warningElement.className = 'visible';
-        warningElement.replaceChildren(`XKit Rewritten failed to import ${scriptName.replaceAll('_', ' ')}`);
-        warningElements.add(warningElement);
-
-        runScript(scriptName).then(() => {
-          warningElements.delete(warningElement);
-          warningElement.remove();
-        });
-      });
-
-    setTimeout(async () => {
-      if (warningElements.size) {
-        const { addToastContainerToPage } = await import('../util/notifications.js');
-        const toastContainer = await addToastContainerToPage();
-        toastContainer.append(...warningElements);
-      }
-    }, 3000);
+      .forEach(runScript);
   };
 
   const waitForReactLoaded = () => new Promise(resolve => {

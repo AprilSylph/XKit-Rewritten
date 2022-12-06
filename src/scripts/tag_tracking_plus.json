@@ -1,6 +1,6 @@
 {
   "title": "Tag Tracking+",
-  "description": "Unread counts on followed tags",
+  "description": "__MSG_script_desc_tag_tracking_plus",
   "icon": {
     "class_name": "ri-hashtag",
     "color": "white",

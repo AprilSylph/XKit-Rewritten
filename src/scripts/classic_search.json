@@ -1,6 +1,6 @@
 {
   "title": "Classic Search",
-  "description": "Go to tagged pages easily",
+  "description": "__MSG_script_desc_classic_search",
   "icon": {
     "class_name": "ri-search-line",
     "color": "white",

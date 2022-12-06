@@ -1,6 +1,6 @@
 {
   "title": "Mass Unliker",
-  "description": "Clear your likes",
+  "description": "__MSG_script_desc_mass_unliker",
   "icon": {
     "color": "white",
     "background_color": "#9d318b",

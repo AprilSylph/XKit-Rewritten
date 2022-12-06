@@ -1,6 +1,6 @@
 {
   "title": "Collapsed Queue",
-  "description": "Shorten posts in your queue",
+  "description": "__MSG_script_desc_collapsed_queue",
   "icon": {
     "class_name": "ri-qr-scan-line",
     "color": "white",

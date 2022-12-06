@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XKit Control Panel</title>
+    <title contentI18nKey="popup_title">XKit Control Panel</title>
     <link rel="icon" href="/icons/128.png" type="image/png">
     <link rel="stylesheet" href="/lib/normalize.min.css">
     <link rel="stylesheet" href="/lib/toggle-button.css">
@@ -15,65 +15,65 @@
     <link rel="stylesheet" href="links.css">
   </head>
   <body>
-    <header id="embedded-banner" hidden>XKit Rewritten can also be configured via the button in the browser toolbar.</header>
+    <header id="embedded-banner" contentI18nKey="popup_embedded_banner" hidden>XKit Rewritten can also be configured via the button in the browser toolbar.</header>
     <main>
       <nav>
-        <a href="#configuration" role="button" class="selected">Configuration</a>
-        <a href="#backup" role="button">Backup</a>
-        <a href="#links" role="button">Links</a>
+        <a href="#configuration" role="button" class="selected" contentI18nKey="popup_button_configuration">Configuration</a>
+        <a href="#backup" role="button" contentI18nKey="popup_button_backup">Backup</a>
+        <a href="#links" role="button" contentI18nKey="popup_button_configuration">Links</a>
       </nav>
       <section id="configuration" class="open">
         <div class="finder">
-          <input id="search" type="text" placeholder="Search" autocomplete="off" spellcheck="false">
-          <label for="filter">Filter by</label>
+          <input id="search" type="text" placeholder="Search" placeholderI18nKey="popup_search_placeholder" autocomplete="off" spellcheck="false">
+          <label for="filter"></label>
           <select id="filter">
-            <option value="all" selected>All</option>
-            <option value="enabled">Enabled</option>
-            <option value="disabled">Disabled</option>
+            <option value="all" contentI18nKey="popup_filter_option_all" selected>All</option>
+            <option value="enabled" contentI18nKey="popup_filter_option_enabled">Enabled</option>
+            <option value="disabled" contentI18nKey="popup_filter_option_disabled">Disabled</option>
           </select>
         </div>
         <div class="no-results">
-          <p>No results found.</p>
+          <p contentI18nKey="popup_search_no_results">No results found.</p>
         </div>
         <div class="scripts"></div>
       </section>
       <section id="backup">
         <details id="export" open>
-          <summary><h4>Export</h4></summary>
+          <summary><h4 contentI18nKey="popup_export_title">Export</h4></summary>
           <pre id="local-storage-export"></pre>
           <div class="buttons-container">
-            <button id="copy-local">Copy All</button>
-            <button id="download-local">Download</button>
+            <button id="copy-local" contentI18nKey="popup_export_copy">Copy All</button>
+            <button id="download-local" contentI18nKey="popup_export_download">Download</button>
           </div>
         </details>
         <details id="import">
-          <summary><h4>Import</h4></summary>
-          <label for="local-storage-import">Paste the contents of your saved backup here.</label>
+          <summary><h4 contentI18nKey="popup_import_title">Import</h4></summary>
+          <label for="local-storage-import" contentI18nKey="popup_import_instructions">Paste the contents of your saved backup here.</label>
           <textarea id="local-storage-import" rows="10" spellcheck="false"></textarea>
           <button id="restore-local"></button>
         </details>
       </section>
       <section id="links">
-        <h4>Help & information</h4>
+        <h4 contentI18nKey="popup_help_title">Help & information</h4>
         <ul>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/wiki" target="_blank">User guide</a></li>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/discussions" target="_blank">Support & discussion</a></li>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/releases" target="_blank">Changelog</a><small id="version"></small></li>
+          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/wiki" target="_blank" contentI18nKey="popup_help_guide">User guide</a></li>
+          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/discussions" target="_blank" contentI18nKey="popup_help_support">Support & discussion</a></li>
+          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/releases" target="_blank" contentI18nKey="popup_help_changelog">Changelog</a><small id="version"></small></li>
         </ul>
-        <h4>Get involved</h4>
+        <h4 contentI18nKey="popup_involved_title">Get involved</h4>
         <ul>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten" target="_blank">Source code</a></li>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues" target="_blank">Issue tracker</a></li>
+          <li><a href="https://github.com/AprilSylph/XKit-Rewritten" target="_blank" contentI18nKey="popup_involved_source">Source code</a></li>
+          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues" target="_blank" contentI18nKey="popup_involved_issue">Issue tracker</a></li>
           <ul>
-            <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues?q=is%3Aopen+is%3Aissue+label%3Abug" target="_blank">Known bugs</a></li>
-            <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement" target="_blank">Suggested features</a></li>
+            <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues?q=is%3Aopen+is%3Aissue+label%3Abug" target="_blank" contentI18nKey="popup_involved_bugs">Known bugs</a></li>
+            <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement" target="_blank" contentI18nKey="popup_involved_suggest">Suggested features</a></li>
           </ul>
         </ul>
         <h4>Related projects</h4>
         <ul>
-          <li><a href="https://github.com/AprilSylph/Palettes-for-Tumblr#readme" target="_blank">Palettes for Tumblr</a></li>
-          <li><a href="https://github.com/AprilSylph/Outbox-for-Tumblr#readme" target="_blank">Outbox for Tumblr</a></li>
-          <li><a href="https://github.com/AprilSylph/Filtering-Plus#readme" target="_blank">Filtering+ for Tumblr</a></li>
+          <li><a href="https://github.com/AprilSylph/Palettes-for-Tumblr#readme" target="_blank" contentI18nKey="popup_related_palettes">Palettes for Tumblr</a></li>
+          <li><a href="https://github.com/AprilSylph/Outbox-for-Tumblr#readme" target="_blank" contentI18nKey="popup_related_outbox">Outbox for Tumblr</a></li>
+          <li><a href="https://github.com/AprilSylph/Filtering-Plus#readme" target="_blank" contentI18nKey="popup_related_filtering">Filtering+ for Tumblr</a></li>
         </ul>
       </section>
     </main>
@@ -143,8 +143,8 @@
     <script src="/lib/browser-polyfill.min.js"></script>
     <script src="/lib/jquery.min.js"></script>
     <script src="/lib/spectrum.js"></script>
-    <script src="popup.js"></script>
-    <script src="render_scripts.js"></script>
+    <script src="popup.js" type="module"></script>
+    <script src="render_scripts.js" type="module"></script>
     <script src="render_backup.js"></script>
   </body>
 </html>

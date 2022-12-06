@@ -1,6 +1,6 @@
 {
   "title": "Tag Replacer",
-  "description": "Replace old tags in bulk",
+  "description": "__MSG_script_desc_tag_replacer",
   "icon": {
     "class_name": "ri-swap-box-line",
     "color": "white",

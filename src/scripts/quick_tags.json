@@ -1,6 +1,6 @@
 {
   "title": "Quick Tags",
-  "description": "Add tags to posts easily",
+  "description": "__MSG_script_desc_quick_tags",
   "icon": {
     "class_name": "ri-price-tag-3-line",
     "color": "white",

@@ -1,6 +1,6 @@
 {
   "title": "AccessKit",
-  "description": "Accessibility options for Tumblr",
+  "description": "__MSG_script_desc_accesskit",
   "icon": {
     "class_name": "ri-open-arm-line",
     "color": "white",

@@ -1,6 +1,6 @@
 {
   "title": "Tweaks",
-  "description": "Miscellaneous dashboard options",
+  "description": "__MSG_script_desc_tweaks",
   "icon": {
     "class_name": "ri-settings-5-line",
     "color": "white",

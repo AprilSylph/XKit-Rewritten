@@ -1,6 +1,6 @@
 {
   "title": "Mutual Checker",
-  "description": "See who follows you back",
+  "description": "__MSG_script_desc_mutual_checker",
   "icon": {
     "class_name": "ri-contacts-book-2-line",
     "color": "white",

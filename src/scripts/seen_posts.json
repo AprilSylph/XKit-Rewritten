@@ -1,6 +1,6 @@
 {
   "title": "Seen Posts",
-  "description": "Dim the posts you've seen already",
+  "description": "__MSG_script_desc_seen_posts",
   "icon": {
     "class_name": "ri-eye-line",
     "color": "white",

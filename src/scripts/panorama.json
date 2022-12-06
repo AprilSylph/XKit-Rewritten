@@ -1,6 +1,6 @@
 {
   "title": "Panorama",
-  "description": "Widescreen dashboard",
+  "description": "__MSG_script_desc_panorama",
   "icon": {
     "class_name": "ri-align-justify",
     "color": "white",

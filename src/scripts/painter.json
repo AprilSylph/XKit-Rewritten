@@ -1,6 +1,6 @@
 {
   "title": "Painter",
-  "description": "Add colour to your dashboard posts",
+  "description": "__MSG_script_desc_painter",
   "icon": {
     "class_name": "ri-brush-line",
     "color": "white",

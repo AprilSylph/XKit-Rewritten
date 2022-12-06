@@ -1,6 +1,6 @@
 {
   "title": "Timestamps",
-  "description": "See when a post was made",
+  "description": "__MSG_script_desc_timestamps",
   "icon": {
     "class_name": "ri-time-line",
     "color": "white",

@@ -90,6 +90,11 @@
 
     browser.storage.onChanged.addListener(onStorageChanged);
 
+    // load scripts sequentially to avoid chromium load failures
+    // for (const name of installedScripts.filter(name => enabledScripts.includes(name))) {
+    //   await import(getURL(`/scripts/${name}.js`));
+    // }
+
     installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))
       .forEach(runScript);

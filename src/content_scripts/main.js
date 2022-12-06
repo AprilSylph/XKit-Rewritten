@@ -2,7 +2,7 @@
 
 {
   const { getURL } = browser.runtime;
-  const redpop = [...document.scripts].some(({ src }) => src.includes('/pop/'));
+  const isRedpop = () => [...document.scripts].some(({ src }) => src.includes('/pop/'));
   const isReactLoaded = () => document.querySelector('[data-rh]') === null;
 
   const restartListeners = {};
@@ -78,12 +78,17 @@
   };
 
   const init = async function () {
+    const installedScripts = await getInstalledScripts();
+    const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
+
+    await waitForDocumentReady();
+    if (!isRedpop()) return;
+
+    if (!isReactLoaded()) await waitForReactLoaded();
+
     $('style.xkit').remove();
 
     browser.storage.onChanged.addListener(onStorageChanged);
-
-    const installedScripts = await getInstalledScripts();
-    const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
     installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))
@@ -94,7 +99,11 @@
     window.requestAnimationFrame(() => isReactLoaded() ? resolve() : waitForReactLoaded().then(resolve));
   });
 
-  if (redpop) {
-    isReactLoaded() ? init() : waitForReactLoaded().then(init);
-  }
+  const waitForDocumentReady = () =>
+    document.readyState === 'loading' &&
+    new Promise(resolve =>
+      document.addEventListener('readystatechange', resolve, { once: true })
+    );
+
+  init();
 }

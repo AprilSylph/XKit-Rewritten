@@ -9,22 +9,24 @@ const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
 const hiddenClass = 'xkit-postblock-hidden';
 const storageKey = 'postblock.blockedPostRootIDs';
+let blockedPostRootIDs;
 
-const processPosts = async function (postElements) {
-  const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
-
-  filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
+const processPosts = function (postElements) {
+  for (const postElement of filterPostElements(postElements, {
+    includeFiltered: true
+  })) {
     const postID = postElement.dataset.id;
-    const { rebloggedRootId } = await timelineObject(postElement);
 
-    const rootID = rebloggedRootId || postID;
+    timelineObject(postElement).then(({ rebloggedRootId }) => {
+      const rootID = rebloggedRootId || postID;
 
-    if (blockedPostRootIDs.includes(rootID)) {
-      postElement.classList.add(hiddenClass);
-    } else {
-      postElement.classList.remove(hiddenClass);
-    }
-  });
+      if (blockedPostRootIDs.includes(rootID)) {
+        postElement.classList.add(hiddenClass);
+      } else {
+        postElement.classList.remove(hiddenClass);
+      }
+    });
+  }
 };
 
 const onButtonClicked = async function ({ currentTarget }) {
@@ -50,14 +52,25 @@ const blockPost = async rootID => {
   browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
 };
 
-export const onStorageChanged = async function (changes, areaName) {
-  if (Object.keys(changes).includes(storageKey)) {
+export const onStorageChanged = async function (changes) {
+  const { [storageKey]: blockedPostRootIDsChanges } = changes;
+
+  if (blockedPostRootIDsChanges) {
+    ({ newValue: blockedPostRootIDs } = blockedPostRootIDsChanges);
     pageModifications.trigger(processPosts);
   }
 };
 
 export const main = async function () {
-  registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
+  registerMeatballItem({
+    id: meatballButtonId,
+    label: meatballButtonLabel,
+    onclick: onButtonClicked
+  });
+
+  ({ [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(
+    storageKey
+  ));
 
   onNewPosts.addListener(processPosts);
 };

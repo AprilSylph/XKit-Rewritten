@@ -15,8 +15,7 @@ const includeFiltered = true;
 const tagLinkSelector = `${keyToCss('searchResult')} h3 ~ a${keyToCss('typeaheadRow')}[href^="/tagged/"]`;
 const tagTextSelector = keyToCss('tagText');
 
-const trackedTagsData = await apiFetch('/v2/user/tags') ?? {};
-const trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
+let trackedTags;
 const unreadCounts = new Map();
 
 let sidebarItem;
@@ -131,6 +130,9 @@ const processTagLinks = function (tagLinkElements) {
 };
 
 export const main = async function () {
+  const trackedTagsData = await apiFetch('/v2/user/tags') ?? {};
+  trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
+
   onNewPosts.addListener(processPosts);
   refreshAllCounts(true).then(startRefreshInterval);
 

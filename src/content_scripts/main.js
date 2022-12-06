@@ -90,6 +90,11 @@
 
     browser.storage.onChanged.addListener(onStorageChanged);
 
+    // preload user and css map fetches
+    ['dom', 'inject', 'tumblr_helpers', 'css_map', 'user'].forEach(utilname =>
+      import(getURL(`/util/${utilname}.js`))
+    );
+
     // load scripts sequentially to avoid chromium load failures
     // for (const name of installedScripts.filter(name => enabledScripts.includes(name))) {
     //   await import(getURL(`/scripts/${name}.js`));

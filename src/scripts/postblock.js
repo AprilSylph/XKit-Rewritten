@@ -52,7 +52,7 @@ const blockPost = async rootID => {
   browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
 };
 
-export const onStorageChanged = async function (changes) {
+export const onStorageChanged = async (changes) => {
   const { [storageKey]: blockedPostRootIDsChanges } = changes;
 
   if (blockedPostRootIDsChanges) {
@@ -61,7 +61,11 @@ export const onStorageChanged = async function (changes) {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
+  ({ [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(
+    storageKey
+  ));
+
   registerMeatballItem({
     id: meatballButtonId,
     label: meatballButtonLabel,

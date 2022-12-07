@@ -39,12 +39,11 @@ const sidebarOptions = {
   visibility: () => /\/following/.test(location.pathname)
 };
 
-const width = 900;
-const height = 150;
-
-const border = 10;
-const innerWidth = width - 2 * border;
-const innerHeight = height - 2 * border;
+const canvasOuterWidth = 900;
+const canvasOuterHeight = 150;
+const canvasBorder = 10;
+const canvasInnerWidth = canvasOuterWidth - 2 * canvasBorder;
+const canvasInnerHeight = canvasOuterHeight - 2 * canvasBorder;
 
 const canvasClass = 'xkit-find-inactives-canvas';
 const sliderClass = 'xkit-find-inactives-slider';
@@ -55,13 +54,13 @@ const avatarClass = 'xkit-find-inactives-avatar';
 
 const styleElement = buildStyle(`
 .${canvasClass} {
-  width: ${width / 2}px;
-  height: ${height / 2}px;
-  border-radius: ${border / 2}px;
+  width: ${canvasOuterWidth / 2}px;
+  height: ${canvasOuterHeight / 2}px;
+  border-radius: ${canvasBorder / 2}px;
 }
 
 .${sliderClass} {
-  width: ${width / 2}px;
+  width: ${canvasOuterWidth / 2}px;
 }
 
 .${buttonClass} {
@@ -128,16 +127,6 @@ const showFetchBlogs = async () => {
 };
 
 const showSelectBlogs = blogs => {
-  const computedStyle = getComputedStyle(document.documentElement);
-  const backgroundColor = `rgb(${computedStyle.getPropertyValue('--secondary-accent')})`;
-  const gridColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.2)`;
-  const selectionColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.8)`;
-  const dotColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.6)`;
-  const selectedDotColor = `rgb(${computedStyle.getPropertyValue('--accent')})`;
-
-  const canvasElement = dom('canvas', { width, height, class: canvasClass });
-  const canvasContext = canvasElement.getContext('2d');
-
   const ONE_YEAR = 31556952;
 
   const allTimes = blogs.map(({ updated }) => updated).filter(Boolean);
@@ -145,10 +134,8 @@ const showSelectBlogs = blogs => {
   const minTime = Math.min(...allTimes, maxTime - ONE_YEAR);
   const dateRange = maxTime - minTime;
 
-  const timeToX = time => ((time - minTime) * innerWidth) / dateRange + border;
-
   blogs.forEach(blog => {
-    blog.randomYValue = Math.random() * innerHeight + border;
+    blog.randomYValue = Math.random() * canvasInnerHeight + canvasBorder;
 
     const followingIcon = buildSvg('managed-icon__following');
     followingIcon.style = `visibility: ${blog.isFollowingYou ? 'shown' : 'hidden'};`;
@@ -182,23 +169,36 @@ const showSelectBlogs = blogs => {
   const selectionInfo = dom('div');
   const table = dom('table');
 
+  const canvasElement = dom('canvas', { width: canvasOuterWidth, height: canvasOuterHeight, class: canvasClass });
+
+  const timeToCanvasX = time => ((time - minTime) * canvasInnerWidth) / dateRange + canvasBorder;
+
   const updateCanvas = sliderTime => {
+    const computedStyle = getComputedStyle(document.documentElement);
+    const backgroundColor = `rgb(${computedStyle.getPropertyValue('--secondary-accent')})`;
+    const gridColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.2)`;
+    const selectionColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.8)`;
+    const dotColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.6)`;
+    const selectedDotColor = `rgb(${computedStyle.getPropertyValue('--accent')})`;
+
+    const canvasContext = canvasElement.getContext('2d');
+
     canvasContext.fillStyle = backgroundColor;
-    canvasContext.fillRect(0, 0, width, height);
+    canvasContext.fillRect(0, 0, canvasOuterWidth, canvasOuterHeight);
 
     canvasContext.fillStyle = gridColor;
     for (let time = maxTime; time >= minTime; time -= ONE_YEAR) {
-      canvasContext.fillRect(timeToX(time) - 1, border, 2, innerHeight);
+      canvasContext.fillRect(timeToCanvasX(time) - 1, canvasBorder, 2, canvasInnerHeight);
     }
 
     canvasContext.fillStyle = selectionColor;
-    canvasContext.fillRect(timeToX(sliderTime) - 1, border, 2, innerHeight);
+    canvasContext.fillRect(timeToCanvasX(sliderTime) - 1, canvasBorder, 2, canvasInnerHeight);
 
     const dotSize = 3;
     blogs.forEach(({ updated, randomYValue }) => {
       canvasContext.fillStyle = updated < sliderTime ? selectedDotColor : dotColor;
       canvasContext.fillRect(
-        timeToX(updated) - dotSize,
+        timeToCanvasX(updated) - dotSize,
         randomYValue - dotSize,
         dotSize * 2,
         dotSize * 2
@@ -256,17 +256,17 @@ const showSelectBlogs = blogs => {
   const onClickContinue = () => {
     const selectedBlogs = visibleBlogs.filter(({ checkbox }) => checkbox.checked).reverse();
     if (selectedBlogs.length) {
-      showConfirmBlogs(selectedBlogs, render);
+      showConfirmBlogs(selectedBlogs, showSelectBlogsModal);
     } else {
       showModal({
         title: 'Nothing selected!',
         message: ['Select the checkboxes next to blogs you want to unfollow and try again.'],
-        buttons: [dom('button', null, { click: render }, ['Back'])]
+        buttons: [dom('button', null, { click: showSelectBlogsModal }, ['Back'])]
       });
     }
   };
 
-  const render = () =>
+  const showSelectBlogsModal = () =>
     showModal({
       title: 'Select Inactive Blogs',
       message: [
@@ -293,7 +293,7 @@ const showSelectBlogs = blogs => {
       ]
     });
 
-  render();
+  showSelectBlogsModal();
 };
 
 const showConfirmBlogs = (blogs, goBack) => {

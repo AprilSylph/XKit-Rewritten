@@ -95,13 +95,6 @@ const styleElement = buildStyle(`
 }
 `);
 
-const computedStyle = getComputedStyle(document.documentElement);
-const backgroundColor = `rgb(${computedStyle.getPropertyValue('--secondary-accent')})`;
-const gridColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.2)`;
-const selectionColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.8)`;
-const dotColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.6)`;
-const selectedDotColor = `rgb(${computedStyle.getPropertyValue('--accent')})`;
-
 const showFetchBlogs = async () => {
   const foundBlogsElement = dom('span', null, null, ['Found 0 blogs...']);
   showModal({
@@ -135,6 +128,13 @@ const showFetchBlogs = async () => {
 };
 
 const showSelectBlogs = blogs => {
+  const computedStyle = getComputedStyle(document.documentElement);
+  const backgroundColor = `rgb(${computedStyle.getPropertyValue('--secondary-accent')})`;
+  const gridColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.2)`;
+  const selectionColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.8)`;
+  const dotColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.6)`;
+  const selectedDotColor = `rgb(${computedStyle.getPropertyValue('--accent')})`;
+
   const canvasElement = dom('canvas', { width, height, class: canvasClass });
   const canvasContext = canvasElement.getContext('2d');
 

@@ -1,7 +1,7 @@
 #quick-tags,
 #quick-tags-post-option {
   position: absolute;
-  z-index: 2;
+  z-index: 97;
 
   display: flex;
   flex-direction: column;
@@ -21,47 +21,48 @@
   font-weight: normal;
 }
 
-#quick-tags-post-option {
+#quick-tags-post-option.below {
   top: 100%;
   right: 50%;
   transform: translate(50%, 12px);
 }
 
-@media (max-width: 650px) {
+#quick-tags-post-option.above {
+  bottom: 100%;
+  right: 50%;
+  transform: translate(50%, -12px);
+}
+
+#quick-tags {
+  --icon-spacing: 12px;
+}
+@media (max-width: 990px) {
   #quick-tags {
-    top: 50%;
-    right: 100%;
-    transform: translateY(-50%);
+    --icon-spacing: 0px;
   }
 }
 
 @media (min-width: 650px) {
+  #quick-tags.below {
+    inset: 100% 50% auto auto;
+    transform: translate(50%, var(--icon-spacing));
+  }
+  #quick-tags.above {
+    inset: auto 50% 100% auto;
+    transform: translate(50%, calc(0px - var(--icon-spacing)));
+  }
+}
+
+@media (max-width: 650px) {
   #quick-tags {
-    top: 100%;
-    right: 50%;
-    transform: translateX(50%);
+    inset: 50% 100% auto auto;
+    transform: translate(calc(0px - var(--icon-spacing)), -50%);
   }
 }
-
-@media (min-width: 990px) {
-  #quick-tags {
-    transform: translate(50%, 12px);
-  }
-}
-
-@media (max-width: 990px) {
+@media (max-width: 1145px) {
   [role="dialog"] #quick-tags {
-    top: 50%;
-    right: 100%;
-    transform: translateY(-50%);
-  }
-}
-
-@media (min-width: 990px) and (max-width: 1145px) {
-  [role="dialog"] #quick-tags {
-    top: 50%;
-    right: 100%;
-    transform: translate(-20px, -50%);
+    inset: 50% 100% auto auto;
+    transform: translate(calc(0px - var(--icon-spacing)), -50%);
   }
 }
 

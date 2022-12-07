@@ -59,7 +59,9 @@ const addIcons = function (postElements) {
     const isMutual = await mutuals[blogName];
     if (isMutual) {
       postElement.classList.add(mutualsClass);
-      postAttribution.prepend(icon.cloneNode(true));
+      getComputedStyle(postAttribution).getPropertyValue('display') === 'flex'
+        ? postAttribution.prepend(icon.cloneNode(true))
+        : postAttribution.before(icon.cloneNode(true));
     } else if (showOnlyMutuals) {
       postElement.classList.add(hiddenClass);
     }

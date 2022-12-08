@@ -39,11 +39,16 @@ const sidebarOptions = {
   visibility: () => /\/following/.test(location.pathname)
 };
 
-const canvasOuterWidth = 900;
-const canvasOuterHeight = 150;
-const canvasBorder = 10;
-const canvasInnerWidth = canvasOuterWidth - 2 * canvasBorder;
-const canvasInnerHeight = canvasOuterHeight - 2 * canvasBorder;
+const buckets = 90;
+const lastBucket = buckets - 1;
+const dotGridSize = 5;
+const dotSize = 2;
+
+const canvasInnerWidth = lastBucket * dotGridSize;
+const canvasInnerHeight = 65;
+const canvasBorder = 5;
+const canvasOuterWidth = canvasInnerWidth + canvasBorder * 2;
+const canvasOuterHeight = canvasInnerHeight + canvasBorder * 2;
 
 const canvasClass = 'xkit-find-inactives-canvas';
 const sliderClass = 'xkit-find-inactives-slider';
@@ -54,13 +59,13 @@ const avatarClass = 'xkit-find-inactives-avatar';
 
 const styleElement = buildStyle(`
 .${canvasClass} {
-  width: ${canvasOuterWidth / 2}px;
-  height: ${canvasOuterHeight / 2}px;
-  border-radius: ${canvasBorder / 2}px;
+  width: ${canvasOuterWidth}px;
+  height: ${canvasOuterHeight}px;
+  border-radius: ${canvasBorder}px;
 }
 
 .${sliderClass} {
-  width: ${canvasOuterWidth / 2}px;
+  width: ${canvasOuterWidth}px;
 }
 
 .${buttonClass} {
@@ -135,7 +140,13 @@ const showSelectBlogs = blogs => {
   const dateRange = maxTime - minTime;
 
   blogs.forEach(blog => {
-    blog.randomYValue = Math.random() * canvasInnerHeight + canvasBorder;
+    blog.bucket = Math.floor(buckets * (blog.updated - minTime) / dateRange);
+    if (blog.bucket === buckets) blog.bucket--;
+
+    const height = blogs.filter(({ bucket }) => blog.bucket === bucket).length;
+
+    blog.xValue = blog.bucket * dotGridSize + canvasBorder;
+    blog.yValue = canvasInnerHeight - height * dotGridSize + canvasBorder;
 
     const followingIcon = buildSvg('managed-icon__following');
     followingIcon.style = `visibility: ${blog.isFollowingYou ? 'shown' : 'hidden'};`;
@@ -169,20 +180,25 @@ const showSelectBlogs = blogs => {
   const selectionInfo = dom('div');
   const table = dom('table');
 
-  const canvasElement = dom('canvas', { width: canvasOuterWidth, height: canvasOuterHeight, class: canvasClass });
+  const canvasScale = 2;
+  const canvasElement = dom('canvas', {
+    width: canvasOuterWidth * canvasScale,
+    height: canvasOuterHeight * canvasScale,
+    class: canvasClass
+  });
+  const canvasContext = canvasElement.getContext('2d');
+  canvasContext.scale(canvasScale, canvasScale);
+
+  const computedStyle = getComputedStyle(document.documentElement);
+  const backgroundColor = `rgb(${computedStyle.getPropertyValue('--secondary-accent')})`;
+  const gridColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.2)`;
+  const selectionColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.8)`;
+  const dotColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.6)`;
+  const selectedDotColor = `rgb(${computedStyle.getPropertyValue('--accent')})`;
 
   const timeToCanvasX = time => ((time - minTime) * canvasInnerWidth) / dateRange + canvasBorder;
 
-  const updateCanvas = sliderTime => {
-    const computedStyle = getComputedStyle(document.documentElement);
-    const backgroundColor = `rgb(${computedStyle.getPropertyValue('--secondary-accent')})`;
-    const gridColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.2)`;
-    const selectionColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.8)`;
-    const dotColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.6)`;
-    const selectedDotColor = `rgb(${computedStyle.getPropertyValue('--accent')})`;
-
-    const canvasContext = canvasElement.getContext('2d');
-
+  const updateCanvas = sliderValue => {
     canvasContext.fillStyle = backgroundColor;
     canvasContext.fillRect(0, 0, canvasOuterWidth, canvasOuterHeight);
 
@@ -192,26 +208,20 @@ const showSelectBlogs = blogs => {
     }
 
     canvasContext.fillStyle = selectionColor;
-    canvasContext.fillRect(timeToCanvasX(sliderTime) - 1, canvasBorder, 2, canvasInnerHeight);
+    canvasContext.fillRect(canvasBorder + sliderValue * dotGridSize - 1, canvasBorder, 2, canvasInnerHeight);
 
-    const dotSize = 3;
-    blogs.forEach(({ updated, randomYValue }) => {
-      canvasContext.fillStyle = updated < sliderTime ? selectedDotColor : dotColor;
-      canvasContext.fillRect(
-        timeToCanvasX(updated) - dotSize,
-        randomYValue - dotSize,
-        dotSize * 2,
-        dotSize * 2
-      );
+    blogs.forEach(({ bucket, xValue, yValue }) => {
+      canvasContext.fillStyle = bucket <= sliderValue ? selectedDotColor : dotColor;
+      canvasContext.fillRect(xValue - dotSize, yValue - dotSize, dotSize * 2, dotSize * 2);
     });
   };
 
-  const updateDisplay = sliderPercent => {
-    const sliderTime = (sliderPercent / 100) * dateRange + minTime;
+  const updateDisplay = sliderValue => {
+    const sliderTime = (sliderValue / lastBucket) * dateRange + minTime;
 
-    updateCanvas(sliderTime);
+    updateCanvas(sliderValue);
 
-    visibleBlogs = blogs.filter(({ updated }) => updated < sliderTime);
+    visibleBlogs = blogs.filter(({ bucket }) => bucket <= sliderValue);
 
     blogs
       .filter(blog => visibleBlogs.includes(blog) === false)
@@ -230,7 +240,7 @@ const showSelectBlogs = blogs => {
 
   const slider = dom(
     'input',
-    { type: 'range', value: 0, class: sliderClass },
+    { type: 'range', value: 0, max: lastBucket, class: sliderClass },
     { input: event => updateDisplay(event.target.value) }
   );
 

@@ -4,5 +4,5 @@ body.xkit-seen-posts-only-dim-avatar .xkit-seen-posts-seen:not(:hover) article >
 }
 
 body.xkit-seen-posts-hide .xkit-seen-posts-seen article {
-  display: none;
+  display: none !important;
 }

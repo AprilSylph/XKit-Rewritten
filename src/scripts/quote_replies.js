@@ -6,6 +6,7 @@ import { notify } from '../util/notifications.js';
 import { getPreferences } from '../util/preferences.js';
 import { buildSvg } from '../util/remixicon.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
+import { userBlogNames } from '../util/user.js';
 
 const storageKey = 'quote_replies.currentResponseId';
 const buttonClass = 'xkit-quote-replies';
@@ -42,7 +43,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
     type
   } = await inject(getNotificationProps, [], notification);
 
-  if (type !== 'reply') return;
+  if (!['reply', 'note_mention'].includes(type)) return;
 
   const activityElement = notification.querySelector(activitySelector);
   if (!activityElement) return;
@@ -53,7 +54,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
     {
       click () {
         this.disabled = true;
-        quoteReply({ id, summary, name, uuid, timestamp })
+        quoteReply({ type, id, summary, name, uuid, timestamp })
           .catch(showError)
           .finally(() => { this.disabled = false; });
       }
@@ -62,7 +63,8 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
-const quoteReply = async ({ id, summary, name, uuid, timestamp }) => {
+const quoteReply = async ({ type, id, summary, name, uuid, timestamp }) => {
+  const isReply = type === 'reply';
   const { response } = await apiFetch(
     `/v2/blog/${uuid}/post/${id}/notes/timeline`,
     { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } }
@@ -73,7 +75,9 @@ const quoteReply = async ({ id, summary, name, uuid, timestamp }) => {
   if (!reply) throw new Error('No replies found on target post.');
   if (Math.floor(reply.timestamp) !== timestamp) throw new Error('Reply not found.');
 
-  const text = `@${reply.blog.name} replied to your post \u201C${summary.replace(/\n/g, ' ')}\u201D:`;
+  const text = isReply
+    ? `@${reply.blog.name} replied to your post \u201C${summary.replace(/\n/g, ' ')}\u201D:`
+    : `@${reply.blog.name} mentioned you on a post \u201C${summary.replace(/\n/g, ' ')}\u201D:`;
   const formatting = [
     { start: 0, end: reply.blog.name.length + 1, type: 'mention', blog: { uuid: reply.blog.uuid } },
     { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: `https://${name}.tumblr.com/post/${id}` }
@@ -89,10 +93,20 @@ const quoteReply = async ({ id, summary, name, uuid, timestamp }) => {
     ...tagReplyingBlog ? [reply.blog.name] : []
   ].join(',');
 
-  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
+  const yourMentionedBlog = reply.content[0]?.formatting?.find(
+    format => format.type === 'mention' && userBlogNames.includes(format.blog?.name)
+  )?.blog;
+  if (type === 'note_mention' && !yourMentionedBlog) {
+    throw new Error('Reply not found.');
+  }
+
+  const yourUuid = isReply ? uuid : yourMentionedBlog.uuid;
+  const yourName = isReply ? name : yourMentionedBlog.name;
+
+  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${yourUuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
   await browser.storage.local.set({ [storageKey]: responseId });
 
-  const openedTab = window.open(`/blog/${name}/drafts`);
+  const openedTab = window.open(`/blog/${yourName}/drafts`);
   if (openedTab === null) {
     browser.storage.local.remove(storageKey);
     notify(displayText);

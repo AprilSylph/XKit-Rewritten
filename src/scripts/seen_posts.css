@@ -3,6 +3,6 @@ body.xkit-seen-posts-only-dim-avatar .xkit-seen-posts-seen:not(:hover) article >
   opacity: 0.5;
 }
 
-body.xkit-seen-posts-hide .xkit-seen-posts-seen article {
+body.xkit-seen-posts-hide .xkit-seen-posts-seen {
   display: none !important;
 }

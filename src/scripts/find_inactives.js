@@ -178,7 +178,7 @@ const showSelectBlogs = blogs => {
   let visibleBlogs = [];
 
   const selectionInfo = dom('div');
-  const table = dom('table');
+  const table = dom('table', null, null, blogs.map(({ selectTableRow }) => selectTableRow));
 
   const canvasScale = 2;
   const canvasElement = dom('canvas', {
@@ -223,6 +223,10 @@ const showSelectBlogs = blogs => {
 
     visibleBlogs = blogs.filter(({ bucket }) => bucket <= sliderValue);
 
+    blogs.forEach(blog => {
+      blog.selectTableRow.style.display = visibleBlogs.includes(blog) ? 'table-row' : 'none';
+    });
+
     blogs
       .filter(blog => visibleBlogs.includes(blog) === false)
       .forEach(({ checkbox }) => {
@@ -232,8 +236,6 @@ const showSelectBlogs = blogs => {
     const blogsString = visibleBlogs.length === 1 ? 'blog is' : 'blogs are';
     const relativeTime = constructRelativeTimeString(sliderTime);
     selectionInfo.textContent = `${visibleBlogs.length} followed ${blogsString} inactive since ${relativeTime}`;
-
-    table.replaceChildren(...visibleBlogs.map(({ selectTableRow }) => selectTableRow));
   };
 
   updateDisplay(0);

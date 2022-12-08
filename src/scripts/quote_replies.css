@@ -25,7 +25,15 @@ button.xkit-quote-replies:disabled svg {
   transition-property: none;
 }
 
-:is(:hover, :focus-within) > button.xkit-quote-replies svg {
+:is(:hover, :focus-within) > button.xkit-quote-replies svg,
+body.xkit-quote-replies-touch button.xkit-quote-replies svg {
   opacity: 1;
   transform: scale(1);
+}
+
+@media (hover: none) {
+  button.xkit-quote-replies svg {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

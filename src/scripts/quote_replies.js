@@ -9,7 +9,6 @@ import { apiFetch } from '../util/tumblr_helpers.js';
 
 const storageKey = 'quote_replies.currentResponseId';
 const buttonClass = 'xkit-quote-replies';
-const touchClass = 'xkit-quote-replies-touch';
 
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
 
@@ -102,8 +101,6 @@ const quoteReply = async ({ id, summary, name, uuid, timestamp }) => {
 
 const showError = exception => notify(exception.body?.errors?.[0]?.detail || exception.message);
 
-const addTouchClass = () => document.body.classList.add(touchClass);
-
 export const main = async function () {
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
   ({ tagReplyingBlog } = await getPreferences('quote_replies'));
@@ -117,15 +114,11 @@ export const main = async function () {
   if (responseId !== undefined && /^\/blog\/.+\/drafts/.test(location.pathname)) {
     document.querySelector(`[href*="/edit/"][href$="/${responseId}"]`)?.click();
   }
-
-  document.body.addEventListener('touchstart', addTouchClass, { once: true });
 };
 
 export const clean = async function () {
   pageModifications.unregister(processNotifications);
-  document.body.removeEventListener('touchstart', addTouchClass);
   $(`.${buttonClass}`).remove();
-  document.body.classList.remove(touchClass);
 };
 
 export const onStorageChanged = async function (changes) {

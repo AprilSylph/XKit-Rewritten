@@ -29,13 +29,8 @@ button.xkit-quote-replies:disabled svg {
     transform: scale(0);
   }
 
-  :is(:hover, :focus-within)>button.xkit-quote-replies svg {
+  :is(:hover, :focus-within) > button.xkit-quote-replies svg {
     opacity: 1;
     transform: scale(1);
   }
-}
-
-body.xkit-quote-replies-touch button.xkit-quote-replies svg {
-  opacity: 1;
-  transform: scale(1);
 }

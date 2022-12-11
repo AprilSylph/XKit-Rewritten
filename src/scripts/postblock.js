@@ -4,7 +4,6 @@ import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
 import { onNewPosts } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
-import { buildStyle } from '../util/interface.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
@@ -12,9 +11,10 @@ const storageKey = 'postblock.blockedPostRootIDs';
 let blockedPostRootIDs;
 
 const styleElement = buildStyle();
-const buildCss = () => `:is(${
-  blockedPostRootIDs.map(rootId => `[data-target-root-id="${rootId}"]`).join(', ')
-}) { display: none !important; }`;
+const buildCss = () =>
+  `:is(${blockedPostRootIDs
+    .map((rootId) => `[data-target-root-id="${rootId}"]`)
+    .join(', ')}) { display: none !important; }`;
 
 const processPosts = (postElements) =>
   filterPostElements(postElements, { includeFiltered: true }).forEach(

@@ -11,23 +11,23 @@ const hiddenClass = 'xkit-postblock-hidden';
 const storageKey = 'postblock.blockedPostRootIDs';
 let blockedPostRootIDs;
 
-const processPosts = function (postElements) {
-  for (const postElement of filterPostElements(postElements, {
-    includeFiltered: true
-  })) {
-    const postID = postElement.dataset.id;
+console.log("pee");
 
-    timelineObject(postElement).then(({ rebloggedRootId }) => {
-      const rootID = rebloggedRootId || postID;
+const processPosts = (postElements) =>
+  filterPostElements(postElements, { includeFiltered: true }).forEach(
+    async (postElement) => {
+      const postID = postElement.dataset.id;
+      timelineObject(postElement).then(({ rebloggedRootId }) => {
+        const rootID = rebloggedRootId || postID;
 
-      if (blockedPostRootIDs.includes(rootID)) {
-        postElement.classList.add(hiddenClass);
-      } else {
-        postElement.classList.remove(hiddenClass);
-      }
-    });
-  }
-};
+        if (blockedPostRootIDs.includes(rootID)) {
+          postElement.classList.add(hiddenClass);
+        } else {
+          postElement.classList.remove(hiddenClass);
+        }
+      });
+    }
+  );
 
 const onButtonClicked = async function ({ currentTarget }) {
   const { id, rebloggedRootId } = currentTarget.__timelineObjectData;
@@ -71,10 +71,6 @@ export const main = async () => {
     label: meatballButtonLabel,
     onclick: onButtonClicked
   });
-
-  ({ [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(
-    storageKey
-  ));
 
   onNewPosts.addListener(processPosts);
 };

@@ -95,7 +95,7 @@ const processPosts = async function (postElements) {
   await processTimelines(postElements.map(postElement => postElement.closest('[data-timeline]')));
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
-    const { blog: { name, uuid }, rebloggedRootUuid, content } = await timelineObject(postElement);
+    const { blog: { name, uuid }, rebloggedRootUuid } = await timelineObject(postElement);
     const { muteOnBlogUuid: onBlogUuid } = postElement.closest('[data-timeline]').dataset;
 
     if (mutedBlogs[uuid] && names[uuid] !== name) {
@@ -103,9 +103,6 @@ const processPosts = async function (postElements) {
       updateNames();
     }
 
-    // should there be a setting such that reblogs with contributed content count?
-    // eslint-disable-next-line no-unused-vars
-    const contributedContent = content.length > 0;
     const isRebloggedPost = Boolean(rebloggedRootUuid);
 
     const originalUuid = isRebloggedPost ? rebloggedRootUuid : uuid;

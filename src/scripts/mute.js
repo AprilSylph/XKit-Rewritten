@@ -21,8 +21,6 @@ const mutedBlogsEntriesStorageKey = 'mute.mutedBlogEntries';
 let names = {};
 let mutedBlogs = {};
 
-const dismissedWarningUuids = new Set();
-
 const lengthenTimeline = timeline => {
   if (!timeline.querySelector(keyToCss('manualPaginatorButtons'))) {
     timeline.classList.add(lengthenedClass);
@@ -45,16 +43,11 @@ const processBlogSpecificTimeline = async (timelineElement, timeline) => {
 
   timelineElement.dataset.muteOnBlogUuid = uuid;
 
-  if (mode && !dismissedWarningUuids.has(uuid)) {
+  if (mode) {
     const warningElement = dom('div', { class: warningClass }, null, [
       `You have muted ${mode} posts from ${name}!`,
       dom('br'),
-      dom('button', null, {
-        click: () => {
-          dismissedWarningUuids.add(uuid);
-          warningElement.remove();
-        }
-      }, 'show posts anyway')
+      dom('button', null, { click: () => warningElement.remove() }, 'show posts anyway')
     ]);
     warningElement.dataset.muteMode = mode;
 
@@ -220,7 +213,6 @@ export const clean = async function () {
   $(`.${warningClass}`).remove();
   $('[data-mute-processed-timeline]').removeAttr('data-mute-processed-timeline');
   $('[data-mute-on-blog-uuid]').removeAttr('data-mute-blog-specific-uuid');
-  dismissedWarningUuids.clear();
 };
 
 export const stylesheet = true;

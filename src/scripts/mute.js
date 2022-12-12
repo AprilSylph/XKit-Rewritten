@@ -101,7 +101,7 @@ const processPosts = async function (postElements) {
     const { blog: { name, uuid }, rebloggedRootUuid, trail = [] } = await timelineObject(postElement);
     const { muteOnBlogUuid: onBlogUuid } = postElement.closest('[data-timeline]').dataset;
 
-    if (trail[uuid] && names[uuid] !== name) {
+    if (mutedBlogs[uuid] && names[uuid] !== name) {
       names[uuid] = name;
       updateNames();
     }

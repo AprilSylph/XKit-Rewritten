@@ -1,6 +1,14 @@
-.xkit-mute-active .xkit-mute-hidden article {
+.xkit-mute-active .xkit-mute-hidden article,
+:is([data-mute-mode="original"], [data-mute-mode="reblogged"]) ~ .xkit-mute-hidden-on-blog article {
   /* display: none; */
   opacity: 0.5;
+}
+
+[data-mute-mode="all"] ~ .xkit-mute-hidden-on-blog article {
+  visibility: hidden !important;
+}
+[data-mute-mode="all"] ~ .xkit-mute-hidden-on-blog article :is(img, video, canvas) {
+  display: none;
 }
 
 .xkit-mute-lengthened {
@@ -8,6 +16,7 @@
 }
 
 .xkit-mute-warning {
+  margin-bottom: 20px;
   padding: 25px 20px;
   border-radius: 3px;
 
@@ -21,12 +30,4 @@
 
 .xkit-mute-warning button {
   color: var(--blog-link-color);
-}
-
-.xkit-mute-warning ~ * {
-  visibility: hidden !important;
-}
-
-.xkit-mute-warning ~ * :is(img, video, canvas) {
-  display: none;
 }

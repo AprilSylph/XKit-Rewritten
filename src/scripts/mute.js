@@ -10,6 +10,7 @@ const meatballButtonId = 'mute';
 const meatballButtonLabel = 'Mute options';
 
 const hiddenClass = 'xkit-mute-hidden';
+const onBlogHiddenClass = 'xkit-mute-hidden-on-blog';
 const activeClass = 'xkit-mute-active';
 const warningClass = 'xkit-mute-warning';
 const lengthenedClass = 'xkit-mute-lengthened';
@@ -40,28 +41,30 @@ const getNameAndUuid = async (timelineElement, timeline) => {
 
 const processBlogSpecificTimeline = async (timelineElement, timeline) => {
   const [name, uuid] = await getNameAndUuid(timelineElement, timeline);
+  const mode = mutedBlogs[uuid];
 
-  if (mutedBlogs[uuid] === 'all') {
-    timelineElement.dataset.muteExcludedUuid = uuid;
+  timelineElement.dataset.muteOnBlogUuid = uuid;
 
-    if (!dismissedWarningUuids.has(uuid)) {
-      const warningElement = dom('div', { class: warningClass }, null, [
-        `You have muted all posts from ${name}!`,
-        dom('br'),
-        dom('button', null, {
-          click: () => {
-            dismissedWarningUuids.add(uuid);
-            warningElement.remove();
-          }
-        }, 'show posts anyway')
-      ]);
-      timelineElement.before(warningElement);
-    }
+  if (mode && !dismissedWarningUuids.has(uuid)) {
+    const warningElement = dom('div', { class: warningClass }, null, [
+      `You have muted ${mode} posts from ${name}!`,
+      dom('br'),
+      dom('button', null, {
+        click: () => {
+          dismissedWarningUuids.add(uuid);
+          warningElement.remove();
+        }
+      }, 'show posts anyway')
+    ]);
+    warningElement.dataset.muteMode = mode;
+
+    const firstPost = timelineElement.querySelector(postSelector);
+    firstPost?.parentElement?.prepend(warningElement);
   }
 };
 
-const processTimelines = async () => {
-  for (const timelineElement of [...document.querySelectorAll('[data-timeline]')]) {
+const processTimelines = async (timelineElements) => {
+  for (const timelineElement of [...new Set(timelineElements)]) {
     const { timeline, muteProcessedTimeline } = timelineElement.dataset;
 
     const alreadyProcessed = timeline === muteProcessedTimeline;
@@ -77,7 +80,7 @@ const processTimelines = async () => {
       if (timelineElement.previousElementSibling?.classList?.contains(warningClass)) {
         timelineElement.previousElementSibling.remove();
       }
-      delete timelineElement.dataset.muteExcludedUuid;
+      delete timelineElement.dataset.muteOnBlogUuid;
 
       if (timeline.startsWith('/v2/blog/')) {
         await processBlogSpecificTimeline(timelineElement, timeline);
@@ -96,11 +99,11 @@ const updateNames = () => {
 };
 
 const processPosts = async function (postElements) {
-  await processTimelines();
+  await processTimelines(postElements.map(postElement => postElement.closest('[data-timeline]')));
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     const { blog: { name, uuid }, rebloggedRootUuid, content } = await timelineObject(postElement);
-    const { muteExcludedUuid } = postElement.closest('[data-timeline]').dataset;
+    const { muteOnBlogUuid: onBlogUuid } = postElement.closest('[data-timeline]').dataset;
 
     if (mutedBlogs[uuid] && names[uuid] !== name) {
       names[uuid] = name;
@@ -115,11 +118,11 @@ const processPosts = async function (postElements) {
     const originalUuid = isRebloggedPost ? rebloggedRootUuid : uuid;
     const reblogUuid = isRebloggedPost ? uuid : null;
 
-    if (originalUuid !== muteExcludedUuid && ['all', 'original'].includes(mutedBlogs[originalUuid])) {
-      postElement.classList.add(hiddenClass);
+    if (['all', 'original'].includes(mutedBlogs[originalUuid])) {
+      postElement.classList.add(originalUuid === onBlogUuid ? onBlogHiddenClass : hiddenClass);
     }
-    if (reblogUuid !== muteExcludedUuid && ['all', 'reblogged'].includes(mutedBlogs[reblogUuid])) {
-      postElement.classList.add(hiddenClass);
+    if (['all', 'reblogged'].includes(mutedBlogs[reblogUuid])) {
+      postElement.classList.add(reblogUuid === onBlogUuid ? onBlogHiddenClass : hiddenClass);
     }
   });
 };
@@ -192,9 +195,14 @@ export const onStorageChanged = async function (changes, areaName) {
     mutedBlogs = Object.fromEntries(mutedBlogsEntries ?? []);
 
     $(`.${hiddenClass}`).removeClass(hiddenClass);
+    $(`.${onBlogHiddenClass}`).removeClass(onBlogHiddenClass);
+    $(`.${activeClass}`).removeClass(activeClass);
+    $(`.${lengthenedClass}`).removeClass(lengthenedClass);
     $(`.${warningClass}`).remove();
     $('[data-mute-processed-timeline]').removeAttr('data-mute-processed-timeline');
-    $('[data-mute-excluded-uuid]').removeAttr('data-mute-excluded-uuid');
+    $('[data-mute-on-blog-uuid]').removeAttr('data-mute-blog-specific-uuid');
+    dismissedWarningUuids.clear();
+
     pageModifications.trigger(processPosts);
   }
 };
@@ -217,12 +225,12 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
   $(`.${hiddenClass}`).removeClass(hiddenClass);
+  $(`.${onBlogHiddenClass}`).removeClass(onBlogHiddenClass);
   $(`.${activeClass}`).removeClass(activeClass);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
   $(`.${warningClass}`).remove();
   $('[data-mute-processed-timeline]').removeAttr('data-mute-processed-timeline');
-  $('[data-mute-excluded-uuid]').removeAttr('data-mute-excluded-uuid');
-
+  $('[data-mute-on-blog-uuid]').removeAttr('data-mute-blog-specific-uuid');
   dismissedWarningUuids.clear();
 };
 

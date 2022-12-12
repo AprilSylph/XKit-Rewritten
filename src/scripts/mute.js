@@ -2,7 +2,7 @@ import { filterPostElements, blogViewSelector, postSelector } from '../util/inte
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
-import { onNewPosts, pageModifications } from '../util/mutations.js';
+import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 
@@ -186,24 +186,13 @@ export const onStorageChanged = async function (changes, areaName) {
     [mutedBlogsEntriesStorageKey]: mutedBlogsEntriesChanges
   } = changes;
 
-  if (namesChanges) {
-    ({ newValue: names } = namesChanges);
+  if (mutedBlogsEntriesChanges) {
+    clean().then(main);
+    return;
   }
 
-  if (mutedBlogsEntriesChanges) {
-    const { newValue: mutedBlogsEntries } = mutedBlogsEntriesChanges;
-    mutedBlogs = Object.fromEntries(mutedBlogsEntries ?? []);
-
-    $(`.${hiddenClass}`).removeClass(hiddenClass);
-    $(`.${onBlogHiddenClass}`).removeClass(onBlogHiddenClass);
-    $(`.${activeClass}`).removeClass(activeClass);
-    $(`.${lengthenedClass}`).removeClass(lengthenedClass);
-    $(`.${warningClass}`).remove();
-    $('[data-mute-processed-timeline]').removeAttr('data-mute-processed-timeline');
-    $('[data-mute-on-blog-uuid]').removeAttr('data-mute-blog-specific-uuid');
-    dismissedWarningUuids.clear();
-
-    pageModifications.trigger(processPosts);
+  if (namesChanges) {
+    ({ newValue: names } = namesChanges);
   }
 };
 

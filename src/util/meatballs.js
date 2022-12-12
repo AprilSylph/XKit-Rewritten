@@ -59,11 +59,21 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
     }, {
       click: onclick
     }, [
-      label
+      '\u22EF'
     ]);
     meatballItemButton.__timelineObjectData = __timelineObjectData;
 
-    meatballMenu.append(meatballItemButton);
+    if (label instanceof Function) {
+      const labelResult = label(__timelineObjectData);
+
+      if (labelResult instanceof Promise) {
+        labelResult.then(result => { meatballItemButton.textContent = result; });
+      } else {
+        meatballItemButton.textContent = labelResult;
+      }
+    } else {
+      meatballItemButton.textContent = label;
+    }
 
     if (postFilter instanceof Function) {
       const shouldShowItem = postFilter(__timelineObjectData);
@@ -75,6 +85,8 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
     } else {
       meatballItemButton.hidden = false;
     }
+
+    meatballMenu.append(meatballItemButton);
   });
 });
 

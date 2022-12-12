@@ -5,6 +5,7 @@ import { timelineObject } from '../util/react_props.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
+import { getPreferences } from '../util/preferences.js';
 
 const meatballButtonId = 'mute';
 const meatballButtonLabel = 'Mute options';
@@ -17,6 +18,8 @@ const lengthenedClass = 'xkit-mute-lengthened';
 
 const namesStorageKey = 'mute.names';
 const mutedBlogsEntriesStorageKey = 'mute.mutedBlogEntries';
+
+let checkTrail;
 
 let names = {};
 let mutedBlogs = {};
@@ -95,10 +98,10 @@ const processPosts = async function (postElements) {
   await processTimelines(postElements.map(postElement => postElement.closest('[data-timeline]')));
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
-    const { blog: { name, uuid }, rebloggedRootUuid } = await timelineObject(postElement);
+    const { blog: { name, uuid }, rebloggedRootUuid, trail = [] } = await timelineObject(postElement);
     const { muteOnBlogUuid: onBlogUuid } = postElement.closest('[data-timeline]').dataset;
 
-    if (mutedBlogs[uuid] && names[uuid] !== name) {
+    if (trail[uuid] && names[uuid] !== name) {
       names[uuid] = name;
       updateNames();
     }
@@ -113,6 +116,16 @@ const processPosts = async function (postElements) {
     }
     if (['all', 'reblogged'].includes(mutedBlogs[reblogUuid])) {
       postElement.classList.add(reblogUuid === onBlogUuid ? onBlogHiddenClass : hiddenClass);
+    }
+
+    if (checkTrail) {
+      for (const { blog } of trail) {
+        if (['all'].includes(mutedBlogs[blog?.uuid])) {
+          postElement.classList.add(
+            blog?.uuid === onBlogUuid ? onBlogHiddenClass : hiddenClass
+          );
+        }
+      }
     }
   });
 };
@@ -176,7 +189,10 @@ export const onStorageChanged = async function (changes, areaName) {
     [mutedBlogsEntriesStorageKey]: mutedBlogsEntriesChanges
   } = changes;
 
-  if (mutedBlogsEntriesChanges) {
+  if (
+    Object.keys(changes).some(key => key.startsWith('mute') && changes[key].oldValue !== undefined) ||
+    mutedBlogsEntriesChanges
+  ) {
     clean().then(main);
     return;
   }
@@ -187,6 +203,7 @@ export const onStorageChanged = async function (changes, areaName) {
 };
 
 export const main = async function () {
+  ({ checkTrail } = await getPreferences('mute'));
   ({ [namesStorageKey]: names = {} } = await browser.storage.local.get(namesStorageKey));
   const { [mutedBlogsEntriesStorageKey]: mutedBlogsEntries } = await browser.storage.local.get(mutedBlogsEntriesStorageKey);
   mutedBlogs = Object.fromEntries(mutedBlogsEntries ?? []);

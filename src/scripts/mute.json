@@ -11,6 +11,11 @@
       "type": "iframe",
       "label": "Manage muted users",
       "src": "/scripts/mute/options/index.html"
+    },
+    "checkTrail": {
+      "type": "checkbox",
+      "label": "Hide posts with a muted user anywhere in the trail",
+      "default": false
     }
   }
 }

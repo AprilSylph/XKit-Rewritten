@@ -66,8 +66,9 @@ const processTimelines = async () => {
 
     const alreadyProcessed = timeline === muteProcessedTimeline;
     const isChannel = timeline.startsWith('/v2/blog/') && !timelineElement.matches(blogViewSelector);
+    const isSinglePostBlogView = timeline.includes('permalink');
 
-    if (!alreadyProcessed && !isChannel) {
+    if (!alreadyProcessed && !isChannel && !isSinglePostBlogView) {
       timelineElement.dataset.muteProcessedTimeline = timeline;
 
       timelineElement.classList.add(activeClass);

@@ -3,10 +3,10 @@
   display: none;
 }
 
-[data-mute-mode="all"] ~ .xkit-mute-hidden-on-blog article {
+[data-mute-mode="all"] ~ div article {
   visibility: hidden !important;
 }
-[data-mute-mode="all"] ~ .xkit-mute-hidden-on-blog article :is(img, video, canvas) {
+[data-mute-mode="all"] ~ div article :is(img, video, canvas) {
   display: none;
 }
 

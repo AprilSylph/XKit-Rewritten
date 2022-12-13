@@ -1,0 +1,21 @@
+{
+  "title": "Search Tracking+",
+  "description": "Unread counts on followed searches",
+  "icon": {
+    "class_name": "ri-hashtag",
+    "color": "white",
+    "background_color": "#000000"
+  },
+  "preferences": {
+    "trackedSearches": {
+      "type": "textarea",
+      "label": "Searches to track (comma-separated)",
+      "default": ""
+    },
+    "onlyShowNew": {
+      "type": "checkbox",
+      "label": "Only show searches with new posts in the sidebar",
+      "default": false
+    }
+  }
+}

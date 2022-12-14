@@ -1,9 +1,9 @@
 {
   "title": "Mass Privater",
-  "description": "",
+  "description": "Make some/all of your posts private",
   "icon": {
     "class_name": "ri-lock-2-line",
     "color": "white",
-    "background_color": "#000000"
+    "background_color": "#A45028"
   }
 }

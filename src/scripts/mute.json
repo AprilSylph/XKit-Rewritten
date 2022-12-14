@@ -1,6 +1,6 @@
 {
   "title": "Mute",
-  "description": "",
+  "description": "Hide users' posts all over Tumblr",
   "icon": {
     "class_name": "ri-volume-mute-line",
     "color": "white",

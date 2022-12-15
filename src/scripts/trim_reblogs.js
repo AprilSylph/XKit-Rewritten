@@ -30,35 +30,24 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
 
   const {
     blog: { uuid },
-    rebloggedRootUuid,
-    rebloggedRootId
+    isBlocksPostFormat
   } = await timelineObject(postElement);
 
-  let unsureOfLegacyStatus;
-
-  if (rebloggedRootUuid && rebloggedRootId) {
-    try {
-      const { response: { shouldOpenInLegacy } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
-      if (shouldOpenInLegacy) {
-        await new Promise(resolve => {
-          showModal({
-            title: 'Note: Legacy post',
-            message: [
-              'The root post of this thread was originally created with the legacy post editor.',
-              '\n\n',
-              'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
-            ],
-            buttons: [
-              modalCancelButton,
-              dom('button', { class: 'blue' }, { click: () => resolve() }, ['Continue'])
-            ]
-          });
-        });
-      }
-      unsureOfLegacyStatus = false;
-    } catch (exception) {
-      unsureOfLegacyStatus = true;
-    }
+  if (isBlocksPostFormat === false) {
+    await new Promise(resolve => {
+      showModal({
+        title: 'Note: Legacy post',
+        message: [
+          'The root post of this thread was originally created with the legacy post editor.',
+          '\n\n',
+          'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
+        ],
+        buttons: [
+          modalCancelButton,
+          dom('button', { class: 'blue' }, { click: () => resolve() }, ['Continue'])
+        ]
+      });
+    });
   }
 
   const {
@@ -164,10 +153,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     title: 'Trim this post?',
     message: [
       'Select trail items to remove:',
-      previewElement,
-      ...(unsureOfLegacyStatus
-        ? ['\n\n', "Warning: XKit can't tell if this post originated from the legacy post editor. Trimming may fail if so."]
-        : [])
+      previewElement
     ],
     buttons: [modalCancelButton, trimButton]
   });

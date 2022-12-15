@@ -28,6 +28,11 @@
       "label": "Liked post colour",
       "default": ""
     },
+    "legacyColour": {
+      "type": "color",
+      "label": "Legacy thread/post colour",
+      "default": ""
+    },
     "tagColour": {
       "type": "color",
       "label": "Tag highlighting colour",

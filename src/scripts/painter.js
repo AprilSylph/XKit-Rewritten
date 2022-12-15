@@ -8,6 +8,7 @@ let ownColour;
 let originalColour;
 let reblogColour;
 let likedColour;
+let legacyColour;
 let tagColour;
 let colouredTags;
 let colourSourceTags;
@@ -17,7 +18,7 @@ let tagArray;
 const excludeClass = 'xkit-painter-done';
 
 const paint = postElements => filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
-  const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, tags } = await timelineObject(postElement);
+  const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, isBlocksPostFormat, tags } = await timelineObject(postElement);
 
   const coloursToApply = [];
 
@@ -25,6 +26,7 @@ const paint = postElements => filterPostElements(postElements, { excludeClass })
   if (liked && likedColour) coloursToApply.push(likedColour);
   if (rebloggedFromId && reblogColour) coloursToApply.push(reblogColour);
   if (!rebloggedFromId && originalColour) coloursToApply.push(originalColour);
+  if (isBlocksPostFormat === false && legacyColour) coloursToApply.push(legacyColour);
 
   if (tagColour) {
     let tagColourFound = false;
@@ -74,6 +76,7 @@ export const main = async function () {
     originalColour,
     reblogColour,
     likedColour,
+    legacyColour,
     tagColour,
     colouredTags,
     colourSourceTags

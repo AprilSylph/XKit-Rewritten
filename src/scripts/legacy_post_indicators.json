@@ -1,0 +1,11 @@
+{
+  "title": "Legacy Post Indicators",
+  "description": "",
+  "icon": {
+    "class_name": "ri-archive-line",
+    "color": "white",
+    "background_color": "#000000"
+  },
+  "preferences": {
+  }
+}

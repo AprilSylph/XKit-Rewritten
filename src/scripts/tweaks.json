@@ -19,11 +19,6 @@
       "label": "Highlight contributed content on reblogs",
       "default": false
     },
-    "show_full_note_count": {
-      "type": "checkbox",
-      "label": "Always show the full note count on posts",
-      "default": false
-    },
     "show_all_tags": {
       "type": "checkbox",
       "label": "Show every line of tags by default",

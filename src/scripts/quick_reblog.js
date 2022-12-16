@@ -32,7 +32,7 @@ const blogSelectorContainer = dom('div', { class: 'select-container' }, null, [b
 const commentInput = Object.assign(document.createElement('input'), {
   placeholder: 'Comment',
   autocomplete: 'off',
-  onkeydown: inputEvents,
+  onkeydown: inputEvents
 });
 const quickTagsList = Object.assign(document.createElement('div'), {
   className: 'quick-tags',
@@ -321,7 +321,7 @@ export const main = async function () {
     queueTag,
     alreadyRebloggedEnabled,
     alreadyRebloggedLimit,
-    enableKeyNav,
+    enableKeyNav
   } = await getPreferences('quick_reblog'));
 
   popupElement.className = popupPosition;

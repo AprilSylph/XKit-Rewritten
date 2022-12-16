@@ -21,7 +21,7 @@
     },
     "show_full_note_count": {
       "type": "checkbox",
-      "label": "Show the full note count on posts",
+      "label": "Always show the full note count on posts",
       "default": false
     },
     "show_all_tags": {

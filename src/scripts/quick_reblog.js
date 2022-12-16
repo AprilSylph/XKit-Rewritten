@@ -9,6 +9,22 @@ import { notify } from '../util/notifications.js';
 import { translate } from '../util/language_data.js';
 import { dom } from '../util/dom.js';
 
+const inputEvents = (event) => {
+  event.stopPropagation();
+
+  if (enableKeyNav) {
+    if (event.key === 'Enter' && event.ctrlKey) {
+      reblogButton.click();
+    }
+
+    if (event.key === 'Escape') {
+      const { parentNode } = popupElement;
+      parentNode?.removeEventListener('mouseleave', removePopupOnLeave);
+      popupElement.remove();
+    }
+  }
+};
+
 const popupElement = Object.assign(document.createElement('div'), { id: 'quick-reblog' });
 const blogSelector = document.createElement('select');
 const blogAvatar = dom('div', { class: 'avatar' });
@@ -16,7 +32,7 @@ const blogSelectorContainer = dom('div', { class: 'select-container' }, null, [b
 const commentInput = Object.assign(document.createElement('input'), {
   placeholder: 'Comment',
   autocomplete: 'off',
-  onkeydown: event => event.stopPropagation()
+  onkeydown: inputEvents,
 });
 const quickTagsList = Object.assign(document.createElement('div'), {
   className: 'quick-tags',
@@ -25,7 +41,7 @@ const quickTagsList = Object.assign(document.createElement('div'), {
 const tagsInput = Object.assign(document.createElement('input'), {
   placeholder: 'Tags (comma separated)',
   autocomplete: 'off',
-  onkeydown: event => event.stopPropagation()
+  onkeydown: inputEvents
 });
 tagsInput.setAttribute('list', 'quick-reblog-tag-suggestions');
 const tagSuggestions = Object.assign(document.createElement('datalist'), { id: 'quick-reblog-tag-suggestions' });
@@ -54,6 +70,7 @@ let reblogTag;
 let queueTag;
 let alreadyRebloggedEnabled;
 let alreadyRebloggedLimit;
+let enableKeyNav;
 
 const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
 const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
@@ -303,7 +320,8 @@ export const main = async function () {
     reblogTag,
     queueTag,
     alreadyRebloggedEnabled,
-    alreadyRebloggedLimit
+    alreadyRebloggedLimit,
+    enableKeyNav,
   } = await getPreferences('quick_reblog'));
 
   popupElement.className = popupPosition;

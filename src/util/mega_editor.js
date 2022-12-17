@@ -2,6 +2,12 @@ import { inject } from './inject.js';
 
 let formKey;
 
+const doPostForm = async (resource, body) => fetch(resource, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+  body
+});
+
 const pathnames = {
   add: 'add_tags_to_posts',
   remove: 'remove_tags_from_posts',
@@ -44,9 +50,5 @@ export const megaEdit = async function (postIds, options) {
     delete requestBody.tags;
   }
 
-  return inject(async (resource, body) => fetch(resource, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-    body
-  }), [`https://www.tumblr.com/${pathname}`, $.param(requestBody)]);
+  return inject(doPostForm, [`https://www.tumblr.com/${pathname}`, $.param(requestBody)]);
 };

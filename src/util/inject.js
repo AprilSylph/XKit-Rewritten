@@ -11,7 +11,8 @@ const injectMV2 = async (func, args = [], target = document.documentElement) => 
   const script = dom('script', { nonce }, null, [`{
     const { dataset } = document.currentScript;
     const ${name} = ${func.toString()};
-    const returnValue = ${name}(...${JSON.stringify(args)});
+    const element = document.currentScript.parentElement;
+    const returnValue = ${name}(...${JSON.stringify(args)}, element);
     ${async
       ? `returnValue
           .then(result => { dataset.result = JSON.stringify(result || null); })

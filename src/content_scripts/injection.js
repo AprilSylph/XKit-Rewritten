@@ -1,6 +1,6 @@
 'use strict';
 
-import('./injectable_functions.js').then(injectableFunctions =>
+import('../util/injectable_functions.js').then(injectableFunctions =>
   document.documentElement.addEventListener('xkitinjectionrequest', async event => {
     const { detail: { id, name, args }, target } = event;
 

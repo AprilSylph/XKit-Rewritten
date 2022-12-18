@@ -1,7 +1,7 @@
 chrome.scripting.registerContentScripts([
   {
-    id: 'xkit-injected',
-    js: ['injected.js'],
+    id: 'xkit-unsandboxed-injection',
+    js: ['./content_scripts/injection.js'],
     matches: ['*://www.tumblr.com/*'],
     excludeMatches: [
       '*://www.tumblr.com/login',

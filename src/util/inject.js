@@ -72,7 +72,8 @@ const injectMV3 = (func, args = [], target = document.documentElement) =>
   });
 
 /**
- * @param {Function} func - Function to run in the page context (can be async)
+ * @param {Function} func - Function to run in the page context (can be async). Must
+ *                          be in injectable_functions.js for MV3 compatibility.
  * @param {Array} [args] - Array of arguments to pass to the function via spread
  * @param {Element} [target] - Element to append script to; will be accessible as
  *                             document.currentScript.parentElement or as the last

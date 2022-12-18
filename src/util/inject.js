@@ -15,45 +15,41 @@ export const inject = async (func, args = [], target = document.documentElement)
   const async = func instanceof AsyncFunction;
 
   const script = dom('script', { nonce }, null, [`{
-    const { dataset } = document.currentScript;
+    const scriptElement = document.currentScript;
     const ${name} = ${func.toString()};
     const returnValue = ${name}(...${JSON.stringify(args)});
     ${async
       ? `returnValue
-          .then(result => { dataset.result = JSON.stringify(result || null); })
-          .catch(exception => { dataset.exception = JSON.stringify({
-            message: exception.message,
-            name: exception.name,
-            stack: exception.stack,
-            ...exception
-          })})
+          .then(result => scriptElement.dispatchEvent(
+            new CustomEvent('xkitinjection', { detail: { result } })
+          ))
+          .catch(exception => {
+            const e = {
+              message: exception.message,
+              name: exception.name,
+              stack: exception.stack,
+              ...exception
+            };
+            scriptElement.dispatchEvent(
+              new CustomEvent('xkitinjection', { detail: { exception: e } })
+            );
+          });
         `
-      : 'dataset.result = JSON.stringify(returnValue || null);'
+      : `scriptElement.dispatchEvent(
+          new CustomEvent('xkitinjection', { detail: { result: returnValue } })
+        );`
     }
   }`]);
 
-  if (async) {
-    return new Promise((resolve, reject) => {
-      const attributeObserver = new MutationObserver((mutations, observer) => {
-        if (mutations.some(({ attributeName }) => attributeName === 'data-result')) {
-          observer.disconnect();
-          resolve(JSON.parse(script.dataset.result));
-        } else if (mutations.some(({ attributeName }) => attributeName === 'data-exception')) {
-          observer.disconnect();
-          reject(JSON.parse(script.dataset.exception));
-        }
-      });
-
-      attributeObserver.observe(script, {
-        attributes: true,
-        attributeFilter: ['data-result', 'data-exception']
-      });
-      target.append(script);
-      script.remove();
-    });
-  } else {
+  return new Promise((resolve, reject) => {
+    script.addEventListener('xkitinjection', ({ detail: { result, exception } }) => {
+      if (result) {
+        resolve(result);
+      } else if (exception) {
+        reject(exception);
+      }
+    }, { once: true });
     target.append(script);
     script.remove();
-    return JSON.parse(script.dataset.result);
-  }
+  });
 };

@@ -146,55 +146,37 @@
 
   const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
-  const observer = new MutationObserver(mutations => {
-    const injectionScriptElements = mutations
-      .flatMap(({ addedNodes }) => [...addedNodes])
-      .filter(
-        addedNode =>
-          addedNode instanceof Element &&
-          addedNode.nodeName === 'SCRIPT' &&
-          addedNode.classList.contains('xkit-injection')
-      );
+  document.documentElement.addEventListener('xkitinjectionrequest', (event) => {
+    const { detail: { name, args, id }, target } = event;
 
-    injectionScriptElements.forEach((scriptElement) => {
-      const { dataset } = scriptElement;
-      const { name, args } = JSON.parse(dataset.data);
+    const fallback = async () => new Error(`function ${name} is not implemented in injected.js`);
+    const func = injectables[name] ?? fallback;
+    const async = func instanceof AsyncFunction;
 
-      const fallback = async () => new Error(`function ${name} is not implemented in injected.js`);
-      const func = injectables[name] ?? fallback;
-      const async = func instanceof AsyncFunction;
+    const returnValue = func(...args, target);
 
-      const returnValue = func(...args, scriptElement.parentElement);
-
-      if (async) {
-        returnValue
-          .then(result =>
-            scriptElement.dispatchEvent(
-              new CustomEvent('xkitinjection', { detail: { result } })
-            )
+    if (async) {
+      returnValue
+        .then(result =>
+          target.dispatchEvent(
+            new CustomEvent('xkitinjectionresponse', { detail: { id, result } })
           )
-          .catch(exception => {
-            const e = JSON.stringify({
-              message: exception.message,
-              name: exception.name,
-              stack: exception.stack,
-              ...exception
-            });
-            scriptElement.dispatchEvent(
-              new CustomEvent('xkitinjection', { detail: { exception: e } })
-            );
-          });
-      } else {
-        scriptElement.dispatchEvent(
-          new CustomEvent('xkitinjection', { detail: { result: returnValue } })
-        );
-      }
-      scriptElement.remove();
-    });
-  });
-
-  observer.observe(document, {
-    childList: true,
-    subtree: true
+        )
+        .catch(exception => {
+          const e = {
+            message: exception.message,
+            name: exception.name,
+            stack: exception.stack,
+            ...exception
+          };
+          target.dispatchEvent(
+            new CustomEvent('xkitinjectionresponse', { detail: { id, exception: e } })
+          );
+        });
+    } else {
+      target.dispatchEvent(
+        new CustomEvent('xkitinjectionresponse', { detail: { id, result: returnValue } })
+      );
+    }
   });
 }

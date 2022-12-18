@@ -53,19 +53,25 @@ const injectMV2 = async (func, args = [], target = document.documentElement) => 
 };
 
 const injectMV3 = async (func, args = [], target = document.documentElement) => {
-  const script = dom('script', { class: 'xkit-injection' });
-  script.dataset.data = JSON.stringify({ name: func.name, args });
+  const requestId = String(Math.random());
+  const data = { name: func.name, args, id: requestId };
 
   return new Promise((resolve, reject) => {
-    script.addEventListener('xkitinjection', ({ detail: { result, exception } }) => {
+    const handler = (event) => {
+      console.log(event);
+      const { detail: { id, result, exception } } = event;
+      if (id !== requestId) return;
+
+      target.removeEventListener('xkitinjectionresponse', handler);
       if (result) {
         resolve(result);
       } else if (exception) {
         reject(exception);
       }
-      script.remove();
-    }, { once: true });
-    target.append(script);
+    };
+    target.addEventListener('xkitinjectionresponse', handler);
+
+    target.dispatchEvent(new CustomEvent('xkitinjectionrequest', { detail: data, bubbles: true }));
   });
 };
 

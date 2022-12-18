@@ -155,7 +155,6 @@
           addedNode.nodeName === 'SCRIPT' &&
           addedNode.classList.contains('xkit-injection')
       );
-    injectionScriptElements.length && console.log('got injectionScriptElements', injectionScriptElements);
 
     injectionScriptElements.forEach((scriptElement) => {
       const { dataset } = scriptElement;
@@ -169,19 +168,26 @@
 
       if (async) {
         returnValue
-          .then(result => {
-            dataset.result = JSON.stringify(result || null);
-          })
+          .then(result =>
+            scriptElement.dispatchEvent(
+              new CustomEvent('xkitinjection', { detail: { result } })
+            )
+          )
           .catch(exception => {
-            dataset.exception = JSON.stringify({
+            const e = JSON.stringify({
               message: exception.message,
               name: exception.name,
               stack: exception.stack,
               ...exception
             });
+            scriptElement.dispatchEvent(
+              new CustomEvent('xkitinjection', { detail: { exception: e } })
+            );
           });
       } else {
-        dataset.result = JSON.stringify(returnValue || null);
+        scriptElement.dispatchEvent(
+          new CustomEvent('xkitinjection', { detail: { result: returnValue } })
+        );
       }
       scriptElement.remove();
     });

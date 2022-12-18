@@ -57,20 +57,14 @@ const injectMV3 = async (func, args = [], target = document.documentElement) => 
   script.dataset.data = JSON.stringify({ name: func.name, args });
 
   return new Promise((resolve, reject) => {
-    const attributeObserver = new MutationObserver((mutations, observer) => {
-      if (mutations.some(({ attributeName }) => attributeName === 'data-result')) {
-        observer.disconnect();
-        resolve(JSON.parse(script.dataset.result));
-      } else if (mutations.some(({ attributeName }) => attributeName === 'data-exception')) {
-        observer.disconnect();
-        reject(JSON.parse(script.dataset.exception));
+    script.addEventListener('xkitinjection', ({ detail: { result, exception } }) => {
+      if (result) {
+        resolve(result);
+      } else if (exception) {
+        reject(exception);
       }
-    });
-
-    attributeObserver.observe(script, {
-      attributes: true,
-      attributeFilter: ['data-result', 'data-exception']
-    });
+      script.remove();
+    }, { once: true });
     target.append(script);
   });
 };

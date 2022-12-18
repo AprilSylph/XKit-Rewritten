@@ -144,38 +144,26 @@
     doPostForm
   };
 
-  const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+  document.documentElement.addEventListener('xkitinjectionrequest', async (event) => {
+    const { detail: { id, name, args }, target } = event;
 
-  document.documentElement.addEventListener('xkitinjectionrequest', (event) => {
-    const { detail: { name, args, id }, target } = event;
-
-    const fallback = async () => new Error(`function ${name} is not implemented in injected.js`);
+    const fallback = async () => new Error(`function "${name}" is not implemented in injected.js`);
     const func = injectables[name] ?? fallback;
-    const async = func instanceof AsyncFunction;
 
-    const returnValue = func(...args, target);
-
-    if (async) {
-      returnValue
-        .then(result =>
-          target.dispatchEvent(
-            new CustomEvent('xkitinjectionresponse', { detail: { id, result } })
-          )
-        )
-        .catch(exception => {
-          const e = {
-            message: exception.message,
-            name: exception.name,
-            stack: exception.stack,
-            ...exception
-          };
-          target.dispatchEvent(
-            new CustomEvent('xkitinjectionresponse', { detail: { id, exception: e } })
-          );
-        });
-    } else {
+    try {
+      const result = await func(...args, target);
       target.dispatchEvent(
-        new CustomEvent('xkitinjectionresponse', { detail: { id, result: returnValue } })
+        new CustomEvent('xkitinjectionresponse', { detail: { id, result } })
+      );
+    } catch (exception) {
+      const e = {
+        message: exception.message,
+        name: exception.name,
+        stack: exception.stack,
+        ...exception
+      };
+      target.dispatchEvent(
+        new CustomEvent('xkitinjectionresponse', { detail: { id, exception: e } })
       );
     }
   });

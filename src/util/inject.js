@@ -52,28 +52,23 @@ const injectMV2 = async (func, args = [], target = document.documentElement) => 
   }
 };
 
-const injectMV3 = async (func, args = [], target = document.documentElement) => {
-  const requestId = String(Math.random());
-  const data = { name: func.name, args, id: requestId };
+const injectMV3 = (func, args = [], target = document.documentElement) =>
+  new Promise((resolve, reject) => {
+    const requestId = String(Math.random());
+    const data = { name: func.name, args, id: requestId };
 
-  return new Promise((resolve, reject) => {
-    const handler = (event) => {
-      console.log(event);
-      const { detail: { id, result, exception } } = event;
+    const responseHandler = ({ detail: { id, result, exception } }) => {
       if (id !== requestId) return;
 
-      target.removeEventListener('xkitinjectionresponse', handler);
-      if (result) {
-        resolve(result);
-      } else if (exception) {
-        reject(exception);
-      }
+      target.removeEventListener('xkitinjectionresponse', responseHandler);
+      exception ? reject(exception) : resolve(result);
     };
-    target.addEventListener('xkitinjectionresponse', handler);
+    target.addEventListener('xkitinjectionresponse', responseHandler);
 
-    target.dispatchEvent(new CustomEvent('xkitinjectionrequest', { detail: data, bubbles: true }));
+    target.dispatchEvent(
+      new CustomEvent('xkitinjectionrequest', { detail: data, bubbles: true })
+    );
   });
-};
 
 /**
  * @param {Function} func - Function to run in the page context (can be async)

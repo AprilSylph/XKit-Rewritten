@@ -115,7 +115,7 @@
     await waitForDocumentReady();
     if (!isRedpop()) return;
 
-    if (!isReactLoaded()) await waitForReactLoaded();
+    await waitForReactLoaded();
 
     $('style.xkit').remove();
 
@@ -124,9 +124,11 @@
     installedEnabledScripts.forEach(runScript);
   };
 
-  const waitForReactLoaded = () => new Promise(resolve => {
-    window.requestAnimationFrame(() => isReactLoaded() ? resolve() : waitForReactLoaded().then(resolve));
-  });
+  const waitForReactLoaded = async () => {
+    while (!isReactLoaded()) {
+      await new Promise(window.requestAnimationFrame);
+    }
+  };
 
   const waitForDocumentReady = () =>
     document.readyState === 'loading' &&

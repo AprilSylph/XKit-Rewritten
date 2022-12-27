@@ -104,13 +104,13 @@
       browser.storage.local.get('enabledScripts')
     ]);
 
-    const scriptPreloadLinks = installedScripts
-      .filter(name => enabledScripts.includes(name))
-      .map(name => createPreloadLinkElement(name, 'scripts'));
+    const installedEnabledScripts = installedScripts
+      .filter(name => enabledScripts.includes(name));
 
-    const utilPreloadLinks = installedUtils.map(name => createPreloadLinkElement(name, 'util'));
-
-    document.head.append(...scriptPreloadLinks, ...utilPreloadLinks);
+    document.head.append(
+      ...installedEnabledScripts.map(name => createPreloadLinkElement(name, 'scripts')),
+      ...installedUtils.map(name => createPreloadLinkElement(name, 'util'))
+    );
 
     await waitForDocumentReady();
     if (!isRedpop()) return;
@@ -121,14 +121,7 @@
 
     browser.storage.onChanged.addListener(onStorageChanged);
 
-    // load scripts sequentially to avoid chromium load failures
-    // for (const name of installedScripts.filter(name => enabledScripts.includes(name))) {
-    //   await import(getURL(`/scripts/${name}.js`));
-    // }
-
-    installedScripts
-      .filter(scriptName => enabledScripts.includes(scriptName))
-      .forEach(runScript);
+    installedEnabledScripts.forEach(runScript);
   };
 
   const waitForReactLoaded = () => new Promise(resolve => {

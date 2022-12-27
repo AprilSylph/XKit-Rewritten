@@ -77,9 +77,40 @@
     return installedScripts;
   };
 
+  const getInstalledUtils = async function () {
+    const url = getURL('/util/_index.json');
+    const file = await fetch(url);
+    const installedUtils = await file.json();
+
+    return installedUtils;
+  };
+
+  const createPreloadLinkElement = (name, directory) =>
+    Object.assign(document.createElement('link'), {
+      href: getURL(`/${directory}/${name}.js`),
+      rel: 'preload',
+      as: 'script',
+      crossOrigin: 'anonymous'
+    });
+
   const init = async function () {
-    const installedScripts = await getInstalledScripts();
-    const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
+    const [
+      installedScripts,
+      installedUtils,
+      { enabledScripts = [] }
+    ] = await Promise.all([
+      getInstalledScripts(),
+      getInstalledUtils(),
+      browser.storage.local.get('enabledScripts')
+    ]);
+
+    const scriptPreloadLinks = installedScripts
+      .filter(name => enabledScripts.includes(name))
+      .map(name => createPreloadLinkElement(name, 'scripts'));
+
+    const utilPreloadLinks = installedUtils.map(name => createPreloadLinkElement(name, 'util'));
+
+    document.head.append(...scriptPreloadLinks, ...utilPreloadLinks);
 
     await waitForDocumentReady();
     if (!isRedpop()) return;
@@ -89,11 +120,6 @@
     $('style.xkit').remove();
 
     browser.storage.onChanged.addListener(onStorageChanged);
-
-    // preload user and css map fetches
-    ['dom', 'inject', 'tumblr_helpers', 'css_map', 'user'].forEach(utilname =>
-      import(getURL(`/util/${utilname}.js`))
-    );
 
     // load scripts sequentially to avoid chromium load failures
     // for (const name of installedScripts.filter(name => enabledScripts.includes(name))) {

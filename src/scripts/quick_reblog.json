@@ -34,12 +34,8 @@
     },
     "quickTagsIntegration": {
       "type": "checkbox",
-      "label": "Enable integration with Quick Tags"
-    },
-    "quickTagsIntegrationSize": {
-      "type": "text",
-      "label": "Quick Tags size (1-20)",
-      "default": 4
+      "label": "Enable integration with Quick Tags",
+      "default": true
     },
     "showTagsInput": {
       "type": "checkbox",

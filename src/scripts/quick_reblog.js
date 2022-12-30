@@ -48,6 +48,7 @@ let showBlogSelector;
 let rememberLastBlog;
 let showCommentInput;
 let quickTagsIntegration;
+let quickTagsIntegrationSize;
 let showTagsInput;
 let showTagSuggestions;
 let reblogTag;
@@ -274,6 +275,21 @@ const renderQuickTags = async function () {
   });
 };
 
+const parseQuickTagsSize = (size) => {
+  if (!Number.isInteger(size)) {
+    return 4;
+  }
+
+  return Math.min(20, Math.max(1, size));
+};
+
+const setQuickTagsSize = (size) => {
+  quickTagsList.style.setProperty(
+    '--quick-tags-size',
+    parseQuickTagsSize(size)
+  );
+};
+
 const updateQuickTags = (changes, areaName) => {
   if (areaName === 'local' && Object.keys(changes).includes(quickTagsStorageKey)) {
     renderQuickTags();
@@ -298,6 +314,7 @@ export const main = async function () {
     rememberLastBlog,
     showCommentInput,
     quickTagsIntegration,
+    quickTagsIntegrationSize,
     showTagsInput,
     showTagSuggestions,
     reblogTag,
@@ -340,6 +357,7 @@ export const main = async function () {
   $(document.body).on('mouseenter', reblogButtonSelector, showPopupOnHover);
 
   if (quickTagsIntegration) {
+    setQuickTagsSize(Number.parseInt(quickTagsIntegrationSize));
     browser.storage.onChanged.addListener(updateQuickTags);
     renderQuickTags();
   }

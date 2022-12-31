@@ -4,6 +4,7 @@ import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
 import { onNewPosts } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
+import { buildStyle } from '../util/interface.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';

@@ -11,11 +11,7 @@ on:
   pull_request:
     branches:
       - master
-  workflow_run:
-    workflows:
-      - Vendor
-    types:
-      - completed
+  workflow_call:
 
 jobs:
   test:

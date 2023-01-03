@@ -16,5 +16,5 @@ jobs:
       - name: Upload Source
         uses: actions/upload-artifact@v3
         with:
-          name: XKit Rewritten (PR ${{ github.event.pull_request.number }})
+          name: XKit Rewritten (#${{ github.event.pull_request.number }})
           path: src/**

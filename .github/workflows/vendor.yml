@@ -37,6 +37,3 @@ jobs:
 
     - name: Push
       run: git push
-  ci:
-    needs: libs
-    uses: ./.github/workflows/ci.yml

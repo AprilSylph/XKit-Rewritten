@@ -2,6 +2,9 @@ name: Vendor
 
 on: workflow_dispatch
 
+permissions:
+  contents: write
+
 jobs:
   libs:
     name: Libraries
@@ -25,7 +28,7 @@ jobs:
     - name: Configure git
       run: |
         git config --global user.name "${{ github.event.sender.name || github.event.sender.login }}"
-        git config --global user.email "${{ github.event.sender.id }}@users.noreply.github.com"
+        git config --global user.email "${{ github.event.sender.id }}+${{ github.event.sender.login }}@users.noreply.github.com"
 
     - name: Commit changes
       run: |

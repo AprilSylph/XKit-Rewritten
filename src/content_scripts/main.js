@@ -85,9 +85,9 @@
     return installedUtils;
   };
 
-  const createPreloadLinkElement = (name, directory) =>
+  const createPreloadLinkElement = path =>
     Object.assign(document.createElement('link'), {
-      href: getURL(`/${directory}/${name}.js`),
+      href: getURL(path),
       rel: 'preload',
       as: 'script',
       crossOrigin: 'anonymous'
@@ -108,8 +108,8 @@
       .filter(name => enabledScripts.includes(name));
 
     document.head.append(
-      ...installedEnabledScripts.map(name => createPreloadLinkElement(name, 'scripts')),
-      ...installedUtils.map(name => createPreloadLinkElement(name, 'util'))
+      ...installedEnabledScripts.map(name => createPreloadLinkElement(`/scripts/${name}.js`)),
+      ...installedUtils.map(name => createPreloadLinkElement(`/util/${name}.js`))
     );
 
     await waitForDocumentReady();

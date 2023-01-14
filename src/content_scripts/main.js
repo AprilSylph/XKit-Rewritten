@@ -85,6 +85,10 @@
     const installedScripts = await getInstalledScripts();
     const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
+    for (const scriptName of installedScripts.filter(scriptName => enabledScripts.includes(scriptName))) {
+      await import(getURL(`/scripts/${scriptName}.js`));
+    }
+
     installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))
       .forEach(runScript);

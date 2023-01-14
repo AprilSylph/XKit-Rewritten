@@ -85,6 +85,7 @@
     const installedScripts = await getInstalledScripts();
     const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
+    // break up import waterfall to prevent chromium failures on slow computers
     for (const scriptName of installedScripts.filter(scriptName => enabledScripts.includes(scriptName))) {
       await import(getURL(`/scripts/${scriptName}.js`));
     }

@@ -1,0 +1,37 @@
+{
+  "title": "XNeko",
+  "description": "A cat for your dashboard!",
+  "icon": {
+    "class_name": "ri-github-line",
+    "color": "white",
+    "background_color": "#779abb"
+  },
+  "preferences": {
+    "appearance": {
+      "type": "select",
+      "label": "Appearance",
+      "options": [
+        { "value": "default", "label": "Default Neko" },
+        { "value": "pink", "label": "Pink Neko" },
+        { "value": "santa", "label": "Santa Neko" },
+        { "value": "xenixlet", "label": "Xenixlet Neko" }
+      ],
+      "default": "default"
+    },
+    "catName": {
+      "type": "text",
+      "label": "Your cat's name",
+      "default": "Maneki-neko"
+    },
+    "fixed": {
+      "type": "checkbox",
+      "label": "Stay in the window regardless of scrolling",
+      "default": true
+    },
+    "stayAway": {
+      "type": "checkbox",
+      "label": "Stay at least 10 pixels away from the cursor",
+      "default": true
+    }
+  }
+}

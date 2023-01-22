@@ -51,6 +51,10 @@ export const navigate = location =>
 
 export const onClickNavigate = event => {
   if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
-  event.preventDefault();
-  navigate(event.currentTarget.href);
+
+  const href = event.currentTarget.getAttribute('href');
+  if (href) {
+    event.preventDefault();
+    navigate(href);
+  }
 };

@@ -1,7 +1,7 @@
 import { dom } from '../util/dom.js';
 import { showModal, modalCancelButton, modalCompleteButton, hideModal } from '../util/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, createEditRequestBody } from '../util/tumblr_helpers.js';
 import { userBlogs } from '../util/user.js';
 
 const getPostsFormId = 'xkit-mass-tip-toggler-get-posts';
@@ -234,29 +234,11 @@ const togglePosts = async ({ uuid, name, tags, newCanBeTipped }) => {
   for (const [id, postData] of filteredPostsMap.entries()) {
     toggleStatus.textContent = `${newCanBeTipped ? 'Enabling' : 'Disabling'} tipping on post with ID ${id}...`;
     try {
-      const {
-        content = [],
-        layout,
-        state = 'published',
-        publishOn,
-        date,
-        tags = [],
-        sourceUrlRaw,
-        slug = ''
-      } = postData;
-
       await Promise.all([
         apiFetch(`/v2/blog/${uuid}/posts/${id}`, {
           method: 'PUT',
           body: {
-            content,
-            layout,
-            state,
-            publish_on: publishOn,
-            date,
-            tags: tags.join(','),
-            source_url: sourceUrlRaw,
-            slug,
+            ...createEditRequestBody(postData),
             canBeTipped: newCanBeTipped
           }
         }),

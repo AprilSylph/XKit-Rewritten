@@ -33,4 +33,13 @@
 
 #version {
   margin-left: 1ch;
+  user-select: all;
+}
+
+#version::before {
+  content: "v";
+}
+
+#version::after {
+  content: " (Beta)";
 }

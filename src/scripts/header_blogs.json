@@ -1,0 +1,17 @@
+{
+  "title": "Header Blogs",
+  "description": "Show your blogs in the header",
+  "icon": {
+    "class_name": "ri-account-circle-line",
+    "color": "white",
+    "background_color": "#000000"
+  },
+  "relatedTerms": [ "Header Options" ],
+  "preferences": {
+    "maxBlogs": {
+      "type": "text",
+      "label": "Maximum blogs",
+      "default": "100"
+    }
+  }
+}

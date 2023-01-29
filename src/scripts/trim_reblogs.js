@@ -7,7 +7,7 @@ import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { timelineObject } from '../util/react_props.js';
 import { buildSvg } from '../util/remixicon.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, createEditRequestBody } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-scissors-cut-line';
 const buttonClass = 'xkit-trim-reblogs-button';
@@ -62,19 +62,8 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     }
   }
 
-  const {
-    response: {
-      blog,
-      content = [],
-      layout,
-      state = 'published',
-      publishOn,
-      date,
-      tags = [],
-      slug = '',
-      trail = []
-    }
-  } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
+  const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
+  const { blog, content = [], trail = [] } = postData;
 
   if (!trail?.length) {
     notify('This post is too short to trim!');
@@ -128,13 +117,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
         method: 'PUT',
         body: {
-          content,
-          layout,
-          state,
-          publish_on: publishOn,
-          date,
-          tags: tags.join(','),
-          slug,
+          ...createEditRequestBody(postData),
           exclude_trail_items: excludeTrailItems
         }
       });

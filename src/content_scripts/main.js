@@ -7,8 +7,6 @@
 
   const restartListeners = {};
 
-  const warningElements = new Map();
-
   const runScript = async function (name) {
     const scriptPath = getURL(`/scripts/${name}.js`);
     const { main, clean, stylesheet, onStorageChanged } = await import(scriptPath);
@@ -37,9 +35,6 @@
     };
 
     browser.storage.onChanged.addListener(restartListeners[name]);
-
-    warningElements.get(name)?.remove();
-    warningElements.delete(name);
   };
 
   const destroyScript = async function (name) {
@@ -92,24 +87,7 @@
 
     installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))
-      .forEach(scriptName => {
-        const warningElement = document.createElement('div');
-        warningElement.className = 'visible';
-        warningElement.replaceChildren(`XKit Rewritten failed to import ${scriptName.replaceAll('_', ' ')}`);
-        warningElements.set(scriptName, warningElement);
-      });
-
-    installedScripts
-      .filter(scriptName => enabledScripts.includes(scriptName))
       .forEach(runScript);
-
-    setTimeout(async () => {
-      if (warningElements.size) {
-        const { addToastContainerToPage } = await import('../util/notifications.js');
-        const toastContainer = await addToastContainerToPage();
-        toastContainer.append(...warningElements.values());
-      }
-    }, 3000);
   };
 
   const waitForReactLoaded = () => new Promise(resolve => {

@@ -6,7 +6,7 @@ import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
 import { getPreferences } from '../util/preferences.js';
 import { timelineObject, editPostFormTags } from '../util/react_props.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, createEditRequestBody } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
@@ -114,36 +114,40 @@ export const onStorageChanged = async function (changes, areaName) {
   }
 };
 
+const appendWithoutViewportOverflow = (element, target) => {
+  element.className = 'below';
+  target.appendChild(element);
+  if (element.getBoundingClientRect().bottom > document.documentElement.clientHeight) {
+    element.className = 'above';
+  }
+};
+
 const togglePopupDisplay = async function ({ target, currentTarget }) {
   if (target === popupElement || popupElement.contains(target)) { return; }
 
-  const appendOrRemove = currentTarget.contains(popupElement) ? 'removeChild' : 'appendChild';
-  currentTarget[appendOrRemove](popupElement);
+  if (currentTarget.contains(popupElement)) {
+    currentTarget.removeChild(popupElement);
+  } else {
+    appendWithoutViewportOverflow(popupElement, currentTarget);
+  }
 };
 
 const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) {
   if (target === postOptionPopupElement || postOptionPopupElement.contains(target)) { return; }
 
-  const appendOrRemove = currentTarget.contains(postOptionPopupElement) ? 'removeChild' : 'appendChild';
-  currentTarget[appendOrRemove](postOptionPopupElement);
+  if (currentTarget.contains(postOptionPopupElement)) {
+    currentTarget.removeChild(postOptionPopupElement);
+  } else {
+    appendWithoutViewportOverflow(postOptionPopupElement, currentTarget);
+  }
 };
 
 const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   const postId = postElement.dataset.id;
   const { blog: { uuid } } = await timelineObject(postElement);
 
-  const {
-    response: {
-      content = {},
-      layout,
-      state = 'published',
-      publishOn,
-      date,
-      tags = [],
-      sourceUrlRaw,
-      slug = ''
-    }
-  } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
+  const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
+  const { tags = [] } = postData;
 
   const tagsToAdd = inputTags.filter(inputTag => tags.includes(inputTag) === false);
   if (tagsToAdd.length === 0) { return; }
@@ -154,14 +158,8 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
     const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
       method: 'PUT',
       body: {
-        content,
-        layout,
-        state,
-        publish_on: publishOn,
-        date,
-        tags: tags.join(','),
-        source_url: sourceUrlRaw,
-        slug
+        ...createEditRequestBody(postData),
+        tags: tags.join(',')
       }
     });
 

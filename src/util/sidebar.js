@@ -1,5 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { blogViewSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 
 $('#xkit-sidebar').remove();
@@ -36,7 +37,7 @@ const buildSidebarRow = ({ label, onclick, count, carrot }) =>
     dom('button', null, { click: onclick }, [
       dom('span', null, null, [label]),
       count !== undefined
-        ? dom('span', { class: 'count' }, null, [count])
+        ? dom('span', { class: 'count', 'data-count-for': label }, null, [count])
         : carrot === true
           ? carrotSvg.cloneNode(true)
           : ''
@@ -78,25 +79,33 @@ export const removeSidebarItem = id => {
   sidebarItem.remove();
 };
 
-const sidebarItemSelector = keyToCss('sidebarItem');
+const mrecContainerSelector = `${keyToCss('mrecContainer')} *`;
+
+// Sidebar on explore/search/hubs
+const desktopContainerSelector = `aside ${keyToCss('desktopContainer', 'summary')}`;
+// Sidebar on most other desktop pages
+const sidebarItemSelector = keyToCss('sidebarItem', 'sidebarContent');
+// Mobile drawer
 const navSubHeaderSelector = keyToCss('navSubHeader');
 
-const addSidebarToPage = () => {
+const addSidebarToPage = (siblingCandidates) => {
   [...sidebarItems.children]
     .filter(sidebarItem => conditions.has(sidebarItem))
     .forEach(sidebarItem => { sidebarItem.hidden = !conditions.get(sidebarItem)(); });
 
-  const firstSidebarItem = document.querySelector(sidebarItemSelector);
-  const firstNavSubHeader = document.querySelector(navSubHeaderSelector);
+  const target = siblingCandidates
+    .filter(target => !target.matches(blogViewSelector))
+    .filter(target => !target.matches(mrecContainerSelector))[0]
+    ?.parentElement
+    ?.firstElementChild;
 
-  if (firstSidebarItem) {
-    const target = getComputedStyle(firstSidebarItem).position === 'sticky'
-      ? firstSidebarItem
-      : firstSidebarItem.nextElementSibling;
-    firstSidebarItem.parentNode.insertBefore(sidebarItems, target);
-  } else if (firstNavSubHeader) {
-    firstNavSubHeader.parentNode.insertBefore(sidebarItems, firstNavSubHeader);
-  }
+  if (!target || target === sidebarItems) return;
+
+  const insertAbove = getComputedStyle(target).position === 'sticky' ||
+    target.matches(desktopContainerSelector) ||
+    target.matches(navSubHeaderSelector);
+
+  target[insertAbove ? 'before' : 'after'](sidebarItems);
 };
 
-pageModifications.register(`${sidebarItemSelector}, ${navSubHeaderSelector}`, addSidebarToPage);
+pageModifications.register(`${desktopContainerSelector}, ${sidebarItemSelector}, ${navSubHeaderSelector}`, addSidebarToPage);

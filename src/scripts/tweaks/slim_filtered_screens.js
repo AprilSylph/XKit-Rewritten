@@ -2,6 +2,7 @@ import { keyToCss } from '../../util/css_map.js';
 import { postSelector, buildStyle } from '../../util/interface.js';
 
 const filteredScreenSelector = `${postSelector}:not(${keyToCss('masonryTimelineObject')}) ${keyToCss('filteredScreen')}`;
+
 const styleElement = buildStyle(`
 ${filteredScreenSelector} {
   flex-direction: row;
@@ -12,26 +13,21 @@ ${filteredScreenSelector} {
   padding-bottom: var(--post-header-vertical-padding);
 }
 
-${filteredScreenSelector} > p {
+${filteredScreenSelector} ${keyToCss('message')} {
   flex-shrink: 0;
 }
 
-${filteredScreenSelector} > a {
-  overflow: hidden;
+${filteredScreenSelector} ${keyToCss('linkOut')} {
   margin-right: auto;
   margin-left: 1ch;
 
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  -webkit-line-clamp: 1;
 }
 
-${filteredScreenSelector} > button {
+${filteredScreenSelector} ${keyToCss('viewPostLinkWrapper')} {
   flex-shrink: 0;
-  margin-left: 1ch;
-}
-
-${filteredScreenSelector} > button > span {
   margin-top: 0;
+  margin-left: 1ch;
 }
 `);
 

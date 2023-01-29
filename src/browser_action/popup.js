@@ -53,7 +53,7 @@ document.getElementById('filter').addEventListener('input', event => {
 });
 
 const versionElement = document.getElementById('version');
-versionElement.textContent = `v${browser.runtime.getManifest().version} (Beta)`;
+versionElement.textContent = browser.runtime.getManifest().version;
 
 const params = new URLSearchParams(location.search);
 const pageIsEmbedded = params.get('embedded') === 'true';

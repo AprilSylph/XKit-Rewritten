@@ -1,4 +1,4 @@
-import { filterPostElements } from '../util/interface.js';
+import { filterPostElements, postSelector } from '../util/interface.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 
@@ -12,6 +12,33 @@ const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 const storageKey = 'seen_posts.seenPosts';
 let seenPosts = [];
 
+/** @type {Map<Element, ?number>} */
+const timers = new Map();
+
+const observer = new IntersectionObserver(
+  (entries) => entries.forEach(({ isIntersecting, target: articleElement }) => {
+    if (isIntersecting) {
+      if (!timers.has(articleElement)) {
+        timers.set(articleElement, setTimeout(() => markAsSeen(articleElement), 300));
+      }
+    } else {
+      clearTimeout(timers.get(articleElement));
+      timers.delete(articleElement);
+    }
+  }),
+  { rootMargin: '-20px 0px' }
+);
+
+const markAsSeen = (articleElement) => {
+  observer.unobserve(articleElement);
+  timers.delete(articleElement);
+
+  const postElement = articleElement.closest(postSelector);
+  seenPosts.push(postElement.dataset.id);
+  seenPosts.splice(0, seenPosts.length - 10000);
+  browser.storage.local.set({ [storageKey]: seenPosts });
+};
+
 const dimPosts = function (postElements) {
   for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
     const { id } = postElement.dataset;
@@ -19,13 +46,9 @@ const dimPosts = function (postElements) {
     if (seenPosts.includes(id)) {
       postElement.classList.add(dimClass);
     } else {
-      seenPosts.push(id);
+      observer.observe(postElement.querySelector('article'));
     }
   }
-
-  seenPosts.splice(0, seenPosts.length - 10000);
-
-  browser.storage.local.set({ [storageKey]: seenPosts });
 };
 
 export const onStorageChanged = async function (changes, areaName) {
@@ -58,6 +81,11 @@ export const main = async function () {
 
 export const clean = async function () {
   onNewPosts.removeListener(dimPosts);
+
+  observer.disconnect();
+  timers.forEach((timerId) => clearTimeout(timerId));
+  timers.clear();
+
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${dimClass}`).removeClass(dimClass);
   $(`.${onlyDimAvatarsClass}`).removeClass(onlyDimAvatarsClass);

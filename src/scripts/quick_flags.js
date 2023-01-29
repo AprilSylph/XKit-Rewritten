@@ -6,7 +6,7 @@ import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { getPreferences } from '../util/preferences.js';
 import { timelineObject } from '../util/react_props.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, createEditRequestBody } from '../util/tumblr_helpers.js';
 
 const buttonClass = 'xkit-quick-flags-button';
 const excludeClass = 'xkit-quick-flags-done';
@@ -110,33 +110,14 @@ const setLabelsOnPost = async function ({ id, uuid, hasCommunityLabel, categorie
     );
   }
 
-  // todo: extract this if adding mass edit mode
-  const {
-    response: {
-      content = [],
-      layout,
-      state = 'published',
-      publishOn,
-      date,
-      tags = [],
-      sourceUrlRaw,
-      slug = ''
-    }
-  } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
+  const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
 
   const {
     response: { displayText }
   } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`, {
     method: 'PUT',
     body: {
-      content,
-      layout,
-      state,
-      publish_on: publishOn,
-      date,
-      tags: tags.join(','),
-      source_url: sourceUrlRaw,
-      slug,
+      ...createEditRequestBody(postData),
       has_community_label: hasCommunityLabel,
       community_label_categories: categories
     }

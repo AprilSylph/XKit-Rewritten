@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "packageRules": [
+    {
+      "groupName": "vendored dependencies",
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["dependencies"],
+      "matchPackagePatterns": ["*"]
+    },
+    {
+      "groupName": "dev dependencies",
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
+      "matchPackagePatterns": ["*"]
+    },
+    {
+      "groupName": "automation dependencies",
+      "matchManagers": ["github-actions"],
+      "matchPackagePatterns": ["*"]
+    }
+  ],
+  "rangeStrategy": "bump",
+  "schedule": [
+    "before 6am on the first day of the month"
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": false
+  }
+}

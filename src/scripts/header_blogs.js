@@ -3,6 +3,7 @@ import { dom } from '../util/dom.js';
 import { buildStyle } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
+import { onClickNavigate } from '../util/tumblr_helpers.js';
 import { userBlogs } from '../util/user.js';
 
 const styleElement = buildStyle(`
@@ -54,7 +55,7 @@ export const main = async function () {
     .slice(0, Number.parseInt(maxBlogs, 10) || Infinity)
     .map(({ name, avatar, theme: { avatarShape } }) => {
       const { url } = avatar[avatar.length - 1];
-      return dom('a', { href: `/blog/${name}`, title: name }, null, [
+      return dom('a', { href: `/blog/${name}`, title: name }, { click: onClickNavigate }, [
         dom('img', { class: `xkit-header-avatar ${avatarShape}`, src: url })
       ]);
     });

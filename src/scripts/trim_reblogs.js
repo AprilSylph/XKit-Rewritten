@@ -44,7 +44,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
         ],
         buttons: [
           modalCancelButton,
-          dom('button', { class: 'blue' }, { click: () => resolve() }, ['Continue'])
+          dom('button', { class: 'blue' }, { click: resolve }, ['Continue'])
         ]
       });
     });

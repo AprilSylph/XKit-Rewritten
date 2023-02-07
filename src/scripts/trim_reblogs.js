@@ -38,7 +38,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       showModal({
         title: 'Note: Legacy post',
         message: [
-          'The root post of this thread was originally created with, or a post in it was edited with, the ',
+          'This thread was originally created, or at some point edited, using the ',
           dom('strong', null, null, 'legacy post editor'),
           ' or a previous XKit version.',
           '\n\n',

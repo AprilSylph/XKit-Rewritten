@@ -38,10 +38,9 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       showModal({
         title: 'Note: Legacy post',
         message: [
-          'The root post of this thread was originally created with the ',
+          'The root post of this thread was originally created with, or a post in it was edited with, the ',
           dom('strong', null, null, 'legacy post editor'),
-          ' ',
-          dom('small', null, null, '(or it was edited with a previous XKit version.)'),
+          ' or a previous XKit version.',
           '\n\n',
           'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
         ],

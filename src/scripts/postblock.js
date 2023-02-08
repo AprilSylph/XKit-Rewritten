@@ -57,7 +57,11 @@ export const onStorageChanged = async function (changes, areaName) {
 };
 
 export const main = async function () {
-  registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
+  registerMeatballItem({
+    id: meatballButtonId,
+    label: ({ blogName }) => `Block post by ${blogName}`,
+    onclick: onButtonClicked
+  });
 
   onNewPosts.addListener(processPosts);
 };

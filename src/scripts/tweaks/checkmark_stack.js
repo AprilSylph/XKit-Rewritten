@@ -5,15 +5,17 @@ import { pageModifications } from '../../util/mutations.js';
 let styleElementMax = 0;
 const styleElement = buildStyle();
 
+const transitionStyleElement = buildStyle(`
+  ${keyToCss('blueCheckmarksContainer')}, ${keyToCss('blueCheckmarkContainer')} {
+    transition: margin 0.5s ease;
+  }
+`);
+
 const updateStyleElement = count => {
   if (count > styleElementMax) {
     styleElementMax = count;
 
     styleElement.textContent = `
-      ${keyToCss('blueCheckmarksContainer')}, ${keyToCss('blueCheckmarkContainer')} {
-        transition: margin 0.5s ease;
-      }
-
       *:not(:hover) > ${keyToCss('blueCheckmarksContainer')} ${keyToCss('blueCheckmarkContainer')} {
         margin-right: -10px;
       }
@@ -41,12 +43,18 @@ const updateStyleElement = count => {
 const processBlueCheckmarksContainer = blueCheckmarksContainers =>
   updateStyleElement(Math.max(...blueCheckmarksContainers.map(el => el.children.length)));
 
+const waitForRender = () =>
+  new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
 export const main = async () => {
   document.head.append(styleElement);
   pageModifications.register(keyToCss('blueCheckmarksContainer'), processBlueCheckmarksContainer);
+
+  waitForRender().then(() => document.head.append(transitionStyleElement));
 };
 
 export const clean = async () => {
   pageModifications.unregister(processBlueCheckmarksContainer);
   styleElement.remove();
+  transitionStyleElement.remove();
 };

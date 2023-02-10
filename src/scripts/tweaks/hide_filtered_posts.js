@@ -12,7 +12,7 @@ const hideFilteredPosts = filteredScreens => filteredScreens
 export const main = async function () {
   const filteredScreenSelector = `article ${keyToCss('filteredScreen')}`;
   pageModifications.register(filteredScreenSelector, hideFilteredPosts);
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {

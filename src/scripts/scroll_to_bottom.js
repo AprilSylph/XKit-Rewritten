@@ -85,7 +85,7 @@ const addButtonToPage = async function ([scrollToTopButton]) {
 
 export const main = async function () {
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {

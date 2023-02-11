@@ -10,11 +10,11 @@
   "relatedTerms": [ "nsfw" ],
   "preferences": {
     "blockingMode": {
-      "label": "Hide media from",
+      "label": "Hide:",
       "type": "select",
       "options": [
-        { "value": "smart", "label": "flagged blogs only" },
-        { "value": "all", "label": "all blogs" }
+        { "value": "smart", "label": "flagged/mature media only" },
+        { "value": "all", "label": "all media" }
       ],
       "default": "smart"
     },

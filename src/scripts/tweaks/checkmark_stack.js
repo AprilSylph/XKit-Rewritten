@@ -9,6 +9,10 @@ const transitionStyleElement = buildStyle(`
   ${keyToCss('blueCheckmarksContainer')}, ${keyToCss('blueCheckmarkContainer')} {
     transition: margin 0.5s ease;
   }
+
+  ${keyToCss('blueCheckmarkContainer')} > :is(svg, img) {
+    transition: filter 0.35s linear;
+  }
 `);
 
 const updateStyleElement = maxCheckmarks => {
@@ -24,7 +28,7 @@ const updateStyleElement = maxCheckmarks => {
       margin-right: 10px;
     }
 
-    ${keyToCss('blueCheckmarkContainer')} > :is(svg, img) {
+    *:not(:hover) > ${keyToCss('blueCheckmarksContainer')} ${keyToCss('blueCheckmarkContainer')} > :is(svg, img) {
       filter: drop-shadow(1px 0px 2px rgb(0 0 0 / 0.5));
     }
 

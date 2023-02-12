@@ -375,7 +375,7 @@ const unfollowBlogs = async blogs => {
 };
 
 export const main = async () => {
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
   addSidebarItem(sidebarOptions);
 };
 

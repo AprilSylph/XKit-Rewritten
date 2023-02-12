@@ -1,6 +1,6 @@
 {
   "title": "Trim Reblogs",
-  "description": "Cut long threads down to size",
+  "description": "Trim threads after posting or drafting",
   "icon": {
     "class_name": "ri-scissors-cut-line",
     "color": "white",

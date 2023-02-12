@@ -14,6 +14,10 @@
   max-width: 250px;
 }
 
+#quick-reblog [hidden] {
+  display: none !important;
+}
+
 @media (max-width: 650px) {
   #quick-reblog {
     top: 50%;
@@ -77,15 +81,39 @@ div:first-child + span + #quick-reblog,
   border-radius: 0;
   color: inherit;
   background-color: inherit;
+}
+
+#quick-reblog input {
   padding: 1ch;
   margin-bottom: 2px;
 }
 
 #quick-reblog select {
-  padding-left: 0.5ch;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   font-family: var(--font-family);
   font-weight: bold;
+}
+
+#quick-reblog .select-container {
+  display: flex;
+  padding: 4px;
+  margin-bottom: 2px;
+
+  background-color: inherit;
+}
+
+#quick-reblog .avatar {
+  flex: none;
+  height: 26px;
+  width: 26px;
+  margin-right: 2px;
+
+  background-size: cover;
+  border-radius: 2px;
 }
 
 #quick-reblog .quick-tags {

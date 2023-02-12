@@ -3,7 +3,7 @@ import { buildStyle } from '../../util/interface.js';
 
 const styleElement = buildStyle(`
 ${keyToCss('tags')}${keyToCss('collapsed')} {
-  max-height: none;
+  max-height: none !important;
 }
 ${keyToCss('seeAll')} {
   display: none;
@@ -11,7 +11,7 @@ ${keyToCss('seeAll')} {
 `);
 
 export const main = async function () {
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {

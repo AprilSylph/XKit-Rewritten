@@ -18,6 +18,14 @@ const createNowString = () => {
 
   return `${YYYY}-${MM}-${DD}T${hh}:${mm}`;
 };
+const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  timeZoneName: 'short'
+});
 
 const showDeleteDraftsPrompt = () => {
   const form = dom('form', { id: 'xkit-mass-deleter-delete-drafts' }, { submit: confirmDeleteDrafts }, [
@@ -40,12 +48,15 @@ const confirmDeleteDrafts = event => {
   const blogName = location.pathname.split('/')[2];
   const { elements } = event.currentTarget;
   const beforeMs = elements.before.valueAsNumber + timezoneOffsetMs;
-  const beforeString = new Date(beforeMs).toLocaleString();
+
+  const beforeString = dateTimeFormat.format(new Date(beforeMs));
+  const beforeElement = dom('span', { style: 'white-space: nowrap; font-weight: bold;' }, null, [beforeString]);
+
   const before = beforeMs / 1000;
 
   showModal({
     title: 'Delete drafts?',
-    message: [`Every draft on this blog dated before ${beforeString} will be deleted.`],
+    message: ['Every draft on this blog dated before ', beforeElement, ' will be deleted.'],
     buttons: [
       modalCancelButton,
       dom(

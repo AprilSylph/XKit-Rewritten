@@ -12,14 +12,14 @@ const includeFiltered = true;
 const symbolId = 'ri-archive-fill';
 
 const styleElement = buildStyle(`
-.xkit-legacy-post-indicator {
+.${indicatorClass} {
   display: flex;
   align-items: center;
 
   cursor: help;
 }
 
-.xkit-legacy-post-indicator > svg {
+.${indicatorClass} > svg {
   width: 24px;
   height: 24px;
 
@@ -27,7 +27,12 @@ const styleElement = buildStyle(`
 }
 `);
 
-let indicatorTemplate;
+const indicatorTemplate = dom(
+  'div',
+  { class: indicatorClass, title: 'Stored in the legacy post format.' },
+  null,
+  [buildSvg(symbolId)]
+);
 
 const processPosts = postElements =>
   filterPostElements(postElements, { excludeClass, includeFiltered }).forEach(
@@ -46,13 +51,7 @@ const processPosts = postElements =>
   );
 
 export const main = async function () {
-  document.head.append(styleElement);
-  indicatorTemplate = dom(
-    'div',
-    { class: indicatorClass, title: 'Stored in the legacy post format.' },
-    null,
-    [buildSvg(symbolId)]
-  );
+  document.documentElement.append(styleElement);
   onNewPosts.addListener(processPosts);
 };
 

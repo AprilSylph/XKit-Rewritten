@@ -55,7 +55,7 @@ const processEditors = editors =>
   });
 
 export const main = async () => {
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
   pageModifications.register(keyToCss('editor'), processEditors);
 };
 

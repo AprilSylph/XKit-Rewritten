@@ -49,10 +49,10 @@ const waitForRender = () =>
   new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
 export const main = async () => {
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
   pageModifications.register(keyToCss('blueCheckmarksContainer'), processBlueCheckmarksContainer);
 
-  waitForRender().then(() => document.head.append(transitionStyleElement));
+  waitForRender().then(() => document.documentElement.append(transitionStyleElement));
 };
 
 export const clean = async () => {

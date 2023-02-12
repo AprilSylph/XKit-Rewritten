@@ -89,7 +89,7 @@ export const main = async function () {
     `;
   }
 
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
   onNewPosts.addListener(processPosts);
 };
 

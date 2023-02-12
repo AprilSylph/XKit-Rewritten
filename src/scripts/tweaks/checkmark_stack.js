@@ -5,12 +5,16 @@ import { pageModifications } from '../../util/mutations.js';
 let styleElementMaxCheckmarks = 0;
 const styleElement = buildStyle();
 
+const wrapper = keyToCss('blueCheckmarksContainer');
+const checkmarkContainer = `${wrapper} > ${keyToCss('blueCheckmarkContainer')}`;
+const checkmarkImage = `${checkmarkContainer} > :is(svg, img)`;
+
 const transitionStyleElement = buildStyle(`
-  ${keyToCss('blueCheckmarksContainer')}, ${keyToCss('blueCheckmarkContainer')} {
+  ${wrapper}, ${checkmarkContainer} {
     transition: margin 0.5s ease;
   }
 
-  ${keyToCss('blueCheckmarkContainer')} > :is(svg, img) {
+  ${checkmarkImage} {
     transition: filter 0.35s linear;
   }
 `);
@@ -20,32 +24,32 @@ const updateStyleElement = maxCheckmarks => {
 
   const range = [...Array(styleElementMaxCheckmarks).keys()].map(i => i + 1);
   styleElement.textContent = `
-    *:not(:hover) > ${keyToCss('blueCheckmarksContainer')} ${keyToCss('blueCheckmarkContainer')} {
-      margin-right: -10px;
-    }
-
-    *:not(:hover) > ${keyToCss('blueCheckmarksContainer')} {
+    *:not(:hover) > ${wrapper} {
       margin-right: 10px;
     }
 
-    *:not(:hover) > ${keyToCss('blueCheckmarksContainer')} ${keyToCss('blueCheckmarkContainer')} > :is(svg, img) {
+    *:not(:hover) > ${checkmarkContainer} {
+      margin-right: -10px;
+    }
+
+    *:not(:hover) > ${checkmarkImage} {
       filter: drop-shadow(1px 0px 2px rgb(0 0 0 / 0.5));
     }
 
-    ${keyToCss('blueCheckmarksContainer')} {
+    ${wrapper} {
       isolation: isolate;
     }
 
     ${range.map(i => `
-      ${keyToCss('blueCheckmarkContainer')}:nth-last-child(${i}) {
+      ${checkmarkContainer}:nth-last-child(${i}) {
         z-index: ${i};
       }
     `).join('')}
   `;
 };
 
-const processBlueCheckmarksContainer = blueCheckmarksContainers => {
-  const maxCheckmarks = Math.max(...blueCheckmarksContainers.map(el => el.children.length));
+const processWrappers = wrapperElements => {
+  const maxCheckmarks = Math.max(...wrapperElements.map(el => el.children.length));
   maxCheckmarks > styleElementMaxCheckmarks && updateStyleElement(maxCheckmarks);
 };
 
@@ -54,13 +58,13 @@ const waitForRender = () =>
 
 export const main = async () => {
   document.documentElement.append(styleElement);
-  pageModifications.register(keyToCss('blueCheckmarksContainer'), processBlueCheckmarksContainer);
+  pageModifications.register(wrapper, processWrappers);
 
   waitForRender().then(() => document.documentElement.append(transitionStyleElement));
 };
 
 export const clean = async () => {
-  pageModifications.unregister(processBlueCheckmarksContainer);
+  pageModifications.unregister(processWrappers);
   styleElement.remove();
   transitionStyleElement.remove();
 };

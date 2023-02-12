@@ -20,7 +20,7 @@ const processPosts = async function (postElements) {
 
 export const main = async function () {
   onNewPosts.addListener(processPosts);
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {

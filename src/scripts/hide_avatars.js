@@ -12,7 +12,7 @@ export const main = async function () {
     .map(username => `[title="${username.trim()}"] img[alt="${translate('Avatar')}"] { display: none; }`)
     .join('\n');
 
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {

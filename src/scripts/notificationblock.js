@@ -104,7 +104,7 @@ export const onStorageChanged = (changes, areaName) => {
 export const main = async function () {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
   styleElement.textContent = buildCss();
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
 
   pageModifications.register(notificationSelector, processNotifications);
 

@@ -6,7 +6,6 @@ import { timelineObject } from '../util/react_props.js';
 import { buildSvg } from '../util/remixicon.js';
 
 const indicatorClass = 'xkit-legacy-post-indicator';
-const excludeClass = 'xkit-legacy-post-done';
 const includeFiltered = true;
 
 const symbolId = 'ri-archive-fill';
@@ -35,7 +34,7 @@ const indicatorTemplate = dom(
 );
 
 const processPosts = postElements =>
-  filterPostElements(postElements, { excludeClass, includeFiltered }).forEach(
+  filterPostElements(postElements, { includeFiltered }).forEach(
     async postElement => {
       const { isBlocksPostFormat } = await timelineObject(postElement);
 

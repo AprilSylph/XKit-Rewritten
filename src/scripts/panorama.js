@@ -50,7 +50,7 @@ export const main = async () => {
     }
   `;
 
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
 };
 
 export const clean = async () => {

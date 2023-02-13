@@ -110,8 +110,8 @@ const setLabelsOnPost = async function ({ id, uuid, hasCommunityLabel, categorie
     method: 'PUT',
     body: {
       ...createEditRequestBody(postData),
-      has_community_label: hasCommunityLabel,
-      community_label_categories: categories
+      hasCommunityLabel,
+      communityLabelCategories: categories
     }
   });
 

@@ -17,7 +17,7 @@ const symbolId = 'ri-flag-2-line';
 
 let controlButtonTemplate;
 
-let editedPostStates = new WeakMap();
+let editedPostStates = {};
 
 const popupData = [
   { text: 'Community Label: Mature', category: undefined },
@@ -57,18 +57,23 @@ const togglePopupDisplay = async function ({ target, currentTarget }) {
   if (currentTarget.contains(popupElement)) {
     currentTarget.removeChild(popupElement);
   } else {
-    appendWithoutViewportOverflow(popupElement, currentTarget);
+    const { id, communityLabels } = await timelineObject(target.closest(postSelector));
+    updateCheckboxes(editedPostStates[id] ?? communityLabels);
 
-    const postElement = target.closest(postSelector);
-    updateCheckboxes(editedPostStates.get(postElement));
+    appendWithoutViewportOverflow(popupElement, currentTarget);
   }
 };
 
 const handlePopupClick = async (checkbox, category) => {
   const postElement = checkbox.closest(postSelector);
 
-  const { hasCommunityLabel: currentHasCommunityLabel, categories: currentCategories } =
-    editedPostStates.get(postElement);
+  const { id, blog: { uuid } } = await timelineObject(postElement);
+  const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
+
+  const {
+    hasCommunityLabel: currentHasCommunityLabel,
+    categories: currentCategories
+  } = postData.communityLabels;
 
   let hasCommunityLabel;
   let categories;
@@ -84,29 +89,24 @@ const handlePopupClick = async (checkbox, category) => {
     hasCommunityLabel = !currentHasCommunityLabel;
     categories = [];
   }
-  const { id, blog: { uuid } } = await timelineObject(postElement);
 
   try {
-    await setLabelsOnPost({ id, uuid, hasCommunityLabel, categories });
+    await setLabelsOnPost({ id, uuid, postData, hasCommunityLabel, categories });
+    await onPopupAction({ postElement, hasCommunityLabel, categories });
   } catch ({ body }) {
-    notify(body?.errors?.[0]?.detail);
-    return;
+    notify(body?.errors?.[0]?.detail || 'Failed to set flags on post!');
+    await onPopupAction({ postElement, hasCommunityLabel: currentHasCommunityLabel, categories: currentCategories });
   }
-  await onPopupSuccess({ postElement, hasCommunityLabel, categories });
 };
 
-const setLabelsOnPost = async function ({ id, uuid, hasCommunityLabel, categories }) {
+const setLabelsOnPost = async function ({ id, uuid, postData, hasCommunityLabel, categories }) {
   if (!hasCommunityLabel && Boolean(categories.length)) {
     throw new Error(
       `Invalid label combination: ${JSON.stringify({ hasCommunityLabel, categories })}`
     );
   }
 
-  const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
-
-  const {
-    response: { displayText }
-  } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`, {
+  const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`, {
     method: 'PUT',
     body: {
       ...createEditRequestBody(postData),
@@ -118,16 +118,17 @@ const setLabelsOnPost = async function ({ id, uuid, hasCommunityLabel, categorie
   notify(displayText);
 };
 
-const onPopupSuccess = async ({ postElement, hasCommunityLabel, categories }) => {
-  editedPostStates.set(postElement, { hasCommunityLabel, categories });
-  updateCheckboxes({ hasCommunityLabel, categories });
-
+const onPopupAction = async ({ postElement, hasCommunityLabel, categories }) => {
   const {
+    id,
     communityLabels: {
       hasCommunityLabel: renderedHasCommunityLabel,
       categories: renderedCategories = []
     }
   } = await timelineObject(postElement);
+
+  editedPostStates[id] = { hasCommunityLabel, categories };
+  updateCheckboxes({ hasCommunityLabel, categories });
 
   const renderedPostStateIncorrect =
     renderedHasCommunityLabel !== hasCommunityLabel ||
@@ -159,11 +160,7 @@ popupData.forEach(({ category, checkbox }) => {
 // https://github.com/aprilsylph/XKit-Rewritten/commit/77ef1dd556992b1ef610633509ff7c136e2854c2 ????
 const processPosts = postElements =>
   filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
-    const {
-      canEdit,
-      communityLabels: { hasCommunityLabel, categories }
-    } = await timelineObject(postElement);
-
+    const { id, canEdit } = await timelineObject(postElement);
     if (!canEdit) return;
 
     const editButton = postElement.querySelector(
@@ -177,7 +174,7 @@ const processPosts = postElements =>
     const controlIcon = editButton.closest(keyToCss('controlIcon'));
     controlIcon.before(clonedControlButton);
 
-    editedPostStates.set(postElement, { hasCommunityLabel, categories });
+    delete editedPostStates[id];
   });
 
 export const main = async function () {

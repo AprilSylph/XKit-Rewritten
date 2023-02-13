@@ -50,9 +50,7 @@ const appendWithoutViewportOverflow = (element, target) => {
 };
 
 const togglePopupDisplay = async function ({ target, currentTarget }) {
-  if (target === popupElement || popupElement.contains(target)) {
-    return;
-  }
+  if (target === popupElement || popupElement.contains(target)) { return; }
 
   if (currentTarget.contains(popupElement)) {
     currentTarget.removeChild(popupElement);
@@ -79,14 +77,16 @@ const handlePopupClick = async (checkbox, category) => {
   let categories;
 
   if (category) {
-    // community label will be enabled in every potential state
-    hasCommunityLabel = true;
     categories = currentCategories.includes(category)
       ? currentCategories.filter(item => item !== category)
       : [...currentCategories, category];
+
+    // community label will be enabled in every possible state
+    hasCommunityLabel = true;
   } else {
-    // no categories will be enabled in both potential states
     hasCommunityLabel = !currentHasCommunityLabel;
+
+    // no categories will be enabled in either possible state
     categories = [];
   }
 
@@ -95,15 +95,17 @@ const handlePopupClick = async (checkbox, category) => {
     await onPopupAction({ postElement, hasCommunityLabel, categories });
   } catch ({ body }) {
     notify(body?.errors?.[0]?.detail || 'Failed to set flags on post!');
-    await onPopupAction({ postElement, hasCommunityLabel: currentHasCommunityLabel, categories: currentCategories });
+    await onPopupAction({
+      postElement,
+      hasCommunityLabel: currentHasCommunityLabel,
+      categories: currentCategories
+    });
   }
 };
 
 const setLabelsOnPost = async function ({ id, uuid, postData, hasCommunityLabel, categories }) {
   if (!hasCommunityLabel && Boolean(categories.length)) {
-    throw new Error(
-      `Invalid label combination: ${JSON.stringify({ hasCommunityLabel, categories })}`
-    );
+    throw new Error(`Invalid label combination: ${JSON.stringify({ hasCommunityLabel, categories })}`);
   }
 
   const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`, {
@@ -156,8 +158,6 @@ popupData.forEach(({ category, checkbox }) => {
   });
 });
 
-// remove excludeclass?
-// https://github.com/aprilsylph/XKit-Rewritten/commit/77ef1dd556992b1ef610633509ff7c136e2854c2 ????
 const processPosts = postElements =>
   filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
     const { id, canEdit } = await timelineObject(postElement);
@@ -168,9 +168,7 @@ const processPosts = postElements =>
     );
     if (!editButton) return;
 
-    const clonedControlButton = cloneControlButton(controlButtonTemplate, {
-      click: togglePopupDisplay
-    });
+    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
     const controlIcon = editButton.closest(keyToCss('controlIcon'));
     controlIcon.before(clonedControlButton);
 
@@ -194,7 +192,7 @@ export const clean = async function () {
   $(`.${warningClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
 
-  editedPostStates = new WeakMap();
+  editedPostStates = {};
 };
 
 export const stylesheet = true;

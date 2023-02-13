@@ -20,34 +20,27 @@ let controlButtonTemplate;
 let editedPostStates = new WeakMap();
 
 const popupData = [
-  ['Community Label: Mature', undefined, dom('input', { type: 'checkbox' })],
-  ['Drug/Alcohol Addiction', 'drug_use', dom('input', { type: 'checkbox' })],
-  ['Violence', 'violence', dom('input', { type: 'checkbox' })],
-  ['Sexual Themes', 'sexual_themes', dom('input', { type: 'checkbox' })]
-];
-
-const checkboxes = popupData.map(([text, category, checkbox]) => checkbox);
+  { text: 'Community Label: Mature', category: undefined },
+  { text: 'Drug/Alcohol Addiction', category: 'drug_use' },
+  { text: 'Violence', category: 'violence' },
+  { text: 'Sexual Themes', category: 'sexual_themes' }
+].map(entry => ({ ...entry, checkbox: dom('input', { type: 'checkbox' }) }));
 
 const updateCheckboxes = ({ hasCommunityLabel, categories }) => {
-  popupData.forEach(([text, category, checkbox]) => {
+  popupData.forEach(({ category, checkbox }) => {
     checkbox.indeterminate = false;
     checkbox.disabled = false;
-    if (category) {
-      checkbox.checked = categories.includes(category);
-    } else {
-      checkbox.checked = hasCommunityLabel;
-    }
+    checkbox.checked = category ? categories.includes(category) : hasCommunityLabel;
   });
 };
 
-const buttons = popupData.map(([text, category, checkbox]) => {
+const buttons = popupData.map(({ text, category, checkbox }) => {
   const button = dom('label', !category ? { class: 'no-category' } : null, null, [checkbox, text]);
   if (category) checkbox.value = category;
   return button;
 });
 const popupElement = dom('div', { id: 'quick-flags' }, null, buttons);
 
-// extract this?
 const appendWithoutViewportOverflow = (element, target) => {
   element.className = 'below';
   target.appendChild(element);
@@ -81,18 +74,17 @@ const handlePopupClick = async (checkbox, category) => {
   let categories;
 
   if (category) {
+    // community label will be enabled in every potential state
     hasCommunityLabel = true;
     categories = currentCategories.includes(category)
       ? currentCategories.filter(item => item !== category)
       : [...currentCategories, category];
   } else {
+    // no categories will be enabled in both potential states
     hasCommunityLabel = !currentHasCommunityLabel;
     categories = [];
   }
-  const {
-    id,
-    blog: { uuid }
-  } = await timelineObject(postElement);
+  const { id, blog: { uuid } } = await timelineObject(postElement);
 
   try {
     await setLabelsOnPost({ id, uuid, hasCommunityLabel, categories });
@@ -155,10 +147,10 @@ const onPopupSuccess = async ({ postElement, hasCommunityLabel, categories }) =>
   }
 };
 
-popupData.forEach(([text, category, checkbox]) => {
+popupData.forEach(({ category, checkbox }) => {
   checkbox.addEventListener('change', () => {
     checkbox.indeterminate = true;
-    checkboxes.forEach(checkbox => { checkbox.disabled = true; });
+    popupData.forEach(({ checkbox }) => { checkbox.disabled = true; });
     handlePopupClick(checkbox, category);
   });
 });

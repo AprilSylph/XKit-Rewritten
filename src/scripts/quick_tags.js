@@ -2,6 +2,7 @@ import { cloneControlButton, createControlButtonTemplate } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { postSelector } from '../util/interface.js';
+import { megaEdit } from '../util/mega_editor.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
@@ -146,10 +147,12 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
 
 const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   const postId = postElement.dataset.id;
-  const { blog: { uuid } } = await timelineObject(postElement);
+  const { blog: { uuid }, blogName } = await timelineObject(postElement);
 
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
-  const { tags = [] } = postData;
+  const { tags = [], isBlocksPostFormat, shouldOpenInLegacy } = postData;
+
+  const isNpfCompatible = isBlocksPostFormat || shouldOpenInLegacy === false;
 
   const tagsToAdd = inputTags.filter(inputTag => tags.includes(inputTag) === false);
   if (tagsToAdd.length === 0) { return; }
@@ -157,15 +160,20 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   tags.push(...tagsToAdd);
 
   try {
-    const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
-      method: 'PUT',
-      body: {
-        ...createEditRequestBody(postData),
-        tags: tags.join(',')
-      }
-    });
+    if (isNpfCompatible) {
+      const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
+        method: 'PUT',
+        body: {
+          ...createEditRequestBody(postData),
+          tags: tags.join(',')
+        }
+      });
 
-    notify(displayText);
+      notify(displayText);
+    } else {
+      await megaEdit([postId], { mode: 'add', tags: tagsToAdd });
+      notify(`Edited on ${blogName} (legacy)`);
+    }
 
     const tagsElement = dom('div', { class: tagsClass });
 

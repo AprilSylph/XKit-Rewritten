@@ -83,3 +83,28 @@
 .xkit-quick-flags-warning-text {
   margin: 0.5em auto;
 }
+
+
+.quick-flags-bulk-tag,
+.quick-flags-bulk-blog {
+  display: inline-block;
+
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.quick-flags-bulk-tag {
+  padding: 0 0.5em;
+  border-radius: 1em;
+  margin: 0.25rem 0;
+
+  background-color: rgb(var(--accent));
+  color: rgb(var(--navy));
+}
+
+.quick-flags-bulk-blog {
+  font-weight: 700;
+}
+
+.quick-flags-bulk-tag::before { content: '#'; }
+.quick-flags-bulk-blog::before { content: '@'; }

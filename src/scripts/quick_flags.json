@@ -1,16 +1,16 @@
 {
   "title": "Quick Flags",
-  "description": "Quickly label your mature content",
+  "description": "Easily label your mature posts",
   "icon": {
     "class_name": "ri-flag-2-line",
     "color": "white",
-    "background_color": "#000000"
+    "background_color": "#434343"
   },
   "relatedTerms": [ "Mature", "NSFW", "Flag", "Community Label" ],
   "preferences": {
     "quickLabel": {
       "type": "checkbox",
-      "label": "Show quick label buttons on your posts",
+      "label": "Show quick label buttons on posts",
       "default": true
     }
   }

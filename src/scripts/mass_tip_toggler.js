@@ -363,11 +363,23 @@ const processPosts = postElements =>
     );
     if (!editButton) return;
 
-    const { rebloggedRootId, canBeTipped, shouldShowTip } = await timelineObject(postElement);
+    const {
+      isBlocksPostFormat,
+      rebloggedRootId,
+      canBeTipped,
+      shouldShowTip
+    } = await timelineObject(postElement);
+
     if (rebloggedRootId) return;
 
-    const currentTipStatus = canBeTipped && shouldShowTip;
-    if (currentTipStatus !== showIfCanBeTipped) return;
+    if (isBlocksPostFormat) {
+      if (canBeTipped !== showIfCanBeTipped) return;
+    } else {
+      // untippable legacy posts have canBeTipped: true and shouldShowTip: false
+      // this is otherwise indistinguishable from tippable NPF drafts(?)
+      const currentTipStatus = canBeTipped && shouldShowTip;
+      if (currentTipStatus !== showIfCanBeTipped) return;
+    }
 
     const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });
     const controlIcon = editButton.closest(keyToCss('controlIcon'));

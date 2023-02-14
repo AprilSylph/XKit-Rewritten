@@ -11,6 +11,17 @@ const createTagSpan = tag => dom('span', { class: 'mass-tip-toggler-tag' }, null
 const createBlogSpan = name => dom('span', { class: 'mass-tip-toggler-blog' }, null, [name]);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  timeZoneName: 'short'
+});
+
+const timezoneOffsetMs = new Date().getTimezoneOffset() * 60000;
+
 /**
  * Adds string elements between an array's items to format it as an English prose list.
  * The Oxford comma is included.
@@ -28,15 +39,16 @@ const elementsAsList = (array, andOr) =>
 
 const showInitialPrompt = async () => {
   const initialForm = dom('form', { id: getPostsFormId }, { submit: confirmInitialPrompt }, [
+    'This toggles the visibility of the tipping button on your original posts that match the chosen criteria. It has no effect unless you enable tipping in Tumblr settings.',
     dom('label', null, null, [
       'Action:',
       dom('select', { name: 'action', required: true }, null, [
-        dom('option', { value: 'enabled', title: 'Enable Tipping' }, null, ['Enable Tipping']),
-        dom('option', { value: 'disabled', title: 'Disable Tipping' }, null, ['Disable Tipping'])
+        dom('option', { value: 'enabled', title: 'Enable the tip button' }, null, ['Enable the tip button']),
+        dom('option', { value: 'disabled', title: 'Disable the tip button' }, null, ['Disable the tip button'])
       ])
     ]),
     dom('label', null, null, [
-      'Original posts on blog:',
+      'Posts on blog:',
       dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption))
     ]),
     dom('label', null, null, [
@@ -47,7 +59,12 @@ const showInitialPrompt = async () => {
         placeholder: 'Comma-separated',
         autocomplete: 'off'
       })
-    ])
+    ]),
+    dom('label', null, null, [
+      'Posts from after:',
+      dom('input', { type: 'datetime-local', name: 'after', value: '2006-09-29T00:00' })
+    ]),
+    '[Explanation or link to explanation of how the "Add tip button to your posts by default" setting works goes here.]'
   ]);
 
   if (location.pathname.startsWith('/blog/')) {
@@ -57,12 +74,11 @@ const showInitialPrompt = async () => {
   }
 
   showModal({
-    title: 'Enable/disable tipping on:',
+    title: 'Enable/disable tipping in bulk:',
     message: [
-      '[Explanation of how the "Add tip button to your posts by default" setting works goes somewhere. Also a warning that this is incredibly slow unless the mass post editor endpoint gets tipping.]',
       initialForm,
       dom('small', null, null, [
-        'This has no effect unless you enable tipping in Tumblr settings.'
+        'Note: This may take a long time (~3300 posts/hour).'
       ])
     ],
     buttons: [
@@ -108,12 +124,21 @@ const confirmInitialPrompt = async event => {
     }
   }
 
+  const afterMs = elements.after.valueAsNumber + timezoneOffsetMs;
+
+  const afterString = dateTimeFormat.format(new Date(afterMs));
+  const afterElement = dom('span', { style: 'white-space: nowrap; font-weight: bold;' }, null, [afterString]);
+
+  const after = afterMs / 1000;
+
   const message = tags.length
     ? [
         'Every original post on ',
         createBlogSpan(name),
         ' tagged ',
         ...elementsAsList(tags.map(createTagSpan), 'or'),
+        ' from after ',
+        afterElement,
         ' will have tipping ',
         dom('span', { style: 'font-weight: bold;' }, null, [action]),
         '.'
@@ -121,6 +146,8 @@ const confirmInitialPrompt = async event => {
     : [
         'Every published post on ',
         createBlogSpan(name),
+        ' from after ',
+        afterElement,
         ' will have tipping ',
         dom('span', { style: 'font-weight: bold;' }, null, [action]),
         '.'
@@ -134,7 +161,7 @@ const confirmInitialPrompt = async event => {
       dom(
         'button',
         { class: 'red' },
-        { click: () => togglePosts({ uuid, name, tags, newCanBeTipped }).catch(showError) },
+        { click: () => togglePosts({ uuid, name, tags, after, newCanBeTipped }).catch(showError) },
         ['Go!']
       )
     ]
@@ -171,7 +198,7 @@ const showError = exception => showModal({
   buttons: [modalCompleteButton]
 });
 
-const togglePosts = async ({ uuid, name, tags, newCanBeTipped }) => {
+const togglePosts = async ({ uuid, name, tags, after, newCanBeTipped }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const toggleStatus = dom('span');
 
@@ -181,6 +208,7 @@ const togglePosts = async ({ uuid, name, tags, newCanBeTipped }) => {
       dom('small', null, null, ['Do not navigate away from this page.']),
       '\n\n',
       gatherStatus,
+      '\n',
       toggleStatus
     ]
   });
@@ -200,12 +228,16 @@ const togglePosts = async ({ uuid, name, tags, newCanBeTipped }) => {
 
           posts
             .filter(({ rebloggedRootId }) => !rebloggedRootId)
+            .filter(({ timestamp }) => timestamp > after)
             .filter(({ canBeTipped }) => canBeTipped !== newCanBeTipped)
             .forEach((postData) => filteredPostsMap.set(postData.id, postData));
 
-          resource = response.links?.next?.href;
+          const done = !posts.some(({ timestamp }) => timestamp > after);
 
-          gatherStatus.textContent = `Found ${filteredPostsMap.size} posts (checked ${allPostIdsSet.size})${resource ? '...' : '.'}`;
+          resource = done ? false : response.links?.next?.href;
+
+          gatherStatus.textContent =
+            `Found ${filteredPostsMap.size} posts (checked ${allPostIdsSet.size})${resource ? '...' : '.'}`;
         }),
         sleep(1000)
       ]);
@@ -227,12 +259,7 @@ const togglePosts = async ({ uuid, name, tags, newCanBeTipped }) => {
   let toggledCount = 0;
   let toggledFailCount = 0;
 
-  // temp
-  filteredPostsMap.forEach(postData => console.log(postData));
-  return;
-
   for (const [id, postData] of filteredPostsMap.entries()) {
-    toggleStatus.textContent = `${newCanBeTipped ? 'Enabling' : 'Disabling'} tipping on post with ID ${id}...`;
     try {
       await Promise.all([
         apiFetch(`/v2/blog/${uuid}/posts/${id}`, {
@@ -249,6 +276,7 @@ const togglePosts = async ({ uuid, name, tags, newCanBeTipped }) => {
       console.error(exception);
       toggledFailCount++;
     }
+    toggleStatus.textContent = `${newCanBeTipped ? 'Enabled' : 'Disabled'} tipping on on ${toggledCount} posts... ${toggledFailCount ? `(failed: ${toggledFailCount})` : ''}`;
   }
 
   await sleep(1000);
@@ -270,7 +298,7 @@ const sidebarOptions = {
   id: 'mass-tip-toggler',
   title: 'Mass Tip Toggler',
   rows: [{
-    label: 'Toggle tipping on original posts',
+    label: 'Toggle tipping in bulk',
     onclick: showInitialPrompt,
     carrot: true
   }],

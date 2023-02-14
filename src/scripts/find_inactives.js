@@ -4,6 +4,7 @@ import { hideModal, modalCancelButton, showModal } from '../util/modals.js';
 import { buildSvg } from '../util/remixicon.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
+import { userInfo } from '../util/user.js';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -121,7 +122,7 @@ const showFetchBlogs = async () => {
         blogs.push(...response.blogs);
         resource = response.links?.next?.href;
 
-        foundBlogsElement.textContent = `Found ${blogs.length} blogs${resource ? '...' : '.'}`;
+        foundBlogsElement.textContent = `Collected ${blogs.length}/${userInfo.following} blogs${resource ? '...' : '.'}`;
       }),
       sleep(500)
     ]);

@@ -234,10 +234,15 @@ const togglePosts = async ({ uuid, name, tags, after, newCanBeTipped }) => {
           posts.forEach(({ id }) => allPostIdsSet.add(id));
 
           posts
-            .filter(({ rebloggedRootId }) => !rebloggedRootId)
-            .filter(({ timestamp }) => timestamp > after)
-            .filter(({ canBeTipped }) => canBeTipped !== newCanBeTipped)
-            .forEach((postData) => filteredPostsMap.set(postData.id, postData));
+            .filter(
+              ({ isBlocksPostFormat, rebloggedRootId, timestamp, canBeTipped }) =>
+                // skipping legacy posts; unsure if canBeTipped acts strangely
+                isBlocksPostFormat &&
+                !rebloggedRootId &&
+                timestamp > after &&
+                canBeTipped !== newCanBeTipped
+            )
+            .forEach(postData => filteredPostsMap.set(postData.id, postData));
 
           const done = !posts.some(({ timestamp }) => timestamp > after);
 

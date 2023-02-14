@@ -68,8 +68,10 @@ export const createEditRequestBody = postData => {
     interactabilityReblog,
 
     canBeTipped,
-    hasCommunityLabel,
-    communityLabelCategories
+    communityLabels: {
+      hasCommunityLabel,
+      categories: communityLabelCategories
+    }
   } = postData;
 
   return {

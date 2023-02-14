@@ -63,6 +63,14 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
+const waitForDraft = async (uuid, responseId, retries = 10) => {
+  while (retries-- > 0) {
+    const { meta } = await apiFetch(`/v2/blog/${uuid}/posts/${responseId}`).catch(() => ({}));
+    if (meta?.status === 200) return;
+  }
+  throw new Error("Couldn't find saved draft.");
+};
+
 const quoteReply = async ({ type, id, summary, name, uuid, timestamp }) => {
   const isReply = type === 'reply';
   const { response } = await apiFetch(
@@ -104,6 +112,8 @@ const quoteReply = async ({ type, id, summary, name, uuid, timestamp }) => {
   const yourName = isReply ? name : yourMentionedBlog.name;
 
   const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${yourUuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
+  await waitForDraft(uuid, responseId);
+
   await browser.storage.local.set({ [storageKey]: responseId });
 
   const openedTab = window.open(`/blog/${yourName}/drafts`);

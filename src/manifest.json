@@ -51,23 +51,8 @@
       "run_at": "document_start",
       "js": [
         "lib/browser-polyfill.min.js",
-        "content_scripts/preload.js"
-      ]
-    },
-    {
-      "matches": [
-        "*://www.tumblr.com/*"
-      ],
-      "exclude_matches": [
-        "*://www.tumblr.com/login",
-        "*://www.tumblr.com/register",
-        "*://www.tumblr.com/register?*",
-        "*://www.tumblr.com/privacy/*"
-      ],
-      "run_at": "document_end",
-      "js": [
-        "lib/browser-polyfill.min.js",
         "lib/jquery.min.js",
+        "content_scripts/preload.js",
         "content_scripts/main.js"
       ],
       "css": [

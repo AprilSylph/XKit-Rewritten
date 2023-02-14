@@ -11,13 +11,27 @@
     return installedScripts;
   };
 
-  const getInstalledUtils = async function () {
-    const url = getURL('/util/_index.json');
-    const file = await fetch(url);
-    const installedUtils = await file.json();
-
-    return installedUtils;
-  };
+  const installedUtils = [
+    'control_buttons',
+    'crypto',
+    'css_map',
+    'dom',
+    'inject',
+    'interface',
+    'language_data',
+    'meatballs',
+    'mega_editor',
+    'modals',
+    'mutations',
+    'notifications',
+    'post_actions',
+    'preferences',
+    'react_props',
+    'remixicon',
+    'sidebar',
+    'tumblr_helpers',
+    'user'
+  ];
 
   const createPreloadLinkElement = path =>
     Object.assign(document.createElement('link'), {
@@ -30,22 +44,28 @@
   const preload = async function () {
     const [
       installedScripts,
-      installedUtils,
       { enabledScripts = [] }
     ] = await Promise.all([
       getInstalledScripts(),
-      getInstalledUtils(),
       browser.storage.local.get('enabledScripts')
     ]);
 
     const installedEnabledScripts = installedScripts
       .filter(name => enabledScripts.includes(name));
 
+    await waitForDocumentInteractive();
+
     document.head.append(
       ...installedEnabledScripts.map(name => createPreloadLinkElement(`/scripts/${name}.js`)),
       ...installedUtils.map(name => createPreloadLinkElement(`/util/${name}.js`))
     );
   };
+
+  const waitForDocumentInteractive = () =>
+    document.readyState === 'loading' &&
+    new Promise(resolve =>
+      document.addEventListener('readystatechange', resolve, { once: true })
+    );
 
   preload();
 }

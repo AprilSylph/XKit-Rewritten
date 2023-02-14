@@ -41,7 +41,7 @@ export const main = async function () {
   styleElement.textContent = localFlaggedBlogs
     .map(username => `[title="${username}"] img[alt="${translate('Avatar')}"] { filter: blur(20px); }`)
     .join('');
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
   onNewPosts.addListener(processPosts);
 };
 

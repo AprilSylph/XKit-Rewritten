@@ -4,6 +4,32 @@
   "icon": {
     "class_name": "ri-currency-line",
     "color": "white",
-    "background_color": "#000000"
+    "background_color": "#507450"
+  },
+  "preferences": {
+    "quickToggle": {
+      "type": "checkbox",
+      "label": "Show quick toggle buttons on posts",
+      "default": false
+    },
+    "quickToggleMode": {
+      "type": "select",
+      "label": "Show buttons on",
+      "options": [
+        { "value": "enabled", "label": "Tip-enabled posts" },
+        { "value": "disabled", "label": "Tip-disabled posts" }
+      ],
+      "default": "enabled"
+    },
+    "quickToggleAction": {
+      "type": "select",
+      "label": "Quick toggle button action",
+      "options": [
+        { "value": "default", "label": "Revert to default" },
+        { "value": "enable", "label": "Enable tipping" },
+        { "value": "disable", "label": "Disable tipping" }
+      ],
+      "default": "default"
+    }
   }
 }

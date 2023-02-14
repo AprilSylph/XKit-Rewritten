@@ -1,5 +1,12 @@
+import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
+import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
+import { filterPostElements, postSelector } from '../util/interface.js';
 import { showModal, modalCancelButton, modalCompleteButton, hideModal } from '../util/modals.js';
+import { onNewPosts } from '../util/mutations.js';
+import { notify } from '../util/notifications.js';
+import { getPreferences } from '../util/preferences.js';
+import { timelineObject } from '../util/react_props.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { apiFetch, createEditRequestBody } from '../util/tumblr_helpers.js';
 import { userBlogs } from '../util/user.js';
@@ -305,6 +312,95 @@ const sidebarOptions = {
   visibility: () => /^\/blog\/[^/]+\/?$/.test(location.pathname)
 };
 
-export const main = async () => addSidebarItem(sidebarOptions);
-export const clean = async () => removeSidebarItem(sidebarOptions.id);
+const buttonClass = 'xkit-quick-tip-button';
+const warningClass = 'xkit-quick-tip-warning';
+const warningTextClass = 'xkit-quick-tip-warning-text';
+
+const symbolId = 'ri-currency-line';
+
+let controlButtonTemplate;
+
+let showIfCanBeTipped;
+let newCanBeTipped;
+
+const onButtonClicked = async function ({ currentTarget: controlButton }) {
+  const postElement = controlButton.closest(postSelector);
+  const { id, blog: { uuid } } = await timelineObject(postElement);
+  const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
+
+  try {
+    const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`, {
+      method: 'PUT',
+      body: {
+        ...createEditRequestBody(postData),
+        canBeTipped: newCanBeTipped
+      }
+    });
+
+    notify(displayText);
+
+    postElement.querySelector(`.${warningClass}`)?.remove();
+
+    const footerRow = postElement.querySelector(keyToCss('footerRow'));
+    const warningElement = dom('div', { class: warningClass }, null, [
+      dom('div', { class: warningTextClass }, null, [
+        'note: navigate away and back or refresh to see edited tip status!'
+      ])
+    ]);
+    footerRow.after(warningElement);
+  } catch ({ body }) {
+    notify(body?.errors?.[0]?.detail || 'Failed to set tipping on post!');
+  }
+};
+
+const processPosts = postElements =>
+  filterPostElements(postElements).forEach(async postElement => {
+    const existingButton = postElement.querySelector(`.${buttonClass}`);
+    if (existingButton !== null) { return; }
+
+    const editButton = postElement.querySelector(
+      `footer ${keyToCss('controlIcon')} a[href*="/edit/"]`
+    );
+    if (!editButton) return;
+
+    const { rebloggedRootId, canBeTipped, shouldShowTip } = await timelineObject(postElement);
+    if (rebloggedRootId) return;
+
+    const currentTipStatus = canBeTipped && shouldShowTip;
+    if (currentTipStatus !== showIfCanBeTipped) return;
+
+    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });
+    const controlIcon = editButton.closest(keyToCss('controlIcon'));
+    controlIcon.before(clonedControlButton);
+  });
+
+export const main = async function () {
+  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
+
+  addSidebarItem(sidebarOptions);
+
+  const { quickToggle, quickToggleMode, quickToggleAction } = await getPreferences('mass_tip_toggler');
+  if (quickToggle) {
+    showIfCanBeTipped = {
+      enabled: true,
+      disabled: false
+    }[quickToggleMode];
+
+    newCanBeTipped = {
+      default: undefined,
+      enable: true,
+      disable: false
+    }[quickToggleAction];
+
+    onNewPosts.addListener(processPosts);
+  }
+};
+export const clean = async function () {
+  removeSidebarItem(sidebarOptions.id);
+  onNewPosts.removeListener(processPosts);
+
+  $(`.${buttonClass}`).remove();
+  $(`.${warningClass}`).remove();
+};
+
 export const stylesheet = true;

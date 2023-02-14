@@ -21,3 +21,13 @@
 
 .mass-tip-toggler-tag::before { content: '#'; }
 .mass-tip-toggler-blog::before { content: '@'; }
+
+.xkit-quick-tip-warning {
+  background-color: rgb(var(--secondary-accent));
+  line-height: 1;
+  display: flex;
+}
+
+.xkit-quick-tip-warning-text {
+  margin: 0.5em auto;
+}

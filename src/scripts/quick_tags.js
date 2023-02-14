@@ -1,5 +1,6 @@
 import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
 import { keyToCss } from '../util/css_map.js';
+import { dom } from '../util/dom.js';
 import { postSelector } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
@@ -20,15 +21,16 @@ let autoTagAsker;
 
 let controlButtonTemplate;
 
-const popupElement = Object.assign(document.createElement('div'), { id: 'quick-tags' });
-const popupForm = Object.assign(document.createElement('form'), {
-  onsubmit: event => event.preventDefault()
-});
-const popupInput = Object.assign(document.createElement('input'), {
-  placeholder: 'Tags (comma separated)',
-  autocomplete: 'off',
-  onkeydown: event => event.stopPropagation()
-});
+const popupElement = dom('div', { id: 'quick-tags' });
+const popupForm = dom('form', null, { submit: event => event.preventDefault() });
+const popupInput = dom(
+  'input',
+  {
+    placeholder: 'Tags (comma separated)',
+    autocomplete: 'off'
+  },
+  { keydown: event => event.stopPropagation() }
+);
 const doSmartQuotes = ({ currentTarget }) => {
   const { value } = currentTarget;
   currentTarget.value = value
@@ -50,7 +52,7 @@ const checkLength = ({ currentTarget }) => {
 popupInput.addEventListener('input', checkLength);
 popupForm.appendChild(popupInput);
 
-const postOptionPopupElement = Object.assign(document.createElement('div'), { id: 'quick-tags-post-option' });
+const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option' });
 
 const storageKey = 'quick_tags.preferences.tagBundles';
 
@@ -165,17 +167,15 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 
     notify(displayText);
 
-    const tagsElement = Object.assign(document.createElement('div'), { className: tagsClass });
+    const tagsElement = dom('div', { class: tagsClass });
 
     const innerTagsDiv = document.createElement('div');
     tagsElement.appendChild(innerTagsDiv);
 
     for (const tag of tags) {
-      innerTagsDiv.appendChild(Object.assign(document.createElement('a'), {
-        textContent: `#${tag}`,
-        href: `/tagged/${encodeURIComponent(tag)}`,
-        target: '_blank'
-      }));
+      innerTagsDiv.appendChild(
+        dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`])
+      );
     }
 
     postElement.querySelector('footer').parentNode.prepend(tagsElement);

@@ -102,7 +102,7 @@
 
   const waitForReactLoaded = async () => {
     while (!isReactLoaded()) {
-      await new Promise(window.requestAnimationFrame);
+      await new Promise(requestAnimationFrame);
     }
   };
 

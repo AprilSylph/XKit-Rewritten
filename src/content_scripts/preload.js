@@ -48,7 +48,7 @@
     ] = await Promise.all([
       getInstalledScripts(),
       browser.storage.local.get('enabledScripts'),
-      waitForDocumentInteractive()
+      documentInteractive
     ]);
 
     const installedEnabledScripts = installedScripts
@@ -60,11 +60,11 @@
     );
   };
 
-  const waitForDocumentInteractive = () =>
-    document.readyState === 'loading' &&
-    new Promise(resolve =>
-      document.addEventListener('readystatechange', resolve, { once: true })
-    );
+  const documentInteractive = new Promise(resolve =>
+    document.readyState === 'loading'
+      ? document.addEventListener('readystatechange', resolve, { once: true })
+      : resolve()
+  );
 
   preload();
 }

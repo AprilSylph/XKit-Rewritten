@@ -78,10 +78,15 @@
   };
 
   const init = async function () {
-    const installedScripts = await getInstalledScripts();
-    const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
+    const [
+      installedScripts,
+      { enabledScripts = [] }
+    ] = await Promise.all([
+      getInstalledScripts(),
+      browser.storage.local.get('enabledScripts'),
+      waitForDocumentInteractive()
+    ]);
 
-    await waitForDocumentInteractive();
     if (!isRedpop()) return;
 
     await waitForReactLoaded();

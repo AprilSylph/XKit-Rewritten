@@ -47,13 +47,12 @@
       { enabledScripts = [] }
     ] = await Promise.all([
       getInstalledScripts(),
-      browser.storage.local.get('enabledScripts')
+      browser.storage.local.get('enabledScripts'),
+      waitForDocumentInteractive()
     ]);
 
     const installedEnabledScripts = installedScripts
       .filter(name => enabledScripts.includes(name));
-
-    await waitForDocumentInteractive();
 
     document.head.append(
       ...installedEnabledScripts.map(name => createPreloadLinkElement(`/scripts/${name}.js`)),

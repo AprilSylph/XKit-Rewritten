@@ -6,5 +6,5 @@ const styleElement = buildStyle(`
   ${keyToCss('post')} ${keyToCss('stickyContainer')} > ${keyToCss('avatar')} { top: 69px !important; }
 `);
 
-export const main = async () => document.head.append(styleElement);
+export const main = async () => document.documentElement.append(styleElement);
 export const clean = async () => styleElement.remove();

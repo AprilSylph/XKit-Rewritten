@@ -33,11 +33,11 @@
     'user'
   ];
 
-  const createPreloadLinkElement = path =>
+  const createPreloadLinkElement = (path, as = 'script') =>
     Object.assign(document.createElement('link'), {
       href: getURL(path),
       rel: 'preload',
-      as: 'script',
+      as,
       crossOrigin: 'anonymous'
     });
 
@@ -56,6 +56,7 @@
 
     document.head.append(
       ...installedEnabledScripts.map(name => createPreloadLinkElement(`/scripts/${name}.js`)),
+      ...installedEnabledScripts.map(name => createPreloadLinkElement(`/scripts/${name}.json`, 'fetch')),
       ...installedUtils.map(name => createPreloadLinkElement(`/util/${name}.js`))
     );
   };

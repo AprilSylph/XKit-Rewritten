@@ -17,40 +17,29 @@ const toOpenStorageKey = 'postblock.toOpen';
 
 let uuids = {};
 
-const saveUuid = (id, uuid, blockedPostRootIDs) => {
-  if (blockedPostRootIDs.includes(id) && !uuids[id]) {
-    uuids[id] = uuid;
-    browser.storage.local.set({ [uuidsStorageKey]: uuids });
-  }
-};
-
 const addWarningElement = (postElement, rootID) => {
-  const { timeline } = postElement.closest('[data-timeline]').dataset;
+  const showButton = dom('button', null, {
+    click: ({ currentTarget }) => {
+      postElement.classList.remove(hiddenClass);
+      currentTarget.disabled = true;
+    }
+  }, 'show it');
 
-  if (timeline.includes(`posts/${rootID}/permalink`)) {
-    const showButton = dom('button', null, {
-      click: ({ currentTarget }) => {
-        postElement.classList.remove(hiddenClass);
-        currentTarget.disabled = true;
-      }
-    }, 'show it');
+  const unblockButton = dom('button', null, {
+    click: () => {
+      unblockPost(rootID);
+      warningElement.remove();
+    }
+  }, 'unblock it');
 
-    const unblockButton = dom('button', null, {
-      click: () => {
-        unblockPost(rootID);
-        warningElement.remove();
-      }
-    }, 'unblock it');
-
-    const warningElement = dom('div', { class: warningClass }, null, [
-      'You have blocked this post!',
-      dom('br'),
-      showButton,
-      ' / ',
-      unblockButton
-    ]);
-    postElement.before(warningElement);
-  }
+  const warningElement = dom('div', { class: warningClass }, null, [
+    'You have blocked this post!',
+    dom('br'),
+    showButton,
+    ' / ',
+    unblockButton
+  ]);
+  postElement.before(warningElement);
 };
 
 const processPosts = async function (postElements) {
@@ -71,14 +60,23 @@ const processPosts = async function (postElements) {
 
     if (blockedPostRootIDs.includes(rootID)) {
       postElement.classList.add(hiddenClass);
-      addWarningElement(postElement, rootID);
+
+      const { timeline } = postElement.closest('[data-timeline]').dataset;
+      timeline.includes(`posts/${rootID}/permalink`) && addWarningElement(postElement, rootID);
     } else {
       postElement.classList.remove(hiddenClass);
     }
 
-    saveUuid(rebloggedRootId, rebloggedRootUuid, blockedPostRootIDs);
-    saveUuid(id, uuid, blockedPostRootIDs);
-    saveUuid(rebloggedFromId, rebloggedFromUuid, blockedPostRootIDs);
+    const saveUuidPair = (id, uuid) => {
+      if (blockedPostRootIDs.includes(id) && !uuids[id]) {
+        uuids[id] = uuid;
+        browser.storage.local.set({ [uuidsStorageKey]: uuids });
+      }
+    };
+
+    saveUuidPair(rebloggedRootId, rebloggedRootUuid);
+    saveUuidPair(id, uuid);
+    saveUuidPair(rebloggedFromId, rebloggedFromUuid);
   });
 };
 

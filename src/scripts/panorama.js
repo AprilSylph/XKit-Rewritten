@@ -53,6 +53,4 @@ export const main = async () => {
   document.documentElement.append(styleElement);
 };
 
-export const clean = async () => {
-  styleElement?.remove();
-};
+export const clean = async () => styleElement.remove();

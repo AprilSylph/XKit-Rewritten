@@ -1,7 +1,7 @@
 import { keyToCss } from '../../util/css_map.js';
 import { pageModifications } from '../../util/mutations.js';
 import { translate } from '../../util/language_data.js';
-import { buildStyle } from '../../util/interface.js';
+import { blogViewSelector, buildStyle } from '../../util/interface.js';
 
 const hiddenClass = 'xkit-no-recommended-blogs-hidden';
 
@@ -13,13 +13,16 @@ const hideDashboardRecommended = function (sidebarTitles) {
     .forEach(h1 => h1.parentNode.classList.add(hiddenClass));
 };
 
-const hideTagPageRecommended = topBlogsLists => topBlogsLists.forEach(ul => ul.parentNode.classList.add(hiddenClass));
+const hideTagPageRecommended = blogsLists =>
+  blogsLists
+    .filter(ul => !ul.matches(blogViewSelector))
+    .forEach(ul => ul.parentNode.classList.add(hiddenClass));
 
 export const main = async function () {
   pageModifications.register('aside > div > h1', hideDashboardRecommended);
 
-  const topBlogsSelector = `${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
-  pageModifications.register(topBlogsSelector, hideTagPageRecommended);
+  const blogsListSelector = `${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
+  pageModifications.register(blogsListSelector, hideTagPageRecommended);
 
   document.documentElement.append(styleElement);
 };

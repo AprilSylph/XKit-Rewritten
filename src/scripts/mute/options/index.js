@@ -2,12 +2,12 @@ const mutedBlogList = document.getElementById('muted-blogs');
 const noMutedBlogText = document.getElementById('no-muted-blogs');
 const mutedBlogTemplate = document.getElementById('muted-blog');
 
-const namesStorageKey = 'mute.names';
+const blogNamesStorageKey = 'mute.blogNames';
 const mutedBlogsEntriesStorageKey = 'mute.mutedBlogEntries';
 
-const getNames = async () => {
-  const { [namesStorageKey]: names = {} } = await browser.storage.local.get(namesStorageKey);
-  return names;
+const getBlogNames = async () => {
+  const { [blogNamesStorageKey]: blogNames = {} } = await browser.storage.local.get(blogNamesStorageKey);
+  return blogNames;
 };
 const getMutedBlogs = async () => {
   const { [mutedBlogsEntriesStorageKey]: mutedBlogsEntries } = await browser.storage.local.get(mutedBlogsEntriesStorageKey);
@@ -37,7 +37,7 @@ const updateMode = async function (event) {
 
 const renderMutedBlogs = async function () {
   const mutedBlogs = await getMutedBlogs();
-  const names = await getNames();
+  const blogNames = await getBlogNames();
 
   mutedBlogList.textContent = '';
   noMutedBlogText.style.display = Object.entries(mutedBlogs).length ? 'none' : 'block';
@@ -51,7 +51,7 @@ const renderMutedBlogs = async function () {
 
     li.dataset.uuid = uuid;
 
-    linkElement.textContent = names[uuid] ?? uuid;
+    linkElement.textContent = blogNames[uuid] ?? uuid;
     linkElement.href = `https://www.tumblr.com/blog/view/${uuid}`;
 
     modeSelect.value = mode;
@@ -67,7 +67,7 @@ browser.storage.onChanged.addListener((changes, areaName) => {
   if (
     areaName === 'local' &&
     (Object.keys(changes).includes(mutedBlogsEntriesStorageKey) ||
-      Object.keys(changes).includes(namesStorageKey))
+      Object.keys(changes).includes(blogNamesStorageKey))
   ) {
     renderMutedBlogs();
   }

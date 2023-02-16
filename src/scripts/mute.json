@@ -6,6 +6,7 @@
     "color": "white",
     "background_color": "#C20044"
   },
+  "relatedTerms": [ "Blacklist", "Filter", "Savior" ],
   "preferences": {
     "manageBlockedPosts": {
       "type": "iframe",

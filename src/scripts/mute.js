@@ -8,7 +8,7 @@ import { dom } from '../util/dom.js';
 import { getPreferences } from '../util/preferences.js';
 
 const meatballButtonId = 'mute';
-const meatballButtonLabel = 'Mute options';
+const meatballButtonLabel = 'User mute options';
 
 const hiddenClass = 'xkit-mute-hidden';
 const onBlogHiddenClass = 'xkit-mute-hidden-on-blog';
@@ -16,12 +16,12 @@ const activeClass = 'xkit-mute-active';
 const warningClass = 'xkit-mute-warning';
 const lengthenedClass = 'xkit-mute-lengthened';
 
-const namesStorageKey = 'mute.names';
+const blogNamesStorageKey = 'mute.blogNames';
 const mutedBlogsEntriesStorageKey = 'mute.mutedBlogEntries';
 
 let checkTrail;
 
-let names = {};
+let blogNames = {};
 let mutedBlogs = {};
 
 const lengthenTimeline = timeline => {
@@ -83,25 +83,25 @@ const processTimelines = async (timelineElements) => {
   }
 };
 
-const updateNames = () => {
-  Object.keys(names).forEach(uuid => {
+const updateStoredName = (uuid, name) => {
+  blogNames[uuid] = name;
+  Object.keys(blogNames).forEach(uuid => {
     if (!mutedBlogs[uuid]) {
-      delete names[uuid];
+      delete blogNames[uuid];
     }
   });
-  browser.storage.local.set({ [namesStorageKey]: names });
+  browser.storage.local.set({ [blogNamesStorageKey]: blogNames });
 };
 
 const processPosts = async function (postElements) {
   await processTimelines(postElements.map(postElement => postElement.closest('[data-timeline]')));
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
-    const { blog: { name, uuid }, rebloggedRootUuid, trail = [] } = await timelineObject(postElement);
-    const { muteOnBlogUuid: onBlogUuid } = postElement.closest('[data-timeline]').dataset;
+    const { blog: { uuid, name }, rebloggedRootUuid, trail = [] } = await timelineObject(postElement);
+    const { muteOnBlogUuid: currentBlogViewUuid } = postElement.closest('[data-timeline]').dataset;
 
-    if (mutedBlogs[uuid] && names[uuid] !== name) {
-      names[uuid] = name;
-      updateNames();
+    if (mutedBlogs[uuid] && blogNames[uuid] !== name) {
+      updateStoredName(uuid, name);
     }
 
     const isRebloggedPost = Boolean(rebloggedRootUuid);
@@ -110,17 +110,17 @@ const processPosts = async function (postElements) {
     const reblogUuid = isRebloggedPost ? uuid : null;
 
     if (['all', 'original'].includes(mutedBlogs[originalUuid])) {
-      postElement.classList.add(originalUuid === onBlogUuid ? onBlogHiddenClass : hiddenClass);
+      postElement.classList.add(originalUuid === currentBlogViewUuid ? onBlogHiddenClass : hiddenClass);
     }
     if (['all', 'reblogged'].includes(mutedBlogs[reblogUuid])) {
-      postElement.classList.add(reblogUuid === onBlogUuid ? onBlogHiddenClass : hiddenClass);
+      postElement.classList.add(reblogUuid === currentBlogViewUuid ? onBlogHiddenClass : hiddenClass);
     }
 
     if (checkTrail) {
       for (const { blog } of trail) {
         if (['all'].includes(mutedBlogs[blog?.uuid])) {
           postElement.classList.add(
-            blog?.uuid === onBlogUuid ? onBlogHiddenClass : hiddenClass
+            blog?.uuid === currentBlogViewUuid ? onBlogHiddenClass : hiddenClass
           );
         }
       }
@@ -135,8 +135,8 @@ const onMeatballButtonClicked = function ({ currentTarget }) {
 
   const createRadioElement = value =>
     dom('label', null, null, [
-      dom('input', { type: 'radio', name: 'muteOption', value }),
-      `Hide ${value} posts`
+      `Hide ${value} posts`,
+      dom('input', { type: 'radio', name: 'muteOption', value })
     ]);
 
   const form = dom('form', { id: 'xkit-mute-form', 'data-name': name, 'data-uuid': uuid }, { submit: muteUser }, [
@@ -148,13 +148,18 @@ const onMeatballButtonClicked = function ({ currentTarget }) {
   form.elements.muteOption.value = currentMode;
 
   showModal({
-    title: `Mute ${name}`,
+    title: currentMode ? `Mute options for ${name}:` : `Mute ${name}?`,
     message: [form],
-    buttons: [
-      modalCancelButton,
-      ...currentMode ? [dom('button', { class: 'blue' }, { click: () => unmuteUser(uuid) }, ['Unmute'])] : [],
-      dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Mute' })
-    ]
+    buttons: currentMode
+      ? [
+          modalCancelButton,
+          dom('button', { class: 'blue' }, { click: () => unmuteUser(uuid) }, ['Unmute']),
+          dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Update Mute' })
+        ]
+      : [
+          modalCancelButton,
+          dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Mute' })
+        ]
   });
 };
 
@@ -166,10 +171,10 @@ const muteUser = event => {
   if (value === '') return;
 
   mutedBlogs[uuid] = value;
-  names[uuid] = name;
+  blogNames[uuid] = name;
 
   browser.storage.local.set({ [mutedBlogsEntriesStorageKey]: Object.entries(mutedBlogs) });
-  browser.storage.local.set({ [namesStorageKey]: names });
+  browser.storage.local.set({ [blogNamesStorageKey]: blogNames });
 
   hideModal();
 };
@@ -183,7 +188,7 @@ const unmuteUser = uuid => {
 
 export const onStorageChanged = async function (changes, areaName) {
   const {
-    [namesStorageKey]: namesChanges,
+    [blogNamesStorageKey]: blogNamesChanges,
     [mutedBlogsEntriesStorageKey]: mutedBlogsEntriesChanges
   } = changes;
 
@@ -195,14 +200,14 @@ export const onStorageChanged = async function (changes, areaName) {
     return;
   }
 
-  if (namesChanges) {
-    ({ newValue: names } = namesChanges);
+  if (blogNamesChanges) {
+    ({ newValue: blogNames } = blogNamesChanges);
   }
 };
 
 export const main = async function () {
   ({ checkTrail } = await getPreferences('mute'));
-  ({ [namesStorageKey]: names = {} } = await browser.storage.local.get(namesStorageKey));
+  ({ [blogNamesStorageKey]: blogNames = {} } = await browser.storage.local.get(blogNamesStorageKey));
   const { [mutedBlogsEntriesStorageKey]: mutedBlogsEntries } = await browser.storage.local.get(mutedBlogsEntriesStorageKey);
   mutedBlogs = Object.fromEntries(mutedBlogsEntries ?? []);
 
@@ -224,7 +229,7 @@ export const clean = async function () {
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
   $(`.${warningClass}`).remove();
   $('[data-mute-processed-timeline]').removeAttr('data-mute-processed-timeline');
-  $('[data-mute-on-blog-uuid]').removeAttr('data-mute-blog-specific-uuid');
+  $('[data-mute-on-blog-uuid]').removeAttr('data-mute-on-blog-uuid');
 };
 
 export const stylesheet = true;

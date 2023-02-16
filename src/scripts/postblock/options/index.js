@@ -39,7 +39,7 @@ const renderBlockedPosts = async function () {
         await browser.storage.local.set({
           [toOpenStorageKey]: { uuid: uuids[blockedPostID], blockedPostID }
         });
-        window.open('http://tumblr.com/');
+        window.open('https://www.tumblr.com/');
       });
       spanElement.replaceWith(a);
       a.append(spanElement);

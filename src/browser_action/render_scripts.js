@@ -17,6 +17,9 @@ const writeEnabled = async function ({ currentTarget }) {
   const detailsElement = currentTarget.closest('details');
   let { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
+  const hasPreferences = detailsElement.querySelector('.preferences:not(:empty)');
+  if (hasPreferences) detailsElement.open = checked;
+
   if (checked) {
     enabledScripts.push(id);
     detailsElement.classList.remove('disabled');
@@ -181,10 +184,7 @@ const renderScripts = async function () {
   scriptsDiv.append(...scriptClones);
 };
 
-renderScripts().then(() => {
-  const main = document.querySelector('main');
-  main.style.minWidth = `${main.getBoundingClientRect().width}px`;
-});
+renderScripts();
 
 configSectionLink.addEventListener('click', ({ currentTarget }) => {
   if (currentTarget.classList.contains('outdated')) {

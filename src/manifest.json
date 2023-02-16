@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "XKit Rewritten",
-  "version": "0.20.7",
+  "version": "0.21.1",
 
   "short_name": "XKit",
   "author": "April Sylph",
@@ -43,7 +43,6 @@
         "*://www.tumblr.com/*"
       ],
       "exclude_matches": [
-        "*://www.tumblr.com/",
         "*://www.tumblr.com/login",
         "*://www.tumblr.com/register",
         "*://www.tumblr.com/register?*",

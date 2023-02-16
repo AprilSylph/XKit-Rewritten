@@ -4,6 +4,8 @@ import { modalCancelButton, modalCompleteButton, showModal } from '../util/modal
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
+const timezoneOffsetMs = new Date().getTimezoneOffset() * 60000;
+
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const createNowString = () => {
   const now = new Date();
@@ -16,6 +18,14 @@ const createNowString = () => {
 
   return `${YYYY}-${MM}-${DD}T${hh}:${mm}`;
 };
+const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  timeZoneName: 'short'
+});
 
 const showDeleteDraftsPrompt = () => {
   const form = dom('form', { id: 'xkit-mass-deleter-delete-drafts' }, { submit: confirmDeleteDrafts }, [
@@ -37,12 +47,16 @@ const confirmDeleteDrafts = event => {
 
   const blogName = location.pathname.split('/')[2];
   const { elements } = event.currentTarget;
-  const beforeString = elements.before.valueAsDate.toLocaleString();
-  const before = elements.before.valueAsNumber / 1000;
+  const beforeMs = elements.before.valueAsNumber + timezoneOffsetMs;
+
+  const beforeString = dateTimeFormat.format(new Date(beforeMs));
+  const beforeElement = dom('span', { style: 'white-space: nowrap; font-weight: bold;' }, null, [beforeString]);
+
+  const before = beforeMs / 1000;
 
   showModal({
     title: 'Delete drafts?',
-    message: [`Every draft on this blog dated before ${beforeString} will be deleted.`],
+    message: ['Every draft on this blog dated before ', beforeElement, ' will be deleted.'],
     buttons: [
       modalCancelButton,
       dom(

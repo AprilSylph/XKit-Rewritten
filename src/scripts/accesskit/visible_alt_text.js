@@ -62,7 +62,7 @@ const onStorageChanged = async function (changes, areaName) {
 export const main = async function () {
   ({ visible_alt_text_mode: mode } = await getPreferences('accesskit'));
 
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
   pageModifications.register(`article ${imageBlockSelector} img[alt]`, processImages);
   browser.storage.onChanged.addListener(onStorageChanged);
 };

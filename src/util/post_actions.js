@@ -6,29 +6,22 @@ import { dom } from './dom.js';
 // Remove outdated post options when loading module
 $('.xkit-post-option').remove();
 
-const fakePostActions = dom('div', { class: 'xkit-post-actions' });
 const postOptions = {};
-
-const postActionsSelector = keyToCss('postActions');
-const postFormButtonSelector = keyToCss('postFormButton');
 
 const addPostOptions = ([postFormButton]) => {
   if (!postFormButton) { return; }
 
-  const postActions = document.querySelector(postActionsSelector);
-  if (!postActions) {
-    fakePostActions.replaceChildren();
-    postFormButton.parentNode.insertBefore(fakePostActions, postFormButton);
-  }
+  const postActions = postFormButton.parentElement;
 
-  Object.keys(postOptions).sort().reverse().forEach(id => {
-    const postOption = postOptions[id];
-    const target = postActions || fakePostActions;
-    if (!target.contains(postOption)) { target.prepend(postOption); }
-  });
+  postFormButton.before(
+    ...Object.keys(postOptions)
+      .sort()
+      .map(id => postOptions[id])
+      .filter(postOption => !postActions.contains(postOption))
+  );
 };
 
-pageModifications.register(postFormButtonSelector, addPostOptions);
+pageModifications.register(keyToCss('postFormButton'), addPostOptions);
 
 /**
  * Create and register a button to add to the new post form

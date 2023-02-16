@@ -14,7 +14,7 @@ const checkForRadar = function (sidebarTitles) {
 
 export const main = async function () {
   pageModifications.register('aside > div > h1', checkForRadar);
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {

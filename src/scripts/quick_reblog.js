@@ -6,33 +6,43 @@ import { userBlogs } from '../util/user.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
+import { translate } from '../util/language_data.js';
+import { dom } from '../util/dom.js';
 
-const popupElement = Object.assign(document.createElement('div'), { id: 'quick-reblog' });
-const blogSelector = document.createElement('select');
-const commentInput = Object.assign(document.createElement('input'), {
-  placeholder: 'Comment',
-  autocomplete: 'off',
-  onkeydown: event => event.stopPropagation()
-});
-const quickTagsList = Object.assign(document.createElement('div'), {
-  className: 'quick-tags',
+const popupElement = dom('div', { id: 'quick-reblog' });
+const blogSelector = dom('select');
+const blogAvatar = dom('div', { class: 'avatar' });
+const blogSelectorContainer = dom('div', { class: 'select-container' }, null, [blogAvatar, blogSelector]);
+const commentInput = dom(
+  'input',
+  {
+    placeholder: 'Comment',
+    autocomplete: 'off'
+  },
+  { keydown: event => event.stopPropagation() }
+);
+const quickTagsList = dom('div', {
+  class: 'quick-tags',
   tabIndex: -1
 });
-const tagsInput = Object.assign(document.createElement('input'), {
-  placeholder: 'Tags (comma separated)',
-  autocomplete: 'off',
-  onkeydown: event => event.stopPropagation()
-});
-tagsInput.setAttribute('list', 'quick-reblog-tag-suggestions');
-const tagSuggestions = Object.assign(document.createElement('datalist'), { id: 'quick-reblog-tag-suggestions' });
-const actionButtons = Object.assign(document.createElement('fieldset'), { className: 'action-buttons' });
-const reblogButton = Object.assign(document.createElement('button'), { textContent: 'Reblog' });
+const tagsInput = dom(
+  'input',
+  {
+    placeholder: 'Tags (comma separated)',
+    autocomplete: 'off',
+    list: 'quick-reblog-tag-suggestions'
+  },
+  { keydown: event => event.stopPropagation() }
+);
+const tagSuggestions = dom('datalist', { id: 'quick-reblog-tag-suggestions' });
+const actionButtons = dom('fieldset', { class: 'action-buttons' });
+const reblogButton = dom('button', null, null, ['Reblog']);
 reblogButton.dataset.state = 'published';
-const queueButton = Object.assign(document.createElement('button'), { textContent: 'Queue' });
+const queueButton = dom('button', null, null, ['Queue']);
 queueButton.dataset.state = 'queue';
-const draftButton = Object.assign(document.createElement('button'), { textContent: 'Draft' });
+const draftButton = dom('button', null, null, ['Draft']);
 draftButton.dataset.state = 'draft';
-[blogSelector, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons].forEach(element => popupElement.appendChild(element));
+[blogSelectorContainer, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons].forEach(element => popupElement.appendChild(element));
 
 let lastPostID;
 let timeoutID;
@@ -56,6 +66,19 @@ const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 const blogHashes = {};
 
+const reblogButtonSelector = `
+${postSelector} footer a[href*="/reblog/"],
+${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
+`;
+
+const renderBlogAvatar = async () => {
+  const { value: selectedUuid } = blogSelector;
+  const { avatar } = userBlogs.find(({ uuid }) => uuid === selectedUuid);
+  const { url } = avatar[avatar.length - 1];
+  blogAvatar.style.backgroundImage = `url(${url})`;
+};
+blogSelector.addEventListener('change', renderBlogAvatar);
+
 const renderTagSuggestions = () => {
   tagSuggestions.textContent = '';
   if (!showTagSuggestions) return;
@@ -72,9 +95,7 @@ const renderTagSuggestions = () => {
     .filter((tag, index, array) => array.indexOf(tag) === index)
     .map(tag => `${tagsInput.value}${includeSpace ? ' ' : ''}${tag}`);
 
-  tagSuggestions.append(
-    ...tagsToSuggest.map(value => Object.assign(document.createElement('option'), { value }))
-  );
+  tagSuggestions.append(...tagsToSuggest.map(value => dom('option', { value })));
 };
 
 const updateTagSuggestions = () => {
@@ -117,6 +138,7 @@ const showPopupOnHover = ({ currentTarget }) => {
   if (thisPostID !== lastPostID) {
     if (!rememberLastBlog) {
       blogSelector.value = blogSelector.options[0].value;
+      renderBlogAvatar();
     }
     commentInput.value = '';
     [...quickTagsList.children].forEach(({ dataset }) => delete dataset.checked);
@@ -219,7 +241,7 @@ const processPosts = async function (postElements) {
     const rootID = rebloggedRootId || id;
 
     if (alreadyRebloggedList.includes(rootID)) {
-      const reblogLink = postElement.querySelector('footer a[href*="/reblog/"]');
+      const reblogLink = postElement.querySelector(reblogButtonSelector);
       const buttonDiv = reblogLink?.closest('div');
       if (buttonDiv) makeButtonReblogged({ buttonDiv, state: 'published' });
     }
@@ -232,8 +254,7 @@ const renderQuickTags = async function () {
   const { [quickTagsStorageKey]: tagBundles = [] } = await browser.storage.local.get(quickTagsStorageKey);
   tagBundles.forEach(tagBundle => {
     const bundleTags = tagBundle.tags.split(',').map(tag => tag.trim().toLowerCase());
-    const bundleButton = document.createElement('button');
-    bundleButton.textContent = tagBundle.title;
+    const bundleButton = dom('button', null, null, [tagBundle.title]);
     bundleButton.addEventListener('click', ({ currentTarget: { dataset } }) => {
       const checked = dataset.checked === 'true';
 
@@ -291,7 +312,7 @@ export const main = async function () {
   popupElement.className = popupPosition;
 
   blogSelector.replaceChildren(
-    ...userBlogs.map(({ name, uuid }) => Object.assign(document.createElement('option'), { value: uuid, textContent: name }))
+    ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name]))
   );
 
   if (rememberLastBlog) {
@@ -312,13 +333,14 @@ export const main = async function () {
 
     blogSelector.addEventListener('change', updateRememberedBlog);
   }
+  renderBlogAvatar();
 
-  blogSelector.hidden = !showBlogSelector;
+  blogSelectorContainer.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;
   quickTagsList.hidden = !quickTagsIntegration;
   tagsInput.hidden = !showTagsInput;
 
-  $(document.body).on('mouseenter', `${postSelector} footer a[href*="/reblog/"]`, showPopupOnHover);
+  $(document.body).on('mouseenter', reblogButtonSelector, showPopupOnHover);
 
   if (quickTagsIntegration) {
     browser.storage.onChanged.addListener(updateQuickTags);
@@ -331,7 +353,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  $(document.body).off('mouseenter', `${postSelector} footer a[href*="/reblog/"]`, showPopupOnHover);
+  $(document.body).off('mouseenter', reblogButtonSelector, showPopupOnHover);
   popupElement.remove();
 
   blogSelector.removeEventListener('change', updateRememberedBlog);

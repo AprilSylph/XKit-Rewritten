@@ -22,7 +22,6 @@ export const getPreferences = async function (scriptName) {
         const { [preference.inherit]: inheritedDefault } = await browser.storage.local.get(preference.inherit);
         if (inheritedDefault !== undefined) {
           preference.default = inheritedDefault;
-          browser.storage.local.remove(preference.inherit);
         }
       }
 

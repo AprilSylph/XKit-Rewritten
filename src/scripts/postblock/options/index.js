@@ -5,6 +5,7 @@ const blockedPostTemplate = document.getElementById('blocked-post');
 
 const storageKey = 'postblock.blockedPostRootIDs';
 const uuidsStorageKey = 'postblock.uuids';
+const toOpenStorageKey = 'postblock.toOpen';
 
 const unblockPost = async function ({ currentTarget }) {
   let { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
@@ -33,8 +34,13 @@ const renderBlockedPosts = async function () {
 
     if (uuids[blockedPostID]) {
       const a = document.createElement('a');
-      a.href = `https://www.tumblr.com/blog/view/${uuids[blockedPostID]}/${blockedPostID}`;
-      a.target = '_blank';
+      a.href = 'javascript:void(0);';
+      a.addEventListener('click', async () => {
+        await browser.storage.local.set({
+          [toOpenStorageKey]: { uuid: uuids[blockedPostID], blockedPostID }
+        });
+        window.open('http://tumblr.com/');
+      });
       spanElement.replaceWith(a);
       a.append(spanElement);
     }

@@ -4,6 +4,7 @@ import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
 import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
+import { apiFetch, navigate } from '../util/tumblr_helpers.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
@@ -11,6 +12,7 @@ const hiddenClass = 'xkit-postblock-hidden';
 const warningClass = 'xkit-postblock-warning';
 const storageKey = 'postblock.blockedPostRootIDs';
 const uuidsStorageKey = 'postblock.uuids';
+const toOpenStorageKey = 'postblock.toOpen';
 
 let uuids = {};
 
@@ -125,6 +127,15 @@ export const main = async function () {
 
   registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
   onNewPosts.addListener(processPosts);
+
+  const { [toOpenStorageKey]: toOpen } = await browser.storage.local.get(toOpenStorageKey);
+  if (toOpen) {
+    browser.storage.local.remove(toOpenStorageKey);
+
+    const { uuid, blockedPostID } = toOpen;
+    const { response: { blog: { name } } } = await apiFetch(`/v2/blog/${uuid}/info`);
+    navigate(`/${name}/${blockedPostID}`);
+  }
 };
 
 export const clean = async function () {

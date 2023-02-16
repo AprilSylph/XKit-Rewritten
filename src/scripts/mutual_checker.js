@@ -6,6 +6,7 @@ import { keyToCss } from '../util/css_map.js';
 import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
 import { getPreferences } from '../util/preferences.js';
+import { translate } from '../util/language_data.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenClass = 'xkit-mutual-checker-hidden';
@@ -19,7 +20,6 @@ const following = {};
 const followingYou = {};
 
 let showOnlyMutuals;
-let icon;
 let aprilFools;
 
 const styleElement = buildStyle(`
@@ -46,6 +46,18 @@ const styleElement = buildStyle(`
   }
 `);
 
+const createIcon = blogName => dom('svg', {
+  xmlns: 'http://www.w3.org/2000/svg',
+  class: mutualIconClass,
+  viewBox: '0 0 1000 1000',
+  fill: aprilFools ? '#00b8ff' : 'rgb(var(--black))'
+}, null, [
+  dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
+    translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
+  ]),
+  dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: aprilFools ? aprilFoolsPath : regularPath })
+]);
+
 const alreadyProcessed = postElement =>
   postElement.classList.contains(mutualsClass) &&
   postElement.querySelector(`.${mutualIconClass}`);
@@ -67,7 +79,7 @@ const processPosts = function (postElements) {
     const isMutual = await getIsFollowingYou(blogName);
     if (isMutual) {
       postElement.classList.add(mutualsClass);
-      postAttribution.prepend(icon.cloneNode(true));
+      postAttribution.prepend(createIcon(blogName));
     } else if (showOnlyMutuals) {
       postElement.classList.add(hiddenClass);
     }
@@ -84,9 +96,9 @@ const processBlogCardLinks = blogCardLinks =>
 
     const isMutual = await getIsFollowingYou(blogName);
     if (isMutual) {
-      const clonedIcon = icon.cloneNode(true);
-      !aprilFools && clonedIcon.setAttribute('fill', blogCardLink.style.color);
-      blogCardLink.before(clonedIcon);
+      const icon = createIcon(blogName);
+      !aprilFools && icon.setAttribute('fill', blogCardLink.style.color);
+      blogCardLink.before(icon);
     }
   });
 
@@ -123,15 +135,6 @@ export const main = async function () {
 
   const today = new Date();
   aprilFools = (today.getMonth() === 3 && today.getDate() === 1);
-
-  icon = dom('svg', {
-    xmlns: 'http://www.w3.org/2000/svg',
-    class: mutualIconClass,
-    viewBox: '0 0 1000 1000',
-    fill: aprilFools ? '#00b8ff' : 'rgb(var(--black))'
-  }, null, [
-    dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: aprilFools ? aprilFoolsPath : regularPath })
-  ]);
 
   onNewPosts.addListener(processPosts);
   pageModifications.register(`${keyToCss('blogCardBlogLink')} > a`, processBlogCardLinks);

@@ -18,3 +18,7 @@
 .xkit-postblock-warning button {
   color: var(--blog-link-color);
 }
+
+.xkit-postblock-warning button:disabled {
+  color: var(--blog-link-color-40);
+}

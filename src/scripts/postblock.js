@@ -25,12 +25,26 @@ const addWarningElement = (postElement, rootID) => {
   const { timeline } = postElement.closest('[data-timeline]').dataset;
 
   if (timeline.includes(`posts/${rootID}/permalink`)) {
+    const showButton = dom('button', null, {
+      click: ({ currentTarget }) => {
+        postElement.classList.remove(hiddenClass);
+        currentTarget.disabled = true;
+      }
+    }, 'show it');
+
+    const unblockButton = dom('button', null, {
+      click: () => {
+        unblockPost(rootID);
+        warningElement.remove();
+      }
+    }, 'unblock it');
+
     const warningElement = dom('div', { class: warningClass }, null, [
       'You have blocked this post!',
       dom('br'),
-      dom('button', null, { click: () => postElement.classList.remove(hiddenClass) }, 'show it'),
+      showButton,
       ' / ',
-      dom('button', null, { click: () => { unblockPost(rootID); warningElement.remove(); } }, 'unblock it')
+      unblockButton
     ]);
     postElement.before(warningElement);
   }

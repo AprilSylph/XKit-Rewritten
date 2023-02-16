@@ -5,6 +5,7 @@ import { timelineObject } from '../util/react_props.js';
 import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
 import { apiFetch, navigate } from '../util/tumblr_helpers.js';
+import { notify } from '../util/notifications.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
@@ -132,9 +133,13 @@ export const main = async function () {
   if (toOpen) {
     browser.storage.local.remove(toOpenStorageKey);
 
-    const { uuid, blockedPostID } = toOpen;
-    const { response: { blog: { name } } } = await apiFetch(`/v2/blog/${uuid}/info`);
-    navigate(`/${name}/${blockedPostID}`);
+    try {
+      const { uuid, blockedPostID } = toOpen;
+      const { response: { blog: { name } } } = await apiFetch(`/v2/blog/${uuid}/info`);
+      navigate(`/${name}/${blockedPostID}`);
+    } catch (e) {
+      notify('Failed to open blocked post!');
+    }
   }
 };
 

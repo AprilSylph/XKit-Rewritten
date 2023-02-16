@@ -7,7 +7,7 @@
     "background_color": "#ff567e"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#cleanfeed",
-  "relatedTerms": [ "nsfw" ],
+  "relatedTerms": [ "NSFW", "Mature", "Adult", "Sensitive", "Community Label" ],
   "preferences": {
     "blockingMode": {
       "label": "Hide:",

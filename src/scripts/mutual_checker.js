@@ -1,4 +1,4 @@
-import { filterPostElements } from '../util/interface.js';
+import { buildStyle, filterPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { primaryBlogName } from '../util/user.js';
@@ -20,6 +20,31 @@ const followingYou = {};
 
 let showOnlyMutuals;
 let icon;
+let aprilFools;
+
+const styleElement = buildStyle(`
+  svg.xkit-mutual-icon {
+    vertical-align: text-bottom;
+
+    height: 1.23em;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0.5ch;
+  }
+
+  [data-timeline="/v2/timeline/dashboard"] .xkit-mutual-checker-hidden article {
+    display: none;
+  }
+
+  ${keyToCss('blogCardBlogLink')} {
+    display: flex;
+    align-items: end;
+  }
+
+  ${keyToCss('blogCardBlogLink')} svg.xkit-mutual-icon {
+    height: 1.4em;
+  }
+`);
 
 const alreadyProcessed = postElement =>
   postElement.classList.contains(mutualsClass) &&
@@ -59,7 +84,9 @@ const processBlogCardLinks = blogCardLinks =>
 
     const isMutual = await getIsFollowingYou(blogName);
     if (isMutual) {
-      blogCardLink.prepend(icon.cloneNode(true));
+      const clonedIcon = icon.cloneNode(true);
+      !aprilFools && clonedIcon.setAttribute('fill', blogCardLink.style.color);
+      blogCardLink.before(clonedIcon);
     }
   });
 
@@ -89,33 +116,33 @@ const getIsFollowingYou = (blogName) => {
 
 export const main = async function () {
   if (primaryBlogName === undefined) return;
+  document.documentElement.append(styleElement);
 
   ({ showOnlyMutuals } = await getPreferences('mutual_checker'));
   following[primaryBlogName] = Promise.resolve(false);
 
   const today = new Date();
-  const aprilFools = (today.getMonth() === 3 && today.getDate() === 1);
+  aprilFools = (today.getMonth() === 3 && today.getDate() === 1);
 
   icon = dom('svg', {
     xmlns: 'http://www.w3.org/2000/svg',
     class: mutualIconClass,
     viewBox: '0 0 1000 1000',
-    fill: aprilFools ? '#00b8ff' : 'currentColor'
+    fill: aprilFools ? '#00b8ff' : 'rgb(var(--black))'
   }, null, [
     dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: aprilFools ? aprilFoolsPath : regularPath })
   ]);
 
   onNewPosts.addListener(processPosts);
-  pageModifications.register(keyToCss('blogLinkShort'), processBlogCardLinks);
+  pageModifications.register(`${keyToCss('blogCardBlogLink')} > a`, processBlogCardLinks);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
   pageModifications.unregister(processBlogCardLinks);
+  styleElement.remove();
 
   $(`.${mutualsClass}`).removeClass(mutualsClass);
   $(`.${hiddenClass}`).removeClass(hiddenClass);
   $(`.${mutualIconClass}`).remove();
 };
-
-export const stylesheet = true;

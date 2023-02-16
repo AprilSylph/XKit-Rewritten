@@ -73,9 +73,7 @@ const processTimelines = async (timelineElements) => {
       timelineElement.classList.add(activeClass);
       lengthenTimeline(timelineElement);
 
-      if (timelineElement.previousElementSibling?.classList?.contains(warningClass)) {
-        timelineElement.previousElementSibling.remove();
-      }
+      [...timelineElement.querySelectorAll(`.${warningClass}`)].forEach(el => el.remove());
       delete timelineElement.dataset.muteOnBlogUuid;
 
       if (timeline.startsWith('/v2/blog/')) {

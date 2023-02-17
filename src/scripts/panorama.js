@@ -23,6 +23,12 @@ const embeddedBlogModalScrollContainer = `${keyToCss('container')} > ${blogBodyS
 const styleElement = buildStyle();
 styleElement.media = '(min-width: 990px)';
 
+const modalStyleElementNoSidebar = buildStyle();
+modalStyleElementNoSidebar.media = '(min-width: 990px) and (max-width: 1149px)';
+
+const modalStyleElementWithSidebar = buildStyle();
+modalStyleElementWithSidebar.media = '(min-width: 1150px)';
+
 export const main = async () => {
   const { maxPostWidth: maxPostWidthPref } = await getPreferences('panorama');
 
@@ -62,6 +68,34 @@ export const main = async () => {
 
     ${taggedPageColumn} { max-width: none; }
 
+    ${queueSettings} {
+      box-sizing: border-box;
+      width: calc(100% - ${625 - 540}px);
+    }
+  `;
+
+  modalStyleElementNoSidebar.textContent = `
+  ${blogModalLayout} { max-width: none; }
+  ${blogModalBody} { max-width: none; }
+
+  ${blogModalBody} main { max-width: calc(100% - ${20 * 2}px); }
+  ${blogModalBody} main article { max-width: 100%; }
+  ${blogModalBody} main article > * { max-width: 100%; }
+
+  ${blogModalDrawer} {
+    max-width: max(${maxPostWidth} + 40px, 720px);
+    width: calc(100% - 160px);
+  }
+
+  ${embeddedBlogModalScrollContainer} {
+    max-width: max(${maxPostWidth} + 40px, 720px);
+    width: calc(100% - 160px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+`;
+
+  modalStyleElementWithSidebar.textContent = `
     ${blogModalLayout} { max-width: none; }
     ${blogModalBody} { max-width: none; }
 
@@ -80,14 +114,15 @@ export const main = async () => {
       margin-left: auto;
       margin-right: auto;
     }
-
-    ${queueSettings} {
-      box-sizing: border-box;
-      width: calc(100% - ${625 - 540}px);
-    }
   `;
 
   document.documentElement.append(styleElement);
+  document.documentElement.append(modalStyleElementNoSidebar);
+  document.documentElement.append(modalStyleElementWithSidebar);
 };
 
-export const clean = async () => styleElement.remove();
+export const clean = async () => {
+  styleElement.remove();
+  modalStyleElementNoSidebar.remove();
+  modalStyleElementWithSidebar.remove();
+};

@@ -58,6 +58,13 @@ export const main = async () => {
       box-sizing: border-box;
       width: calc(100% - ${625 - 540}px);
     }
+
+    /* embedded blog view visual corruption fix */
+    ${keyToCss('container')} > [style*="--blog-title-color"] {
+      max-width: 960px;
+      margin-left: auto;
+      margin-right: auto;
+    }
   `;
 
   document.documentElement.append(styleElement);

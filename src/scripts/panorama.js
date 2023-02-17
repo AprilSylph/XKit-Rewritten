@@ -12,6 +12,14 @@ const queueSettings = keyToCss('queueSettings');
 
 const taggedPageColumn = `${keyToCss('postMasonry')} > ${keyToCss('postColumn')}`;
 
+const blogBodySelector = '[style*="--blog-title-color"]';
+
+const blogModalLayout = `${blogBodySelector} > ${keyToCss('layout')}`;
+const blogModalBody = `${blogBodySelector} > ${keyToCss('layout')} > ${keyToCss('body')}`;
+
+const blogModalDrawer = `${keyToCss('drawer')}${keyToCss('center')}`;
+const embeddedBlogModalScrollContainer = `${keyToCss('container')} > ${blogBodySelector}`;
+
 const styleElement = buildStyle();
 styleElement.media = '(min-width: 990px)';
 
@@ -53,6 +61,25 @@ export const main = async () => {
     ${link} ${linkImage} { height: unset; }
 
     ${taggedPageColumn} { max-width: none; }
+
+    ${blogModalLayout} { max-width: none; }
+    ${blogModalBody} { max-width: none; }
+
+    ${blogModalBody} main { max-width: calc(100% - ${20 * 2}px); }
+    ${blogModalBody} main article { max-width: 100%; }
+    ${blogModalBody} main article > * { max-width: 100%; }
+
+    ${blogModalDrawer} {
+      max-width: max(${maxPostWidth} + 420px, 720px);
+      width: calc(100% - 160px);
+    }
+
+    ${embeddedBlogModalScrollContainer} {
+      max-width: max(${maxPostWidth} + 420px, 720px);
+      width: calc(100% - 160px);
+      margin-left: auto;
+      margin-right: auto;
+    }
 
     ${queueSettings} {
       box-sizing: border-box;

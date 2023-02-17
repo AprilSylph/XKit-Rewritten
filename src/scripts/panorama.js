@@ -41,9 +41,9 @@ export const main = async () => {
       flex: 1;
     }
 
-    ${container} > :first-child main { max-width: calc(100% - ${625 - 540}px); }
-    ${container} > :first-child main article { max-width: 100%; }
-    ${container} > :first-child main article > * { max-width: 100%; }
+    ${container} > :first-child > main { max-width: calc(100% - ${625 - 540}px); }
+    ${container} > :first-child > main article { max-width: 100%; }
+    ${container} > :first-child > main article > * { max-width: 100%; }
 
     ${reblog} { max-width: none; }
     ${videoBlock} { max-width: none; }

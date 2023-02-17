@@ -5,7 +5,12 @@ import { getPreferences } from '../util/preferences.js';
 const container = `${keyToCss('bluespaceLayout')} > ${keyToCss('container')}`;
 const reblog = `${keyToCss('post')} ${keyToCss('reblog')}`;
 const videoBlock = keyToCss('videoBlock');
+const audioBlock = keyToCss('audioBlock');
+const link = `${keyToCss('rows')} > ${keyToCss('link')}`;
+const linkImage = `${keyToCss('header')}${keyToCss('withImage')}`;
 const queueSettings = keyToCss('queueSettings');
+
+const taggedPageColumn = `${keyToCss('postMasonry')} > ${keyToCss('postColumn')}`;
 
 const styleElement = buildStyle();
 styleElement.media = '(min-width: 990px)';
@@ -36,13 +41,18 @@ export const main = async () => {
       flex: 1;
     }
 
-    ${container} > :first-child > main { max-width: calc(100% - ${625 - 540}px); }
-    ${container} > :first-child > main article { max-width: 100%; }
-    ${container} > :first-child > main article > * { max-width: 100%; }
+    ${container} > :first-child main { max-width: calc(100% - ${625 - 540}px); }
+    ${container} > :first-child main article { max-width: 100%; }
+    ${container} > :first-child main article > * { max-width: 100%; }
 
     ${reblog} { max-width: none; }
     ${videoBlock} { max-width: none; }
     ${videoBlock} iframe { max-width: none !important; }
+    ${audioBlock} { max-width: none; }
+    ${link} { max-width: none; }
+    ${link} ${linkImage} { height: unset; }
+
+    ${taggedPageColumn} { max-width: none; }
 
     ${queueSettings} {
       box-sizing: border-box;

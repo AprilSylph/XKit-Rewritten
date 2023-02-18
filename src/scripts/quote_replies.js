@@ -6,7 +6,7 @@ import { notify } from '../util/notifications.js';
 import { getPreferences } from '../util/preferences.js';
 import { buildSvg } from '../util/remixicon.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
-import { userBlogNames } from '../util/user.js';
+import { userBlogs } from '../util/user.js';
 
 const storageKey = 'quote_replies.currentResponseId';
 const buttonClass = 'xkit-quote-replies';
@@ -24,9 +24,9 @@ const getNotificationProps = function () {
   let fiber = notificationElement[reactKey];
 
   while (fiber !== null) {
-    const { notification } = fiber.memoizedProps || {};
-    if (notification !== undefined) {
-      return notification;
+    const props = fiber.memoizedProps || {};
+    if (props?.notification !== undefined) {
+      return props;
     } else {
       fiber = fiber.return;
     }
@@ -34,10 +34,9 @@ const getNotificationProps = function () {
 };
 
 const processNotifications = notifications => notifications.forEach(async notification => {
-  const notificationProps = await inject(getNotificationProps, [], notification);
-  const { type } = notificationProps;
+  const { notification: notificationProps, tumblelogName } = await inject(getNotificationProps, [], notification);
 
-  if (!['reply', 'note_mention'].includes(type)) return;
+  if (!['reply', 'note_mention'].includes(notificationProps.type)) return;
 
   const activityElement = notification.querySelector(activitySelector);
   if (!activityElement) return;
@@ -48,7 +47,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
     {
       click () {
         this.disabled = true;
-        quoteReply(notificationProps)
+        quoteReply(tumblelogName, notificationProps)
           .catch(showError)
           .finally(() => { this.disabled = false; });
       }
@@ -57,7 +56,10 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
-const quoteReply = async ({ type, targetPostId, targetPostSummary, targetTumblelogName, targetTumblelogUuid, timestamp }) => {
+const quoteReply = async (tumblelogName, notificationProps) => {
+  const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
+  const { type, targetPostId, targetPostSummary, targetTumblelogName, targetTumblelogUuid, timestamp } = notificationProps;
+
   const isReply = type === 'reply';
   const { response } = await apiFetch(
     `/v2/blog/${targetTumblelogUuid}/post/${targetPostId}/notes/timeline`,
@@ -87,20 +89,10 @@ const quoteReply = async ({ type, targetPostId, targetPostSummary, targetTumblel
     ...tagReplyingBlog ? [reply.blog.name] : []
   ].join(',');
 
-  const yourMentionedBlog = reply.content[0]?.formatting?.find(
-    format => format.type === 'mention' && userBlogNames.includes(format.blog?.name)
-  )?.blog;
-  if (type === 'note_mention' && !yourMentionedBlog) {
-    throw new Error('Reply not found.');
-  }
-
-  const yourUuid = isReply ? targetTumblelogUuid : yourMentionedBlog.uuid;
-  const yourName = isReply ? targetTumblelogName : yourMentionedBlog.name;
-
-  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${yourUuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
+  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
   await browser.storage.local.set({ [storageKey]: responseId });
 
-  const openedTab = window.open(`/blog/${yourName}/drafts`);
+  const openedTab = window.open(`/blog/${tumblelogName}/drafts`);
   if (openedTab === null) {
     browser.storage.local.remove(storageKey);
     notify(displayText);

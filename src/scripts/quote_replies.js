@@ -34,14 +34,8 @@ const getNotificationProps = function () {
 };
 
 const processNotifications = notifications => notifications.forEach(async notification => {
-  const {
-    targetPostId: id,
-    targetPostSummary: summary,
-    targetTumblelogName: name,
-    targetTumblelogUuid: uuid,
-    timestamp,
-    type
-  } = await inject(getNotificationProps, [], notification);
+  const notificationProps = await inject(getNotificationProps, [], notification);
+  const { type } = notificationProps;
 
   if (!['reply', 'note_mention'].includes(type)) return;
 
@@ -54,7 +48,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
     {
       click () {
         this.disabled = true;
-        quoteReply({ type, id, summary, name, uuid, timestamp })
+        quoteReply(notificationProps)
           .catch(showError)
           .finally(() => { this.disabled = false; });
       }
@@ -63,10 +57,10 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
-const quoteReply = async ({ type, id, summary, name, uuid, timestamp }) => {
+const quoteReply = async ({ type, targetPostId, targetPostSummary, targetTumblelogName, targetTumblelogUuid, timestamp }) => {
   const isReply = type === 'reply';
   const { response } = await apiFetch(
-    `/v2/blog/${uuid}/post/${id}/notes/timeline`,
+    `/v2/blog/${targetTumblelogUuid}/post/${targetPostId}/notes/timeline`,
     { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } }
   );
 
@@ -76,11 +70,11 @@ const quoteReply = async ({ type, id, summary, name, uuid, timestamp }) => {
   if (Math.floor(reply.timestamp) !== timestamp) throw new Error('Reply not found.');
 
   const text = isReply
-    ? `@${reply.blog.name} replied to your post \u201C${summary.replace(/\n/g, ' ')}\u201D:`
-    : `@${reply.blog.name} mentioned you on a post \u201C${summary.replace(/\n/g, ' ')}\u201D:`;
+    ? `@${reply.blog.name} replied to your post \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`
+    : `@${reply.blog.name} mentioned you on a post \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`;
   const formatting = [
     { start: 0, end: reply.blog.name.length + 1, type: 'mention', blog: { uuid: reply.blog.uuid } },
-    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: `https://${name}.tumblr.com/post/${id}` }
+    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: `https://${targetTumblelogName}.tumblr.com/post/${targetPostId}` }
   ];
 
   const content = [
@@ -100,8 +94,8 @@ const quoteReply = async ({ type, id, summary, name, uuid, timestamp }) => {
     throw new Error('Reply not found.');
   }
 
-  const yourUuid = isReply ? uuid : yourMentionedBlog.uuid;
-  const yourName = isReply ? name : yourMentionedBlog.name;
+  const yourUuid = isReply ? targetTumblelogUuid : yourMentionedBlog.uuid;
+  const yourName = isReply ? targetTumblelogName : yourMentionedBlog.name;
 
   const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${yourUuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
   await browser.storage.local.set({ [storageKey]: responseId });

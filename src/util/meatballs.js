@@ -3,7 +3,7 @@ import { dom } from './dom.js';
 import { postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { inject } from './inject.js';
-import { timelineObject } from './react_props.js';
+import { blogData, timelineObject } from './react_props.js';
 
 const postHeaderSelector = `${postSelector} article > header`;
 const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
@@ -21,22 +21,6 @@ const testHeaderElement = (selector) => {
     }
   }
 };
-
-const unburyBlog = () => {
-  const element = document.currentScript.parentElement;
-  const reactKey = Object.keys(element).find(key => key.startsWith('__reactFiber'));
-  let fiber = element[reactKey];
-
-  while (fiber !== null) {
-    const { blog, blogSettings } = fiber.memoizedProps || {};
-    if (blog ?? blogSettings) {
-      return blog ?? blogSettings;
-    } else {
-      fiber = fiber.return;
-    }
-  }
-};
-const blogData = async (element) => inject(unburyBlog, [], element);
 
 const meatballItems = {};
 const blogMeatballItems = {};

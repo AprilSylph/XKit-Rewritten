@@ -29,6 +29,27 @@ export const timelineObject = async function (postElement) {
   return timelineObjectCache.get(postElement);
 };
 
+const unburyBlog = () => {
+  const element = document.currentScript.parentElement;
+  const reactKey = Object.keys(element).find(key => key.startsWith('__reactFiber'));
+  let fiber = element[reactKey];
+
+  while (fiber !== null) {
+    const { blog, blogSettings } = fiber.memoizedProps || {};
+    if (blog ?? blogSettings) {
+      return blog ?? blogSettings;
+    } else {
+      fiber = fiber.return;
+    }
+  }
+};
+
+/**
+ * @param {Element} meatballMenu - An on-screen meatball menu element in a blog modal header or blog card
+ * @returns {Promise<object>} - The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not availiable in blog cards.
+ */
+export const blogData = async (meatballMenu) => inject(unburyBlog, [], meatballMenu);
+
 export const isMyPost = async (postElement) => {
   const { blog, isSubmission, postAuthor } = await timelineObject(postElement);
   const userIsMember = userBlogNames.includes(blog.name);

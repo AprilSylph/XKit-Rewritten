@@ -6,7 +6,7 @@ import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { timelineObject } from '../util/react_props.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, createEditRequestBody } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-scissors-cut-line';
 const buttonClass = 'xkit-trim-reblogs-button';
@@ -30,50 +30,28 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
 
   const {
     blog: { uuid },
-    rebloggedRootUuid,
-    rebloggedRootId
+    isBlocksPostFormat
   } = await timelineObject(postElement);
 
-  let unsureOfLegacyStatus;
-
-  if (rebloggedRootUuid && rebloggedRootId) {
-    try {
-      const { response: { shouldOpenInLegacy } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
-      if (shouldOpenInLegacy) {
-        await new Promise(resolve => {
-          showModal({
-            title: 'Note: Legacy post',
-            message: [
-              'The root post of this thread was originally created with the legacy post editor.',
-              '\n\n',
-              'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
-            ],
-            buttons: [
-              modalCancelButton,
-              dom('button', { class: 'blue' }, { click: () => resolve() }, ['Continue'])
-            ]
-          });
-        });
-      }
-      unsureOfLegacyStatus = false;
-    } catch (exception) {
-      unsureOfLegacyStatus = true;
-    }
+  if (isBlocksPostFormat === false) {
+    await new Promise(resolve => {
+      showModal({
+        title: 'Note: Legacy post',
+        message: [
+          'The root post of this thread was originally created with the legacy post editor.',
+          '\n\n',
+          'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
+        ],
+        buttons: [
+          modalCancelButton,
+          dom('button', { class: 'blue' }, { click: resolve }, ['Continue'])
+        ]
+      });
+    });
   }
 
-  const {
-    response: {
-      blog,
-      content = [],
-      layout,
-      state = 'published',
-      publishOn,
-      date,
-      tags = [],
-      slug = '',
-      trail = []
-    }
-  } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
+  const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
+  const { blog, content = [], trail = [] } = postData;
 
   if (!trail?.length) {
     notify('This post is too short to trim!');
@@ -127,13 +105,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
         method: 'PUT',
         body: {
-          content,
-          layout,
-          state,
-          publish_on: publishOn,
-          date,
-          tags: tags.join(','),
-          slug,
+          ...createEditRequestBody(postData),
           exclude_trail_items: excludeTrailItems
         }
       });
@@ -164,10 +136,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     title: 'Trim this post?',
     message: [
       'Select trail items to remove:',
-      previewElement,
-      ...(unsureOfLegacyStatus
-        ? ['\n\n', "Warning: XKit can't tell if this post originated from the legacy post editor. Trimming may fail if so."]
-        : [])
+      previewElement
     ],
     buttons: [modalCancelButton, trimButton]
   });

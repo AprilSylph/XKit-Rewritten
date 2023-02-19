@@ -1,12 +1,13 @@
 import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
 import { keyToCss } from '../util/css_map.js';
+import { dom } from '../util/dom.js';
 import { postSelector } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
 import { getPreferences } from '../util/preferences.js';
 import { timelineObject, editPostFormTags } from '../util/react_props.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, createEditRequestBody } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
@@ -20,15 +21,16 @@ let autoTagAsker;
 
 let controlButtonTemplate;
 
-const popupElement = Object.assign(document.createElement('div'), { id: 'quick-tags' });
-const popupForm = Object.assign(document.createElement('form'), {
-  onsubmit: event => event.preventDefault()
-});
-const popupInput = Object.assign(document.createElement('input'), {
-  placeholder: 'Tags (comma separated)',
-  autocomplete: 'off',
-  onkeydown: event => event.stopPropagation()
-});
+const popupElement = dom('div', { id: 'quick-tags' });
+const popupForm = dom('form', null, { submit: event => event.preventDefault() });
+const popupInput = dom(
+  'input',
+  {
+    placeholder: 'Tags (comma separated)',
+    autocomplete: 'off'
+  },
+  { keydown: event => event.stopPropagation() }
+);
 const doSmartQuotes = ({ currentTarget }) => {
   const { value } = currentTarget;
   currentTarget.value = value
@@ -50,7 +52,7 @@ const checkLength = ({ currentTarget }) => {
 popupInput.addEventListener('input', checkLength);
 popupForm.appendChild(popupInput);
 
-const postOptionPopupElement = Object.assign(document.createElement('div'), { id: 'quick-tags-post-option' });
+const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option' });
 
 const storageKey = 'quick_tags.preferences.tagBundles';
 
@@ -146,18 +148,8 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   const postId = postElement.dataset.id;
   const { blog: { uuid } } = await timelineObject(postElement);
 
-  const {
-    response: {
-      content = [],
-      layout,
-      state = 'published',
-      publishOn,
-      date,
-      tags = [],
-      sourceUrlRaw,
-      slug = ''
-    }
-  } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
+  const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
+  const { tags = [] } = postData;
 
   const tagsToAdd = inputTags.filter(inputTag => tags.includes(inputTag) === false);
   if (tagsToAdd.length === 0) { return; }
@@ -168,30 +160,22 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
     const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
       method: 'PUT',
       body: {
-        content,
-        layout,
-        state,
-        publish_on: publishOn,
-        date,
-        tags: tags.join(','),
-        source_url: sourceUrlRaw,
-        slug
+        ...createEditRequestBody(postData),
+        tags: tags.join(',')
       }
     });
 
     notify(displayText);
 
-    const tagsElement = Object.assign(document.createElement('div'), { className: tagsClass });
+    const tagsElement = dom('div', { class: tagsClass });
 
     const innerTagsDiv = document.createElement('div');
     tagsElement.appendChild(innerTagsDiv);
 
     for (const tag of tags) {
-      innerTagsDiv.appendChild(Object.assign(document.createElement('a'), {
-        textContent: `#${tag}`,
-        href: `/tagged/${encodeURIComponent(tag)}`,
-        target: '_blank'
-      }));
+      innerTagsDiv.appendChild(
+        dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`])
+      );
     }
 
     postElement.querySelector('footer').parentNode.prepend(tagsElement);

@@ -11,7 +11,7 @@ ${keyToCss('seeAll')} {
 `);
 
 export const main = async function () {
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {

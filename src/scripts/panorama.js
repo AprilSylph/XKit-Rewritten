@@ -15,6 +15,10 @@ const taggedPageColumn = `${keyToCss('postMasonry')} > ${keyToCss('postColumn')}
 const styleElement = buildStyle();
 styleElement.media = '(min-width: 990px)';
 
+const avatarLeft = 85;
+const avatarWidth = 64;
+const avatarGutter = avatarLeft - avatarWidth;
+
 export const main = async () => {
   const { maxPostWidth: maxPostWidthPref } = await getPreferences('panorama');
 
@@ -27,7 +31,7 @@ export const main = async () => {
     #base-container > div > div > header,
     ${container} {
       max-width: 100vw;
-      padding-left: ${85 - 64}px;
+      padding-left: ${avatarGutter}px;
       padding-right: 30px;
     }
 
@@ -37,11 +41,11 @@ export const main = async () => {
 
     ${container} > :first-child:not(${keyToCss('scrollContainer')}) {
       min-width: 0;
-      max-width: max(${maxPostWidth} + 85px, 385px);
+      max-width: max(${maxPostWidth} + ${avatarLeft}px, 385px);
       flex: 1;
     }
 
-    ${container} > :first-child > main { max-width: calc(100% - ${625 - 540}px); }
+    ${container} > :first-child > main { max-width: calc(100% - ${avatarLeft}px); }
     ${container} > :first-child > main article { max-width: 100%; }
     ${container} > :first-child > main article > * { max-width: 100%; }
 
@@ -56,7 +60,7 @@ export const main = async () => {
 
     ${queueSettings} {
       box-sizing: border-box;
-      width: calc(100% - ${625 - 540}px);
+      width: calc(100% - ${avatarLeft}px);
     }
 
     /* embedded blog view visual corruption fix */

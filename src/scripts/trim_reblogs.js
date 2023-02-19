@@ -149,8 +149,9 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"]`);
   if (!editButton) { return; }
 
-  const { trail = [] } = await timelineObject(postElement);
-  if (!trail.length) { return; }
+  const { trail = [], content = [] } = await timelineObject(postElement);
+  const items = trail.length + (content.length ? 1 : 0);
+  if (items < 2) { return; }
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });
   const controlIcon = editButton.closest(controlIconSelector);

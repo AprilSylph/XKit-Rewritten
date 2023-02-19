@@ -4,7 +4,7 @@ import { getPreferences } from '../util/preferences.js';
 
 const minSize = 300;
 
-const container = `${keyToCss('bluespaceLayout')} > ${keyToCss('container')}`;
+const container = `${keyToCss('bluespaceLayout')} > ${keyToCss('container')}:not(${keyToCss('mainContentIs4ColumnMasonry')})`;
 const reblog = `${keyToCss('post')} ${keyToCss('reblog')}`;
 const videoBlock = keyToCss('videoBlock');
 const audioBlock = keyToCss('audioBlock');
@@ -26,13 +26,13 @@ const styleElement = buildStyle();
 styleElement.media = '(min-width: 576px)';
 
 const mobileStyleElement = buildStyle();
-mobileStyleElement.media = '(min-width: 576px) and (max-width: 990px)';
+mobileStyleElement.media = '(min-width: 576px) and (max-width: 989px)';
 
 const standardStyleElement = buildStyle();
 standardStyleElement.media = '(min-width: 990px)';
 
 const modalStyleElementMobile = buildStyle();
-mobileStyleElement.media = '(min-width: 576px) and (max-width: 990px)';
+modalStyleElementMobile.media = '(min-width: 576px) and (max-width: 989px)';
 
 const modalStyleElementNoSidebar = buildStyle();
 modalStyleElementNoSidebar.media = '(min-width: 990px) and (max-width: 1149px)';
@@ -48,6 +48,22 @@ const styleElements = [
   modalStyleElementNoSidebar,
   modalStyleElementWithSidebar
 ];
+
+const avatarLeft = 85;
+const avatarWidth = 64;
+const avatarGutter = avatarLeft - avatarWidth;
+
+const sidebarWidth = 320;
+const sidebarSpacing = 30;
+const defaultPostWidth = 540;
+
+const minContainerWidth = avatarLeft + defaultPostWidth + sidebarWidth + sidebarSpacing;
+
+const modalMainMargin = 20;
+const modalSidebarWidth = 320;
+const modalSidebarSpacing = 20;
+
+const minModalWidthWithSidebar = modalSidebarWidth + modalSidebarSpacing * 5;
 
 export const main = async () => {
   const { maxPostWidth: maxPostWidthPref } = await getPreferences('panorama');
@@ -89,7 +105,7 @@ export const main = async () => {
 
     ${container} > :first-child main { max-width: calc(100% - ${20 * 2}px); }
 
-    ${container} > :first-child:not(${keyToCss('scrollContainer')}) {
+    ${container} > :first-child:not(${blogBodySelector}) {
       min-width: 0;
       max-width: max(${maxPostWidth} + ${40}px, ${minSize + 40}px);
       flex: 1;
@@ -99,16 +115,15 @@ export const main = async () => {
   standardStyleElement.textContent = `
     #base-container > div > div > header,
     ${container} {
-      max-width: 100vw;
-      padding-left: ${85 - 64}px;
-      padding-right: 30px;
+      max-width: max(100vw - ${avatarGutter * 2}px, ${minContainerWidth}px);
+      padding: 0
     }
 
-    ${container} > :first-child main { max-width: calc(100% - ${625 - 540}px); }
+    ${container} > :first-child:not(${blogBodySelector}) main { max-width: calc(100% - ${avatarLeft}px); }
 
-    ${container} > :first-child:not(${keyToCss('scrollContainer')}) {
+    ${container} > :first-child:not(${blogBodySelector}) {
       min-width: 0;
-      max-width: max(${maxPostWidth} + ${85}px, ${minSize + 85}px);
+      max-width: max(${maxPostWidth} + ${avatarLeft}px, ${minSize + avatarLeft}px);
       flex: 1;
     }
   `;
@@ -117,17 +132,17 @@ export const main = async () => {
     ${blogModalLayout} { max-width: none; }
     ${blogModalBody} { max-width: none; }
 
-    ${blogModalBody} main { max-width: calc(100% - ${20 * 2}px); }
+    ${blogModalBody} main { max-width: calc(100% - ${modalMainMargin * 2}px); }
     ${blogModalBody} main article { max-width: 100%; }
     ${blogModalBody} main article > * { max-width: 100%; }
 
     ${blogModalDrawer} {
-      max-width: max(${maxPostWidth} + ${40}px, ${minSize + 40}px);
+      max-width: max(${maxPostWidth} + ${modalMainMargin * 2}px, ${minSize + modalMainMargin * 2}px);
       width: calc(100% - 40px);
     }
 
     ${embeddedBlogModalScrollContainer} {
-      max-width: max(${maxPostWidth} + ${40}px, ${minSize + 40}px);
+      max-width: max(${maxPostWidth} + ${modalMainMargin * 2}px, ${minSize + modalMainMargin * 2}px);
       width: calc(100% - 40px);
       margin-left: auto;
       margin-right: auto;
@@ -138,17 +153,17 @@ export const main = async () => {
     ${blogModalLayout} { max-width: none; }
     ${blogModalBody} { max-width: none; }
 
-    ${blogModalBody} main { max-width: calc(100% - ${20 * 2}px); }
+    ${blogModalBody} main { max-width: calc(100% - ${modalMainMargin * 2}px); }
     ${blogModalBody} main article { max-width: 100%; }
     ${blogModalBody} main article > * { max-width: 100%; }
 
     ${blogModalDrawer} {
-      max-width: max(${maxPostWidth} + ${40}px, ${minSize + 40}px);
+      max-width: max(${maxPostWidth} + ${modalMainMargin * 2}px, ${minSize + modalMainMargin * 2}px);
       width: calc(100% - 160px);
     }
 
     ${embeddedBlogModalScrollContainer} {
-      max-width: max(${maxPostWidth} + ${40}px, ${minSize + 40}px);
+      max-width: max(${maxPostWidth} + ${modalMainMargin * 2}px, ${minSize + modalMainMargin * 2}px);
       width: calc(100% - 160px);
       margin-left: auto;
       margin-right: auto;
@@ -159,17 +174,17 @@ export const main = async () => {
     ${blogModalLayout} { max-width: none; }
     ${blogModalBody} { max-width: none; }
 
-    ${blogModalBody} main { max-width: calc(100% - ${20 * 2}px); }
+    ${blogModalBody} main { max-width: calc(100% - ${modalMainMargin * 2}px); }
     ${blogModalBody} main article { max-width: 100%; }
     ${blogModalBody} main article > * { max-width: 100%; }
 
     ${blogModalDrawer} {
-      max-width: max(${maxPostWidth} + ${420}px, ${minSize + 420}px);
+      max-width: max(${maxPostWidth} + ${minModalWidthWithSidebar}px, ${minSize + minModalWidthWithSidebar}px);
       width: calc(100% - 160px);
     }
 
     ${embeddedBlogModalScrollContainer} {
-      max-width: max(${maxPostWidth} + ${420}px, ${minSize + 420}px);
+      max-width: max(${maxPostWidth} + ${minModalWidthWithSidebar}px, ${minSize + minModalWidthWithSidebar}px);
       width: calc(100% - 160px);
       margin-left: auto;
       margin-right: auto;

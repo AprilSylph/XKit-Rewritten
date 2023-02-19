@@ -2,7 +2,7 @@ import { keyToCss } from '../util/css_map.js';
 import { buildStyle } from '../util/interface.js';
 import { getPreferences } from '../util/preferences.js';
 
-const container = `${keyToCss('bluespaceLayout')} > ${keyToCss('container')}`;
+const container = `${keyToCss('bluespaceLayout')} > ${keyToCss('container')}:not(${keyToCss('mainContentIs4ColumnMasonry')})`;
 const reblog = `${keyToCss('post')} ${keyToCss('reblog')}`;
 const videoBlock = keyToCss('videoBlock');
 const audioBlock = keyToCss('audioBlock');

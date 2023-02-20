@@ -24,7 +24,6 @@ export const main = async () => {
 
   const maxPostWidth = maxPostWidthPref
     .trim()
-    .replace('%', 'vw')
     .replace(/^(\d+)$/, '$&px') || '100vw';
 
   styleElement.textContent = `

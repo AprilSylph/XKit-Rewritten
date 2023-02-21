@@ -2,6 +2,7 @@ import { dom } from './dom.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
 export const blogViewSelector = '[style*="--blog-title-color"] *';
+export const blogBodySelector = '[style*="--blog-title-color"]';
 
 /**
  * @typedef {object} PostFilterOptions

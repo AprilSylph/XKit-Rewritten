@@ -101,7 +101,8 @@ const sidebarOptions = {
       onclick: () => showModal(modalPromptOptions),
       carrot: true
     }
-  ]
+  ],
+  visibility: () => /\/likes/.test(location.pathname)
 };
 
 export const main = async function () {

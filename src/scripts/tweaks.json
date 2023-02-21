@@ -84,6 +84,11 @@
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",
       "default": false
+    },
+    "no_live": {
+      "type": "checkbox",
+      "label": "Hide the Tumblr Live carousel",
+      "default": false
     }
   }
 }

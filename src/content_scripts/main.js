@@ -77,7 +77,16 @@
     return installedScripts;
   };
 
+  const notifyOnError = async () => {
+    const notificationsPath = getURL('/util/notifications.js');
+    const { notify } = await import(notificationsPath);
+    window.addEventListener('error', (event) => { notify(`XKit Rewritten error: ${event.message}`); });
+    window.addEventListener('unhandledrejection', (event) => { notify(`XKit Rewritten error: ${event.reason}`); });
+  };
+
   const init = async function () {
+    await notifyOnError().catch(console.error);
+
     $('style.xkit').remove();
 
     browser.storage.onChanged.addListener(onStorageChanged);

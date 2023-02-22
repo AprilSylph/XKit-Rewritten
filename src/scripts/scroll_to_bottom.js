@@ -41,8 +41,8 @@ const startScrolling = () => {
   scrollElement = modalScrollContainer || document.documentElement;
   observer.observe(modalScrollContainer?.firstElementChild || document.documentElement);
   active = true;
-  scrollToBottomButton.classList.add(activeClass);
-  modalScrollToBottomButton.classList.add(activeClass);
+  scrollToBottomButton?.classList.add(activeClass);
+  modalScrollToBottomButton?.classList.add(activeClass);
   scrollToBottom();
 };
 

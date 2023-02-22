@@ -53,7 +53,10 @@ export const main = async () => {
     ${videoBlock} iframe { max-width: none !important; }
     ${audioBlock} { max-width: none; }
     ${link} { max-width: none; }
-    ${link} ${linkImage} { height: unset; }
+    ${link} ${linkImage} {
+      height: unset;
+      aspect-ratio: 2;
+    }
 
     ${taggedPageColumn} { max-width: none; }
 

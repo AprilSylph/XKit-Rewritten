@@ -1,5 +1,6 @@
 import { apiFetch } from './tumblr_helpers.js';
 
+// eslint-disable-next-line mozilla/reject-top-level-await
 const fetchedUserInfo = await apiFetch('/v2/user/info').catch(() => ({ response: {} }));
 
 /**

@@ -15,6 +15,7 @@ const includeFiltered = true;
 const tagLinkSelector = `${keyToCss('searchResult')} h3 ~ a${keyToCss('typeaheadRow')}[href^="/tagged/"]`;
 const tagTextSelector = keyToCss('tagText');
 
+// eslint-disable-next-line mozilla/reject-top-level-await
 const trackedTagsData = await apiFetch('/v2/user/tags') ?? {};
 const trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
 const unreadCounts = new Map();

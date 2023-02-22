@@ -1,5 +1,6 @@
 import { inject } from './inject.js';
 
+// eslint-disable-next-line mozilla/reject-top-level-await
 export const languageData = await inject(() => window.tumblr.languageData);
 
 /**

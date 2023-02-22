@@ -1,5 +1,6 @@
 import { inject } from './inject.js';
 
+// eslint-disable-next-line mozilla/reject-top-level-await
 export const cssMap = await inject(async () => window.tumblr.getCssMap());
 
 /**

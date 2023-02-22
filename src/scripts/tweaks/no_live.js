@@ -7,12 +7,12 @@ const styleElement = buildStyle(`.${hiddenClass} { display: none; }`);
 
 const processFrames = frames =>
   frames.forEach(frame =>
-    frame.closest(keyToCss('listTimelineObjectInner')).classList.add(hiddenClass)
+    frame.closest(keyToCss('listTimelineObjectInner'))?.classList?.add(hiddenClass)
   );
 
 export const main = async function () {
   pageModifications.register(
-    'iframe[src^="https://api.gateway.tumblr-live.com/"]',
+    `[data-timeline="/v2/timeline/dashboard"] iframe[src^="https://api.gateway.tumblr-live.com/"]`,
     processFrames
   );
   document.documentElement.append(styleElement);

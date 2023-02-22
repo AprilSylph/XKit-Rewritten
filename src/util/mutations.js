@@ -33,20 +33,21 @@ export const pageModifications = Object.freeze({
    * Run a page modification on all existing matching elements
    *
    * @param {Function} modifierFunction - Previously-registered function to run
+   * @returns {Promise<void>} Resolves when finished
    */
-  trigger (modifierFunction) {
+  async trigger (modifierFunction) {
     const selector = this.listeners.get(modifierFunction);
     if (!selector) return;
 
     if (modifierFunction.length === 0) {
       const shouldRun = rootNode.querySelector(selector) !== null;
-      if (shouldRun) modifierFunction();
+      if (shouldRun) await modifierFunction();
       return;
     }
 
     const matchingElements = [...rootNode.querySelectorAll(selector)];
     if (matchingElements.length !== 0) {
-      modifierFunction(matchingElements);
+      await modifierFunction(matchingElements);
     }
   }
 });

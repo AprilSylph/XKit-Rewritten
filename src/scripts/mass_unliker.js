@@ -102,7 +102,7 @@ const sidebarOptions = {
       carrot: true
     }
   ],
-  visibility: () => /\/likes/.test(location.pathname)
+  visibility: () => /^\/likes/.test(location.pathname)
 };
 
 export const main = async function () {

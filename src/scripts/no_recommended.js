@@ -4,12 +4,12 @@ let enabledOptions;
 
 const runOption = async function (name) {
   const { main: run } = await import(`./no_recommended/${name}.js`);
-  run().catch(console.error);
+  run();
 };
 
 const destroyOption = async function (name) {
   const { clean: destroy } = await import(`./no_recommended/${name}.js`);
-  destroy().catch(console.error);
+  destroy();
 };
 
 export const onStorageChanged = async function (changes, areaName) {

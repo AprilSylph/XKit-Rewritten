@@ -11,7 +11,7 @@
     const scriptPath = getURL(`/scripts/${name}.js`);
     const { main, clean, stylesheet, onStorageChanged } = await import(scriptPath);
 
-    main().catch(console.error);
+    main();
 
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
@@ -41,7 +41,7 @@
     const scriptPath = getURL(`/scripts/${name}.js`);
     const { clean, stylesheet } = await import(scriptPath);
 
-    clean().catch(console.error);
+    clean();
 
     if (stylesheet) {
       document.querySelector(`link[href="${getURL(`/scripts/${name}.css`)}"]`)?.remove();

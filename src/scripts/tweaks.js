@@ -4,12 +4,12 @@ let enabledTweaks;
 
 const runTweak = async function (name) {
   const { main: run } = await import(`./tweaks/${name}.js`);
-  run().catch(console.error);
+  run();
 };
 
 const destroyTweak = async function (name) {
   const { clean: destroy } = await import(`./tweaks/${name}.js`);
-  destroy().catch(console.error);
+  destroy();
 };
 
 export const onStorageChanged = async function (changes, areaName) {

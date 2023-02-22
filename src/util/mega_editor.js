@@ -32,7 +32,7 @@ export const megaEdit = async function (postIds, options) {
   }).then(responseText => {
     const responseDocument = (new DOMParser()).parseFromString(responseText, 'text/html');
     return responseDocument.getElementById('tumblr_form_key').getAttribute('content');
-  }).catch(console.error);
+  });
 
   const requestBody = {
     post_ids: postIds.join(','),

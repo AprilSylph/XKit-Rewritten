@@ -137,7 +137,7 @@ export const main = async function () {
   aprilFools = (today.getMonth() === 3 && today.getDate() === 1);
 
   onNewPosts.addListener(processPosts);
-  pageModifications.register(`${keyToCss('blogCardBlogLink')} > a`, processBlogCardLinks);
+  pageModifications.register(`${keyToCss('blogCard')} ${keyToCss('blogCardBlogLink')} > a`, processBlogCardLinks);
 };
 
 export const clean = async function () {

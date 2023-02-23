@@ -88,7 +88,7 @@ const processPosts = function (postElements) {
 
 const processBlogCardLinks = blogCardLinks =>
   blogCardLinks.forEach(async blogCardLink => {
-    const blogName = blogCardLink?.textContent;
+    const blogName = blogCardLink.querySelector(keyToCss('blogLinkShort'))?.textContent || blogCardLink?.textContent;
     if (!blogName) return;
 
     const followingBlog = await getIsFollowing(blogName, blogCardLink);

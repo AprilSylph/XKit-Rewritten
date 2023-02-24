@@ -16,24 +16,24 @@ let seenPosts = [];
 const timers = new Map();
 
 const observer = new IntersectionObserver(
-  (entries) => entries.forEach(({ isIntersecting, target: articleElement }) => {
+  (entries) => entries.forEach(({ isIntersecting, target: element }) => {
     if (isIntersecting) {
-      if (!timers.has(articleElement)) {
-        timers.set(articleElement, setTimeout(() => markAsSeen(articleElement), 300));
+      if (!timers.has(element)) {
+        timers.set(element, setTimeout(() => markAsSeen(element), 300));
       }
     } else {
-      clearTimeout(timers.get(articleElement));
-      timers.delete(articleElement);
+      clearTimeout(timers.get(element));
+      timers.delete(element);
     }
   }),
   { rootMargin: '-20px 0px' }
 );
 
-const markAsSeen = (articleElement) => {
-  observer.unobserve(articleElement);
-  timers.delete(articleElement);
+const markAsSeen = (element) => {
+  observer.unobserve(element);
+  timers.delete(element);
 
-  const postElement = articleElement.closest(postSelector);
+  const postElement = element.closest(postSelector);
   seenPosts.push(postElement.dataset.id);
   seenPosts.splice(0, seenPosts.length - 10000);
   browser.storage.local.set({ [storageKey]: seenPosts });

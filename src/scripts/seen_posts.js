@@ -46,7 +46,7 @@ const dimPosts = function (postElements) {
     if (seenPosts.includes(id)) {
       postElement.classList.add(dimClass);
     } else {
-      observer.observe(postElement.querySelector('article'));
+      observer.observe(postElement.querySelector('article header + *'));
     }
   }
 };

@@ -9,14 +9,14 @@
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#seen-posts",
   "relatedTerms": [ "Read Posts" ],
   "preferences": {
-    "hideSeenPosts": {
-      "type": "checkbox",
-      "label": "Hide seen posts from dashboard",
-      "default": false
-    },
     "onlyDimAvatars": {
       "type": "checkbox",
       "label": "Only dim avatars on seen posts",
+      "default": false
+    },
+    "hideSeenPosts": {
+      "type": "checkbox",
+      "label": "Hide seen posts from the dashboard",
       "default": false
     }
   }

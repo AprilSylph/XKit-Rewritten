@@ -59,7 +59,7 @@ export const main = async function () {
   ({ showTags, maxHeight } = await getPreferences('shorten_posts'));
 
   styleElement.textContent = `body { --xkit-shorten-posts-max-height: ${maxHeight}; }`;
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
 
   onNewPosts.addListener(shortenPosts);
 };

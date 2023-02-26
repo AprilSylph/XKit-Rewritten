@@ -8,8 +8,7 @@ const unHiddenClass = 'xkit-no-recommended-posts-many';
 const timeline = /\/v2\/timeline\/dashboard/;
 const includeFiltered = true;
 
-// const styleElement = buildStyle(`.${hiddenClass}:not(.${unHiddenClass}) article { display: none; }`);
-const styleElement = buildStyle(`.${hiddenClass}:not(.${unHiddenClass}) { outline: 4px solid red }`);
+const styleElement = buildStyle(`.${hiddenClass}:not(.${unHiddenClass}) article { display: none; }`);
 
 const precedingHiddenPosts = ({ previousElementSibling: previousElement }, count = 0) => {
   if (!previousElement) return count;
@@ -31,9 +30,6 @@ const processPosts = async function (postElements) {
     if (loggingReason === 'orbitznews') return;
 
     postElement.classList.add(hiddenClass);
-
-    // test
-    postElement.dataset.previousHidden = precedingHiddenPosts(postElement);
 
     if (precedingHiddenPosts(postElement) >= 10) {
       postElement.classList.add(unHiddenClass);

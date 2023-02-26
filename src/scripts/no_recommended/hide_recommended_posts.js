@@ -1,13 +1,22 @@
-import { buildStyle, filterPostElements } from '../../util/interface.js';
+import { buildStyle, filterPostElements, postSelector } from '../../util/interface.js';
 import { onNewPosts } from '../../util/mutations.js';
 import { timelineObject } from '../../util/react_props.js';
 
 const excludeClass = 'xkit-no-recommended-posts-done';
 const hiddenClass = 'xkit-no-recommended-posts-hidden';
+const unHiddenClass = 'xkit-no-recommended-posts-many';
 const timeline = /\/v2\/timeline\/dashboard/;
 const includeFiltered = true;
 
-const styleElement = buildStyle(`.${hiddenClass} article { display: none; }`);
+// const styleElement = buildStyle(`.${hiddenClass}:not(.${unHiddenClass}) article { display: none; }`);
+const styleElement = buildStyle(`.${hiddenClass}:not(.${unHiddenClass}) { outline: 4px solid red }`);
+
+const precedingHiddenPosts = ({ previousElementSibling: previousElement }, count = 0) => {
+  if (!previousElement) return count;
+  if (!previousElement.matches(postSelector)) return precedingHiddenPosts(previousElement, count);
+  if (previousElement.classList.contains(hiddenClass)) return precedingHiddenPosts(previousElement, count + 1);
+  return count;
+};
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { excludeClass, timeline, includeFiltered }).forEach(async postElement => {
@@ -22,6 +31,13 @@ const processPosts = async function (postElements) {
     if (loggingReason === 'orbitznews') return;
 
     postElement.classList.add(hiddenClass);
+
+    // test
+    postElement.dataset.previousHidden = precedingHiddenPosts(postElement);
+
+    if (precedingHiddenPosts(postElement) >= 10) {
+      postElement.classList.add(unHiddenClass);
+    }
   });
 };
 

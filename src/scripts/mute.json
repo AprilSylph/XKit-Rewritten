@@ -17,6 +17,11 @@
       "type": "checkbox",
       "label": "Hide posts with a muted user anywhere in the trail",
       "default": false
+    },
+    "contributedContentOriginal": {
+      "type": "checkbox",
+      "label": "Treat reblogs with contributed content as original",
+      "default": false
     }
   }
 }

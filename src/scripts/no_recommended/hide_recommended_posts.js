@@ -8,7 +8,23 @@ const unHiddenClass = 'xkit-no-recommended-posts-many';
 const timeline = /\/v2\/timeline\/dashboard/;
 const includeFiltered = true;
 
-const styleElement = buildStyle(`.${hiddenClass}:not(.${unHiddenClass}) article { display: none; }`);
+const styleElement = buildStyle(`
+.${hiddenClass}:not(.${unHiddenClass}) article {
+  display: none;
+}
+
+:not(.${unHiddenClass}) + .${unHiddenClass}::before {
+  content: 'Too many recommended posts to hide!';
+
+  display: block;
+  text-align: center;
+  padding: 25px 20px;
+  border-radius: 3px;
+  background-color: rgba(var(--white-on-dark), 0.13);
+  color: rgba(var(--white-on-dark), 0.6);
+  font-weight: 700;
+}
+`);
 
 const precedingHiddenPosts = ({ previousElementSibling: previousElement }, count = 0) => {
   if (!previousElement) return count;

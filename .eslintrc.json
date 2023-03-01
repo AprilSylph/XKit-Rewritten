@@ -22,7 +22,7 @@
   },
   "overrides": [
     {
-      "files": ["src/util/*.js"],
+      "files": ["src/util/[!css_map][!language_data]*.js"],
       "rules": {
         "mozilla/reject-top-level-await": "error"
       }

@@ -85,6 +85,8 @@
     const installedScripts = await getInstalledScripts();
     const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
+    await Promise.all(['css_map', 'language_data'].map(name => import(getURL(`/util/${name}.js`))));
+
     installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))
       .forEach(runScript);

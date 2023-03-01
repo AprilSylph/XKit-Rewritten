@@ -1,11 +1,24 @@
-import { apiFetch } from './tumblr_helpers.js';
+import { inject } from './inject.js';
 
-const fetchedUserInfo = await apiFetch('/v2/user/info').catch(() => ({ response: {} }));
+const unburyUserInfo = async () => {
+  const baseContainerElement = document.getElementById('base-container');
+  const reactKey = Object.keys(baseContainerElement).find(key => key.startsWith('__reactFiber'));
+  let fiber = baseContainerElement[reactKey];
+
+  while (fiber !== null) {
+    const { appContext } = fiber.memoizedProps || {};
+    if (appContext !== undefined) {
+      return appContext.getUserInfo();
+    } else {
+      fiber = fiber.return;
+    }
+  }
+};
 
 /**
  * {object?} userInfo - The contents of the /v2/user/info API endpoint
  */
-export const userInfo = fetchedUserInfo.response.user;
+export const userInfo = await inject(unburyUserInfo).catch(() => ({}));
 
 /**
  * {object[]} userBlogs - An array of blog objects the current user has post access to

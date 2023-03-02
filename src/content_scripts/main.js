@@ -85,9 +85,13 @@
     const installedScripts = await getInstalledScripts();
     const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
-    installedScripts
+    const loaded = installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))
-      .forEach(runScript);
+      .map(runScript);
+
+    const rootNode = document.getElementById('root');
+    setTimeout(() => rootNode.classList.add('xkit-after-n-seconds'), 5000);
+    Promise.all(loaded).then(() => rootNode.classList.add('xkit-loaded'));
   };
 
   const waitForReactLoaded = () => new Promise(resolve => {

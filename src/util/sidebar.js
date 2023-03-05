@@ -32,9 +32,9 @@ const carrotSvg = dom('svg', {
  * @param {sidebarRowOptions} options - Sidebar row options
  * @returns {HTMLLIElement} The constructed sidebar row
  */
-const buildSidebarRow = ({ label, onclick, count, carrot }) =>
+const buildSidebarRow = ({ label, onclick, href, count, carrot }) =>
   dom('li', null, null, [
-    dom('button', null, { click: onclick }, [
+    dom('a', { role: 'button', ...href ? { href } : {} }, { click: onclick }, [
       dom('span', null, null, [label]),
       count !== undefined
         ? dom('span', { class: 'count', 'data-count-for': label }, null, [count])

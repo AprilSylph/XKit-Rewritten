@@ -27,7 +27,7 @@ const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
   });
 
 export const main = async function () {
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
   pageModifications.register(tagChicletCarouselItemSelector, createCaughtUpLine);
 };
 

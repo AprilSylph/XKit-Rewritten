@@ -1,4 +1,4 @@
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, onClickNavigate } from '../util/tumblr_helpers.js';
 import { filterPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { keyToCss } from '../util/css_map.js';
@@ -149,7 +149,8 @@ export const main = async function () {
       title: 'Tag Tracking+',
       rows: trackedTags.map(tag => ({
         label: `#${tag}`,
-        onclick: () => location.assign(`/tagged/${tag}?sort=recent`),
+        href: `/tagged/${tag}?sort=recent`,
+        onclick: onClickNavigate,
         count: '\u22EF'
       }))
     });

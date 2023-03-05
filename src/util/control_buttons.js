@@ -27,10 +27,15 @@ export const createControlButtonTemplate = function (symbolId, buttonClass) {
  * @param {HTMLDivElement} template - A button template as returned by createControlButtonTemplate()
  * @param {object} events - An object of DOM Event names and handler functions,
  *                          e.g. { click: () => { alert('Hello!'); } }
+ * @param {boolean} disabled - Whether to disable the button clone
  * @returns {HTMLDivElement} A clone of the button template, with the specified event handlers attached
  */
-export const cloneControlButton = function (template, events) {
+export const cloneControlButton = function (template, events, disabled = false) {
   const newButton = template.cloneNode(true);
-  Object.entries(events).forEach(([type, listener]) => newButton.addEventListener(type, listener));
+  if (disabled) {
+    newButton.classList.add('xkit-control-button-disabled');
+  } else {
+    Object.entries(events).forEach(([type, listener]) => newButton.addEventListener(type, listener));
+  }
   return newButton;
 };

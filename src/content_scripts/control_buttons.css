@@ -28,6 +28,11 @@
   fill: rgba(var(--black), 0.65);
 }
 
+.xkit-control-button-disabled svg {
+  fill: rgba(var(--black), 0.4);
+  cursor: not-allowed;
+}
+
 @media (max-width: 990px) {
   .xkit-control-button-container {
     margin-left: 0;

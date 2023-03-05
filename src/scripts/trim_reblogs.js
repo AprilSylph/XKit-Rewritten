@@ -55,11 +55,6 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
   const { blog, content = [], trail = [] } = postData;
 
-  if (!trail?.length) {
-    notify('This post is too short to trim!');
-    return;
-  }
-
   const createPreviewItem = ({ blog, brokenBlog, content, disableCheckbox = false }) => {
     const { avatar, name } = blog ?? brokenBlog ?? blogPlaceholder;
     const { url: src } = avatar[avatar.length - 1];
@@ -153,9 +148,8 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
 
   const { trail = [], content = [] } = await timelineObject(postElement);
   const items = trail.length + (content.length ? 1 : 0);
-  if (items < 2) { return; }
 
-  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });
+  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked }, items < 2);
   const controlIcon = editButton.closest(controlIconSelector);
   controlIcon.before(clonedControlButton);
 });

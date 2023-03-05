@@ -3,7 +3,8 @@ import { megaEdit } from '../util/mega_editor.js';
 import { showModal, modalCancelButton, modalCompleteButton } from '../util/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
-import { userBlogs } from '../util/user.js';
+import { useUserData } from '../util/user.js';
+const { userBlogs } = await useUserData();
 
 const getPostsFormId = 'xkit-tag-replacer-get-posts';
 

@@ -1,5 +1,5 @@
 import { inject } from './inject.js';
-import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
+import { useUserData } from './user.js';
 
 const timelineObjectCache = new WeakMap();
 
@@ -30,6 +30,8 @@ export const timelineObject = async function (postElement) {
 };
 
 export const isMyPost = async (postElement) => {
+  const { primaryBlogName, userBlogNames, adminBlogNames } = await useUserData();
+
   const { blog, isSubmission, postAuthor } = await timelineObject(postElement);
   const userIsMember = userBlogNames.includes(blog.name);
   const userIsAdmin = adminBlogNames.includes(blog.name);

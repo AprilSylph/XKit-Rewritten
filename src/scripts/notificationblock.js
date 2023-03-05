@@ -5,7 +5,8 @@ import { inject } from '../util/inject.js';
 import { keyToCss } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { dom } from '../util/dom.js';
-import { userBlogNames } from '../util/user.js';
+import { useUserData } from '../util/user.js';
+const { userBlogNames } = await useUserData();
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonBlockId = 'notificationblock-block';

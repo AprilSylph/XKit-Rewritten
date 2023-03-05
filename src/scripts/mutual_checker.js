@@ -1,11 +1,12 @@
 import { filterPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
-import { primaryBlogName } from '../util/user.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
 import { getPreferences } from '../util/preferences.js';
+import { useUserData } from '../util/user.js';
+const { primaryBlogName } = await useUserData();
 
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenClass = 'xkit-mutual-checker-hidden';

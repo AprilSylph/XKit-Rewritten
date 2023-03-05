@@ -4,7 +4,8 @@ import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
-import { userBlogs } from '../util/user.js';
+import { useUserData } from '../util/user.js';
+const { userBlogs } = await useUserData();
 
 const hiddenClass = 'xkit-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';

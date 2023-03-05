@@ -10,6 +10,9 @@
     "plugin:jsdoc/recommended",
     "plugin:import/recommended"
   ],
+  "plugins": [
+    "mozilla"
+  ],
   "parserOptions": {
     "ecmaVersion": 2022,
     "sourceType": "module"
@@ -17,6 +20,14 @@
   "rules": {
     "import/no-cycle": "error"
   },
+  "overrides": [
+    {
+      "files": ["src/util/*.js"],
+      "rules": {
+        "mozilla/reject-top-level-await": "error"
+      }
+    }
+  ],
   "ignorePatterns": [
     "lib/"
   ]

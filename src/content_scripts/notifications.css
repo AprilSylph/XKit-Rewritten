@@ -47,3 +47,22 @@
 [role="dialog"] #xkit-toasts[data-in-sidebar="false"] {
   position: absolute;
 }
+
+#root.xkit-after-n-seconds:not(.xkit-loaded)::after {
+  content: "Warning: XKit Rewritten scripts are not fully loaded!";
+
+  position: fixed;
+  bottom: 0;
+  z-index: 98;
+
+  width: 100%;
+  padding: 10px;
+  border-top: 1px solid rgba(var(--white-on-dark), .13);
+
+  background-color: rgb(var(--navy));
+  background-image: linear-gradient(rgba(var(--white-on-dark), .07), rgba(var(--white-on-dark), .07));
+  color: rgb(var(--white-on-dark));
+  font-family: var(--font-family);
+  line-height: 1.5;
+  text-align: center;
+}

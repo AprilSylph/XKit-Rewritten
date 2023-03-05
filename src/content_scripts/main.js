@@ -87,9 +87,13 @@
 
     await Promise.all(['css_map', 'language_data'].map(name => import(getURL(`/util/${name}.js`))));
 
-    installedScripts
+    const loaded = installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))
-      .forEach(runScript);
+      .map(runScript);
+
+    const rootNode = document.getElementById('root');
+    setTimeout(() => rootNode.classList.add('xkit-after-n-seconds'), 5000);
+    Promise.all(loaded).then(() => rootNode.classList.add('xkit-loaded'));
   };
 
   const waitForReactLoaded = () => new Promise(resolve => {

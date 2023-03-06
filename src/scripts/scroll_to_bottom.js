@@ -1,7 +1,7 @@
 import { keyToClasses, keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { pageModifications } from '../util/mutations.js';
-import { buildStyle } from '../util/interface.js';
+import { blogViewSelector, buildStyle } from '../util/interface.js';
 
 const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
 $(`[id="${scrollToBottomButtonId}"]`).remove();
@@ -17,6 +17,11 @@ let scrollToBottomButton;
 let active = false;
 
 const styleElement = buildStyle(`
+${keyToCss('isPeeprShowing')} #${scrollToBottomButtonId} {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .${activeClass} svg use {
   --icon-color-primary: rgb(var(--yellow));
 }
@@ -24,7 +29,8 @@ const styleElement = buildStyle(`
 
 const scrollToBottom = () => {
   window.scrollTo({ top: document.documentElement.scrollHeight });
-  const loaders = [...document.querySelectorAll(knightRiderLoaderSelector)];
+  const loaders = [...document.querySelectorAll(knightRiderLoaderSelector)]
+    .filter(element => element.matches(blogViewSelector) === false);
 
   if (loaders.length === 0) {
     stopScrolling();

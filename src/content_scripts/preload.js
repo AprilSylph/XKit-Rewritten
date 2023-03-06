@@ -2,6 +2,7 @@
 
 {
   const { getURL } = browser.runtime;
+  const isRedpop = () => [...document.scripts].some(({ src }) => src.includes('/pop/'));
 
   const getInstalledScripts = async function () {
     const url = getURL('/scripts/_index.json');
@@ -50,6 +51,8 @@
       browser.storage.local.get('enabledScripts'),
       documentInteractive
     ]);
+
+    if (!isRedpop()) return;
 
     const installedEnabledScripts = installedScripts
       .filter(name => enabledScripts.includes(name));

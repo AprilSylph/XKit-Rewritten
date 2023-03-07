@@ -58,7 +58,11 @@ const refreshCount = async function (tag) {
   const unreadCountString = `${unreadCount}${showPlus ? '+' : ''}`;
 
   [document, ...(!sidebarItem || document.contains(sidebarItem) ? [] : [sidebarItem])]
-    .flatMap(node => [...node.querySelectorAll(`[data-count-for="#${tag}"]`)])
+    .flatMap(node =>
+      [...node.querySelectorAll('[data-count-for]')].filter(
+        ({ dataset: { countFor } }) => countFor === `#${tag}`
+      )
+    )
     .filter((value, index, array) => array.indexOf(value) === index)
     .forEach(unreadCountElement => {
       unreadCountElement.textContent = unreadCountString;

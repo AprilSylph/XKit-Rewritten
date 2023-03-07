@@ -1,0 +1,8 @@
+{
+  "title": "Mute meatball menu demo",
+  "icon": {
+    "class_name": "ri-volume-mute-line",
+    "color": "white",
+    "background_color": "#C20044"
+  }
+}

@@ -34,7 +34,7 @@ const refreshCount = async function (tag) {
       }
     }
   } = await apiFetch(
-    `/v2/hubs/${tag}/timeline`,
+    `/v2/hubs/${encodeURIComponent(tag)}/timeline`,
     { queryParams: { limit: 20, sort: 'recent' } }
   );
 
@@ -149,7 +149,7 @@ export const main = async function () {
       title: 'Tag Tracking+',
       rows: trackedTags.map(tag => ({
         label: `#${tag}`,
-        href: `/tagged/${tag}?sort=recent`,
+        href: `/tagged/${encodeURIComponent(tag)}?sort=recent`,
         onclick: onClickNavigate,
         count: '\u22EF'
       }))

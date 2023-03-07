@@ -46,7 +46,7 @@ const unburyBlog = () => {
 
 /**
  * @param {Element} meatballMenu - An on-screen meatball menu element in a blog modal header or blog card
- * @returns {Promise<object>} - The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not availiable in blog cards.
+ * @returns {Promise<object>} - The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
  */
 export const blogData = async (meatballMenu) => inject(unburyBlog, [], meatballMenu);
 

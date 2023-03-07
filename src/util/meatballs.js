@@ -49,9 +49,9 @@ export const unregisterMeatballItem = id => {
  *
  * @param {object} options - Destructured
  * @param {string} options.id - Identifier for this button (must be unique)
- * @param {string|Function} options.label - Button text to display. May be a function accepting the timelineObject data of the post element being actioned on.
+ * @param {string|Function} options.label - Button text to display. May be a function accepting the blog data of the post element being actioned on.
  * @param {Function} options.onclick - Button click listener function
- * @param {Function} [options.postFilter] - Filter function, called with the blog data of the menu element being actioned on. Must return true for button to be added. Some blog data fields, such as "followed," are not availiable in blog cards.
+ * @param {Function} [options.postFilter] - Filter function, called with the blog data of the menu element being actioned on. Must return true for button to be added. Some blog data fields, such as "followed," are not available in blog cards.
  */
 export const registerBlogMeatballItem = function ({ id, label, onclick, postFilter }) {
   blogMeatballItems[id] = { label, onclick, postFilter };

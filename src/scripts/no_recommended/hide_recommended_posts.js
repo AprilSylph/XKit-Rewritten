@@ -17,12 +17,16 @@ const styleElement = buildStyle(`
   content: 'Too many recommended posts to hide!';
 
   display: block;
-  text-align: center;
   padding: 25px 20px;
   border-radius: 3px;
+  margin-bottom: var(--post-padding);
+
   background-color: rgba(var(--white-on-dark), 0.13);
   color: rgba(var(--white-on-dark), 0.6);
+
   font-weight: 700;
+  text-align: center;
+  line-height: 1.5em;
 }
 `);
 

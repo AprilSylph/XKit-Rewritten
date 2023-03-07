@@ -15,9 +15,9 @@
 }
 
 .xkit-mute-warning {
-  margin-bottom: 20px;
   padding: 25px 20px;
   border-radius: 3px;
+  margin-bottom: var(--post-padding);
 
   background-color: var(--blog-title-color-15);
   color: var(--blog-title-color);

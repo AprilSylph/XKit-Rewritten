@@ -68,8 +68,10 @@ export const createEditRequestBody = postData => {
     interactabilityReblog,
 
     canBeTipped,
-    hasCommunityLabel,
-    communityLabelCategories
+    communityLabels: {
+      hasCommunityLabel,
+      categories: communityLabelCategories
+    }
   } = postData;
 
   return {
@@ -87,4 +89,17 @@ export const createEditRequestBody = postData => {
     hasCommunityLabel,
     communityLabelCategories
   };
+};
+
+export const navigate = location =>
+  inject(location => window.tumblr.navigate(location), [location]);
+
+export const onClickNavigate = event => {
+  if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+
+  const href = event.currentTarget.getAttribute('href');
+  if (href) {
+    event.preventDefault();
+    navigate(href);
+  }
 };

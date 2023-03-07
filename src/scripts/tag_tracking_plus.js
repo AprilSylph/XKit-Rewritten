@@ -1,4 +1,4 @@
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, onClickNavigate } from '../util/tumblr_helpers.js';
 import { filterPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { keyToCss } from '../util/css_map.js';
@@ -93,6 +93,8 @@ const processPosts = async function (postElements) {
   const { [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey);
   const timeline = new RegExp(`/v2/hubs/${encodedCurrentTag}/timeline`);
 
+  let updated = false;
+
   for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
     const { tags, timestamp } = await timelineObject(postElement);
 
@@ -103,11 +105,14 @@ const processPosts = async function (postElements) {
     const savedTimestamp = timestamps[currentTag] || 0;
     if (timestamp > savedTimestamp) {
       timestamps[currentTag] = timestamp;
+      updated = true;
     }
   }
 
-  await browser.storage.local.set({ [storageKey]: timestamps });
-  refreshCount(currentTag);
+  if (updated) {
+    await browser.storage.local.set({ [storageKey]: timestamps });
+    refreshCount(currentTag);
+  }
 };
 
 const processTagLinks = function (tagLinkElements) {
@@ -144,7 +149,8 @@ export const main = async function () {
       title: 'Tag Tracking+',
       rows: trackedTags.map(tag => ({
         label: `#${tag}`,
-        onclick: () => location.assign(`/tagged/${tag}?sort=recent`),
+        href: `/tagged/${tag}?sort=recent`,
+        onclick: onClickNavigate,
         count: '\u22EF'
       }))
     });

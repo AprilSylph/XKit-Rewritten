@@ -21,7 +21,7 @@ export const main = async function () {
   const topBlogsSelector = `${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
   pageModifications.register(topBlogsSelector, hideTagPageRecommended);
 
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {

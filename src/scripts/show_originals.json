@@ -22,6 +22,11 @@
       "type": "textarea",
       "label": "Always show reblogs from these blogs (comma-separated)",
       "default": ""
+    },
+    "showReverse": {
+      "type": "checkbox",
+      "label": "Add a \"reverse\" mode to the controls",
+      "default": false
     }
   }
 }

@@ -10,10 +10,15 @@ import { userBlogs } from '../util/user.js';
 
 const storageKey = 'quote_replies.currentResponseId';
 const buttonClass = 'xkit-quote-replies';
+const activityPageButtonClass = 'xkit-quote-replies-activity';
+const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
 
 const activitySelector = `${keyToCss('notification')} > ${keyToCss('activity')}`;
+
+const activityPageSelector = `section${keyToCss('notifications')} > ${keyToCss('notification')}`;
+const dropdownSelector = `${keyToCss('activityPopover')} ${keyToCss('notification')}`;
 
 let originalPostTag;
 let tagReplyingBlog;
@@ -43,7 +48,14 @@ const processNotifications = notifications => notifications.forEach(async notifi
 
   activityElement.after(dom(
     'button',
-    { class: buttonClass, title: 'Quote this reply' },
+    {
+      class: `${buttonClass} ${
+        notification.matches(dropdownSelector)
+          ? dropdownButtonClass
+          : activityPageButtonClass
+      }`,
+      title: 'Quote this reply'
+    },
     {
       click () {
         this.disabled = true;
@@ -105,7 +117,7 @@ export const main = async function () {
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
   ({ tagReplyingBlog } = await getPreferences('quote_replies'));
 
-  const notificationSelector = `section${keyToCss('notifications')} > ${keyToCss('notification')}`;
+  const notificationSelector = `${activityPageSelector}, ${dropdownSelector}`;
   pageModifications.register(notificationSelector, processNotifications);
 
   const { [storageKey]: responseId } = await browser.storage.local.get(storageKey);

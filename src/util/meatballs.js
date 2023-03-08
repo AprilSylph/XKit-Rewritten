@@ -60,7 +60,7 @@ export const registerBlogMeatballItem = function ({ id, label, onclick, postFilt
 
 export const unregisterBlogMeatballItem = id => {
   delete blogMeatballItems[id];
-  $(`[data-xkit-meatball-button="${id}"]`).remove();
+  $(`[data-xkit-blog-meatball-button="${id}"]`).remove();
 };
 
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
@@ -129,7 +129,7 @@ const addBlogMeatballItem = async meatballMenu => {
     const { label, onclick, postFilter } = blogMeatballItems[id];
 
     const meatballItemButton = dom('button', {
-      'data-xkit-meatball-button': id,
+      'data-xkit-blog-meatball-button': id,
       hidden: true
     }, {
       click: onclick

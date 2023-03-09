@@ -1,4 +1,5 @@
 import { inject } from './inject.js';
+import { apiFetch } from './tumblr_helpers.js';
 
 const unburyUserInfo = async () => {
   const baseContainerElement = document.getElementById('base-container');
@@ -18,7 +19,9 @@ const unburyUserInfo = async () => {
 /**
  * {object?} userInfo - The contents of the /v2/user/info API endpoint
  */
-export const userInfo = await inject(unburyUserInfo).catch(() => ({}));
+export const userInfo =
+  (await inject(unburyUserInfo).catch(() => undefined)) ??
+  (await apiFetch('/v2/user/info').catch(() => ({ response: {} })));
 
 /**
  * {object[]} userBlogs - An array of blog objects the current user has post access to

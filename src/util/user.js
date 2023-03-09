@@ -21,7 +21,7 @@ const unburyUserInfo = async () => {
  */
 export const userInfo =
   (await inject(unburyUserInfo).catch(() => undefined)) ??
-  (await apiFetch('/v2/user/info').catch(() => ({ response: {} })));
+  (await apiFetch('/v2/user/info').catch(() => ({ response: {} })))?.response?.user;
 
 /**
  * {object[]} userBlogs - An array of blog objects the current user has post access to

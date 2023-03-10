@@ -59,8 +59,8 @@ const processNotifications = notifications => notifications.forEach(async notifi
 
 const waitForDraft = async (uuid, responseId, retries = 5) => {
   while (retries-- > 0) {
-    const { response: { posts } } = await apiFetch(`/v2/blog/${uuid}/posts/draft`).catch(() => ({}));
-    if (posts.some(({ id }) => id === responseId)) return true;
+    const { response } = await apiFetch(`/v2/blog/${uuid}/posts/draft`).catch(() => ({}));
+    if (response?.posts?.some(({ id }) => id === responseId)) return true;
   }
   return false;
 };

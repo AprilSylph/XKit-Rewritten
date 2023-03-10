@@ -12,6 +12,11 @@
       "type": "checkbox",
       "label": "Automatically tag the quoted user",
       "default": false
+    },
+    "newTab": {
+      "type": "checkbox",
+      "label": "Open created posts in new tabs",
+      "default": false
     }
   }
 }

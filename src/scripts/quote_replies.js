@@ -5,7 +5,7 @@ import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { getPreferences } from '../util/preferences.js';
 import { buildSvg } from '../util/remixicon.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, navigate } from '../util/tumblr_helpers.js';
 import { userBlogs } from '../util/user.js';
 
 const storageKey = 'quote_replies.currentResponseId';
@@ -17,6 +17,7 @@ const activitySelector = `${keyToCss('notification')} > ${keyToCss('activity')}`
 
 let originalPostTag;
 let tagReplyingBlog;
+let newTab;
 
 const getNotificationProps = function () {
   const notificationElement = document.currentScript.parentElement;
@@ -56,6 +57,14 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
+const waitForDraft = async (uuid, responseId, retries = 5) => {
+  while (retries-- > 0) {
+    const { response: { posts } } = await apiFetch(`/v2/blog/${uuid}/posts/draft`).catch(() => ({}));
+    if (posts.some(({ id }) => id === responseId)) return true;
+  }
+  return false;
+};
+
 const quoteReply = async (tumblelogName, notificationProps) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
   const { type, targetPostId, targetPostSummary, targetTumblelogName, targetTumblelogUuid, timestamp } = notificationProps;
@@ -90,20 +99,27 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   ].join(',');
 
   const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
-  await browser.storage.local.set({ [storageKey]: responseId });
+  notify(displayText);
 
-  const openedTab = window.open(`/blog/${tumblelogName}/drafts`);
-  if (openedTab === null) {
-    browser.storage.local.remove(storageKey);
-    notify(displayText);
+  if (await waitForDraft(uuid, responseId) && newTab) {
+    await browser.storage.local.set({ [storageKey]: responseId });
+
+    const openedTab = window.open(`/blog/${tumblelogName}/drafts`);
+    if (openedTab) {
+      return;
+    } else {
+      browser.storage.local.remove(storageKey);
+    }
   }
+
+  navigate(`/edit/${tumblelogName}/${responseId}`);
 };
 
 const showError = exception => notify(exception.body?.errors?.[0]?.detail || exception.message);
 
 export const main = async function () {
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
-  ({ tagReplyingBlog } = await getPreferences('quote_replies'));
+  ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
 
   const notificationSelector = `section${keyToCss('notifications')} > ${keyToCss('notification')}`;
   pageModifications.register(notificationSelector, processNotifications);
@@ -127,7 +143,7 @@ export const onStorageChanged = async function (changes) {
   }
 
   if (Object.keys(changes).some(key => key.startsWith('quote_replies.preferences'))) {
-    ({ tagReplyingBlog } = await getPreferences('quote_replies'));
+    ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
   }
 };
 

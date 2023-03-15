@@ -38,7 +38,9 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       showModal({
         title: 'Note: Legacy post',
         message: [
-          'The root post of this thread was originally created with the legacy post editor.',
+          'This thread was originally created, or at some point was edited, using the ',
+          dom('strong', null, null, 'legacy post editor'),
+          ' or a previous XKit version.',
           '\n\n',
           'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
         ],
@@ -149,8 +151,9 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"]`);
   if (!editButton) { return; }
 
-  const { trail = [] } = await timelineObject(postElement);
-  if (!trail.length) { return; }
+  const { trail = [], content = [] } = await timelineObject(postElement);
+  const items = trail.length + (content.length ? 1 : 0);
+  if (items < 2) { return; }
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });
   const controlIcon = editButton.closest(controlIconSelector);

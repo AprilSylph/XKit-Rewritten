@@ -15,8 +15,6 @@ button.xkit-quote-replies svg {
   height: 21.5px;
 
   fill: rgb(var(--blue));
-  opacity: 0;
-  transform: scale(0);
   transition: all .25s ease-out .4s;
 }
 
@@ -25,7 +23,14 @@ button.xkit-quote-replies:disabled svg {
   transition-property: none;
 }
 
-:is(:hover, :focus-within) > button.xkit-quote-replies svg {
-  opacity: 1;
-  transform: scale(1);
+@media (hover: hover) {
+  button.xkit-quote-replies svg {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  :is(:hover, :focus-within) > button.xkit-quote-replies svg {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

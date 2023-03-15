@@ -29,7 +29,7 @@ const scrollToBottom = () => {
   scrollElement.scrollTo({ top: scrollElement.scrollHeight });
   const loaders = [...scrollElement.querySelectorAll(knightRiderLoaderSelector)];
 
-  if (loaders.length === 0) {
+  if (!scrollElement.isConnected || loaders.length === 0) {
     stopScrolling();
   }
 };

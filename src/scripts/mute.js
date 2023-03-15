@@ -65,17 +65,20 @@ const processTimelines = async (timelineElements) => {
     const { timeline, muteProcessedTimeline } = timelineElement.dataset;
 
     const alreadyProcessed = timeline === muteProcessedTimeline;
+    if (alreadyProcessed) return;
+
+    timelineElement.dataset.muteProcessedTimeline = timeline;
+
+    [...timelineElement.querySelectorAll(`.${warningClass}`)].forEach(el => el.remove());
+    delete timelineElement.dataset.muteOnBlogUuid;
+
     const isChannel = timeline.startsWith('/v2/blog/') && !timelineElement.matches(blogViewSelector);
-    const isSinglePostBlogView = timeline.includes('permalink');
+    const isSinglePostBlogView = timeline.endsWith('/permalink');
+    const isLikes = timeline.endsWith('/likes');
 
-    if (!alreadyProcessed && !isChannel && !isSinglePostBlogView) {
-      timelineElement.dataset.muteProcessedTimeline = timeline;
-
+    if (!isChannel && !isSinglePostBlogView && !isLikes) {
       timelineElement.classList.add(activeClass);
       lengthenTimeline(timelineElement);
-
-      [...timelineElement.querySelectorAll(`.${warningClass}`)].forEach(el => el.remove());
-      delete timelineElement.dataset.muteOnBlogUuid;
 
       if (timeline.startsWith('/v2/blog/')) {
         await processBlogSpecificTimeline(timelineElement, timeline);

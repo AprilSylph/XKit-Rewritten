@@ -85,6 +85,13 @@
     const installedScripts = await getInstalledScripts();
     const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
+    /**
+     * fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
+     *
+     * @see https://github.com/sveltejs/kit/issues/7805#issuecomment-1330078207
+     */
+    await Promise.all(['css_map', 'language_data', 'user'].map(name => import(getURL(`/util/${name}.js`))));
+
     const loaded = installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))
       .map(runScript);

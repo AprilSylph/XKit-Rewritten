@@ -1,4 +1,4 @@
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, onClickNavigate } from '../util/tumblr_helpers.js';
 import { filterPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { keyToCss } from '../util/css_map.js';
@@ -34,7 +34,7 @@ const refreshCount = async function (tag) {
       }
     }
   } = await apiFetch(
-    `/v2/hubs/${tag}/timeline`,
+    `/v2/hubs/${encodeURIComponent(tag)}/timeline`,
     { queryParams: { limit: 20, sort: 'recent' } }
   );
 
@@ -58,7 +58,11 @@ const refreshCount = async function (tag) {
   const unreadCountString = `${unreadCount}${showPlus ? '+' : ''}`;
 
   [document, ...(!sidebarItem || document.contains(sidebarItem) ? [] : [sidebarItem])]
-    .flatMap(node => [...node.querySelectorAll(`[data-count-for="#${tag}"]`)])
+    .flatMap(node =>
+      [...node.querySelectorAll('[data-count-for]')].filter(
+        ({ dataset: { countFor } }) => countFor === `#${tag}`
+      )
+    )
     .filter((value, index, array) => array.indexOf(value) === index)
     .forEach(unreadCountElement => {
       unreadCountElement.textContent = unreadCountString;
@@ -149,7 +153,8 @@ export const main = async function () {
       title: 'Tag Tracking+',
       rows: trackedTags.map(tag => ({
         label: `#${tag}`,
-        onclick: () => location.assign(`/tagged/${tag}?sort=recent`),
+        href: `/tagged/${encodeURIComponent(tag)}?sort=recent`,
+        onclick: onClickNavigate,
         count: '\u22EF'
       }))
     });

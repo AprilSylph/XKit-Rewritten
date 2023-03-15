@@ -13,6 +13,8 @@ ${keyToCss('notifications')} + ${keyToCss('loader')}
 `;
 const knightRiderLoaderSelector = `:is(${loaderSelector}) > ${keyToCss('knightRiderLoader')}`;
 
+const modalScrollContainerSelector = `${keyToCss('drawerContent')} > ${keyToCss('scrollContainer')}`;
+
 let scrollToBottomButton;
 let modalScrollToBottomButton;
 let active = false;
@@ -25,24 +27,34 @@ const styleElement = buildStyle(`
 }
 `);
 
+const getScrollElement = () =>
+  document.querySelector(modalScrollContainerSelector) ||
+  document.documentElement;
+
+const getObserveElement = () =>
+  document.querySelector(modalScrollContainerSelector)?.firstElementChild ||
+  document.documentElement;
+
 const scrollToBottom = () => {
   scrollElement.scrollTo({ top: scrollElement.scrollHeight });
+
+  const buttonConnected = scrollToBottomButton?.isConnected || modalScrollToBottomButton?.isConnected;
   const loaders = [...scrollElement.querySelectorAll(knightRiderLoaderSelector)];
 
-  if (!scrollElement.isConnected || loaders.length === 0) {
+  if (!buttonConnected || scrollElement !== getScrollElement() || loaders.length === 0) {
     stopScrolling();
   }
 };
 const observer = new ResizeObserver(scrollToBottom);
 
 const startScrolling = () => {
-  const modalScrollContainer = document.querySelector(`${keyToCss('drawerContent')} > ${keyToCss('scrollContainer')}`);
+  scrollElement = getScrollElement();
 
-  scrollElement = modalScrollContainer || document.documentElement;
-  observer.observe(modalScrollContainer?.firstElementChild || document.documentElement);
+  observer.observe(getObserveElement());
   active = true;
   scrollToBottomButton?.classList.add(activeClass);
   modalScrollToBottomButton?.classList.add(activeClass);
+
   scrollToBottom();
 };
 
@@ -55,14 +67,6 @@ const stopScrolling = () => {
 
 const onClick = () => active ? stopScrolling() : startScrolling();
 const onKeyDown = ({ key }) => key === '.' && stopScrolling();
-
-// const checkForButtonRemoved = () => {
-//   const buttonWasRemoved = document.documentElement.contains(scrollToBottomButton) === false;
-//   if (buttonWasRemoved) {
-//     if (active) stopScrolling();
-//     pageModifications.unregister(checkForButtonRemoved);
-//   }
-// };
 
 const addButtonToPage = async function ([scrollToTopButton]) {
   if (!scrollToBottomButton) {
@@ -82,7 +86,6 @@ const addButtonToPage = async function ([scrollToTopButton]) {
   scrollToTopButton.after(scrollToBottomButton);
   scrollToTopButton.addEventListener('click', stopScrolling);
   document.documentElement.addEventListener('keydown', onKeyDown);
-  // pageModifications.register('*', checkForButtonRemoved);
 };
 
 const addModalButtonToPage = async function ([modalScrollToTopButton]) {
@@ -103,7 +106,6 @@ const addModalButtonToPage = async function ([modalScrollToTopButton]) {
   modalScrollToTopButton.after(modalScrollToBottomButton);
   modalScrollToTopButton.addEventListener('click', stopScrolling);
   document.documentElement.addEventListener('keydown', onKeyDown);
-  // pageModifications.register('*', checkForButtonRemoved);
 };
 
 export const main = async function () {
@@ -115,7 +117,6 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(addButtonToPage);
-  // pageModifications.unregister(checkForButtonRemoved);
   stopScrolling();
   scrollToBottomButton?.remove();
   styleElement.remove();

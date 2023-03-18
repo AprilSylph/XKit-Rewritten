@@ -14,7 +14,7 @@
       "label": "Use a slim layout for filtered posts",
       "default": false
     },
-    "checkmark_stack": {
+    "badge_stack": {
       "type": "checkbox",
       "label": "Use a slim layout for \"important internet checkmarks\"",
       "default": false

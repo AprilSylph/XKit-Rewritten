@@ -2,37 +2,37 @@ import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
-let styleElementMaxCheckmarks = 0;
+let styleElementMaxBadges = 0;
 const styleElement = buildStyle();
 
-const wrapper = keyToCss('blueCheckmarksContainer');
-const checkmarkContainer = `${wrapper} > ${keyToCss('blueCheckmarkContainer')}`;
-const checkmarkImage = `${checkmarkContainer} > :is(svg, img)`;
+const wrapper = keyToCss('badgesContainer');
+const badgeContainer = `${wrapper} > ${keyToCss('badgeContainer')}`;
+const badgeImage = `${badgeContainer} > :is(svg, img)`;
 
 const transitionStyleElement = buildStyle(`
-  ${wrapper}, ${checkmarkContainer} {
+  ${wrapper}, ${badgeContainer} {
     transition: margin 0.5s ease;
   }
 
-  ${checkmarkImage} {
+  ${badgeImage} {
     transition: filter 0.35s linear;
   }
 `);
 
-const updateStyleElement = maxCheckmarks => {
-  styleElementMaxCheckmarks = maxCheckmarks;
+const updateStyleElement = maxBadges => {
+  styleElementMaxBadges = maxBadges;
 
-  const range = [...Array(styleElementMaxCheckmarks).keys()].map(i => i + 1);
+  const range = [...Array(styleElementMaxBadges).keys()].map(i => i + 1);
   styleElement.textContent = `
     *:not(:hover) > ${wrapper} {
       margin-right: 10px;
     }
 
-    *:not(:hover) > ${checkmarkContainer} {
+    *:not(:hover) > ${badgeContainer} {
       margin-right: -10px;
     }
 
-    *:not(:hover) > ${checkmarkImage} {
+    *:not(:hover) > ${badgeImage} {
       filter: drop-shadow(1px 0px 2px rgb(0 0 0 / 0.5));
     }
 
@@ -41,7 +41,7 @@ const updateStyleElement = maxCheckmarks => {
     }
 
     ${range.map(i => `
-      ${checkmarkContainer}:nth-last-child(${i}) {
+      ${badgeContainer}:nth-last-child(${i}) {
         z-index: ${i};
       }
     `).join('')}
@@ -49,8 +49,8 @@ const updateStyleElement = maxCheckmarks => {
 };
 
 const processWrappers = wrapperElements => {
-  const maxCheckmarks = Math.max(...wrapperElements.map(el => el.children.length));
-  maxCheckmarks > styleElementMaxCheckmarks && updateStyleElement(maxCheckmarks);
+  const maxBadges = Math.max(...wrapperElements.map(el => el.children.length));
+  maxBadges > styleElementMaxBadges && updateStyleElement(maxBadges);
 };
 
 const waitForRender = () =>

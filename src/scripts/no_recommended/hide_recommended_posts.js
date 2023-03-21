@@ -22,7 +22,7 @@ const styleElement = buildStyle(`
   margin-bottom: var(--post-padding);
 
   background-color: rgba(var(--white-on-dark), 0.13);
-  color: rgba(var(--white-on-dark), 0.6);
+  color: rgba(var(--white-on-dark), 0.65);
 
   font-weight: 700;
   text-align: center;

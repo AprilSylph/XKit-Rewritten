@@ -8,7 +8,7 @@ import { buildSvg } from '../util/remixicon.js';
 import { apiFetch, navigate } from '../util/tumblr_helpers.js';
 import { userBlogs } from '../util/user.js';
 
-const storageKey = 'quote_replies.currentResponseId';
+const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';
 
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
@@ -101,8 +101,10 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
   notify(displayText);
 
+  const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;
+
   if (await waitForDraft(uuid, responseId) && newTab) {
-    await browser.storage.local.set({ [storageKey]: responseId });
+    await browser.storage.local.set({ [storageKey]: currentDraftLocation });
 
     const openedTab = window.open(`/blog/${tumblelogName}/drafts`);
     if (openedTab) {
@@ -112,7 +114,7 @@ const quoteReply = async (tumblelogName, notificationProps) => {
     }
   }
 
-  navigate(`/edit/${tumblelogName}/${responseId}`);
+  navigate(currentDraftLocation);
 };
 
 const showError = exception => notify(exception.body?.errors?.[0]?.detail || exception.message);
@@ -124,11 +126,11 @@ export const main = async function () {
   const notificationSelector = `section${keyToCss('notifications')} > ${keyToCss('notification')}`;
   pageModifications.register(notificationSelector, processNotifications);
 
-  const { [storageKey]: responseId } = await browser.storage.local.get(storageKey);
+  const { [storageKey]: draftLocation } = await browser.storage.local.get(storageKey);
   browser.storage.local.remove(storageKey);
 
-  if (responseId !== undefined && /^\/blog\/.+\/drafts/.test(location.pathname)) {
-    document.querySelector(`[href*="/edit/"][href$="/${responseId}"]`)?.click();
+  if (draftLocation !== undefined && /^\/blog\/.+\/drafts/.test(location.pathname)) {
+    navigate(draftLocation);
   }
 };
 

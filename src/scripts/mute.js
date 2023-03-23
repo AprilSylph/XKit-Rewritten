@@ -8,7 +8,7 @@ import { dom } from '../util/dom.js';
 import { getPreferences } from '../util/preferences.js';
 
 const meatballButtonId = 'mute';
-const meatballButtonLabel = 'User mute options';
+const meatballButtonLabel = ({ blogName }) => `Mute options for ${blogName}`;
 
 const hiddenClass = 'xkit-mute-hidden';
 const onBlogHiddenClass = 'xkit-mute-hidden-on-blog';

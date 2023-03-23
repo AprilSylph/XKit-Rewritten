@@ -1,10 +1,10 @@
-import { pageModifications } from '../util/mutations.js';
-
 const linkSelector = 'a[role="link"][target="_blank"]';
 
-const onClickExternalLink = event => event.stopPropagation();
-
-const processLinks = links => links.forEach(link => link.addEventListener('click', onClickExternalLink));
+const onDocumentClick = event => {
+  if (event.target.matches(`${linkSelector}, ${linkSelector} *`)) {
+    event.stopPropagation();
+  }
+};
 
 const onClickBlogViewLink = event => {
   event.stopPropagation();
@@ -17,12 +17,11 @@ const onClickBlogViewLink = event => {
 };
 
 export const main = async function () {
-  pageModifications.register(linkSelector, processLinks);
+  document.documentElement.addEventListener('click', onDocumentClick, { capture: true });
   $('#base-container').on('click', 'a[href^="/blog/view/"]', onClickBlogViewLink);
 };
 
 export const clean = async function () {
-  pageModifications.unregister(processLinks);
-  [...document.querySelectorAll(linkSelector)].forEach(link => link.removeEventListener('click', onClickExternalLink));
+  document.documentElement.removeEventListener('click', onDocumentClick, { capture: true });
   $('#base-container').off('click', 'a[href^="/blog/view/"]', onClickBlogViewLink);
 };

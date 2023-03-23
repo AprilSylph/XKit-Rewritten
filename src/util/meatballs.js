@@ -28,7 +28,7 @@ const meatballItems = {};
  *
  * @param {object} options - Destructured
  * @param {string} options.id - Identifier for this button (must be unique)
- * @param {string} options.label - Button text to display
+ * @param {string|Function} options.label - Button text to display. May be a function accepting the timelineObject data of the post element being actioned on.
  * @param {Function} options.onclick - Button click listener function
  * @param {Function} [options.postFilter] - Filter function, called with the timelineObject data of the post element being actioned on. Must return true for button to be added
  */
@@ -59,11 +59,21 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
     }, {
       click: onclick
     }, [
-      label
+      '\u22EF'
     ]);
     meatballItemButton.__timelineObjectData = __timelineObjectData;
 
-    meatballMenu.append(meatballItemButton);
+    if (label instanceof Function) {
+      const labelResult = label(__timelineObjectData);
+
+      if (labelResult instanceof Promise) {
+        labelResult.then(result => { meatballItemButton.textContent = result; });
+      } else {
+        meatballItemButton.textContent = labelResult;
+      }
+    } else {
+      meatballItemButton.textContent = label;
+    }
 
     if (postFilter instanceof Function) {
       const shouldShowItem = postFilter(__timelineObjectData);
@@ -75,6 +85,8 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
     } else {
       meatballItemButton.hidden = false;
     }
+
+    meatballMenu.append(meatballItemButton);
   });
 });
 

@@ -13,6 +13,11 @@
       "type": "checkbox",
       "label": "Only dim avatars on seen posts",
       "default": false
+    },
+    "hideSeenPosts": {
+      "type": "checkbox",
+      "label": "Hide seen posts from the dashboard",
+      "default": false
     }
   }
 }

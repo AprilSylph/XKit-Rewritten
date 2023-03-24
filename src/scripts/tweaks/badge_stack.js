@@ -5,7 +5,7 @@ import { pageModifications } from '../../util/mutations.js';
 let styleElementMaxBadges = 0;
 const styleElement = buildStyle();
 
-const wrapper = keyToCss('badgesContainer');
+const wrapper = `article ${keyToCss('badgesContainer')}`;
 const badgeContainer = `${wrapper} > ${keyToCss('badgeContainer')}`;
 const badgeImage = `${badgeContainer} > :is(svg, img)`;
 

@@ -1,12 +1,6 @@
 body:not(.xkit-seen-posts-only-dim-avatar) .xkit-seen-posts-seen:not(:hover),
-body.xkit-seen-posts-only-dim-avatar .xkit-seen-posts-seen:not(:hover) article > :first-child img {
+body.xkit-seen-posts-only-dim-avatar .xkit-seen-posts-seen:not(:hover) article > :first-child  > :first-child img {
   opacity: 0.5;
-}
-
-@media (max-width: 990px) {
-  body.xkit-seen-posts-only-dim-avatar .xkit-seen-posts-seen:not(:hover) article > :first-child > :not(:first-child) img {
-    opacity: 1;
-  }
 }
 
 body.xkit-seen-posts-hide .xkit-seen-posts-seen article {

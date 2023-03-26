@@ -50,6 +50,11 @@ body.accesskit-no-user-colours article span[style^="color"] {
   color: inherit !important;
 }
 
+body.accesskit-normal-width-scrollbar,
+html.accesskit-normal-width-scrollbar,
+body.accesskit-normal-width-scrollbar [data-testid="scroll-container"] {
+  scrollbar-width: auto !important;
+}
 
 figure.accesskit-visible-alt-text {
   height: 100%;

@@ -7,7 +7,7 @@
     "background_color": "#df46f6"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#accesskit",
-  "relatedTerms": [ "Disable GIFs" ],
+  "relatedTerms": [ "Disable GIFs", "Scrollbar Width" ],
   "preferences": {
     "disable_gifs": {
       "type": "checkbox",
@@ -37,6 +37,11 @@
     "no_user_fonts": {
       "type": "checkbox",
       "label": "Remove user-set fonts from text in posts",
+      "default": false
+    },
+    "normal_width_scrollbar": {
+      "type": "checkbox",
+      "label": "Set scrollbar width to auto instead of thin in Firefox",
       "default": false
     },
     "visible_alt_text": {

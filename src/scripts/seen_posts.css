@@ -1,5 +1,5 @@
 body:not(.xkit-seen-posts-only-dim-avatar) .xkit-seen-posts-seen:not(:hover),
-body.xkit-seen-posts-only-dim-avatar .xkit-seen-posts-seen:not(:hover) article > :first-child img {
+body.xkit-seen-posts-only-dim-avatar .xkit-seen-posts-seen:not(:hover) article > :first-child  > :first-child img {
   opacity: 0.5;
 }
 

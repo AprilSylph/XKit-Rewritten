@@ -7,7 +7,7 @@
     "background_color": "#df46f6"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#accesskit",
-  "relatedTerms": [ "Disable GIFs", "Scrollbar Width" ],
+  "relatedTerms": [ "Disable GIFs" ],
   "preferences": {
     "disable_gifs": {
       "type": "checkbox",
@@ -41,7 +41,7 @@
     },
     "normal_width_scrollbar": {
       "type": "checkbox",
-      "label": "Set scrollbar width to auto instead of thin in Firefox",
+      "label": "Use regular-width scrollbars in Firefox",
       "default": false
     },
     "visible_alt_text": {

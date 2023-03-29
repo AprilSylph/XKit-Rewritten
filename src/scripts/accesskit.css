@@ -53,7 +53,7 @@ body.accesskit-no-user-colours article span[style^="color"] {
 body.accesskit-normal-width-scrollbar,
 html.accesskit-normal-width-scrollbar,
 body.accesskit-normal-width-scrollbar div {
-  scrollbar-width: auto !important;
+  scrollbar-width: auto;
 }
 
 figure.accesskit-visible-alt-text {

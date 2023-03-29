@@ -5,7 +5,7 @@ const className = 'accesskit-normal-width-scrollbar';
 const styleElement = buildStyle(`
   .${className}
   ${keyToCss('timelineHeaderNavInner')} { 
-    scrollbar-width: none !important; 
+    scrollbar-width: none; 
 }`
 );
 

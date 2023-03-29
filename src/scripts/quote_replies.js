@@ -57,14 +57,6 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
-const waitForDraft = async (uuid, responseId, retries = 5) => {
-  while (retries-- > 0) {
-    const { response } = await apiFetch(`/v2/blog/${uuid}/posts/draft`).catch(() => ({}));
-    if (response?.posts?.some(({ id }) => id === responseId)) return true;
-  }
-  return false;
-};
-
 const quoteReply = async (tumblelogName, notificationProps) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
   const { type, targetPostId, targetPostSummary, targetTumblelogName, targetTumblelogUuid, timestamp } = notificationProps;
@@ -103,7 +95,7 @@ const quoteReply = async (tumblelogName, notificationProps) => {
 
   const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;
 
-  if (await waitForDraft(uuid, responseId) && newTab) {
+  if (newTab) {
     await browser.storage.local.set({ [storageKey]: currentDraftLocation });
 
     const openedTab = window.open(`/blog/${tumblelogName}/drafts`);

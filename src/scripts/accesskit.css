@@ -56,6 +56,10 @@ body.accesskit-normal-width-scrollbar div {
   scrollbar-width: auto !important;
 }
 
+body.accesskit-normal-width-scrollbar main > div:nth-child(4) div div {
+  scrollbar-width: none !important;
+}
+
 figure.accesskit-visible-alt-text {
   height: 100%;
   display: flex;

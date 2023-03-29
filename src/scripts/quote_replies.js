@@ -121,7 +121,7 @@ export const main = async function () {
   const { [storageKey]: draftLocation } = await browser.storage.local.get(storageKey);
   browser.storage.local.remove(storageKey);
 
-  if (draftLocation !== undefined && /^\/blog\/.+\/drafts/.test(location.pathname)) {
+  if (newTab && draftLocation !== undefined && /^\/blog\/.+\/drafts/.test(location.pathname)) {
     navigate(draftLocation);
   }
 };

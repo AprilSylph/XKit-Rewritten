@@ -7,5 +7,4 @@ export const main = async () => {
 export const clean = async () => {
   document.documentElement.classList.remove(className);
   document.body.classList.remove(className);
-  styleElement.remove();
 };

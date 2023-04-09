@@ -29,7 +29,7 @@ button.xkit-quote-replies-dropdown {
 }
 
 @media (hover: hover) {
-  button.xkit-quote-replies:not(.xkit-quote-replies-dropdown) svg {
+  button.xkit-quote-replies svg {
     opacity: 0;
     transform: scale(0);
   }

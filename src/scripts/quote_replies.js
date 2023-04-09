@@ -10,7 +10,6 @@ import { userBlogs } from '../util/user.js';
 
 const storageKey = 'quote_replies.currentResponseId';
 const buttonClass = 'xkit-quote-replies';
-const activityPageButtonClass = 'xkit-quote-replies-activity';
 const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
@@ -49,11 +48,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
   activityElement.after(dom(
     'button',
     {
-      class: `${buttonClass} ${
-        notification.matches(dropdownSelector)
-          ? dropdownButtonClass
-          : activityPageButtonClass
-      }`,
+      class: `${buttonClass} ${notification.matches(dropdownSelector) ? dropdownButtonClass : ''}`,
       title: 'Quote this reply'
     },
     {

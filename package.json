@@ -8,18 +8,18 @@
     "build": "web-ext build"
   },
   "devDependencies": {
-    "chrome-webstore-upload-cli": "^2.1.0",
-    "eslint": "^8.35.0",
+    "chrome-webstore-upload-cli": "^2.2.0",
+    "eslint": "^8.37.0",
     "eslint-config-semistandard": "^17.0.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsdoc": "^40.0.0",
-    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-jsdoc": "^40.1.1",
+    "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
-    "web-ext": "^7.5.0"
+    "web-ext": "^7.6.0"
   },
   "dependencies": {
-    "jquery": "^3.6.3",
+    "jquery": "^3.6.4",
     "moment": "^2.29.4",
     "normalize.css": "^8.0.1",
     "remixicon": "^2.5.0",

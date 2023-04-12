@@ -98,7 +98,6 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   ].join(',');
 
   const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
-  notify(displayText);
 
   const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;
 
@@ -109,6 +108,7 @@ const quoteReply = async (tumblelogName, notificationProps) => {
     if (openedTab) {
       return;
     } else {
+      notify(displayText);
       browser.storage.local.remove(storageKey);
     }
   }

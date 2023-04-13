@@ -105,15 +105,13 @@ const quoteReply = async (tumblelogName, notificationProps) => {
     await browser.storage.local.set({ [storageKey]: currentDraftLocation });
 
     const openedTab = window.open(`/blog/${tumblelogName}/drafts`);
-    if (openedTab) {
-      return;
-    } else {
-      notify(displayText);
+    if (openedTab === null) {
       browser.storage.local.remove(storageKey);
+      notify(displayText);
     }
+  } else {
+    navigate(currentDraftLocation);
   }
-
-  navigate(currentDraftLocation);
 };
 
 const showError = exception => notify(exception.body?.errors?.[0]?.detail || exception.message);

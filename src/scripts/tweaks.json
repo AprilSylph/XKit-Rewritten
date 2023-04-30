@@ -55,6 +55,11 @@
       "label": "Hide control button tooltips in the post footer",
       "default": false
     },
+    "hide_blaze_tip_labels": {
+      "type": "checkbox",
+      "label": "Hide the \"blaze\" and \"tip\" button labels",
+      "default": false
+    },
     "hide_filtered_posts": {
       "type": "checkbox",
       "label": "Hide filtered posts entirely",

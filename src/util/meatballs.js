@@ -50,11 +50,11 @@ export const unregisterMeatballItem = id => {
  * @param {object} options - Destructured
  * @param {string} options.id - Identifier for this button (must be unique)
  * @param {string|Function} options.label - Button text to display. May be a function accepting the blog data of the post element being actioned on.
- * @param {Function} options.onclick - Button click listener function
- * @param {Function} [options.postFilter] - Filter function, called with the blog data of the menu element being actioned on. Must return true for button to be added. Some blog data fields, such as "followed," are not available in blog cards.
+ * @param {Function} options.onClick - Button click listener function
+ * @param {Function} [options.blogFilter] - Filter function, called with the blog data of the menu element being actioned on. Must return true for button to be added. Some blog data fields, such as "followed", are not available in blog cards.
  */
-export const registerBlogMeatballItem = function ({ id, label, onclick, postFilter }) {
-  blogMeatballItems[id] = { label, onclick, postFilter };
+export const registerBlogMeatballItem = function ({ id, label, onClick, blogFilter }) {
+  blogMeatballItems[id] = { label, onClick, blogFilter };
   pageModifications.trigger(addMeatballItems);
 };
 
@@ -126,13 +126,13 @@ const addBlogMeatballItem = async meatballMenu => {
   $(meatballMenu).children('[data-xkit-meatball-button]').remove();
 
   Object.keys(blogMeatballItems).sort().forEach(id => {
-    const { label, onclick, postFilter } = blogMeatballItems[id];
+    const { label, onClick, blogFilter } = blogMeatballItems[id];
 
     const meatballItemButton = dom('button', {
       'data-xkit-blog-meatball-button': id,
       hidden: true
     }, {
-      click: onclick
+      click: onClick
     }, [
       '\u22EF'
     ]);
@@ -150,8 +150,8 @@ const addBlogMeatballItem = async meatballMenu => {
       meatballItemButton.textContent = label;
     }
 
-    if (postFilter instanceof Function) {
-      const shouldShowItem = postFilter(__blogData);
+    if (blogFilter instanceof Function) {
+      const shouldShowItem = blogFilter(__blogData);
       meatballItemButton.hidden = shouldShowItem !== true;
 
       if (shouldShowItem instanceof Promise) {

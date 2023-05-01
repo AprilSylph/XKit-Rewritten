@@ -22,7 +22,7 @@
     "jquery": "^3.6.4",
     "moment": "^2.29.4",
     "normalize.css": "^8.0.1",
-    "remixicon": "^2.5.0",
+    "remixicon": "^3.2.0",
     "spectrum-colorpicker": "^1.8.1",
     "webextension-polyfill": "^0.10.0"
   },

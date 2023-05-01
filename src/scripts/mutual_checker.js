@@ -1,5 +1,5 @@
 import { buildStyle, filterPostElements } from '../util/interface.js';
-import { timelineObject } from '../util/react_props.js';
+import { blogData, timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { primaryBlogName } from '../util/user.js';
 import { keyToCss } from '../util/css_map.js';
@@ -103,7 +103,7 @@ const processBlogCardLinks = blogCardLinks =>
   });
 
 const getIsFollowing = async (blogName, element) => {
-  const { blog } = await timelineObject(element) ?? {};
+  const blog = await blogData(element) ?? (await timelineObject(element))?.blog;
 
   if (following[blogName] === undefined) {
     if (blogName === blog?.name) {

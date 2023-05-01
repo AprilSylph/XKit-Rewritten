@@ -8,5 +8,5 @@ article footer ${keyToCss('controlIcon')} ${keyToCss('tooltip')} ~ * {
 }
 `);
 
-export const main = async () => document.head.append(styleElement);
+export const main = async () => document.documentElement.append(styleElement);
 export const clean = async () => styleElement.remove();

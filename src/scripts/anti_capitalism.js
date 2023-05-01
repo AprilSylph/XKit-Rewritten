@@ -19,7 +19,7 @@ const processVideoCTAs = videoCTAs => videoCTAs
   .forEach(({ classList }) => classList.add(hiddenClass));
 
 export const main = async () => {
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
   pageModifications.register(`${listTimelineObjectInnerSelector}:first-child ${keyToCss('videoCTA', 'videoImageCTA')}`, processVideoCTAs);
 };
 

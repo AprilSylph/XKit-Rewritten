@@ -9,32 +9,38 @@ import { notify } from '../util/notifications.js';
 import { translate } from '../util/language_data.js';
 import { dom } from '../util/dom.js';
 
-const popupElement = Object.assign(document.createElement('div'), { id: 'quick-reblog' });
-const blogSelector = document.createElement('select');
+const popupElement = dom('div', { id: 'quick-reblog' });
+const blogSelector = dom('select');
 const blogAvatar = dom('div', { class: 'avatar' });
 const blogSelectorContainer = dom('div', { class: 'select-container' }, null, [blogAvatar, blogSelector]);
-const commentInput = Object.assign(document.createElement('input'), {
-  placeholder: 'Comment',
-  autocomplete: 'off',
-  onkeydown: event => event.stopPropagation()
-});
-const quickTagsList = Object.assign(document.createElement('div'), {
-  className: 'quick-tags',
+const commentInput = dom(
+  'input',
+  {
+    placeholder: 'Comment',
+    autocomplete: 'off'
+  },
+  { keydown: event => event.stopPropagation() }
+);
+const quickTagsList = dom('div', {
+  class: 'quick-tags',
   tabIndex: -1
 });
-const tagsInput = Object.assign(document.createElement('input'), {
-  placeholder: 'Tags (comma separated)',
-  autocomplete: 'off',
-  onkeydown: event => event.stopPropagation()
-});
-tagsInput.setAttribute('list', 'quick-reblog-tag-suggestions');
-const tagSuggestions = Object.assign(document.createElement('datalist'), { id: 'quick-reblog-tag-suggestions' });
-const actionButtons = Object.assign(document.createElement('fieldset'), { className: 'action-buttons' });
-const reblogButton = Object.assign(document.createElement('button'), { textContent: 'Reblog' });
+const tagsInput = dom(
+  'input',
+  {
+    placeholder: 'Tags (comma separated)',
+    autocomplete: 'off',
+    list: 'quick-reblog-tag-suggestions'
+  },
+  { keydown: event => event.stopPropagation() }
+);
+const tagSuggestions = dom('datalist', { id: 'quick-reblog-tag-suggestions' });
+const actionButtons = dom('fieldset', { class: 'action-buttons' });
+const reblogButton = dom('button', null, null, ['Reblog']);
 reblogButton.dataset.state = 'published';
-const queueButton = Object.assign(document.createElement('button'), { textContent: 'Queue' });
+const queueButton = dom('button', null, null, ['Queue']);
 queueButton.dataset.state = 'queue';
-const draftButton = Object.assign(document.createElement('button'), { textContent: 'Draft' });
+const draftButton = dom('button', null, null, ['Draft']);
 draftButton.dataset.state = 'draft';
 [blogSelectorContainer, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons].forEach(element => popupElement.appendChild(element));
 
@@ -89,9 +95,7 @@ const renderTagSuggestions = () => {
     .filter((tag, index, array) => array.indexOf(tag) === index)
     .map(tag => `${tagsInput.value}${includeSpace ? ' ' : ''}${tag}`);
 
-  tagSuggestions.append(
-    ...tagsToSuggest.map(value => Object.assign(document.createElement('option'), { value }))
-  );
+  tagSuggestions.append(...tagsToSuggest.map(value => dom('option', { value })));
 };
 
 const updateTagSuggestions = () => {
@@ -250,8 +254,7 @@ const renderQuickTags = async function () {
   const { [quickTagsStorageKey]: tagBundles = [] } = await browser.storage.local.get(quickTagsStorageKey);
   tagBundles.forEach(tagBundle => {
     const bundleTags = tagBundle.tags.split(',').map(tag => tag.trim().toLowerCase());
-    const bundleButton = document.createElement('button');
-    bundleButton.textContent = tagBundle.title;
+    const bundleButton = dom('button', null, null, [tagBundle.title]);
     bundleButton.addEventListener('click', ({ currentTarget: { dataset } }) => {
       const checked = dataset.checked === 'true';
 
@@ -291,6 +294,23 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
   browser.storage.local.set({ [rememberedBlogStorageKey]: rememberedBlogs });
 };
 
+/**
+ * Chromium passes a full PointerEvent here; Firefox passes a MouseEvent.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/contextmenu_event
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/mozInputSource
+ */
+const MOZ_SOURCE_TOUCH = 5;
+
+const preventLongPressMenu = ({ originalEvent: event }) => {
+  const isTouchEvent = event.pointerType === 'touch';
+  const firefoxIsTouchEvent = event.mozInputSource === MOZ_SOURCE_TOUCH;
+
+  if (isTouchEvent || firefoxIsTouchEvent) {
+    event.preventDefault();
+  }
+};
+
 export const main = async function () {
   ({
     popupPosition,
@@ -309,7 +329,7 @@ export const main = async function () {
   popupElement.className = popupPosition;
 
   blogSelector.replaceChildren(
-    ...userBlogs.map(({ name, uuid }) => Object.assign(document.createElement('option'), { value: uuid, textContent: name }))
+    ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name]))
   );
 
   if (rememberLastBlog) {
@@ -338,6 +358,7 @@ export const main = async function () {
   tagsInput.hidden = !showTagsInput;
 
   $(document.body).on('mouseenter', reblogButtonSelector, showPopupOnHover);
+  $(document.body).on('contextmenu', reblogButtonSelector, preventLongPressMenu);
 
   if (quickTagsIntegration) {
     browser.storage.onChanged.addListener(updateQuickTags);
@@ -351,6 +372,7 @@ export const main = async function () {
 
 export const clean = async function () {
   $(document.body).off('mouseenter', reblogButtonSelector, showPopupOnHover);
+  $(document.body).off('contextmenu', reblogButtonSelector, preventLongPressMenu);
   popupElement.remove();
 
   blogSelector.removeEventListener('change', updateRememberedBlog);

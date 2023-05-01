@@ -1,5 +1,5 @@
 import { filterPostElements, blogViewSelector, postSelector } from '../util/interface.js';
-import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
+import { registerBlogMeatballItem, registerMeatballItem, unregisterBlogMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -8,7 +8,7 @@ import { dom } from '../util/dom.js';
 import { getPreferences } from '../util/preferences.js';
 
 const meatballButtonId = 'mute';
-const meatballButtonLabel = ({ blogName }) => `Mute options for ${blogName}`;
+const meatballButtonLabel = ({ blogName, name }) => `Mute options for ${blogName ?? name}`;
 
 const hiddenClass = 'xkit-mute-hidden';
 const onBlogHiddenClass = 'xkit-mute-hidden-on-blog';
@@ -140,7 +140,7 @@ const processPosts = async function (postElements) {
 };
 
 const onMeatballButtonClicked = function ({ currentTarget }) {
-  const { blog: { name, uuid } } = currentTarget.__timelineObjectData;
+  const { name, uuid } = currentTarget?.__timelineObjectData?.blog || currentTarget?.__blogData;
 
   const currentMode = mutedBlogs[uuid];
 
@@ -227,11 +227,17 @@ export const main = async function () {
     label: meatballButtonLabel,
     onclick: onMeatballButtonClicked
   });
+  registerBlogMeatballItem({
+    id: meatballButtonId,
+    label: meatballButtonLabel,
+    onClick: onMeatballButtonClicked
+  });
   onNewPosts.addListener(processPosts);
 };
 
 export const clean = async function () {
   unregisterMeatballItem(meatballButtonId);
+  unregisterBlogMeatballItem(meatballButtonId);
   onNewPosts.removeListener(processPosts);
 
   $(`.${hiddenClass}`).removeClass(hiddenClass);

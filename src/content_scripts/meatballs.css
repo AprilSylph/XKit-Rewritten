@@ -1,4 +1,4 @@
-:is([data-xkit-meatball-button], [data-xkit-blog-meatball-button]) {
+[data-xkit-meatball-button] {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -16,15 +16,15 @@
   text-decoration: none;
 }
 
-:is([data-xkit-meatball-button], [data-xkit-blog-meatball-button])[hidden] {
+[data-xkit-meatball-button][hidden] {
   display: none;
 }
 
-:is([data-xkit-meatball-button], [data-xkit-blog-meatball-button]):not([hidden]) ~ :is([data-xkit-meatball-button], [data-xkit-blog-meatball-button]) {
+[data-xkit-meatball-button]:not([hidden]) ~ [data-xkit-meatball-button] {
   border-top: none;
 }
 
-:is([data-xkit-meatball-button], [data-xkit-blog-meatball-button]):hover,
-:is([data-xkit-meatball-button], [data-xkit-blog-meatball-button]):focus {
+[data-xkit-meatball-button]:hover,
+[data-xkit-meatball-button]:focus {
   background-color: rgb(var(--secondary-accent));
 }

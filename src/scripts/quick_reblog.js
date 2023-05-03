@@ -296,7 +296,6 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
 
 /**
  * Chromium passes a full PointerEvent here; Firefox passes a MouseEvent.
- *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/contextmenu_event
  * @see https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/mozInputSource
  */

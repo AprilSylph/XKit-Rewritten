@@ -27,7 +27,6 @@ const blogMeatballItems = {};
 
 /**
  * Add a custom button to posts' meatball menus.
- *
  * @param {object} options - Destructured
  * @param {string} options.id - Identifier for this button (must be unique)
  * @param {string|Function} options.label - Button text to display. May be a function accepting the timelineObject data of the post element being actioned on.
@@ -46,7 +45,6 @@ export const unregisterMeatballItem = id => {
 
 /**
  * Add a custom button to blogs' meatball menus in blog cards and the blog view header.
- *
  * @param {object} options - Destructured
  * @param {string} options.id - Identifier for this button (must be unique)
  * @param {string|Function} options.label - Button text to display. May be a function accepting the blog data of the post element being actioned on.

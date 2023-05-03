@@ -55,7 +55,6 @@ export const buildStyle = (css = '') => dom('style', { class: 'xkit' }, null, [c
 
 /**
  * Determine a post's legacy type
- *
  * @param {object} post - Destructured into content and layout
  * @param {Array} [post.trail] - Full post trail
  * @param {Array} [post.content] - Post content array

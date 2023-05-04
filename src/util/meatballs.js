@@ -82,6 +82,7 @@ const addPostMeatballItem = async meatballMenu => {
     const { label, onclick, postFilter } = meatballItems[id];
 
     const meatballItemButton = dom('button', {
+      class: 'xkit-meatball-button',
       'data-xkit-meatball-button': id,
       hidden: true
     }, {
@@ -127,6 +128,7 @@ const addBlogMeatballItem = async meatballMenu => {
     const { label, onClick, blogFilter } = blogMeatballItems[id];
 
     const meatballItemButton = dom('button', {
+      class: 'xkit-meatball-button',
       'data-xkit-blog-meatball-button': id,
       hidden: true
     }, {

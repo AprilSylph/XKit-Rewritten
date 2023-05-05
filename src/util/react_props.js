@@ -94,7 +94,6 @@ const controlTagsInput = async ({ add, remove }) => {
 
 /**
  * Manipulate post form tags
- *
  * @param {object} options - Tags to add/remove to/from the current post form
  * @param {string[]} [options.add] - Tags to insert
  * @param {string[]} [options.remove] - Tags to remove

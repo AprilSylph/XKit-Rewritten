@@ -9,7 +9,7 @@ import { userBlogNames } from '../util/user.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonBlockId = 'notificationblock-block';
-const meatballButtonBlockLabel = 'Block notifications';
+const meatballButtonBlockLabel = 'Block notifications (XKit)';
 const meatballButtonUnblockId = 'notificationblock-unblock';
 const meatballButtonUnblockLabel = 'Unblock notifications';
 const notificationSelector = keyToCss('notification');

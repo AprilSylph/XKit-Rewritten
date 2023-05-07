@@ -16,8 +16,12 @@ const styleElement = buildStyle(`
   height: 1em;
   margin: 0 0.5ch;
 
-  background-size: contain;
-  background-image: url(${browser.runtime.getURL('/icons/128.png')})
+  mask-size: contain;
+  -webkit-mask-size: contain;
+  mask-image: url(${browser.runtime.getURL('/icons/mask_128.png')});
+  -webkit-mask-image: url(${browser.runtime.getURL('/icons/mask_128.png')});
+
+  background-color: RGB(var(--black));
 }
 `);
 document.documentElement.append(styleElement);

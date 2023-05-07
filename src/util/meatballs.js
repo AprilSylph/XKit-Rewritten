@@ -1,20 +1,12 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
-import { buildStyle, postSelector } from './interface.js';
+import { postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { inject } from './inject.js';
 import { blogData, timelineObject } from './react_props.js';
 
 const postHeaderSelector = `${postSelector} article > header`;
 const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
-
-const styleElement = buildStyle(`
-.xkit-meatball-button::before {
-  content: "[XKit] ";
-  white-space: pre-wrap;
-}
-`);
-document.documentElement.append(styleElement);
 
 const testHeaderElement = (selector) => {
   const menuElement = document.currentScript.parentElement;

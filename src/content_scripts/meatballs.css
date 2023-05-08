@@ -28,3 +28,8 @@
 .xkit-meatball-button:focus {
   background-color: rgb(var(--secondary-accent));
 }
+
+.xkit-meatball-button::before {
+  content: "[XKit] ";
+  white-space: pre-wrap;
+}

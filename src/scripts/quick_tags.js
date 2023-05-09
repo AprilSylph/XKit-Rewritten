@@ -187,7 +187,8 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
     }
 
     postElement.querySelector('footer').parentNode.prepend(tagsElement);
-  } catch ({ body }) {
+  } catch (error) {
+    const body = error.body ?? error;
     notify(body.errors[0].detail);
   }
 };

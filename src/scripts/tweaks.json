@@ -55,6 +55,11 @@
       "label": "Hide control button tooltips in the post footer",
       "default": false
     },
+    "hide_blaze_tip_labels": {
+      "type": "checkbox",
+      "label": "Hide the \"blaze\" and \"tip\" button labels",
+      "default": false
+    },
     "hide_filtered_posts": {
       "type": "checkbox",
       "label": "Hide filtered posts entirely",
@@ -83,6 +88,11 @@
     "no_where_were_we": {
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",
+      "default": false
+    },
+    "no_live": {
+      "type": "checkbox",
+      "label": "Hide the Tumblr Live carousel",
       "default": false
     }
   }

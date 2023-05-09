@@ -8,7 +8,7 @@ import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
 import { getPreferences } from '../util/preferences.js';
 import { timelineObject, editPostFormTags } from '../util/react_props.js';
-import { apiFetch, createEditRequestBody } from '../util/tumblr_helpers.js';
+import { apiFetch, createEditRequestBody, isNpfCompatible } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
@@ -152,9 +152,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   const { blog: { uuid }, blogName } = await timelineObject(postElement);
 
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
-  const { tags = [], isBlocksPostFormat, shouldOpenInLegacy } = postData;
-
-  const isNpfCompatible = isBlocksPostFormat || shouldOpenInLegacy === false;
+  const { tags = [] } = postData;
 
   const tagsToAdd = inputTags.filter(inputTag => tags.includes(inputTag) === false);
   if (tagsToAdd.length === 0) { return; }
@@ -162,7 +160,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   tags.push(...tagsToAdd);
 
   try {
-    if (isNpfCompatible) {
+    if (isNpfCompatible(postData)) {
       const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
         method: 'PUT',
         body: {

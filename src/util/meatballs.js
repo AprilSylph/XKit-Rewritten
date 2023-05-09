@@ -12,9 +12,12 @@ const styleElement = buildStyle(`
 .xkit-meatball-button::before {
   content: "";
 
+  display: inline-block;
+  vertical-align: text-top;
+
   width: 1em;
   height: 1em;
-  margin: 0 0.5ch;
+  margin: 0.2ch 0.5ch;
 
   mask-size: contain;
   -webkit-mask-size: contain;

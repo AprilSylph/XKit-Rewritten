@@ -1,10 +1,10 @@
 {
   "title": "Mass Privater",
-  "description": "Make some/all of your posts private",
+  "description": "Unpublish posts by time range or tag",
   "icon": {
     "class_name": "ri-lock-2-line",
     "color": "white",
-    "background_color": "#A45028"
+    "background_color": "#9d318b"
   },
   "relatedTerms": [ "Mass Deleter" ]
 }

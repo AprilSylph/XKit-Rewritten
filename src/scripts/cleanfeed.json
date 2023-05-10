@@ -10,11 +10,11 @@
   "relatedTerms": [ "NSFW", "Mature", "Adult", "Sensitive", "Community Label" ],
   "preferences": {
     "blockingMode": {
-      "label": "Hide:",
+      "label": "Hide media from:",
       "type": "select",
       "options": [
-        { "value": "smart", "label": "flagged/mature media only" },
-        { "value": "all", "label": "all media" }
+        { "value": "smart", "label": "mature posts & blogs" },
+        { "value": "all", "label": "all posts" }
       ],
       "default": "smart"
     },

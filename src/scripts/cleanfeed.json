@@ -19,7 +19,7 @@
       "default": "smart"
     },
     "localFlagging": {
-      "label": "Treat these blogs as flagged (comma-separated)",
+      "label": "Treat these blogs as mature (comma-separated)",
       "type": "textarea",
       "default": ""
     }

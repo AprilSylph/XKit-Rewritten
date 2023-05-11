@@ -1,9 +1,28 @@
-import { keyToCss } from '../../util/css_map.js';
+import { keyToClasses, keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
+import { pageModifications } from '../../util/mutations.js';
 
 const wrapper = `:is(article ${keyToCss('badgesContainer')})`;
 const badgeContainer = `${wrapper} > ${keyToCss('badgeContainer')}`;
 const badgeImage = `${badgeContainer} > :is(svg, img)`;
+
+const prefix = 'xkit-badge-disabled';
+const classesToDisable = keyToClasses('tooManyBadges', 'shrinkBadges');
+const disableClassesSelector = keyToCss('tooManyBadges', 'shrinkBadges');
+
+const disableClasses = elements =>
+  elements.forEach(element =>
+    classesToDisable.forEach(className =>
+      element.classList.replace(className, `${prefix}-${className}`)
+    )
+  );
+
+const enableClasses = () =>
+  [...document.querySelectorAll(`[class*="${prefix}"]`)].forEach(element =>
+    classesToDisable.forEach(className =>
+      element.classList.replace(`${prefix}-${className}`, className)
+    )
+  );
 
 const styleElement = buildStyle(`
 *:not(:hover) > ${wrapper} {
@@ -43,9 +62,14 @@ const waitForRender = () =>
 export const main = async () => {
   document.documentElement.append(styleElement);
   waitForRender().then(() => document.documentElement.append(transitionStyleElement));
+
+  pageModifications.register(disableClassesSelector, disableClasses);
 };
 
 export const clean = async () => {
+  pageModifications.unregister(disableClasses);
+  enableClasses();
+
   styleElement.remove();
   transitionStyleElement.remove();
 };

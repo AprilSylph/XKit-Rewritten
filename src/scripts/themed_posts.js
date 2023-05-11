@@ -8,9 +8,11 @@ const styleElement = buildStyle();
 const blogs = new Set();
 const groupsFromHex = /^#(?<red>[A-Fa-f0-9]{1,2})(?<green>[A-Fa-f0-9]{1,2})(?<blue>[A-Fa-f0-9]{1,2})$/;
 const reblogSelector = keyToCss('reblog');
+const timelineSelector = keyToCss('timeline');
 
 let enableOnPeepr;
 let blacklistedUsernames;
+let missingPostMode;
 
 let blacklist;
 
@@ -28,11 +30,11 @@ const processPosts = async function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (postElement.matches(blogViewSelector) && !enableOnPeepr) return;
 
-    const { blog, trail = [] } = await timelineObject(postElement);
+    const { blog, trail = [], content } = await timelineObject(postElement);
 
     const blogData = [
       blog,
-      ...reblogTrailTheming ? trail.map(item => item.blog) : []
+      ...reblogTrailTheming ? trail.map(item => item.blog).filter(item => item !== undefined) : []
     ];
 
     blogData.forEach(({ name, theme }) => {
@@ -65,15 +67,19 @@ const processPosts = async function (postElements) {
     postElement.dataset.xkitThemed = blog.name ?? '';
 
     if (reblogTrailTheming) {
+      const blogNameTrail = trail.map(item => item?.blog?.name);
+      if (content.length > 0) {
+        blogNameTrail.push(blog?.name);
+      }
       [...postElement.querySelectorAll(reblogSelector)].forEach((reblog, i) => {
-        reblog.dataset.xkitThemed = trail[i]?.blog?.name ?? '';
+        reblog.dataset.xkitThemed = blogNameTrail[i] ?? '';
       });
     }
   });
 };
 
 export const main = async function () {
-  ({ reblogTrailTheming, enableOnPeepr, blacklistedUsernames } = await getPreferences('themed_posts'));
+  ({ reblogTrailTheming, enableOnPeepr, blacklistedUsernames, missingPostMode } = await getPreferences('themed_posts'));
   blacklist = blacklistedUsernames.split(',').map(username => username.trim());
 
   if (reblogTrailTheming) {
@@ -87,6 +93,21 @@ export const main = async function () {
         margin-bottom: 15px;
       }
     `;
+    if (missingPostMode === 'palette') {
+      styleElement.textContent += `
+        ${timelineSelector} {
+          --xkit-root-white: var(--white);
+          --xkit-root-black: var(--black);
+          --xkit-root-accent: var(--accent);
+        }
+
+        [data-xkit-themed] {
+          --white: var(--xkit-root-white);
+          --black: var(--xkit-root-black);
+          --accent: var(--xkit-root-accent);
+        }
+      `;
+    }
   }
 
   document.documentElement.append(styleElement);

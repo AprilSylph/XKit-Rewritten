@@ -8,7 +8,7 @@ const badgeImage = ':is(svg, img)';
 
 const prefix = 'xkit-badge-disabled';
 const classesToDisable = keyToClasses('tooManyBadges', 'shrinkBadges');
-const disableClassesSelector = keyToCss('tooManyBadges', 'shrinkBadges');
+const disableClassesSelector = `article ${keyToCss('tooManyBadges', 'shrinkBadges')}`;
 
 const disableClasses = elements =>
   elements.forEach(element =>

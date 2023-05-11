@@ -1,7 +1,7 @@
 import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
-const wrapper = `:is(article ${keyToCss('badgesContainer')})`;
+const wrapper = `:is(article ${keyToCss('badgesContainer')}:not(${keyToCss('tooManyBadges')}))`;
 const badgeContainer = `${wrapper} > ${keyToCss('badgeContainer')}`;
 const badgeImage = `${badgeContainer} > :is(svg, img)`;
 

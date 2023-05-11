@@ -25,11 +25,11 @@ const updateStyleElement = maxBadges => {
   const range = [...Array(styleElementMaxBadges).keys()].map(i => i + 1);
   styleElement.textContent = `
     *:not(:hover) > ${wrapper} {
-      margin-right: 10px;
+      margin-right: 7px;
     }
 
     *:not(:hover) > ${badgeContainer} {
-      margin-right: -10px;
+      margin-right: -7px;
     }
 
     *:not(:hover) > ${badgeImage} {

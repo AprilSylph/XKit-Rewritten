@@ -47,13 +47,13 @@ ${wrapper} > ${badgeContainer} {
 `);
 
 const transitionStyleElement = buildStyle(`
-  ${wrapper}, ${wrapper} > ${badgeContainer} {
-    transition: margin 0.5s ease;
-  }
+${wrapper}, ${wrapper} > ${badgeContainer} {
+  transition: margin 0.5s ease;
+}
 
-  ${wrapper} > ${badgeContainer} > ${badgeImage} {
-    transition: filter 0.35s linear;
-  }
+${wrapper} > ${badgeContainer} > ${badgeImage} {
+  transition: filter 0.35s linear;
+}
 `);
 
 const waitForRender = () =>

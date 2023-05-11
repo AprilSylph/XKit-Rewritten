@@ -2,9 +2,9 @@ import { keyToClasses, keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
-const wrapper = `:is(article ${keyToCss('badgesContainer')})`;
-const badgeContainer = `${wrapper} > ${keyToCss('badgeContainer')}`;
-const badgeImage = `${badgeContainer} > :is(svg, img)`;
+const wrapper = `article ${keyToCss('badgesContainer')}`;
+const badgeContainer = keyToCss('badgeContainer');
+const badgeImage = ':is(svg, img)';
 
 const prefix = 'xkit-badge-disabled';
 const classesToDisable = keyToClasses('tooManyBadges', 'shrinkBadges');
@@ -25,15 +25,15 @@ const enableClasses = () =>
   );
 
 const styleElement = buildStyle(`
-*:not(:hover) > ${wrapper} {
+${wrapper}:not(:hover) {
   margin-right: 7px;
 }
 
-*:not(:hover) > ${badgeContainer} {
+${wrapper}:not(:hover) > ${badgeContainer} {
   margin-right: -7px;
 }
 
-*:not(:hover) > ${badgeImage} {
+${wrapper}:not(:hover) > ${badgeContainer} > ${badgeImage} {
   filter: drop-shadow(1px 0px 2px rgb(0 0 0 / 0.5));
 }
 
@@ -41,17 +41,17 @@ ${wrapper} {
   isolation: isolate;
 }
 
-${badgeContainer} {
+${wrapper} > ${badgeContainer} {
   z-index: calc(0 - var(--badges-index));
 }
 `);
 
 const transitionStyleElement = buildStyle(`
-  ${wrapper}, ${badgeContainer} {
+  ${wrapper}, ${wrapper} > ${badgeContainer} {
     transition: margin 0.5s ease;
   }
 
-  ${badgeImage} {
+  ${wrapper} > ${badgeContainer} > ${badgeImage} {
     transition: filter 0.35s linear;
   }
 `);

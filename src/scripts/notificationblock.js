@@ -5,11 +5,12 @@ import { inject } from '../util/inject.js';
 import { keyToCss } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { dom } from '../util/dom.js';
-import { userBlogNames } from '../util/user.js';
+import { userBlogNames, userBlogs } from '../util/user.js';
 import { apiFetch, navigate } from '../util/tumblr_helpers.js';
 import { notify } from '../util/notifications.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
+const uuidsStorageKey = 'notificationblock.uuids';
 const namesStorageKey = 'notificationblock.names';
 const toOpenStorageKey = 'notificationblock.toOpen';
 const meatballButtonBlockId = 'notificationblock-block';
@@ -21,31 +22,34 @@ const notificationSelector = keyToCss('notification');
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 let blockedPostTargetIDs;
+let uuids = {};
 let names = {};
 
-const backgroundPopulateNames = async () => {
-  Object.keys(names).forEach(id => {
-    if (names[id] && !userBlogNames.includes(names[id])) {
-      delete names[id];
-    }
-  });
-  await browser.storage.local.set({ [namesStorageKey]: names });
+const backgroundPopulateData = async () => {
+  const idsMissingUuids = blockedPostTargetIDs.filter(id => uuids[id] === undefined).reverse();
 
-  const idsMissingNames = blockedPostTargetIDs.filter(id => names[id] === undefined).reverse();
-
-  for (const id of idsMissingNames) {
-    names[id] = false;
-    for (const name of userBlogNames) {
+  for (const id of idsMissingUuids) {
+    uuids[id] = false;
+    for (const { uuid } of userBlogs) {
       try {
-        await apiFetch(`/v2/blog/${name}/posts/${id}`);
-        names[id] = name;
+        await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
+        uuids[id] = uuid;
         break;
       } catch (e) {
         await sleep(1000);
       }
     }
-    await browser.storage.local.set({ [namesStorageKey]: names });
+    await browser.storage.local.set({ [uuidsStorageKey]: uuids });
   }
+
+  const newNameEntries = Object.values(uuids)
+    .filter(Boolean)
+    .map(uuid => [
+      uuid,
+      userBlogs.find(({ uuid: blogUuid }) => blogUuid === uuid)?.name ?? names[uuid]
+    ]);
+  names = Object.fromEntries(newNameEntries);
+  await browser.storage.local.set({ [namesStorageKey]: names });
 };
 
 const styleElement = buildStyle();
@@ -127,7 +131,15 @@ const unblockPostFilter = async ({ id, rebloggedRootId }) => {
 };
 
 export const onStorageChanged = (changes, areaName) => {
-  const { [storageKey]: blockedPostChanges, [namesStorageKey]: namesChanges } = changes;
+  const {
+    [storageKey]: blockedPostChanges,
+    [uuidsStorageKey]: uuidsChanges,
+    [namesStorageKey]: namesChanges
+  } = changes;
+
+  if (uuidsChanges) {
+    ({ newValue: uuids } = uuidsChanges);
+  }
 
   if (namesChanges) {
     ({ newValue: names } = namesChanges);
@@ -141,9 +153,10 @@ export const onStorageChanged = (changes, areaName) => {
 
 export const main = async function () {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
+  ({ [uuidsStorageKey]: uuids = {} } = await browser.storage.local.get(uuidsStorageKey));
   ({ [namesStorageKey]: names = {} } = await browser.storage.local.get(namesStorageKey));
 
-  backgroundPopulateNames();
+  backgroundPopulateData();
 
   styleElement.textContent = buildCss();
   document.documentElement.append(styleElement);
@@ -158,7 +171,8 @@ export const main = async function () {
     browser.storage.local.remove(toOpenStorageKey);
 
     try {
-      const { name, blockedPostID } = toOpen;
+      const { uuid, blockedPostID } = toOpen;
+      const { response: { blog: { name } } } = await apiFetch(`/v2/blog/${uuid}/info`);
       navigate(`/${name}/${blockedPostID}`);
     } catch (e) {
       notify('Failed to open post!');

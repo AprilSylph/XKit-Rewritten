@@ -4,7 +4,7 @@ const blockedPostList = document.getElementById('notification-blocked-posts');
 const blockedPostTemplate = document.getElementById('notification-blocked-post');
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
-const uuidsStorageKey = 'notificationblock.uuids';
+const namesStorageKey = 'notificationblock.names';
 const toOpenStorageKey = 'notificationblock.toOpen';
 
 const unblockPost = async function ({ currentTarget }) {
@@ -18,7 +18,7 @@ const unblockPost = async function ({ currentTarget }) {
 
 const renderBlocked = async function () {
   const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
-  const { [uuidsStorageKey]: uuids = {} } = await browser.storage.local.get(uuidsStorageKey);
+  const { [namesStorageKey]: names = {} } = await browser.storage.local.get(namesStorageKey);
 
   postsBlockedCount.textContent = `${blockedPostRootIDs.length} ${blockedPostRootIDs.length === 1 ? 'post' : 'posts'} with blocked notifications`;
   blockedPostList.textContent = '';
@@ -32,16 +32,17 @@ const renderBlocked = async function () {
     unblockButton.dataset.postId = blockedPostID;
     unblockButton.addEventListener('click', unblockPost);
 
-    if (uuids[blockedPostID]) {
+    if (names[blockedPostID]) {
       const a = document.createElement('a');
       a.href = 'javascript:void(0);';
       a.addEventListener('click', async () => {
         await browser.storage.local.set({
-          [toOpenStorageKey]: { uuid: uuids[blockedPostID], blockedPostID }
+          [toOpenStorageKey]: { name: names[blockedPostID], blockedPostID }
         });
         window.open('https://www.tumblr.com/');
       });
       spanElement.replaceWith(a);
+      spanElement.textContent = `${names[blockedPostID]}/${blockedPostID}`;
       a.append(spanElement);
     }
 
@@ -52,7 +53,7 @@ const renderBlocked = async function () {
 browser.storage.onChanged.addListener((changes, areaName) => {
   if (
     areaName === 'local' &&
-    (Object.keys(changes).includes(storageKey) || Object.keys(changes).includes(uuidsStorageKey))
+    (Object.keys(changes).includes(storageKey) || Object.keys(changes).includes(namesStorageKey))
   ) {
     renderBlocked();
   }

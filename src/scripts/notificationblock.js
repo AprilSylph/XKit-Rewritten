@@ -6,8 +6,12 @@ import { keyToCss } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { dom } from '../util/dom.js';
 import { userBlogNames } from '../util/user.js';
+import { apiFetch, navigate } from '../util/tumblr_helpers.js';
+import { notify } from '../util/notifications.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
+const uuidsStorageKey = 'notificationblock.uuids';
+const toOpenStorageKey = 'notificationblock.toOpen';
 const meatballButtonBlockId = 'notificationblock-block';
 const meatballButtonBlockLabel = 'Block notifications';
 const meatballButtonUnblockId = 'notificationblock-unblock';
@@ -15,6 +19,7 @@ const meatballButtonUnblockLabel = 'Unblock notifications';
 const notificationSelector = keyToCss('notification');
 
 let blockedPostTargetIDs;
+let uuids = {};
 
 const styleElement = buildStyle();
 const buildCss = () => `:is(${
@@ -95,7 +100,13 @@ const unblockPostFilter = async ({ id, rebloggedRootId }) => {
 };
 
 export const onStorageChanged = (changes, areaName) => {
-  if (Object.keys(changes).includes(storageKey)) {
+  const { [storageKey]: blockedPostChanges, [uuidsStorageKey]: uuidsChanges } = changes;
+
+  if (uuidsChanges) {
+    ({ newValue: uuids } = uuidsChanges);
+  }
+
+  if (blockedPostChanges) {
     blockedPostTargetIDs = changes[storageKey].newValue;
     styleElement.textContent = buildCss();
   }
@@ -103,6 +114,8 @@ export const onStorageChanged = (changes, areaName) => {
 
 export const main = async function () {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
+  ({ [uuidsStorageKey]: uuids = {} } = await browser.storage.local.get(uuidsStorageKey));
+
   styleElement.textContent = buildCss();
   document.documentElement.append(styleElement);
 
@@ -110,6 +123,19 @@ export const main = async function () {
 
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
   registerMeatballItem({ id: meatballButtonUnblockId, label: meatballButtonUnblockLabel, onclick: onButtonClicked, postFilter: unblockPostFilter });
+
+  const { [toOpenStorageKey]: toOpen } = await browser.storage.local.get(toOpenStorageKey);
+  if (toOpen) {
+    browser.storage.local.remove(toOpenStorageKey);
+
+    try {
+      const { uuid, blockedPostID } = toOpen;
+      const { response: { blog: { name } } } = await apiFetch(`/v2/blog/${uuid}/info`);
+      navigate(`/${name}/${blockedPostID}`);
+    } catch (e) {
+      notify('Failed to open post!');
+    }
+  }
 };
 
 export const clean = async function () {

@@ -38,17 +38,17 @@ header {
   margin-bottom: 1em;
 }
 
-#posts-blocked-count {
+#notification-blocked-count {
   font-weight: bold;
 }
 
-#blocked-posts {
+#notification-blocked-posts {
   padding: 0;
   border-bottom: 1px solid rgb(var(--grey));
   margin: 0;
 }
 
-.blocked-post {
+.notification-blocked-post {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -57,7 +57,7 @@ header {
   border-top: 1px solid rgb(var(--grey));
 }
 
-.blocked-post button {
+.notification-blocked-post button {
   padding: 0;
   border: none;
 

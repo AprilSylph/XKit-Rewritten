@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XKit: Manage blocked posts</title>
+    <title>XKit: Manage posts with blocked notifications</title>
     <link rel="icon" href="/icons/128.png" type="image/png">
     <link rel="stylesheet" href="/lib/normalize.min.css">
     <link rel="stylesheet" href="index.css">
@@ -12,18 +12,17 @@
     <script src="index.js" defer></script>
   </head>
   <body>
-    <template id="blocked-post">
-      <li class="blocked-post">
+    <template id="notification-blocked-post">
+      <li class="notification-blocked-post">
         <span></span>
-        <button data-post-id="">Unblock</button>
+        <button data-post-id="">Remove</button>
       </li>
     </template>
     <main>
       <header>
-        <span id="posts-blocked-count"></span>
-        <small>Unblocking a post will immediately unhide it.</small>
+        <span id="notification-blocked-count"></span>
       </header>
-      <ul id="blocked-posts"></ul>
+      <ul id="notification-blocked-posts"></ul>
     </main>
   </body>
 </html>

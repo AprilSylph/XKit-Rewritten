@@ -11,7 +11,6 @@ import { notify } from '../util/notifications.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const uuidsStorageKey = 'notificationblock.uuids';
-const namesStorageKey = 'notificationblock.names';
 const toOpenStorageKey = 'notificationblock.toOpen';
 const meatballButtonBlockId = 'notificationblock-block';
 const meatballButtonBlockLabel = 'Block notifications';
@@ -23,7 +22,6 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 let blockedPostTargetIDs;
 let uuids = {};
-let names = {};
 
 const backgroundPopulateData = async () => {
   const idsMissingUuids = blockedPostTargetIDs.filter(id => uuids[id] === undefined).reverse();
@@ -41,15 +39,6 @@ const backgroundPopulateData = async () => {
     }
     await browser.storage.local.set({ [uuidsStorageKey]: uuids });
   }
-
-  const newNameEntries = Object.values(uuids)
-    .filter(Boolean)
-    .map(uuid => [
-      uuid,
-      userBlogs.find(({ uuid: blogUuid }) => blogUuid === uuid)?.name ?? names[uuid]
-    ]);
-  names = Object.fromEntries(newNameEntries);
-  await browser.storage.local.set({ [namesStorageKey]: names });
 };
 
 const styleElement = buildStyle();
@@ -79,7 +68,7 @@ const unburyTargetPostIds = async (notificationSelector) => {
 const processNotifications = () => inject(unburyTargetPostIds, [notificationSelector]);
 
 const onButtonClicked = async function ({ currentTarget }) {
-  const { id, rebloggedRootId, blog: { name, uuid } } = currentTarget.__timelineObjectData;
+  const { id, rebloggedRootId, blog: { uuid } } = currentTarget.__timelineObjectData;
   const rootId = rebloggedRootId || id;
   const shouldBlockNotifications = blockedPostTargetIDs.includes(rootId) === false;
 
@@ -103,8 +92,6 @@ const onButtonClicked = async function ({ currentTarget }) {
         browser.storage.local.set({ [storageKey]: blockedPostTargetIDs });
         uuids[rootId] = uuid;
         browser.storage.local.set({ [uuidsStorageKey]: uuids });
-        names[uuid] = name;
-        browser.storage.local.set({ [namesStorageKey]: names });
       }
     : () =>
         browser.storage.local.set({
@@ -141,18 +128,10 @@ const unblockPostFilter = async ({ id, rebloggedRootId }) => {
 };
 
 export const onStorageChanged = (changes, areaName) => {
-  const {
-    [storageKey]: blockedPostChanges,
-    [uuidsStorageKey]: uuidsChanges,
-    [namesStorageKey]: namesChanges
-  } = changes;
+  const { [storageKey]: blockedPostChanges, [uuidsStorageKey]: uuidsChanges } = changes;
 
   if (uuidsChanges) {
     ({ newValue: uuids } = uuidsChanges);
-  }
-
-  if (namesChanges) {
-    ({ newValue: names } = namesChanges);
   }
 
   if (blockedPostChanges) {
@@ -164,7 +143,6 @@ export const onStorageChanged = (changes, areaName) => {
 export const main = async function () {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
   ({ [uuidsStorageKey]: uuids = {} } = await browser.storage.local.get(uuidsStorageKey));
-  ({ [namesStorageKey]: names = {} } = await browser.storage.local.get(namesStorageKey));
 
   backgroundPopulateData();
 

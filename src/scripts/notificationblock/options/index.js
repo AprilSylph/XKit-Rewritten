@@ -5,7 +5,6 @@ const blockedPostTemplate = document.getElementById('notification-blocked-post')
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const uuidsStorageKey = 'notificationblock.uuids';
-const namesStorageKey = 'notificationblock.names';
 const toOpenStorageKey = 'notificationblock.toOpen';
 
 const unblockPost = async function ({ currentTarget }) {
@@ -20,7 +19,6 @@ const unblockPost = async function ({ currentTarget }) {
 const renderBlocked = async function () {
   const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
   const { [uuidsStorageKey]: uuids = {} } = await browser.storage.local.get(uuidsStorageKey);
-  const { [namesStorageKey]: names = {} } = await browser.storage.local.get(namesStorageKey);
 
   postsBlockedCount.textContent = `${blockedPostRootIDs.length} ${blockedPostRootIDs.length === 1 ? 'post' : 'posts'} with blocked notifications`;
   blockedPostList.textContent = '';
@@ -45,10 +43,6 @@ const renderBlocked = async function () {
       });
       spanElement.replaceWith(a);
       a.append(spanElement);
-
-      if (names[uuids[blockedPostID]]) {
-        spanElement.textContent = `${names[uuids[blockedPostID]]}/${blockedPostID}`;
-      }
     }
 
     blockedPostList.append(templateClone);
@@ -59,8 +53,7 @@ browser.storage.onChanged.addListener((changes, areaName) => {
   if (
     areaName === 'local' &&
     (Object.keys(changes).includes(storageKey) ||
-      Object.keys(changes).includes(uuidsStorageKey) ||
-      Object.keys(changes).includes(namesStorageKey))
+      Object.keys(changes).includes(uuidsStorageKey))
   ) {
     renderBlocked();
   }

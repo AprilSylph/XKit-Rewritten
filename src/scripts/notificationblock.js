@@ -96,10 +96,12 @@ const onButtonClicked = async function ({ currentTarget }) {
         uuids[rootId] = uuid;
         browser.storage.local.set({ [uuidsStorageKey]: uuids });
       }
-    : () =>
-        browser.storage.local.set({
-          [storageKey]: blockedPostTargetIDs.filter(blockedId => blockedId !== rootId)
-        });
+    : () => {
+        blockedPostTargetIDs = blockedPostTargetIDs.filter(blockedId => blockedId !== rootId);
+        browser.storage.local.set({ [storageKey]: blockedPostTargetIDs });
+        delete uuids[rootId];
+        browser.storage.local.set({ [uuidsStorageKey]: uuids });
+      };
 
   showModal({
     title,

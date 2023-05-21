@@ -3,11 +3,10 @@ import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.
 import { pageModifications } from '../util/mutations.js';
 import { inject } from '../util/inject.js';
 import { keyToCss } from '../util/css_map.js';
-import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
+import { showModal, hideModal, modalCancelButton, modalCompleteButton } from '../util/modals.js';
 import { dom } from '../util/dom.js';
 import { userBlogNames, userBlogs } from '../util/user.js';
 import { apiFetch, navigate } from '../util/tumblr_helpers.js';
-import { notify } from '../util/notifications.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const uuidsStorageKey = 'notificationblock.uuids';
@@ -23,21 +22,25 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 let blockedPostTargetIDs;
 let uuids = {};
 
-const backgroundPopulateData = async () => {
-  const idsMissingUuids = blockedPostTargetIDs.filter(id => uuids[id] === undefined).reverse();
-
-  for (const id of idsMissingUuids) {
-    uuids[id] = false;
-    for (const { uuid } of userBlogs) {
-      try {
-        await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
-        uuids[id] = uuid;
-        break;
-      } catch (e) {
-        await sleep(1000);
-      }
+const findUuid = async id => {
+  if (uuids[id]) return;
+  uuids[id] = false;
+  for (const { uuid } of userBlogs) {
+    try {
+      await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
+      uuids[id] = uuid;
+      break;
+    } catch (e) {
+      await sleep(500);
     }
-    await browser.storage.local.set({ [uuidsStorageKey]: uuids });
+  }
+  await browser.storage.local.set({ [uuidsStorageKey]: uuids });
+};
+
+const backgroundFindUuids = async () => {
+  const idsMissingUuids = blockedPostTargetIDs.filter(id => uuids[id] === undefined).reverse();
+  for (const id of idsMissingUuids) {
+    await findUuid(id);
   }
 };
 
@@ -144,7 +147,7 @@ export const main = async function () {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
   ({ [uuidsStorageKey]: uuids = {} } = await browser.storage.local.get(uuidsStorageKey));
 
-  backgroundPopulateData();
+  backgroundFindUuids();
 
   styleElement.textContent = buildCss();
   document.documentElement.append(styleElement);
@@ -159,11 +162,24 @@ export const main = async function () {
     browser.storage.local.remove(toOpenStorageKey);
 
     try {
-      const { uuid, blockedPostID } = toOpen;
-      const { response: { blog: { name } } } = await apiFetch(`/v2/blog/${uuid}/info`);
+      const { blockedPostID } = toOpen;
+      showModal({
+        title: 'NotificationBlock',
+        message: ['Finding post with blocked notifications. Please wait...']
+      });
+      await findUuid(blockedPostID);
+      if (!uuids[blockedPostID]) {
+        throw new Error();
+      }
+      const { response: { blog: { name } } } = await apiFetch(`/v2/blog/${uuids[blockedPostID]}/info`);
+      hideModal();
       navigate(`/${name}/${blockedPostID}`);
     } catch (e) {
-      notify('Failed to open post!');
+      showModal({
+        title: 'NotificationBlock',
+        message: ['Failed to find and open post!'],
+        buttons: [modalCompleteButton]
+      });
     }
   }
 };

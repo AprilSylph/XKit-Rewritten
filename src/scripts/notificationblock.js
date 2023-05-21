@@ -25,7 +25,7 @@ let uuids = {};
 const findUuid = async id => {
   if (uuids[id]) return;
   uuids[id] = false;
-  for (const { uuid } of userBlogs) {
+  for (const { uuid } of userBlogs.sort((a, b) => b.posts - a.posts)) {
     try {
       await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
       uuids[id] = uuid;

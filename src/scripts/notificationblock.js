@@ -72,8 +72,9 @@ const unburyTargetPostIds = async (notificationSelector) => {
 const processNotifications = () => inject(unburyTargetPostIds, [notificationSelector]);
 
 const onButtonClicked = async function ({ currentTarget }) {
-  const { id, rebloggedRootId, blog: { uuid } } = currentTarget.__timelineObjectData;
+  const { id, rebloggedRootId, blog: { uuid }, rebloggedRootUuid } = currentTarget.__timelineObjectData;
   const rootId = rebloggedRootId || id;
+  const rootUuid = rebloggedRootUuid || uuid;
   const shouldBlockNotifications = blockedPostTargetIDs.includes(rootId) === false;
 
   const title = shouldBlockNotifications
@@ -94,7 +95,7 @@ const onButtonClicked = async function ({ currentTarget }) {
     ? () => {
         blockedPostTargetIDs.push(rootId);
         browser.storage.local.set({ [storageKey]: blockedPostTargetIDs });
-        uuids[rootId] = uuid;
+        uuids[rootId] = rootUuid;
         browser.storage.local.set({ [uuidsStorageKey]: uuids });
       }
     : () => {

@@ -26,12 +26,13 @@ const findUuid = async id => {
   if (uuids[id]) return;
   uuids[id] = false;
   for (const { uuid } of userBlogs.sort((a, b) => b.posts - a.posts)) {
+    const delay = sleep(500);
     try {
       await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
       uuids[id] = uuid;
       break;
     } catch (e) {
-      await sleep(500);
+      await delay;
     }
   }
   await browser.storage.local.set({ [uuidsStorageKey]: uuids });
@@ -163,11 +164,11 @@ export const main = async function () {
   if (toOpen) {
     browser.storage.local.remove(toOpenStorageKey);
 
+    const { blockedPostID } = toOpen;
     try {
-      const { blockedPostID } = toOpen;
       showModal({
         title: 'NotificationBlock',
-        message: ['Finding post with blocked notifications. Please wait...']
+        message: [`Searching for post ${blockedPostID} on your blogs. Please wait...`]
       });
       await findUuid(blockedPostID);
       if (!uuids[blockedPostID]) {
@@ -179,7 +180,7 @@ export const main = async function () {
     } catch (e) {
       showModal({
         title: 'NotificationBlock',
-        message: ['Failed to find and open post!'],
+        message: [`Failed to find and open post ${blockedPostID}! It may not be one of your original posts.`],
         buttons: [modalCompleteButton]
       });
     }

@@ -22,10 +22,14 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 let blockedPostTargetIDs;
 let uuids = {};
 
+const userBlogsToSearch = userBlogs
+  .filter(({ posts }) => posts)
+  .sort((a, b) => b.posts - a.posts);
+
 const findUuid = async id => {
   if (uuids[id]) return;
   uuids[id] = false;
-  for (const { uuid } of userBlogs.sort((a, b) => b.posts - a.posts)) {
+  for (const { uuid } of userBlogsToSearch) {
     const delay = sleep(500);
     try {
       await apiFetch(`/v2/blog/${uuid}/posts/${id}`);

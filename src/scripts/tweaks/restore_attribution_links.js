@@ -1,5 +1,4 @@
 import { onNewPosts } from '../../util/mutations.js';
-import { filterPostElements } from '../../util/interface.js';
 import { keyToCss } from '../../util/css_map.js';
 import { timelineObject } from '../../util/react_props.js';
 
@@ -7,7 +6,7 @@ const postAttributionSelector = keyToCss('postAttribution');
 const reblogAttributionSelector = keyToCss('reblogAttribution');
 
 const processPosts = async function (postElements) {
-  filterPostElements(postElements).forEach(async postElement => {
+  postElements.forEach(async postElement => {
     const { postUrl, rebloggedFromUrl } = await timelineObject(postElement);
     const postAttribution = postElement.querySelector(postAttributionSelector);
     const postAttributionLink = postAttribution?.querySelector('a');

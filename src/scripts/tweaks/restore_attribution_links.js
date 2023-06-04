@@ -3,13 +3,11 @@ import { filterPostElements } from '../../util/interface.js';
 import { keyToCss } from '../../util/css_map.js';
 import { timelineObject } from '../../util/react_props.js';
 
-const timeline = /\/v2\/timeline\/dashboard/;
-
 const postAttributionSelector = keyToCss('postAttribution');
 const reblogAttributionSelector = keyToCss('reblogAttribution');
 
 const processPosts = async function (postElements) {
-  filterPostElements(postElements, { timeline }).forEach(async postElement => {
+  filterPostElements(postElements).forEach(async postElement => {
     const { postUrl, rebloggedFromUrl } = await timelineObject(postElement);
     const postAttribution = postElement.querySelector(postAttributionSelector);
     const postAttributionLink = postAttribution?.querySelector('a');

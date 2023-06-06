@@ -12,6 +12,11 @@
     "Separator"
   ],
   "preferences": {
+    "restore_attribution_links": {
+      "type": "checkbox",
+      "label": "Restore links to individual posts in the post header",
+      "default": false
+    },
     "slim_filtered_screens": {
       "type": "checkbox",
       "label": "Use a slim layout for filtered posts",
@@ -96,11 +101,6 @@
     "no_live": {
       "type": "checkbox",
       "label": "Hide the Tumblr Live carousel",
-      "default": false
-    },
-    "restore_attribution_links": {
-      "type": "checkbox",
-      "label": "Restore links to individual posts in the post header",
       "default": false
     }
   }

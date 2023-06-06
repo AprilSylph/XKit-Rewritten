@@ -7,8 +7,16 @@
     "background_color": "#ecc84b"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks",
-  "relatedTerms": [ "Blacklist", "Separator" ],
+  "relatedTerms": [
+    "Blacklist",
+    "Separator"
+  ],
   "preferences": {
+    "restore_attribution_links": {
+      "type": "checkbox",
+      "label": "Restore links to individual posts in the post header",
+      "default": false
+    },
     "slim_filtered_screens": {
       "type": "checkbox",
       "label": "Use a slim layout for filtered posts",

@@ -13,12 +13,6 @@ ${keyToCss('adTimelineObject', 'instreamAd', 'mrecContainer', 'nativeIponWebAd',
 }`
 );
 
-const chromiumStyleElement = buildStyle(`
-${keyToCss('timelineOptionsItemWrapper')}:not(${keyToCss('active')}):has(> a[href="/dashboard/freeform_campaign"]) {
-  display: none !important;
-}`
-);
-
 const processVideoCTAs = videoCTAs => videoCTAs
   .map(videoCTA => videoCTA.closest(listTimelineObjectInnerSelector))
   .filter(Boolean)
@@ -26,13 +20,11 @@ const processVideoCTAs = videoCTAs => videoCTAs
 
 export const main = async () => {
   document.documentElement.append(styleElement);
-  document.documentElement.append(chromiumStyleElement);
   pageModifications.register(`${listTimelineObjectInnerSelector}:first-child ${keyToCss('videoCTA', 'videoImageCTA')}`, processVideoCTAs);
 };
 
 export const clean = async () => {
   pageModifications.unregister(processVideoCTAs);
   styleElement.remove();
-  chromiumStyleElement.remove();
   $(`.${hiddenClass}`).removeClass(hiddenClass);
 };

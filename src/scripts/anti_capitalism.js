@@ -18,13 +18,19 @@ const processVideoCTAs = videoCTAs => videoCTAs
   .filter(Boolean)
   .forEach(({ classList }) => classList.add(hiddenClass));
 
+const processTimelineOptionsWrappers = wrappers => wrappers
+  .filter(wrapper => wrapper.querySelector('a[href="/dashboard/freeform_campaign"]'))
+  .forEach(({ classList }) => classList.add(hiddenClass));
+
 export const main = async () => {
   document.documentElement.append(styleElement);
   pageModifications.register(`${listTimelineObjectInnerSelector}:first-child ${keyToCss('videoCTA', 'videoImageCTA')}`, processVideoCTAs);
+  pageModifications.register(keyToCss('timelineOptionsItemWrapper'), processTimelineOptionsWrappers);
 };
 
 export const clean = async () => {
   pageModifications.unregister(processVideoCTAs);
+  pageModifications.unregister(processTimelineOptionsWrappers);
   styleElement.remove();
   $(`.${hiddenClass}`).removeClass(hiddenClass);
 };

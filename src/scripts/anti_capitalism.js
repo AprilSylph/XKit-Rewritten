@@ -8,7 +8,7 @@ const listTimelineObjectInnerSelector = keyToCss('listTimelineObjectInner');
 
 const styleElement = buildStyle(`
 .${hiddenClass},
-${keyToCss('adTimelineObject', 'instreamAd', 'mrecContainer', 'nativeIponWebAd', 'takeoverBanner')} {
+${keyToCss('adTimelineObject', 'instreamAd', 'mrecContainer', 'nativeIponWebAd', 'takeoverBanner', 'cruelSummer')} {
   display: none !important;
 }`
 );

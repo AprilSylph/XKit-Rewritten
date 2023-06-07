@@ -19,10 +19,10 @@
     "web-ext": "^7.6.2"
   },
   "dependencies": {
-    "jquery": "^3.6.4",
+    "jquery": "^3.7.0",
     "moment": "^2.29.4",
     "normalize.css": "^8.0.1",
-    "remixicon": "^3.2.0",
+    "remixicon": "^3.3.0",
     "spectrum-colorpicker": "^1.8.1",
     "webextension-polyfill": "^0.10.0"
   },

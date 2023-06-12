@@ -89,6 +89,8 @@ const sidebarItemSelector = keyToCss('sidebarItem', 'sidebarContent');
 const navSubHeaderSelector = keyToCss('navSubHeader');
 
 const addSidebarToPage = (siblingCandidates) => {
+  if (/^\/settings/.test(location.pathname)) { return; }
+
   [...sidebarItems.children]
     .filter(sidebarItem => conditions.has(sidebarItem))
     .forEach(sidebarItem => { sidebarItem.hidden = !conditions.get(sidebarItem)(); });

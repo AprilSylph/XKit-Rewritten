@@ -25,7 +25,6 @@ pageModifications.register(keyToCss('postFormButton'), addPostOptions);
 
 /**
  * Create and register a button to add to the new post form
- *
  * @param {string} id - Unique identifier for this post option
  * @param {object} options - Construction options for this post option
  * @param {string} options.symbolId - RemixIcon symbol to use

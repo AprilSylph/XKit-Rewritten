@@ -7,8 +7,9 @@ const badgeContainer = keyToCss('badgeContainer');
 const badgeImage = ':is(svg, img)';
 
 const prefix = 'xkit-badge-disabled';
-const classesToDisable = keyToClasses('tooManyBadges', 'shrinkBadges');
-const disableClassesSelector = `article ${keyToCss('tooManyBadges', 'shrinkBadges')}`;
+const keysToDisable = ['tooManyBadges', 'shrinkBadges', 'shouldStack'];
+const classesToDisable = keyToClasses(...keysToDisable);
+const disableClassesSelector = `article ${keyToCss(...keysToDisable)}`;
 
 const disableClasses = elements =>
   elements.forEach(element =>
@@ -25,34 +26,32 @@ const enableClasses = () =>
   );
 
 const styleElement = buildStyle(`
-${wrapper}:not(:hover) {
-  margin-right: 7px;
+${wrapper} {
+  width: unset !important
 }
 
 ${wrapper}:not(:hover) > ${badgeContainer} {
-  margin-right: -7px;
+  margin-right: 7px;
 }
 
 ${wrapper}:not(:hover) > ${badgeContainer} > ${badgeImage} {
+  margin-right: -7px !important;
   filter: drop-shadow(1px 0px 2px rgb(0 0 0 / 0.5));
 }
 
-${wrapper} {
+${wrapper} > ${badgeContainer} {
   isolation: isolate;
 }
 
-${wrapper} > ${badgeContainer} {
+${wrapper} > ${badgeContainer} > ${badgeImage} {
+  position: relative;
   z-index: calc(0 - var(--badges-index));
 }
 `);
 
 const transitionStyleElement = buildStyle(`
-${wrapper}, ${wrapper} > ${badgeContainer} {
-  transition: margin 0.5s ease;
-}
-
-${wrapper} > ${badgeContainer} > ${badgeImage} {
-  transition: filter 0.35s linear;
+${badgeContainer}, ${badgeContainer} > ${badgeImage} {
+  transition: margin 0.5s ease, filter 0.35s linear;
 }
 `);
 

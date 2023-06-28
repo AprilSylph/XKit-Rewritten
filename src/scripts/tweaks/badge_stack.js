@@ -25,32 +25,34 @@ const enableClasses = () =>
   );
 
 const styleElement = buildStyle(`
-${wrapper} {
-  width: unset !important
-}
-
-${wrapper}:not(:hover) > ${badgeContainer} {
+${wrapper}:not(:hover) {
   margin-right: 7px;
 }
 
+${wrapper}:not(:hover) > ${badgeContainer} {
+  margin-right: -7px;
+}
+
 ${wrapper}:not(:hover) > ${badgeContainer} > ${badgeImage} {
-  margin-right: -7px !important;
   filter: drop-shadow(1px 0px 2px rgb(0 0 0 / 0.5));
 }
 
-${wrapper} > ${badgeContainer} {
+${wrapper} {
   isolation: isolate;
 }
 
-${wrapper} > ${badgeContainer} > ${badgeImage} {
-  position: relative;
+${wrapper} > ${badgeContainer} {
   z-index: calc(0 - var(--badges-index));
 }
 `);
 
 const transitionStyleElement = buildStyle(`
-${badgeContainer}, ${badgeContainer} > ${badgeImage} {
-  transition: margin 0.5s ease, filter 0.35s linear;
+${wrapper}, ${wrapper} > ${badgeContainer} {
+  transition: margin 0.5s ease;
+}
+
+${wrapper} > ${badgeContainer} > ${badgeImage} {
+  transition: filter 0.35s linear;
 }
 `);
 

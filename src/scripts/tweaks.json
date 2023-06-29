@@ -58,6 +58,11 @@
       "default": false,
       "inherit": "tweaks.preferences.subtle_follow"
     },
+    "subtle_create_post": {
+      "type": "checkbox",
+      "label": "Make the \"create post\" button more subtle",
+      "default": false
+    },
     "hide_footer_tooltips": {
       "type": "checkbox",
       "label": "Hide control button tooltips in the post footer",

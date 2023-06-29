@@ -86,10 +86,14 @@ const desktopContainerSelector = `aside ${keyToCss('desktopContainer', 'summary'
 // Sidebar on most other desktop pages
 const sidebarItemSelector = keyToCss('sidebarItem', 'sidebarContent');
 // Mobile drawer
-const navSubHeaderSelector = keyToCss('navSubHeader');
+const navItemSelector = keyToCss('navItem');
 
-const addSidebarToPage = (siblingCandidates) => {
+const sidebarItemSelectors = [desktopContainerSelector, sidebarItemSelector, navItemSelector];
+
+const addSidebarToPage = () => {
   if (/^\/settings/.test(location.pathname)) { return; }
+
+  const siblingCandidates = sidebarItemSelectors.flatMap(selector => [...document.querySelectorAll(selector)]);
 
   [...sidebarItems.children]
     .filter(sidebarItem => conditions.has(sidebarItem))
@@ -97,17 +101,15 @@ const addSidebarToPage = (siblingCandidates) => {
 
   const target = siblingCandidates
     .filter(target => !target.matches(blogViewSelector))
-    .filter(target => !target.matches(mrecContainerSelector))[0]
-    ?.parentElement
-    ?.firstElementChild;
+    .filter(target => !target.matches(mrecContainerSelector))[0];
 
   if (!target || target === sidebarItems) return;
 
   const insertAbove = getComputedStyle(target).position === 'sticky' ||
     target.matches(desktopContainerSelector) ||
-    target.matches(navSubHeaderSelector);
+    target.matches(navItemSelector);
 
   target[insertAbove ? 'before' : 'after'](sidebarItems);
 };
 
-pageModifications.register(`${desktopContainerSelector}, ${sidebarItemSelector}, ${navSubHeaderSelector}`, addSidebarToPage);
+pageModifications.register(sidebarItemSelectors.join(', '), addSidebarToPage);

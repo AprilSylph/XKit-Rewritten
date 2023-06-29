@@ -8,6 +8,7 @@ const styleElement = buildStyle(`
     transition: none !important;
   }
   ${keyToCss('post')} ${keyToCss('stickyContainer')} > ${keyToCss('avatar')} { top: 69px !important; }
+  ${keyToCss('post')} ${keyToCss('stickyContainer')} > ${keyToCss('avatar')}${keyToCss('newDesktopLayout')} { top: 14px !important; }
 `);
 
 export const main = async () => document.documentElement.append(styleElement);

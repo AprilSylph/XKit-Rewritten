@@ -48,6 +48,11 @@ const processRightMenu = ([rightMenu]) => {
   rightMenu.before(headerBlogElement);
 };
 
+const processNavigationLinks = ([navigationLinks]) => {
+  const logoContainer = navigationLinks.querySelector(keyToCss('logoContainer'));
+  logoContainer ? logoContainer.after(headerBlogElement) : navigationLinks.prepend(headerBlogElement);
+};
+
 export const main = async function () {
   const { maxBlogs } = await getPreferences('header_blogs');
 
@@ -66,10 +71,12 @@ export const main = async function () {
 
   document.head.append(styleElement);
   pageModifications.register(`header > ${keyToCss('menuRight')}`, processRightMenu);
+  pageModifications.register(keyToCss('navigationLinks'), processNavigationLinks);
 };
 
 export const clean = async function () {
   pageModifications.unregister(processRightMenu);
+  pageModifications.unregister(processNavigationLinks);
 
   headerBlogElement.remove();
   styleElement.remove();

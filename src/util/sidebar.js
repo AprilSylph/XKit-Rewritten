@@ -86,7 +86,7 @@ const desktopContainerSelector = `aside ${keyToCss('desktopContainer', 'summary'
 // Sidebar on most other desktop pages
 const sidebarItemSelector = keyToCss('sidebarItem', 'sidebarContent');
 // Mobile drawer
-const navItemSelector = keyToCss('navItem');
+const navItemSelector = `${keyToCss('drawerContent')} ${keyToCss('navItem')}`;
 
 const sidebarItemSelectors = [desktopContainerSelector, sidebarItemSelector, navItemSelector];
 

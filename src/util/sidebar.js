@@ -88,12 +88,8 @@ const sidebarItemSelector = keyToCss('sidebarItem', 'sidebarContent');
 // Mobile drawer
 const navItemSelector = `${keyToCss('drawerContent')} ${keyToCss('navItem')}`;
 
-const sidebarItemSelectors = [desktopContainerSelector, sidebarItemSelector, navItemSelector];
-
-const addSidebarToPage = () => {
+const addSidebarToPage = (siblingCandidates) => {
   if (/^\/settings/.test(location.pathname)) { return; }
-
-  const siblingCandidates = sidebarItemSelectors.flatMap(selector => [...document.querySelectorAll(selector)]);
 
   [...sidebarItems.children]
     .filter(sidebarItem => conditions.has(sidebarItem))
@@ -112,4 +108,4 @@ const addSidebarToPage = () => {
   target[insertAbove ? 'before' : 'after'](sidebarItems);
 };
 
-pageModifications.register(sidebarItemSelectors.join(', '), addSidebarToPage);
+pageModifications.register(`${desktopContainerSelector}, ${sidebarItemSelector}, ${navItemSelector}`, addSidebarToPage);

@@ -85,6 +85,8 @@ const mrecContainerSelector = `${keyToCss('mrecContainer')} *`;
 const desktopContainerSelector = `aside ${keyToCss('desktopContainer', 'summary')}`;
 // Sidebar on most other desktop pages
 const sidebarItemSelector = keyToCss('sidebarItem', 'sidebarContent');
+// Footer beneath sidebar area
+const aboutFooterSelector = `${keyToCss('about')}${keyToCss('inSidebar')}`;
 // Mobile drawer
 const navItemSelector = `${keyToCss('drawerContent')} ${keyToCss('navigationLinks')} > ${keyToCss('navItem', 'subNav')}`;
 
@@ -103,7 +105,9 @@ const addSidebarToPage = (siblingCandidates) => {
 
   if (!target || target === sidebarItems) return;
 
-  const insertAbove = getComputedStyle(target).position === 'sticky' || target.matches(desktopContainerSelector);
+  const insertAbove = getComputedStyle(target).position === 'sticky' ||
+    target.matches(desktopContainerSelector) ||
+    target.matches(aboutFooterSelector);
 
   target[insertAbove ? 'before' : 'after'](sidebarItems);
 };
@@ -115,5 +119,5 @@ const addSidebarToDrawer = (navItems) => {
   lastNavItem?.after(sidebarItems);
 };
 
-pageModifications.register(`${desktopContainerSelector}, ${sidebarItemSelector}`, addSidebarToPage);
+pageModifications.register(`${desktopContainerSelector}, ${sidebarItemSelector}, ${aboutFooterSelector}`, addSidebarToPage);
 pageModifications.register(navItemSelector, addSidebarToDrawer);

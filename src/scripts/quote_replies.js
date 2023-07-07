@@ -16,7 +16,7 @@ const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
 
 const activitySelector = `${keyToCss('notification')} > ${keyToCss('activity')}`;
 
-const activityPageSelector = `section${keyToCss('notifications')} > ${keyToCss('notification')}`;
+const activityPageSelector = `section${keyToCss('notifications')} ${keyToCss('notification')}`;
 const dropdownSelector = `${keyToCss('activityPopover')} > [role="tabpanel"] ${keyToCss('notification')}`;
 
 let originalPostTag;

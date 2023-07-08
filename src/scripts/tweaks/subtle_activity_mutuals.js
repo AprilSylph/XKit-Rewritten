@@ -4,7 +4,7 @@ import { buildStyle } from '../../util/interface.js';
 const styleElement = buildStyle(`
 ${keyToCss('activity')} ${keyToCss('generalLabelContainer')} {
   color: RGB(var(--black));
-  background-color: RGB(var(--black), 0.07);
+  background-color: RGBA(var(--black), 0.07);
 }
 `);
 

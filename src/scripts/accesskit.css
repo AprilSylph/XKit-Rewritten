@@ -22,6 +22,10 @@
   font-size: 0.6rem;
 }
 
+.xkit-paused-gif-label.verymini {
+  font-size: 0.3rem;
+}
+
 .xkit-paused-gif {
   position: absolute;
   visibility: visible;

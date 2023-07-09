@@ -18,9 +18,11 @@ const pauseGif = function (gifElement) {
     canvas.getContext('2d').drawImage(image, 0, 0);
 
     const gifLabel = document.createElement('p');
-    gifLabel.className = gifElement.clientWidth < 150
-      ? 'xkit-paused-gif-label mini'
-      : 'xkit-paused-gif-label';
+    gifLabel.className = gifElement.clientWidth < 30
+      ? 'xkit-paused-gif-label verymini'
+      : gifElement.clientWidth < 150
+        ? 'xkit-paused-gif-label mini'
+        : 'xkit-paused-gif-label';
 
     gifElement.parentNode.append(canvas, gifLabel);
   };

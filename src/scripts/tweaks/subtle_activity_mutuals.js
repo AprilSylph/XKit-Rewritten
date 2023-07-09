@@ -9,7 +9,6 @@ const styleElement = buildStyle(`
 ${keyToCss('generalLabelContainer')} > .${spanClass} {
   display: inline-block;
   overflow-x: clip;
-  width: calc(100% - 16px);
 }
 
 a:not(:hover) ${keyToCss('generalLabelContainer')} > svg {
@@ -17,7 +16,7 @@ a:not(:hover) ${keyToCss('generalLabelContainer')} > svg {
 }
 
 a:not(:hover) ${keyToCss('generalLabelContainer')} > .${spanClass} {
-   width: 0;
+   width: 0 !important;
 }
 `);
 
@@ -31,8 +30,11 @@ const processLabels = labels => labels.forEach(label => {
   const textNode = label.firstChild;
   if (textNode.nodeName !== '#text') return;
 
-  const span = dom('span', { class: spanClass }, null, [textNode.textContent]);
+  const span = dom('span', null, null, [textNode.textContent]);
   label.replaceChild(span, textNode);
+
+  span.style.width = `${span.getBoundingClientRect().width}px`;
+  span.classList.add(spanClass);
 });
 
 const waitForRender = () =>

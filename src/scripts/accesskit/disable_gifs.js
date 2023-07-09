@@ -78,7 +78,7 @@ const processRows = function (rowsElements) {
 export const main = async function () {
   document.body.classList.add(className);
   const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+    :is(figure, ${keyToCss('tagImage', 'takeoverBanner', 'headerBanner')}) :is(img[srcset*=".gif"], img[src*=".gif"]):not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 

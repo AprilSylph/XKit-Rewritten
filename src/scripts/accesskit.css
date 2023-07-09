@@ -25,6 +25,11 @@
   background-color: rgb(var(--white));
 }
 
+.xkit-paused-gif.xkit-paused-gif.xkit-paused-gif {
+  left: 0;
+  height: unset;
+}
+
 *:hover > .xkit-paused-gif,
 *:hover > .xkit-paused-gif-label,
 .xkit-paused-gif-container:hover .xkit-paused-gif,

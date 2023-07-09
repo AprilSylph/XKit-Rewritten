@@ -58,6 +58,11 @@
       "default": false,
       "inherit": "tweaks.preferences.subtle_follow"
     },
+    "subtle_activity_mutuals": {
+      "type": "checkbox",
+      "label": "Make following/mutuals indicators on notifications more subtle",
+      "default": false
+    },
     "hide_footer_tooltips": {
       "type": "checkbox",
       "label": "Hide control button tooltips in the post footer",

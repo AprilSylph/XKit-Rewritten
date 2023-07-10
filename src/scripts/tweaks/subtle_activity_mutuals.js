@@ -3,26 +3,32 @@ import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { dom } from '../../util/dom.js';
 
+const labelClass = 'xkit-tweaks-subtle-activity';
 const spanClass = 'xkit-tweaks-subtle-activity-span';
 
 const styleElement = buildStyle(`
-${keyToCss('generalLabelContainer')} > .${spanClass} {
+.${spanClass} {
   display: inline-block;
   overflow-x: clip;
+
+  width: var(--rendered-width);
 }
 
-a:not(:hover) ${keyToCss('generalLabelContainer')} > svg {
+a:not(:hover) .${spanClass} {
+  width: 0;
+}
+
+a:not(:hover) .${labelClass} > svg {
   margin-left: 0;
-}
-
-a:not(:hover) ${keyToCss('generalLabelContainer')} > .${spanClass} {
-   width: 0 !important;
 }
 `);
 
 const transitionStyleElement = buildStyle(`
-${keyToCss('generalLabelContainer')} > svg, .${spanClass} {
-  transition: width 0.5s ease, margin 0.5s ease;
+.${spanClass} {
+  transition: width 0.5s ease;
+}
+.${labelClass} > svg {
+  transition: margin 0.5s ease;
 }
 `);
 
@@ -30,10 +36,12 @@ const processLabels = labels => labels.forEach(label => {
   const textNode = label.firstChild;
   if (textNode.nodeName !== '#text') return;
 
+  label.classList.add(labelClass);
+
   const span = dom('span', null, null, [textNode.textContent]);
   label.replaceChild(span, textNode);
 
-  span.style.width = `${span.getBoundingClientRect().width}px`;
+  span.style.setProperty('--rendered-width', `${span.getBoundingClientRect().width}px`);
   span.classList.add(spanClass);
 });
 
@@ -51,6 +59,8 @@ export const clean = async function () {
   pageModifications.unregister(processLabels);
   styleElement.remove();
   transitionStyleElement.remove();
+
+  $(`.${labelClass}`).removeClass(labelClass);
 
   [...document.querySelectorAll(`.${spanClass}`)].forEach(span => {
     const textNode = document.createTextNode(span.textContent);

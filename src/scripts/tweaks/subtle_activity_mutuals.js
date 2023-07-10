@@ -59,7 +59,6 @@ export const clean = async function () {
   styleElement.remove();
   transitionStyleElement.remove();
 
-
   [...document.querySelectorAll(`.${spanClass}`)].forEach(span => {
     const textNode = document.createTextNode(span.textContent);
     span.parentNode.replaceChild(textNode, span);

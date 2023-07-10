@@ -26,10 +26,10 @@ a:not(:hover) ${labelSelector} > svg {
 
 const transitionStyleElement = buildStyle(`
 .${spanClass} {
-  transition: width 0.5s ease;
+  transition: width 0.2s ease;
 }
 ${labelSelector} > svg {
-  transition: margin 0.5s ease;
+  transition: margin 0.2s ease;
 }
 `);
 

@@ -105,7 +105,7 @@
     },
     "following_tab": {
       "type": "checkbox",
-      "label": "Force the \"Following\" dashboard tab to be the default",
+      "label": "Force the default dashboard tab to \"Following\"",
       "default": false
     }
   }

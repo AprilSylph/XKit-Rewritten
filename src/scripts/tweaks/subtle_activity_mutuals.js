@@ -3,7 +3,8 @@ import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { dom } from '../../util/dom.js';
 
-const labelClass = 'xkit-tweaks-subtle-activity';
+const labelSelector = keyToCss('generalLabelContainer');
+
 const spanClass = 'xkit-tweaks-subtle-activity-span';
 
 const styleElement = buildStyle(`
@@ -18,7 +19,7 @@ a:not(:hover) .${spanClass} {
   width: 0;
 }
 
-a:not(:hover) .${labelClass} > svg {
+a:not(:hover) ${labelSelector} > svg {
   margin-left: 0;
 }
 `);
@@ -27,7 +28,7 @@ const transitionStyleElement = buildStyle(`
 .${spanClass} {
   transition: width 0.5s ease;
 }
-.${labelClass} > svg {
+${labelSelector} > svg {
   transition: margin 0.5s ease;
 }
 `);
@@ -35,8 +36,6 @@ const transitionStyleElement = buildStyle(`
 const processLabels = labels => labels.forEach(label => {
   const textNode = label.firstChild;
   if (textNode.nodeName !== '#text') return;
-
-  label.classList.add(labelClass);
 
   const span = dom('span', null, null, [textNode.textContent]);
   label.replaceChild(span, textNode);
@@ -49,7 +48,7 @@ const waitForRender = () =>
   new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
 export const main = async function () {
-  pageModifications.register(keyToCss('generalLabelContainer'), processLabels);
+  pageModifications.register(labelSelector, processLabels);
 
   document.documentElement.append(styleElement);
   waitForRender().then(() => document.documentElement.append(transitionStyleElement));
@@ -60,7 +59,6 @@ export const clean = async function () {
   styleElement.remove();
   transitionStyleElement.remove();
 
-  $(`.${labelClass}`).removeClass(labelClass);
 
   [...document.querySelectorAll(`.${spanClass}`)].forEach(span => {
     const textNode = document.createTextNode(span.textContent);

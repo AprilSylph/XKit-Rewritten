@@ -4,7 +4,7 @@ import { timelineObject } from '../../util/react_props.js';
 import { navigate } from '../../util/tumblr_helpers.js';
 
 const postAttributionLinkSelector = `${keyToCss('postAttribution')} a`;
-const reblogAttributionLinkSelector = `${keyToCss('reblogAttribution')} a`;
+const reblogAttributionLinkSelector = `${keyToCss('rebloggedFromName')} a`;
 
 const onLinkClick = event => {
   event.stopPropagation();

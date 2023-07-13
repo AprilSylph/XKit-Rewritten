@@ -41,11 +41,6 @@
   color: rgb(var(--black));
 }
 
-body.accesskit-blue-links article a[target="_blank"][href^="https://t.umblr.com/redirect"],
-body.accesskit-blue-links article a[target="_blank"][href^="https://href.li/"] {
-  color: rgb(var(--accent));
-}
-
 body.accesskit-no-user-colours article span[style^="color"] {
   color: inherit !important;
 }

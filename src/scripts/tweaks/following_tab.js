@@ -4,8 +4,8 @@ const attemptRedirect = () => {
   if (
     ['/dashboard', '/'].includes(location.pathname) &&
     document
-      .querySelector('main')
-      ?.querySelector(':scope > [data-timeline^="/v2/tabs/for_you"]')
+      .querySelector('main > [data-timeline]')
+      ?.matches('[data-timeline^="/v2/tabs/for_you"]')
   ) {
     navigate('/dashboard/following');
   }

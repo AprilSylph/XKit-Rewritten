@@ -3,7 +3,7 @@ import { buildStyle } from '../../util/interface.js';
 
 const styleElement = buildStyle(`
 article ${keyToCss('textBlock')} a[target="_blank"] {
-  color: var(--color-primary-link);
+  color: rgba(var(--accent));
 }
 `);
 

@@ -3,7 +3,9 @@ import { navigate } from '../../util/tumblr_helpers.js';
 const attemptRedirect = () => {
   if (
     ['/dashboard', '/'].includes(location.pathname) &&
-    document.querySelector('main > [data-timeline^="/v2/tabs/for_you"]')
+    document
+      .querySelector('main')
+      ?.querySelector(':scope > [data-timeline^="/v2/tabs/for_you"]')
   ) {
     navigate('/dashboard/following');
   }

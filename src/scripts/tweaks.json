@@ -93,6 +93,11 @@
       "label": "Hide the activity notification badge",
       "default": false
     },
+    "hide_following_notification_badge": {
+      "type": "checkbox",
+      "label": "Hide the home/following notification badge",
+      "default": false
+    },
     "no_where_were_we": {
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",

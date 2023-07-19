@@ -5,10 +5,6 @@ import { translate } from '../../util/language_data.js';
 const followingHomeButton = `:is(li[title="${translate('Home')}"], button[aria-label="${translate('Home')}"], a[href="/dashboard/following"])`;
 
 const styleElement = buildStyle(`
-${followingHomeButton} {
-  outline: 1px solid red;
-  outline-offset: -1px;
-}
 ${followingHomeButton} ${keyToCss('notificationBadge')} {
   display: none;
 }

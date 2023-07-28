@@ -96,12 +96,18 @@ const addButtonToPage = async function ([scrollToTopButton]) {
   document.documentElement.addEventListener('keydown', onKeyDown);
 };
 
+const modalButtonColorObserver = new MutationObserver(([mutation]) => {
+  modalScrollToBottomButton.style = mutation.target.style.cssText;
+});
+
 const addModalButtonToPage = async function ([modalScrollToTopButton]) {
   modalScrollToBottomButton ??= cloneButton(modalScrollToTopButton);
 
   modalScrollToTopButton.after(modalScrollToBottomButton);
   modalScrollToTopButton.addEventListener('click', stopScrolling);
   document.documentElement.addEventListener('keydown', onKeyDown);
+
+  modalButtonColorObserver.observe(modalScrollToTopButton, { attributeFilter: ['style'] });
 };
 
 export const main = async function () {
@@ -113,6 +119,7 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(addButtonToPage);
+  modalButtonColorObserver.disconnect();
   stopScrolling();
   scrollToBottomButton?.remove();
   styleElement.remove();

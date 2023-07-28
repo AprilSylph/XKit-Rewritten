@@ -12,7 +12,7 @@ const processFrames = frames =>
 
 export const main = async function () {
   pageModifications.register(
-    `[data-timeline="/v2/timeline/dashboard"] :is(iframe[src^="https://api.gateway.tumblr-live.com/"], ${keyToCss('liveMarqueeContainer')})`,
+    `[data-timeline="/v2/timeline/dashboard"] :is(iframe[src^="https://api.gateway.tumblr-live.com/"], ${keyToCss('liveMarqueeContainer', 'liveMarqueeTitle')})`,
     processFrames
   );
   document.documentElement.append(styleElement);

@@ -22,6 +22,15 @@ let active = false;
 let scrollElement;
 
 const styleElement = buildStyle(`
+.${buttonClass} {
+  margin-top: 0.5ch;
+  transform: rotate(180deg);
+}
+
+${keyToCss('drawer')} .${buttonClass} {
+  margin-top: 1ch;
+}
+
 .${activeClass} svg use {
   --icon-color-primary: rgb(var(--yellow));
 }
@@ -75,8 +84,6 @@ const addButtonToPage = async function ([scrollToTopButton]) {
     scrollToBottomButton = scrollToTopButton.cloneNode(true);
     hiddenClasses.forEach(className => scrollToBottomButton.classList.remove(className));
     scrollToBottomButton.removeAttribute('aria-label');
-    scrollToBottomButton.style.marginTop = '0.5ch';
-    scrollToBottomButton.style.transform = 'rotate(180deg)';
     scrollToBottomButton.addEventListener('click', onClick);
     scrollToBottomButton.classList.add(buttonClass);
 
@@ -95,8 +102,6 @@ const addModalButtonToPage = async function ([modalScrollToTopButton]) {
     modalScrollToBottomButton = modalScrollToTopButton.cloneNode(true);
     hiddenClasses.forEach(className => modalScrollToBottomButton.classList.remove(className));
     modalScrollToBottomButton.removeAttribute('aria-label');
-    modalScrollToBottomButton.style.marginTop = '1ch';
-    modalScrollToBottomButton.style.transform = 'rotate(180deg)';
     modalScrollToBottomButton.addEventListener('click', onClick);
     modalScrollToBottomButton.classList.add(buttonClass);
 

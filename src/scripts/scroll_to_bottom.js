@@ -77,18 +77,19 @@ const stopScrolling = () => {
 const onClick = () => active ? stopScrolling() : startScrolling();
 const onKeyDown = ({ key }) => key === '.' && stopScrolling();
 
+const cloneButton = target => {
+  const clonedButton = target.cloneNode(true);
+  keyToClasses('hidden').forEach(className => clonedButton.classList.remove(className));
+  clonedButton.removeAttribute('aria-label');
+  clonedButton.addEventListener('click', onClick);
+  clonedButton.classList.add(buttonClass);
+
+  clonedButton.classList[active ? 'add' : 'remove'](activeClass);
+  return clonedButton;
+};
+
 const addButtonToPage = async function ([scrollToTopButton]) {
-  if (!scrollToBottomButton) {
-    const hiddenClasses = keyToClasses('hidden');
-
-    scrollToBottomButton = scrollToTopButton.cloneNode(true);
-    hiddenClasses.forEach(className => scrollToBottomButton.classList.remove(className));
-    scrollToBottomButton.removeAttribute('aria-label');
-    scrollToBottomButton.addEventListener('click', onClick);
-    scrollToBottomButton.classList.add(buttonClass);
-
-    scrollToBottomButton.classList[active ? 'add' : 'remove'](activeClass);
-  }
+  scrollToBottomButton ??= cloneButton(scrollToTopButton);
 
   scrollToTopButton.after(scrollToBottomButton);
   scrollToTopButton.addEventListener('click', stopScrolling);
@@ -96,17 +97,7 @@ const addButtonToPage = async function ([scrollToTopButton]) {
 };
 
 const addModalButtonToPage = async function ([modalScrollToTopButton]) {
-  if (!modalScrollToBottomButton) {
-    const hiddenClasses = keyToClasses('hidden');
-
-    modalScrollToBottomButton = modalScrollToTopButton.cloneNode(true);
-    hiddenClasses.forEach(className => modalScrollToBottomButton.classList.remove(className));
-    modalScrollToBottomButton.removeAttribute('aria-label');
-    modalScrollToBottomButton.addEventListener('click', onClick);
-    modalScrollToBottomButton.classList.add(buttonClass);
-
-    modalScrollToBottomButton.classList[active ? 'add' : 'remove'](activeClass);
-  }
+  modalScrollToBottomButton ??= cloneButton(modalScrollToTopButton);
 
   modalScrollToTopButton.after(modalScrollToBottomButton);
   modalScrollToTopButton.addEventListener('click', stopScrolling);

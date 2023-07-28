@@ -93,7 +93,6 @@ const addButtonToPage = async function ([scrollToTopButton]) {
 
   scrollToTopButton.after(scrollToBottomButton);
   scrollToTopButton.addEventListener('click', stopScrolling);
-  document.documentElement.addEventListener('keydown', onKeyDown);
 };
 
 const modalButtonColorObserver = new MutationObserver(([mutation]) => {
@@ -105,7 +104,6 @@ const addModalButtonToPage = async function ([modalScrollToTopButton]) {
 
   modalScrollToTopButton.after(modalScrollToBottomButton);
   modalScrollToTopButton.addEventListener('click', stopScrolling);
-  document.documentElement.addEventListener('keydown', onKeyDown);
 
   modalButtonColorObserver.observe(modalScrollToTopButton, { attributeFilter: ['style'] });
 };
@@ -113,6 +111,7 @@ const addModalButtonToPage = async function ([modalScrollToTopButton]) {
 export const main = async function () {
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
   pageModifications.register(`button[aria-label="${translate('Back to top')}"]`, addModalButtonToPage);
+  document.documentElement.addEventListener('keydown', onKeyDown);
 
   document.documentElement.append(styleElement);
 };

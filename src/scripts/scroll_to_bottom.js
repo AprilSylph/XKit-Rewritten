@@ -122,5 +122,6 @@ export const clean = async function () {
   modalButtonColorObserver.disconnect();
   stopScrolling();
   scrollToBottomButton?.remove();
+  modalScrollToBottomButton?.remove();
   styleElement.remove();
 };

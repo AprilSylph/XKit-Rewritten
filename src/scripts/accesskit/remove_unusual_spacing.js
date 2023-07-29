@@ -7,11 +7,11 @@ import { keyToCss } from '../../util/css_map.js';
 import { buildStyle, postSelector } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
-const oldTextClass = 'xkit-accesskit-unusual-spacing';
-const newTextClass = 'xkit-accesskit-removed-unusual-spacing';
+const oldTextClass = 'accesskit-unusual-spacing';
+const newTextClass = 'accesskit-removed-unusual-spacing';
 
-const enableButtonClass = 'xkit-multiple-spaces-enable-button';
-const disableButtonClass = 'xkit-multiple-spaces-disable-button';
+const enableButtonClass = 'accesskit-unusual-spacing-enable-button';
+const disableButtonClass = 'accesskit-unusual-spacing-disable-button';
 
 const enableButtonTemplate = createControlButtonTemplate(
   'ri-contract-left-right-fill',
@@ -23,21 +23,17 @@ const disableButtonTemplate = createControlButtonTemplate(
 );
 
 const styleElement = buildStyle(`
-.${newTextClass} {
-  white-space: pre-line;
-}
-
 .${oldTextClass}:first-child + .${newTextClass} {
   margin-top: 8px;
 }
 
-[data-remove-multiple-spaces="on"] .${oldTextClass},
-[data-remove-multiple-spaces="off"] .${newTextClass}  {
+[data-remove-unusual-spaces="on"] .${oldTextClass},
+[data-remove-unusual-spaces="off"] .${newTextClass}  {
   display: none;
 }
 
-[data-remove-multiple-spaces="on"] .${enableButtonClass},
-[data-remove-multiple-spaces="off"] .${disableButtonClass} {
+[data-remove-unusual-spaces="on"] .${enableButtonClass},
+[data-remove-unusual-spaces="off"] .${disableButtonClass} {
   display: none;
 }
 .${disableButtonClass} svg {
@@ -45,8 +41,8 @@ const styleElement = buildStyle(`
 }
 
 /* temp */
-[data-remove-multiple-spaces="on"] .${oldTextClass}, [data-remove-multiple-spaces="off"] .${newTextClass}  { background: rgba(255, 0, 0, 0.05); }
-[data-remove-multiple-spaces="on"] .${newTextClass}, [data-remove-multiple-spaces="off"] .${oldTextClass}  { background: rgba(0, 255, 0, 0.05); }
+[data-remove-unusual-spaces="on"] .${oldTextClass}, [data-remove-unusual-spaces="off"] .${newTextClass}  { background: rgba(255, 0, 0, 0.05); }
+[data-remove-unusual-spaces="on"] .${newTextClass}, [data-remove-unusual-spaces="off"] .${oldTextClass}  { background: rgba(0, 255, 0, 0.05); }
 `);
 
 /*
@@ -69,8 +65,8 @@ const styleElement = buildStyle(`
 \ufeff        Zero Width No-Break Space (BOM, ZWNBSP)
 */
 
-const hasMultipleSpaceRegex = /[^\S\r\n\u2028\u2029]{2,}/;
-const unusualSpaceRegex = /[^ \S\r\n\u2028\u2029]/g;
+const spaceWithinSentenceRegex = /(?<=\w)[^\S\r\n\u2028\u2029]{2,}/gm;
+const spaceRegex = /[^\S\r\n\u2028\u2029]{2,}/gm;
 
 const addButtons = postElement => {
   const { dataset } = postElement;
@@ -81,12 +77,12 @@ const addButtons = postElement => {
 
   const disableControlButton = cloneControlButton(disableButtonTemplate, {
     click: () => {
-      dataset.removeMultipleSpaces = 'off';
+      dataset.removeUnusualSpaces = 'off';
     }
   });
   const enableControlButton = cloneControlButton(enableButtonTemplate, {
     click: () => {
-      dataset.removeMultipleSpaces = 'on';
+      dataset.removeUnusualSpaces = 'on';
     }
   });
 
@@ -95,34 +91,73 @@ const addButtons = postElement => {
 
 const processContainers = containers =>
   containers.forEach(container => {
-    let edited = false;
-    [...container.querySelectorAll(keyToCss('textBlock'))].forEach(textBlock => {
-      const text = textBlock.innerText;
-      if (hasMultipleSpaceRegex.test(text)) {
-        edited = true;
+    let spaceWithinSentenceCount = 0;
 
-        const newTextBlock = textBlock.cloneNode(true);
-        textBlock.after(newTextBlock);
+    const textBlocksToProcess = [...container.querySelectorAll(keyToCss('textBlock'))].filter(
+      textBlock => {
+        const count = textBlock.innerText.match(spaceWithinSentenceRegex)?.length ?? 0;
+        spaceWithinSentenceCount += count;
+        return count;
+      }
+    );
 
-        textBlock.classList.add(oldTextClass);
-        newTextBlock.classList.add(newTextClass);
+    if (spaceWithinSentenceCount < 5) return;
 
-        const nodeIterator = document.createTreeWalker(newTextBlock, NodeFilter.SHOW_TEXT);
-        let textNode;
-        while ((textNode = nodeIterator.nextNode())) {
-          textNode.nodeValue = textNode.nodeValue.replaceAll(unusualSpaceRegex, ' ');
-        }
+    textBlocksToProcess.forEach(textBlock => {
+      const newTextBlock = textBlock.cloneNode(true);
+      newTextBlock.normalize();
+      textBlock.after(newTextBlock);
+
+      textBlock.classList.add(oldTextClass);
+      newTextBlock.classList.add(newTextClass);
+
+      const nodeIterator = document.createTreeWalker(newTextBlock, NodeFilter.SHOW_TEXT);
+      let textNode;
+      while ((textNode = nodeIterator.nextNode())) {
+        const keepLeadingWhitespace =
+          !textNode.previousSibling &&
+          textNode.parentElement &&
+          getComputedStyle(textNode.parentElement).display !== 'inline';
+
+        console.log(
+          keepLeadingWhitespace,
+          getComputedStyle(textNode.parentElement).display,
+          textNode.nodeValue
+        );
+
+        const fragments = textNode.nodeValue.split('\n');
+        console.log(fragments);
+
+        fragments.forEach((value, index) => {
+          fragments[index] = value.replace(
+            index !== 0 || keepLeadingWhitespace ? /(^\s*)(.*)/gm : /()(.*)/gm,
+            (match, preservedWhitespace, rest) => {
+              console.log({ preservedWhitespace, rest });
+              return `${preservedWhitespace}${rest.replaceAll(spaceRegex, ' ')}`;
+            }
+          );
+        });
+
+        console.log(fragments);
+
+        textNode.nodeValue = fragments.join('\n');
+
+        // textNode.nodeValue = textNode.nodeValue.replace(
+        //   keepLeadingWhitespace ? /(^\s*)(.*)/gm : /()(.*)/gm,
+        //   (match, preservedWhitespace, rest) => {
+        //     console.log('preservedWhitespace', preservedWhitespace, 'rest', rest);
+        //     return `${preservedWhitespace}${rest.replaceAll(spaceRegex, ' ')}`;
+        //   }
+        // );
       }
     });
 
-    if (!edited) return;
-
     const postElement = container.closest(postSelector);
     if (postElement) {
-      postElement.dataset.removeMultipleSpaces = 'on';
+      postElement.dataset.removeUnusualSpaces = 'on';
       addButtons(postElement);
     } else {
-      container.dataset.removeMultipleSpaces = 'on';
+      container.dataset.removeUnusualSpaces = 'on';
     }
   });
 

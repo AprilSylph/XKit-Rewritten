@@ -108,7 +108,7 @@ const processPostContainers = postContainers =>
         }
       );
 
-      if (gapWithinSentenceCount < 5) return;
+      if (gapWithinSentenceCount < 3) return;
 
       postEdited = true;
 
@@ -156,4 +156,5 @@ export const clean = async () => {
   styleElement.remove();
   $(`.${oldTextClass}`).removeClass(oldTextClass);
   $(`.${newTextClass}, .${enableButtonClass}, .${disableButtonClass}`).remove();
+  $('[data-remove-unusual-spacing]').removeAttr('data-remove-unusual-spacing');
 };

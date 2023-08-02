@@ -14,8 +14,8 @@ const styleElement = buildStyle(`
     bottom: 5px;
     right: 0px;
 
-    padding: 12px 48px 12px 12px;
-    border-radius: 24px;
+    padding: 23px 46px 23px 12px;
+    border-radius: 23px;
 
     background-color: rgba(var(--black));
     color: rgb(var(--white));
@@ -23,6 +23,7 @@ const styleElement = buildStyle(`
     content: "Add a description! ->";
     font-size: var(--base-font-size);
     font-weight: 500;
+    line-height: 0;
   }
 
   figure[data-no-alt-text] ${keyToCss('imageOptionsWrapper')} {

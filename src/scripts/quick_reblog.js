@@ -294,6 +294,22 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
   browser.storage.local.set({ [rememberedBlogStorageKey]: rememberedBlogs });
 };
 
+/**
+ * Chromium passes a full PointerEvent here; Firefox passes a MouseEvent.
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/contextmenu_event
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/mozInputSource
+ */
+const MOZ_SOURCE_TOUCH = 5;
+
+const preventLongPressMenu = ({ originalEvent: event }) => {
+  const isTouchEvent = event.pointerType === 'touch';
+  const firefoxIsTouchEvent = event.mozInputSource === MOZ_SOURCE_TOUCH;
+
+  if (isTouchEvent || firefoxIsTouchEvent) {
+    event.preventDefault();
+  }
+};
+
 export const main = async function () {
   ({
     popupPosition,
@@ -341,6 +357,7 @@ export const main = async function () {
   tagsInput.hidden = !showTagsInput;
 
   $(document.body).on('mouseenter', reblogButtonSelector, showPopupOnHover);
+  $(document.body).on('contextmenu', reblogButtonSelector, preventLongPressMenu);
 
   if (quickTagsIntegration) {
     browser.storage.onChanged.addListener(updateQuickTags);
@@ -354,6 +371,7 @@ export const main = async function () {
 
 export const clean = async function () {
   $(document.body).off('mouseenter', reblogButtonSelector, showPopupOnHover);
+  $(document.body).off('contextmenu', reblogButtonSelector, preventLongPressMenu);
   popupElement.remove();
 
   blogSelector.removeEventListener('change', updateRememberedBlog);

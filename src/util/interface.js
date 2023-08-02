@@ -6,7 +6,7 @@ export const blogViewSelector = '[style*="--blog-title-color"] *';
 /**
  * @typedef {object} PostFilterOptions
  * @property {string} [excludeClass] - Classname to exclude and add
- * @property {RegExp} [timeline] - Filter results to matching [data-timeline] children
+ * @property {RegExp|string} [timeline] - Filter results to matching [data-timeline] children
  * @property {boolean} [noBlogView] - Whether to exclude posts in the blog view modal
  * @property {boolean} [includeFiltered] - Whether to include filtered posts
  */
@@ -21,6 +21,8 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
 
   if (timeline instanceof RegExp) {
     postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]')?.dataset.timeline));
+  } else if (timeline) {
+    postElements = postElements.filter(postElement => timeline === postElement.closest('[data-timeline]')?.dataset.timeline);
   }
 
   if (noBlogView) {
@@ -53,7 +55,6 @@ export const buildStyle = (css = '') => dom('style', { class: 'xkit' }, null, [c
 
 /**
  * Determine a post's legacy type
- *
  * @param {object} post - Destructured into content and layout
  * @param {Array} [post.trail] - Full post trail
  * @param {Array} [post.content] - Post content array

@@ -9,7 +9,6 @@ export const pageModifications = Object.freeze({
 
   /**
    * Register a page modification
-   *
    * @param {string} selector - CSS selector for elements to target
    * @param {Function} modifierFunction - Function to handle matching elements (accepts one Element[] argument)
    */
@@ -22,7 +21,6 @@ export const pageModifications = Object.freeze({
 
   /**
    * Unregister a page modification
-   *
    * @param {Function} modifierFunction - Previously-registered function to remove
    */
   unregister (modifierFunction) {
@@ -31,7 +29,6 @@ export const pageModifications = Object.freeze({
 
   /**
    * Run a page modification on all existing matching elements
-   *
    * @param {Function} modifierFunction - Previously-registered function to run
    */
   trigger (modifierFunction) {

@@ -48,7 +48,6 @@ export const apiFetch = async function (...args) {
 
 /**
  * Create an NPF edit request body.
- *
  * @see https://github.com/tumblr/docs/blob/master/api.md#postspost-id---editing-a-post-neue-post-format
  * @see https://github.com/tumblr/docs/blob/master/api.md#posts---createreblog-a-post-neue-post-format
  * @param {object} postData - camelCased /posts/{post-id} GET request response JSON
@@ -68,8 +67,10 @@ export const createEditRequestBody = postData => {
     interactabilityReblog,
 
     canBeTipped,
-    hasCommunityLabel,
-    communityLabelCategories
+    communityLabels: {
+      hasCommunityLabel,
+      categories: communityLabelCategories
+    }
   } = postData;
 
   return {

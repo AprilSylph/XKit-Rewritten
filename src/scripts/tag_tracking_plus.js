@@ -1,4 +1,4 @@
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, onClickNavigate } from '../util/tumblr_helpers.js';
 import { filterPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { keyToCss } from '../util/css_map.js';
@@ -15,8 +15,7 @@ const includeFiltered = true;
 const tagLinkSelector = `${keyToCss('searchResult')} h3 ~ a${keyToCss('typeaheadRow')}[href^="/tagged/"]`;
 const tagTextSelector = keyToCss('tagText');
 
-const trackedTagsData = await apiFetch('/v2/user/tags') ?? {};
-const trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
+let trackedTags;
 const unreadCounts = new Map();
 
 let sidebarItem;
@@ -34,7 +33,7 @@ const refreshCount = async function (tag) {
       }
     }
   } = await apiFetch(
-    `/v2/hubs/${tag}/timeline`,
+    `/v2/hubs/${encodeURIComponent(tag)}/timeline`,
     { queryParams: { limit: 20, sort: 'recent' } }
   );
 
@@ -58,13 +57,32 @@ const refreshCount = async function (tag) {
   const unreadCountString = `${unreadCount}${showPlus ? '+' : ''}`;
 
   [document, ...(!sidebarItem || document.contains(sidebarItem) ? [] : [sidebarItem])]
-    .flatMap(node => [...node.querySelectorAll(`[data-count-for="#${tag}"]`)])
+    .flatMap(node =>
+      [...node.querySelectorAll('[data-count-for]')].filter(
+        ({ dataset: { countFor } }) => countFor === `#${tag}`
+      )
+    )
     .filter((value, index, array) => array.indexOf(value) === index)
     .forEach(unreadCountElement => {
       unreadCountElement.textContent = unreadCountString;
+      if (unreadCountElement.closest('li')) {
+        unreadCountElement.closest('li').dataset.new = unreadCountString !== '0';
+      }
     });
 
   unreadCounts.set(tag, unreadCountString);
+  updateSidebarStatus();
+};
+
+const updateSidebarStatus = () => {
+  if (sidebarItem) {
+    sidebarItem.dataset.loading = [...unreadCounts.values()].some(
+      unreadCountString => unreadCountString === undefined
+    );
+    sidebarItem.dataset.hasNew = [...unreadCounts.values()].some(
+      unreadCountString => unreadCountString && unreadCountString !== '0'
+    );
+  }
 };
 
 const refreshAllCounts = async (isFirstRun = false) => {
@@ -93,6 +111,8 @@ const processPosts = async function (postElements) {
   const { [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey);
   const timeline = new RegExp(`/v2/hubs/${encodedCurrentTag}/timeline`);
 
+  let updated = false;
+
   for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
     const { tags, timestamp } = await timelineObject(postElement);
 
@@ -103,11 +123,14 @@ const processPosts = async function (postElements) {
     const savedTimestamp = timestamps[currentTag] || 0;
     if (timestamp > savedTimestamp) {
       timestamps[currentTag] = timestamp;
+      updated = true;
     }
   }
 
-  await browser.storage.local.set({ [storageKey]: timestamps });
-  refreshCount(currentTag);
+  if (updated) {
+    await browser.storage.local.set({ [storageKey]: timestamps });
+    refreshCount(currentTag);
+  }
 };
 
 const processTagLinks = function (tagLinkElements) {
@@ -131,10 +154,12 @@ const processTagLinks = function (tagLinkElements) {
 };
 
 export const main = async function () {
-  onNewPosts.addListener(processPosts);
-  refreshAllCounts(true).then(startRefreshInterval);
+  const trackedTagsData = (await apiFetch('/v2/user/tags')) ?? {};
+  trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
 
-  const { showUnread } = await getPreferences('tag_tracking_plus');
+  trackedTags.forEach(tag => unreadCounts.set(tag, undefined));
+
+  const { showUnread, onlyShowNew } = await getPreferences('tag_tracking_plus');
   if (showUnread === 'both' || showUnread === 'search') {
     pageModifications.register(tagLinkSelector, processTagLinks);
   }
@@ -144,13 +169,18 @@ export const main = async function () {
       title: 'Tag Tracking+',
       rows: trackedTags.map(tag => ({
         label: `#${tag}`,
-        onclick: () => location.assign(`/tagged/${tag}?sort=recent`),
+        href: `/tagged/${encodeURIComponent(tag)}?sort=recent`,
+        onclick: onClickNavigate,
         count: '\u22EF'
       }))
     });
+
+    onlyShowNew && sidebarItem.classList.add('only-show-new');
+    updateSidebarStatus();
   }
 
   onNewPosts.addListener(processPosts);
+  refreshAllCounts(true).then(startRefreshInterval);
 };
 
 export const clean = async function () {
@@ -164,3 +194,5 @@ export const clean = async function () {
   unreadCounts.clear();
   sidebarItem = undefined;
 };
+
+export const stylesheet = true;

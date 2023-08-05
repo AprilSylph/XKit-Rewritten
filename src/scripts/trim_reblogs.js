@@ -30,44 +30,30 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
 
   const {
     blog: { uuid },
-    rebloggedRootUuid,
-    rebloggedRootId
+    isBlocksPostFormat
   } = await timelineObject(postElement);
 
-  let unsureOfLegacyStatus;
-
-  if (rebloggedRootUuid && rebloggedRootId) {
-    try {
-      const { response: { shouldOpenInLegacy } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
-      if (shouldOpenInLegacy) {
-        await new Promise(resolve => {
-          showModal({
-            title: 'Note: Legacy post',
-            message: [
-              'The root post of this thread was originally created with the legacy post editor.',
-              '\n\n',
-              'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
-            ],
-            buttons: [
-              modalCancelButton,
-              dom('button', { class: 'blue' }, { click: () => resolve() }, ['Continue'])
-            ]
-          });
-        });
-      }
-      unsureOfLegacyStatus = false;
-    } catch (exception) {
-      unsureOfLegacyStatus = true;
-    }
+  if (isBlocksPostFormat === false) {
+    await new Promise(resolve => {
+      showModal({
+        title: 'Note: Legacy post',
+        message: [
+          'This thread was originally created, or at some point was edited, using the ',
+          dom('strong', null, null, 'legacy post editor'),
+          ' or a previous XKit version.',
+          '\n\n',
+          'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
+        ],
+        buttons: [
+          modalCancelButton,
+          dom('button', { class: 'blue' }, { click: resolve }, ['Continue'])
+        ]
+      });
+    });
   }
 
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
   const { blog, content = [], trail = [] } = postData;
-
-  if (!trail?.length) {
-    notify('This post is too short to trim!');
-    return;
-  }
 
   const createPreviewItem = ({ blog, brokenBlog, content, disableCheckbox = false }) => {
     const { avatar, name } = blog ?? brokenBlog ?? blogPlaceholder;
@@ -147,10 +133,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     title: 'Trim this post?',
     message: [
       'Select trail items to remove:',
-      previewElement,
-      ...(unsureOfLegacyStatus
-        ? ['\n\n', "Warning: XKit can't tell if this post originated from the legacy post editor. Trimming may fail if so."]
-        : [])
+      previewElement
     ],
     buttons: [modalCancelButton, trimButton]
   });
@@ -163,10 +146,10 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"]`);
   if (!editButton) { return; }
 
-  const { trail = [] } = await timelineObject(postElement);
-  if (!trail.length) { return; }
+  const { trail = [], content = [] } = await timelineObject(postElement);
+  const items = trail.length + (content.length ? 1 : 0);
 
-  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });
+  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked }, items < 2);
   const controlIcon = editButton.closest(controlIconSelector);
   controlIcon.before(clonedControlButton);
 });

@@ -105,6 +105,7 @@ const addModalButtonToPage = async function ([modalScrollToTopButton]) {
   modalScrollToTopButton.after(modalScrollToBottomButton);
   modalScrollToTopButton.addEventListener('click', stopScrolling);
 
+  modalScrollToBottomButton.style = modalScrollToTopButton.style.cssText;
   modalButtonColorObserver.observe(modalScrollToTopButton, { attributeFilter: ['style'] });
 };
 

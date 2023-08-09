@@ -35,7 +35,7 @@ const addControls = async (timelineElement, location) => {
   controls.dataset.location = location;
 
   const firstPost = timelineElement.querySelector(postSelector);
-  location === 'blogSubscriptions'
+  ['blogSubscriptions', 'blogpack'].includes(location)
     ? firstPost?.before(controls)
     : firstPost?.parentElement?.prepend(controls);
 
@@ -72,8 +72,8 @@ const getLocation = timelineElement => {
   const on = {
     dashboard: timeline === '/v2/timeline/dashboard',
     peepr: isInBlogView && !isSinglePostBlogView,
-    blogSubscriptions: timeline.includes('blog_subscriptions') || which === 'blog_subscriptions'
-
+    blogSubscriptions: timeline.includes('blog_subscriptions') || which === 'blog_subscriptions',
+    blogpack: timeline.includes('blogpack') || which === 'blogpack'
   };
   const location = Object.keys(on).find(location => on[location]);
   const isDisabledBlog = disabledBlogs.some(name => timeline.startsWith(`/v2/blog/${name}/`));

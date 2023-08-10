@@ -18,10 +18,15 @@
       ],
       "default": "smart"
     },
-    "localFlagging": {
+    "localBlogFlagging": {
       "label": "Treat these blogs as mature (comma-separated)",
       "type": "textarea",
       "default": ""
+    },
+    "localTagFlagging": {
+      "label": "Treat these tags as mature (comma-separated)",
+      "type": "textarea",
+      "default": "nsfw, nsft"
     }
   }
 }

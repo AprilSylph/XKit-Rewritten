@@ -21,7 +21,7 @@
     "localBlogFlagging": {
       "label": "Treat these blogs as mature (comma-separated)",
       "type": "textarea",
-      "default": ""
+      "default": "",
       "inherit": "cleanfeed.preferences.localFlagging"
     },
     "localTagFlagging": {

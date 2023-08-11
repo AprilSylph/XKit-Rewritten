@@ -23,14 +23,17 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
 
   const { blog: { name, isAdult }, communityLabels, trail, tags } = await timelineObject(postElement);
 
-  if (isAdult || communityLabels.hasCommunityLabel || localFlaggedBlogs.includes(name) || localFlaggedTags.some(t => tags.includes(t))) {
+  if (isAdult ||
+      communityLabels.hasCommunityLabel ||
+      localFlaggedBlogs.includes(name) ||
+      localFlaggedTags.some(t => tags.map(tag => tag.toLowerCase()).includes(t))) {
     postElement.classList.add(hiddenClass);
     return;
   }
 
   const reblogs = postElement.querySelectorAll(reblogSelector);
   trail.forEach((trailItem, i) => {
-    if (trailItem.blog?.isAdult || localFlaggedBlogs.includes(trailItem.blog?.name || localFlaggedTags.some(t => trailItem.tags?.includes(t)))) {
+    if (trailItem.blog?.isAdult || localFlaggedBlogs.includes(trailItem.blog?.name)) {
       reblogs[i].classList.add(hiddenClass);
     }
   });
@@ -38,8 +41,8 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
 
 export const main = async function () {
   ({ blockingMode, localBlogFlagging, localTagFlagging } = await getPreferences('cleanfeed'));
-  localFlaggedBlogs = localBlogFlagging.split(',').map(username => username.trim());
-  localFlaggedTags = localTagFlagging.split(',').map(tag => tag.trim());
+  localFlaggedBlogs = localBlogFlagging.toLowerCase().split(',').map(username => username.trim());
+  localFlaggedTags = localTagFlagging.toLowerCase().split(',').map(tag => tag.replace(/\#/gi, '').trim());
 
   styleElement.textContent = localFlaggedBlogs
     .map(username => `[title="${username}"] img[alt="${translate('Avatar')}"] { filter: blur(20px); }`)

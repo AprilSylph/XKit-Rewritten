@@ -39,7 +39,7 @@ const processEditors = editors =>
       });
 
       const imagesWithoutAlt = [
-        ...editor.querySelectorAll(`img[alt="${translate('Image')}"]`)
+        ...editor.querySelectorAll(`figure img[alt="${translate('Image')}"]`)
       ];
 
       imagesWithoutAlt.forEach(image => {

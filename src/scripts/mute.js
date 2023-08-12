@@ -184,8 +184,10 @@ const muteUser = event => {
   mutedBlogs[uuid] = value;
   blogNames[uuid] = name;
 
-  browser.storage.local.set({ [mutedBlogsEntriesStorageKey]: Object.entries(mutedBlogs) });
-  browser.storage.local.set({ [blogNamesStorageKey]: blogNames });
+  browser.storage.local.set({
+    [mutedBlogsEntriesStorageKey]: Object.entries(mutedBlogs),
+    [blogNamesStorageKey]: blogNames
+  });
 
   hideModal();
 };

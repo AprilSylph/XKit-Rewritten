@@ -137,12 +137,13 @@ const renderScripts = async function () {
   for (const scriptName of [...orderedEnabledScripts, ...disabledScripts]) {
     const url = getURL(`/scripts/${scriptName}.json`);
     const file = await fetch(url);
-    const { title = scriptName, description = '', icon = {}, help = '', relatedTerms = [], preferences = {}, deprecated } = await file.json();
+    const { title = scriptName, description = '', icon = {}, help = '', relatedTerms = [], preferences = {}, deprecated = false } = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 
     const detailsElement = scriptTemplateClone.querySelector('details.script');
     detailsElement.dataset.relatedTerms = relatedTerms;
+    detailsElement.dataset.deprecated = deprecated;
 
     if (enabledScripts.includes(scriptName) === false) {
       detailsElement.classList.add('disabled');

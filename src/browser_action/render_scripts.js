@@ -15,7 +15,7 @@ const getInstalledScripts = async function () {
 const writeEnabled = async function ({ currentTarget }) {
   const { checked, id } = currentTarget;
   const detailsElement = currentTarget.closest('details');
-  let { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
+  let { enabledScripts = [], previouslyEnabledScripts = [] } = await browser.storage.local.get();
 
   const hasPreferences = detailsElement.querySelector('.preferences:not(:empty)');
   if (hasPreferences) detailsElement.open = checked;
@@ -25,10 +25,11 @@ const writeEnabled = async function ({ currentTarget }) {
     detailsElement.classList.remove('disabled');
   } else {
     enabledScripts = enabledScripts.filter(x => x !== id);
+    previouslyEnabledScripts.includes(id) || previouslyEnabledScripts.push(id);
     detailsElement.classList.add('disabled');
   }
 
-  browser.storage.local.set({ enabledScripts });
+  browser.storage.local.set({ enabledScripts, previouslyEnabledScripts });
 };
 
 const debounce = (func, ms) => {
@@ -128,8 +129,7 @@ const renderScripts = async function () {
 
   const installedScripts = await getInstalledScripts();
 
-  const storageLocal = await browser.storage.local.get();
-  const { enabledScripts = [] } = storageLocal;
+  const { enabledScripts = [], previouslyEnabledScripts = [] } = await browser.storage.local.get();
 
   const orderedEnabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName));
   const disabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName) === false);
@@ -147,7 +147,7 @@ const renderScripts = async function () {
     if (enabledScripts.includes(scriptName) === false) {
       detailsElement.classList.add('disabled');
 
-      if (deprecated && !Object.keys(storageLocal).some(key => key.startsWith(`${scriptName}.`))) {
+      if (deprecated && !previouslyEnabledScripts.includes(scriptName)) {
         // detailsElement.hidden = true;
         detailsElement.style.outline = '2px solid red';
         detailsElement.style.outlineOffset = '-2px';

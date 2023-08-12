@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^2.2.1",
-    "eslint": "^8.42.0",
+    "eslint": "^8.44.0",
     "eslint-config-semistandard": "^17.0.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.27.5",
@@ -22,7 +22,7 @@
     "jquery": "^3.7.0",
     "moment": "^2.29.4",
     "normalize.css": "^8.0.1",
-    "remixicon": "^3.3.0",
+    "remixicon": "^3.4.0",
     "spectrum-colorpicker": "^1.8.1",
     "webextension-polyfill": "^0.10.0"
   },

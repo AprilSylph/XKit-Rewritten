@@ -131,7 +131,6 @@ const renderScripts = async function () {
   scriptsDiv.textContent = '';
 
   const installedScripts = await getInstalledScripts();
-
   const { enabledScripts = [], specialAccess = [] } = await browser.storage.local.get();
 
   const orderedEnabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName));

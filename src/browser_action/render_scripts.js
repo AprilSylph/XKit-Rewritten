@@ -153,9 +153,7 @@ const renderScripts = async function () {
         !previouslyEnabledScripts.includes(scriptName) &&
         !Object.keys(storageLocal).some(key => key.startsWith(`${scriptName}.`))
       ) {
-        // detailsElement.hidden = true;
-        detailsElement.style.outline = '2px solid red';
-        detailsElement.style.outlineOffset = '-2px';
+        detailsElement.hidden = true;
       }
     }
 

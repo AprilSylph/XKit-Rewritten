@@ -129,7 +129,8 @@ const renderScripts = async function () {
 
   const installedScripts = await getInstalledScripts();
 
-  const { enabledScripts = [], previouslyEnabledScripts = [] } = await browser.storage.local.get();
+  const storageLocal = await browser.storage.local.get();
+  const { enabledScripts = [], previouslyEnabledScripts = [] } = storageLocal;
 
   const orderedEnabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName));
   const disabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName) === false);
@@ -147,7 +148,11 @@ const renderScripts = async function () {
     if (enabledScripts.includes(scriptName) === false) {
       detailsElement.classList.add('disabled');
 
-      if (deprecated && !previouslyEnabledScripts.includes(scriptName)) {
+      if (
+        deprecated &&
+        !previouslyEnabledScripts.includes(scriptName) &&
+        !Object.keys(storageLocal).some(key => key.startsWith(`${scriptName}.`))
+      ) {
         // detailsElement.hidden = true;
         detailsElement.style.outline = '2px solid red';
         detailsElement.style.outlineOffset = '-2px';

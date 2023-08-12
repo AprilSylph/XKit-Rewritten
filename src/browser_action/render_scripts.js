@@ -127,7 +127,9 @@ const renderScripts = async function () {
   scriptsDiv.textContent = '';
 
   const installedScripts = await getInstalledScripts();
-  const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
+
+  const storageLocal = await browser.storage.local.get();
+  const { enabledScripts = [] } = storageLocal;
 
   const orderedEnabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName));
   const disabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName) === false);
@@ -135,7 +137,7 @@ const renderScripts = async function () {
   for (const scriptName of [...orderedEnabledScripts, ...disabledScripts]) {
     const url = getURL(`/scripts/${scriptName}.json`);
     const file = await fetch(url);
-    const { title = scriptName, description = '', icon = {}, help = '', relatedTerms = [], preferences = {} } = await file.json();
+    const { title = scriptName, description = '', icon = {}, help = '', relatedTerms = [], preferences = {}, deprecated } = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 
@@ -144,6 +146,12 @@ const renderScripts = async function () {
 
     if (enabledScripts.includes(scriptName) === false) {
       detailsElement.classList.add('disabled');
+
+      if (deprecated && !Object.keys(storageLocal).some(key => key.startsWith(`${scriptName}.`))) {
+        // detailsElement.hidden = true;
+        detailsElement.style.outline = '2px solid red';
+        detailsElement.style.outlineOffset = '-2px';
+      }
     }
 
     if (icon.class_name !== undefined) {

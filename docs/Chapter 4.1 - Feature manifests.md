@@ -108,4 +108,4 @@ The storage key to inherit the value of, if the preference has not been set. Onl
 - Type: Boolean
 - Required: No
 
-Whether to hide the feature on installations on which it has never been enabled.
+Whether to hide the feature on installations on which it was not enabled at the time of deprecation.

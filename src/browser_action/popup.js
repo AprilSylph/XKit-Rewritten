@@ -56,5 +56,9 @@ const versionElement = document.getElementById('version');
 versionElement.textContent = browser.runtime.getManifest().version;
 
 const params = new URLSearchParams(location.search);
-const pageIsEmbedded = params.get('embedded') === 'true';
-document.getElementById('embedded-banner').hidden = !pageIsEmbedded;
+if (params.get('embedded') === 'true') {
+  document.body.classList.add('embedded');
+}
+if (params.get('standalone') === 'true') {
+  document.body.classList.add('standalone');
+}

@@ -57,11 +57,23 @@ body {
   user-select: none;
 }
 
+body.standalone {
+  width: 100%;
+  max-width: 632px;
+  margin: 1ch auto;
+
+  outline: 1px solid rgb(var(--active-grey));
+}
+
 #embedded-banner {
   padding: 4px 8px;
   border-bottom: 1px solid rgb(var(--active-grey));
 
   text-align: center;
+}
+
+body:not(.embedded) #embedded-banner {
+  display: none;
 }
 
 nav {
@@ -154,4 +166,17 @@ label:not(:first-child),
 input:not(:first-child),
 select:not(:first-child) {
   margin-left: 1ch;
+}
+
+#non-standalone-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1ch;
+
+  border-top: 1px dotted rgb(var(--active-grey));
+}
+
+body.standalone #non-standalone-footer {
+  display: none;
 }

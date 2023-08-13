@@ -151,7 +151,7 @@ const renderScripts = async function () {
       detailsElement.classList.add('disabled');
 
       if (deprecated && !specialAccess.includes(scriptName)) {
-        detailsElement.hidden = true;
+        continue;
       }
     }
 

@@ -1,4 +1,4 @@
-import { filterPostElements, postSelector, blogViewSelector } from '../util/interface.js';
+import { filterPostElements, postSelector, blogViewSelector, closestTimelineItem } from '../util/interface.js';
 import { isMyPost, timelineObject } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -6,7 +6,7 @@ import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { userBlogs } from '../util/user.js';
 
-const hiddenClass = 'xkit-show-originals-hidden';
+const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
 
@@ -108,7 +108,7 @@ const processPosts = async function (postElements) {
       if (showReblogsWithContributedContent && content.length > 0) { return; }
       if (whitelist.includes(blogName)) { return; }
 
-      postElement.classList.add(hiddenClass);
+      closestTimelineItem(postElement).setAttribute(hiddenAttribute, '');
     });
 };
 
@@ -132,8 +132,7 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
-  $('[data-show-originals]').removeAttr('data-show-originals');
+  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
   $(`.${controlsClass}`).remove();
 };

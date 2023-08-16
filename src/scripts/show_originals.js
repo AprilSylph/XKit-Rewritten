@@ -84,7 +84,10 @@ const processTimelines = async () => {
   [...document.querySelectorAll('[data-timeline]')].forEach(async timelineElement => {
     const location = getLocation(timelineElement);
 
-    const currentControls = timelineElement.parentElement.querySelector(`.${controlsClass}`);
+    const currentControls = timelineElement.previousElementSibling?.classList?.contains(controlsClass)
+      ? timelineElement.previousElementSibling
+      : null;
+
     if (currentControls?.dataset?.location !== location) {
       currentControls?.remove();
       if (location) addControls(timelineElement, location);

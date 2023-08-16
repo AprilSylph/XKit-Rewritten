@@ -1,13 +1,13 @@
 import { pageModifications } from '../../util/mutations.js';
 import { keyToCss } from '../../util/css_map.js';
-import { buildStyle } from '../../util/interface.js';
+import { buildStyle, closestTimelineItem } from '../../util/interface.js';
 
-const hiddenClass = 'xkit-tweaks-hide-filtered-posts-hidden';
-const styleElement = buildStyle(`.${hiddenClass} { display: none; }`);
+const hiddenAttribute = 'data-tweaks-hide-filtered-posts-hidden';
+const styleElement = buildStyle(`[${hiddenAttribute}] article { display: none; }`);
 
 const hideFilteredPosts = filteredScreens => filteredScreens
-  .map(filteredScreen => filteredScreen.closest('article'))
-  .forEach(article => article.classList.add(hiddenClass));
+  .map(closestTimelineItem)
+  .forEach(timelineItem => timelineItem.setAttribute(hiddenAttribute, ''));
 
 export const main = async function () {
   const filteredScreenSelector = `article ${keyToCss('filteredScreen')}`;
@@ -19,5 +19,5 @@ export const clean = async function () {
   pageModifications.unregister(hideFilteredPosts);
   styleElement.remove();
 
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

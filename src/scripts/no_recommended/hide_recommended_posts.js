@@ -1,19 +1,19 @@
-import { buildStyle, filterPostElements, postSelector } from '../../util/interface.js';
+import { buildStyle, closestTimelineItem, filterPostElements, postSelector } from '../../util/interface.js';
 import { onNewPosts } from '../../util/mutations.js';
 import { timelineObject } from '../../util/react_props.js';
 
 const excludeClass = 'xkit-no-recommended-posts-done';
-const hiddenClass = 'xkit-no-recommended-posts-hidden';
-const unHiddenClass = 'xkit-no-recommended-posts-many';
+const hiddenAttribute = 'data-no-recommended-posts-hidden';
+const unHiddenAttribute = 'data-no-recommended-posts-many';
 const timeline = /\/v2\/timeline\/dashboard/;
 const includeFiltered = true;
 
 const styleElement = buildStyle(`
-.${hiddenClass}:not(.${unHiddenClass}) article {
+[${hiddenAttribute}]:not([${unHiddenAttribute}]) article {
   display: none;
 }
 
-:not(.${unHiddenClass}) + .${unHiddenClass}::before {
+:not([${unHiddenAttribute}]) + [${unHiddenAttribute}]::before {
   content: 'Too many recommended posts to hide!';
 
   display: block;
@@ -34,9 +34,9 @@ const precedingHiddenPosts = ({ previousElementSibling: previousElement }, count
   // If there is no previous sibling, stop counting
   if (!previousElement) return count;
   // If the previous sibling is not a post, skip over it
-  if (!previousElement.matches(postSelector)) return precedingHiddenPosts(previousElement, count);
+  if (!previousElement.matches(postSelector) || !previousElement.querySelector(postSelector)) return precedingHiddenPosts(previousElement, count);
   // If the previous sibling is hidden, count it and continue
-  if (previousElement.classList.contains(hiddenClass)) return precedingHiddenPosts(previousElement, count + 1);
+  if (previousElement.matches(`[${hiddenAttribute}]`)) return precedingHiddenPosts(previousElement, count + 1);
   // Otherwise, we've hit a non-hidden post; stop counting
   return count;
 };
@@ -53,10 +53,12 @@ const processPosts = async function (postElements) {
     if (loggingReason.startsWith('search:')) return;
     if (loggingReason === 'orbitznews') return;
 
-    postElement.classList.add(hiddenClass);
+    const timelineItem = closestTimelineItem(postElement);
 
-    if (precedingHiddenPosts(postElement) >= 10) {
-      postElement.classList.add(unHiddenClass);
+    timelineItem.setAttribute(hiddenAttribute, '');
+
+    if (precedingHiddenPosts(timelineItem) >= 10) {
+      timelineItem.setAttribute(hiddenAttribute, '');
     }
   });
 };
@@ -69,6 +71,7 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
   $(`.${excludeClass}`).removeClass(excludeClass);
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  $(`[${unHiddenAttribute}]`).removeAttr(unHiddenAttribute);
   styleElement.remove();
 };

@@ -1,4 +1,4 @@
-import { buildStyle, closestTimelineItem, filterPostElements, postSelector } from '../../util/interface.js';
+import { buildStyle, getTimelineItemWrapper, filterPostElements, postSelector } from '../../util/interface.js';
 import { onNewPosts } from '../../util/mutations.js';
 import { timelineObject } from '../../util/react_props.js';
 
@@ -53,7 +53,7 @@ const processPosts = async function (postElements) {
     if (loggingReason.startsWith('search:')) return;
     if (loggingReason === 'orbitznews') return;
 
-    const timelineItem = closestTimelineItem(postElement);
+    const timelineItem = getTimelineItemWrapper(postElement);
 
     timelineItem.setAttribute(hiddenAttribute, '');
 

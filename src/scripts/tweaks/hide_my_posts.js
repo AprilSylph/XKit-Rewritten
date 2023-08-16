@@ -1,5 +1,5 @@
 import { onNewPosts } from '../../util/mutations.js';
-import { buildStyle, closestTimelineItem, filterPostElements } from '../../util/interface.js';
+import { buildStyle, getTimelineItemWrapper, filterPostElements } from '../../util/interface.js';
 import { isMyPost } from '../../util/react_props.js';
 
 const excludeClass = 'xkit-tweaks-hide-my-posts-done';
@@ -13,7 +13,7 @@ const processPosts = async function (postElements) {
     const myPost = await isMyPost(postElement);
 
     if (myPost) {
-      closestTimelineItem(postElement).setAttribute(hiddenAttribute, '');
+      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
     }
   });
 };

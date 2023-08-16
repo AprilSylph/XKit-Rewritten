@@ -7,7 +7,7 @@ export const blogViewSelector = '[style*="--blog-title-color"] *';
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
 const cellSelector = keyToCss('cell');
 
-export const closestTimelineItem = element => element.closest(cellSelector) || element.closest(listTimelineObjectSelector);
+export const getTimelineItemWrapper = element => element.closest(cellSelector) || element.closest(listTimelineObjectSelector);
 
 /**
  * @typedef {object} PostFilterOptions

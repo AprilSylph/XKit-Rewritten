@@ -1,4 +1,4 @@
-import { closestTimelineItem, filterPostElements } from '../util/interface.js';
+import { getTimelineItemWrapper, filterPostElements } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
@@ -20,9 +20,9 @@ const processPosts = async function (postElements) {
     const rootID = rebloggedRootId || postID;
 
     if (blockedPostRootIDs.includes(rootID)) {
-      closestTimelineItem(postElement).setAttribute(hiddenAttribute, '');
+      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
     } else {
-      closestTimelineItem(postElement).removeAttribute(hiddenAttribute);
+      getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
     }
   });
 };

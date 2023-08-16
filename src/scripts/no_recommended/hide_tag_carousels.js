@@ -1,5 +1,5 @@
 import { keyToCss } from '../../util/css_map.js';
-import { buildStyle, closestTimelineItem } from '../../util/interface.js';
+import { buildStyle, getTimelineItemWrapper } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
 const hiddenAttribute = 'data-no-recommended-tag-carousels-hidden';
@@ -16,7 +16,7 @@ const carouselWrapperSelector = `${listTimelineObjectSelector} ${keyToCss('carou
 
 const hideTagCarousels = carouselWrappers => carouselWrappers
   .filter(carouselWrapper => carouselWrapper.querySelector(tagCardCarouselItemSelector) !== null)
-  .map(closestTimelineItem)
+  .map(getTimelineItemWrapper)
   .forEach(timelineItem => {
     timelineItem.setAttribute(hiddenAttribute, '');
     timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');

@@ -1,5 +1,5 @@
 import { onNewPosts } from '../../util/mutations.js';
-import { buildStyle, closestTimelineItem, filterPostElements } from '../../util/interface.js';
+import { buildStyle, getTimelineItemWrapper, filterPostElements } from '../../util/interface.js';
 import { isMyPost, timelineObject } from '../../util/react_props.js';
 
 const timeline = /\/v2\/timeline\/dashboard/;
@@ -12,7 +12,7 @@ const processPosts = async function (postElements) {
     const { liked } = await timelineObject(postElement);
     const myPost = await isMyPost(postElement);
 
-    if (liked && !myPost) closestTimelineItem(postElement).setAttribute(hiddenAttribute, '');
+    if (liked && !myPost) getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
   });
 };
 

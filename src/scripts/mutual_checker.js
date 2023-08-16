@@ -1,4 +1,4 @@
-import { closestTimelineItem, filterPostElements } from '../util/interface.js';
+import { getTimelineItemWrapper, filterPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { primaryBlogName } from '../util/user.js';
@@ -61,7 +61,7 @@ const addIcons = function (postElements) {
       postElement.classList.add(mutualsClass);
       postAttribution.prepend(icon.cloneNode(true));
     } else if (showOnlyMutuals) {
-      closestTimelineItem(postElement).setAttribute(hiddenAttribute, '');
+      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
     }
   });
 };

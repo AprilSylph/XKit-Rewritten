@@ -1,5 +1,5 @@
 import { keyToCss } from '../util/css_map.js';
-import { buildStyle, closestTimelineItem } from '../util/interface.js';
+import { buildStyle, getTimelineItemWrapper } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
 
 const hiddenAttribute = 'data-anti-capitalism-hidden';
@@ -14,7 +14,7 @@ ${keyToCss('adTimelineObject', 'instreamAd', 'mrecContainer', 'nativeIponWebAd',
 );
 
 const processVideoCTAs = videoCTAs => videoCTAs
-  .map(closestTimelineItem)
+  .map(getTimelineItemWrapper)
   .filter(Boolean)
   .forEach(timelineItem => timelineItem.setAttribute(hiddenAttribute, ''));
 

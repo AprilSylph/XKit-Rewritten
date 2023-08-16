@@ -1,5 +1,5 @@
 import { keyToCss } from '../../util/css_map.js';
-import { buildStyle, closestTimelineItem } from '../../util/interface.js';
+import { buildStyle, getTimelineItemWrapper } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
 const hiddenAttribute = 'data-no-recommended-blog-carousels-hidden';
@@ -14,7 +14,7 @@ const listTimelineObjectSelector = keyToCss('listTimelineObject');
 const blogCarouselSelector = `${listTimelineObjectSelector} ${keyToCss('blogCarousel')}`;
 
 const hideBlogCarousels = blogCarousels => blogCarousels
-  .map(closestTimelineItem)
+  .map(getTimelineItemWrapper)
   .filter(timelineItem =>
     timelineItem.previousElementSibling.querySelector(keyToCss('titleObject'))
   )

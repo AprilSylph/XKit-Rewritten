@@ -1,4 +1,4 @@
-import { filterPostElements, postSelector, blogViewSelector, closestTimelineItem } from '../util/interface.js';
+import { filterPostElements, postSelector, blogViewSelector, getTimelineItemWrapper } from '../util/interface.js';
 import { isMyPost, timelineObject } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -108,7 +108,7 @@ const processPosts = async function (postElements) {
       if (showReblogsWithContributedContent && content.length > 0) { return; }
       if (whitelist.includes(blogName)) { return; }
 
-      closestTimelineItem(postElement).setAttribute(hiddenAttribute, '');
+      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
     });
 };
 

@@ -23,6 +23,11 @@ button.xkit-quote-replies:disabled svg {
   transition-property: none;
 }
 
+button.xkit-quote-replies-dropdown {
+  align-self: flex-start;
+  margin: 10px 0 0;
+}
+
 @media (hover: hover) {
   button.xkit-quote-replies svg {
     opacity: 0;

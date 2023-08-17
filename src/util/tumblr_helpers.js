@@ -48,7 +48,6 @@ export const apiFetch = async function (...args) {
 
 /**
  * Create an NPF edit request body.
- *
  * @see https://github.com/tumblr/docs/blob/master/api.md#postspost-id---editing-a-post-neue-post-format
  * @see https://github.com/tumblr/docs/blob/master/api.md#posts---createreblog-a-post-neue-post-format
  * @param {object} postData - camelCased /posts/{post-id} GET request response JSON
@@ -68,8 +67,10 @@ export const createEditRequestBody = postData => {
     interactabilityReblog,
 
     canBeTipped,
-    hasCommunityLabel,
-    communityLabelCategories
+    communityLabels: {
+      hasCommunityLabel,
+      categories: communityLabelCategories
+    }
   } = postData;
 
   return {
@@ -87,4 +88,17 @@ export const createEditRequestBody = postData => {
     hasCommunityLabel,
     communityLabelCategories
   };
+};
+
+export const navigate = location =>
+  inject(location => window.tumblr.navigate(location), [location]);
+
+export const onClickNavigate = event => {
+  if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+
+  const href = event.currentTarget.getAttribute('href');
+  if (href) {
+    event.preventDefault();
+    navigate(href);
+  }
 };

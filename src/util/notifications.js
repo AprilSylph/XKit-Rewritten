@@ -3,13 +3,10 @@ import { dom } from './dom.js';
 
 const toastContainer = dom('div', { id: 'xkit-toasts' });
 
-const drawerContentSelectorPromise = keyToCss('drawerContent');
-const sidebarSelectorPromise = keyToCss('sidebar');
+const drawerContentSelector = keyToCss('drawerContent');
+const sidebarSelector = keyToCss('sidebar');
 
-const addToastContainerToPage = async () => {
-  const drawerContentSelector = await drawerContentSelectorPromise;
-  const sidebarSelector = await sidebarSelectorPromise;
-
+const addToastContainerToPage = () => {
   const targetNode = [
     document.body.querySelector(`${drawerContentSelector} ${sidebarSelector}`),
     document.body.querySelector(drawerContentSelector),
@@ -29,7 +26,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
  * @param {string} textContent - Text to display to the user as a notification
  */
 export const notify = async textContent => {
-  await addToastContainerToPage();
+  addToastContainerToPage();
 
   const toast = dom('div', { class: 'visible' }, null, [textContent]);
   toastContainer.append(toast);

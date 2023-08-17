@@ -7,19 +7,19 @@
     "background_color": "#ff567e"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#cleanfeed",
-  "relatedTerms": [ "nsfw" ],
+  "relatedTerms": [ "NSFW", "Mature", "Adult", "Sensitive", "Community Label" ],
   "preferences": {
     "blockingMode": {
-      "label": "Hide media from",
+      "label": "Hide media from:",
       "type": "select",
       "options": [
-        { "value": "smart", "label": "flagged blogs only" },
-        { "value": "all", "label": "all blogs" }
+        { "value": "smart", "label": "mature posts & blogs" },
+        { "value": "all", "label": "all posts" }
       ],
       "default": "smart"
     },
     "localFlagging": {
-      "label": "Treat these blogs as flagged (comma-separated)",
+      "label": "Treat these blogs as mature (comma-separated)",
       "type": "textarea",
       "default": ""
     }

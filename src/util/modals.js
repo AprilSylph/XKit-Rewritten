@@ -7,7 +7,6 @@ let lastFocusedElement;
 
 /**
  * Show a takeover prompt to the user
- *
  * @param {object} options - Destructured
  * @param {string} [options.title] - Prompt title
  * @param {(string|Node)[]} [options.message] - Nodes to be displayed in the modal, to be used as prompts or non-submit inputs

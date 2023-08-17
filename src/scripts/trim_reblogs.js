@@ -38,7 +38,9 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       showModal({
         title: 'Note: Legacy post',
         message: [
-          'The root post of this thread was originally created with the legacy post editor.',
+          'This thread was originally created, or at some point was edited, using the ',
+          dom('strong', null, null, 'legacy post editor'),
+          ' or a previous XKit version.',
           '\n\n',
           'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
         ],
@@ -52,11 +54,6 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
 
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
   const { blog, content = [], trail = [] } = postData;
-
-  if (!trail?.length) {
-    notify('This post is too short to trim!');
-    return;
-  }
 
   const createPreviewItem = ({ blog, brokenBlog, content, disableCheckbox = false }) => {
     const { avatar, name } = blog ?? brokenBlog ?? blogPlaceholder;
@@ -151,9 +148,8 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
 
   const { trail = [], content = [] } = await timelineObject(postElement);
   const items = trail.length + (content.length ? 1 : 0);
-  if (items < 2) { return; }
 
-  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked });
+  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked }, items < 2);
   const controlIcon = editButton.closest(controlIconSelector);
   controlIcon.before(clonedControlButton);
 });

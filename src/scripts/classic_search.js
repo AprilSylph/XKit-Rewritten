@@ -1,5 +1,6 @@
 import { getPreferences } from '../util/preferences.js';
 import { pageModifications } from '../util/mutations.js';
+import { navigate } from '../util/tumblr_helpers.js';
 
 let newTab;
 
@@ -22,7 +23,7 @@ const replaceSearchForm = function ([searchFormElement]) {
     if (newTab) {
       window.open(address);
     } else {
-      location.assign(address);
+      navigate(address);
     }
   });
   searchFormElementClone.classList.add('classic-search');

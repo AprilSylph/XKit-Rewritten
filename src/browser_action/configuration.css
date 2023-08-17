@@ -173,6 +173,10 @@ label[for="filter"] {
   padding: 0.5ch 0;
 }
 
+.script li.search-highlighted {
+  background: rgb(var(--search-highlight));
+}
+
 .script input[type="text"] {
   box-sizing: border-box;
   width: 65%;

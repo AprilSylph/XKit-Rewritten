@@ -1,8 +1,4 @@
-[data-xkit-meatball-button] {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+.xkit-meatball-button {
   box-sizing: border-box;
   width: 100%;
   padding: 10px;
@@ -16,15 +12,20 @@
   text-decoration: none;
 }
 
-[data-xkit-meatball-button][hidden] {
+.xkit-meatball-button[hidden] {
   display: none;
 }
 
-[data-xkit-meatball-button]:not([hidden]) ~ [data-xkit-meatball-button] {
+.xkit-meatball-button:not([hidden]) ~ .xkit-meatball-button {
   border-top: none;
 }
 
-[data-xkit-meatball-button]:hover,
-[data-xkit-meatball-button]:focus {
+.xkit-meatball-button:hover,
+.xkit-meatball-button:focus {
   background-color: rgb(var(--secondary-accent));
+}
+
+.xkit-meatball-button::before {
+  content: "[XKit] ";
+  white-space: pre-wrap;
 }

@@ -1,4 +1,10 @@
-const onClickExternalLink = event => event.stopPropagation();
+const linkSelector = 'a[role="link"][target="_blank"]';
+
+const onDocumentClick = event => {
+  if (event.target.matches(`${linkSelector}, ${linkSelector} *`)) {
+    event.stopPropagation();
+  }
+};
 
 const onClickBlogViewLink = event => {
   event.stopPropagation();
@@ -11,11 +17,11 @@ const onClickBlogViewLink = event => {
 };
 
 export const main = async function () {
-  $('#base-container').on('click', 'a[role="link"][target="_blank"]', onClickExternalLink);
+  document.documentElement.addEventListener('click', onDocumentClick, { capture: true });
   $('#base-container').on('click', 'a[href^="/blog/view/"]', onClickBlogViewLink);
 };
 
 export const clean = async function () {
-  $('#base-container').off('click', 'a[role="link"][target="_blank"]', onClickExternalLink);
+  document.documentElement.removeEventListener('click', onDocumentClick, { capture: true });
   $('#base-container').off('click', 'a[href^="/blog/view/"]', onClickBlogViewLink);
 };

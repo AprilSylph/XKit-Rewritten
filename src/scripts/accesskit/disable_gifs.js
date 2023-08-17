@@ -26,6 +26,7 @@ const pauseGif = function (gifElement) {
 
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
+    if (gifElement.closest('.block-editor-writing-flow')) return;
     const pausedGifElements = [
       ...gifElement.parentNode.querySelectorAll('.xkit-paused-gif'),
       ...gifElement.parentNode.querySelectorAll('.xkit-paused-gif-label')

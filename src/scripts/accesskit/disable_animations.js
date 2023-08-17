@@ -4,7 +4,7 @@ import { buildStyle } from '../../util/interface.js';
 const playPauseSelector = `${keyToCss('overlayPoof')} ${keyToCss('overlay')} svg`;
 
 const styleElement = buildStyle(`
-:not(${playPauseSelector}) {
+:not(${playPauseSelector}):not(${keyToCss('blockEditorContainer')} *) {
   animation: none !important;
   transition: none !important;
 }
@@ -22,5 +22,5 @@ canvas#fire-everywhere {
 }
 `);
 
-export const main = async () => document.head.append(styleElement);
+export const main = async () => document.documentElement.append(styleElement);
 export const clean = async () => styleElement.remove();

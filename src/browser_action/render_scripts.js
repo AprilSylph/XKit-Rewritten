@@ -15,7 +15,7 @@ const getInstalledScripts = async function () {
 const writeEnabled = async function ({ currentTarget }) {
   const { checked, id } = currentTarget;
   const detailsElement = currentTarget.closest('details');
-  let { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
+  let { enabledScripts = [], specialAccess = [] } = await browser.storage.local.get();
 
   const hasPreferences = detailsElement.querySelector('.preferences:not(:empty)');
   if (hasPreferences) detailsElement.open = checked;
@@ -26,9 +26,13 @@ const writeEnabled = async function ({ currentTarget }) {
   } else {
     enabledScripts = enabledScripts.filter(x => x !== id);
     detailsElement.classList.add('disabled');
+
+    if (detailsElement.dataset.deprecated === 'true' && !specialAccess.includes(id)) {
+      specialAccess.push(id);
+    }
   }
 
-  browser.storage.local.set({ enabledScripts });
+  browser.storage.local.set({ enabledScripts, specialAccess });
 };
 
 const debounce = (func, ms) => {
@@ -127,7 +131,7 @@ const renderScripts = async function () {
   scriptsDiv.textContent = '';
 
   const installedScripts = await getInstalledScripts();
-  const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
+  const { enabledScripts = [], specialAccess = [] } = await browser.storage.local.get();
 
   const orderedEnabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName));
   const disabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName) === false);
@@ -135,15 +139,20 @@ const renderScripts = async function () {
   for (const scriptName of [...orderedEnabledScripts, ...disabledScripts]) {
     const url = getURL(`/scripts/${scriptName}.json`);
     const file = await fetch(url);
-    const { title = scriptName, description = '', icon = {}, help = '', relatedTerms = [], preferences = {} } = await file.json();
+    const { title = scriptName, description = '', icon = {}, help = '', relatedTerms = [], preferences = {}, deprecated = false } = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 
     const detailsElement = scriptTemplateClone.querySelector('details.script');
     detailsElement.dataset.relatedTerms = relatedTerms;
+    detailsElement.dataset.deprecated = deprecated;
 
     if (enabledScripts.includes(scriptName) === false) {
       detailsElement.classList.add('disabled');
+
+      if (deprecated && !specialAccess.includes(scriptName)) {
+        continue;
+      }
     }
 
     if (icon.class_name !== undefined) {

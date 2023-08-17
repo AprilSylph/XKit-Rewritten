@@ -1,13 +1,13 @@
 import { keyToCss } from '../../util/css_map.js';
-import { buildStyle } from '../../util/interface.js';
+import { buildStyle, getTimelineItemWrapper } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
-const hiddenClass = 'xkit-tweaks-caught-up-line-title';
-const borderClass = 'xkit-tweaks-caught-up-line-border';
+const hiddenAttribute = 'data-tweaks-caught-up-line-title';
+const borderAttribute = 'data-tweaks-caught-up-line-border';
 
 const styleElement = buildStyle(`
-  .${hiddenClass} > div { display: none; }
-  .${borderClass} > div {
+  [${hiddenAttribute}] > div { display: none; }
+  [${borderAttribute}] > div {
     box-sizing: content-box;
     height: 0px;
     overflow-y: hidden;
@@ -19,11 +19,11 @@ const listTimelineObjectSelector = keyToCss('listTimelineObject');
 const tagChicletCarouselItemSelector = `${listTimelineObjectSelector} ${keyToCss('tagChicletCarouselItem')}`;
 
 const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
-  .map(tagChicletCarouselItem => tagChicletCarouselItem.closest(listTimelineObjectSelector))
+  .map(getTimelineItemWrapper)
   .filter((element, index, array) => array.indexOf(element) === index)
-  .forEach(listTimelineObject => {
-    listTimelineObject.classList.add(borderClass);
-    listTimelineObject.previousElementSibling.classList.add(hiddenClass);
+  .forEach(timelineItem => {
+    timelineItem.setAttribute(borderAttribute, '');
+    timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
   });
 
 export const main = async function () {
@@ -34,6 +34,6 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(createCaughtUpLine);
   styleElement.remove();
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
-  $(`.${borderClass}`).removeClass(borderClass);
+  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  $(`[${borderAttribute}]`).removeAttr(borderAttribute);
 };

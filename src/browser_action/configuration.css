@@ -144,6 +144,12 @@ label[for="filter"] {
   font-weight: normal;
 }
 
+.script:not(.disabled)[data-deprecated="true"] .title::after {
+  content: "(deprecated)";
+  margin-left: 0.5ch;
+  font-weight: normal;
+}
+
 .script ul.preferences {
   padding: 0 1ch;
   margin: 1ch 0;

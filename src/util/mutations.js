@@ -1,8 +1,10 @@
+import { keyToCss } from './css_map.js';
 import { postSelector } from './interface.js';
 const rootNode = document.getElementById('root');
 
-const mutationsPool = [];
+const addedNodesPool = [];
 let repaintQueued = false;
+let timerId;
 
 export const pageModifications = Object.freeze({
   listeners: new Map(),
@@ -56,10 +58,9 @@ export const onNewPosts = Object.freeze({
 const onBeforeRepaint = () => {
   repaintQueued = false;
 
-  const addedNodes = mutationsPool
+  const addedNodes = addedNodesPool
     .splice(0)
-    .flatMap(({ addedNodes }) => [...addedNodes])
-    .filter(addedNode => addedNode instanceof Element && addedNode.isConnected);
+    .filter(addedNode => addedNode.isConnected);
 
   if (addedNodes.length === 0) return;
 
@@ -81,10 +82,20 @@ const onBeforeRepaint = () => {
   }
 };
 
+const cellSelector = keyToCss('cell');
+
 const observer = new MutationObserver(mutations => {
-  mutationsPool.push(...mutations);
-  if (repaintQueued === false) {
-    window.requestAnimationFrame(onBeforeRepaint);
+  const addedNodes = mutations
+    .flatMap(({ addedNodes }) => [...addedNodes])
+    .filter(addedNode => addedNode instanceof Element);
+
+  addedNodesPool.push(...addedNodes);
+
+  if (addedNodes.some(addedNode => addedNode.parentElement?.matches(cellSelector))) {
+    cancelAnimationFrame(timerId);
+    onBeforeRepaint();
+  } else if (repaintQueued === false) {
+    timerId = requestAnimationFrame(onBeforeRepaint);
     repaintQueued = true;
   }
 });

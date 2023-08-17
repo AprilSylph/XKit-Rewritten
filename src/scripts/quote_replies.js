@@ -5,18 +5,23 @@ import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { getPreferences } from '../util/preferences.js';
 import { buildSvg } from '../util/remixicon.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { apiFetch, navigate } from '../util/tumblr_helpers.js';
 import { userBlogs } from '../util/user.js';
 
-const storageKey = 'quote_replies.currentResponseId';
+const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';
+const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
 
 const activitySelector = `${keyToCss('notification')} > ${keyToCss('activity')}`;
 
+const activityPageSelector = `section${keyToCss('notifications')} ${keyToCss('notification')}`;
+const dropdownSelector = `${keyToCss('activityPopover')} > [role="tabpanel"] ${keyToCss('notification')}`;
+
 let originalPostTag;
 let tagReplyingBlog;
+let newTab;
 
 const getNotificationProps = function () {
   const notificationElement = document.currentScript.parentElement;
@@ -43,7 +48,10 @@ const processNotifications = notifications => notifications.forEach(async notifi
 
   activityElement.after(dom(
     'button',
-    { class: buttonClass, title: 'Quote this reply' },
+    {
+      class: `${buttonClass} ${notification.matches(dropdownSelector) ? dropdownButtonClass : ''}`,
+      title: 'Quote this reply'
+    },
     {
       click () {
         this.disabled = true;
@@ -90,12 +98,19 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   ].join(',');
 
   const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
-  await browser.storage.local.set({ [storageKey]: responseId });
 
-  const openedTab = window.open(`/blog/${tumblelogName}/drafts`);
-  if (openedTab === null) {
-    browser.storage.local.remove(storageKey);
-    notify(displayText);
+  const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;
+
+  if (newTab) {
+    await browser.storage.local.set({ [storageKey]: currentDraftLocation });
+
+    const openedTab = window.open(`/blog/${tumblelogName}/drafts`);
+    if (openedTab === null) {
+      browser.storage.local.remove(storageKey);
+      notify(displayText);
+    }
+  } else {
+    navigate(currentDraftLocation);
   }
 };
 
@@ -103,16 +118,16 @@ const showError = exception => notify(exception.body?.errors?.[0]?.detail || exc
 
 export const main = async function () {
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
-  ({ tagReplyingBlog } = await getPreferences('quote_replies'));
+  ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
 
-  const notificationSelector = `section${keyToCss('notifications')} > ${keyToCss('notification')}`;
+  const notificationSelector = `${activityPageSelector}, ${dropdownSelector}`;
   pageModifications.register(notificationSelector, processNotifications);
 
-  const { [storageKey]: responseId } = await browser.storage.local.get(storageKey);
+  const { [storageKey]: draftLocation } = await browser.storage.local.get(storageKey);
   browser.storage.local.remove(storageKey);
 
-  if (responseId !== undefined && /^\/blog\/.+\/drafts/.test(location.pathname)) {
-    document.querySelector(`[href*="/edit/"][href$="/${responseId}"]`)?.click();
+  if (newTab && draftLocation !== undefined && /^\/blog\/.+\/drafts/.test(location.pathname)) {
+    navigate(draftLocation);
   }
 };
 
@@ -127,7 +142,7 @@ export const onStorageChanged = async function (changes) {
   }
 
   if (Object.keys(changes).some(key => key.startsWith('quote_replies.preferences'))) {
-    ({ tagReplyingBlog } = await getPreferences('quote_replies'));
+    ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
   }
 };
 

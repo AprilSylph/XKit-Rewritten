@@ -1,6 +1,5 @@
 /**
  * Create elements with simple syntax
- *
  * @param {string} tagName - Type of element to create
  * @param {object} [attributes] - Property-value pairs to set as HTML/XML attributes (e.g. { href: '/' })
  * @param {object} [events] - Property-value pairs to set as event listeners (e.g. { click: () => {} })

@@ -19,9 +19,9 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
     return;
   }
 
-  const { blog: { name, isAdult }, trail } = await timelineObject(postElement);
+  const { blog: { name, isAdult }, communityLabels, trail } = await timelineObject(postElement);
 
-  if (isAdult || localFlaggedBlogs.includes(name)) {
+  if (isAdult || communityLabels.hasCommunityLabel || localFlaggedBlogs.includes(name)) {
     postElement.classList.add(hiddenClass);
     return;
   }

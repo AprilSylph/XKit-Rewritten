@@ -134,6 +134,8 @@ div:first-child + span + #quick-reblog,
   position: relative;
 
   flex-shrink: 0;
+  display: flex;
+  justify-content: flex-start;
   overflow-x: hidden;
   padding: 0.75ch 1ch;
   padding-right: calc(1ch + 1em + 1ch);
@@ -180,9 +182,12 @@ div:first-child + span + #quick-reblog,
 #quick-reblog .action-buttons button {
   flex-basis: calc(100% / 3);
   flex-grow: 1;
-  font-weight: bold;
+  display: flex;
+  justify-content: center;
   padding: 1ch;
+
   background-color: rgb(var(--white));
+  font-weight: bold;
 }
 
 #quick-reblog .action-buttons:enabled button:hover {

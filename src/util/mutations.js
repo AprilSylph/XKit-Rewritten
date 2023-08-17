@@ -1,3 +1,4 @@
+import { keyToCss } from './css_map.js';
 import { postSelector } from './interface.js';
 const rootNode = document.getElementById('root');
 
@@ -81,6 +82,8 @@ const onBeforeRepaint = () => {
   }
 };
 
+const cellSelector = keyToCss('cell');
+
 const observer = new MutationObserver(mutations => {
   const addedNodes = mutations
     .flatMap(({ addedNodes }) => [...addedNodes])
@@ -88,10 +91,7 @@ const observer = new MutationObserver(mutations => {
 
   addedNodesPool.push(...addedNodes);
 
-  if ([
-    ...addedNodes.filter(addedNode => addedNode.matches(postSelector)),
-    ...addedNodes.flatMap(addedNode => [...addedNode.querySelectorAll(postSelector)])
-  ].length) {
+  if (addedNodes.some(addedNode => addedNode.parentElement?.matches(cellSelector))) {
     cancelAnimationFrame(timerId);
     onBeforeRepaint();
   } else if (repaintQueued === false) {

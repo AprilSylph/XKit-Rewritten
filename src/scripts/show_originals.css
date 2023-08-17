@@ -1,4 +1,4 @@
-[data-show-originals="on"] ~ [data-timeline] .xkit-show-originals-hidden article {
+[data-show-originals="on"] ~ [data-timeline] [data-show-originals-hidden] article {
   display: none;
 }
 

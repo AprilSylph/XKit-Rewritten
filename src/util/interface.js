@@ -1,7 +1,13 @@
+import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
 export const blogViewSelector = '[style*="--blog-title-color"] *';
+
+const listTimelineObjectSelector = keyToCss('listTimelineObject');
+const cellSelector = keyToCss('cell');
+
+export const getTimelineItemWrapper = element => element.closest(cellSelector) || element.closest(listTimelineObjectSelector);
 
 /**
  * @typedef {object} PostFilterOptions
@@ -17,7 +23,10 @@ export const blogViewSelector = '[style*="--blog-title-color"] *';
  * @returns {HTMLDivElement[]} Matching post elements
  */
 export const filterPostElements = function (postElements, { excludeClass, timeline, noBlogView = false, includeFiltered = false } = {}) {
-  postElements = postElements.map(element => element.closest(postSelector)).filter(Boolean);
+  postElements = postElements
+    .filter(element => element.isConnected)
+    .map(element => element.closest(postSelector))
+    .filter(Boolean);
 
   if (timeline instanceof RegExp) {
     postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]')?.dataset.timeline));

@@ -1,8 +1,4 @@
 .xkit-meatball-button {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
   box-sizing: border-box;
   width: 100%;
   padding: 10px;

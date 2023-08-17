@@ -2,7 +2,7 @@ import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
 const styleElement = buildStyle(`
-article ${keyToCss('igniteButton', 'tippingButton')} > ${keyToCss('label')} {
+article ${keyToCss('igniteButton', 'tippingButton')} > svg:not([style*="#ff8a00"]) ~ ${keyToCss('label')} {
   display: none;
 }
 `);

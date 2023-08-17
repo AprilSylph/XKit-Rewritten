@@ -2,30 +2,29 @@ import { filterPostElements } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
-import { onNewPosts, pageModifications } from '../util/mutations.js';
+import { onNewPosts } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
+import { buildStyle } from '../util/interface.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
-const hiddenClass = 'xkit-postblock-hidden';
 const storageKey = 'postblock.blockedPostRootIDs';
+let blockedPostRootIDs;
 
-const processPosts = async function (postElements) {
-  const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
+const styleElement = buildStyle();
+const buildCss = () =>
+  `:is(${blockedPostRootIDs
+    .map((rootId) => `[data-target-root-id="${rootId}"]`)
+    .join(', ')}) { display: none !important; }`;
 
-  filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
-    const postID = postElement.dataset.id;
-    const { rebloggedRootId } = await timelineObject(postElement);
-
-    const rootID = rebloggedRootId || postID;
-
-    if (blockedPostRootIDs.includes(rootID)) {
-      postElement.classList.add(hiddenClass);
-    } else {
-      postElement.classList.remove(hiddenClass);
+const processPosts = (postElements) =>
+  filterPostElements(postElements, { includeFiltered: true }).forEach(
+    async (postElement) => {
+      const { rebloggedRootId } = await timelineObject(postElement);
+      const rootID = rebloggedRootId || postElement.dataset.id;
+      postElement.dataset.targetRootId = rootID;
     }
-  });
-};
+  );
 
 const onButtonClicked = async function ({ currentTarget }) {
   const { id, rebloggedRootId } = currentTarget.__timelineObjectData;
@@ -50,23 +49,36 @@ const blockPost = async rootID => {
   browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
 };
 
-export const onStorageChanged = async function (changes, areaName) {
-  if (Object.keys(changes).includes(storageKey)) {
-    pageModifications.trigger(processPosts);
+export const onStorageChanged = async (changes) => {
+  const { [storageKey]: blockedPostRootIDsChanges } = changes;
+
+  if (blockedPostRootIDsChanges) {
+    ({ newValue: blockedPostRootIDs } = blockedPostRootIDsChanges);
+    styleElement.textContent = buildCss();
   }
 };
 
-export const main = async function () {
-  registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
+export const main = async () => {
+  ({ [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(
+    storageKey
+  ));
+
+  styleElement.textContent = buildCss();
+  document.head.append(styleElement);
+
+  registerMeatballItem({
+    id: meatballButtonId,
+    label: meatballButtonLabel,
+    onclick: onButtonClicked
+  });
 
   onNewPosts.addListener(processPosts);
 };
 
 export const clean = async function () {
+  styleElement.remove();
   unregisterMeatballItem(meatballButtonId);
   onNewPosts.removeListener(processPosts);
-
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
 };
 
 export const stylesheet = true;

@@ -85,29 +85,39 @@ const mrecContainerSelector = `${keyToCss('mrecContainer')} *`;
 const desktopContainerSelector = `aside ${keyToCss('desktopContainer', 'summary')}`;
 // Sidebar on most other desktop pages
 const sidebarItemSelector = keyToCss('sidebarItem', 'sidebarContent');
+// Footer beneath sidebar area
+const aboutFooterSelector = `${keyToCss('about')}${keyToCss('inSidebar')}`;
 // Mobile drawer
-const navSubHeaderSelector = keyToCss('navSubHeader');
+const navItemSelector = `${keyToCss('drawerContent')} ${keyToCss('navigationLinks')} > ${keyToCss('navItem', 'subNav')}`;
+
+const updateSidebarItemVisibility = () => [...sidebarItems.children]
+  .filter(sidebarItem => conditions.has(sidebarItem))
+  .forEach(sidebarItem => { sidebarItem.hidden = !conditions.get(sidebarItem)(); });
 
 const addSidebarToPage = (siblingCandidates) => {
   if (/^\/settings/.test(location.pathname)) { return; }
 
-  [...sidebarItems.children]
-    .filter(sidebarItem => conditions.has(sidebarItem))
-    .forEach(sidebarItem => { sidebarItem.hidden = !conditions.get(sidebarItem)(); });
+  updateSidebarItemVisibility();
 
   const target = siblingCandidates
     .filter(target => !target.matches(blogViewSelector))
-    .filter(target => !target.matches(mrecContainerSelector))[0]
-    ?.parentElement
-    ?.firstElementChild;
+    .filter(target => !target.matches(mrecContainerSelector))[0];
 
   if (!target || target === sidebarItems) return;
 
   const insertAbove = getComputedStyle(target).position === 'sticky' ||
     target.matches(desktopContainerSelector) ||
-    target.matches(navSubHeaderSelector);
+    target.matches(aboutFooterSelector);
 
   target[insertAbove ? 'before' : 'after'](sidebarItems);
 };
 
-pageModifications.register(`${desktopContainerSelector}, ${sidebarItemSelector}, ${navSubHeaderSelector}`, addSidebarToPage);
+const addSidebarToDrawer = (navItems) => {
+  updateSidebarItemVisibility();
+
+  const lastNavItem = navItems[navItems.length - 1];
+  lastNavItem?.after(sidebarItems);
+};
+
+pageModifications.register(`${desktopContainerSelector}, ${sidebarItemSelector}, ${aboutFooterSelector}`, addSidebarToPage);
+pageModifications.register(navItemSelector, addSidebarToDrawer);

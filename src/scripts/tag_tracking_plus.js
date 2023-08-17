@@ -15,8 +15,7 @@ const includeFiltered = true;
 const tagLinkSelector = `${keyToCss('searchResult')} h3 ~ a${keyToCss('typeaheadRow')}[href^="/tagged/"]`;
 const tagTextSelector = keyToCss('tagText');
 
-const trackedTagsData = await apiFetch('/v2/user/tags') ?? {};
-const trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
+let trackedTags;
 const unreadCounts = new Map();
 
 let sidebarItem;
@@ -66,9 +65,24 @@ const refreshCount = async function (tag) {
     .filter((value, index, array) => array.indexOf(value) === index)
     .forEach(unreadCountElement => {
       unreadCountElement.textContent = unreadCountString;
+      if (unreadCountElement.closest('li')) {
+        unreadCountElement.closest('li').dataset.new = unreadCountString !== '0';
+      }
     });
 
   unreadCounts.set(tag, unreadCountString);
+  updateSidebarStatus();
+};
+
+const updateSidebarStatus = () => {
+  if (sidebarItem) {
+    sidebarItem.dataset.loading = [...unreadCounts.values()].some(
+      unreadCountString => unreadCountString === undefined
+    );
+    sidebarItem.dataset.hasNew = [...unreadCounts.values()].some(
+      unreadCountString => unreadCountString && unreadCountString !== '0'
+    );
+  }
 };
 
 const refreshAllCounts = async (isFirstRun = false) => {
@@ -140,10 +154,12 @@ const processTagLinks = function (tagLinkElements) {
 };
 
 export const main = async function () {
-  onNewPosts.addListener(processPosts);
-  refreshAllCounts(true).then(startRefreshInterval);
+  const trackedTagsData = (await apiFetch('/v2/user/tags')) ?? {};
+  trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
 
-  const { showUnread } = await getPreferences('tag_tracking_plus');
+  trackedTags.forEach(tag => unreadCounts.set(tag, undefined));
+
+  const { showUnread, onlyShowNew } = await getPreferences('tag_tracking_plus');
   if (showUnread === 'both' || showUnread === 'search') {
     pageModifications.register(tagLinkSelector, processTagLinks);
   }
@@ -158,9 +174,13 @@ export const main = async function () {
         count: '\u22EF'
       }))
     });
+
+    onlyShowNew && sidebarItem.classList.add('only-show-new');
+    updateSidebarStatus();
   }
 
   onNewPosts.addListener(processPosts);
+  refreshAllCounts(true).then(startRefreshInterval);
 };
 
 export const clean = async function () {
@@ -174,3 +194,5 @@ export const clean = async function () {
   unreadCounts.clear();
   sidebarItem = undefined;
 };
+
+export const stylesheet = true;

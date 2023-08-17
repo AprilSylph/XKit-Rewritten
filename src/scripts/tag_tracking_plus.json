@@ -17,6 +17,11 @@
         { "value": "sidebar", "label": "Only in the sidebar" }
       ],
       "default": "both"
+    },
+    "onlyShowNew": {
+      "type": "checkbox",
+      "label": "Only show tags with new posts in the sidebar",
+      "default": false
     }
   }
 }

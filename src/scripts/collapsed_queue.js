@@ -28,6 +28,8 @@ const processPosts = async function (postElements) {
 
 export const main = async function () {
   const { runInQueue, runInDrafts } = await getPreferences('collapsed_queue');
+  if (![runInQueue, runInDrafts].some(Boolean)) return;
+
   const regexGroup = [
     ...runInQueue ? ['queue'] : [],
     ...runInDrafts ? ['draft'] : []

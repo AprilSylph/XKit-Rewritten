@@ -1,4 +1,4 @@
-.xkit-postblock-hidden article {
+[data-postblock-hidden] article {
   display: none;
 }
 

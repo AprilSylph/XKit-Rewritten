@@ -1,4 +1,4 @@
-import { filterPostElements } from '../util/interface.js';
+import { getTimelineItemWrapper, filterPostElements } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
@@ -9,7 +9,7 @@ import { notify } from '../util/notifications.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
-const hiddenClass = 'xkit-postblock-hidden';
+const hiddenAttribute = 'data-postblock-hidden';
 const warningClass = 'xkit-postblock-warning';
 const storageKey = 'postblock.blockedPostRootIDs';
 const uuidsStorageKey = 'postblock.uuids';
@@ -20,7 +20,7 @@ let uuids = {};
 const addWarningElement = (postElement, rootID) => {
   const showButton = dom('button', null, {
     click: ({ currentTarget }) => {
-      postElement.classList.remove(hiddenClass);
+      getTimelineItemWrapper(postElement).removeAttr(hiddenAttribute);
       currentTarget.disabled = true;
     }
   }, 'show it');
@@ -59,12 +59,12 @@ const processPosts = async function (postElements) {
     const rootID = rebloggedRootId || postID;
 
     if (blockedPostRootIDs.includes(rootID)) {
-      postElement.classList.add(hiddenClass);
+      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
 
       const { timeline } = postElement.closest('[data-timeline]').dataset;
       timeline.includes(`posts/${rootID}/permalink`) && addWarningElement(postElement, rootID);
     } else {
-      postElement.classList.remove(hiddenClass);
+      getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
     }
 
     const saveUuidPair = (id, uuid) => {
@@ -145,7 +145,7 @@ export const clean = async function () {
   unregisterMeatballItem(meatballButtonId);
   onNewPosts.removeListener(processPosts);
 
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`.${warningClass}`).remove();
 };
 

@@ -1,4 +1,3 @@
-
 const postsBlockedCount = document.getElementById('notification-blocked-count');
 const blockedPostList = document.getElementById('notification-blocked-posts');
 const blockedPostTemplate = document.getElementById('notification-blocked-post');

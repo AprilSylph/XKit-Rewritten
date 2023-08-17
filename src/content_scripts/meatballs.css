@@ -1,8 +1,4 @@
 .xkit-meatball-button {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
   box-sizing: border-box;
   width: 100%;
   padding: 10px;
@@ -27,4 +23,9 @@
 .xkit-meatball-button:hover,
 .xkit-meatball-button:focus {
   background-color: rgb(var(--secondary-accent));
+}
+
+.xkit-meatball-button::before {
+  content: "[XKit] ";
+  white-space: pre-wrap;
 }

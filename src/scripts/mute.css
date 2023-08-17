@@ -1,5 +1,5 @@
-.xkit-mute-active .xkit-mute-hidden article,
-:is([data-mute-mode="original"], [data-mute-mode="reblogged"]) ~ .xkit-mute-hidden-on-blog article {
+.xkit-mute-active [data-mute-hidden] article,
+:is([data-mute-mode="original"], [data-mute-mode="reblogged"]) ~ [data-mute-hidden-on-blog] article {
   display: none;
 }
 

@@ -1,4 +1,4 @@
-import { filterPostElements, blogViewSelector, postSelector } from '../util/interface.js';
+import { filterPostElements, blogViewSelector, postSelector, getTimelineItemWrapper } from '../util/interface.js';
 import { registerBlogMeatballItem, registerMeatballItem, unregisterBlogMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { timelineObject } from '../util/react_props.js';
@@ -10,8 +10,8 @@ import { getPreferences } from '../util/preferences.js';
 const meatballButtonId = 'mute';
 const meatballButtonLabel = ({ blogName, name }) => `Mute options for ${blogName ?? name}`;
 
-const hiddenClass = 'xkit-mute-hidden';
-const onBlogHiddenClass = 'xkit-mute-hidden-on-blog';
+const hiddenAttribute = 'data-mute-hidden';
+const onBlogHiddenAttribute = 'data-mute-hidden-on-blog';
 const activeClass = 'xkit-mute-active';
 const warningClass = 'xkit-mute-warning';
 const lengthenedClass = 'xkit-mute-lengthened';
@@ -121,17 +121,24 @@ const processPosts = async function (postElements) {
     const reblogUuid = isRebloggedPost ? uuid : null;
 
     if (['all', 'original'].includes(mutedBlogs[originalUuid])) {
-      postElement.classList.add(originalUuid === currentBlogViewUuid ? onBlogHiddenClass : hiddenClass);
+      getTimelineItemWrapper(postElement).setAttribute(
+        originalUuid === currentBlogViewUuid ? onBlogHiddenAttribute : hiddenAttribute,
+        ''
+      );
     }
     if (['all', 'reblogged'].includes(mutedBlogs[reblogUuid])) {
-      postElement.classList.add(reblogUuid === currentBlogViewUuid ? onBlogHiddenClass : hiddenClass);
+      getTimelineItemWrapper(postElement).setAttribute(
+        reblogUuid === currentBlogViewUuid ? onBlogHiddenAttribute : hiddenAttribute,
+        ''
+      );
     }
 
     if (checkTrail) {
       for (const { blog } of trail) {
         if (['all'].includes(mutedBlogs[blog?.uuid])) {
-          postElement.classList.add(
-            blog?.uuid === currentBlogViewUuid ? onBlogHiddenClass : hiddenClass
+          getTimelineItemWrapper(postElement).setAttribute(
+            blog?.uuid === currentBlogViewUuid ? onBlogHiddenAttribute : hiddenAttribute,
+            ''
           );
         }
       }
@@ -242,8 +249,8 @@ export const clean = async function () {
   unregisterBlogMeatballItem(meatballButtonId);
   onNewPosts.removeListener(processPosts);
 
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
-  $(`.${onBlogHiddenClass}`).removeClass(onBlogHiddenClass);
+  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  $(`[${onBlogHiddenAttribute}]`).removeAttr(onBlogHiddenAttribute);
   $(`.${activeClass}`).removeClass(activeClass);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
   $(`.${warningClass}`).remove();

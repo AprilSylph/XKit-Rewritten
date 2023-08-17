@@ -60,7 +60,7 @@ const onBeforeRepaint = () => {
 
   const addedNodes = addedNodesPool
     .splice(0)
-    .filter(addedNode => addedNode instanceof Element && addedNode.isConnected);
+    .filter(addedNode => addedNode.isConnected);
 
   if (addedNodes.length === 0) return;
 

@@ -3,20 +3,20 @@ import { pageModifications } from '../../util/mutations.js';
 import { translate } from '../../util/language_data.js';
 import { blogViewSelector, buildStyle } from '../../util/interface.js';
 
-const hiddenClass = 'xkit-no-recommended-blogs-hidden';
+const hiddenAttribute = 'data-no-recommended-blogs-hidden';
 
-const styleElement = buildStyle(`.${hiddenClass} { display: none; }`);
+const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
 
 const hideDashboardRecommended = function (sidebarTitles) {
   sidebarTitles
     .filter(h1 => h1.textContent === translate('Check out these blogs'))
-    .forEach(h1 => h1.parentNode.classList.add(hiddenClass));
+    .forEach(h1 => h1.parentNode.setAttribute(hiddenAttribute, ''));
 };
 
 const hideTagPageRecommended = blogsLists =>
   blogsLists
     .filter(ul => !ul.matches(blogViewSelector))
-    .forEach(ul => ul.parentNode.classList.add(hiddenClass));
+    .forEach(ul => ul.parentNode.setAttribute(hiddenAttribute, ''));
 
 export const main = async function () {
   pageModifications.register('aside > div > h1', hideDashboardRecommended);
@@ -31,5 +31,5 @@ export const clean = async function () {
   pageModifications.unregister(hideDashboardRecommended);
   pageModifications.unregister(hideTagPageRecommended);
   styleElement.remove();
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

@@ -1,4 +1,4 @@
-import { filterPostElements } from '../util/interface.js';
+import { getTimelineItemWrapper, filterPostElements } from '../util/interface.js';
 import { timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { primaryBlogName } from '../util/user.js';
@@ -8,7 +8,7 @@ import { dom } from '../util/dom.js';
 import { getPreferences } from '../util/preferences.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
-const hiddenClass = 'xkit-mutual-checker-hidden';
+const hiddenAttribute = 'data-mutual-checker-hidden';
 const mutualsClass = 'from-mutual';
 const postAttributionSelector = `header ${keyToCss('attributionHeaderText')}`;
 
@@ -61,7 +61,7 @@ const addIcons = function (postElements) {
       postElement.classList.add(mutualsClass);
       postAttribution.prepend(icon.cloneNode(true));
     } else if (showOnlyMutuals) {
-      postElement.classList.add(hiddenClass);
+      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
     }
   });
 };
@@ -91,7 +91,7 @@ export const clean = async function () {
   onNewPosts.removeListener(addIcons);
 
   $(`.${mutualsClass}`).removeClass(mutualsClass);
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`.${mutualIconClass}`).remove();
 };
 

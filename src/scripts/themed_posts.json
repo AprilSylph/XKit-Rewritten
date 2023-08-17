@@ -22,6 +22,15 @@
       "type": "textarea",
       "label": "Disable theming on these blogs (comma-separated)",
       "default": ""
+    },
+    "missingPostMode": {
+      "type": "select",
+      "label": "Disabled/deleted blog theming",
+      "options": [
+        { "value": "palette", "label": "default/palette color" },
+        { "value": "outer_post", "label": "inherit reblogging blog's theme" }
+      ],
+      "default": "palette"
     }
   }
 }

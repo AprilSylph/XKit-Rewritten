@@ -19,9 +19,9 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
     return;
   }
 
-  const { blog: { name, isAdult }, trail } = await timelineObject(postElement);
+  const { blog: { name, isAdult }, communityLabels, trail } = await timelineObject(postElement);
 
-  if (isAdult || localFlaggedBlogs.includes(name)) {
+  if (isAdult || communityLabels.hasCommunityLabel || localFlaggedBlogs.includes(name)) {
     postElement.classList.add(hiddenClass);
     return;
   }
@@ -41,7 +41,7 @@ export const main = async function () {
   styleElement.textContent = localFlaggedBlogs
     .map(username => `[title="${username}"] img[alt="${translate('Avatar')}"] { filter: blur(20px); }`)
     .join('');
-  document.head.append(styleElement);
+  document.documentElement.append(styleElement);
   onNewPosts.addListener(processPosts);
 };
 

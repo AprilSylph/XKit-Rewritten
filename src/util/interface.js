@@ -1,12 +1,18 @@
+import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
 export const blogViewSelector = '[style*="--blog-title-color"] *';
 
+const listTimelineObjectSelector = keyToCss('listTimelineObject');
+const cellSelector = keyToCss('cell');
+
+export const getTimelineItemWrapper = element => element.closest(cellSelector) || element.closest(listTimelineObjectSelector);
+
 /**
  * @typedef {object} PostFilterOptions
  * @property {string} [excludeClass] - Classname to exclude and add
- * @property {RegExp} [timeline] - Filter results to matching [data-timeline] children
+ * @property {RegExp|string} [timeline] - Filter results to matching [data-timeline] children
  * @property {boolean} [noBlogView] - Whether to exclude posts in the blog view modal
  * @property {boolean} [includeFiltered] - Whether to include filtered posts
  */
@@ -17,10 +23,15 @@ export const blogViewSelector = '[style*="--blog-title-color"] *';
  * @returns {HTMLDivElement[]} Matching post elements
  */
 export const filterPostElements = function (postElements, { excludeClass, timeline, noBlogView = false, includeFiltered = false } = {}) {
-  postElements = postElements.map(element => element.closest(postSelector)).filter(Boolean);
+  postElements = postElements
+    .filter(element => element.isConnected)
+    .map(element => element.closest(postSelector))
+    .filter(Boolean);
 
   if (timeline instanceof RegExp) {
     postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]')?.dataset.timeline));
+  } else if (timeline) {
+    postElements = postElements.filter(postElement => timeline === postElement.closest('[data-timeline]')?.dataset.timeline);
   }
 
   if (noBlogView) {
@@ -53,7 +64,6 @@ export const buildStyle = (css = '') => dom('style', { class: 'xkit' }, null, [c
 
 /**
  * Determine a post's legacy type
- *
  * @param {object} post - Destructured into content and layout
  * @param {Array} [post.trail] - Full post trail
  * @param {Array} [post.content] - Post content array

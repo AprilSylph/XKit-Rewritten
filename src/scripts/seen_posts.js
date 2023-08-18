@@ -1,13 +1,13 @@
-import { filterPostElements, postSelector } from '../util/interface.js';
+import { filterPostElements, getTimelineItemWrapper, postSelector } from '../util/interface.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 
-const excludeClass = 'xkit-seen-posts-done';
+const excludeAttribute = 'data-seen-posts-done';
 const timeline = '/v2/timeline/dashboard';
 const includeFiltered = true;
 
-const dimClass = 'xkit-seen-posts-seen';
+const dimAttribute = 'data-seen-posts-seen';
 const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 const hideClass = 'xkit-seen-posts-hide';
 const lengthenedClass = 'xkit-seen-posts-lengthened';
@@ -52,11 +52,15 @@ const lengthenTimelines = () =>
 const dimPosts = function (postElements) {
   lengthenTimelines();
 
-  for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
+  for (const postElement of filterPostElements(postElements, { timeline, includeFiltered })) {
     const { id } = postElement.dataset;
+    const timelineItem = getTimelineItemWrapper(postElement);
+
+    if (timelineItem.getAttribute(excludeAttribute) !== null) return;
+    timelineItem.setAttribute(excludeAttribute, '');
 
     if (seenPosts.includes(id)) {
-      postElement.classList.add(dimClass);
+      timelineItem.setAttribute(dimAttribute, '');
     } else {
       observer.observe(postElement.querySelector('article'));
     }
@@ -108,9 +112,9 @@ export const clean = async function () {
   timers.forEach((timerId) => clearTimeout(timerId));
   timers.clear();
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
+  $(`[${excludeAttribute}]`).removeAttr(excludeAttribute);
+  $(`[${dimAttribute}]`).removeAttr(dimAttribute);
   $(`.${hideClass}`).removeClass(hideClass);
-  $(`.${dimClass}`).removeClass(dimClass);
   $(`.${onlyDimAvatarsClass}`).removeClass(onlyDimAvatarsClass);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
 };

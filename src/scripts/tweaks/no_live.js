@@ -7,7 +7,7 @@ const styleElement = buildStyle(`[${hiddenAttribute}] > * { display: none; }`);
 
 const processFrames = frames =>
   frames.forEach(frame =>
-    getTimelineItemWrapper(frame).setAttribute(hiddenAttribute, '')
+    getTimelineItemWrapper(frame)?.setAttribute(hiddenAttribute, '')
   );
 
 export const main = async function () {

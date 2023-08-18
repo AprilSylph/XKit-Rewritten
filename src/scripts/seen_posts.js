@@ -39,8 +39,7 @@ const markAsSeen = (articleElement) => {
   const postElement = articleElement.closest(postSelector);
   seenPosts.push(postElement.dataset.id);
   seenPosts.splice(0, seenPosts.length - 10000);
-  getTimelineItemWrapper(postElement).style.border = '3px solid red';
-  // browser.storage.local.set({ [storageKey]: seenPosts });
+  browser.storage.local.set({ [storageKey]: seenPosts });
 };
 
 const lengthenTimelines = () =>

@@ -1,4 +1,4 @@
-import { filterPostElements, postSelector } from '../util/interface.js';
+import { filterPostElements, getTimelineItemWrapper, postSelector } from '../util/interface.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
@@ -7,7 +7,7 @@ const excludeClass = 'xkit-seen-posts-done';
 const timeline = '/v2/timeline/dashboard';
 const includeFiltered = true;
 
-const dimClass = 'xkit-seen-posts-seen';
+const dimAttribute = 'data-seen-posts-seen';
 const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 const hideClass = 'xkit-seen-posts-hide';
 const lengthenedClass = 'xkit-seen-posts-lengthened';
@@ -56,7 +56,7 @@ const dimPosts = function (postElements) {
     const { id } = postElement.dataset;
 
     if (seenPosts.includes(id)) {
-      postElement.classList.add(dimClass);
+      getTimelineItemWrapper(postElement).setAttribute(dimAttribute, '');
     } else {
       observer.observe(postElement.querySelector('article'));
     }
@@ -110,7 +110,7 @@ export const clean = async function () {
 
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${hideClass}`).removeClass(hideClass);
-  $(`.${dimClass}`).removeClass(dimClass);
+  $(`[${dimAttribute}]`).removeAttr(dimAttribute);
   $(`.${onlyDimAvatarsClass}`).removeClass(onlyDimAvatarsClass);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
 };

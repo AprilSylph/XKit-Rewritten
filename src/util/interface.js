@@ -1,7 +1,13 @@
+import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
 export const blogViewSelector = '[style*="--blog-title-color"] *';
+
+const listTimelineObjectSelector = keyToCss('listTimelineObject');
+const cellSelector = keyToCss('cell');
+
+export const getTimelineItemWrapper = element => element.closest(cellSelector) || element.closest(listTimelineObjectSelector);
 
 /**
  * @typedef {object} PostFilterOptions

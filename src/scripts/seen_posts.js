@@ -56,13 +56,13 @@ const dimPosts = function (postElements) {
     const { id } = postElement.dataset;
     const timelineItem = getTimelineItemWrapper(postElement);
 
-    if (timelineItem.getAttribute(excludeAttribute) !== null) return;
+    const isFirstRender = timelineItem.getAttribute(excludeAttribute) === null;
     timelineItem.setAttribute(excludeAttribute, '');
 
-    if (seenPosts.includes(id)) {
-      timelineItem.setAttribute(dimAttribute, '');
-    } else {
+    if (seenPosts.includes(id) === false) {
       observer.observe(postElement.querySelector('article'));
+    } else if (isFirstRender) {
+      timelineItem.setAttribute(dimAttribute, '');
     }
   }
 };

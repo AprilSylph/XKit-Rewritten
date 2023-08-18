@@ -1,4 +1,10 @@
-import { cssMap } from '../../util/css_map.js';
+import { cssMap, keyToCss } from '../../util/css_map.js';
+const rootNode = document.getElementById('root');
+
+const addedNodesPool = [];
+const attributeTargetsPool = [];
+let repaintQueued = false;
+let timerId;
 
 const markerClass = '•';
 
@@ -9,10 +15,8 @@ for (const [key, values] of Object.entries(cssMap)) {
   }
 }
 
-const processEverything = () => {
-  disconnect();
-  const elements = document.body.querySelectorAll(`[class]:not(.${markerClass})`);
-  for (const element of elements) {
+const processElements = elements =>
+  elements.forEach(element => {
     const classes = [];
     for (const css of element.classList.values()) {
       const mappedCss = reverseCssMap[css];
@@ -21,42 +25,72 @@ const processEverything = () => {
       }
     }
     classes.length && element.classList.add(markerClass, ...classes);
-  }
+  });
+
+const onBeforeRepaint = () => {
+  repaintQueued = false;
+  disconnect();
+
+  const addedNodes = addedNodesPool
+    .splice(0)
+    .filter(addedNode => addedNode.isConnected);
+
+  const attributeTargets = attributeTargetsPool
+    .splice(0)
+    .filter(addedNode => addedNode.isConnected);
+
+  const selector = '[class]';
+
+  const matchingElements = [
+    ...addedNodes.filter(addedNode => addedNode.matches(selector)),
+    ...addedNodes.flatMap(addedNode => [...addedNode.querySelectorAll(selector)]),
+    ...attributeTargets
+  ].filter((value, index, array) => index === array.indexOf(value));
+
+  processElements(matchingElements);
+
   observe();
 };
 
-const throttle = func => {
-  let running = false;
-  return (...args) => {
-    if (!running) {
-      running = true;
-      requestAnimationFrame(() => {
-        running = false;
-        func(...args);
-      });
-    }
-  };
-};
+const cellSelector = keyToCss('cell');
 
-const throttledProcessEverything = throttle(processEverything);
+const observer = new MutationObserver(mutations => {
+  const addedNodes = mutations
+    .filter(({ type }) => type === 'childList')
+    .flatMap(({ addedNodes }) => [...addedNodes])
+    .filter(addedNode => addedNode instanceof Element);
 
-const cssObserver = new MutationObserver(throttledProcessEverything);
+  const attributeTargets = mutations
+    .filter(({ type }) => type === 'attributes')
+    .map(({ target }) => target);
+
+  addedNodesPool.push(...addedNodes);
+  attributeTargetsPool.push(...attributeTargets);
+
+  if (addedNodes.some(addedNode => addedNode.parentElement?.matches(cellSelector))) {
+    cancelAnimationFrame(timerId);
+    onBeforeRepaint();
+  } else if (repaintQueued === false) {
+    requestAnimationFrame(onBeforeRepaint);
+    repaintQueued = true;
+  }
+});
+
 const observe = () =>
-  cssObserver.observe(document.body, {
+  observer.observe(rootNode, {
     childList: true,
     subtree: true,
     attributeFilter: ['class']
   });
-const disconnect = () => cssObserver.disconnect();
-
-observe();
+const disconnect = () => observer.disconnect();
 
 export const main = async () => {
-  throttledProcessEverything();
-  observe();
+  processElements([...rootNode.querySelectorAll('[class]')]);
+  onBeforeRepaint();
 };
 
 export const clean = async () => {
+  cancelAnimationFrame(timerId);
   disconnect();
   // class removal omitted
 };

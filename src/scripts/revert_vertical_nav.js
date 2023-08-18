@@ -372,5 +372,3 @@ export const main = async function () {
 export const clean = async function () {
   styleElement.remove();
 };
-
-export const stylesheet = true;

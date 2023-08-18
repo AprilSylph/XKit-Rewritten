@@ -56,7 +56,7 @@ const dimPosts = function (postElements) {
     const { id } = postElement.dataset;
     const timelineItem = getTimelineItemWrapper(postElement);
 
-    if (timelineItem.getAttribute(excludeAttribute) === '') return;
+    if (timelineItem.getAttribute(excludeAttribute) !== null) return;
     timelineItem.setAttribute(excludeAttribute, '');
 
     if (seenPosts.includes(id)) {

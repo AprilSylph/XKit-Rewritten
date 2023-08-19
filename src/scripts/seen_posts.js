@@ -36,8 +36,10 @@ const markAsSeen = (articleElement) => {
   observer.unobserve(articleElement);
   timers.delete(articleElement);
 
-  const postElement = articleElement.closest(postSelector);
-  seenPosts.push(postElement.dataset.id);
+  const { dataset: { id } } = articleElement.closest(postSelector);
+  if (seenPosts.includes(id)) return;
+
+  seenPosts.push(id);
   seenPosts.splice(0, seenPosts.length - 10000);
   browser.storage.local.set({ [storageKey]: seenPosts });
 };

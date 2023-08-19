@@ -36,8 +36,10 @@ const markAsSeen = (articleElement) => {
   observer.unobserve(articleElement);
   timers.delete(articleElement);
 
-  const postElement = articleElement.closest(postSelector);
-  seenPosts.push(postElement.dataset.id);
+  const { dataset: { id } } = articleElement.closest(postSelector);
+  if (seenPosts.includes(id)) return;
+
+  seenPosts.push(id);
   seenPosts.splice(0, seenPosts.length - 10000);
   browser.storage.local.set({ [storageKey]: seenPosts });
 };
@@ -56,13 +58,13 @@ const dimPosts = function (postElements) {
     const { id } = postElement.dataset;
     const timelineItem = getTimelineItemWrapper(postElement);
 
-    if (timelineItem.getAttribute(excludeAttribute) !== null) return;
+    const isFirstRender = timelineItem.getAttribute(excludeAttribute) === null;
     timelineItem.setAttribute(excludeAttribute, '');
 
-    if (seenPosts.includes(id)) {
-      timelineItem.setAttribute(dimAttribute, '');
-    } else {
+    if (seenPosts.includes(id) === false) {
       observer.observe(postElement.querySelector('article'));
+    } else if (isFirstRender) {
+      timelineItem.setAttribute(dimAttribute, '');
     }
   }
 };

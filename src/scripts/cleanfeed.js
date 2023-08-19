@@ -42,7 +42,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
 export const main = async function () {
   ({ blockingMode, localBlogFlagging, localTagFlagging } = await getPreferences('cleanfeed'));
   localFlaggedBlogs = localBlogFlagging.toLowerCase().split(',').map(username => username.trim());
-  localFlaggedTags = localTagFlagging.toLowerCase().split(',').map(tag => tag.replace(/#/gi, '').trim());
+  localFlaggedTags = localTagFlagging.toLowerCase().split(',').map(tag => tag.replaceAll('#', '').trim());
 
   styleElement.textContent = localFlaggedBlogs
     .map(username => `[title="${username}"] img[alt="${translate('Avatar')}"] { filter: blur(20px); }`)

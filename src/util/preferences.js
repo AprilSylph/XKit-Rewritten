@@ -16,11 +16,11 @@ export const getPreferences = async function (scriptName) {
     if (preference.type === 'iframe') { continue; }
 
     const storageKey = `${scriptName}.preferences.${key}`;
-    const { [storageKey]: savedPreference } = storage;
+    const savedPreference = storage[storageKey];
 
     if (savedPreference === undefined) {
       if (preference.inherit) {
-        const { [preference.inherit]: inheritedDefault } = storage;
+        const inheritedDefault = storage[preference.inherit];
         if (inheritedDefault !== undefined) {
           preference.default = inheritedDefault;
           browser.storage.local.remove(preference.inherit);

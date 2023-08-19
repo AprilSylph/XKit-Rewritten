@@ -195,15 +195,14 @@ const pathname = location.pathname.split('/')[1];
 const waitFor = (selector, retried = 0) => new Promise((resolve) => {
   if ($(selector).length) { resolve(); } else if (retried < 25) { waitFor(selector, retried + 1).then(resolve); }
 });
-const parser = new DOMParser();
 
 let moveSettings;
 let accountStats;
 let newSearch;
 
-const element = selector => document.querySelector(keyToCss(selector));
-const newElement = str => parser.parseFromString(str);
-const newIcon = name => newElement(`<svg xmlns='http://www.w3.org/2000/svg' height='18' width='20' role='presentation' style='--icon-color-primary: rgba(var(--black), 0.65);'><use href='#managed-icon__${name}'></use></svg>`);
+const element = selector => $(keyToCss(selector));
+const newIcon = name => $(`<svg xmlns='http://www.w3.org/2000/svg' height='18' width='20' role='presentation' style='--icon-color-primary: rgba(var(--black), 0.65);'><use href='#managed-icon__${name}'></use></svg>`);
+const keyToClass = key => keyToClasses('key')[0];
 
 export const main = async function () {
   ({ moveSettings, accountStats, newSearch } = await getPreferences('revert_vertical_nav'));
@@ -213,27 +212,28 @@ export const main = async function () {
   const logoContainer = element('logoContainer');
   const createPost = element('createPost');
   const navigationLinks = element('navigationLinks');
-  const homeIcon = navigationLinks.querySelector('use[href="#managed-icon__home"]');
-  const inboxIcon = navigationLinks.querySelector('use[href="#managed-icon__mail"]');
-  const messagingIcon = navigationLinks.querySelector('use[href="#managed-icon__messaging"]');
-  const accountSubnav = document.getElementById('account_subnav');
-  const newHeading = newElement(`<div id='xkit-uifix-newHeading' class='${keyToClasses('heading').join(' ')}'><h3>${translate('Account')}</h3></div>`);
+  const navigationItems = navigationLinks.children();
+  const homeIcon = navigationItems.has('use[href="#managed-icon__home"]');
+  const inboxIcon = navigationItems.has('use[href="#managed-icon__mail"]');
+  const messagingIcon = navigationItems.has('use[href="#managed-icon__messaging"]');
+  const accountSubnav = $('#account_subnav');
+  const newHeading = $(`<div id='xkit-uifix-newHeading' class='${keyToClass('heading')}'><h3>${translate('Account')}</h3></div>`);
   const logoutButton = element('logoutButton');
 
   if (match.includes(pathname)) {
     waitFor('searchbarContainer').then(() => {
       const searchbarContainer = element('searchbarContainer');
-      newDesktopLayout.prependChild(searchbarContainer);
+      newDesktopLayout.prepend(searchbarContainer);
     });
   } else if (newSearch) {
-    newDesktopLayout.prependChild(newElement(`
-      <div class='${keyToClasses('searchSidebarItem').join(' ')}' style='max-width: 550px; width: 100%;' >
-        <div class='${keyToClasses('formContainer').join(' ')}'>
-          <span data-testid='controlled-popover-wrapper' class='${keyToClasses('targetWrapper').join(' ')}'>
-            <span class='${keyToClasses('targetWrapper').join(' ')}'>
-              <form method='GET' action='/search' role='search' class='${keyToClasses('form').join(' ')}'>
-                <div class='${keyToClasses('searchbarContainer').join(' ')}'>
-                  <div class='${keyToClasses('searchIcon').join(' ')}'>
+    newDesktopLayout.prepend($(`
+      <div class='${keyToClass('searchSidebarItem')}' style='max-width: 550px; width: 100%;' >
+        <div class='${keyToClass('formContainer')}'>
+          <span data-testid='controlled-popover-wrapper' class='${keyToClass('targetWrapper')}'>
+            <span class='${keyToClass('targetWrapper')}'>
+              <form method='GET' action='/search' role='search' class='${keyToClass('form')}'>
+                <div class='${keyToClass('searchbarContainer')}'>
+                  <div class='${keyToClass('searchIcon')}'>
                     <svg xmlns='http://www.w3.org/2000/svg' height='18' width='18' role='presentation' >
                       <use href='#managed-icon__search'></use>
                     </svg>
@@ -243,7 +243,7 @@ export const main = async function () {
                     type='text'
                     autocomplete='off'
                     aria-label='${translate('Search')}'
-                    class='${keyToClasses('searchbar').join(' ')}'
+                    class='${keyToClass('searchbar')}'
                     placeholder='${translate('Search Tumblr')}'
                     autocapitalize='sentences'
                     value=''
@@ -256,32 +256,32 @@ export const main = async function () {
       </div>
     `));
   }
-  bluespaceLayout.appendChild(mainContentWrapper);
-  newDesktopLayout.prependChild(logoContainer);
-  newDesktopLayout.appendChild(createPost);
-  homeIcon.insertAdjacentElement('afterend', inboxIcon);
-  inboxIcon.insertAdjacentElement('afterend', messagingIcon);
-  accountSubnav.prependChild(newHeading);
-  newHeading.appendChild(logoutButton);
+  bluespaceLayout.append(mainContentWrapper);
+  newDesktopLayout.prepend(logoContainer);
+  newDesktopLayout.append(createPost);
+  inboxIcon.insertAfter(homeIcon);
+  messagingIcon.insertAfter(inboxIcon);
+  accountSubnav.prepend(newHeading);
+  newHeading.append(logoutButton);
   $(document).on('click', () => {
     if ($('#account_subnav:hover').length) { return; }
     if ($('#account_subnav').attr('hidden')) { document.getElementById('account_button').click(); }
   });
   if (moveSettings) {
-    const settings = navigationLinks.querySelector('[href="/settings/account"]');
-    settings.insertAfter(accountSubnav.querySelectorAll('li').querySelector('[href="/following"]'));
+    const settings = navigationItems.has('[href="/settings/account"]');
+    settings.insertAfter(accountSubnav.children('li').has('[href="/following"]'));
   }
-  document.querySelector(`[href='/likes'] ${keyToCss('childWrapper')}`).prependChild(newIcon('like-filled'));
-  document.querySelector(`[href='/following'] ${keyToCss('childWrapper')}`).prependChild(newIcon('following'));
+  $(`[href='/likes'] ${keyToCss('childWrapper')}`).prepend(newIcon('like-filled'));
+  $(`[href='/following'] ${keyToCss('childWrapper')}`).prepend(newIcon('following'));
   if (accountStats) {
     const blogData = window.___INITIAL_STATE___.queries.queries[0].state.data.user.blogs;
-    const blogTiles = document.querySelectorAll('blogTile');
+    const blogTiles = element('blogTile');
     for (let i = 0; i < blogData.length; ++i) {
-      const tile = blogTiles.item(i);
+      const tile = blogTiles.eq(i);
       const blog = blogData[i];
-      const caret = newElement(`
-        <button class='${keyToClasses('button')[0]}' aria-label='${translate('Show Blog Statistics')}'>
-            <span class='${keyToClasses('buttonInner').join(' ')} ${keyToClasses('menuTarget').join(' ')}' style='transform: rotate(0deg); display: flex; transition: transform 200ms ease-in-out 0s;' tabindex='-1'>
+      const caret = $(`
+        <button class='${keyToClass('button')}' aria-label='${translate('Show Blog Statistics')}'>
+            <span class='${keyToClass('buttonInner')} ${keyToClass('menuTarget')}' style='transform: rotate(0deg); display: flex; transition: transform 200ms ease-in-out 0s;' tabindex='-1'>
                 <svg xmlns='http://www.w3.org/2000/svg' height='12' width='12' role='presentation'>
                     <use href='#managed-icon__caret-thin'></use>
                 </svg>
@@ -295,18 +295,18 @@ export const main = async function () {
         } else { $(this).css('transform', 'rotate(0deg)'); }
         element('accountStats').eq(i + 1).toggle();
       });
-      const stats = newElement(`
-        <ul class='${keyToClasses('accountStats').join(' ')}'>
+      const stats = $(`
+        <ul class='${keyToClass('accountStats')}'>
             <li>
                 <a href='/blog/${blog.name}'>
                     <span>${translate('Posts')}</span>
-                    <span class='${keyToClasses('count').join(' ')}'>${blog.posts ? blog.posts : ''}</span>
+                    <span class='${keyToClasses('count')[3]}'>${blog.posts ? blog.posts : ''}</span>
                 </a>
             </li>
             <li>
                 <a href='/blog/${blog.name}/followers'>
                     <span>${translate('Followers')}</span>
-                    <span class='${keyToClasses('count').join(' ')}'>${blog.followers ? blog.followers : ''}</span>
+                    <span class='${keyToClasses('count')[3]}'>${blog.followers ? blog.followers : ''}</span>
                 </a>
             </li>
             <li id='xkit-uifix-${blog.name}-activity'>
@@ -317,13 +317,13 @@ export const main = async function () {
             <li>
                 <a href='/blog/${blog.name}/drafts'>
                     <span>${translate('Drafts')}</span>
-                    <span class='${keyToClasses('count').join(' ')}'>${blog.drafts ? blog.drafts : ''}</span>
+                    <span class='${keyToClasses('count')[3]}'>${blog.drafts ? blog.drafts : ''}</span>
                 </a>
             </li>
             <li>
                 <a href='/blog/${blog.name}/queue'>
                     <span>${translate('Queue')}</span>
-                    <span class='${keyToClasses('count').join(' ')}'>${blog.queue ? blog.queue : ''}</span>
+                    <span class='${keyToClasses('count')[3]}'>${blog.queue ? blog.queue : ''}</span>
                 </a>
             </li>
             <li>
@@ -350,7 +350,7 @@ export const main = async function () {
       `);
       tile.insertAdjacentElement('afterend', stats);
       if (blog.isGroupChannel) {
-        const members = newElement(`
+        const members = $(`
           <li>
             <a href='/blog/${blog.name}/members' target='_blank'>
               <span>${translate('Members')}</span>

@@ -1,7 +1,7 @@
-import { keyToCss, keyToClasses } from '../util/css_map';
-import { buildStyle } from '../util/interface';
-import { translate } from '../util/language_data';
-import { getPreferences } from '../util/preferences';
+import { keyToCss, keyToClasses } from '../util/css_map.js';
+import { buildStyle } from '../util/interface.js';
+import { translate } from '../util/language_data.js';
+import { getPreferences } from '../util/preferences.js';
 
 const styleElement = buildStyle();
 styleElement.textContent = `
@@ -213,10 +213,9 @@ export const main = async function () {
   const logoContainer = element('logoContainer');
   const createPost = element('createPost');
   const navigationLinks = element('navigationLinks');
-  const navigationItems = navigationLinks.children();
-  const homeIcon = navigationItems.querySelector('use[href="#managed-icon__home"]');
-  const inboxIcon = navigationItems.querySelector('use[href="#managed-icon__mail"]');
-  const messagingIcon = navigationItems.querySelector('use[href="#managed-icon__messaging"]');
+  const homeIcon = navigationLinks.querySelector('use[href="#managed-icon__home"]');
+  const inboxIcon = navigationLinks.querySelector('use[href="#managed-icon__mail"]');
+  const messagingIcon = navigationLinks.querySelector('use[href="#managed-icon__messaging"]');
   const accountSubnav = document.getElementById('account_subnav');
   const newHeading = newElement(`<div id='xkit-uifix-newHeading' class='${keyToClasses('heading').join(' ')}'><h3>${translate('Account')}</h3></div>`);
   const logoutButton = element('logoutButton');
@@ -269,8 +268,8 @@ export const main = async function () {
     if ($('#account_subnav').attr('hidden')) { document.getElementById('account_button').click(); }
   });
   if (moveSettings) {
-    const settings = navigationItems.querySelector('[href="/settings/account"]');
-    settings.insertAfter(accountSubnav.children.querySelectorAll('li').querySelector('[href="/following"]'));
+    const settings = navigationLinks.querySelector('[href="/settings/account"]');
+    settings.insertAfter(accountSubnav.querySelectorAll('li').querySelector('[href="/following"]'));
   }
   document.querySelector(`[href='/likes'] ${keyToCss('childWrapper')}`).prependChild(newIcon('like-filled'));
   document.querySelector(`[href='/following'] ${keyToCss('childWrapper')}`).prependChild(newIcon('following'));

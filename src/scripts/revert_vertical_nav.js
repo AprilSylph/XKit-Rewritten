@@ -65,7 +65,6 @@ styleElement.textContent = `
       ${keyToCss('navSubHeader')} a { color: rgba(var(--black),.65) !important; }
     ${keyToCss('subNav')} > ${keyToCss('navItem')}, ${keyToCss('accountStats')} li {
       list-style-type: none;
-      border-bottom: 1px solid rgba(var(--black),.07);
     }
     ${keyToCss('subNav')} use { --icon-color-primary: rgba(var(--black),.65) }
     ${keyToCss('subNav')} > ${keyToCss('navItem')}:hover,

@@ -119,7 +119,7 @@ export const main = async function () {
     whitelistedUsernames
   } = await getPreferences('show_originals'));
 
-  whitelist = whitelistedUsernames.split(',').map(username => username.trim());
+  whitelist = whitelistedUsernames.split(',').map(username => username.trim().toLowerCase());
   const nonGroupUserBlogs = userBlogs
     .filter(blog => !blog.isGroupChannel)
     .map(blog => blog.name);

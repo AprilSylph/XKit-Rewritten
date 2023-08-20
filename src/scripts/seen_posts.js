@@ -19,24 +19,24 @@ let seenPosts = [];
 const timers = new Map();
 
 const observer = new IntersectionObserver(
-  (entries) => entries.forEach(({ isIntersecting, target: articleElement }) => {
+  (entries) => entries.forEach(({ isIntersecting, target: element }) => {
     if (isIntersecting) {
-      if (!timers.has(articleElement)) {
-        timers.set(articleElement, setTimeout(() => markAsSeen(articleElement), 300));
+      if (!timers.has(element)) {
+        timers.set(element, setTimeout(() => markAsSeen(element), 300));
       }
     } else {
-      clearTimeout(timers.get(articleElement));
-      timers.delete(articleElement);
+      clearTimeout(timers.get(element));
+      timers.delete(element);
     }
   }),
   { rootMargin: '-20px 0px' }
 );
 
-const markAsSeen = (articleElement) => {
-  observer.unobserve(articleElement);
-  timers.delete(articleElement);
+const markAsSeen = (element) => {
+  observer.unobserve(element);
+  timers.delete(element);
 
-  const { dataset: { id } } = articleElement.closest(postSelector);
+  const { dataset: { id } } = element.closest(postSelector);
   if (seenPosts.includes(id)) return;
 
   seenPosts.push(id);
@@ -62,7 +62,7 @@ const dimPosts = function (postElements) {
     timelineItem.setAttribute(excludeAttribute, '');
 
     if (seenPosts.includes(id) === false) {
-      observer.observe(postElement.querySelector('article'));
+      observer.observe(postElement.querySelector('article header + *'));
     } else if (isFirstRender) {
       timelineItem.setAttribute(dimAttribute, '');
     }

@@ -103,12 +103,14 @@ styleElement.textContent = `
       left: 100px;
     }
     ${keyToCss('navigationWrapper')} {
+      height: 55px;
       display: flex;
       justify-content: center !important;
       width: 100%;
       margin: 0 !important;
       z-index: 100;
       position: fixed;
+      top: 0;
       background-color: RGB(var(--navy));
       border-bottom: 1px solid rgba(var(--white-on-dark), .13);
     }
@@ -198,6 +200,7 @@ styleElement.textContent = `
       align-items: center !important;
       font-size: 0px !important;
     }
+    ${keyToCss('container')}${keyToCss('mainContentIs4ColumnMasonry')} { margin: 0 auto !important; }
     @media (max-width: 1150px) {
       ${keyToCss('searchSidebarItem')} {
         left: 60px;
@@ -240,13 +243,15 @@ const fetchStats = async () => {
     for (const key of ['posts', 'followers', 'drafts', 'queue']) {
       if (blog[key]) {
         const count = $(`<span class='${keyToClasses('count')[3]}'>${blog[key]}</span>`);
-        count.appendTo($(`[href='/blog/${blog.name}/${key}/']`));
+        if (key === 'posts') {
+          count.appendTo($(`.xkit-uifix[href='/blog/${blog.name}']`));
+        } else { count.appendTo($(`.xkit-uifix[href='/blog/${blog.name}/${key}']`)); }
       }
     }
     if (blog.isGroupChannel) {
       const members = $(`
         <li>
-          <a href='/blog/${blog.name}/members' target='_blank'>
+          <a class='xkit-uifix' href='/blog/${blog.name}/members' target='_blank'>
             <span>${translate('Members')}</span>
           </a>
         </li>
@@ -264,18 +269,18 @@ export const main = async function () {
   const logoutButton = element('logoutButton');
   const navSubHeader = element('navSubHeader');
   const navigationWrapper = element('navigationWrapper');
-  const settings = element(keyToCss('navItem')).has('[href="/settings/account"]');
+  const settings = element('navItem').has('[href="/settings/account"]');
 
-  settings.insertAfter(element(keyToCss('navItem')).has('#account_button'));
+  settings.insertAfter(element('navItem').has('#account_button'));
   if (!match.includes(pathname) && newSearch) {
-    element('sidebar').prepend($(`
+    element('layout').prepend($(`
       <div class='xkit-uifix ${keyToClass('searchSidebarItem')}'>
         <div class='${keyToClass('formContainer')}'>
           <span data-testid='controlled-popover-wrapper' class='${keyToClass('targetWrapper')}'>
             <span class='${keyToClass('targetWrapper')}'>
               <form method='GET' action='/search' role='search' class='${keyToClass('form')}'>
                 <div class='${keyToClasses('searchbarContainer')[1]}'>
-                  <div class='${keyToClass('searchIcon')}'>
+                  <div class='${keyToClasses('searchIcon')[5]}'>
                     <svg xmlns='http://www.w3.org/2000/svg' height='18' width='18' role='presentation' >
                       <use href='#managed-icon__search'></use>
                     </svg>
@@ -306,7 +311,7 @@ export const main = async function () {
     if (!$('#account_subnav:hover').length && !$('#account_subnav').attr('hidden')) { document.getElementById('account_button').click(); }
   });
   if (moveSettings) {
-    settings.insertAfter(accountSubnav.children().has('[href="/following"]'));
+    settings.insertAfter(element('navItem').has('[href="/following"]'));
   }
   $(`[href='/likes'] ${keyToCss('childWrapper')}`).prepend(newIcon('like-filled'));
   $(`[href='/following'] ${keyToCss('childWrapper')}`).prepend(newIcon('following'));
@@ -334,47 +339,47 @@ export const main = async function () {
       const stats = $(`
         <ul class='${keyToClass('accountStats')} xkit-uifix'>
             <li>
-                <a href='/blog/${blog}'>
+                <a class='xkit-uifix' href='/blog/${blog}'>
                     <span>${translate('Posts')}</span>
                 </a>
             </li>
             <li>
-                <a href='/blog/${blog}/followers'>
+                <a class='xkit-uifix' href='/blog/${blog}/followers'>
                     <span>${translate('Followers')}</span>
                 </a>
             </li>
             <li id='xkit-uifix-${blog}-activity'>
-                <a href='/blog/${blog}/activity'>
+                <a class='xkit-uifix' href='/blog/${blog}/activity'>
                     <span>${translate('Activity')}</span>
                 </a>
             </li>
             <li>
-                <a href='/blog/${blog}/drafts'>
+                <a class='xkit-uifix' href='/blog/${blog}/drafts'>
                     <span>${translate('Drafts')}</span>
                 </a>
             </li>
             <li>
-                <a href='/blog/${blog}/queue'>
+                <a class='xkit-uifix' href='/blog/${blog}/queue'>
                     <span>${translate('Queue')}</span>
                 </a>
             </li>
             <li>
-                <a href='/blog/${blog}/post-plus'>
+                <a class='xkit-uifix' href='/blog/${blog}/post-plus'>
                     <span>${translate('Post+')}</span>
                 </a>
             </li>
             <li>
-                <a href='/blog/${blog}/blaze'>
+                <a class='xkit-uifix' href='/blog/${blog}/blaze'>
                     <span>${translate('Tumblr Blaze')}</span>
                 </a>
             </li>
             <li>
-                <a href='/settings/blog/${blog}'>
+                <a class='xkit-uifix' href='/settings/blog/${blog}'>
                     <span>${translate('Blog settings')}</span>
                 </a>
             </li>
             <li>
-                <a href='/mega-editor/published/${blog}' target='_blank'>
+                <a class='xkit-uifix' href='/mega-editor/published/${blog}' target='_blank'>
                     <span>${translate('Mass Post Editor')}</span>
                 </a>
             </li>

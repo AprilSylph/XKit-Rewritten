@@ -52,6 +52,7 @@ styleElement.textContent = `
       position: fixed;
       top: 48px;
       border-radius: var(--border-radius-small);
+      box-shadow: 0 0 15px rgba(0,0,0,.5);
     }
     ${keyToCss('subNav')} a,
       ${keyToCss('subNav')} ${keyToCss('childWrapper')},

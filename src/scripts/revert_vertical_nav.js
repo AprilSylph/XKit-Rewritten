@@ -2,147 +2,16 @@ import { keyToCss, keyToClasses } from '../util/css_map.js';
 import { buildStyle } from '../util/interface.js';
 import { translate } from '../util/language_data.js';
 import { getPreferences } from '../util/preferences.js';
+import { userBlogs } from '../util/user.js';
 
 const styleElement = buildStyle();
 styleElement.textContent = `
-  ${keyToCss('createPost')} {
-    width: 44px;
-    margin-left: 10px;
-    content: '';
-  }
-  ${keyToCss('createPost')} > a {
-    border-radius: 3px !important;
-    padding: 5px 12px !important;
-  }
-  ${keyToCss('navigationLinks')} svg { scale: 1.4; }
-  ${keyToCss('navigationLinks')} {
-    display: flex;
-    flex-basis: 100%;
-    margin: 0;
-  }
-  ${keyToCss('navigationLinks')} > ${keyToCss('navItem')} { border: none !important; }
-  @media (max-width: 980px) {
-    ${keyToCss('logoContainer')} {
-      scale: 0.75;
-      padding: 16px 16px 0px;
-    }
-    ${keyToCss('navigationLinks')} {
-      justify-content: center;
-    }
-    ${keyToCss('mobileLayout')} {
-      display: flex;
-      justify-content: center;
-    }
-  }
-
   @media (min-width: 990px) {
-    ${keyToCss('tabsHeader')} { margin-top: 0 !important; }
-    ${keyToCss('searchSidebarItem')} {
-      max-width: 550px;
-      height: unset;
-      padding: 0 8px;
+    ${keyToCss('bluespaceLayout')} > ${keyToCss('newDesktopLayout')} {
+      margin-top: 55px;
     }
-    ${keyToCss('navigation')} { border: none; }
-    ${keyToCss('post')} ${keyToCss('stickyContainer')} ${keyToCss('avatar')}${keyToCss('newDesktopLayout')} {
-      top: calc(70px + var(--dashboard-tabs-header-height,0px))
-    }
-    ${keyToCss('searchShadow')} { background: none; }
-    ${keyToCss('blogTile')} { list-style-type: none; }
-    ${keyToCss('subNav')} {
-      background: RGB(var(--white));
-      scrollbar-color: rgba(var(--black),.4)rgba(var(--white),.1);
-      color: RGB(var(--black));
-      position: absolute;
-      border-radius: 4px;
-      margin-top: 48px;
-    }
-    ${keyToCss('newDesktopLayout')} {
-      z-index: 100;
-      border-bottom: 1px solid rgba(var(--white-on-dark),.13) !important;
-      position: -webkit-sticky !important;
-      position: sticky !important;
-      top: 0 !important;
-      min-height: unset !important;
-      background-color: RGB(var(--navy));
-    }
-    ${keyToCss('navigationLinks')} {
-      justify-content: flex-end;
-    }
-    ${keyToCss('notificationBadgeIn')} { top: -70% !important; }
-    ${keyToCss('timelineHeader')} { border: none; }
-    ${keyToCss('mainContentWrapper')} {
-      min-width: unset !important;
-      flex-basis: unset !important;
-    }
-    ${keyToCss('main')} { border: none !important; }
-    ${keyToCss('navigationWrapper')} { display: none !important; }
-    ${keyToCss('navSubHeader')} {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(var(--black),.07);
-      height: 36px;
-      padding: 4px 12px 4px 12px;
-      color: rgba(var(--black),.65);
-    }
-    ${keyToCss('navSubHeader')} a { text-decoration: none; }
-    ${keyToCss('navSubHeader')} + ul {
-      width: 100%;
-      padding: 0 !important;
-    }
-    ${keyToCss('timelineHeaderNavInner')} { 'justify-content', 'center'; }
-    ${keyToCss('sidebar')} {
-      margin-left: 30px !important;
-      position: sticky;
-      top: 54px;
-      height: fit-content;
-    }
-    ${keyToCss('sidebar')} aside { width: 320px; }
-    ${keyToCss('about')}${keyToCss('inSidebar')}${keyToCss('usesNewDimensions')} {
-      position: fixed;
-      height: 20px;
-      bottom: 0;
-    }
-    ${keyToCss('searchbarContainer')} {
-      padding: 0;
-      border: none;
-      margin: 0;
-    }
-    #account_subnav {
-      height: 85vh;
-      width: 240px;
-      overflow-y: scroll;
-      overflow-x: hidden;
-      overscroll-behavior: none;
-      scrollbar-width: thin;
-    }
-    #settings_subnav {
-      height: fit-content;
-      z-index: 1;
-      top: 96px;
-      left: 8px;
-      border: 2px solid rgba(var(--black),.14);
-    }
-    ${keyToCss('subNav')} a,${keyToCss('subNav')} ${keyToCss('childWrapper')},${keyToCss('subNav')} ${keyToCss('blogName')} { color: RGB(var(--black)) !important; }
-    ${keyToCss('subNav')} ${keyToCss('endChildWrapper')},${keyToCss('subNav')} ${keyToCss('count')},${keyToCss('reorderButton')},${keyToCss('subNav')} ${keyToCss('blogTitle')} { color: rgba(var(--black),.65) !important; }
-    ${keyToCss('navSubHeader')} a { color: rgba(var(--black),.65) !important; }
-    ${keyToCss('subNav')} > ${keyToCss('navItem')}, ${keyToCss('accountStats')} li {
-      list-style-type: none;
-      border-bottom: 1px solid rgba(var(--black),.07);
-    }
+    ${keyToCss('reorderButton')} { color: rgba(var(--black),.65); }
     ${keyToCss('subNav')} use { --icon-color-primary: rgba(var(--black),.65) }
-    ${keyToCss('subNav')} > ${keyToCss('navItem')}:hover, ${keyToCss('accountStats')} li:hover {
-      background-color: rgba(var(--black),.07);
-    }
-    ${keyToCss('subNav')} svg { scale: 1; }
-    ${keyToCss('navInfo')} ${keyToCss('childWrapper')} {
-      display: flex;
-      align-items: center;
-    }
-    ${keyToCss('startChildWrapper')} + ${keyToCss('navInfo')}:not(.__subnavItem div) {
-      display: none !important;
-    }
-    #settings_button_new ${keyToCss('navLink')} { justify-content: flex-start; }
     ${keyToCss('heading')} {
       position: sticky;
       top: 0;
@@ -150,7 +19,8 @@ styleElement.textContent = `
       width: 240px !important;
       background: RGB(var(--white));
       z-index: 1;
-      padding: 5px 20px 5px 10px;
+      margin: 0 !important;
+      padding: 5px 20px 5px 10px !important;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -160,20 +30,184 @@ styleElement.textContent = `
       box-sizing: border-box;
     }
     ${keyToCss('heading')}::before {
-      position: absolute;
-      top: 0;
-      right: 0;
+      background: rgba(var(--black),.07);
+      content: '';
       width: 100%;
       height: 36px;
-      content: '';
-      background: rgba(var(--black),.07);
+      position: absolute;
+      top: 0;
+      left: 0;
       pointer-events: none;
+    }
+    #account_subnav {
+      background: RGB(var(--white));
+      color: RGB(var(--black));
+      max-height: 90vh;
+      width: 240px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: none;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(var(--black),.4)rgba(var(--white),.1);
+      position: fixed;
+      top: 48px;
+      border-radius: var(--border-radius-small);
+    }
+    ${keyToCss('subNav')} a,
+      ${keyToCss('subNav')} ${keyToCss('childWrapper')},
+      ${keyToCss('subNav')} ${keyToCss('blogName')},
+      ${keyToCss('navSubHeader')} { color: RGB(var(--black)) !important; }
+    ${keyToCss('subNav')} ${keyToCss('endChildWrapper')},
+      ${keyToCss('subNav')} ${keyToCss('count')},
+      ${keyToCss('reorderButton')},
+      ${keyToCss('subNav')} ${keyToCss('blogTitle')},
+      ${keyToCss('navSubHeader')} a { color: rgba(var(--black),.65) !important; }
+    ${keyToCss('subNav')} > ${keyToCss('navItem')}, ${keyToCss('accountStats')} li {
+      list-style-type: none;
+      border-bottom: 1px solid rgba(var(--black),.07);
+    }
+    ${keyToCss('subNav')} use { --icon-color-primary: rgba(var(--black),.65) }
+    ${keyToCss('subNav')} > ${keyToCss('navItem')}:hover,
+      ${keyToCss('accountStats')} li:hover {
+        background-color: rgba(var(--black),.07);
+      }
+    ${keyToCss('navInfo')} ${keyToCss('childWrapper')} {
+      display: flex;
+      align-items: center;
     }
     ${keyToCss('childWrapper')} > svg {
       margin-right: 10px;
     }
+    ${keyToCss('startChildWrapper')} > svg {
+      width: 21px !important;
+      height: 21px !important;
+    }
+    ${keyToCss('startChildWrapper')} + ${keyToCss('navInfo')}:not(#account_subnav div) {
+      display: none !important;
+    }
+    ${keyToCss('searchSidebarItem')} {
+      max-width: 480px;
+      width: 100%;
+      position: fixed;
+      top: 10px;
+      left: 140px;
+      z-index: 100;
+      height: fit-content;
+      padding: 0;
+    }
+    ${keyToCss('logoContainer')} {
+      justify-content: center;
+      padding: 0px;
+      display: flex;
+      position: absolute;
+      left: 100px;
+    }
+    ${keyToCss('navigationWrapper')} {
+      display: flex;
+      justify-content: center !important;
+      width: 100%;
+      margin: 0 !important;
+      z-index: 100;
+      position: fixed;
+      background-color: RGB(var(--navy));
+      border-bottom: 1px solid rgba(var(--white-on-dark), .13);
+    }
+    ${keyToCss('navigation')} {
+      max-width: 1716px;
+      width: 100%;
+      margin: auto;
+      border: none;
+      position: absolute;
+    }
+    ${keyToCss('primaryNavigation')} {
+      height: 55px;
+      padding: 0;
+      justify-content: center;
+    }
+    ${keyToCss('navigationLinks')} {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      width: 100%;
+      height: 55px;
+      position: absolute;
+      z-index: 100;
+      right: 70px;
+    }
+    ${keyToCss('notificationBadgeIn')} {
+      font-size: .8rem !important;
+      height: 21px !important;
+      top: -40% !important;
+      visibility: visible !important;
+    }
+    ${keyToCss('navItem')}${keyToCss('open')} { border: none !important; }
+    ${keyToCss('navItem')}:hover { background-color: transparent; }
+    ${keyToCss('navItem')}[title='${translate('Home')}'] { order: -9; }
+    ${keyToCss('navItem')}[title='${translate('Live')}'] { order: -8; }
+    ${keyToCss('navItem')}[title='${translate('Explore')}'] { order: -7; }
+    ${keyToCss('navigationLinks')} > ${keyToCss('targetPopoverWrapper')}:nth-of-type(3) { order: -6; }
+    ${keyToCss('navItem')}[title='${translate('Inbox')}'] { order: -5; }
+    ${keyToCss('navigationLinks')} > ${keyToCss('targetPopoverWrapper')}:nth-of-type(2) { order: -4; }
+    ${keyToCss('navigationLinks')} > ${keyToCss('targetPopoverWrapper')}:nth-of-type(1) { order: -3; }
+    ${keyToCss('navItem')}[title='${translate('Get a domain')}'] { display: none; }
+    ${keyToCss('navItem')}[title='${translate('Go Ad-Free')}'] { display: none; }
+    ${keyToCss('navigationLinks')} >${keyToCss('navItem')},
+      ${keyToCss('navigationLinks')} >${keyToCss('targetPopoverWrapper')} {
+        width: 20px;
+        margin: 0 16px;
+      }
+    ${keyToCss('navigationLinks')} > ${keyToCss('navItem')} ${keyToCss('navLink')},
+      ${keyToCss('navigationLinks')} > ${keyToCss('targetPopoverWrapper')} ${keyToCss('navLink')} {
+        padding: 0;
+        gap: 0;
+        justify-content: center;
+      }
+    ${keyToCss('mainContentWrapper')} {
+      flex-basis: 976px;
+      margin-top: 20px;
+    }
+    ${keyToCss('container')} { margin: 0 }
+    ${keyToCss('bar')} { margin-bottom: 100px; }
+    ${keyToCss('main')} {
+      margin-right: 16px;
+      padding: 0;
+      border: none !important;
+    }
+    ${keyToCss('tabsHeader')} {
+      width: 540px;
+      position: relative;
+      top: 200px !important;
+      left: 105px;
+    }
+    ${keyToCss('postColumn')} {
+      position: relative;
+      top: -54px;
+    }
+    ${keyToCss('stickyContainer')} > ${keyToCss('avatar')} { top: calc(70px + var(--dashboard-tabs-header-height, 0px)) !important; }
+    ${keyToCss('createPost')} {
+      height: 55px;
+      position: absolute;
+      justify-content: flex-end;
+    }
+    ${keyToCss('createPostButton')} {
+      gap: 0 !important;
+      border-radius: var(--border-radius-small) !important;
+      max-width: 45px !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      font-size: 0px !important;
+    }
     @media (max-width: 1150px) {
-      ${keyToCss('navItem')} ${keyToCss('buttonInner')} { padding: 8px 16px !important; }
+      ${keyToCss('searchSidebarItem')} {
+        left: 60px;
+        width: 320px;
+      }
+      #account_subnav { right: 150px; }
+    }
+    @media (min-width: 1716px) {
+      ${keyToCss('searchSidebarItem')} { left: 240px; }
+      #account_subnav { right: 50px; }
     }
   }
 `;
@@ -192,47 +226,55 @@ const match = [
   'reblog'
 ];
 const pathname = location.pathname.split('/')[1];
-const waitFor = (selector, retried = 0) => new Promise((resolve) => {
-  if ($(selector).length) { resolve(); } else if (retried < 25) { waitFor(selector, retried + 1).then(resolve); }
-});
 
 let moveSettings;
 let accountStats;
 let newSearch;
 
 const element = selector => $(keyToCss(selector));
-const newIcon = name => $(`<svg xmlns='http://www.w3.org/2000/svg' height='18' width='20' role='presentation' style='--icon-color-primary: rgba(var(--black), 0.65);'><use href='#managed-icon__${name}'></use></svg>`);
-const keyToClass = key => keyToClasses('key')[0];
+const newIcon = name => $(`<svg class='xkit-uifix' xmlns='http://www.w3.org/2000/svg' height='18' width='20' role='presentation' style='--icon-color-primary: rgba(var(--black), 0.65);'><use href='#managed-icon__${name}'></use></svg>`);
+const keyToClass = key => keyToClasses(key)[0];
+const fetchStats = async () => {
+  const data = userBlogs;
+  for (const blog of data) {
+    for (const key of ['posts', 'followers', 'drafts', 'queue']) {
+      if (blog[key]) {
+        const count = $(`<span class='${keyToClasses('count')[3]}'>${blog[key]}</span>`);
+        count.appendTo($(`[href='/blog/${blog.name}/${key}/']`));
+      }
+    }
+    if (blog.isGroupChannel) {
+      const members = $(`
+        <li>
+          <a href='/blog/${blog.name}/members' target='_blank'>
+            <span>${translate('Members')}</span>
+          </a>
+        </li>
+      `);
+      members.insertAfter($(`#xkit-uifix-${blog.name}-activity`));
+    }
+  }
+};
 
 export const main = async function () {
   ({ moveSettings, accountStats, newSearch } = await getPreferences('revert_vertical_nav'));
-  const bluespaceLayout = element('bluespaceLayout');
-  const newDesktopLayout = element('newDesktopLayout');
-  const mainContentWrapper = element('mainContentWrapper');
-  const logoContainer = element('logoContainer');
-  const createPost = element('createPost');
-  const navigationLinks = element('navigationLinks');
-  const navigationItems = navigationLinks.children();
-  const homeIcon = navigationItems.has('use[href="#managed-icon__home"]');
-  const inboxIcon = navigationItems.has('use[href="#managed-icon__mail"]');
-  const messagingIcon = navigationItems.has('use[href="#managed-icon__messaging"]');
+  $('.xkit-uifix').remove();
   const accountSubnav = $('#account_subnav');
-  const newHeading = $(`<div id='xkit-uifix-newHeading' class='${keyToClass('heading')}'><h3>${translate('Account')}</h3></div>`);
+  const newHeading = $(`<div class='xkit-uifix ${keyToClass('heading')}'><h3>${translate('Account')}</h3></div>`);
   const logoutButton = element('logoutButton');
+  const navSubHeader = element('navSubHeader');
+  const navigationWrapper = element('navigationWrapper');
+  const settings = element(keyToCss('navItem')).has('[href="/settings/account"]');
 
-  if (match.includes(pathname)) {
-    waitFor('searchbarContainer').then(() => {
-      const searchbarContainer = element('searchbarContainer');
-      newDesktopLayout.prepend(searchbarContainer);
-    });
-  } else if (newSearch) {
-    newDesktopLayout.prepend($(`
-      <div class='${keyToClass('searchSidebarItem')}' style='max-width: 550px; width: 100%;' >
+  settings.insertAfter(element(keyToCss('navItem')).has('#account_button'));
+  if (!match.includes(pathname) && newSearch) {
+    element('sidebar').prepend($(`
+      <div class='xkit-uifix ${keyToClass('searchSidebarItem')}'>
         <div class='${keyToClass('formContainer')}'>
           <span data-testid='controlled-popover-wrapper' class='${keyToClass('targetWrapper')}'>
             <span class='${keyToClass('targetWrapper')}'>
               <form method='GET' action='/search' role='search' class='${keyToClass('form')}'>
-                <div class='${keyToClass('searchbarContainer')}'>
+                <div class='${keyToClasses('searchbarContainer')[1]}'>
                   <div class='${keyToClass('searchIcon')}'>
                     <svg xmlns='http://www.w3.org/2000/svg' height='18' width='18' role='presentation' >
                       <use href='#managed-icon__search'></use>
@@ -243,7 +285,7 @@ export const main = async function () {
                     type='text'
                     autocomplete='off'
                     aria-label='${translate('Search')}'
-                    class='${keyToClass('searchbar')}'
+                    class='${keyToClasses('searchbar')[1]}'
                     placeholder='${translate('Search Tumblr')}'
                     autocapitalize='sentences'
                     value=''
@@ -256,32 +298,26 @@ export const main = async function () {
       </div>
     `));
   }
-  bluespaceLayout.append(mainContentWrapper);
-  newDesktopLayout.prepend(logoContainer);
-  newDesktopLayout.append(createPost);
-  inboxIcon.insertAfter(homeIcon);
-  messagingIcon.insertAfter(inboxIcon);
+  navSubHeader.addClass(keyToClass('heading'));
+  navigationWrapper.addClass(keyToClasses('headerWrapper').join(' '));
   accountSubnav.prepend(newHeading);
   newHeading.append(logoutButton);
   $(document).on('click', () => {
-    if ($('#account_subnav:hover').length) { return; }
-    if ($('#account_subnav').attr('hidden')) { document.getElementById('account_button').click(); }
+    if (!$('#account_subnav:hover').length && !$('#account_subnav').attr('hidden')) { document.getElementById('account_button').click(); }
   });
   if (moveSettings) {
-    const settings = navigationItems.has('[href="/settings/account"]');
-    settings.insertAfter(accountSubnav.children('li').has('[href="/following"]'));
+    settings.insertAfter(accountSubnav.children().has('[href="/following"]'));
   }
   $(`[href='/likes'] ${keyToCss('childWrapper')}`).prepend(newIcon('like-filled'));
   $(`[href='/following'] ${keyToCss('childWrapper')}`).prepend(newIcon('following'));
   if (accountStats) {
-    const blogData = window.___INITIAL_STATE___.queries.queries[0].state.data.user.blogs;
     const blogTiles = element('blogTile');
-    for (let i = 0; i < blogData.length; ++i) {
+    for (let i = 0; i < blogTiles.length; ++i) {
       const tile = blogTiles.eq(i);
-      const blog = blogData[i];
+      const blog = tile.find(keyToCss('displayName')).text();
       const caret = $(`
-        <button class='${keyToClass('button')}' aria-label='${translate('Show Blog Statistics')}'>
-            <span class='${keyToClass('buttonInner')} ${keyToClass('menuTarget')}' style='transform: rotate(0deg); display: flex; transition: transform 200ms ease-in-out 0s;' tabindex='-1'>
+        <button class='${keyToClass('button')} xkit-uifix' aria-label='${translate('Show Blog Statistics')}' style='transform: rotate(0deg); display: flex; transition: transform 200ms ease-in-out 0s;'>
+            <span class='${keyToClass('buttonInner')} ${keyToClass('menuTarget')}' tabindex='-1'>
                 <svg xmlns='http://www.w3.org/2000/svg' height='12' width='12' role='presentation'>
                     <use href='#managed-icon__caret-thin'></use>
                 </svg>
@@ -290,84 +326,74 @@ export const main = async function () {
       `);
       tile.find(keyToCss('actionButtons')).append(caret);
       caret.on('click', function () {
-        if (element('accountStats').eq(i + 1).is(':hidden')) {
+        if (element('accountStats').eq(i).is(':hidden')) {
           $(this).css('transform', 'rotate(180deg)');
         } else { $(this).css('transform', 'rotate(0deg)'); }
-        element('accountStats').eq(i + 1).toggle();
+        element('accountStats').eq(i).toggle();
       });
       const stats = $(`
-        <ul class='${keyToClass('accountStats')}'>
+        <ul class='${keyToClass('accountStats')} xkit-uifix'>
             <li>
-                <a href='/blog/${blog.name}'>
+                <a href='/blog/${blog}'>
                     <span>${translate('Posts')}</span>
-                    <span class='${keyToClasses('count')[3]}'>${blog.posts ? blog.posts : ''}</span>
                 </a>
             </li>
             <li>
-                <a href='/blog/${blog.name}/followers'>
+                <a href='/blog/${blog}/followers'>
                     <span>${translate('Followers')}</span>
-                    <span class='${keyToClasses('count')[3]}'>${blog.followers ? blog.followers : ''}</span>
                 </a>
             </li>
-            <li id='xkit-uifix-${blog.name}-activity'>
-                <a href='/blog/${blog.name}/activity'>
+            <li id='xkit-uifix-${blog}-activity'>
+                <a href='/blog/${blog}/activity'>
                     <span>${translate('Activity')}</span>
                 </a>
             </li>
             <li>
-                <a href='/blog/${blog.name}/drafts'>
+                <a href='/blog/${blog}/drafts'>
                     <span>${translate('Drafts')}</span>
-                    <span class='${keyToClasses('count')[3]}'>${blog.drafts ? blog.drafts : ''}</span>
                 </a>
             </li>
             <li>
-                <a href='/blog/${blog.name}/queue'>
+                <a href='/blog/${blog}/queue'>
                     <span>${translate('Queue')}</span>
-                    <span class='${keyToClasses('count')[3]}'>${blog.queue ? blog.queue : ''}</span>
                 </a>
             </li>
             <li>
-                <a href='/blog/${blog.name}/post-plus'>
+                <a href='/blog/${blog}/post-plus'>
                     <span>${translate('Post+')}</span>
                 </a>
             </li>
             <li>
-                <a href='/blog/${blog.name}/blaze'>
+                <a href='/blog/${blog}/blaze'>
                     <span>${translate('Tumblr Blaze')}</span>
                 </a>
             </li>
             <li>
-                <a href='/settings/blog/${blog.name}'>
+                <a href='/settings/blog/${blog}'>
                     <span>${translate('Blog settings')}</span>
                 </a>
             </li>
             <li>
-                <a href='/mega-editor/published/${blog.name}' target='_blank'>
+                <a href='/mega-editor/published/${blog}' target='_blank'>
                     <span>${translate('Mass Post Editor')}</span>
                 </a>
             </li>
         </ul>
       `);
-      tile.insertAdjacentElement('afterend', stats);
-      if (blog.isGroupChannel) {
-        const members = $(`
-          <li>
-            <a href='/blog/${blog.name}/members' target='_blank'>
-              <span>${translate('Members')}</span>
-            </a>
-          </li>
-        `);
-        document.getElementById(`#xkit-uifix-${blog.name}-activity`).insertAdjacentElement('afterend', members);
-      }
+      stats.insertAfter(tile);
       stats.hide();
     }
-    element(`button[aria-label='${translate('Show Blog Statistics')}'`).click();
+    fetchStats();
+    $('button.xkit-uifix').eq(0).trigger('click');
   }
-  if (['blog', 'likes', 'following'].includes(pathname) && accountSubnav.attr('hidden')) { document.getElementById('account_button').click(); }
 
   document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {
   styleElement.remove();
+  element('navSubHeader').removeClass(keyToClass('heading'));
+  element('navigationWrapper').removeClass(keyToClasses('headerWrapper').join(' '));
+  element('logoutButton').insertAfter($('#account_subnav').children('li').has('[href="/following"]'));
+  $('.xkit-uifix').remove();
 };

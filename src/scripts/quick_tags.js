@@ -172,7 +172,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
       notify(displayText);
     } else {
       await megaEdit([postId], { mode: 'add', tags: tagsToAdd });
-      notify(`Edited on ${blogName} (legacy)`);
+      notify(`Edited legacy post on ${blogName}`);
     }
 
     const tagsElement = dom('div', { class: tagsClass });

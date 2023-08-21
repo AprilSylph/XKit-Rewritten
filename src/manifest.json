@@ -36,7 +36,7 @@
   },
 
   "permissions": [ "storage" ],
-  "web_accessible_resources": [ "*.js", "*.json", "*.css", "*.svg" ],
+  "web_accessible_resources": [ "*.js", "*.json", "*.css", "*.svg", "*.png" ],
   "content_scripts": [
     {
       "matches": [

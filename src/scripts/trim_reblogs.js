@@ -155,7 +155,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
 });
 
 export const main = async function () {
-  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Trim Reblogs');
+  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Trim');
   onNewPosts.addListener(processPosts);
 };
 

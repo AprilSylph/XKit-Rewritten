@@ -62,6 +62,7 @@ styleElement.textContent = `
       ${keyToCss('subNav')} ${keyToCss('count')},
       ${keyToCss('reorderButton')},
       ${keyToCss('subNav')} ${keyToCss('blogTitle')},
+      ${keyToCss('navSubHeader')},
       ${keyToCss('navSubHeader')} a { color: rgba(var(--black),.65) !important; }
     ${keyToCss('subNav')} > ${keyToCss('navItem')}, ${keyToCss('accountStats')} li {
       list-style-type: none;
@@ -168,7 +169,7 @@ styleElement.textContent = `
       flex-basis: 976px;
       margin-top: 20px;
     }
-    ${keyToCss('container')} { margin: 0 }
+    ${keyToCss('container')} { margin: 0; }
     ${keyToCss('bar')} { margin-bottom: 100px; }
     ${keyToCss('main')} {
       margin-right: 16px;
@@ -181,6 +182,7 @@ styleElement.textContent = `
       top: 200px !important;
       left: 105px;
     }
+    ${keyToCss('timelineOptions')} { overflow-x: auto !important; }
     ${keyToCss('postColumn')}:not(.${keyToClasses('postColumn')[6]}) {
       position: relative;
       top: -54px;

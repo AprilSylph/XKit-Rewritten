@@ -270,9 +270,7 @@ export const main = async function () {
     const logoutButton = element('logoutButton');
     const navSubHeader = element('navSubHeader');
     const navigationWrapper = element('navigationWrapper');
-    const settings = element('navItem').has('[href="/settings/account"]');
 
-    settings.insertAfter(element('navItem').has('#account_button'));
     if (!match.includes(pathname) && newSearch) {
       element('layout').prepend($(`
         <div class='xkit-uifix ${keyToClass('searchSidebarItem')}'>
@@ -312,7 +310,11 @@ export const main = async function () {
       if (!$('#account_subnav:hover').length && !$('#account_subnav').attr('hidden')) { document.getElementById('account_button').click(); }
     });
     if (moveSettings) {
-      settings.insertAfter(element('navItem').has('[href="/following"]'));
+      const settings = element('navItem').has('[href="/settings/account"]');
+      const newSettings = settings.clone();
+      newSettings.addClass('xkit-uifix');
+      newSettings.insertAfter(element('navItem').has('[href="/following"]'));
+      settings.hide();
     }
     $(`[href='/likes'] ${keyToCss('childWrapper')}`).prepend(newIcon('like-filled'));
     $(`[href='/following'] ${keyToCss('childWrapper')}`).prepend(newIcon('following'));
@@ -403,5 +405,6 @@ export const clean = async function () {
     element('navigationWrapper').removeClass(keyToClasses('headerWrapper').join(' '));
     element('logoutButton').insertAfter($('#account_subnav').children('li').has('[href="/following"]'));
     $('.xkit-uifix').remove();
+    element('navItem').has('[href="/settings/account"]').show();
   });
 };

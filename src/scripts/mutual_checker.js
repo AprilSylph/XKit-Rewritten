@@ -32,7 +32,7 @@ const addIcons = function (postElements) {
     const postAttribution = postElement.querySelector(postAttributionSelector);
     if (postAttribution === null) { return; }
 
-    const blogName = postAttribution.textContent;
+    const blogName = postAttribution.textContent.trim();
     if (!blogName) return;
 
     if (following[blogName] === undefined) {

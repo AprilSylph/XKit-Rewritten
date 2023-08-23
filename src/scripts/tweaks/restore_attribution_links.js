@@ -3,7 +3,7 @@ import { keyToCss } from '../../util/css_map.js';
 import { timelineObject } from '../../util/react_props.js';
 import { navigate } from '../../util/tumblr_helpers.js';
 
-const postAttributionLinkSelector = `header ${keyToCss('attributionHeaderText')} a`;
+const postAttributionLinkSelector = `header ${keyToCss('attribution')} > span:not(${keyToCss('reblogAttribution')}) a`;
 const reblogAttributionLinkSelector = `header ${keyToCss('rebloggedFromName')} a`;
 
 const onLinkClick = event => {

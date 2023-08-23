@@ -6,8 +6,30 @@ export const blogViewSelector = '[style*="--blog-title-color"] *';
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
 const cellSelector = keyToCss('cell');
+const targetWrapperSelector = keyToCss(
+  'targetWrapper',
+  'targetWrapperBlock',
+  'targetWrapperFlex',
+  'targetWrapperInline'
+);
 
-export const getTimelineItemWrapper = element => element.closest(cellSelector) || element.closest(listTimelineObjectSelector);
+/**
+ * @param {Element} element Element within a timeline item
+ * @returns {Element | null} The timeline item wrapper
+ */
+export const getTimelineItemWrapper = element =>
+  element.closest(cellSelector) || element.closest(listTimelineObjectSelector);
+
+/**
+ * @param {Element} element Element within a popover wrapper
+ * @returns {Element | null} The outermost popover wrapper
+ */
+export const getPopoverWrapper = element => {
+  const closestWrapper = element.closest(targetWrapperSelector);
+  return closestWrapper?.parentElement?.matches(targetWrapperSelector)
+    ? closestWrapper.parentElement
+    : closestWrapper;
+};
 
 /**
  * @typedef {object} PostFilterOptions

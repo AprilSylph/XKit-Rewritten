@@ -1,4 +1,4 @@
-import { buildStyle, filterPostElements, getPopoverWrapper, getTimelineItemWrapper } from '../util/interface.js';
+import { getTimelineItemWrapper, buildStyle, filterPostElements, getPopoverWrapper } from '../util/interface.js';
 import { blogData, timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { primaryBlogName } from '../util/user.js';

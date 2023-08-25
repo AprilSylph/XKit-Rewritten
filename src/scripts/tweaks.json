@@ -24,7 +24,7 @@
     },
     "badge_stack": {
       "type": "checkbox",
-      "label": "Use a slim layout for \"important internet checkmarks\"",
+      "label": "Use a slim layout for user badges",
       "default": false
     },
     "highlight_contributed_content": {

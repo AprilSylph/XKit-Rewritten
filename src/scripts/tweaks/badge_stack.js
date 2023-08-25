@@ -2,9 +2,11 @@ import { keyToClasses, keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
-const wrapper = `article ${keyToCss('attribution')}`;
+const wrapper = keyToCss('leftContent');
 const badgeContainer = keyToCss('badgeContainer');
 const badgeImage = ':is(svg, img)';
+
+const stackedClass = 'xkit-tweaks-badge-stacked';
 
 const prefix = 'xkit-badge-disabled';
 const keysToDisable = ['tooManyBadges', 'shrinkBadges', 'shouldStack'];
@@ -27,25 +29,27 @@ const enableClasses = () =>
 
 const styleElement = buildStyle(`
 
-${wrapper}:not(:hover) > ${badgeContainer} + ${badgeContainer} {
-  margin-left: -7px;
+${wrapper}:not(:hover) .${stackedClass} {
+  margin-right: -7px;
 }
 
-${wrapper}:not(:hover) > ${badgeContainer} ${badgeImage} {
+${wrapper}:not(:hover) ${badgeContainer} ${badgeImage} {
   filter: drop-shadow(1px 0px 2px rgb(0 0 0 / 0.5));
 }
 
 ${wrapper} {
+  margin-right: 7px;
   isolation: isolate;
 }
 
-/*
-this breaks the hover cards! not sure how to fix this at the moment.
-${badgeContainer} {
+/**
+ * this reversal of the regular stacking order must be removed on hover or the popups
+ * break, though it causes slight visual corruption during the animation ;(
+ */
+${wrapper}:not(:hover) ${badgeContainer} {
   position: relative;
   z-index: calc(0 - var(--badges-index));
 }
-*/
 `);
 
 const transitionStyleElement = buildStyle(`
@@ -57,6 +61,11 @@ ${badgeContainer} ${badgeImage} {
 }
 `);
 
+const processBadges = badgeContainers =>
+  badgeContainers
+    .filter(badge => badge.nextElementSibling?.matches(badgeContainer))
+    .forEach(badge => badge.classList.add(stackedClass));
+
 const waitForRender = () =>
   new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
@@ -64,6 +73,7 @@ export const main = async () => {
   document.documentElement.append(styleElement);
   waitForRender().then(() => document.documentElement.append(transitionStyleElement));
 
+  pageModifications.register(`${wrapper} ${badgeContainer}`, processBadges);
   pageModifications.register(disableClassesSelector, disableClasses);
 };
 
@@ -73,4 +83,6 @@ export const clean = async () => {
 
   styleElement.remove();
   transitionStyleElement.remove();
+
+  $(`.${stackedClass}`).removeClass(stackedClass);
 };

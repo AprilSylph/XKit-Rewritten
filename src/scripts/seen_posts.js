@@ -1,13 +1,16 @@
-import { filterPostElements, postSelector } from '../util/interface.js';
+import { filterPostElements, getTimelineItemWrapper, postSelector } from '../util/interface.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
+import { keyToCss } from '../util/css_map.js';
 
-const excludeClass = 'xkit-seen-posts-done';
-const timeline = /\/v2\/timeline\/dashboard/;
+const excludeAttribute = 'data-seen-posts-done';
+const timeline = '/v2/timeline/dashboard';
 const includeFiltered = true;
 
-const dimClass = 'xkit-seen-posts-seen';
+const dimAttribute = 'data-seen-posts-seen';
 const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
+const hideClass = 'xkit-seen-posts-hide';
+const lengthenedClass = 'xkit-seen-posts-lengthened';
 
 const storageKey = 'seen_posts.seenPosts';
 let seenPosts = [];
@@ -16,46 +19,68 @@ let seenPosts = [];
 const timers = new Map();
 
 const observer = new IntersectionObserver(
-  (entries) => entries.forEach(({ isIntersecting, target: articleElement }) => {
+  (entries) => entries.forEach(({ isIntersecting, target: element }) => {
     if (isIntersecting) {
-      if (!timers.has(articleElement)) {
-        timers.set(articleElement, setTimeout(() => markAsSeen(articleElement), 300));
+      if (!timers.has(element)) {
+        timers.set(element, setTimeout(() => markAsSeen(element), 300));
       }
     } else {
-      clearTimeout(timers.get(articleElement));
-      timers.delete(articleElement);
+      clearTimeout(timers.get(element));
+      timers.delete(element);
     }
   }),
   { rootMargin: '-20px 0px' }
 );
 
-const markAsSeen = (articleElement) => {
-  observer.unobserve(articleElement);
-  timers.delete(articleElement);
+const markAsSeen = (element) => {
+  observer.unobserve(element);
+  timers.delete(element);
 
-  const postElement = articleElement.closest(postSelector);
-  seenPosts.push(postElement.dataset.id);
+  const { dataset: { id } } = element.closest(postSelector);
+  if (seenPosts.includes(id)) return;
+
+  seenPosts.push(id);
   seenPosts.splice(0, seenPosts.length - 10000);
   browser.storage.local.set({ [storageKey]: seenPosts });
 };
 
-const dimPosts = function (postElements) {
-  for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
-    const { id } = postElement.dataset;
+const lengthenTimelines = () =>
+  [...document.querySelectorAll(`[data-timeline="${timeline}"]`)].forEach(timelineElement => {
+    if (!timelineElement.querySelector(keyToCss('manualPaginatorButtons'))) {
+      timelineElement.classList.add(lengthenedClass);
+    }
+  });
 
-    if (seenPosts.includes(id)) {
-      postElement.classList.add(dimClass);
-    } else {
-      observer.observe(postElement.querySelector('article'));
+const dimPosts = function (postElements) {
+  lengthenTimelines();
+
+  for (const postElement of filterPostElements(postElements, { timeline, includeFiltered })) {
+    const { id } = postElement.dataset;
+    const timelineItem = getTimelineItemWrapper(postElement);
+
+    const isFirstRender = timelineItem.getAttribute(excludeAttribute) === null;
+    timelineItem.setAttribute(excludeAttribute, '');
+
+    if (seenPosts.includes(id) === false) {
+      observer.observe(postElement.querySelector('article header + *'));
+    } else if (isFirstRender) {
+      timelineItem.setAttribute(dimAttribute, '');
     }
   }
 };
 
 export const onStorageChanged = async function (changes, areaName) {
   const {
+    'seen_posts.preferences.hideSeenPosts': hideSeenPostsChanges,
     'seen_posts.preferences.onlyDimAvatars': onlyDimAvatarsChanges,
     [storageKey]: seenPostsChanges
   } = changes;
+
+  if (hideSeenPostsChanges && hideSeenPostsChanges.oldValue !== undefined) {
+    const { newValue: hideSeenPosts } = hideSeenPostsChanges;
+    const addOrRemoveHide = hideSeenPosts ? 'add' : 'remove';
+    document.body.classList[addOrRemoveHide](hideClass);
+  }
 
   if (onlyDimAvatarsChanges && onlyDimAvatarsChanges.oldValue !== undefined) {
     const { newValue: onlyDimAvatars } = onlyDimAvatarsChanges;
@@ -71,7 +96,10 @@ export const onStorageChanged = async function (changes, areaName) {
 export const main = async function () {
   ({ [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey));
 
-  const { onlyDimAvatars } = await getPreferences('seen_posts');
+  const { hideSeenPosts, onlyDimAvatars } = await getPreferences('seen_posts');
+  if (hideSeenPosts) {
+    document.body.classList.add(hideClass);
+  }
   if (onlyDimAvatars) {
     document.body.classList.add(onlyDimAvatarsClass);
   }
@@ -86,9 +114,11 @@ export const clean = async function () {
   timers.forEach((timerId) => clearTimeout(timerId));
   timers.clear();
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
-  $(`.${dimClass}`).removeClass(dimClass);
+  $(`[${excludeAttribute}]`).removeAttr(excludeAttribute);
+  $(`[${dimAttribute}]`).removeAttr(dimAttribute);
+  $(`.${hideClass}`).removeClass(hideClass);
   $(`.${onlyDimAvatarsClass}`).removeClass(onlyDimAvatarsClass);
+  $(`.${lengthenedClass}`).removeClass(lengthenedClass);
 };
 
 export const stylesheet = true;

@@ -2,12 +2,13 @@ import { cloneControlButton, createControlButtonTemplate } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { postSelector } from '../util/interface.js';
+import { megaEdit } from '../util/mega_editor.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
 import { getPreferences } from '../util/preferences.js';
 import { timelineObject, editPostFormTags } from '../util/react_props.js';
-import { apiFetch, createEditRequestBody } from '../util/tumblr_helpers.js';
+import { apiFetch, createEditRequestBody, isNpfCompatible } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
@@ -124,13 +125,15 @@ const appendWithoutViewportOverflow = (element, target) => {
   }
 };
 
-const togglePopupDisplay = async function ({ target, currentTarget }) {
+const togglePopupDisplay = async function ({ target, currentTarget: controlButton }) {
   if (target === popupElement || popupElement.contains(target)) { return; }
 
-  if (currentTarget.contains(popupElement)) {
-    currentTarget.removeChild(popupElement);
+  const buttonContainer = controlButton.parentElement;
+
+  if (buttonContainer.contains(popupElement)) {
+    buttonContainer.removeChild(popupElement);
   } else {
-    appendWithoutViewportOverflow(popupElement, currentTarget);
+    appendWithoutViewportOverflow(popupElement, buttonContainer);
   }
 };
 
@@ -146,7 +149,7 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
 
 const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   const postId = postElement.dataset.id;
-  const { blog: { uuid } } = await timelineObject(postElement);
+  const { blog: { uuid }, blogName } = await timelineObject(postElement);
 
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
   const { tags = [] } = postData;
@@ -157,15 +160,20 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   tags.push(...tagsToAdd);
 
   try {
-    const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
-      method: 'PUT',
-      body: {
-        ...createEditRequestBody(postData),
-        tags: tags.join(',')
-      }
-    });
+    if (isNpfCompatible(postData)) {
+      const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
+        method: 'PUT',
+        body: {
+          ...createEditRequestBody(postData),
+          tags: tags.join(',')
+        }
+      });
 
-    notify(displayText);
+      notify(displayText);
+    } else {
+      await megaEdit([postId], { mode: 'add', tags: tagsToAdd });
+      notify(`Edited legacy post on ${blogName}`);
+    }
 
     const tagsElement = dom('div', { class: tagsClass });
 
@@ -179,7 +187,8 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
     }
 
     postElement.querySelector('footer').parentNode.prepend(tagsElement);
-  } catch ({ body }) {
+  } catch (error) {
+    const body = error.body ?? error;
     notify(body.errors[0].detail);
   }
 };

@@ -2,7 +2,7 @@ import { keyToClasses, keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
 
-const wrapper = `article ${keyToCss('badgesContainer')}`;
+const wrapper = `article ${keyToCss('attribution')}`;
 const badgeContainer = keyToCss('badgeContainer');
 const badgeImage = ':is(svg, img)';
 
@@ -26,32 +26,34 @@ const enableClasses = () =>
   );
 
 const styleElement = buildStyle(`
-${wrapper} {
-  width: unset !important
+
+${wrapper}:not(:hover) > ${badgeContainer} + ${badgeContainer} {
+  margin-left: -7px;
 }
 
-${wrapper}:not(:hover) > ${badgeContainer} {
-  margin-right: 7px;
-}
-
-${wrapper}:not(:hover) > ${badgeContainer} > ${badgeImage} {
-  margin-right: -7px !important;
+${wrapper}:not(:hover) > ${badgeContainer} ${badgeImage} {
   filter: drop-shadow(1px 0px 2px rgb(0 0 0 / 0.5));
 }
 
-${wrapper} > ${badgeContainer} {
+${wrapper} {
   isolation: isolate;
 }
 
-${wrapper} > ${badgeContainer} > ${badgeImage} {
+/*
+this breaks the hover cards! not sure how to fix this at the moment.
+${badgeContainer} {
   position: relative;
   z-index: calc(0 - var(--badges-index));
 }
+*/
 `);
 
 const transitionStyleElement = buildStyle(`
-${badgeContainer}, ${badgeContainer} > ${badgeImage} {
-  transition: margin 0.5s ease, filter 0.35s linear;
+${badgeContainer} {
+  transition: margin 0.5s ease;
+}
+${badgeContainer} ${badgeImage} {
+  transition: filter 0.35s linear;
 }
 `);
 

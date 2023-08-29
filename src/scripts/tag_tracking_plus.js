@@ -8,7 +8,6 @@ import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { getPreferences } from '../util/preferences.js';
 
 const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
-let timestamps;
 
 const excludeClass = 'xkit-tag-tracking-plus-done';
 const includeFiltered = true;
@@ -24,6 +23,7 @@ let sidebarItem;
 const refreshCount = async function (tag) {
   if (!trackedTags.includes(tag)) return;
 
+  const { [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey);
   const savedTimestamp = timestamps[tag] ?? 0;
   const {
     response: {
@@ -108,6 +108,7 @@ const processPosts = async function (postElements) {
   const currentTag = decodeURIComponent(encodedCurrentTag);
   if (!trackedTags.includes(currentTag)) return;
 
+  const { [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey);
   const timeline = new RegExp(`/v2/hubs/${encodedCurrentTag}/timeline`);
 
   let updated = false;
@@ -152,31 +153,12 @@ const processTagLinks = function (tagLinkElements) {
   });
 };
 
-export const onStorageChanged = async (changes, areaName) => {
-  if (Object.keys(changes).includes(storageKey)) {
-    timestamps = changes[storageKey].newValue;
-  }
-  if (Object.keys(changes).some(key => key.startsWith('tag_tracking_plus.preferences'))) {
-    cleanSearchAndSidebar();
-    await setupSearchAndSidebar();
-  }
-};
-
 export const main = async function () {
   const trackedTagsData = (await apiFetch('/v2/user/tags')) ?? {};
   trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
 
   trackedTags.forEach(tag => unreadCounts.set(tag, undefined));
 
-  ({ [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey));
-
-  await setupSearchAndSidebar();
-
-  onNewPosts.addListener(processPosts);
-  refreshAllCounts(true).then(startRefreshInterval);
-};
-
-const setupSearchAndSidebar = async () => {
   const { showUnread, onlyShowNew } = await getPreferences('tag_tracking_plus');
   if (showUnread === 'both' || showUnread === 'search') {
     pageModifications.register(tagLinkSelector, processTagLinks);
@@ -189,31 +171,28 @@ const setupSearchAndSidebar = async () => {
         label: `#${tag}`,
         href: `/tagged/${encodeURIComponent(tag)}?sort=recent`,
         onclick: onClickNavigate,
-        count: unreadCounts.get(tag) ?? '\u22EF',
-        attributes: { 'data-new': unreadCounts.get(tag) && unreadCounts.get(tag) !== '0' }
+        count: '\u22EF'
       }))
     });
 
     onlyShowNew && sidebarItem.classList.add('only-show-new');
     updateSidebarStatus();
   }
-};
 
-const cleanSearchAndSidebar = () => {
-  pageModifications.unregister(processTagLinks);
-  $(`${tagLinkSelector} [data-count-for]`).remove();
-
-  removeSidebarItem('tag-tracking-plus');
-  sidebarItem = undefined;
+  onNewPosts.addListener(processPosts);
+  refreshAllCounts(true).then(startRefreshInterval);
 };
 
 export const clean = async function () {
   stopRefreshInterval();
   onNewPosts.removeListener(processPosts);
+  pageModifications.unregister(processTagLinks);
 
-  cleanSearchAndSidebar();
+  removeSidebarItem('tag-tracking-plus');
+  $(`${tagLinkSelector} [data-count-for]`).remove();
 
   unreadCounts.clear();
+  sidebarItem = undefined;
 };
 
 export const stylesheet = true;

@@ -26,14 +26,15 @@ const carrotSvg = dom('svg', {
  * @property {Function} onclick - Click event handler for this row
  * @property {string} [count] - Human-readable additional link text
  * @property {boolean} [carrot] - Whether to include a right-facing arrow on the link (ignored if count is specified)
+ * @property {object} [attributes] - Object of attributes to add to the row element
  */
 
 /**
  * @param {sidebarRowOptions} options - Sidebar row options
  * @returns {HTMLLIElement} The constructed sidebar row
  */
-const buildSidebarRow = ({ label, onclick, href, count, carrot }) =>
-  dom('li', null, null, [
+const buildSidebarRow = ({ label, onclick, href, count, carrot, attributes }) =>
+  dom('li', attributes ?? null, null, [
     dom('a', { role: 'button', ...href ? { href } : {} }, { click: onclick }, [
       dom('span', null, null, [label]),
       count !== undefined

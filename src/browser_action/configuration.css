@@ -150,6 +150,19 @@ label[for="filter"] {
   font-weight: normal;
 }
 
+.script .note {
+  padding: 1ch 2ch;
+  margin: 0;
+
+  background-color: var(--in-content-box-info-background);
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.script .note:empty {
+  display: none;
+}
+
 .script ul.preferences {
   padding: 0 1ch;
   margin: 1ch 0;

@@ -1,6 +1,7 @@
 {
   "title": "Panorama",
   "description": "Widescreen dashboard",
+  "note": "This script may be out of date.",
   "icon": {
     "class_name": "ri-align-justify",
     "color": "white",

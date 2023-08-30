@@ -1,6 +1,7 @@
 {
   "title": "Anti-Capitalism",
   "description": "Hide advertisement containers",
+  "note": "Anti-Capitalism hides Blazed posts.",
   "icon": {
     "class_name": "ri-creative-commons-nc-line",
     "color": "#ffd800",

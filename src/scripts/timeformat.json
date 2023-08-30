@@ -1,6 +1,7 @@
 {
   "title": "TimeFormat",
   "description": "Reformat Tumblr's timestamps",
+  "note": "Enable timestamps in your Tumblr dashboard settings to use TimeFormat.",
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#timeformat",
   "icon": {
     "class_name": "ri-history-line",

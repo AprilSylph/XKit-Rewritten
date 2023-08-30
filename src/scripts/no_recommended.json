@@ -1,6 +1,7 @@
 {
   "title": "No Recommended",
   "description": "Focus only on what you follow",
+  "note": "Most recommended posts are controlled from your Tumblr dashboard settings.",
   "icon": {
     "class_name": "ri-delete-row",
     "color": "white",

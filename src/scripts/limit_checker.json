@@ -1,6 +1,7 @@
 {
   "title": "Limit Checker",
   "description": "Check post limit and more",
+  "note": "Access Limit Checker from the Tumblr sidebar!",
   "icon": {
     "class_name": "ri-timer-line",
     "color": "white",

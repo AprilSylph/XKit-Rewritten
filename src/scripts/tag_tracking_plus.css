@@ -16,14 +16,19 @@
   content: 'No tracked tags!';
 }
 
-#tag-tracking-plus.only-show-new[data-loading="true"] ul:not(:empty)::after {
+#tag-tracking-plus[data-only-show-new="true"][data-loading="true"] ul:not(:empty)::after {
   content: 'Loading...';
 }
 
-#tag-tracking-plus.only-show-new[data-loading="false"][data-has-new="false"] ul:not(:empty)::after {
+#tag-tracking-plus[data-only-show-new="true"][data-loading="false"][data-has-new="false"] ul:not(:empty)::after {
   content: 'No unread tags.';
 }
 
-#tag-tracking-plus.only-show-new li:not([data-new="true"]) {
+#tag-tracking-plus[data-only-show-new="true"] li:not([data-new="true"]) {
+  display: none;
+}
+
+[data-tag-tracking-plus-show-sidebar="false"] #tag-tracking-plus,
+[data-tag-tracking-plus-show-search="false"] .xkit-tag-tracking-plus-search-count {
   display: none;
 }

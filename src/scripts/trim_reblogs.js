@@ -29,9 +29,11 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   const postId = postElement.dataset.id;
 
   const {
-    blog: { uuid },
-    isBlocksPostFormat
+    blog: { uuid }
   } = await timelineObject(postElement);
+
+  const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
+  const { blog, content = [], trail = [], isBlocksPostFormat } = postData;
 
   if (isBlocksPostFormat === false) {
     await new Promise(resolve => {
@@ -51,9 +53,6 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       });
     });
   }
-
-  const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
-  const { blog, content = [], trail = [] } = postData;
 
   const createPreviewItem = ({ blog, brokenBlog, content, disableCheckbox = false }) => {
     const { avatar, name } = blog ?? brokenBlog ?? blogPlaceholder;

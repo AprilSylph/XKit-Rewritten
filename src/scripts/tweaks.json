@@ -112,6 +112,11 @@
       "type": "checkbox",
       "label": "Hide the Tumblr Live carousel",
       "default": false
+    },
+    "following_tab": {
+      "type": "checkbox",
+      "label": "Force the default dashboard tab to \"Following\"",
+      "default": false
     }
   }
 }

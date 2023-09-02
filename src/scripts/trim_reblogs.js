@@ -54,6 +54,21 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     });
   }
 
+  if (trail.some(({ layout = [] }) => layout.some(({ type }) => type === 'ask'))) {
+    await new Promise(resolve => {
+      showModal({
+        title: 'Note: Ask in Thread',
+        message: [
+          'If you trim an ask/answer from a thread, the thread will appear broken on blog themes (blogname.tumblr.com).'
+        ],
+        buttons: [
+          modalCancelButton,
+          dom('button', { class: 'blue' }, { click: resolve }, ['Continue'])
+        ]
+      });
+    });
+  }
+
   const createPreviewItem = ({ blog, brokenBlog, content, disableCheckbox = false }) => {
     const { avatar, name } = blog ?? brokenBlog ?? blogPlaceholder;
     const { url: src } = avatar[avatar.length - 1];

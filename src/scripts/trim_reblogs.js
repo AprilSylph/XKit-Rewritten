@@ -59,7 +59,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       showModal({
         title: 'Note: Ask in Thread',
         message: [
-          'If you trim an ask/answer from a thread, the thread will appear broken on blog themes (blogname.tumblr.com).'
+          `If you trim an ask/answer from a thread, the thread will appear broken on custom themes, e.g. ${blog?.name ?? 'blogname'}.tumblr.com.`
         ],
         buttons: [
           modalCancelButton,

@@ -50,11 +50,15 @@ const onButtonClicked = async function ({ currentTarget }) {
   const title = shouldBlockNotifications
     ? 'Block this post\'s notifications?'
     : 'Unblock this post\'s notifications?';
-  const message = [
-    shouldBlockNotifications
-      ? 'Notifications for this post will be hidden from your activity feed.'
-      : 'Notifications for this post will appear in your activity feed again.'
-  ];
+  const message = shouldBlockNotifications
+    ? [
+        'Notifications for this post will be hidden from your activity feed.',
+        '\n\n',
+        'You can use Tumblr\'s "Mute Notifications" option in addition to or instead of this feature. ',
+        'It will completely prevent the post from generating notifications once enabled, and can be applied temporarily or permanently.'
+      ]
+    : ['Notifications for this post will appear in your activity feed again.'];
+
   const textContent = shouldBlockNotifications
     ? 'Block notifications'
     : 'Unblock notifications';

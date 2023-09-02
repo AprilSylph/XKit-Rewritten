@@ -9,9 +9,9 @@ import { userBlogNames } from '../util/user.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonBlockId = 'notificationblock-block';
-const meatballButtonBlockLabel = 'Block notifications';
+const meatballButtonBlockLabel = 'Hide notifications';
 const meatballButtonUnblockId = 'notificationblock-unblock';
-const meatballButtonUnblockLabel = 'Unblock notifications';
+const meatballButtonUnblockLabel = 'Unhide notifications';
 const notificationSelector = keyToCss('notification');
 
 let blockedPostTargetIDs;
@@ -48,8 +48,8 @@ const onButtonClicked = async function ({ currentTarget }) {
   const shouldBlockNotifications = blockedPostTargetIDs.includes(rootId) === false;
 
   const title = shouldBlockNotifications
-    ? 'Block this post\'s notifications?'
-    : 'Unblock this post\'s notifications?';
+    ? 'Hide this post\'s notifications?'
+    : 'Unhide this post\'s notifications?';
   const message = shouldBlockNotifications
     ? [
         'Notifications for this post will be hidden from your activity feed.',
@@ -60,8 +60,8 @@ const onButtonClicked = async function ({ currentTarget }) {
     : ['Notifications for this post will appear in your activity feed again.'];
 
   const textContent = shouldBlockNotifications
-    ? 'Block notifications'
-    : 'Unblock notifications';
+    ? 'Hide notifications'
+    : 'Unhide notifications';
   const className = shouldBlockNotifications
     ? 'red'
     : 'blue';

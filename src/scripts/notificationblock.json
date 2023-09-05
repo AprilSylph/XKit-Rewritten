@@ -1,6 +1,6 @@
 {
   "title": "NotificationBlock",
-  "description": "Hide a post's notifications",
+  "description": "Block a post's notifications",
   "icon": {
     "class_name": "ri-notification-off-line",
     "color": "white",

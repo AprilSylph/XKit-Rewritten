@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XKit: Manage blog packs</title>
+    <link rel="stylesheet" href="/lib/normalize.min.css">
+    <link rel="stylesheet" href="/lib/remixicon/remixicon.css">
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <main>
+      <section>
+        <h3>Add new blog pack</h3>
+        <form id="new-pack">
+          <label for="new-pack-title">Title</label>
+          <input id="new-pack-title" name="title" type="text" autocomplete="off" placeholder="My blog pack" required>
+          <label for="new-pack-blogs">Blogs</label>
+          <input id="new-pack-blogs" name="blogs" type="text" autocomplete="off" placeholder="blog1, blog2, blog3" required>
+          <button type="submit">Add pack</button>
+        </form>
+      </section>
+      <section>
+        <h3>Your custom packs</h3>
+        <ul id="packs"></ul>
+      </section>
+    </main>
+
+    <template id="pack-template">
+      <li class="pack">
+        <span class="move-buttons">
+          <button class="up"><i class="ri-arrow-up-s-line"></i></button>
+          <button class="down"><i class="ri-arrow-down-s-line"></i></button>
+        </span>
+        <div>
+          <input class="title" type="text" disabled required>
+          <input class="blogs" type="text" disabled required>
+        </div>
+        <span class="controls">
+          <button class="open" title="Open link in a new tab"><i class="ri-external-link-line"></i></button>
+          <button class="edit" title="Edit blog pack"><i class="ri-pencil-line"></i></button>
+          <button class="delete" title="Delete blog pack"><i class="ri-delete-bin-line"></i></button>
+        </span>
+      </li>
+    </template>
+
+    <script src="/browser_action/resize_frames.js" defer></script>
+    <script src="/lib/browser-polyfill.min.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

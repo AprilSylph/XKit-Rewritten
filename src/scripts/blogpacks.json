@@ -1,0 +1,23 @@
+{
+  "title": "Blogpacks",
+  "description": "Create and save custom timelines",
+  "icon": {
+    "class_name": "ri-stack-line",
+    "color": "white",
+    "background_color": "#000"
+  },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#blogpacks",
+  "relatedTerms": [
+    "Blog Pack",
+    "Blogpacks",
+    "Secret Timeline"
+  ],
+  "preferences": {
+    "packs": {
+      "type": "iframe",
+      "label": "Manage your blogpacks",
+      "src": "/scripts/blogpacks/options/index.html",
+      "default": []
+    }
+  }
+}

@@ -57,9 +57,11 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   if (trail.some(({ layout = [] }) => layout.some(({ type }) => type === 'ask'))) {
     await new Promise(resolve => {
       showModal({
-        title: 'Note: Ask in Thread',
+        title: '⚠️ This thread contains an ask!',
         message: [
-          `If you trim an ask/answer from a thread, the thread will appear broken on custom themes, e.g. ${blog?.name ?? 'blogname'}.tumblr.com.`
+          `Trimming an ask from a thread will result in it appearing broken on custom themes (i.e. ${blog?.name}.tumblr.com).`,
+          '\n\n',
+          'To avoid issues with custom themes, leave the ask intact when trimming.'
         ],
         buttons: [
           modalCancelButton,

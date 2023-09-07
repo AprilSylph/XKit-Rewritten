@@ -20,10 +20,12 @@ const unburyTimelineObject = () => {
 
 /**
  * @param {Element} postElement - An on-screen post
+ * @param {object} [options] - Configuration object
+ * @param {boolean} [options.cache] - Whether to use cached values
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
-export const timelineObject = async function (postElement) {
-  if (!timelineObjectCache.has(postElement)) {
+export const timelineObject = async function (postElement, options) {
+  if (!timelineObjectCache.has(postElement) || options?.cache === false) {
     timelineObjectCache.set(postElement, inject(unburyTimelineObject, [], postElement));
   }
   return timelineObjectCache.get(postElement);

@@ -41,19 +41,6 @@ document.documentElement.append(buildStyle(`
   position: relative;
   box-shadow: 0 0 4px rgba(0,0,0,.25);
 }
-.xkit-control-button-tooltip-tooltip::before {
-  content: "";
-  display: inline-block;
-  vertical-align: text-top;
-  width: 1em;
-  height: 1em;
-  margin: 0.2ch 0.5ch;
-  mask-size: contain;
-  -webkit-mask-size: contain;
-  mask-image: url(${browser.runtime.getURL('/icons/mask_128.png')});
-  -webkit-mask-image: url(${browser.runtime.getURL('/icons/mask_128.png')});
-  background-color: #fff;
-}
 .xkit-control-button-tooltip-arrow {
   position: absolute;
   left: 0px;

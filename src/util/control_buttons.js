@@ -60,7 +60,7 @@ document.documentElement.append(buildStyle(`
  */
 export const createControlButtonTemplate = function (symbolId, buttonClass, label) {
   return dom('div', { class: `xkit-control-button-container ${buttonClass}` }, null, [
-    dom('div', { class: 'xkit-control-button-tooltip' }, null, [
+    label && dom('div', { class: 'xkit-control-button-tooltip' }, null, [
       dom('div', { class: 'xkit-control-button-tooltip-box' }, null, [label])
     ]),
     dom('button', { class: 'xkit-control-button', 'aria-label': label, title: label }, null, [

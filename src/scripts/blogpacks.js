@@ -17,7 +17,7 @@ const getSidebarOptions = (rows) => ({
 
 export const main = async () => {
   const { [storageKey]: blogpacks = [] } = await browser.storage.local.get(storageKey);
-  if (!blogpacks) return;
+  if (!blogpacks || blogpacks.length === 0) return;
   const sidebarRows = blogpacks.map(({ title, blogs }) => ({ label: title, link: getLink(blogs) }));
   addSidebarItem(getSidebarOptions(sidebarRows));
 };

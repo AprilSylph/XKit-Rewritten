@@ -4,7 +4,7 @@ import { translate } from '../../util/language_data.js';
 import { pageModifications } from '../../util/mutations.js';
 
 const styleElement = buildStyle(`
-  figure[data-no-alt-text] ${keyToCss('imageOptionsIcon')} {
+  figure[data-no-alt-text] ${keyToCss('optionsIcon')} {
     outline: 3px dashed rgb(var(--accent));
     outline-offset: -1px;
   }
@@ -26,7 +26,7 @@ const styleElement = buildStyle(`
     line-height: 0;
   }
 
-  figure[data-no-alt-text] ${keyToCss('imageOptionsWrapper')} {
+  figure[data-no-alt-text] ${keyToCss('optionsWrapper')} {
     display: unset !important;
   }
 `);

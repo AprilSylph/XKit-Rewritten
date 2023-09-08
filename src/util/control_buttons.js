@@ -22,7 +22,8 @@ document.documentElement.append(buildStyle(`
 
 .xkit-control-button-tooltip-box {
   min-width: 54px;
-  padding: 4px 8px;
+  width: max-content;
+  padding: 4px 10px;
 
   border-radius: 4px;
   box-shadow: 0 0 4px rgba(0,0,0,.25);

@@ -6,10 +6,6 @@ import { buildSvg } from './remixicon.js';
 $('.xkit-control-button-container').remove();
 
 document.documentElement.append(buildStyle(`
-:not(:hover) > .xkit-control-button-tooltip {
-  display: none;
-}
-
 .xkit-control-button-tooltip {
   position: absolute;
   bottom: 50%;
@@ -18,6 +14,13 @@ document.documentElement.append(buildStyle(`
 
   z-index: 2;
   pointer-events: none;
+
+  transition: visibility 0ms 250ms;
+}
+
+:not(:hover) > .xkit-control-button-tooltip {
+  visibility: hidden;
+  transition: visibility 0ms 0ms;
 }
 
 .xkit-control-button-tooltip-box {

@@ -2,11 +2,13 @@ import { dom } from './dom.js';
 import { buildStyle } from './interface.js';
 import { buildSvg } from './remixicon.js';
 
+export const tooltipClass = 'xkit-control-button-tooltip';
+
 // Remove outdated buttons when loading module
 $('.xkit-control-button-container').remove();
 
 document.documentElement.append(buildStyle(`
-.xkit-control-button-tooltip {
+.${tooltipClass} {
   position: absolute;
   bottom: 50%;
   left: 50%;
@@ -18,12 +20,12 @@ document.documentElement.append(buildStyle(`
   transition: visibility 0ms 250ms;
 }
 
-:not(:hover) > .xkit-control-button-tooltip {
+:not(:hover) > .${tooltipClass} {
   visibility: hidden;
   transition: visibility 0ms 0ms;
 }
 
-.xkit-control-button-tooltip-box {
+.${tooltipClass}-box {
   min-width: 54px;
   width: max-content;
   padding: 4px 10px;
@@ -40,7 +42,7 @@ document.documentElement.append(buildStyle(`
   text-align: center;
 }
 
-.xkit-control-button-tooltip::after {
+.${tooltipClass}::after {
   content: "";
   position: absolute;
   left: 50%;
@@ -60,8 +62,8 @@ document.documentElement.append(buildStyle(`
  */
 export const createControlButtonTemplate = function (symbolId, buttonClass, label) {
   return dom('div', { class: `xkit-control-button-container ${buttonClass}` }, null, [
-    label && dom('div', { class: 'xkit-control-button-tooltip' }, null, [
-      dom('div', { class: 'xkit-control-button-tooltip-box' }, null, [label])
+    label && dom('div', { class: tooltipClass }, null, [
+      dom('div', { class: `${tooltipClass}-box` }, null, [label])
     ]),
     dom('button', { class: 'xkit-control-button', 'aria-label': label, title: label }, null, [
       dom('span', { class: 'xkit-control-button-inner', tabindex: '-1' }, null, [

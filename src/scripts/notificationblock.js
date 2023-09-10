@@ -75,8 +75,18 @@ const unburyTargetPostIds = async (notificationSelector) => {
 
 const processNotifications = () => inject(unburyTargetPostIds, [notificationSelector]);
 
+const muteNotificationsMessage = [
+  '\n\n',
+  'Unlike Tumblr\'s option to "Mute notifications", this will not prevent notifications for this post from being created, so they will still increment your unread notification count.',
+  '\n\n',
+  'You can use "Mute Notifications" in addition to or instead of this feature. ',
+  'It will completely prevent the post from generating notifications while it is enabled, and can be applied temporarily or permanently.'
+];
+
 const onButtonClicked = async function ({ currentTarget }) {
   const { id, rebloggedRootId, blog: { uuid }, rebloggedRootUuid } = currentTarget.__timelineObjectData;
+  const { response: { muted } } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
+
   const rootId = rebloggedRootId || id;
   const rootUuid = rebloggedRootUuid || uuid;
   const shouldBlockNotifications = blockedPostTargetIDs.includes(rootId) === false;
@@ -84,11 +94,13 @@ const onButtonClicked = async function ({ currentTarget }) {
   const title = shouldBlockNotifications
     ? 'Block this post\'s notifications?'
     : 'Unblock this post\'s notifications?';
-  const message = [
-    shouldBlockNotifications
-      ? 'Notifications for this post will be hidden from your activity feed.'
-      : 'Notifications for this post will appear in your activity feed again.'
-  ];
+  const message = shouldBlockNotifications
+    ? [
+        'Notifications for this post will be hidden from your activity feed.',
+        ...(muted ? [] : muteNotificationsMessage)
+      ]
+    : ['Notifications for this post will appear in your activity feed again.'];
+
   const textContent = shouldBlockNotifications
     ? 'Block notifications'
     : 'Unblock notifications';

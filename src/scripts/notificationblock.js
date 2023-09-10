@@ -6,6 +6,7 @@ import { keyToCss } from '../util/css_map.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { dom } from '../util/dom.js';
 import { userBlogNames } from '../util/user.js';
+import { apiFetch } from '../util/tumblr_helpers.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonBlockId = 'notificationblock-block';
@@ -42,8 +43,18 @@ const unburyTargetPostIds = async (notificationSelector) => {
 
 const processNotifications = () => inject(unburyTargetPostIds, [notificationSelector]);
 
+const muteNotificationsMessage = [
+  '\n\n',
+  'Unlike Tumblr\'s option to "Mute notifications", this will not prevent notifications for this post from being created, so they will still increment your unread notification count.',
+  '\n\n',
+  'You can use "Mute Notifications" in addition to or instead of this feature. ',
+  'It will completely prevent the post from generating notifications while it is enabled, and can be applied temporarily or permanently.'
+];
+
 const onButtonClicked = async function ({ currentTarget }) {
-  const { id, rebloggedRootId } = currentTarget.__timelineObjectData;
+  const { id, rebloggedRootId, blog: { uuid } } = currentTarget.__timelineObjectData;
+  const { response: { muted } } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
+
   const rootId = rebloggedRootId || id;
   const shouldBlockNotifications = blockedPostTargetIDs.includes(rootId) === false;
 
@@ -53,9 +64,7 @@ const onButtonClicked = async function ({ currentTarget }) {
   const message = shouldBlockNotifications
     ? [
         'Notifications for this post will be hidden from your activity feed.',
-        '\n\n',
-        'You can use Tumblr\'s "Mute Notifications" option in addition to or instead of this feature. ',
-        'It will completely prevent the post from generating notifications once enabled, and can be applied temporarily or permanently.'
+        ...(muted ? [] : muteNotificationsMessage)
       ]
     : ['Notifications for this post will appear in your activity feed again.'];
 

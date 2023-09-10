@@ -3,7 +3,7 @@
   position: relative;
 }
 
-.xkit-cleanfeed-filtered figure:not([style]):not(:hover)::after,
+.xkit-cleanfeed-filtered figure:not([aria-label]):not(:hover)::after,
 .xkit-cleanfeed-filtered [role="application"]:not(:hover)::after {
   position: absolute;
   top: 0;

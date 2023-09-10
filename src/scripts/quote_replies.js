@@ -1,6 +1,7 @@
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { inject } from '../util/inject.js';
+import { showErrorModal } from '../util/modals.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { getPreferences } from '../util/preferences.js';
@@ -56,7 +57,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
       click () {
         this.disabled = true;
         quoteReply(tumblelogName, notificationProps)
-          .catch(showError)
+          .catch(showErrorModal)
           .finally(() => { this.disabled = false; });
       }
     },
@@ -113,8 +114,6 @@ const quoteReply = async (tumblelogName, notificationProps) => {
     navigate(currentDraftLocation);
   }
 };
-
-const showError = exception => notify(exception.body?.errors?.[0]?.detail || exception.message);
 
 export const main = async function () {
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));

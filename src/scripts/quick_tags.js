@@ -232,6 +232,39 @@ popupElement.addEventListener('click', processBundleClick);
 popupForm.addEventListener('submit', processFormSubmit);
 postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 
+const migrateTags = async ({ detail: newTagBundles }) => {
+  const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
+
+  if (Array.isArray(newTagBundles)) {
+    const toAdd = newTagBundles
+      .filter(
+        newTagBundle =>
+          !tagBundles.some(
+            tagBundle =>
+              newTagBundle.title === tagBundle.title && newTagBundle.tags === tagBundle.tags
+          )
+      )
+      .map(({ title, tags }) => ({ title: String(title), tags: String(tags) }));
+
+    if (toAdd.length) {
+      tagBundles.push(...toAdd);
+      await browser.storage.local.set({ [storageKey]: tagBundles });
+
+      window.dispatchEvent(
+        new CustomEvent('xkit-quick-tags-migration-response', {
+          detail: `Added ${toAdd.length} tag bundles!`
+        })
+      );
+    } else {
+      window.dispatchEvent(
+        new CustomEvent('xkit-quick-tags-migration-response', {
+          detail: 'No new bundles to add!'
+        })
+      );
+    }
+  }
+};
+
 export const main = async function () {
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
 
@@ -244,6 +277,8 @@ export const main = async function () {
   if (originalPostTag || answerTag || autoTagAsker) {
     pageModifications.register('#selected-tags', processPostForm);
   }
+
+  window.addEventListener('xkit-quick-tags-migration', migrateTags);
 };
 
 export const clean = async function () {
@@ -256,6 +291,8 @@ export const clean = async function () {
   $(`.${buttonClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${tagsClass}`).remove();
+
+  window.removeEventListener('xkit-quick-tags-migration', migrateTags);
 };
 
 export const stylesheet = true;

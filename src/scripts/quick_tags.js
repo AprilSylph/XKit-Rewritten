@@ -3,6 +3,7 @@ import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { postSelector } from '../util/interface.js';
 import { megaEdit } from '../util/mega_editor.js';
+import { modalCancelButton, modalCompleteButton, showModal } from '../util/modals.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
@@ -233,9 +234,11 @@ popupForm.addEventListener('submit', processFormSubmit);
 postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 
 const migrateTags = async ({ detail: newTagBundles }) => {
-  const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-
   if (Array.isArray(newTagBundles)) {
+    window.dispatchEvent(new CustomEvent('xkit-quick-tags-migration-success'));
+
+    const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
+
     const toAdd = newTagBundles
       .map(({ title, tags }) => ({ title: String(title), tags: String(tags) }))
       .filter(
@@ -247,20 +250,31 @@ const migrateTags = async ({ detail: newTagBundles }) => {
       );
 
     if (toAdd.length) {
+      await new Promise(resolve => {
+        showModal({
+          title: 'Add tag bundles?',
+          message: [`Would you like to add ${toAdd.length} tag bundles?`],
+          buttons: [
+            modalCancelButton,
+            dom('button', { class: 'blue' }, { click: resolve }, ['Add them!'])
+          ]
+        });
+      });
+
       tagBundles.push(...toAdd);
       await browser.storage.local.set({ [storageKey]: tagBundles });
 
-      window.dispatchEvent(
-        new CustomEvent('xkit-quick-tags-migration-response', {
-          detail: `Added ${toAdd.length} tag bundles!`
-        })
-      );
+      showModal({
+        title: 'Success',
+        message: `Added ${toAdd.length} tag bundles!`,
+        buttons: [modalCompleteButton]
+      });
     } else {
-      window.dispatchEvent(
-        new CustomEvent('xkit-quick-tags-migration-response', {
-          detail: 'No new bundles to add!'
-        })
-      );
+      showModal({
+        title: 'No new bundles!',
+        message: 'XKit Rewritten has these tag bundles already.',
+        buttons: [modalCompleteButton]
+      });
     }
   }
 };

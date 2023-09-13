@@ -253,10 +253,16 @@ const migrateTags = async ({ detail: newTagBundles }) => {
       await new Promise(resolve => {
         showModal({
           title: 'Add tag bundles?',
-          message: [`Would you like to add ${toAdd.length} tag bundles?`],
+          message: [
+            `Would you like to add ${
+              toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'a tag bundle'
+            }?`,
+            '\n\n',
+            `(${toAdd.map(({ title }) => title).join(', ')})`
+          ],
           buttons: [
             modalCancelButton,
-            dom('button', { class: 'blue' }, { click: resolve }, ['Add them!'])
+            dom('button', { class: 'blue' }, { click: resolve }, ['Confirm'])
           ]
         });
       });
@@ -266,7 +272,7 @@ const migrateTags = async ({ detail: newTagBundles }) => {
 
       showModal({
         title: 'Success',
-        message: `Added ${toAdd.length} tag bundles!`,
+        message: `Added ${toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'a tag bundle'}!`,
         buttons: [modalCompleteButton]
       });
     } else {

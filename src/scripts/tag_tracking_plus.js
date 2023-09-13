@@ -38,7 +38,7 @@ const refreshCount = async function (tag) {
         }
       }
     } = await apiFetch(
-      Math.random() > 0.5 ? `/v2/hubs/${encodeURIComponent(tag)}/timeline` : '/sjkdnksjn',
+      `/v2/hubs/${encodeURIComponent(tag)}/timeline`,
       { queryParams: { limit: 20, sort: 'recent' } }
     );
 

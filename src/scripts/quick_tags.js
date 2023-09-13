@@ -237,14 +237,14 @@ const migrateTags = async ({ detail: newTagBundles }) => {
 
   if (Array.isArray(newTagBundles)) {
     const toAdd = newTagBundles
+      .map(({ title, tags }) => ({ title: String(title), tags: String(tags) }))
       .filter(
         newTagBundle =>
           !tagBundles.some(
             tagBundle =>
               newTagBundle.title === tagBundle.title && newTagBundle.tags === tagBundle.tags
           )
-      )
-      .map(({ title, tags }) => ({ title: String(title), tags: String(tags) }));
+      );
 
     if (toAdd.length) {
       tagBundles.push(...toAdd);

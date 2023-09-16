@@ -35,7 +35,7 @@ const formatTimeElements = function (timeElements) {
   timeElements.forEach(timeElement => {
     const momentDate = moment(timeElement.dateTime, moment.ISO_8601);
     timeElement.dataset.formattedTime = momentDate.format(format);
-    if (displayRelative) timeElement.dataset.formattedTime += `\u2002\u00B7\u2002${constructRelativeTimeString(momentDate.unix()).replaceAll(' ', '\u00A0')}`;
+    if (displayRelative) timeElement.dataset.formattedTime += `\u2002\u00B7\u2002${constructRelativeTimeString(momentDate.unix())}`;
   });
 };
 

@@ -26,7 +26,7 @@ let sidebarItem;
 const refreshCount = async function (tag) {
   if (!trackedTags.includes(tag)) return;
 
-  let unreadCountString = '⚠';
+  let unreadCountString = '⚠️';
 
   try {
     const savedTimestamp = timestamps[tag] ?? 0;

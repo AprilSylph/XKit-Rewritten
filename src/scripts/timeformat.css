@@ -2,11 +2,17 @@
   font-size: 0px;
 }
 
-[data-formatted-time]::after {
+[data-formatted-time]::before {
   content: attr(data-formatted-time);
   font-size: .78125rem;
 }
 
-[data-formatted-time][title]::after {
+[data-formatted-time]::after {
+  content: attr(data-formatted-relative-time);
+  font-size: .78125rem;
+  display: inline-block;
+}
+
+[data-formatted-time]::before, [data-formatted-time][title]::after {
   cursor: help;
 }

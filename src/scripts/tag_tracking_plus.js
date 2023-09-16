@@ -6,7 +6,6 @@ import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { getPreferences } from '../util/preferences.js';
-import { notify } from '../util/notifications.js';
 
 const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
 let timestamps;
@@ -169,14 +168,9 @@ export const onStorageChanged = async (changes, areaName) => {
   }
 };
 
-const showError = exception => {
-  console.error(exception);
-  notify(exception.body?.errors?.[0]?.detail || exception.message);
-};
-
 export const main = async function () {
-  const trackedTagsData = await apiFetch('/v2/user/tags').catch(showError);
-  trackedTags = trackedTagsData?.response?.tags?.map(({ name }) => name) ?? [];
+  const trackedTagsData = (await apiFetch('/v2/user/tags')) ?? {};
+  trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
 
   trackedTags.forEach(tag => unreadCounts.set(tag, undefined));
 

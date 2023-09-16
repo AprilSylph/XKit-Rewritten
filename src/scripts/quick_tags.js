@@ -94,7 +94,7 @@ const processPostForm = async function ([selectedTagsElement]) {
       response = {},
       state = response.state,
       askingName = response.askingName
-    } = await (postOnScreen ? timelineObject(postOnScreen) : apiFetch(`/v2/blog/${blogName}/posts/${postId}`).catch(showError));
+    } = await (postOnScreen ? timelineObject(postOnScreen) : apiFetch(`/v2/blog/${blogName}/posts/${postId}`));
 
     if (state === 'submission') {
       const tagsToAdd = [];
@@ -103,11 +103,6 @@ const processPostForm = async function ([selectedTagsElement]) {
       editPostFormTags({ add: tagsToAdd });
     }
   }
-};
-
-const showError = exception => {
-  console.error(exception);
-  notify(exception.body?.errors?.[0]?.detail || exception.message);
 };
 
 export const onStorageChanged = async function (changes, areaName) {

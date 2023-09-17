@@ -165,7 +165,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const { trail = [], content = [] } = await timelineObject(postElement);
   const items = trail.length + (content.length ? 1 : 0);
 
-  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: (event) => onButtonClicked(event).catch(showErrorModal) }, items < 2);
+  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: event => onButtonClicked(event).catch(showErrorModal) }, items < 2);
   const controlIcon = editButton.closest(controlIconSelector);
   controlIcon.before(clonedControlButton);
 });

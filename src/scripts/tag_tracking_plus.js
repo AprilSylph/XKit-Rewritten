@@ -26,37 +26,43 @@ let sidebarItem;
 const refreshCount = async function (tag) {
   if (!trackedTags.includes(tag)) return;
 
-  const savedTimestamp = timestamps[tag] ?? 0;
-  const {
-    response: {
-      timeline: {
-        elements = [],
-        links
+  let unreadCountString = '⚠️';
+
+  try {
+    const savedTimestamp = timestamps[tag] ?? 0;
+    const {
+      response: {
+        timeline: {
+          elements = [],
+          links
+        }
+      }
+    } = await apiFetch(
+      `/v2/hubs/${encodeURIComponent(tag)}/timeline`,
+      { queryParams: { limit: 20, sort: 'recent' } }
+    );
+
+    const posts = elements.filter(({ objectType, displayType, recommendedSource }) =>
+      objectType === 'post' &&
+      displayType === undefined &&
+      recommendedSource === null
+    );
+
+    let unreadCount = 0;
+
+    for (const { timestamp } of posts) {
+      if (timestamp <= savedTimestamp) {
+        break;
+      } else {
+        unreadCount++;
       }
     }
-  } = await apiFetch(
-    `/v2/hubs/${encodeURIComponent(tag)}/timeline`,
-    { queryParams: { limit: 20, sort: 'recent' } }
-  );
 
-  const posts = elements.filter(({ objectType, displayType, recommendedSource }) =>
-    objectType === 'post' &&
-    displayType === undefined &&
-    recommendedSource === null
-  );
-
-  let unreadCount = 0;
-
-  for (const { timestamp } of posts) {
-    if (timestamp <= savedTimestamp) {
-      break;
-    } else {
-      unreadCount++;
-    }
+    const showPlus = unreadCount === posts.length && links?.next;
+    unreadCountString = `${unreadCount}${showPlus ? '+' : ''}`;
+  } catch (exception) {
+    console.error(exception);
   }
-
-  const showPlus = unreadCount === posts.length && links?.next;
-  const unreadCountString = `${unreadCount}${showPlus ? '+' : ''}`;
 
   [document, ...(!sidebarItem || document.contains(sidebarItem) ? [] : [sidebarItem])]
     .flatMap(node =>

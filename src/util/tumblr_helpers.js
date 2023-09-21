@@ -1,12 +1,13 @@
 import { inject } from './inject.js';
 
 /**
- * @param {...any} args - Arguments to pass to window.tumblr.apiFetch()
+ * @param {string} resource - path for the API route to fetch
+ * @param {object} [init] - fetch options
  * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#apifetch}
  * @returns {Promise<Response|Error>} Resolves or rejects with result of window.tumblr.apiFetch()
  */
-export const apiFetch = async function (...args) {
-  return inject('doApiFetch', args);
+export const apiFetch = async function (resource, init = {}) {
+  return inject('doApiFetch', [resource, init]);
 };
 
 /**

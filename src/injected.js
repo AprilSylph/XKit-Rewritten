@@ -100,7 +100,7 @@
     }
   };
 
-  const doApiFetch = async (resource, init = {}) => {
+  const doApiFetch = async (resource, init) => {
     // add XKit header to all API requests
     init.headers ??= {};
     init.headers['X-XKit'] = '1';

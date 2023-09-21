@@ -10,8 +10,7 @@ export const inject = (name, args = [], target = document.documentElement) =>
     const requestId = String(Math.random());
     const data = { name, args, id: requestId };
 
-    const responseHandler = ({ detail }) => {
-      const { id, result, exception } = JSON.parse(detail);
+    const responseHandler = ({ detail: { id, result, exception } }) => {
       if (id !== requestId) return;
 
       target.removeEventListener('xkitinjectionresponse', responseHandler);
@@ -20,6 +19,6 @@ export const inject = (name, args = [], target = document.documentElement) =>
     target.addEventListener('xkitinjectionresponse', responseHandler);
 
     target.dispatchEvent(
-      new CustomEvent('xkitinjectionrequest', { detail: JSON.stringify(data), bubbles: true })
+      new CustomEvent('xkitinjectionrequest', { detail: data, bubbles: true })
     );
   });

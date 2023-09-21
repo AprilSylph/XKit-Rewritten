@@ -161,6 +161,14 @@
     doPostForm
   };
 
+  /**
+   * Apparently required in Firefox to prevent "Permission denied to access property" error when sending an
+   * object cross-world.
+   * @see https://stackoverflow.com/a/46081249
+   */
+  /* globals cloneInto */
+  const clone = data => typeof cloneInto !== 'undefined' ? cloneInto(data, document.defaultView) : data;
+
   document.documentElement.addEventListener('xkitinjectionrequest', async event => {
     const { detail: { id, name, args }, target } = event;
 
@@ -170,12 +178,12 @@
     try {
       const result = await func(...args, target);
       target.dispatchEvent(
-        new CustomEvent('xkitinjectionresponse', { detail: { id, result } })
+        new CustomEvent('xkitinjectionresponse', { detail: clone({ id, result }) })
       );
     } catch (exception) {
       target.dispatchEvent(
         new CustomEvent('xkitinjectionresponse', {
-          detail: {
+          detail: clone({
             id,
             exception: {
               message: exception.message,
@@ -183,7 +191,7 @@
               stack: exception.stack,
               ...exception
             }
-          }
+          })
         })
       );
     }

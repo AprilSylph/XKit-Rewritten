@@ -1,4 +1,12 @@
 /**
+ * Apparently required in Firefox to prevent "Permission denied to access property" error when sending an
+ * object cross-world.
+ * @see https://stackoverflow.com/a/46081249
+ */
+/* globals cloneInto */
+const clone = data => typeof cloneInto !== 'undefined' ? cloneInto(data, document.defaultView) : data;
+
+/**
  * @param {string} name - Function name to run in the page context; must be in injectables.js
  * @param {Array} [args] - Array of arguments to pass to the function via spread
  * @param {Element} [target] - Target element; will be accessible as the last argument to the
@@ -19,6 +27,6 @@ export const inject = (name, args = [], target = document.documentElement) =>
     target.addEventListener('xkitinjectionresponse', responseHandler);
 
     target.dispatchEvent(
-      new CustomEvent('xkitinjectionrequest', { detail: data, bubbles: true })
+      new CustomEvent('xkitinjectionrequest', { detail: clone(data), bubbles: true })
     );
   });

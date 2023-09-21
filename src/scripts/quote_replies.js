@@ -23,6 +23,7 @@ let originalPostTag;
 let tagReplyingBlog;
 let newTab;
 
+/*
 const getNotificationProps = function () {
   const notificationElement = document.currentScript.parentElement;
   const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactFiber'));
@@ -37,9 +38,10 @@ const getNotificationProps = function () {
     }
   }
 };
+ */
 
 const processNotifications = notifications => notifications.forEach(async notification => {
-  const { notification: notificationProps, tumblelogName } = await inject(getNotificationProps, [], notification);
+  const { notification: notificationProps, tumblelogName } = await inject('getNotificationProps', [], notification);
 
   if (!['reply', 'note_mention'].includes(notificationProps.type)) return;
 

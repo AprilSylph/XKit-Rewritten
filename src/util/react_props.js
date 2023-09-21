@@ -3,6 +3,7 @@ import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
 const timelineObjectCache = new WeakMap();
 
+/*
 const unburyTimelineObject = () => {
   const postElement = document.currentScript.parentElement;
   const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
@@ -17,6 +18,7 @@ const unburyTimelineObject = () => {
     }
   }
 };
+ */
 
 /**
  * @param {Element} postElement - An on-screen post
@@ -24,11 +26,12 @@ const unburyTimelineObject = () => {
  */
 export const timelineObject = async function (postElement) {
   if (!timelineObjectCache.has(postElement)) {
-    timelineObjectCache.set(postElement, inject(unburyTimelineObject, [], postElement));
+    timelineObjectCache.set(postElement, inject('unburyTimelineObject', [], postElement));
   }
   return timelineObjectCache.get(postElement);
 };
 
+/*
 const unburyBlog = () => {
   const element = document.currentScript.parentElement;
   const reactKey = Object.keys(element).find(key => key.startsWith('__reactFiber'));
@@ -43,12 +46,13 @@ const unburyBlog = () => {
     }
   }
 };
+ */
 
 /**
  * @param {Element} meatballMenu - An on-screen meatball menu element in a blog modal header or blog card
  * @returns {Promise<object>} - The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
  */
-export const blogData = async (meatballMenu) => inject(unburyBlog, [], meatballMenu);
+export const blogData = async (meatballMenu) => inject('unburyBlog', [], meatballMenu);
 
 export const isMyPost = async (postElement) => {
   const { blog, isSubmission, postAuthor } = await timelineObject(postElement);
@@ -70,6 +74,7 @@ export const isMyPost = async (postElement) => {
   return false;
 };
 
+/*
 const controlTagsInput = async ({ add, remove }) => {
   add = add.map(tag => tag.trim()).filter((tag, index, array) => array.indexOf(tag) === index);
 
@@ -91,6 +96,7 @@ const controlTagsInput = async ({ add, remove }) => {
     }
   }
 };
+ */
 
 /**
  * Manipulate post form tags
@@ -99,4 +105,4 @@ const controlTagsInput = async ({ add, remove }) => {
  * @param {string[]} [options.remove] - Tags to remove
  * @returns {Promise<void>} Resolves when finished
  */
-export const editPostFormTags = async ({ add = [], remove = [] }) => inject(controlTagsInput, [{ add, remove }]);
+export const editPostFormTags = async ({ add = [], remove = [] }) => inject('controlTagsInput', [{ add, remove }]);

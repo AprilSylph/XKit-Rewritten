@@ -1,6 +1,6 @@
 import { inject } from './inject.js';
 
-export const cssMap = await inject(async () => window.tumblr.getCssMap());
+export const cssMap = await inject('getCssMap');
 
 /**
  * @param {...string} keys - One or more element source names

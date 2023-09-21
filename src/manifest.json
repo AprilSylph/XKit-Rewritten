@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "XKit Rewritten",
   "version": "0.22.2",
 
@@ -17,7 +17,7 @@
     "128": "icons/128.png"
   },
 
-  "browser_action": {
+  "action": {
     "browser_style": true,
     "default_title": "XKit Rewritten",
     "default_popup": "browser_action/popup.html",
@@ -36,7 +36,16 @@
   },
 
   "permissions": [ "storage" ],
-  "web_accessible_resources": [ "*.js", "*.json", "*.css", "*.svg" ],
+  "host_permissions": [
+    "*://www.tumblr.com/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [ "*.js", "*.json", "*.css", "*.svg" ],
+      "matches": [ "*://www.tumblr.com/*" ]
+    }
+  ],
+
   "content_scripts": [
     {
       "matches": [
@@ -65,10 +74,10 @@
     }
   ],
 
-  "minimum_chrome_version": "89",
+  "minimum_chrome_version": "102",
   "browser_specific_settings": {
     "gecko": {
-      "strict_min_version": "89.0a1"
+      "strict_min_version": "101.0a1"
     }
   }
 }

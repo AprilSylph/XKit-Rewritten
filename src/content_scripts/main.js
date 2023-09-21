@@ -77,8 +77,18 @@
     return installedScripts;
   };
 
+  const initInjection = () => {
+    const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
+    const script = document.createElement('script');
+    script.nonce = nonce;
+    script.src = browser.runtime.getURL('/injected.js');
+    document.documentElement.append(script);
+  };
+
   const init = async function () {
     $('style.xkit').remove();
+
+    initInjection();
 
     browser.storage.onChanged.addListener(onStorageChanged);
 

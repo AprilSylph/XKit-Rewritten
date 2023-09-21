@@ -22,6 +22,7 @@ const buildCss = () => `:is(${
   blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')
 }) { display: none !important; }`;
 
+/*
 const unburyTargetPostIds = async (notificationSelector) => {
   [...document.querySelectorAll(notificationSelector)]
     .forEach(notificationElement => {
@@ -40,8 +41,9 @@ const unburyTargetPostIds = async (notificationSelector) => {
       }
     });
 };
+ */
 
-const processNotifications = () => inject(unburyTargetPostIds, [notificationSelector]);
+const processNotifications = () => inject('unburyTargetPostIds', [notificationSelector]);
 
 const muteNotificationsMessage = [
   '\n\n',

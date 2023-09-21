@@ -161,8 +161,8 @@
     doPostForm
   };
 
-  document.documentElement.addEventListener('xkitinjectionrequest', async event => {
-    const { detail: { id, name, args }, target } = event;
+  document.documentElement.addEventListener('xkitinjectionrequest', async ({ detail, target }) => {
+    const { id, name, args } = JSON.parse(detail);
 
     const fallback = async () => new Error(`function "${name}" is not implemented in injectable_functions.js`);
     const func = injectables[name] ?? fallback;
@@ -170,12 +170,12 @@
     try {
       const result = await func(...args, target);
       target.dispatchEvent(
-        new CustomEvent('xkitinjectionresponse', { detail: { id, result } })
+        new CustomEvent('xkitinjectionresponse', { detail: JSON.stringify({ id, result }) })
       );
     } catch (exception) {
       target.dispatchEvent(
         new CustomEvent('xkitinjectionresponse', {
-          detail: {
+          detail: JSON.stringify({
             id,
             exception: {
               message: exception.message,
@@ -183,7 +183,7 @@
               stack: exception.stack,
               ...exception
             }
-          }
+          })
         })
       );
     }

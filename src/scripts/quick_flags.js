@@ -2,13 +2,14 @@ import { cloneControlButton, createControlButtonTemplate } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { filterPostElements, postSelector } from '../util/interface.js';
+import { bulkCommunityLabel } from '../util/mega_editor.js';
 import { hideModal, modalCancelButton, modalCompleteButton, showModal } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { getPreferences } from '../util/preferences.js';
 import { timelineObject } from '../util/react_props.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
-import { apiFetch, createEditRequestBody } from '../util/tumblr_helpers.js';
+import { apiFetch } from '../util/tumblr_helpers.js';
 import { userBlogs } from '../util/user.js';
 
 const data = [
@@ -88,12 +89,7 @@ const showInitialPrompt = async () => {
 
   showModal({
     title: 'Flag posts in bulk:',
-    message: [
-      initialForm,
-      dom('small', null, null, [
-        "Note: The Tumblr API doesn't currently have an optimized method for flagging posts. This may take a long time (~3300 posts/hour)."
-      ])
-    ],
+    message: [initialForm],
     buttons: [
       modalCancelButton,
       dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' })
@@ -282,32 +278,46 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
     return;
   }
 
+  const postIdsByCurrentValue = {};
+
+  filteredPostsMap.forEach((postData, id) => {
+    // categories are probably in a stable order, but this will not cause problems if they aren't
+    const currentCategoriesJSON = JSON.stringify(postData.communityLabels.categories);
+
+    postIdsByCurrentValue[currentCategoriesJSON] ??= [];
+    postIdsByCurrentValue[currentCategoriesJSON].push(id);
+  });
+
   let labelledCount = 0;
   let labelledFailCount = 0;
 
-  for (const [id, postData] of filteredPostsMap.entries()) {
-    try {
-      const { communityLabels: { categories: currentCategories } } = postData;
-      const newCategories = [...new Set([...currentCategories, ...addedCategories])];
+  for (const [currentCategoriesJSON, postIdsWithCurrentValue] of Object.entries(postIdsByCurrentValue)) {
+    const currentCategories = JSON.parse(currentCategoriesJSON);
 
+    const newCategories = [...new Set([...currentCategories, ...addedCategories])];
+
+    while (postIdsWithCurrentValue.length !== 0) {
+      const postIds = postIdsWithCurrentValue.splice(0, 100);
       await Promise.all([
-        apiFetch(`/v2/blog/${uuid}/posts/${id}`, {
-          method: 'PUT',
-          body: {
-            ...createEditRequestBody(postData),
-            hasCommunityLabel: true,
-            communityLabelCategories: newCategories
-          }
+        bulkCommunityLabel(name, postIds, { hasCommunityLabel: true, categories: newCategories }).then(() => {
+          labelledCount += postIds.length;
+
+          postIds.forEach(id => {
+            editedPostStates[id] = { hasCommunityLabel: true, categories: newCategories };
+            const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
+            if (postElement) {
+              // todo: refactor this
+              onPopupAction({ postElement, hasCommunityLabel: true, categories: newCategories });
+            }
+          });
+        }).catch(() => {
+          labelledFailCount += postIds.length;
+        }).finally(() => {
+          flagStatus.textContent = `Set community labels on ${labelledCount} posts... ${labelledFailCount ? `(failed: ${labelledFailCount})` : ''}`;
         }),
         sleep(1000)
       ]);
-      labelledCount++;
-      editedPostStates[id] = { hasCommunityLabel: true, categories: newCategories };
-    } catch (exception) {
-      console.error(exception);
-      labelledFailCount++;
     }
-    flagStatus.textContent = `Set community labels on ${labelledCount} posts... ${labelledFailCount ? `(failed: ${labelledFailCount})` : ''}`;
   }
 
   await sleep(1000);
@@ -388,7 +398,7 @@ const togglePopupDisplay = async function ({ target, currentTarget }) {
 const handlePopupClick = async (checkbox, category) => {
   const postElement = checkbox.closest(postSelector);
 
-  const { id, blog: { uuid } } = await timelineObject(postElement);
+  const { id, blog: { uuid, name } } = await timelineObject(postElement);
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
 
   const {
@@ -414,7 +424,7 @@ const handlePopupClick = async (checkbox, category) => {
   }
 
   try {
-    await setLabelsOnPost({ id, uuid, postData, hasCommunityLabel, categories });
+    await setLabelsOnPost({ id, name, hasCommunityLabel, categories });
     await onPopupAction({ postElement, hasCommunityLabel, categories });
   } catch ({ body }) {
     notify(body?.errors?.[0]?.detail || 'Failed to set flags on post!');
@@ -426,21 +436,18 @@ const handlePopupClick = async (checkbox, category) => {
   }
 };
 
-const setLabelsOnPost = async function ({ id, uuid, postData, hasCommunityLabel, categories }) {
+const setLabelsOnPost = async function ({ id, name, hasCommunityLabel, categories }) {
   if (!hasCommunityLabel && Boolean(categories.length)) {
     throw new Error(`Invalid label combination: ${JSON.stringify({ hasCommunityLabel, categories })}`);
   }
 
-  const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`, {
-    method: 'PUT',
-    body: {
-      ...createEditRequestBody(postData),
-      hasCommunityLabel,
-      communityLabelCategories: categories
-    }
-  });
-
-  notify(displayText);
+  try {
+    await bulkCommunityLabel(name, [id], { hasCommunityLabel, categories });
+    notify('done');
+  } catch (e) {
+    console.log(e);
+    notify('error');
+  }
 };
 
 const onPopupAction = async ({ postElement, hasCommunityLabel, categories }) => {

@@ -7,8 +7,16 @@
     "background_color": "#ecc84b"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks",
-  "relatedTerms": [ "Blacklist", "Separator" ],
+  "relatedTerms": [
+    "Blacklist",
+    "Separator"
+  ],
   "preferences": {
+    "restore_attribution_links": {
+      "type": "checkbox",
+      "label": "Restore links to individual posts in the post header",
+      "default": false
+    },
     "slim_filtered_screens": {
       "type": "checkbox",
       "label": "Use a slim layout for filtered posts",
@@ -50,6 +58,11 @@
       "default": false,
       "inherit": "tweaks.preferences.subtle_follow"
     },
+    "hide_activity_mutuals": {
+      "type": "checkbox",
+      "label": "Hide following/mutuals indicators on notifications",
+      "default": false
+    },
     "hide_footer_tooltips": {
       "type": "checkbox",
       "label": "Hide control button tooltips in the post footer",
@@ -80,9 +93,14 @@
       "label": "Hide my follower count where possible",
       "default": false
     },
+    "hide_following_notification_badge": {
+      "type": "checkbox",
+      "label": "Hide the Home/Following unread badge",
+      "default": false
+    },
     "hide_activity_notification_badge": {
       "type": "checkbox",
-      "label": "Hide the activity notification badge",
+      "label": "Hide the Activity notification badge",
       "default": false
     },
     "no_where_were_we": {
@@ -93,6 +111,11 @@
     "no_live": {
       "type": "checkbox",
       "label": "Hide the Tumblr Live carousel",
+      "default": false
+    },
+    "following_tab": {
+      "type": "checkbox",
+      "label": "Force the default dashboard tab to \"Following\"",
       "default": false
     }
   }

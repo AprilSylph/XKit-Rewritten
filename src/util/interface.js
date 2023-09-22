@@ -1,7 +1,35 @@
+import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
 export const blogViewSelector = '[style*="--blog-title-color"] *';
+
+const listTimelineObjectSelector = keyToCss('listTimelineObject');
+const cellSelector = keyToCss('cell');
+const targetWrapperSelector = keyToCss(
+  'targetWrapper',
+  'targetWrapperBlock',
+  'targetWrapperFlex',
+  'targetWrapperInline'
+);
+
+/**
+ * @param {Element} element Element within a timeline item
+ * @returns {Element | null} The timeline item wrapper
+ */
+export const getTimelineItemWrapper = element =>
+  element.closest(cellSelector) || element.closest(listTimelineObjectSelector);
+
+/**
+ * @param {Element} element Element within a popover wrapper
+ * @returns {Element | null} The outermost popover wrapper
+ */
+export const getPopoverWrapper = element => {
+  const closestWrapper = element.closest(targetWrapperSelector);
+  return closestWrapper?.parentElement?.matches(targetWrapperSelector)
+    ? closestWrapper.parentElement
+    : closestWrapper;
+};
 
 /**
  * @typedef {object} PostFilterOptions
@@ -17,7 +45,10 @@ export const blogViewSelector = '[style*="--blog-title-color"] *';
  * @returns {HTMLDivElement[]} Matching post elements
  */
 export const filterPostElements = function (postElements, { excludeClass, timeline, noBlogView = false, includeFiltered = false } = {}) {
-  postElements = postElements.map(element => element.closest(postSelector)).filter(Boolean);
+  postElements = postElements
+    .filter(element => element.isConnected)
+    .map(element => element.closest(postSelector))
+    .filter(Boolean);
 
   if (timeline instanceof RegExp) {
     postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]')?.dataset.timeline));

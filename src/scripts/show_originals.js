@@ -1,4 +1,4 @@
-import { filterPostElements, postSelector, blogViewSelector } from '../util/interface.js';
+import { filterPostElements, blogViewSelector, getTimelineItemWrapper } from '../util/interface.js';
 import { isMyPost, timelineObject } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -6,7 +6,7 @@ import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { userBlogs } from '../util/user.js';
 
-const hiddenClass = 'xkit-show-originals-hidden';
+const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
 
@@ -34,10 +34,7 @@ const addControls = async (timelineElement, location) => {
   const controls = Object.assign(document.createElement('div'), { className: controlsClass });
   controls.dataset.location = location;
 
-  const firstPost = timelineElement.querySelector(postSelector);
-  location === 'blogSubscriptions'
-    ? firstPost?.before(controls)
-    : firstPost?.parentElement?.prepend(controls);
+  timelineElement.prepend(controls);
 
   const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
     controls.dataset.showOriginals = mode;
@@ -87,7 +84,9 @@ const processTimelines = async () => {
   [...document.querySelectorAll('[data-timeline]')].forEach(async timelineElement => {
     const location = getLocation(timelineElement);
 
-    const currentControls = timelineElement.querySelector(`.${controlsClass}`);
+    const currentControls = [...timelineElement.children]
+      .find(element => element.matches(`.${controlsClass}`));
+
     if (currentControls?.dataset?.location !== location) {
       currentControls?.remove();
       if (location) addControls(timelineElement, location);
@@ -108,7 +107,7 @@ const processPosts = async function (postElements) {
       if (showReblogsWithContributedContent && content.length > 0) { return; }
       if (whitelist.includes(blogName)) { return; }
 
-      postElement.classList.add(hiddenClass);
+      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
     });
 };
 
@@ -132,8 +131,7 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
-  $('[data-show-originals]').removeAttr('data-show-originals');
+  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
   $(`.${controlsClass}`).remove();
 };

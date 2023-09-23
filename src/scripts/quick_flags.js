@@ -1,7 +1,7 @@
 import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
-import { filterPostElements, postSelector } from '../util/interface.js';
+import { filterPostElements, getTimelineItemWrapper, postSelector } from '../util/interface.js';
 import { bulkCommunityLabel } from '../util/mega_editor.js';
 import { hideModal, modalCancelButton, modalCompleteButton, showModal } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -303,11 +303,10 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
           labelledCount += postIds.length;
 
           postIds.forEach(id => {
-            editedPostStates[id] = { hasCommunityLabel: true, categories: newCategories };
             const postElement = document.querySelector(`[tabindex="-1"][data-id="${id}"]`);
             if (postElement) {
-              // todo: refactor this
-              onPopupAction({ postElement, hasCommunityLabel: true, categories: newCategories });
+              editedPostStates.set(getTimelineItemWrapper(postElement), { hasCommunityLabel: true, categories: newCategories });
+              updatePostWarningElement(postElement);
             }
           });
         }).catch(() => {
@@ -355,7 +354,7 @@ const symbolId = 'ri-flag-2-line';
 
 let controlButtonTemplate;
 
-let editedPostStates = {};
+let editedPostStates = new WeakMap();
 
 const popupData = data.map(entry => ({ ...entry, checkbox: dom('input', { type: 'checkbox' }) }));
 
@@ -388,8 +387,9 @@ const togglePopupDisplay = async function ({ target, currentTarget }) {
   if (currentTarget.contains(popupElement)) {
     currentTarget.removeChild(popupElement);
   } else {
-    const { id, communityLabels } = await timelineObject(target.closest(postSelector));
-    updateCheckboxes(editedPostStates[id] ?? communityLabels);
+    const postElement = target.closest(postSelector);
+    const { communityLabels } = await timelineObject(postElement);
+    updateCheckboxes(editedPostStates.get(getTimelineItemWrapper(postElement)) ?? communityLabels);
 
     appendWithoutViewportOverflow(popupElement, currentTarget);
   }
@@ -425,14 +425,12 @@ const handlePopupClick = async (checkbox, category) => {
 
   try {
     await setLabelsOnPost({ id, name, hasCommunityLabel, categories });
-    await onPopupAction({ postElement, hasCommunityLabel, categories });
+    editedPostStates.set(getTimelineItemWrapper(postElement), { hasCommunityLabel, categories });
+    updatePostWarningElement(postElement);
   } catch ({ body }) {
     notify(body?.errors?.[0]?.detail || 'Failed to set flags on post!');
-    await onPopupAction({
-      postElement,
-      hasCommunityLabel: currentHasCommunityLabel,
-      categories: currentCategories
-    });
+  } finally {
+    updateCheckboxes({ hasCommunityLabel, categories });
   }
 };
 
@@ -450,17 +448,17 @@ const setLabelsOnPost = async function ({ id, name, hasCommunityLabel, categorie
   }
 };
 
-const onPopupAction = async ({ postElement, hasCommunityLabel, categories }) => {
+const updatePostWarningElement = async (postElement) => {
+  const editedPostState = editedPostStates.get(getTimelineItemWrapper(postElement));
+  if (!editedPostState) return;
+
+  const { hasCommunityLabel, categories } = editedPostState;
   const {
-    id,
     communityLabels: {
       hasCommunityLabel: renderedHasCommunityLabel,
       categories: renderedCategories = []
     }
   } = await timelineObject(postElement);
-
-  editedPostStates[id] = { hasCommunityLabel, categories };
-  updateCheckboxes({ hasCommunityLabel, categories });
 
   const renderedPostStateIncorrect =
     renderedHasCommunityLabel !== hasCommunityLabel ||
@@ -490,7 +488,9 @@ popupData.forEach(({ category, checkbox }) => {
 
 const processPosts = postElements =>
   filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
-    const { id, canEdit } = await timelineObject(postElement);
+    updatePostWarningElement(postElement);
+
+    const { canEdit } = await timelineObject(postElement);
     if (!canEdit) return;
 
     const editButton = postElement.querySelector(
@@ -501,8 +501,6 @@ const processPosts = postElements =>
     const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
     const controlIcon = editButton.closest(keyToCss('controlIcon'));
     controlIcon.before(clonedControlButton);
-
-    delete editedPostStates[id];
   });
 
 export const main = async function () {
@@ -525,7 +523,7 @@ export const clean = async function () {
   $(`.${warningClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
 
-  editedPostStates = {};
+  editedPostStates = new WeakMap();
 };
 
 export const stylesheet = true;

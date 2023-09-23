@@ -88,7 +88,7 @@ const showInitialPrompt = async () => {
   }
 
   showModal({
-    title: 'Flag posts in bulk:',
+    title: 'Add community labels in bulk:',
     message: [initialForm],
     buttons: [
       modalCancelButton,
@@ -205,7 +205,7 @@ const showPostsNotFound = ({ name }) =>
   showModal({
     title: 'No posts found!',
     message: [
-      'It looks like you don\'t have any unflagged posts with the selected criteria on ',
+      'It looks like you don\'t have any unlabelled posts with the selected criteria on ',
       createBlogSpan(name),
       '.'
     ],
@@ -220,7 +220,7 @@ const showError = exception => showModal({
 
 const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
-  const flagStatus = dom('span');
+  const labelStatus = dom('span');
 
   showModal({
     title: 'Setting community labels on posts...',
@@ -229,7 +229,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
       '\n\n',
       gatherStatus,
       '\n',
-      flagStatus
+      labelStatus
     ]
   });
 
@@ -259,7 +259,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
           resource = done ? false : response.links?.next?.href;
 
           gatherStatus.textContent =
-            `Found ${filteredPostsMap.size} flaggable posts (checked ${allPostIdsSet.size})${resource ? '...' : '.'}`;
+            `Found ${filteredPostsMap.size} unlabelled posts (checked ${allPostIdsSet.size})${resource ? '...' : '.'}`;
         }),
         sleep(1000)
       ]);
@@ -312,7 +312,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
         }).catch(() => {
           labelledFailCount += postIds.length;
         }).finally(() => {
-          flagStatus.textContent = `Set community labels on ${labelledCount} posts... ${labelledFailCount ? `(failed: ${labelledFailCount})` : ''}`;
+          labelStatus.textContent = `Set community labels on ${labelledCount} posts... ${labelledFailCount ? `(failed: ${labelledFailCount})` : ''}`;
         }),
         sleep(1000)
       ]);
@@ -338,7 +338,7 @@ const sidebarOptions = {
   id: 'quick-flags-bulk',
   title: 'Quick Flags',
   rows: [{
-    label: 'Flag posts in bulk',
+    label: 'Add community labels',
     onclick: showInitialPrompt,
     carrot: true
   }],

@@ -424,27 +424,15 @@ const handlePopupClick = async (checkbox, category) => {
   }
 
   try {
-    await setLabelsOnPost({ id, name, hasCommunityLabel, categories });
+    await bulkCommunityLabel(name, [id], { hasCommunityLabel, categories });
+
+    notify('Updated community labels!');
     editedPostStates.set(getTimelineItemWrapper(postElement), { hasCommunityLabel, categories });
     updatePostWarningElement(postElement);
   } catch ({ body }) {
-    notify(body?.errors?.[0]?.detail || 'Failed to set flags on post!');
+    notify(body?.errors?.[0]?.detail || 'Failed to update community labels!');
   } finally {
     updateCheckboxes({ hasCommunityLabel, categories });
-  }
-};
-
-const setLabelsOnPost = async function ({ id, name, hasCommunityLabel, categories }) {
-  if (!hasCommunityLabel && Boolean(categories.length)) {
-    throw new Error(`Invalid label combination: ${JSON.stringify({ hasCommunityLabel, categories })}`);
-  }
-
-  try {
-    await bulkCommunityLabel(name, [id], { hasCommunityLabel, categories });
-    notify('done');
-  } catch (e) {
-    console.log(e);
-    notify('error');
   }
 };
 

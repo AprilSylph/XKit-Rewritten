@@ -8,7 +8,7 @@ $(`[id="${scrollToBottomButtonId}"]`).remove();
 const activeClass = 'xkit-scroll-to-bottom-active';
 
 const loaderSelector = `
-${keyToCss('timeline', 'blogRows')} > ${keyToCss('loader')},
+${keyToCss('timeline', 'blogRows')} > ${keyToCss('loader', 'container')},
 ${keyToCss('notifications')} + ${keyToCss('loader')}
 `;
 const knightRiderLoaderSelector = `:is(${loaderSelector}) > ${keyToCss('knightRiderLoader')}`;

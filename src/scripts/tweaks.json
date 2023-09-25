@@ -93,9 +93,14 @@
       "label": "Hide my follower count where possible",
       "default": false
     },
+    "hide_following_notification_badge": {
+      "type": "checkbox",
+      "label": "Hide the Home/Following unread badge",
+      "default": false
+    },
     "hide_activity_notification_badge": {
       "type": "checkbox",
-      "label": "Hide the activity notification badge",
+      "label": "Hide the Activity notification badge",
       "default": false
     },
     "no_where_were_we": {
@@ -106,6 +111,11 @@
     "no_live": {
       "type": "checkbox",
       "label": "Hide the Tumblr Live carousel",
+      "default": false
+    },
+    "following_tab": {
+      "type": "checkbox",
+      "label": "Force the default dashboard tab to \"Following\"",
       "default": false
     }
   }

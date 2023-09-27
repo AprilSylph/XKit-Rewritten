@@ -233,7 +233,9 @@ popupElement.addEventListener('click', processBundleClick);
 popupForm.addEventListener('submit', processFormSubmit);
 postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 
-const migrateTags = async ({ detail: newTagBundles }) => {
+const migrateTags = async ({ detail }) => {
+  const newTagBundles = JSON.parse(detail);
+
   if (Array.isArray(newTagBundles)) {
     window.dispatchEvent(new CustomEvent('xkit-quick-tags-migration-success'));
 

@@ -1,39 +1,79 @@
 import { keyToCss } from '../util/css_map.js';
 import { buildStyle } from '../util/interface.js';
+import { getPreferences } from '../util/preferences.js';
 
-const container = `${keyToCss('bluespaceLayout')} > ${keyToCss('container')}`;
-const reblog = `${keyToCss('post')} ${keyToCss('reblog')}`;
-const videoBlock = keyToCss('videoBlock');
-const queueSettings = keyToCss('queueSettings');
+const navigationWrapperBasis = 240;
+const navigationWrapperMargin = 20;
+const mainContentWrapperBasis = 966;
 
-const styleElement = buildStyle(`
-#base-container > div > div > header,
-${container} {
-  max-width: 100vw;
-  padding-left: ${85 - 64}px;
-  padding-right: 30px;
-}
+const styleElement = buildStyle();
+styleElement.media = `(min-width: ${navigationWrapperBasis + navigationWrapperMargin + mainContentWrapperBasis}px)`;
 
-${container} > :first-child {
-  min-width: 0;
-  max-width: none;
-  flex: 1;
-}
+const sidebarMaxWidth = 320;
+const mainRightPadding = 20;
+const mainRightBorder = 1;
+const sidebarOffset = sidebarMaxWidth + mainRightPadding + mainRightBorder;
+const stickyContainerOffset = 85;
 
-${container} > :first-child > main { max-width: calc(100% - ${625 - 540}px); }
-${container} > :first-child > main article { max-width: 100%; }
-${container} > :first-child > main article > * { max-width: 100%; }
+const mainContentWrapper = `${keyToCss('mainContentWrapper')}:not(${keyToCss('mainContentIsMasonry', 'mainContentIs4ColumnMasonry', 'mainContentIsLive')})`;
+const container = `${mainContentWrapper} > ${keyToCss('container')}`;
+const mainElement = `${container} > ${keyToCss('main')}`;
+const postColumn = `${mainElement} > ${keyToCss('postColumn', 'postsColumn')}`;
 
-${reblog} { max-width: none; }
-${videoBlock} { max-width: none; }
-${videoBlock} iframe { max-width: none !important; }
+const updateStyle = async () => {
+  const { maxPostWidth: maxPostWidthString } = await getPreferences('panorama');
+  const maxPostWidth = Number(maxPostWidthString.trim().replace('px', '')) || 0;
 
-${queueSettings} {
-  box-sizing: border-box;
-  width: calc(100% - ${625 - 540}px);
-}
-`);
-styleElement.media = '(min-width: 990px)';
+  styleElement.textContent = `
+    ${mainContentWrapper} {
+      flex-grow: 1;
+      max-width: ${Math.max(maxPostWidth, 540) + stickyContainerOffset + sidebarOffset}px;
+    }
+    ${container} {
+      max-width: unset;
+    }
+    ${mainElement} {
+      max-width: calc(100% - ${sidebarOffset}px);
+    }
+    ${postColumn} {
+      max-width: calc(100% - ${stickyContainerOffset}px);
+    }
 
-export const main = async () => document.documentElement.append(styleElement);
+    ${postColumn}
+      :is(
+        ${keyToCss('cell')},
+        article,
+        article > header,
+        article ${keyToCss('reblog', 'videoBlock', 'audioBlock', 'link')}
+      ) {
+      max-width: 100%;
+    }
+
+    ${postColumn} article ${keyToCss('link')} ${keyToCss('header')}${keyToCss('withImage')} {
+      height: unset;
+      aspect-ratio: 2;
+    }
+    ${postColumn} article ${keyToCss('videoBlock')} iframe {
+      max-width: none !important;
+    }
+    ${keyToCss('queueSettings')} {
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    /* embedded blog view visual corruption fix */
+    ${container} > [style*="--blog-title-color"] {
+      max-width: 960px;
+    }
+  `;
+};
+
+export const onStorageChanged = async (changes, areaName) =>
+  Object.keys(changes).some(key => key.startsWith('panorama')) && updateStyle();
+
+export const main = async () => {
+  updateStyle();
+  document.documentElement.append(styleElement);
+};
+
 export const clean = async () => styleElement.remove();

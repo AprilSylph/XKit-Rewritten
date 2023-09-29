@@ -60,6 +60,9 @@ const updateStyle = async () => {
     ${postColumn} article ${keyToCss('videoBlock')} iframe {
       max-width: none !important;
     }
+    ${postColumn} [data-is-resizable="true"][style="width: 540px;"] {
+      width: unset !important;
+    }
     ${keyToCss('queueSettings')} {
       box-sizing: border-box;
       width: 100%;

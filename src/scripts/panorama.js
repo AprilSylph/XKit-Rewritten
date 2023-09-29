@@ -19,6 +19,7 @@ const mainContentWrapper = `${keyToCss('mainContentWrapper')}:not(${keyToCss('ma
 const container = `${mainContentWrapper} > ${keyToCss('container')}`;
 const mainElement = `${container} > ${keyToCss('main')}`;
 const postColumn = `${mainElement} > ${keyToCss('postColumn', 'postsColumn')}`;
+const content = `${mainElement} > ${keyToCss('content')}`;
 
 const updateStyle = async () => {
   const { maxPostWidth: maxPostWidthString } = await getPreferences('panorama');
@@ -34,6 +35,9 @@ const updateStyle = async () => {
     }
     ${mainElement} {
       max-width: calc(100% - ${sidebarOffset}px);
+    }
+    ${content} {
+      max-width: 100%;
     }
     ${postColumn} {
       max-width: calc(100% - ${stickyContainerOffset}px);

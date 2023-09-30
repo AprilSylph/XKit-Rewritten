@@ -60,7 +60,11 @@ const updateStyle = async () => {
     ${postColumn} article ${keyToCss('videoBlock')} iframe {
       max-width: none !important;
     }
-    ${postColumn} [data-is-resizable="true"][style="width: 540px;"] {
+    ${postColumn}
+      :is(
+        [data-is-resizable="true"][style="width: 540px;"],
+        ${keyToCss('takeoverBanner')}
+      ) {
       width: unset !important;
     }
     ${keyToCss('queueSettings')} {

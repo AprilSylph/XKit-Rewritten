@@ -7,7 +7,7 @@
   font-size: .78125rem;
 }
 
-[data-formatted-time]::after {
+[data-formatted-relative-time]::after {
   content: attr(data-formatted-relative-time);
   font-size: .78125rem;
   display: inline-block;

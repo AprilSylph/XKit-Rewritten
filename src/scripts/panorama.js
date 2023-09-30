@@ -1,5 +1,6 @@
 import { keyToCss } from '../util/css_map.js';
 import { buildStyle } from '../util/interface.js';
+import { pageModifications } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
 
 const navigationWrapperBasis = 240;
@@ -71,6 +72,10 @@ const updateStyle = async () => {
       box-sizing: border-box;
       width: 100%;
     }
+    iframe[style*="${aspectRatioVar}"] {
+      aspect-ratio: var(${aspectRatioVar});
+      height: unset !important;
+    }
 
     /* embedded blog view visual corruption fix */
     ${container} > [style*="--blog-title-color"] {
@@ -79,12 +84,36 @@ const updateStyle = async () => {
   `;
 };
 
+const aspectRatioVar = '--panorama-aspect-ratio';
+
+const processVideoIframes = iframes => iframes.forEach(iframe => {
+  const { maxWidth, height } = iframe.style;
+  if (maxWidth && height) {
+    iframe.style.setProperty(
+      aspectRatioVar,
+      `${maxWidth.replace('px', '')} / ${height.replace('px', '')}`
+    );
+  }
+});
+
 export const onStorageChanged = async (changes, areaName) =>
   Object.keys(changes).some(key => key.startsWith('panorama')) && updateStyle();
 
 export const main = async () => {
   updateStyle();
   document.documentElement.append(styleElement);
+
+  pageModifications.register(
+    `${keyToCss('videoBlock')} iframe[style*="max-width"][style*="height"]`,
+    processVideoIframes
+  );
 };
 
-export const clean = async () => styleElement.remove();
+export const clean = async () => {
+  pageModifications.unregister(processVideoIframes);
+  [...document.querySelectorAll(`iframe[style*="${aspectRatioVar}"]`)].forEach(el =>
+    el.style.removeProperty(aspectRatioVar)
+  );
+
+  styleElement.remove();
+};

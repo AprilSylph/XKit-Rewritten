@@ -1,3 +1,4 @@
+import { getRandomHexString } from './crypto.js';
 import { inject } from './inject.js';
 
 export const onNavigation = Object.freeze({
@@ -10,10 +11,13 @@ export const onNavigation = Object.freeze({
   }
 });
 
-addEventListener('navigation', () =>
+const eventName = `xkit-navigation-${getRandomHexString()}`;
+
+addEventListener(eventName, () =>
   onNavigation.listeners.forEach(callback => callback())
 );
 
-inject(() =>
-  window.tumblr.on('navigation', () => dispatchEvent(new CustomEvent('navigation')))
+inject(
+  eventName => window.tumblr.on('navigation', () => dispatchEvent(new CustomEvent(eventName))),
+  [eventName]
 );

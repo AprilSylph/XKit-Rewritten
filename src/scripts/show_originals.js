@@ -5,7 +5,6 @@ import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { userBlogs } from '../util/user.js';
-import { onNavigation } from '../util/on_navigation.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
@@ -127,8 +126,6 @@ export const main = async function () {
   disabledBlogs = [...whitelist, ...showOwnReblogs ? nonGroupUserBlogs : []];
 
   onNewPosts.addListener(processPosts);
-
-  onNavigation.register(() => console.log('navigated to', location.href));
 };
 
 export const clean = async function () {

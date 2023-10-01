@@ -13,6 +13,7 @@
   display: inline-block;
 }
 
-[data-formatted-time]::before, [data-formatted-time][title]::after {
+[data-formatted-time][title]::before,
+[data-formatted-time][title]::after {
   cursor: help;
 }

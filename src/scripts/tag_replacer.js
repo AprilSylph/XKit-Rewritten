@@ -30,7 +30,6 @@ const showInitialPrompt = async () => {
 
   if (location.pathname.startsWith('/blog/')) {
     const name = location.pathname.split('/')[2];
-    // @ts-ignore
     const option = [...initialForm.elements.blog.options].find(({ textContent }) => textContent === name);
     if (option) option.selected = true;
   }
@@ -66,7 +65,6 @@ const confirmReplaceTag = async event => {
   const name = elements.blog.selectedOptions[0].textContent;
   const oldTag = elements.oldTag.value.replace(/,|"|#/g, '').trim();
 
-  // @ts-ignore
   const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag: oldTag } });
   if (!totalPosts) {
     showTagNotFound({ tag: oldTag, name });
@@ -138,7 +136,6 @@ const replaceTag = async ({ uuid, oldTag, newTag, appendOnly }) => {
 
   while (resource) {
     await Promise.all([
-      // @ts-ignore
       apiFetch(resource).then(({ response }) => {
         const posts = response.posts.filter(({ canEdit }) => canEdit === true);
         taggedPosts.push(...posts);

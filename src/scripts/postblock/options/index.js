@@ -20,7 +20,6 @@ const renderBlockedPosts = async function () {
   blockedPostList.textContent = '';
 
   for (const blockedPostID of blockedPostRootIDs) {
-    // @ts-ignore
     const templateClone = blockedPostTemplate.content.cloneNode(true);
     const spanElement = templateClone.querySelector('span');
     const unblockButton = templateClone.querySelector('button');

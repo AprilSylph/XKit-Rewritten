@@ -67,7 +67,6 @@ const showInitialPrompt = async () => {
 
   if (location.pathname.startsWith('/blog/')) {
     const blogName = location.pathname.split('/')[2];
-    // @ts-ignore
     const option = [...initialForm.elements.blog.options].find(({ textContent }) => textContent === blogName);
     if (option) option.selected = true;
   }
@@ -103,7 +102,6 @@ const confirmInitialPrompt = async event => {
 
   if (tags.length) {
     const getTagCount = async tag => {
-      // @ts-ignore
       const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag } });
       return totalPosts ?? 0;
     };
@@ -206,7 +204,6 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
   const collect = async resource => {
     while (resource) {
       await Promise.all([
-        // @ts-ignore
         apiFetch(resource).then(({ response }) => {
           const posts = response.posts
             .filter(({ canEdit }) => canEdit === true)

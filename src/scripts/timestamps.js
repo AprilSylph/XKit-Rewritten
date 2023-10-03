@@ -99,7 +99,6 @@ const constructRelativeTimeString = function (unixTime) {
   for (const { unit, denominator } of thresholds) {
     if (unixDiffAbsolute >= denominator) {
       const value = Math.trunc(unixDiff / denominator);
-      // @ts-ignore
       return relativeTimeFormat.format(value, unit);
     }
   }
@@ -169,7 +168,6 @@ const addReblogTimestamps = async function () {
       reblogHeaders[i].appendChild(timestampElement);
 
       if (cache[id] === undefined) {
-        // @ts-ignore
         cache[id] = apiFetch(`/v2/blog/${uuid}/posts/${id}`).then(({ response: { timestamp } }) => timestamp);
       }
 

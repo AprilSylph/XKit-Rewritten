@@ -24,7 +24,6 @@ const constructRelativeTimeString = function (unixTime) {
   for (const { unit, denominator } of thresholds) {
     if (unixDiffAbsolute >= denominator) {
       const value = Math.trunc(unixDiff / denominator);
-      // @ts-ignore
       return relativeTimeFormat.format(value, unit);
     }
   }

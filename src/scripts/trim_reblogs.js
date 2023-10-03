@@ -32,7 +32,6 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     blog: { uuid }
   } = await timelineObject(postElement);
 
-  // @ts-ignore
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
   const { blog, content = [], trail = [], isBlocksPostFormat } = postData;
 
@@ -80,7 +79,6 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     const checkbox = dom('input', { type: 'checkbox' });
     if (disableCheckbox) {
       checkbox.disabled = true;
-      // @ts-ignore
       checkbox.style = 'visibility: hidden';
     }
 
@@ -100,7 +98,6 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   trailData.slice(0, -1).forEach(({ checkbox }) => { checkbox.checked = true; });
 
   const contentData = content.length
-    // @ts-ignore
     ? [createPreviewItem({ blog, content, disableCheckbox: true })]
     : [];
 
@@ -118,7 +115,6 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       .filter(i => trailData[i].checkbox.checked);
 
     try {
-      // @ts-ignore
       const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
         method: 'PUT',
         body: {

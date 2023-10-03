@@ -26,7 +26,6 @@ const onButtonClicked = async function ({ currentTarget }) {
     ['archive.today']
   );
 
-  // @ts-ignore
   archiveDotOrgForm.elements.url_preload.value = ampUrl;
 
   showModal({

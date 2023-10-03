@@ -41,7 +41,6 @@ const addIcons = function (postElements) {
         following[blogName] = Promise.resolve(blog.followed && !blog.isMember);
       } else {
         following[blogName] = apiFetch(`/v2/blog/${blogName}/info`)
-          // @ts-ignore
           .then(({ response: { blog: { followed } } }) => followed)
           .catch(() => Promise.resolve(false));
       }
@@ -52,7 +51,6 @@ const addIcons = function (postElements) {
 
     if (mutuals[blogName] === undefined) {
       mutuals[blogName] = apiFetch(`/v2/blog/${primaryBlogName}/followed_by`, { queryParams: { query: blogName } })
-        // @ts-ignore
         .then(({ response: { followedBy } }) => followedBy)
         .catch(() => Promise.resolve(false));
     }

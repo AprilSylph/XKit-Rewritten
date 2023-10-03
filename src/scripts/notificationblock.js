@@ -53,7 +53,6 @@ const muteNotificationsMessage = [
 
 const onButtonClicked = async function ({ currentTarget }) {
   const { id, rebloggedRootId, blog: { uuid } } = currentTarget.__timelineObjectData;
-  // @ts-ignore
   const { response: { muted } } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
 
   const rootId = rebloggedRootId || id;

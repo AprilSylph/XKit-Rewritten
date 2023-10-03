@@ -15,7 +15,6 @@ const addToastContainerToPage = () => {
   ].find(candidateNode => candidateNode !== null && getComputedStyle(candidateNode).display !== 'none');
 
   if ([...targetNode.children].includes(toastContainer) === false) {
-    // @ts-ignore
     toastContainer.dataset.inSidebar = targetNode.matches(sidebarSelector);
     targetNode.append(toastContainer);
   }

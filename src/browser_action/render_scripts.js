@@ -67,7 +67,6 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
     const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
     preference.value = savedPreference ?? preference.default;
 
-    // @ts-ignore
     const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
 
     const preferenceInput = preferenceTemplateClone.querySelector('input, select, textarea, iframe');
@@ -109,7 +108,6 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
         preferenceInput.value = preference.value;
         $(preferenceInput)
           .on('change.spectrum', writePreference)
-          // @ts-ignore
           .spectrum({
             preferredFormat: 'hex',
             showInput: true,
@@ -143,7 +141,6 @@ const renderScripts = async function () {
     const file = await fetch(url);
     const { title = scriptName, description = '', icon = {}, help = '', relatedTerms = [], preferences = {}, deprecated = false } = await file.json();
 
-    // @ts-ignore
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 
     const detailsElement = scriptTemplateClone.querySelector('details.script');
@@ -199,9 +196,7 @@ const renderScripts = async function () {
 renderScripts();
 
 configSectionLink.addEventListener('click', ({ currentTarget }) => {
-  // @ts-ignore
   if (currentTarget.classList.contains('outdated')) {
-    // @ts-ignore
     currentTarget.classList.remove('outdated');
     renderScripts();
   }

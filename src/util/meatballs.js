@@ -90,7 +90,6 @@ const addPostMeatballItem = async meatballMenu => {
     }, [
       '\u22EF'
     ]);
-    // @ts-ignore
     meatballItemButton.__timelineObjectData = __timelineObjectData;
 
     if (label instanceof Function) {
@@ -137,7 +136,6 @@ const addBlogMeatballItem = async meatballMenu => {
     }, [
       '\u22EF'
     ]);
-    // @ts-ignore
     meatballItemButton.__blogData = __blogData;
 
     if (label instanceof Function) {

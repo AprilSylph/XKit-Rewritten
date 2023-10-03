@@ -87,7 +87,6 @@ const processTimelines = async () => {
     const currentControls = [...timelineElement.children]
       .find(element => element.matches(`.${controlsClass}`));
 
-    // @ts-ignore
     if (currentControls?.dataset?.location !== location) {
       currentControls?.remove();
       if (location) addControls(timelineElement, location);

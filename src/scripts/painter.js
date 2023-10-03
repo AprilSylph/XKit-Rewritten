@@ -36,7 +36,6 @@ const paint = postElements => filterPostElements(postElements, { excludeClass })
 
     if (!tagColourFound && colourSourceTags && rebloggedRootId && rebloggedRootUuid) {
       try {
-        // @ts-ignore
         const { response: { tags: sourceTags } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
         if (sourceTags.some(tag => tagArray.includes(tag.toLowerCase()))) coloursToApply.push(tagColour);
       } catch (exception) {

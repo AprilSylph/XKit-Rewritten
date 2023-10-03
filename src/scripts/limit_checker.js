@@ -46,7 +46,6 @@ const sidebarOptions = {
   title: 'Limit Checker',
   rows: [{
     label: 'Check daily limits',
-    // @ts-ignore
     onclick: () => checkUserLimits().then(showUserLimits).catch(showError),
     carrot: true
   }]

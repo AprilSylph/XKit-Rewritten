@@ -1,4 +1,4 @@
-import { dom } from './dom.js';
+import { domSvg } from './dom.js';
 
 const symbolsUrl = browser.runtime.getURL('/lib/remixicon/remixicon.symbol.svg');
 
@@ -13,6 +13,6 @@ if (document.querySelector(`svg[data-src="${symbolsUrl}"]`) === null) {
     });
 }
 
-export const buildSvg = symbolId => dom('svg', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
-  dom('use', { xmlns: 'http://www.w3.org/2000/svg', href: `#${symbolId}` })
+export const buildSvg = symbolId => domSvg('svg', null, null, [
+  domSvg('use', { href: `#${symbolId}` })
 ]);

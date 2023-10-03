@@ -1,5 +1,5 @@
 import { keyToCss } from './css_map.js';
-import { dom } from './dom.js';
+import { dom, domSvg } from './dom.js';
 import { blogViewSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 
@@ -8,14 +8,12 @@ $('#xkit-sidebar').remove();
 const sidebarItems = dom('div', { id: 'xkit-sidebar' });
 const conditions = new Map();
 
-const carrotSvg = dom('svg', {
-  xmlns: 'http://www.w3.org/2000/svg',
+const carrotSvg = domSvg('svg', {
   viewBox: '0 0 13 20.1',
   width: '12',
   height: '12'
 }, null, [
-  dom('path', {
-    xmlns: 'http://www.w3.org/2000/svg',
+  domSvg('path', {
     d: 'M0 2.9l7.2 7.2-7.1 7.1L3 20.1l7.1-7.1 2.9-2.9L2.9 0 0 2.9'
   })
 ]);

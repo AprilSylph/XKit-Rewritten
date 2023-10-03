@@ -4,7 +4,7 @@ import { apiFetch } from '../util/tumblr_helpers.js';
 import { primaryBlogName } from '../util/user.js';
 import { keyToCss } from '../util/css_map.js';
 import { onNewPosts } from '../util/mutations.js';
-import { dom } from '../util/dom.js';
+import { domSvg } from '../util/dom.js';
 import { getPreferences } from '../util/preferences.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
@@ -74,13 +74,12 @@ export const main = async function () {
   const today = new Date();
   const aprilFools = (today.getMonth() === 3 && today.getDate() === 1);
 
-  icon = dom('svg', {
-    xmlns: 'http://www.w3.org/2000/svg',
+  icon = domSvg('svg', {
     class: mutualIconClass,
     viewBox: '0 0 1000 1000',
     fill: aprilFools ? '#00b8ff' : 'rgb(var(--black))'
   }, null, [
-    dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: aprilFools ? aprilFoolsPath : regularPath })
+    domSvg('path', { d: aprilFools ? aprilFoolsPath : regularPath })
   ]);
 
   onNewPosts.addListener(addIcons);

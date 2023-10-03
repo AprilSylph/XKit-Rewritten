@@ -31,7 +31,7 @@ const onButtonClicked = async function ({ currentTarget }) {
 
   showModal({
     title: meatballButtonLabel,
-    message: 'Note: this will not work for dashboard-only blogs.',
+    message: ['Note: this will not work for dashboard-only blogs.'],
     buttons: [modalCancelButton, archiveDotOrgForm, archiveTodayButton]
   });
 };

@@ -156,7 +156,7 @@ const processTagLinks = function (tagLinkElements) {
         style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65;'
       },
       null,
-      unreadCounts.get(tag) ?? '\u22EF'
+      [unreadCounts.get(tag) ?? '\u22EF']
     );
 
     tagTextElement.after(unreadCountElement);

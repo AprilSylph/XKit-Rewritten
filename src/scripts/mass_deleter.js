@@ -235,7 +235,7 @@ const clearQueue = async function () {
 
 const showEmptyQueueError = () => showModal({
   title: 'No queued posts!',
-  message: 'Looks like there is nothing to clear here.',
+  message: ['Looks like there is nothing to clear here.'],
   buttons: [modalCompleteButton]
 });
 

@@ -1,10 +1,11 @@
 /**
  * Create elements with simple syntax
- * @param {string} tagName - Type of element to create
+ * @template {keyof HTMLElementTagNameMap} TagName
+ * @param {TagName} tagName - Type of element to create
  * @param {object} [attributes] - Property-value pairs to set as HTML/XML attributes (e.g. { href: '/' })
  * @param {object} [events] - Property-value pairs to set as event listeners (e.g. { click: () => {} })
  * @param {(Node|string)[]} [children] - Zero or more valid children
- * @returns {Element} Element created to specification
+ * @returns {HTMLElementTagNameMap[TagName]} Element created to specification
  */
 export function dom (tagName, attributes = {}, events = {}, children = []) {
   const element = attributes?.xmlns

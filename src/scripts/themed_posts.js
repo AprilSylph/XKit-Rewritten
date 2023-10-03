@@ -72,6 +72,7 @@ const processPosts = async function (postElements) {
         blogNameTrail.push(blog?.name);
       }
       [...postElement.querySelectorAll(reblogSelector)].forEach((reblog, i) => {
+        // @ts-ignore
         reblog.dataset.xkitThemed = blogNameTrail[i] ?? '';
       });
     }

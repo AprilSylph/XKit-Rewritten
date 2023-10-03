@@ -30,8 +30,10 @@ export const createControlButtonTemplate = function (symbolId, buttonClass) {
  */
 export const cloneControlButton = function (template, events, disabled = false) {
   const newButtonContainer = template.cloneNode(true);
+  // @ts-ignore
   const newButton = newButtonContainer.querySelector('button');
   Object.entries(events).forEach(([type, listener]) => newButton.addEventListener(type, listener));
   newButton.disabled = disabled;
+  // @ts-ignore
   return newButtonContainer;
 };

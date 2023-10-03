@@ -43,7 +43,9 @@ const shortenPosts = postElements => filterPostElements(postElements, { excludeC
       const tagsElement = postElement.querySelector(tagsSelector);
       if (tagsElement) {
         const tagsClone = tagsElement.cloneNode(true);
+        // @ts-ignore
         tagsClone.classList.add(tagsClass);
+        // @ts-ignore
         [...tagsClone.querySelectorAll('[href]')].forEach(element => { element.target = '_blank'; });
         postElement.querySelector('article')?.appendChild(tagsClone);
       }

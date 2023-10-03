@@ -69,6 +69,7 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   const { type, targetPostId, targetPostSummary, targetTumblelogName, targetTumblelogUuid, timestamp } = notificationProps;
 
   const isReply = type === 'reply';
+  // @ts-ignore
   const { response } = await apiFetch(
     `/v2/blog/${targetTumblelogUuid}/post/${targetPostId}/notes/timeline`,
     { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } }
@@ -97,6 +98,7 @@ const quoteReply = async (tumblelogName, notificationProps) => {
     ...tagReplyingBlog ? [reply.blog.name] : []
   ].join(',');
 
+  // @ts-ignore
   const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
 
   const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;

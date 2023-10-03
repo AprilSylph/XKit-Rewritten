@@ -90,6 +90,7 @@ const navItemSelector = `${keyToCss('drawerContent')} ${keyToCss('navigationLink
 
 const updateSidebarItemVisibility = () => [...sidebarItems.children]
   .filter(sidebarItem => conditions.has(sidebarItem))
+  // @ts-ignore
   .forEach(sidebarItem => { sidebarItem.hidden = !conditions.get(sidebarItem)(); });
 
 const addSidebarToPage = (siblingCandidates) => {

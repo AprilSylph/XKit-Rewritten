@@ -16,6 +16,7 @@ const cloneVideoElements = videoElements => videoElements.forEach(videoElement =
     volume: defaultVolume / 100,
     className: vanillaVideoClass
   });
+  // @ts-ignore
   newVideoElement.setAttribute('playsinline', true);
 
   const videoSources = [...videoElement.children];

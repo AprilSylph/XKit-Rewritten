@@ -151,6 +151,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   const postId = postElement.dataset.id;
   const { blog: { uuid }, blogName } = await timelineObject(postElement);
 
+  // @ts-ignore
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
   const { tags = [] } = postData;
 
@@ -161,6 +162,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 
   try {
     if (isNpfCompatible(postData)) {
+      // @ts-ignore
       const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
         method: 'PUT',
         body: {

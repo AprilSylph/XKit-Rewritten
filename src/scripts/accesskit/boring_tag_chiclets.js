@@ -15,5 +15,6 @@ export const main = async () => {
 
 export const clean = async () => {
   pageModifications.unregister(processTagChicletVideos);
+  // @ts-ignore
   [...document.querySelectorAll(tagChicletVideoSelector)].forEach(video => video.play());
 };

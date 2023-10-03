@@ -89,6 +89,7 @@ const deleteDrafts = async function ({ blogName, before }) {
 
   while (resource) {
     await Promise.all([
+      // @ts-ignore
       apiFetch(resource).then(({ response }) => {
         const posts = response.posts
           .filter(({ canEdit }) => canEdit === true)
@@ -179,6 +180,7 @@ const clearQueue = async function () {
 
   while (resource) {
     await Promise.all([
+      // @ts-ignore
       apiFetch(resource).then(({ response }) => {
         const posts = response.posts
           .filter(({ canEdit }) => canEdit === true)

@@ -5,6 +5,7 @@ const fetchedUserInfo = await apiFetch('/v2/user/info').catch(() => ({ response:
 /**
  * {object?} userInfo - The contents of the /v2/user/info API endpoint
  */
+// @ts-ignore
 export const userInfo = fetchedUserInfo.response.user;
 
 /**

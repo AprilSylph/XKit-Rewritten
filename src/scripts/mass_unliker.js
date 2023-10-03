@@ -13,6 +13,7 @@ const gatherLikes = async function () {
   let resource = '/v2/user/likes';
 
   while (resource) {
+    // @ts-ignore
     const { response } = await apiFetch(resource);
     const posts = response.likedPosts.filter(({ reblogKey }) => reblogKey);
     likes.push(...posts);

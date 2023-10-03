@@ -31,6 +31,7 @@ const refreshCount = async function (tag) {
   try {
     const savedTimestamp = timestamps[tag] ?? 0;
     const {
+      // @ts-ignore
       response: {
         timeline: {
           elements = [],
@@ -107,6 +108,7 @@ const startRefreshInterval = () => { intervalID = setInterval(refreshAllCounts, 
 const stopRefreshInterval = () => clearInterval(intervalID);
 
 const processPosts = async function (postElements) {
+  // @ts-ignore
   const { pathname, searchParams } = new URL(location);
   if (!pathname.startsWith('/tagged/') || searchParams.get('sort') === 'top') {
     return;
@@ -168,7 +170,9 @@ export const onStorageChanged = async (changes, areaName) => {
   if (Object.keys(changes).some(key => key.startsWith('tag_tracking_plus.preferences'))) {
     const { showUnread, onlyShowNew } = await getPreferences('tag_tracking_plus');
 
+    // @ts-ignore
     document.body.dataset.tagTrackingPlusShowSearch = showUnread === 'both' || showUnread === 'search';
+    // @ts-ignore
     document.body.dataset.tagTrackingPlusShowSidebar = showUnread === 'both' || showUnread === 'sidebar';
     sidebarItem.dataset.onlyShowNew = onlyShowNew;
   }
@@ -176,6 +180,7 @@ export const onStorageChanged = async (changes, areaName) => {
 
 export const main = async function () {
   const trackedTagsData = (await apiFetch('/v2/user/tags')) ?? {};
+  // @ts-ignore
   trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
 
   trackedTags.forEach(tag => unreadCounts.set(tag, undefined));
@@ -183,7 +188,9 @@ export const main = async function () {
   ({ [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey));
 
   const { showUnread, onlyShowNew } = await getPreferences('tag_tracking_plus');
+  // @ts-ignore
   document.body.dataset.tagTrackingPlusShowSearch = showUnread === 'both' || showUnread === 'search';
+  // @ts-ignore
   document.body.dataset.tagTrackingPlusShowSidebar = showUnread === 'both' || showUnread === 'sidebar';
 
   pageModifications.register(tagLinkSelector, processTagLinks);

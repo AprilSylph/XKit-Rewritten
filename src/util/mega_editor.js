@@ -27,6 +27,7 @@ export const megaEdit = async function (postIds, options) {
     if (response.ok) {
       return response.text();
     } else {
+      // @ts-ignore
       throw Object.assign(new Error(response.status), { response });
     }
   }).then(responseText => {

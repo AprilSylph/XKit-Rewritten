@@ -51,8 +51,10 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
     .filter(Boolean);
 
   if (timeline instanceof RegExp) {
+    // @ts-ignore
     postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]')?.dataset.timeline));
   } else if (timeline) {
+    // @ts-ignore
     postElements = postElements.filter(postElement => timeline === postElement.closest('[data-timeline]')?.dataset.timeline);
   }
 
@@ -69,6 +71,7 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
     postElements.forEach(postElement => postElement.classList.add(excludeClass));
   }
 
+  // @ts-ignore
   return postElements;
 };
 

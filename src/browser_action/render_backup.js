@@ -51,16 +51,20 @@ const localExport = async function () {
 };
 
 const localRestore = async function () {
+  // @ts-ignore
   const importText = localImportTextarea.value;
 
   try {
     const parsedStorage = JSON.parse(importText);
     await browser.storage.local.set(parsedStorage);
 
+    // @ts-ignore
     localRestoreButton.disabled = true;
+    // @ts-ignore
     localImportTextarea.value = '';
     document.querySelector('a[href="#configuration"]').classList.add('outdated');
     await sleep(3000);
+    // @ts-ignore
     localRestoreButton.disabled = false;
   } catch (exception) {
     console.error(exception);
@@ -69,6 +73,7 @@ const localRestore = async function () {
 
 const renderLocalBackup = async function () {
   updateLocalExportDisplay();
+  // @ts-ignore
   browser.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'local') {
       updateLocalExportDisplay();
@@ -84,7 +89,9 @@ const renderLocalBackup = async function () {
 renderLocalBackup();
 
 document.querySelectorAll('#backup details').forEach(details => details.addEventListener('toggle', ({ currentTarget }) => {
+  // @ts-ignore
   if (currentTarget.open) {
+    // @ts-ignore
     [...currentTarget.parentNode.children]
       .filter(element => element !== currentTarget)
       .forEach(sibling => { sibling.open = false; });

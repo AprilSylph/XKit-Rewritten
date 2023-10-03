@@ -8,6 +8,7 @@ if (document.querySelector(`svg[data-src="${symbolsUrl}"]`) === null) {
     .then(responseText => {
       const responseDocument = (new DOMParser()).parseFromString(responseText, 'image/svg+xml');
       const symbols = responseDocument.firstElementChild;
+      // @ts-ignore
       symbols.dataset.src = symbolsUrl;
       document.head.appendChild(symbols);
     });

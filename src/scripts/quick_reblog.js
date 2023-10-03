@@ -141,6 +141,7 @@ const showPopupOnHover = ({ currentTarget }) => {
       renderBlogAvatar();
     }
     commentInput.value = '';
+    // @ts-ignore
     [...quickTagsList.children].forEach(({ dataset }) => delete dataset.checked);
     tagsInput.value = '';
     timelineObject(thisPost).then(({ tags, trail, content, layout, blogName, rebloggedRootName }) => {
@@ -157,6 +158,7 @@ const showPopupOnHover = ({ currentTarget }) => {
 const removePopupOnLeave = () => {
   timeoutID = setTimeout(() => {
     const { parentNode } = popupElement;
+    // @ts-ignore
     if (parentNode?.matches(':hover, :active, :focus-within') === false) {
       parentNode?.removeEventListener('mouseleave', removePopupOnLeave);
       popupElement.remove();
@@ -200,6 +202,7 @@ const reblogPost = async function ({ currentTarget }) {
   };
 
   try {
+    // @ts-ignore
     const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
     if (meta.status === 201) {
       makeButtonReblogged({ buttonDiv: currentReblogButton, state });
@@ -255,6 +258,7 @@ const renderQuickTags = async function () {
   tagBundles.forEach(tagBundle => {
     const bundleTags = tagBundle.tags.split(',').map(tag => tag.trim().toLowerCase());
     const bundleButton = dom('button', null, null, [tagBundle.title]);
+    // @ts-ignore
     bundleButton.addEventListener('click', ({ currentTarget: { dataset } }) => {
       const checked = dataset.checked === 'true';
 
@@ -347,6 +351,7 @@ export const main = async function () {
     const savedBlogUuid = Object.keys(blogHashes).find(uuid => blogHashes[uuid] === savedBlogHash);
     if (savedBlogUuid) blogSelector.value = savedBlogUuid;
 
+    // @ts-ignore
     blogSelector.addEventListener('change', updateRememberedBlog);
   }
   renderBlogAvatar();
@@ -371,9 +376,11 @@ export const main = async function () {
 
 export const clean = async function () {
   $(document.body).off('mouseenter', reblogButtonSelector, showPopupOnHover);
+  // @ts-ignore
   $(document.body).off('contextmenu', reblogButtonSelector, preventLongPressMenu);
   popupElement.remove();
 
+  // @ts-ignore
   blogSelector.removeEventListener('change', updateRememberedBlog);
 
   browser.storage.onChanged.removeListener(updateQuickTags);

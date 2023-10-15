@@ -89,7 +89,7 @@
   content: "Restore";
 }
 
-#restore-local.success {
+#restore-local:disabled {
   border: none;
 
   background-color: transparent;
@@ -97,19 +97,6 @@
   font-weight: bold;
 }
 
-#restore-local.failure {
-  border: none;
-
-  background-color: transparent;
-  color: #cf0000;
-  font-weight: bold;
-}
-
-#restore-local.success::before {
+#restore-local:disabled::before {
   content: "Successfully restored!";
 }
-
-#restore-local.failure::before {
-  content: "Failed to parse!";
-}
-

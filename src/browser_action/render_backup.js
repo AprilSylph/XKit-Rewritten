@@ -54,21 +54,16 @@ const localRestore = async function () {
   const importText = localImportTextarea.value;
 
   try {
-    localRestoreButton.disabled = true;
-
     const parsedStorage = JSON.parse(importText);
     await browser.storage.local.set(parsedStorage);
 
-    localRestoreButton.classList.add('success');
+    localRestoreButton.disabled = true;
     localImportTextarea.value = '';
     document.querySelector('a[href="#configuration"]').classList.add('outdated');
-  } catch (exception) {
-    localRestoreButton.classList.add('failure');
-    console.error(exception);
-  } finally {
     await sleep(3000);
     localRestoreButton.disabled = false;
-    localRestoreButton.classList.remove('success', 'failure');
+  } catch (exception) {
+    console.error(exception);
   }
 };
 

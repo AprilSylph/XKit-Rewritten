@@ -1,12 +1,13 @@
 svg.xkit-mutual-icon {
   vertical-align: text-bottom;
 
-	height: 1.23em;
+  height: 1.23em;
   margin-top: 0;
   margin-left: 0;
-	margin-right: 0.5ch;
+  margin-right: 0.5ch;
 }
 
+[data-notification-feed] [data-mutual-checker-hidden],
 [data-timeline="/v2/timeline/dashboard"] [data-mutual-checker-hidden] article {
   display: none;
 }

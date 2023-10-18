@@ -1,9 +1,9 @@
 import { getTimelineItemWrapper, filterPostElements, getPopoverWrapper } from '../util/interface.js';
-import { timelineObject } from '../util/react_props.js';
+import { notificationObject, timelineObject } from '../util/react_props.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { primaryBlogName } from '../util/user.js';
 import { keyToCss } from '../util/css_map.js';
-import { onNewPosts } from '../util/mutations.js';
+import { onNewPosts, onNewNotifications } from '../util/mutations.js';
 import { dom } from '../util/dom.js';
 import { getPreferences } from '../util/preferences.js';
 
@@ -19,7 +19,36 @@ const following = {};
 const mutuals = {};
 
 let showOnlyMutuals;
+let showOnlyMutualNotifications;
 let icon;
+
+const processNotifications = (notificationElements) => {
+  // Unbury the notification feed hackily for better CSS selection.
+  const notificationFeedContainer = notificationElements[0].parentElement.parentElement;
+  notificationFeedContainer.setAttribute('data-notification-feed', '');
+  let lastDateWrapperElement;
+  [...notificationFeedContainer.children].forEach(notifcationWrapperElement => {
+    notifcationWrapperElement.setAttribute(hiddenAttribute, '');
+    [...notifcationWrapperElement.children].forEach(async notificationElement => {
+      // Captures the current date wrapper element before async shenanigans.
+      const currDateWrapperElement = lastDateWrapperElement;
+      const notification = await notificationObject(notificationElement);
+      if (notification) {
+        const { mutuals } = notification || undefined;
+        if (!mutuals) {
+          notificationElement.setAttribute(hiddenAttribute, '');
+        } else {
+          // Unhides the date and wrapper of a visible notification.
+          notifcationWrapperElement.removeAttribute(hiddenAttribute);
+          currDateWrapperElement?.removeAttribute(hiddenAttribute);
+        }
+      } else {
+        // Keep track of the wrapper with a date in it.
+        lastDateWrapperElement = notifcationWrapperElement;
+      }
+    });
+  });
+};
 
 const alreadyProcessed = postElement =>
   postElement.classList.contains(mutualsClass) &&
@@ -68,7 +97,7 @@ const addIcons = function (postElements) {
 export const main = async function () {
   if (primaryBlogName === undefined) return;
 
-  ({ showOnlyMutuals } = await getPreferences('mutual_checker'));
+  ({ showOnlyMutuals, showOnlyMutualNotifications } = await getPreferences('mutual_checker'));
   following[primaryBlogName] = Promise.resolve(false);
 
   const today = new Date();
@@ -84,10 +113,16 @@ export const main = async function () {
   ]);
 
   onNewPosts.addListener(addIcons);
+  if (showOnlyMutualNotifications) {
+    onNewNotifications.addListener(processNotifications);
+  }
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(addIcons);
+  if (showOnlyMutualNotifications) {
+    onNewNotifications.removeListener(processNotifications);
+  }
 
   $(`.${mutualsClass}`).removeClass(mutualsClass);
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

@@ -12,6 +12,11 @@
       "type": "checkbox",
       "label": "Only show posts from mutuals on the dashboard",
       "default": false
+    },
+    "showOnlyMutualNotifications": {
+      "type": "checkbox",
+      "label": "Only show notifications from mutuals in the activity feed",
+      "default": false
     }
   }
 }

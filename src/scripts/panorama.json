@@ -11,7 +11,7 @@
     "maxPostWidth": {
       "label": "Max. post width",
       "type": "text",
-      "default": "855px"
+      "default": "800px"
     }
   }
 }

@@ -26,12 +26,11 @@ const togglePanorama = async () => {
     const mainRightPadding = 20;
     const mainRightBorder = 1;
     const sidebarOffset = sidebarMaxWidth + mainRightPadding + mainRightBorder;
-    const stickyContainerOffset = document.querySelector(keyToCss('reblogRedesignEnabled')) ? 0 : 85;
 
     styleElement.textContent = `
       ${mainContentWrapper} {
         flex-grow: 1;
-        max-width: ${Math.max(maxPostWidth, 540) + stickyContainerOffset + sidebarOffset}px;
+        max-width: ${Math.max(maxPostWidth, 540) + sidebarOffset}px;
       }
       ${container} {
         max-width: unset;
@@ -40,7 +39,7 @@ const togglePanorama = async () => {
         max-width: calc(100% - ${sidebarOffset}px);
       }
       ${postColumn} {
-        max-width: calc(100% - ${stickyContainerOffset}px);
+        max-width: 100%;
       }
 
       ${postColumn}

@@ -1,5 +1,5 @@
 import { keyToCss } from './css_map.js';
-import { postSelector } from './interface.js';
+import { notificationSelector, postSelector } from './interface.js';
 const rootNode = document.getElementById('root');
 
 const addedNodesPool = [];
@@ -52,6 +52,11 @@ export const pageModifications = Object.freeze({
 
 export const onNewPosts = Object.freeze({
   addListener: callback => pageModifications.register(`${postSelector} article`, callback),
+  removeListener: callback => pageModifications.unregister(callback)
+});
+
+export const onNewNotifications = Object.freeze({
+  addListener: callback => pageModifications.register(notificationSelector, callback),
   removeListener: callback => pageModifications.unregister(callback)
 });
 

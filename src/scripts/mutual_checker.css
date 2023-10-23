@@ -7,7 +7,6 @@ svg.xkit-mutual-icon {
   margin-right: 0.5ch;
 }
 
-[data-notification-feed] [data-mutual-checker-hidden],
 [data-timeline="/v2/timeline/dashboard"] [data-mutual-checker-hidden] article {
   display: none;
 }

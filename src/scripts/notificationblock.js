@@ -1,47 +1,33 @@
 import { buildStyle } from '../util/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
-import { pageModifications } from '../util/mutations.js';
-import { inject } from '../util/inject.js';
-import { keyToCss } from '../util/css_map.js';
+import { onNewNotifications } from '../util/mutations.js';
 import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
 import { dom } from '../util/dom.js';
 import { userBlogNames } from '../util/user.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
+import { notificationObject } from '../util/react_props.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonBlockId = 'notificationblock-block';
 const meatballButtonBlockLabel = 'Block notifications';
 const meatballButtonUnblockId = 'notificationblock-unblock';
 const meatballButtonUnblockLabel = 'Unblock notifications';
-const notificationSelector = keyToCss('notification');
 
 let blockedPostTargetIDs;
 
 const styleElement = buildStyle();
-const buildCss = () => `:is(${
-  blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')
-}) { display: none !important; }`;
+const buildCss = () => `:is(${blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')
+  }) { display: none !important; }`;
 
-const unburyTargetPostIds = async (notificationSelector) => {
-  [...document.querySelectorAll(notificationSelector)]
-    .forEach(notificationElement => {
-      const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactFiber'));
-      let fiber = notificationElement[reactKey];
-
-      while (fiber !== null) {
-        const { notification } = fiber.memoizedProps || {};
-        if (notification !== undefined) {
-          const { targetRootPostId, targetPostId } = notification;
-          notificationElement.dataset.targetRootPostId = targetRootPostId || targetPostId;
-          break;
-        } else {
-          fiber = fiber.return;
-        }
-      }
-    });
+const processNotifications = (notificationElements) => {
+  notificationElements.forEach(async notificationElement => {
+    const notification = await notificationObject(notificationElement);
+    if (notification !== undefined) {
+      const { targetRootPostId, targetPostId } = notification;
+      notificationElement.dataset.targetRootPostId = targetRootPostId || targetPostId;
+    }
+  });
 };
-
-const processNotifications = () => inject(unburyTargetPostIds, [notificationSelector]);
 
 const muteNotificationsMessage = [
   '\n\n',
@@ -118,8 +104,7 @@ export const main = async function () {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
   styleElement.textContent = buildCss();
   document.documentElement.append(styleElement);
-
-  pageModifications.register(notificationSelector, processNotifications);
+  onNewNotifications.addListener(processNotifications);
 
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
   registerMeatballItem({ id: meatballButtonUnblockId, label: meatballButtonUnblockLabel, onclick: onButtonClicked, postFilter: unblockPostFilter });
@@ -127,7 +112,7 @@ export const main = async function () {
 
 export const clean = async function () {
   styleElement.remove();
-  pageModifications.unregister(processNotifications);
+  onNewNotifications.removeListener(processNotifications);
   unregisterMeatballItem(meatballButtonBlockId);
   unregisterMeatballItem(meatballButtonUnblockId);
 };

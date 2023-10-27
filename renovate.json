@@ -9,18 +9,18 @@
       "groupName": "vendored dependencies",
       "matchManagers": ["npm"],
       "matchDepTypes": ["dependencies"],
-      "matchPackagePatterns": ["*"]
+      "matchUpdateTypes": ["minor", "patch"]
     },
     {
       "groupName": "dev dependencies",
       "matchManagers": ["npm"],
       "matchDepTypes": ["devDependencies"],
-      "matchPackagePatterns": ["*"]
+      "matchUpdateTypes": ["minor", "patch"]
     },
     {
       "groupName": "automation dependencies",
       "matchManagers": ["github-actions"],
-      "matchPackagePatterns": ["*"]
+      "matchUpdateTypes": ["minor", "patch"]
     }
   ],
   "rangeStrategy": "bump",

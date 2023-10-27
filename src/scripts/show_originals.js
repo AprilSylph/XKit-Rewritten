@@ -34,7 +34,7 @@ const addControls = async (timelineElement, location) => {
   const controls = Object.assign(document.createElement('div'), { className: controlsClass });
   controls.dataset.location = location;
 
-  timelineElement.before(controls);
+  timelineElement.prepend(controls);
 
   const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
     controls.dataset.showOriginals = mode;
@@ -84,9 +84,8 @@ const processTimelines = async () => {
   [...document.querySelectorAll('[data-timeline]')].forEach(async timelineElement => {
     const location = getLocation(timelineElement);
 
-    const currentControls = timelineElement.previousElementSibling?.classList?.contains(controlsClass)
-      ? timelineElement.previousElementSibling
-      : null;
+    const currentControls = [...timelineElement.children]
+      .find(element => element.matches(`.${controlsClass}`));
 
     if (currentControls?.dataset?.location !== location) {
       currentControls?.remove();

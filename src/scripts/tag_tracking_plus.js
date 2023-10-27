@@ -8,6 +8,9 @@ import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { getPreferences } from '../util/preferences.js';
 
 const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
+let timestamps;
+
+const searchCountClass = 'xkit-tag-tracking-plus-search-count';
 
 const excludeClass = 'xkit-tag-tracking-plus-done';
 const includeFiltered = true;
@@ -23,38 +26,43 @@ let sidebarItem;
 const refreshCount = async function (tag) {
   if (!trackedTags.includes(tag)) return;
 
-  const { [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey);
-  const savedTimestamp = timestamps[tag] ?? 0;
-  const {
-    response: {
-      timeline: {
-        elements = [],
-        links
+  let unreadCountString = '⚠️';
+
+  try {
+    const savedTimestamp = timestamps[tag] ?? 0;
+    const {
+      response: {
+        timeline: {
+          elements = [],
+          links
+        }
+      }
+    } = await apiFetch(
+      `/v2/hubs/${encodeURIComponent(tag)}/timeline`,
+      { queryParams: { limit: 20, sort: 'recent' } }
+    );
+
+    const posts = elements.filter(({ objectType, displayType, recommendedSource }) =>
+      objectType === 'post' &&
+      displayType === undefined &&
+      recommendedSource === null
+    );
+
+    let unreadCount = 0;
+
+    for (const { timestamp } of posts) {
+      if (timestamp <= savedTimestamp) {
+        break;
+      } else {
+        unreadCount++;
       }
     }
-  } = await apiFetch(
-    `/v2/hubs/${encodeURIComponent(tag)}/timeline`,
-    { queryParams: { limit: 20, sort: 'recent' } }
-  );
 
-  const posts = elements.filter(({ objectType, displayType, recommendedSource }) =>
-    objectType === 'post' &&
-    displayType === undefined &&
-    recommendedSource === null
-  );
-
-  let unreadCount = 0;
-
-  for (const { timestamp } of posts) {
-    if (timestamp <= savedTimestamp) {
-      break;
-    } else {
-      unreadCount++;
-    }
+    const showPlus = unreadCount === posts.length && links?.next;
+    unreadCountString = `${unreadCount}${showPlus ? '+' : ''}`;
+  } catch (exception) {
+    console.error(exception);
   }
-
-  const showPlus = unreadCount === posts.length && links?.next;
-  const unreadCountString = `${unreadCount}${showPlus ? '+' : ''}`;
 
   [document, ...(!sidebarItem || document.contains(sidebarItem) ? [] : [sidebarItem])]
     .flatMap(node =>
@@ -108,7 +116,6 @@ const processPosts = async function (postElements) {
   const currentTag = decodeURIComponent(encodedCurrentTag);
   if (!trackedTags.includes(currentTag)) return;
 
-  const { [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey);
   const timeline = new RegExp(`/v2/hubs/${encodedCurrentTag}/timeline`);
 
   let updated = false;
@@ -142,6 +149,7 @@ const processTagLinks = function (tagLinkElements) {
     const unreadCountElement = dom(
       'span',
       {
+        class: searchCountClass,
         'data-count-for': `#${tag}`,
         style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65;'
       },
@@ -153,31 +161,45 @@ const processTagLinks = function (tagLinkElements) {
   });
 };
 
+export const onStorageChanged = async (changes, areaName) => {
+  if (Object.keys(changes).includes(storageKey)) {
+    timestamps = changes[storageKey].newValue;
+  }
+  if (Object.keys(changes).some(key => key.startsWith('tag_tracking_plus.preferences'))) {
+    const { showUnread, onlyShowNew } = await getPreferences('tag_tracking_plus');
+
+    document.body.dataset.tagTrackingPlusShowSearch = showUnread === 'both' || showUnread === 'search';
+    document.body.dataset.tagTrackingPlusShowSidebar = showUnread === 'both' || showUnread === 'sidebar';
+    sidebarItem.dataset.onlyShowNew = onlyShowNew;
+  }
+};
+
 export const main = async function () {
   const trackedTagsData = (await apiFetch('/v2/user/tags')) ?? {};
   trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
 
   trackedTags.forEach(tag => unreadCounts.set(tag, undefined));
 
-  const { showUnread, onlyShowNew } = await getPreferences('tag_tracking_plus');
-  if (showUnread === 'both' || showUnread === 'search') {
-    pageModifications.register(tagLinkSelector, processTagLinks);
-  }
-  if (showUnread === 'both' || showUnread === 'sidebar') {
-    sidebarItem = addSidebarItem({
-      id: 'tag-tracking-plus',
-      title: 'Tag Tracking+',
-      rows: trackedTags.map(tag => ({
-        label: `#${tag}`,
-        href: `/tagged/${encodeURIComponent(tag)}?sort=recent`,
-        onclick: onClickNavigate,
-        count: '\u22EF'
-      }))
-    });
+  ({ [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey));
 
-    onlyShowNew && sidebarItem.classList.add('only-show-new');
-    updateSidebarStatus();
-  }
+  const { showUnread, onlyShowNew } = await getPreferences('tag_tracking_plus');
+  document.body.dataset.tagTrackingPlusShowSearch = showUnread === 'both' || showUnread === 'search';
+  document.body.dataset.tagTrackingPlusShowSidebar = showUnread === 'both' || showUnread === 'sidebar';
+
+  pageModifications.register(tagLinkSelector, processTagLinks);
+
+  sidebarItem = addSidebarItem({
+    id: 'tag-tracking-plus',
+    title: 'Tag Tracking+',
+    rows: trackedTags.map(tag => ({
+      label: `#${tag}`,
+      href: `/tagged/${encodeURIComponent(tag)}?sort=recent`,
+      onclick: onClickNavigate,
+      count: '\u22EF'
+    }))
+  });
+  sidebarItem.dataset.onlyShowNew = onlyShowNew;
+  updateSidebarStatus();
 
   onNewPosts.addListener(processPosts);
   refreshAllCounts(true).then(startRefreshInterval);
@@ -189,7 +211,10 @@ export const clean = async function () {
   pageModifications.unregister(processTagLinks);
 
   removeSidebarItem('tag-tracking-plus');
-  $(`${tagLinkSelector} [data-count-for]`).remove();
+  $(`.${searchCountClass}`).remove();
+
+  document.body.removeAttribute('data-tag-tracking-plus-show-sidebar');
+  document.body.removeAttribute('data-tag-tracking-plus-show-search');
 
   unreadCounts.clear();
   sidebarItem = undefined;

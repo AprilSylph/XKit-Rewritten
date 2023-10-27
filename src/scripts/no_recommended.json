@@ -10,7 +10,7 @@
   "preferences": {
     "hide_recommended_posts": {
       "type": "checkbox",
-      "label": "Hide recommended posts on the dashboard",
+      "label": "Hide experimental types of recommended posts",
       "default": true
     },
     "hide_answertime": {

@@ -2,6 +2,7 @@ import { inject } from './inject.js';
 import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
 const timelineObjectCache = new WeakMap();
+const notificationObjectCache = new WeakMap();
 
 const unburyTimelineObject = () => {
   const postElement = document.currentScript.parentElement;
@@ -42,6 +43,32 @@ const unburyBlog = () => {
       fiber = fiber.return;
     }
   }
+};
+
+const unburyNotification = async () => {
+  const notificationElement = document.currentScript.parentElement;
+  const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactFiber'));
+  let fiber = notificationElement[reactKey];
+
+  while (fiber !== null) {
+    const { notification } = fiber.memoizedProps || {};
+    if (notification !== undefined) {
+      return notification;
+    } else {
+      fiber = fiber.return;
+    }
+  }
+};
+
+/**
+ * @param {Element} notificationElement - An on-screen notification
+ * @returns {Promise<object>} - The notification's buried notification property
+ */
+export const notificationObject = function (notificationElement) {
+  if (!notificationObjectCache.has(notificationElement)) {
+    notificationObjectCache.set(notificationElement, inject(unburyNotification, [], notificationElement));
+  }
+  return notificationObjectCache.get(notificationElement);
 };
 
 /**

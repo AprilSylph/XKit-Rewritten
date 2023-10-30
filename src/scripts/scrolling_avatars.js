@@ -4,50 +4,54 @@ import { onNewPosts } from '../util/mutations.js';
 import { translate } from '../util/language_data.js';
 import { filterPostElements, buildStyle } from '../util/interface.js';
 import { keyToCss } from '../util/css_map.js';
+import { navigate } from '../util/tumblr_helpers.js';
 
 const styleElement = buildStyle(`
+  @media (min-width: 990px) {
     ${keyToCss('mainContentWrapper')} { margin-left: 85px; }
-    @media (min-width: 990px) {
-      ${keyToCss('tabsHeader')} { margin-left: -105px !important; }
-    }
-  `);
+    ${keyToCss('tabsHeader')} { margin-left: -105px !important; }
+    article > header ${keyToCss('avatar')} { display: none; }
+  }
+`);
 
-const newScrollingAvatar = blog => dom('div', {
-  class: 'xkit-sticky-container'
-}, null, [
-  $(`
-    <div class='xkit-outer-avatar'>
-      <div class='xkit-avatar-wrapper' role='figure' aria-label='${translate('avatar')}'>
-        <span data-testid='controlled-popover-wrapper' class='xkit-target-wrapper'>
-          <span class='xkit-target-wrapper'>
-            <a
-              href='${blog.url}.tumblr.com/'
-              title='${blog.name}'
-              target='_blank' rel='noopener'
-              role='link'
-              class='xkit-blog-link'
-              tabindex='0'
-            >
-              <div class='xkit-inner-avatar'>
-                <div class='xkit-inner-avatar-wrapper'>
-                  <div class='xkit-placeholder'>
-                    <img
-                    class='xkit-avatar-image'
-                    src='${blog.avatar[3].url}'
-                    sizes='64px'
-                    alt='${translate('Avatar')}'
-                    style='width: 64px; height: 64px;'
-                    loading='eager'>
+const newScrollingAvatar = blog => {
+  const avatar = dom('div', { class: 'xkit-sticky-container' }, null,
+    [$(`
+      <div class='xkit-outer-avatar'>
+        <div class='xkit-avatar-wrapper' role='figure' aria-label='${translate('avatar')}'>
+          <span data-testid='controlled-popover-wrapper' class='xkit-target-wrapper'>
+            <span class='xkit-target-wrapper'>
+              <a
+                href='${blog.url}'
+                title='${blog.name}'
+                target='_blank' rel='noopener'
+                role='link'
+                class='xkit-blog-link'
+                tabindex='0'
+              >
+                <div class='xkit-inner-avatar'>
+                  <div class='xkit-inner-avatar-wrapper'>
+                    <div class='xkit-placeholder'>
+                      <img
+                      class='xkit-avatar-image'
+                      src='${blog.avatar[3].url}'
+                      sizes='64px'
+                      alt='${translate('Avatar')}'
+                      style='width: 64px; height: 64px;'
+                      loading='eager'>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </a>
+              </a>
+            </span>
           </span>
-        </span>
+        </div>
       </div>
-    </div>
-  `)[0]
-]);
+    `)[0]]
+  );
+  avatar.querySelector('a').addEventListener('click', () => {navigate(blog.name)});
+  return avatar;
+};
 
 const addAvatars = postElements => {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {

@@ -49,7 +49,7 @@ const newScrollingAvatar = blog => {
       </div>
     `)[0]]
   );
-  avatar.querySelector('a').addEventListener('click', () => {navigate(blog.name)});
+  avatar.querySelector('a').addEventListener('click', () => { navigate(blog.name); });
   return avatar;
 };
 

@@ -4,7 +4,7 @@
   right: 1ch;
 
   height: 1em;
-  padding: 5px;
+  padding: 0.6ch;
   border-radius: 3px;
 
   background-color: rgb(var(--black));
@@ -16,6 +16,10 @@
 
 .xkit-paused-gif-label::before {
   content: "GIF";
+}
+
+.xkit-paused-gif-label.mini {
+  font-size: 0.6rem;
 }
 
 .xkit-paused-gif {

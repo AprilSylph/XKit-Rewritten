@@ -15,8 +15,9 @@ const searchCountClass = 'xkit-tag-tracking-plus-search-count';
 const excludeClass = 'xkit-tag-tracking-plus-done';
 const includeFiltered = true;
 
-const tagLinkSelector = `${keyToCss('searchResult')} h3 ~ a${keyToCss('typeaheadRow')}[href^="/tagged/"]`;
-const tagTextSelector = keyToCss('tagText');
+const tagLinkSelector = `${keyToCss('searchResult', 'followedTags')} :is(h3, h4) ~ a${keyToCss('typeaheadRow')}[href^="/tagged/"]`;
+const modalTagLinkSelector = `${keyToCss('manageTagsModal')} ${keyToCss('tagItem')}`;
+const tagTextSelector = keyToCss('tagText', 'tagName');
 
 let trackedTags;
 const unreadCounts = new Map();
@@ -145,13 +146,13 @@ const processTagLinks = function (tagLinkElements) {
     if (tagLinkElement.querySelector('[data-count-for]') !== null) return;
 
     const tagTextElement = tagLinkElement.querySelector(tagTextSelector);
-    const tag = tagTextElement.textContent;
+    const tag = tagTextElement.textContent.replace('#', '');
     const unreadCountElement = dom(
       'span',
       {
         class: searchCountClass,
         'data-count-for': `#${tag}`,
-        style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65;'
+        style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65; flex: 0'
       },
       null,
       unreadCounts.get(tag) ?? '\u22EF'
@@ -186,7 +187,7 @@ export const main = async function () {
   document.body.dataset.tagTrackingPlusShowSearch = showUnread === 'both' || showUnread === 'search';
   document.body.dataset.tagTrackingPlusShowSidebar = showUnread === 'both' || showUnread === 'sidebar';
 
-  pageModifications.register(tagLinkSelector, processTagLinks);
+  pageModifications.register(`${tagLinkSelector}, ${modalTagLinkSelector}`, processTagLinks);
 
   sidebarItem = addSidebarItem({
     id: 'tag-tracking-plus',

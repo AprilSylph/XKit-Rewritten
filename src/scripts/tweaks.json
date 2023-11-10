@@ -47,11 +47,6 @@
       "label": "Remove the sticky effect from the dashboard tab bar",
       "default": false
     },
-    "unsticky_post_avatars": {
-      "type": "checkbox",
-      "label": "Remove the sticky effect from post avatars",
-      "default": false
-    },
     "hide_mini_follow": {
       "type": "checkbox",
       "label": "Hide mini-follow buttons on posts",
@@ -111,6 +106,11 @@
     "no_live": {
       "type": "checkbox",
       "label": "Hide the Tumblr Live carousel",
+      "default": false
+    },
+    "following_tab": {
+      "type": "checkbox",
+      "label": "Force the default dashboard tab to \"Following\"",
       "default": false
     }
   }

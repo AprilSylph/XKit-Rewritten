@@ -1,0 +1,41 @@
+.xkit-timeline-search-container {
+  color: rgba(var(--white-on-dark),.65);
+  background-color: rgba(var(--white-on-dark),.25);
+  border-radius: 8px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  transition: background-color .25s;
+  display: flex;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.xkit-timeline-search-container:focus-within {
+  color: rgb(var(--black));
+  background-color: rgb(var(--white));
+  box-shadow: rgb(var(--accent))0px 0px 0px 2px inset;
+  outline: none;
+}
+.xkit-timeline-search-icon {
+  flex-shrink: 0;
+  justify-content: flex-end;
+  align-items: center;
+  height: 34px;
+  margin-left: 12px;
+  margin-right: 2px;
+  display: flex;
+}
+.xkit-timeline-search-icon use { --icon-color-primary: rgba(var(--white-on-dark),.65)}
+.xkit-timeline-search-container:focus-within .xkit-timeline-search-icon use { --icon-color-primary: rgba(var(--black),.65)}
+#xkit-timeline-search-textarea {
+  color: inherit;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 5px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+[data-timeline] [data-timeline-search-hidden] article { display: none; }

@@ -193,19 +193,22 @@ styleElement.textContent = `
       margin-top: 20px;
     }
     ${keyToCss('container')} { margin: 0; }
-    ${keyToCss('bar')} { margin-bottom: 100px !important; }
     ${keyToCss('main')} {
       margin-right: 16px;
       padding: 0;
       border: none !important;
     }
+    ${keyToCss('bar')} { margin-bottom: 90px !important; }
     ${keyToCss('tabsHeader')} {
       width: 540px;
       position: relative;
-      top: 200px !important;
+      margin-top: 30px !important;
       left: 20px;
     }
-    ${keyToCss('timelineOptions')} { overflow-x: auto !important; }
+    [aria-hidden] + ${keyToCss('tabsHeader')} {
+      margin-top: -14px !important;
+      top: 190px !important;
+    }
     ${keyToCss('postColumn')}:not(.${keyToClasses('postColumn')[6]}) {
       position: relative;
       top: -54px;

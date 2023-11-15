@@ -6,22 +6,5 @@
     "color": "white",
     "background_color": "#001935"
   },
-  "relatedTerms": [ "UI", "Dashboard", "Vertical Nav", "Vertical Navigation" ],
-  "preferences": {
-    "moveSettings": {
-      "type": "checkbox",
-      "label": "Move the Settings icon from the navbar to the Account submenu",
-      "default": false
-    },
-    "accountStats": {
-      "type": "checkbox",
-      "label": "Re-add the account stats dropdown under blogs in the Account submenu",
-      "default": false
-    },
-    "newSearch": {
-      "type": "checkbox",
-      "label": "Add a search bar to pages without a sidebar",
-      "default": false
-    }
-  }
+  "relatedTerms": [ "UI", "Dashboard", "Vertical Nav", "Vertical Navigation" ]
 }

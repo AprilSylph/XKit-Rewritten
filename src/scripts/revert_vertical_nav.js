@@ -1,8 +1,26 @@
 import { keyToCss, keyToClasses } from '../util/css_map.js';
 import { buildStyle } from '../util/interface.js';
 import { translate } from '../util/language_data.js';
-import { getPreferences } from '../util/preferences.js';
 import { userBlogs } from '../util/user.js';
+import { pageModifications } from '../util/mutations.js';
+
+const match = [
+  '',
+  'dashboard',
+  'settings',
+  'blog',
+  'domains',
+  'search',
+  'likes',
+  'following',
+  'inbox',
+  'tagged',
+  'explore',
+  'reblog'
+];
+const pathname = location.pathname.split('/')[1];
+const customClass = 'xkit-uifix';
+const hiddenIconSelector = `${keyToCss('navigationLinks')} > ${keyToCss('navItem')}:is([title="${translate('Settings')}"],[title="${translate('Get a domain')}"],[title="${translate('Go Ad-Free')}"])`;
 
 const styleElement = buildStyle();
 styleElement.textContent = `
@@ -95,7 +113,14 @@ styleElement.textContent = `
       z-index: 100;
       height: fit-content;
       padding: 0;
+      margin-top: 0;
     }
+    .${customClass} ${keyToCss('searchIcon')} {
+      display: flex;
+      margin: 0 2px 0 12px;
+    }
+    .${customClass} ${keyToCss('searchIcon')} svg use { --icon-color-primary: rgba(var(--white-on-dark),.65); }
+    .${customClass}:focus-within ${keyToCss('searchIcon')} svg use { --icon-color-primary: rgba(var(--black),.65); }
     ${keyToCss('logoContainer')} {
       justify-content: center;
       padding: 0px;
@@ -152,8 +177,6 @@ styleElement.textContent = `
     ${keyToCss('navItem')}[title='${translate('Inbox')}'] { order: -5; }
     ${keyToCss('navigationLinks')} > ${keyToCss('targetPopoverWrapper')}:nth-of-type(2) { order: -4; }
     ${keyToCss('navigationLinks')} > ${keyToCss('targetPopoverWrapper')}:nth-of-type(1) { order: -3; }
-    ${keyToCss('navItem')}[title='${translate('Get a domain')}'] { display: none; }
-    ${keyToCss('navItem')}[title='${translate('Go Ad-Free')}'] { display: none; }
     ${keyToCss('navigationLinks')} >${keyToCss('navItem')},
       ${keyToCss('navigationLinks')} >${keyToCss('targetPopoverWrapper')} {
         width: 20px;
@@ -170,7 +193,7 @@ styleElement.textContent = `
       margin-top: 20px;
     }
     ${keyToCss('container')} { margin: 0; }
-    ${keyToCss('bar')} { margin-bottom: 100px; }
+    ${keyToCss('bar')} { margin-bottom: 100px !important; }
     ${keyToCss('main')} {
       margin-right: 16px;
       padding: 0;
@@ -180,7 +203,7 @@ styleElement.textContent = `
       width: 540px;
       position: relative;
       top: 200px !important;
-      left: 105px;
+      left: 20px;
     }
     ${keyToCss('timelineOptions')} { overflow-x: auto !important; }
     ${keyToCss('postColumn')}:not(.${keyToClasses('postColumn')[6]}) {
@@ -216,28 +239,9 @@ styleElement.textContent = `
     }
   }
 `;
-const match = [
-  '',
-  'dashboard',
-  'settings',
-  'blog',
-  'domains',
-  'search',
-  'likes',
-  'following',
-  'inbox',
-  'tagged',
-  'explore',
-  'reblog'
-];
-const pathname = location.pathname.split('/')[1];
-
-let moveSettings;
-let accountStats;
-let newSearch;
 
 const element = selector => $(keyToCss(selector));
-const newIcon = name => $(`<svg class='xkit-uifix' xmlns='http://www.w3.org/2000/svg' height='18' width='20' role='presentation' style='--icon-color-primary: rgba(var(--black), 0.65);'><use href='#managed-icon__${name}'></use></svg>`);
+const newIcon = (name, h, w) => $(`<svg class='${customClass}' xmlns='http://www.w3.org/2000/svg' height='${h}' width='${w}' role='presentation' style='--icon-color-primary: rgba(var(--black), 0.65);'><use href='#managed-icon__${name}'></use></svg>`);
 const keyToClass = key => keyToClasses(key)[0];
 const fetchStats = async () => {
   const data = userBlogs;
@@ -246,156 +250,184 @@ const fetchStats = async () => {
       if (blog[key]) {
         const count = $(`<span class='${keyToClasses('count')[3]}'>${blog[key]}</span>`);
         if (key === 'posts') {
-          count.appendTo($(`.xkit-uifix[href='/blog/${blog.name}']`));
-        } else { count.appendTo($(`.xkit-uifix[href='/blog/${blog.name}/${key}']`)); }
+          count.appendTo($(`.${customClass}[href='/blog/${blog.name}']`));
+        } else { count.appendTo($(`.${customClass}[href='/blog/${blog.name}/${key}']`)); }
       }
     }
     if (blog.isGroupChannel) {
       const members = $(`
         <li>
-          <a class='xkit-uifix' href='/blog/${blog.name}/members' target='_blank'>
+          <a class='${customClass}' href='/blog/${blog.name}/members' target='_blank'>
             <span>${translate('Members')}</span>
           </a>
         </li>
       `);
-      members.insertAfter($(`#xkit-uifix-${blog.name}-activity`));
+      members.insertAfter($(`#${customClass}-${blog.name}-activity`));
     }
   }
 };
+const addStats = () => {
+  const blogTiles = element('blogTile');
+  for (let i = 0; i < blogTiles.length; ++i) {
+    const tile = blogTiles.eq(i);
+    const blog = tile.find(keyToCss('displayName')).text();
+    const caret = $(`
+      <button class='${keyToClass('button')} ${customClass}' aria-label='${translate('Show Blog Statistics')}' style='transform: rotate(0deg); display: flex; transition: transform 200ms ease-in-out 0s;'>
+          <span class='${keyToClass('buttonInner')} ${keyToClass('menuTarget')}' tabindex='-1'>
+              <svg xmlns='http://www.w3.org/2000/svg' height='12' width='12' role='presentation'>
+                  <use href='#managed-icon__caret-thin'></use>
+              </svg>
+          </span>
+      </button>
+    `);
+    tile.find(keyToCss('actionButtons')).append(caret);
+    caret.on('click', function () {
+      if (element('accountStats').eq(i).is(':hidden')) {
+        $(this).css('transform', 'rotate(180deg)');
+      } else { $(this).css('transform', 'rotate(0deg)'); }
+      element('accountStats').eq(i).toggle();
+    });
+    const stats = $(`
+      <ul class='${keyToClass('accountStats')} ${customClass}'>
+          <li>
+              <a class='${customClass}' href='/blog/${blog}'>
+                  <span>${translate('Posts')}</span>
+              </a>
+          </li>
+          <li>
+              <a class='${customClass}' href='/blog/${blog}/followers'>
+                  <span>${translate('Followers')}</span>
+              </a>
+          </li>
+          <li id='${customClass}-${blog}-activity'>
+              <a class='${customClass}' href='/blog/${blog}/activity'>
+                  <span>${translate('Activity')}</span>
+              </a>
+          </li>
+          <li>
+              <a class='${customClass}' href='/blog/${blog}/drafts'>
+                  <span>${translate('Drafts')}</span>
+              </a>
+          </li>
+          <li>
+              <a class='${customClass}' href='/blog/${blog}/queue'>
+                  <span>${translate('Queue')}</span>
+              </a>
+          </li>
+          <li>
+              <a class='${customClass}' href='/blog/${blog}/post-plus'>
+                  <span>${translate('Post+')}</span>
+              </a>
+          </li>
+          <li>
+              <a class='${customClass}' href='/blog/${blog}/blaze'>
+                  <span>${translate('Tumblr Blaze')}</span>
+              </a>
+          </li>
+          <li>
+              <a class='${customClass}' href='/settings/blog/${blog}'>
+                  <span>${translate('Blog settings')}</span>
+              </a>
+          </li>
+          <li>
+              <a class='${customClass}' href='/mega-editor/published/${blog}' target='_blank'>
+                  <span>${translate('Mass Post Editor')}</span>
+              </a>
+          </li>
+      </ul>
+    `);
+    stats.insertAfter(tile);
+    stats.hide();
+  }
+  fetchStats();
+  $(`button.${customClass}`).eq(0).trigger('click');
+};
+const newSubnavItem = (title, href, icon, h, w) => {
+  const navItem = $(`
+    <li class='${keyToClasses('navItem').join(' ')} ${keyToClasses('newDesktopLayout').join(' ')} ${customClass}' title='${translate(title)}'>
+      <a class='${keyToClasses('navLink').join(' ')}' href='${href}'>
+        <div class='${keyToClasses('navInfo').join(' ')}'>
+          <span class='${keyToClasses('childWrapper').join(' ')}'>${translate(title)}</span>
+          <span class='${keyToClasses('endChildWrapper').join(' ')}'></span>
+        </div>
+      </a>
+    </li>
+  `);
+  navItem.find(keyToCss('childWrapper')).prepend(newIcon(icon, h, w));
+  return navItem;
+};
+const shuffleIcons = () => {
+  const settings = newSubnavItem('Settings', '/settings/account', 'settings', 20, 20);
+  settings.insertAfter(element('navItem').has('[href="/following"]'));
+  const domains = newSubnavItem('Domains', '/domains', 'earth', 20, 20);
+  domains.insertAfter(settings);
+  const adFree = newSubnavItem('Go Ad-Free', '/settings/ad-free-browsing', 'sparkle', 21, 20);
+  adFree.insertAfter(domains);
+  const purchases = newSubnavItem('Payment & Purchases', '/settings/purchases', 'payment-purchases', 21, 20);
+  purchases.insertAfter(adFree);
+  const gifts = newSubnavItem('Gifts', '/settings/gifts', 'gift', 21, 20);
+  gifts.insertAfter(purchases);
+};
+const navModfifcations = (elements) => {
+  const accountSubnav = $('#account_subnav');
+  const newHeading = $(`<div class='${customClass} ${keyToClass('heading')}'><h3>${translate('Account')}</h3></div>`);
+  const logoutButton = element('logoutButton');
+  const navSubHeader = element('navSubHeader');
+  const navigationWrapper = element('navigationWrapper');
+
+  if (!match.includes(pathname)) {
+    element('layout').prepend($(`
+      <div class='${customClass} ${keyToClass('searchSidebarItem')}'>
+        <div class='${keyToClass('formContainer')}'>
+          <span data-testid='controlled-popover-wrapper' class='${keyToClass('targetWrapper')}'>
+            <span class='${keyToClass('targetWrapper')}'>
+              <form method='GET' action='/search' role='search' class='${keyToClass('form')}'>
+                <div class='${keyToClasses('searchbarContainer')[1]}'>
+                  <div class='${keyToClasses('searchIcon')[5]}'>
+                    <svg xmlns='http://www.w3.org/2000/svg' height='18' width='18' role='presentation' >
+                      <use href='#managed-icon__search'></use>
+                    </svg>
+                  </div>
+                  <input
+                    name='q'
+                    type='text'
+                    autocomplete='off'
+                    aria-label='${translate('Search')}'
+                    class='${keyToClasses('searchbar')[1]}'
+                    placeholder='${translate('Search Tumblr')}'
+                    autocapitalize='sentences'
+                    value=''
+                  />
+                </div>
+              </form>
+            </span>
+          </span>
+        </div>
+      </div>
+    `));
+  }
+  navSubHeader.addClass(keyToClass('heading'));
+  navigationWrapper.addClass(keyToClasses('headerWrapper').join(' '));
+  accountSubnav.prepend(newHeading);
+  newHeading.append(logoutButton);
+  $(document).on('click', () => {
+    if (!$('#account_subnav:hover').length && !$('#account_subnav').attr('hidden')) { document.getElementById('account_button').click(); }
+  });
+
+  $(elements).hide();
+  shuffleIcons();
+  addStats();
+
+  $(`[href='/likes'] ${keyToCss('childWrapper')}`).prepend(newIcon('like-filled', 18, 20));
+  $(`[href='/following'] ${keyToCss('childWrapper')}`).prepend(newIcon('following', 20, 21));
+  $(`[href='/live/shop'] ${keyToCss('childWrapper')}`).prepend(newIcon('coins', 21, 20));
+};
 
 export const main = async function () {
-  ({ moveSettings, accountStats, newSearch } = await getPreferences('revert_vertical_nav'));
   requestAnimationFrame(() => {
-    $('.xkit-uifix').remove();
-    const accountSubnav = $('#account_subnav');
-    const newHeading = $(`<div class='xkit-uifix ${keyToClass('heading')}'><h3>${translate('Account')}</h3></div>`);
-    const logoutButton = element('logoutButton');
-    const navSubHeader = element('navSubHeader');
-    const navigationWrapper = element('navigationWrapper');
+    $(`.${customClass}`).remove();
 
-    if (!match.includes(pathname) && newSearch) {
-      element('layout').prepend($(`
-        <div class='xkit-uifix ${keyToClass('searchSidebarItem')}'>
-          <div class='${keyToClass('formContainer')}'>
-            <span data-testid='controlled-popover-wrapper' class='${keyToClass('targetWrapper')}'>
-              <span class='${keyToClass('targetWrapper')}'>
-                <form method='GET' action='/search' role='search' class='${keyToClass('form')}'>
-                  <div class='${keyToClasses('searchbarContainer')[1]}'>
-                    <div class='${keyToClasses('searchIcon')[5]}'>
-                      <svg xmlns='http://www.w3.org/2000/svg' height='18' width='18' role='presentation' >
-                        <use href='#managed-icon__search'></use>
-                      </svg>
-                    </div>
-                    <input
-                      name='q'
-                      type='text'
-                      autocomplete='off'
-                      aria-label='${translate('Search')}'
-                      class='${keyToClasses('searchbar')[1]}'
-                      placeholder='${translate('Search Tumblr')}'
-                      autocapitalize='sentences'
-                      value=''
-                    />
-                  </div>
-                </form>
-              </span>
-            </span>
-          </div>
-        </div>
-      `));
-    }
-    navSubHeader.addClass(keyToClass('heading'));
-    navigationWrapper.addClass(keyToClasses('headerWrapper').join(' '));
-    accountSubnav.prepend(newHeading);
-    newHeading.append(logoutButton);
-    $(document).on('click', () => {
-      if (!$('#account_subnav:hover').length && !$('#account_subnav').attr('hidden')) { document.getElementById('account_button').click(); }
-    });
-    if (moveSettings) {
-      const settings = element('navItem').has('[href="/settings/account"]');
-      const newSettings = settings.clone();
-      newSettings.addClass('xkit-uifix');
-      newSettings.insertAfter(element('navItem').has('[href="/following"]'));
-      settings.hide();
-    }
-    $(`[href='/likes'] ${keyToCss('childWrapper')}`).prepend(newIcon('like-filled'));
-    $(`[href='/following'] ${keyToCss('childWrapper')}`).prepend(newIcon('following'));
-    if (accountStats) {
-      const blogTiles = element('blogTile');
-      for (let i = 0; i < blogTiles.length; ++i) {
-        const tile = blogTiles.eq(i);
-        const blog = tile.find(keyToCss('displayName')).text();
-        const caret = $(`
-          <button class='${keyToClass('button')} xkit-uifix' aria-label='${translate('Show Blog Statistics')}' style='transform: rotate(0deg); display: flex; transition: transform 200ms ease-in-out 0s;'>
-              <span class='${keyToClass('buttonInner')} ${keyToClass('menuTarget')}' tabindex='-1'>
-                  <svg xmlns='http://www.w3.org/2000/svg' height='12' width='12' role='presentation'>
-                      <use href='#managed-icon__caret-thin'></use>
-                  </svg>
-              </span>
-          </button>
-        `);
-        tile.find(keyToCss('actionButtons')).append(caret);
-        caret.on('click', function () {
-          if (element('accountStats').eq(i).is(':hidden')) {
-            $(this).css('transform', 'rotate(180deg)');
-          } else { $(this).css('transform', 'rotate(0deg)'); }
-          element('accountStats').eq(i).toggle();
-        });
-        const stats = $(`
-          <ul class='${keyToClass('accountStats')} xkit-uifix'>
-              <li>
-                  <a class='xkit-uifix' href='/blog/${blog}'>
-                      <span>${translate('Posts')}</span>
-                  </a>
-              </li>
-              <li>
-                  <a class='xkit-uifix' href='/blog/${blog}/followers'>
-                      <span>${translate('Followers')}</span>
-                  </a>
-              </li>
-              <li id='xkit-uifix-${blog}-activity'>
-                  <a class='xkit-uifix' href='/blog/${blog}/activity'>
-                      <span>${translate('Activity')}</span>
-                  </a>
-              </li>
-              <li>
-                  <a class='xkit-uifix' href='/blog/${blog}/drafts'>
-                      <span>${translate('Drafts')}</span>
-                  </a>
-              </li>
-              <li>
-                  <a class='xkit-uifix' href='/blog/${blog}/queue'>
-                      <span>${translate('Queue')}</span>
-                  </a>
-              </li>
-              <li>
-                  <a class='xkit-uifix' href='/blog/${blog}/post-plus'>
-                      <span>${translate('Post+')}</span>
-                  </a>
-              </li>
-              <li>
-                  <a class='xkit-uifix' href='/blog/${blog}/blaze'>
-                      <span>${translate('Tumblr Blaze')}</span>
-                  </a>
-              </li>
-              <li>
-                  <a class='xkit-uifix' href='/settings/blog/${blog}'>
-                      <span>${translate('Blog settings')}</span>
-                  </a>
-              </li>
-              <li>
-                  <a class='xkit-uifix' href='/mega-editor/published/${blog}' target='_blank'>
-                      <span>${translate('Mass Post Editor')}</span>
-                  </a>
-              </li>
-          </ul>
-        `);
-        stats.insertAfter(tile);
-        stats.hide();
-      }
-      fetchStats();
-      $('button.xkit-uifix').eq(0).trigger('click');
-    }
+    pageModifications.register(hiddenIconSelector, navModfifcations);
     document.documentElement.append(styleElement);
   });
 };
@@ -406,7 +438,7 @@ export const clean = async function () {
     element('navSubHeader').removeClass(keyToClass('heading'));
     element('navigationWrapper').removeClass(keyToClasses('headerWrapper').join(' '));
     element('logoutButton').insertAfter($('#account_subnav').children('li').has('[href="/following"]'));
-    $('.xkit-uifix').remove();
-    element('navItem').has('[href="/settings/account"]').show();
+    $(`.${customClass}`).remove();
+    element('navItem').has('[href="/settings/account"],[href="/settings/ad-free-browsing"],[href="/domains"]').show();
   });
 };

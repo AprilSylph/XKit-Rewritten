@@ -1,7 +1,6 @@
 import { getTimelineItemWrapper, filterPostElements } from '../util/interface.js';
 import { pageModifications, onNewPosts } from '../util/mutations.js';
 import { timelineObject } from '../util/react_props.js';
-import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 
 const filters = {

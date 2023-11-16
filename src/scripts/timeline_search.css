@@ -1,7 +1,7 @@
 .xkit-timeline-search-container {
   color: rgba(var(--white-on-dark),.65);
   background-color: rgba(var(--white-on-dark),.25);
-  border-radius: 3px;
+  border-radius: 8px;
   justify-content: space-between;
   align-items: center;
   width: 100%;

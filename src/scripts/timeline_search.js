@@ -11,9 +11,16 @@ const filters = {
   rebloggedFromName: /"blogName":"([\w\d]*)"/g,
   summary: /"summary":"([^"]*)"/g,
   text: /"text":"([^"]*)"/g,
-  tags: /"tags":\[((?:"(?:[^"]*)",?)*)\]/g
+  tags: /"tags":\[((?:"(?:[^"]*)",?)*)\]/g,
+  artist: /"artist":"([^"]*)"/g,
+  album: /"album":"([^"]*)"/g,
+  audioTitle: /url:"[^"]*","title":"([^"]*)"/g,
+  sitename: /"sitename":"([^"]*)"/g,
+  linkTitle: /sitename:"[^"]*","title":"([^"]*)"/g,
+  description: /"description":"([^"]*)"/g
 };
 const hiddenAttribute = 'data-timeline-search-hidden';
+const targetSelector = '[data-timeline]';
 const inputId = 'xkit-timeline-search-textarea';
 
 const matchToString = arr => arr.map(x => x[1]).join('');
@@ -53,16 +60,14 @@ const onInput = ({ target }) => {
 };
 const search = dom('div', { class: 'xkit-timeline-search-container' }, null, [
   dom('div', { class: 'xkit-timeline-search-icon' }, null, [
-    dom('svg', { xmlns: 'http://www.w3.org/2000/svg', height: 18, width: 18, role: 'presentation' }, null, [
-      dom('use', { href: '#managed-icon__search' }, null, null)
-    ]),
-    dom('input', { type: 'text', id: inputId, placeholder: 'Search the timeline', value: '' }, { input: debounce(onInput) }, null)
-  ])
+    $('<svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" role="presentation"><use href="#managed-icon__search"></use></svg>')[0]
+  ]),
+  dom('input', { type: 'text', id: inputId, placeholder: 'Search the timeline', value: '' }, { input: debounce(onInput) }, null)
 ]);
 const renderSearch = element => element[0].prepend(search);
 
 export const main = async function () {
-  pageModifications.register(keyToCss('postColumn'), renderSearch);
+  pageModifications.register(targetSelector, renderSearch);
 };
 
 export const clean = async function () {

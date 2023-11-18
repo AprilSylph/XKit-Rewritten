@@ -1,11 +1,13 @@
 import { inject } from './inject.js';
 
 /**
- * @param {...any} args - Arguments to pass to window.tumblr.apiFetch()
+ * @param {string} resource - path for the API route to fetch
+ * @param {object} [init] - fetch options
  * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#apifetch}
  * @returns {Promise<Response|Error>} Resolves or rejects with result of window.tumblr.apiFetch()
  */
-export const apiFetch = async function (...args) {
+export const apiFetch = async function (resource, init = {}) {
+  /*
   return inject(
     async (resource, init = {}) => {
       // add XKit header to all API requests
@@ -44,6 +46,9 @@ export const apiFetch = async function (...args) {
     },
     args
   );
+  */
+
+  return inject('/util/injected_api_fetch.js', [resource, init]);
 };
 
 /**
@@ -100,7 +105,7 @@ export const isNpfCompatible = postData => {
 };
 
 export const navigate = location =>
-  inject(location => window.tumblr.navigate(location), [location]);
+  inject('/util/injected_navigate.js', [location]);
 
 export const onClickNavigate = event => {
   if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;

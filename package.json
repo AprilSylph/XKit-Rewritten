@@ -9,11 +9,11 @@
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^2.2.2",
-    "eslint": "^8.52.0",
+    "eslint": "^8.54.0",
     "eslint-config-semistandard": "^17.0.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-jsdoc": "^46.8.2",
+    "eslint-plugin-jsdoc": "^46.9.0",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
     "web-ext": "^7.8.0"

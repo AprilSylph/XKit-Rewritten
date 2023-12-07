@@ -60,7 +60,7 @@ document.documentElement.append(buildStyle(`
  * @param {string} label - Text to display in the button aria-label property and on-hover tooltip
  * @returns {HTMLDivElement} A button that can be cloned with cloneControlButton()
  */
-export const createControlButtonTemplate = function (symbolId, buttonClass, label) {
+export const createControlButtonTemplate = function (symbolId, buttonClass, label = '') {
   return dom('div', { class: `xkit-control-button-container ${buttonClass}` }, null, [
     label && dom('div', { class: tooltipClass }, null, [
       dom('div', { class: `${tooltipClass}-box` }, null, [label])

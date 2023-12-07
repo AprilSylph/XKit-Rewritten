@@ -11,7 +11,7 @@ const styleElement = buildStyle(`
 `);
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
-const blogCarouselSelector = `${listTimelineObjectSelector} ${keyToCss('blogCarousel')}`;
+const blogCarouselSelector = `${listTimelineObjectSelector} ${keyToCss('blogRecommendation')}`;
 
 const hideBlogCarousels = blogCarousels => blogCarousels
   .map(getTimelineItemWrapper)

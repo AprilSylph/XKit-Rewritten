@@ -12,7 +12,7 @@
   --passive-grey: 223, 223, 229;
   --active-grey: 207, 207, 216;
 
-  --search-highlight: 255, 255, 0, 0.15;
+  --search-highlight: 255, 233, 0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,8 +29,6 @@
     --accent: 54, 213, 255;
     --passive-grey: 83, 83, 94;
     --active-grey: 91, 91, 102;
-
-    --search-highlight: 255, 255, 0, 0.15;
   }
 }
 

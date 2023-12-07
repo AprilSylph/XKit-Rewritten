@@ -1,4 +1,5 @@
 import moment from '../lib/moment.js';
+import { keyToCss } from '../util/css_map.js';
 import { pageModifications } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
 
@@ -41,7 +42,7 @@ const formatTimeElements = function (timeElements) {
 
 export const main = async function () {
   ({ format, displayRelative } = await getPreferences('timeformat'));
-  pageModifications.register('time[datetime]', formatTimeElements);
+  pageModifications.register(`${keyToCss('timestamp')}[datetime]`, formatTimeElements);
 };
 
 export const clean = async function () {

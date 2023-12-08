@@ -174,7 +174,7 @@ label[for="filter"] {
 }
 
 .script li.search-highlighted {
-  background: rgb(var(--search-highlight));
+  background-color: rgb(var(--search-highlight));
 }
 
 .script input[type="text"] {

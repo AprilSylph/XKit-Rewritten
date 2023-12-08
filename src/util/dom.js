@@ -13,7 +13,9 @@ export function dom (tagName, attributes = {}, events = {}, children = []) {
 
   attributes && Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, value));
   events && Object.entries(events).forEach(([type, listener]) => element.addEventListener(type, listener));
-  children && element.replaceChildren(...children.filter(Boolean));
+  Array.isArray(children)
+    ? element.replaceChildren(...children.filter(Boolean))
+    : element.replaceChildren(children);
 
   element.normalize();
   return element;

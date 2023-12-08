@@ -5,15 +5,10 @@ import { timelineObject } from '../../util/react_props.js';
 
 const hiddenAttribute = 'data-no-recommended-blog-carousels-hidden';
 
-/*
 const styleElement = buildStyle(`
   [${hiddenAttribute}] { position: relative; }
   [${hiddenAttribute}] > div { visibility: hidden; position: absolute; max-width: 100%; }
   [${hiddenAttribute}] > div :is(img, video, canvas) { display: none }
-`);
-*/
-const styleElement = buildStyle(`
-  [${hiddenAttribute}] { outline: 4px solid red; }
 `);
 
 const blogCarouselSelector = `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')}`;

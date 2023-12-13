@@ -11,13 +11,13 @@ const styleElement = buildStyle(`
   [${hiddenAttribute}] > div :is(img, video, canvas) { display: none }
 `);
 
-const blogCarouselSelector = `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')}`;
+const carouselSelector = `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')}`;
 
-const hideBlogCarousels = blogCarousels =>
-  blogCarousels.forEach(async blogCarousel => {
-    const { elements } = await timelineObject(blogCarousel);
+const hideBlogCarousels = carousels =>
+  carousels.forEach(async carousel => {
+    const { elements } = await timelineObject(carousel);
     if (elements.some(({ objectType }) => objectType === 'blog')) {
-      const timelineItem = getTimelineItemWrapper(blogCarousel);
+      const timelineItem = getTimelineItemWrapper(carousel);
       if (timelineItem.previousElementSibling.querySelector(keyToCss('titleObject'))) {
         timelineItem.setAttribute(hiddenAttribute, '');
         timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
@@ -27,7 +27,7 @@ const hideBlogCarousels = blogCarousels =>
 
 export const main = async function () {
   document.documentElement.append(styleElement);
-  pageModifications.register(blogCarouselSelector, hideBlogCarousels);
+  pageModifications.register(carouselSelector, hideBlogCarousels);
 };
 
 export const clean = async function () {

@@ -5,10 +5,14 @@
     "test": "web-ext lint",
     "posttest": "eslint src/",
     "start": "web-ext run",
-    "build": "web-ext build"
+    "build": "web-ext build",
+    "esbuild": "rimraf dist && node esbuild.mjs",
+    "esbuildWatch": "rimraf dist && node esbuild.mjs --watch"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^2.2.2",
+    "esbuild": "^0.19.10",
+    "esbuild-plugin-copy": "^2.1.1",
     "eslint": "^8.54.0",
     "eslint-config-semistandard": "^17.0.0",
     "eslint-config-standard": "^17.1.0",
@@ -16,6 +20,7 @@
     "eslint-plugin-jsdoc": "^46.9.0",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
+    "rimraf": "^5.0.5",
     "web-ext": "^7.8.0"
   },
   "dependencies": {

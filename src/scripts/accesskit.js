@@ -3,12 +3,12 @@ import { getPreferences } from '../util/preferences.js';
 let enabledOptions;
 
 const runOption = async function (name) {
-  const { main: run } = await import(`./accesskit/${name}.js`);
+  const { main: run } = await import(`./accesskit/${name}.ts`);
   run().catch(console.error);
 };
 
 const destroyOption = async function (name) {
-  const { clean: destroy } = await import(`./accesskit/${name}.js`);
+  const { clean: destroy } = await import(`./accesskit/${name}.ts`);
   destroy().catch(console.error);
 };
 

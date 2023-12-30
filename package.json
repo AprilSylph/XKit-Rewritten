@@ -32,7 +32,7 @@
     "webextension-polyfill": "^0.10.0"
   },
   "webExt": {
-    "sourceDir": "src/",
+    "sourceDir": "dist/",
     "build": {
       "overwriteDest": true
     }

@@ -15,7 +15,17 @@
     "sourceType": "module"
   },
   "rules": {
-    "import/no-cycle": "error"
+    "import/no-cycle": "error",
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "none",
+        "caughtErrors": "none",
+        "ignoreRestSiblings": true,
+        "vars": "all",
+        "varsIgnorePattern": "jsx"
+      }
+    ]
   },
   "ignorePatterns": [
     "lib/",

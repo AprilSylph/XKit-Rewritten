@@ -18,3 +18,31 @@ export function dom (tagName, attributes = {}, events = {}, children = []) {
   element.normalize();
   return element;
 }
+
+/**
+ * Create elements with simple syntax (JSX compatible)
+ * @param {string} tagName - Type of element to create
+ * @param {object|null} attributes - Property-value pairs to set as HTML/XML attributes (e.g. { href: '/' })
+ * @param {(Node|string)[]} [children] - Zero or more valid children
+ * @returns {Element} Element created to specification
+ */
+export function jsx (tagName, attributes, ...children) {
+  attributes ??= {};
+
+  const element = attributes?.xmlns
+    ? document.createElementNS(attributes.xmlns, tagName)
+    : document.createElement(tagName);
+
+  attributes &&
+    Object.entries(attributes).forEach(([nameOrType, value]) => {
+      if (typeof value === 'function') {
+        element.addEventListener(nameOrType.substring(2), value);
+      } else {
+        element.setAttribute(nameOrType, value);
+      }
+    });
+  children && element.replaceChildren(...children);
+
+  element.normalize();
+  return element;
+}

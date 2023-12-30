@@ -6,6 +6,8 @@ const options = {
   bundle: true,
   format: 'esm',
   outdir: 'dist',
+  loader: { '.js': 'jsx' },
+  jsxFactory: 'jsx',
   plugins: [
     copy({
       assets: {

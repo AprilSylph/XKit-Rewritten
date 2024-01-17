@@ -4,7 +4,7 @@ import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
-import { userBlogs } from '../util/user.js';
+import { userBlogNames } from '../util/user.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
@@ -16,7 +16,7 @@ const includeFiltered = true;
 let showOwnReblogs;
 let showReblogsWithContributedContent;
 let whitelist;
-let disabledBlogs;
+let defaultDisabledBlogs;
 
 const lengthenTimeline = async (timeline) => {
   if (!timeline.querySelector(keyToCss('manualPaginatorButtons'))) {
@@ -46,14 +46,11 @@ const addControls = async (timelineElement, location) => {
 
   const onButton = createButton(translate('Original Posts'), handleClick, 'on');
   const offButton = createButton(translate('All posts'), handleClick, 'off');
-  const disabledButton = createButton(translate('All posts'), null, 'disabled');
+  controls.append(onButton, offButton);
 
   if (location === 'disabled') {
-    controls.append(disabledButton);
+    controls.dataset.showOriginals = 'off';
   } else {
-    controls.append(onButton, offButton);
-
-    lengthenTimeline(timelineElement);
     const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
     const mode = savedModes[location] ?? 'on';
     controls.dataset.showOriginals = mode;
@@ -73,10 +70,10 @@ const getLocation = timelineElement => {
 
   };
   const location = Object.keys(on).find(location => on[location]);
-  const isDisabledBlog = disabledBlogs.some(name => timeline.startsWith(`/v2/blog/${name}/`));
+  const isDefaultDisabledBlog = defaultDisabledBlogs.some(name => timeline.startsWith(`/v2/blog/${name}/`));
 
   if (!location || isSinglePostBlogView) return undefined;
-  if (isDisabledBlog) return 'disabled';
+  if (isDefaultDisabledBlog) return 'disabled';
   return location;
 };
 
@@ -89,7 +86,10 @@ const processTimelines = async () => {
 
     if (currentControls?.dataset?.location !== location) {
       currentControls?.remove();
-      if (location) addControls(timelineElement, location);
+      if (location) {
+        addControls(timelineElement, location);
+        lengthenTimeline(timelineElement);
+      }
     }
   });
 };
@@ -101,11 +101,12 @@ const processPosts = async function (postElements) {
     .forEach(async postElement => {
       const { rebloggedRootId, content, blogName } = await timelineObject(postElement);
       const myPost = await isMyPost(postElement);
+      const isInBlogView = postElement.matches(blogViewSelector);
 
       if (!rebloggedRootId) { return; }
-      if (showOwnReblogs && myPost) { return; }
+      if (showOwnReblogs && myPost && !isInBlogView) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
-      if (whitelist.includes(blogName)) { return; }
+      if (whitelist.includes(blogName) && !isInBlogView) { return; }
 
       getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
     });
@@ -120,10 +121,7 @@ export const main = async function () {
   } = await getPreferences('show_originals'));
 
   whitelist = whitelistedUsernames.split(',').map(username => username.trim());
-  const nonGroupUserBlogs = userBlogs
-    .filter(blog => !blog.isGroupChannel)
-    .map(blog => blog.name);
-  disabledBlogs = [...whitelist, ...showOwnReblogs ? nonGroupUserBlogs : []];
+  defaultDisabledBlogs = [...whitelist, ...showOwnReblogs ? userBlogNames : []];
 
   onNewPosts.addListener(processPosts);
 };

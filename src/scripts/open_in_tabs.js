@@ -1,7 +1,12 @@
+import { keyToCss } from '../util/css_map.js';
+
 const linkSelector = 'a[role="link"][target="_blank"]';
 
 const onDocumentClick = event => {
-  if (event.target.matches(`${linkSelector}, ${linkSelector} *`)) {
+  if (
+    event.target.matches(`${linkSelector}, ${linkSelector} *`) &&
+    !event.target.closest(keyToCss('typeaheadBlogRow'))
+  ) {
     event.stopPropagation();
   }
 };

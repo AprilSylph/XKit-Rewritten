@@ -114,7 +114,7 @@ export const onStorageChanged = async (changes, areaName) =>
   Object.keys(changes).some(key => key.startsWith('panorama')) && togglePanorama();
 
 export const main = async () => {
-  pageModifications.register(`:is(${mainContentWrapper}, ${postColumn})`, togglePanorama);
+  pageModifications.register(`:is(${mainContentWrapper}, ${postColumn}, ${patioWidePostColumn})`, togglePanorama);
 
   pageModifications.register(
     `${keyToCss('videoBlock')} iframe[style*="max-width"][style*="height"]`,

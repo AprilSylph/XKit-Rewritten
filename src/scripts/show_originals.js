@@ -7,6 +7,7 @@ import { translate } from '../util/language_data.js';
 import { userBlogs } from '../util/user.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
+const whitelistedAttribute = 'data-show-originals-whitelisted';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
 
@@ -35,6 +36,7 @@ const addControls = async (timelineElement, location) => {
   controls.dataset.location = location;
 
   timelineElement.prepend(controls);
+  lengthenTimeline(timelineElement);
 
   const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
     controls.dataset.showOriginals = mode;
@@ -45,15 +47,15 @@ const addControls = async (timelineElement, location) => {
   };
 
   const onButton = createButton(translate('Original Posts'), handleClick, 'on');
+  const forceOnButton = createButton(translate('Original Posts'), handleClick, 'force-on');
   const offButton = createButton(translate('All posts'), handleClick, 'off');
-  const disabledButton = createButton(translate('All posts'), null, 'disabled');
 
   if (location === 'disabled') {
-    controls.append(disabledButton);
+    controls.append(forceOnButton, offButton);
+    controls.dataset.showOriginals = 'off';
   } else {
     controls.append(onButton, offButton);
 
-    lengthenTimeline(timelineElement);
     const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
     const mode = savedModes[location] ?? 'on';
     controls.dataset.showOriginals = mode;
@@ -103,11 +105,14 @@ const processPosts = async function (postElements) {
       const myPost = await isMyPost(postElement);
 
       if (!rebloggedRootId) { return; }
-      if (showOwnReblogs && myPost) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
-      if (whitelist.includes(blogName)) { return; }
 
-      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
+      getTimelineItemWrapper(postElement).setAttribute(
+        (showOwnReblogs && myPost) || disabledBlogs.includes(blogName)
+          ? whitelistedAttribute
+          : hiddenAttribute,
+        ''
+      );
     });
 };
 
@@ -132,6 +137,7 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  $(`[${whitelistedAttribute}]`).removeAttr(whitelistedAttribute);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
   $(`.${controlsClass}`).remove();
 };

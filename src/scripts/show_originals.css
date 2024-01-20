@@ -1,4 +1,5 @@
-[data-show-originals="on"] ~ div > [data-show-originals-hidden] article {
+[data-show-originals="on"] ~ div > [data-show-originals-hidden] article,
+[data-show-originals="force-on"] ~ div > :is([data-show-originals-hidden], [data-show-originals-whitelisted]) article {
   display: none;
 }
 
@@ -25,14 +26,9 @@
   cursor: pointer;
 }
 
-.xkit-show-originals-controls > a[data-mode="disabled"] {
-  cursor: not-allowed;
-  opacity: 0.65;
-}
-
 [data-show-originals="on"].xkit-show-originals-controls > a[data-mode="on"],
 [data-show-originals="off"].xkit-show-originals-controls > a[data-mode="off"],
-.xkit-show-originals-controls > a[data-mode="disabled"] {
+[data-show-originals="force-on"].xkit-show-originals-controls > a[data-mode="force-on"] {
   box-shadow: inset 0 -3px 0 var(--blog-link-color, rgb(var(--accent)));
   color: var(--blog-link-color, rgb(var(--accent)));
 }

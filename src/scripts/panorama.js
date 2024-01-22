@@ -8,17 +8,22 @@ const navigationWrapperMargin = 20;
 const mainContentWrapperBasis = 966;
 
 const styleElement = buildStyle();
-styleElement.media = `(min-width: ${navigationWrapperBasis + navigationWrapperMargin + mainContentWrapperBasis}px)`;
 
 const mainContentWrapper = `${keyToCss('mainContentWrapper')}:not(${keyToCss('mainContentIsMasonry', 'mainContentIs4ColumnMasonry', 'mainContentIsLive')})`;
 const container = `${mainContentWrapper} > ${keyToCss('container')}`;
 const mainElement = `${container} > ${keyToCss('main')}`;
-const postColumn = `${mainElement} > ${keyToCss('postColumn', 'postsColumn')}`;
+const mainPostColumn = `${mainElement} > ${keyToCss('postColumn', 'postsColumn')}`;
+const patioPostColumn = `[id]${keyToCss('columnWide')}`;
 
 const togglePanorama = async () => {
-  const enablePanorama = document.querySelector(keyToCss('postColumn', 'postsColumn'));
+  const hasMainColumn = document.querySelector(mainPostColumn);
+  const hasPatioColumn = document.querySelector(patioPostColumn);
 
-  if (enablePanorama) {
+  if (hasMainColumn || hasPatioColumn) {
+    styleElement.media = hasPatioColumn
+      ? ''
+      : `(min-width: ${navigationWrapperBasis + navigationWrapperMargin + mainContentWrapperBasis}px)`;
+
     const { maxPostWidth: maxPostWidthString } = await getPreferences('panorama');
     const maxPostWidth = Number(maxPostWidthString.trim().replace('px', '')) || 0;
 
@@ -27,21 +32,31 @@ const togglePanorama = async () => {
     const mainRightBorder = 1;
     const sidebarOffset = sidebarMaxWidth + mainRightPadding + mainRightBorder;
 
-    styleElement.textContent = `
-      ${mainContentWrapper} {
-        flex-grow: 1;
-        max-width: ${Math.max(maxPostWidth, 540) + sidebarOffset}px;
-      }
-      ${container} {
-        max-width: unset;
-      }
-      ${mainElement} {
-        max-width: calc(100% - ${sidebarOffset}px);
-      }
-      ${postColumn} {
-        max-width: 100%;
-      }
+    const postColumn = hasPatioColumn ? patioPostColumn : mainPostColumn;
 
+    styleElement.textContent = hasPatioColumn
+      ? `
+        ${postColumn} {
+          width: min(${Math.max(maxPostWidth, 540)}px, 100vw);
+        }
+      `
+      : `
+        ${mainContentWrapper} {
+          flex-grow: 1;
+          max-width: ${Math.max(maxPostWidth, 540) + sidebarOffset}px;
+        }
+        ${container} {
+          max-width: unset;
+        }
+        ${mainElement} {
+          max-width: calc(100% - ${sidebarOffset}px);
+        }
+        ${postColumn} {
+          max-width: 100%;
+        }
+      `;
+
+    styleElement.textContent += `
       ${postColumn}
         :is(
           ${keyToCss('cell')},
@@ -97,7 +112,7 @@ export const onStorageChanged = async (changes, areaName) =>
   Object.keys(changes).some(key => key.startsWith('panorama')) && togglePanorama();
 
 export const main = async () => {
-  pageModifications.register(`:is(${mainContentWrapper}, ${postColumn})`, togglePanorama);
+  pageModifications.register(`:is(${mainContentWrapper}, ${mainPostColumn}, ${patioPostColumn})`, togglePanorama);
 
   pageModifications.register(
     `${keyToCss('videoBlock')} iframe[style*="max-width"][style*="height"]`,

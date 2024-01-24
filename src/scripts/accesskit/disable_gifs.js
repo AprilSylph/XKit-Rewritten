@@ -18,7 +18,7 @@ const pauseGif = function (gifElement) {
     canvas.getContext('2d').drawImage(image, 0, 0);
 
     const gifLabel = document.createElement('p');
-    gifLabel.className = gifElement.clientWidth < 150
+    gifLabel.className = gifElement.clientWidth && gifElement.clientWidth < 150
       ? 'xkit-paused-gif-label mini'
       : 'xkit-paused-gif-label';
 

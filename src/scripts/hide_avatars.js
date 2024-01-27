@@ -9,7 +9,7 @@ export const main = async function () {
 
   styleElement.textContent = hiddenAvatars
     .split(',')
-    .map(username => `[title="${username.trim()}"] img[alt="${translate('Avatar')}"] { display: none; }`)
+    .map(username => `[title="${username.trim().toLowerCase()}"] img[alt="${translate('Avatar')}"] { display: none; }`)
     .join('\n');
 
   document.documentElement.append(styleElement);

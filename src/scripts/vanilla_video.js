@@ -7,7 +7,8 @@ const vanillaVideoClass = 'xkit-vanilla-video-player';
 let defaultVolume;
 
 const cloneVideoElements = videoElements => videoElements.forEach(videoElement => {
-  if (videoElement.previousElementSibling?.classList.contains(vanillaVideoClass)) return;
+  const videoPlayer = videoElement.closest(keyToCss('videoPlayer'));
+  if (videoPlayer.querySelector(`.${vanillaVideoClass}`)) return;
 
   const newVideoElement = Object.assign(document.createElement('video'), {
     controls: true,
@@ -23,7 +24,7 @@ const cloneVideoElements = videoElements => videoElements.forEach(videoElement =
     ...videoSources.map(sourceElement => sourceElement.cloneNode(true))
   );
 
-  videoElement.before(newVideoElement);
+  videoPlayer.prepend(newVideoElement);
 });
 
 export const onStorageChanged = async function (changes, areaName) {

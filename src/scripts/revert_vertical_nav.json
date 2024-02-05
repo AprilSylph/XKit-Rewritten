@@ -1,0 +1,10 @@
+{
+  "title":  "Revert Vertical Navigation Update",
+  "description": "Reverts the dashboard to the pre-August 2023 UI with the icons at the top of the page",
+  "icon" : {
+    "class_name": "ri-dashboard-fill",
+    "color": "white",
+    "background_color": "#001935"
+  },
+  "relatedTerms": [ "UI", "Dashboard", "Vertical Nav", "Vertical Navigation" ]
+}

@@ -1,0 +1,9 @@
+{
+  "title": "Timeline Search",
+  "description": "Filter the timeline to posts that match a search query",
+  "icon": {
+    "class_name": "ri-menu-search-line",
+    "color": "white",
+    "background_color": "#4800ff"
+  }
+}

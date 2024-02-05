@@ -1,0 +1,9 @@
+{
+  "title": "Scrolling Avatars",
+  "description": "Show a scrolling avatar of the person who put a post on your dash beside each post",
+  "icon": {
+    "class_name": "ri-account-box-line",
+    "color": "white",
+    "background_color": "#834BFF"
+  }
+}

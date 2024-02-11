@@ -51,7 +51,7 @@ const processBlogSpecificTimeline = async (timelineElement, timeline) => {
     const warningElement = dom('div', { class: warningClass }, null, [
       `You have muted ${mode} posts from ${name}!`,
       dom('br'),
-      dom('button', null, { click: () => warningElement.remove() }, 'show posts anyway')
+      dom('button', null, { click: () => warningElement.remove() }, ['show posts anyway'])
     ]);
     warningElement.dataset.muteMode = mode;
 

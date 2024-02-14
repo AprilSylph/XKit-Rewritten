@@ -9,7 +9,7 @@ const mainContentWrapperBasis = 966;
 
 const styleElement = buildStyle();
 
-const mainContentWrapper = `${keyToCss('mainContentWrapper')}:not(${keyToCss('mainContentIsMasonry', 'mainContentIs4ColumnMasonry', 'mainContentIsLive')})`;
+const mainContentWrapper = `${keyToCss('mainContentWrapper')}:not(${keyToCss('mainContentIsMasonry', 'mainContentIs4ColumnMasonry')})`;
 const container = `${mainContentWrapper} > ${keyToCss('container')}`;
 const mainElement = `${container} > ${keyToCss('main')}`;
 const mainPostColumn = `${mainElement} > ${keyToCss('postColumn', 'postsColumn')}`;

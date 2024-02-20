@@ -8,8 +8,8 @@ const className = 'accesskit-disable-gifs';
 
 const pauseGif = async function (gifElement) {
   if (gifElement.currentSrc.includes('.webp')) {
-    const arrayBuffer = await fetch(gifElement.currentSrc).then(response => response.arrayBuffer());
-    if (!isAnimatedWebP(arrayBuffer)) return;
+    const imageData = await fetch(gifElement.currentSrc).then(response => response.arrayBuffer());
+    if (!isAnimatedWebP(imageData)) return;
   }
   const image = new Image();
   image.src = gifElement.currentSrc;

@@ -10,7 +10,7 @@ const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
 const hideDashboardRecommended = function (sidebarTitles) {
   sidebarTitles
     .filter(h1 => h1.textContent === translate('Check out these blogs'))
-    .forEach(h1 => h1.parentNode.setAttribute(hiddenAttribute, ''));
+    .forEach(h1 => h1.closest('aside > *').setAttribute(hiddenAttribute, ''));
 };
 
 const hideTagPageRecommended = blogsLists =>
@@ -19,7 +19,7 @@ const hideTagPageRecommended = blogsLists =>
     .forEach(ul => ul.parentNode.setAttribute(hiddenAttribute, ''));
 
 export const main = async function () {
-  pageModifications.register('aside > div > h1', hideDashboardRecommended);
+  pageModifications.register('aside h1', hideDashboardRecommended);
 
   const blogsListSelector = `${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
   pageModifications.register(blogsListSelector, hideTagPageRecommended);

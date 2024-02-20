@@ -10,12 +10,12 @@ const styleElement = buildStyle(`
   [${hiddenAttribute}] > div img, [${hiddenAttribute}] > div canvas { visibility: hidden; }
 `);
 
-const tagCardCarouselItemSelector = keyToCss('tagCardCarouselItem');
+const tagCardSelector = keyToCss('tagCard');
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
 const carouselWrapperSelector = `${listTimelineObjectSelector} ${keyToCss('carouselWrapper')}`;
 
 const hideTagCarousels = carouselWrappers => carouselWrappers
-  .filter(carouselWrapper => carouselWrapper.querySelector(tagCardCarouselItemSelector) !== null)
+  .filter(carouselWrapper => carouselWrapper.querySelector(tagCardSelector) !== null)
   .map(getTimelineItemWrapper)
   .forEach(timelineItem => {
     timelineItem.setAttribute(hiddenAttribute, '');

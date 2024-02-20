@@ -151,7 +151,7 @@ label[for="filter"] {
 }
 
 .script ul.preferences {
-  padding: 0 1ch;
+  padding: 0 0.5ch;
   margin: 1ch 0;
 
   list-style-type: none;
@@ -170,7 +170,11 @@ label[for="filter"] {
 .script li {
   display: flex;
   align-items: center;
-  padding: 0.5ch 0;
+  padding: 0.5ch;
+}
+
+.script li.search-highlighted {
+  background-color: rgb(var(--search-highlight));
 }
 
 .script input[type="text"] {

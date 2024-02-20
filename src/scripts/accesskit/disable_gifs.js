@@ -2,10 +2,15 @@ import { pageModifications } from '../../util/mutations.js';
 import { keyToCss } from '../../util/css_map.js';
 import { dom } from '../../util/dom.js';
 import { postSelector } from '../../util/interface.js';
+import { isAnimatedWebP } from '../../util/webp.js';
 
 const className = 'accesskit-disable-gifs';
 
-const pauseGif = function (gifElement) {
+const pauseGif = async function (gifElement) {
+  if (gifElement.currentSrc.includes('.webp')) {
+    const arrayBuffer = await fetch(gifElement.currentSrc).then(response => response.arrayBuffer());
+    if (!isAnimatedWebP(arrayBuffer)) return;
+  }
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
@@ -80,7 +85,7 @@ const processRows = function (rowsElements) {
 export const main = async function () {
   document.body.classList.add(className);
   const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img:is([srcset*=".gif"], [srcset*=".webp"]):not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 

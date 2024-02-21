@@ -5,7 +5,7 @@ const linkSelector = 'a[role="link"][target="_blank"]';
 const onDocumentClick = event => {
   if (
     event.target.matches(`${linkSelector}, ${linkSelector} *`) &&
-    !event.target.closest(keyToCss('typeaheadBlogRow'))
+    !event.target.closest(keyToCss('columnOptions'))
   ) {
     event.stopPropagation();
   }

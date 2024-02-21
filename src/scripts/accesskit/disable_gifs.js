@@ -2,7 +2,7 @@ import { pageModifications } from '../../util/mutations.js';
 import { keyToCss } from '../../util/css_map.js';
 import { dom } from '../../util/dom.js';
 import { postSelector } from '../../util/interface.js';
-import { isAnimatedWebP } from '../../util/webp.js';
+import { isAnimatedWebP } from '../../util/binary.js';
 
 const className = 'accesskit-disable-gifs';
 

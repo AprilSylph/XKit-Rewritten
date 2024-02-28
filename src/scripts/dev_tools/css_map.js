@@ -92,5 +92,8 @@ export const main = async () => {
 export const clean = async () => {
   cancelAnimationFrame(timerId);
   disconnect();
-  // class removal omitted
+  [...rootNode.querySelectorAll(`.${markerClass}`)].forEach(element => {
+    const toRemove = [...element.classList].filter(className => className.startsWith('ⓣ'));
+    element.classList.remove(markerClass, ...toRemove);
+  });
 };

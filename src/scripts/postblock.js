@@ -20,7 +20,7 @@ let uuids = {};
 const addWarningElement = (postElement, rootID) => {
   const showButton = dom('button', null, {
     click: ({ currentTarget }) => {
-      getTimelineItemWrapper(postElement).removeAttr(hiddenAttribute);
+      getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
       currentTarget.disabled = true;
     }
   }, 'show it');

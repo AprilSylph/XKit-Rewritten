@@ -2,7 +2,7 @@ import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
 const styleElement = buildStyle(`
-${keyToCss('activity')} ${keyToCss('generalLabelContainer')} {
+${keyToCss('activity')} ${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')} {
   display: none;
 }
 `);

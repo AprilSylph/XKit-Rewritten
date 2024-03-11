@@ -90,7 +90,7 @@
     },
     "hide_following_notification_badge": {
       "type": "checkbox",
-      "label": "Hide the Home/Following unread badge",
+      "label": "Hide the Home/Following unread count",
       "default": false
     },
     "hide_activity_notification_badge": {
@@ -101,11 +101,6 @@
     "no_where_were_we": {
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",
-      "default": false
-    },
-    "no_live": {
-      "type": "checkbox",
-      "label": "Hide the Tumblr Live carousel",
       "default": false
     }
   }

@@ -2,6 +2,7 @@ import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { inject } from '../util/inject.js';
 import { showErrorModal } from '../util/modals.js';
+import { notificationSelector } from '../util/interface.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { getPreferences } from '../util/preferences.js';
@@ -17,8 +18,7 @@ const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
 
 const activitySelector = `${keyToCss('notification')} > ${keyToCss('activity')}`;
 
-const activityPageSelector = `section${keyToCss('notifications')} ${keyToCss('notification')}`;
-const dropdownSelector = `${keyToCss('activityPopover')} > [role="tabpanel"] ${keyToCss('notification')}`;
+const dropdownSelector = '[role="tabpanel"] *';
 
 let originalPostTag;
 let tagReplyingBlog;
@@ -119,7 +119,6 @@ export const main = async function () {
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
   ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
 
-  const notificationSelector = `${activityPageSelector}, ${dropdownSelector}`;
   pageModifications.register(notificationSelector, processNotifications);
 
   const { [storageKey]: draftLocation } = await browser.storage.local.get(storageKey);

@@ -340,8 +340,7 @@ const unfollowBlogs = async blogs => {
       dom('br'),
       dom('br'),
       unfollowStatus
-    ],
-    buttons: [modalCancelButton]
+    ]
   });
 
   const succeeded = [];

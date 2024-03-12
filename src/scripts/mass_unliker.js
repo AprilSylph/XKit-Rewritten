@@ -2,11 +2,13 @@ import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { showModal, modalCancelButton, modalCompleteButton, showErrorModal } from '../util/modals.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { dom } from '../util/dom.js';
+import { constructDurationString } from '../util/text_format.js';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const gatherStatusElement = dom('span');
 const unlikeStatusElement = dom('span');
+const remainingElement = dom('span');
 
 const gatherLikes = async function () {
   const likes = [];
@@ -32,6 +34,7 @@ const unlikePosts = async function () {
 
   for (const { id, reblogKey } of likes) {
     unlikeStatusElement.textContent = `Unliking post with ID ${id}...`;
+    remainingElement.textContent = `Estimated time remaining: ${constructDurationString(likes.length - unlikedCount - failureCount)}`;
     try {
       await Promise.all([
         apiFetch('/v2/user/unlike', { method: 'POST', body: { id, reblog_key: reblogKey } }),
@@ -63,7 +66,9 @@ const modalWorkingOptions = {
     dom('small', null, null, ['Do not navigate away from this page, or the process will be interrupted.\n\n']),
     gatherStatusElement,
     '\n',
-    unlikeStatusElement
+    unlikeStatusElement,
+    '\n',
+    remainingElement
   ]
 };
 

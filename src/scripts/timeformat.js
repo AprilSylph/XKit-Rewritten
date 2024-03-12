@@ -2,35 +2,10 @@ import moment from '../lib/moment.js';
 import { keyToCss } from '../util/css_map.js';
 import { pageModifications } from '../util/mutations.js';
 import { getPreferences } from '../util/preferences.js';
+import { constructRelativeTimeString } from '../util/text_format.js';
 
 let format;
 let displayRelative;
-
-const relativeTimeFormat = new Intl.RelativeTimeFormat(document.documentElement.lang, { style: 'long' });
-const thresholds = [
-  { unit: 'year', denominator: 31557600 },
-  { unit: 'month', denominator: 2629800 },
-  { unit: 'week', denominator: 604800 },
-  { unit: 'day', denominator: 86400 },
-  { unit: 'hour', denominator: 3600 },
-  { unit: 'minute', denominator: 60 },
-  { unit: 'second', denominator: 1 }
-];
-
-const constructRelativeTimeString = function (unixTime) {
-  const now = Math.trunc(new Date().getTime() / 1000);
-  const unixDiff = unixTime - now;
-  const unixDiffAbsolute = Math.abs(unixDiff);
-
-  for (const { unit, denominator } of thresholds) {
-    if (unixDiffAbsolute >= denominator) {
-      const value = Math.trunc(unixDiff / denominator);
-      return relativeTimeFormat.format(value, unit);
-    }
-  }
-
-  return relativeTimeFormat.format(-0, 'second');
-};
 
 const formatTimeElements = function (timeElements) {
   timeElements.forEach(timeElement => {

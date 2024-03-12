@@ -46,3 +46,22 @@ export const elementsAsList = (array, andOr) =>
     if (i === array.length - 2) return array.length === 2 ? [item, ` ${andOr} `] : [item, `, ${andOr} `];
     return [item, ', '];
   });
+
+export const constructDurationString = function (seconds) {
+  const parts = [];
+
+  for (const { unit, denominator } of thresholds) {
+    if (seconds >= denominator) {
+      const value = Math.trunc(seconds / denominator);
+      seconds -= value * denominator;
+      parts.push(
+        new Intl.NumberFormat(document.documentElement.lang, {
+          style: 'unit',
+          unit,
+          unitDisplay: 'long'
+        }).format(value)
+      );
+    }
+  }
+  return elementsAsList(parts, 'and').join('');
+};

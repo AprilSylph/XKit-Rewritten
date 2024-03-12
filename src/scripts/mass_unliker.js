@@ -11,6 +11,8 @@ const unlikeStatusElement = dom('span');
 const remainingElement = dom('span');
 
 const gatherLikes = async function () {
+  gatherStatusElement.textContent = 'Gathering likes...';
+
   const likes = [];
   let resource = '/v2/user/likes';
 
@@ -27,12 +29,51 @@ const gatherLikes = async function () {
 };
 
 const unlikePosts = async function () {
-  gatherStatusElement.textContent = 'Gathering likes...';
+  let stopped = false;
+  const stopButton = dom(
+    'button',
+    null,
+    {
+      click: () => {
+        stopped = true;
+        stopButton.textContent = 'Stopping...';
+        stopButton.disabled = true;
+      }
+    },
+    ['Stop']
+  );
+
+  showModal({
+    title: 'Clearing your likes...',
+    message: [
+      dom('small', null, null, ['Do not navigate away from this page, or the process will be interrupted.\n\n']),
+      gatherStatusElement,
+      '\n',
+      unlikeStatusElement,
+      '\n',
+      remainingElement
+    ],
+    buttons: [stopButton]
+  });
+
   const likes = await gatherLikes();
   let unlikedCount = 0;
   let failureCount = 0;
 
   for (const { id, reblogKey } of likes) {
+    if (stopped) {
+      showModal({
+        title: 'Stopped!',
+        message: [
+          `Unliked ${unlikedCount} posts.\n`,
+          `Failed to unlike ${failureCount} posts.\n\n`
+        ],
+        buttons: [
+          modalCompleteButton
+        ]
+      });
+      return;
+    }
     unlikeStatusElement.textContent = `Unliking post with ID ${id}...`;
     remainingElement.textContent = `Estimated time remaining: ${constructDurationString(likes.length - unlikedCount - failureCount)}`;
     try {
@@ -60,18 +101,6 @@ const unlikePosts = async function () {
   });
 };
 
-const modalWorkingOptions = {
-  title: 'Clearing your likes...',
-  message: [
-    dom('small', null, null, ['Do not navigate away from this page, or the process will be interrupted.\n\n']),
-    gatherStatusElement,
-    '\n',
-    unlikeStatusElement,
-    '\n',
-    remainingElement
-  ]
-};
-
 const modalConfirmButton = dom(
   'button',
   { class: 'red' },
@@ -79,7 +108,6 @@ const modalConfirmButton = dom(
     click () {
       gatherStatusElement.textContent = '';
       unlikeStatusElement.textContent = '';
-      showModal(modalWorkingOptions);
       unlikePosts().catch(showErrorModal);
     }
   },

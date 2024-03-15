@@ -8,7 +8,23 @@ const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
 
+const inEditor = '.block-editor-writing-flow *';
+const directHovered = ':hover > *';
+const photosetHovered = `.${containerClass}:hover *`;
+
+const gifWithPoster = `figure img[srcset*=".gif"]:has(+ ${keyToCss('poster')}):not(${inEditor})`;
+const poster = `figure img[srcset*=".gif"] + ${keyToCss('poster')}:not(${inEditor})`;
+
 const styleElement = buildStyle(`
+${poster} {
+  visibility: visible !important;
+}
+
+${gifWithPoster}:not(${directHovered}):not(${photosetHovered}),
+${poster}:is(${directHovered}, ${photosetHovered}) {
+  display: none;
+}
+
 .${labelClass} {
   position: absolute;
   top: 1ch;
@@ -40,10 +56,7 @@ const styleElement = buildStyle(`
   background-color: rgb(var(--white));
 }
 
-*:hover > .${canvasClass},
-*:hover > .${labelClass},
-.${containerClass}:hover .${canvasClass},
-.${containerClass}:hover .${labelClass} {
+:is(.${canvasClass}, .${labelClass}):is(${directHovered}, ${photosetHovered}) {
   display: none;
 }
 
@@ -85,9 +98,10 @@ const pauseGif = function (gifElement) {
   };
 };
 
+const processGifsWithPosters = gifElements => gifElements.forEach(gifElement => addLabel(gifElement));
+
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
-    if (gifElement.closest('.block-editor-writing-flow')) return;
     const pausedGifElements = [
       ...gifElement.parentNode.querySelectorAll(`.${canvasClass}`),
       ...gifElement.parentNode.querySelectorAll(`.${labelClass}`)
@@ -131,8 +145,10 @@ const processRows = function (rowsElements) {
 export const main = async function () {
   document.documentElement.append(styleElement);
 
+  pageModifications.register(gifWithPoster, processGifsWithPosters);
+
   const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+    ${keyToCss('blogCard', 'tagImage', 'takeoverBanner')} img[srcset*=".gif"]:not(${keyToCss('poster')}):not(${inEditor})
   `;
   pageModifications.register(gifImage, processGifs);
 
@@ -148,6 +164,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
+  pageModifications.unregister(processGifsWithPosters);
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);

@@ -101,10 +101,10 @@ const processGifs = function (gifElements) {
 const processBackgroundGifs = function (gifBackgroundElements) {
   gifBackgroundElements.forEach(gifBackgroundElement => {
     gifBackgroundElement.classList.add(backgroundGifClass);
-    const pausedGifElements = [
+    const labelElements = [
       ...gifBackgroundElement.querySelectorAll(`.${labelClass}`)
     ];
-    if (pausedGifElements.length) {
+    if (labelElements.length) {
       return;
     }
     const gifLabel = document.createElement('p');

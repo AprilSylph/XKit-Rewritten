@@ -57,6 +57,17 @@ const styleElement = buildStyle(`
 }
 `);
 
+const addLabel = (element, inside = false) => {
+  if (element.parentNode.querySelector(labelClass) === null) {
+    const gifLabel = document.createElement('p');
+    gifLabel.className = element.clientWidth && element.clientWidth < 150
+      ? `${labelClass} mini`
+      : labelClass;
+
+    inside ? element.append(gifLabel) : element.parentNode.append(gifLabel);
+  }
+};
+
 const pauseGif = function (gifElement) {
   const image = new Image();
   image.src = gifElement.currentSrc;
@@ -68,13 +79,8 @@ const pauseGif = function (gifElement) {
     canvas.className = gifElement.className;
     canvas.classList.add(canvasClass);
     canvas.getContext('2d').drawImage(image, 0, 0);
-
-    const gifLabel = document.createElement('p');
-    gifLabel.className = gifElement.clientWidth && gifElement.clientWidth < 150
-      ? `${labelClass} mini`
-      : labelClass;
-
-    gifElement.parentNode.append(canvas, gifLabel);
+    gifElement.parentNode.append(canvas);
+    addLabel(gifElement);
   };
 };
 
@@ -101,15 +107,7 @@ const processGifs = function (gifElements) {
 const processBackgroundGifs = function (gifBackgroundElements) {
   gifBackgroundElements.forEach(gifBackgroundElement => {
     gifBackgroundElement.classList.add(backgroundGifClass);
-    const labelElements = [
-      ...gifBackgroundElement.querySelectorAll(`.${labelClass}`)
-    ];
-    if (labelElements.length) {
-      return;
-    }
-    const gifLabel = document.createElement('p');
-    gifLabel.className = labelClass;
-    gifBackgroundElement.append(gifLabel);
+    addLabel(gifBackgroundElement, true);
   });
 };
 

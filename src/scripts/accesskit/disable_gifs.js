@@ -3,8 +3,6 @@ import { keyToCss } from '../../util/css_map.js';
 import { dom } from '../../util/dom.js';
 import { postSelector } from '../../util/interface.js';
 
-const className = 'accesskit-disable-gifs';
-
 const pauseGif = function (gifElement) {
   const image = new Image();
   image.src = gifElement.currentSrc;
@@ -78,7 +76,6 @@ const processRows = function (rowsElements) {
 };
 
 export const main = async function () {
-  document.body.classList.add(className);
   const gifImage = `
     :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
   `;
@@ -99,13 +96,11 @@ export const clean = async function () {
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);
-  document.body.classList.remove(className);
 
   [...document.querySelectorAll('.xkit-paused-gif-container')].forEach(wrapper =>
     wrapper.replaceWith(...wrapper.children)
   );
 
   $('.xkit-paused-gif, .xkit-paused-gif-label').remove();
-  $('.xkit-accesskit-disabled-gif').removeClass('xkit-accesskit-disabled-gif');
   $('.xkit-paused-background-gif').removeClass('xkit-paused-background-gif');
 };

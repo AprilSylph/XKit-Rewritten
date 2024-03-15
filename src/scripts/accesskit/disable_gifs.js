@@ -1,7 +1,56 @@
 import { pageModifications } from '../../util/mutations.js';
 import { keyToCss } from '../../util/css_map.js';
 import { dom } from '../../util/dom.js';
-import { postSelector } from '../../util/interface.js';
+import { buildStyle, postSelector } from '../../util/interface.js';
+
+const styleElement = buildStyle(`
+.xkit-paused-gif-label {
+  position: absolute;
+  top: 1ch;
+  right: 1ch;
+
+  height: 1em;
+  padding: 0.6ch;
+  border-radius: 3px;
+
+  background-color: rgb(var(--black));
+  color: rgb(var(--white));
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1em;
+}
+
+.xkit-paused-gif-label::before {
+  content: "GIF";
+}
+
+.xkit-paused-gif-label.mini {
+  font-size: 0.6rem;
+}
+
+.xkit-paused-gif {
+  position: absolute;
+  visibility: visible;
+
+  background-color: rgb(var(--white));
+}
+
+*:hover > .xkit-paused-gif,
+*:hover > .xkit-paused-gif-label,
+.xkit-paused-gif-container:hover .xkit-paused-gif,
+.xkit-paused-gif-container:hover .xkit-paused-gif-label {
+  display: none;
+}
+
+.xkit-paused-background-gif:not(:hover) {
+  background-image: none !important;
+  background-color: rgb(var(--secondary-accent));
+}
+
+.xkit-paused-background-gif:not(:hover) > div {
+  color: rgb(var(--black));
+}
+`);
 
 const pauseGif = function (gifElement) {
   const image = new Image();
@@ -76,6 +125,8 @@ const processRows = function (rowsElements) {
 };
 
 export const main = async function () {
+  document.documentElement.append(styleElement);
+
   const gifImage = `
     :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
   `;
@@ -101,6 +152,7 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children)
   );
 
+  styleElement.remove();
   $('.xkit-paused-gif, .xkit-paused-gif-label').remove();
   $('.xkit-paused-background-gif').removeClass('xkit-paused-background-gif');
 };

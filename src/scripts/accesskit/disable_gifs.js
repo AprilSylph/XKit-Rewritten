@@ -3,7 +3,7 @@ import { keyToCss } from '../../util/css_map.js';
 import { dom } from '../../util/dom.js';
 import { buildStyle, postSelector } from '../../util/interface.js';
 
-const canvasClass = 'xkit-paused-gif';
+const canvasClass = 'xkit-paused-gif-placeholder';
 const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';

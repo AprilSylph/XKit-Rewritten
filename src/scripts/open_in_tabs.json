@@ -1,7 +1,6 @@
 {
   "title": "Open In Tabs",
   "description": "Open blogs in new tabs",
-  "note": "This script may be out of date.",
   "icon": {
     "class_name": "ri-add-box-line",
     "color": "white",

@@ -1,6 +1,7 @@
 import { keyToCss } from './css_map.js';
-import { postSelector } from './interface.js';
+import { notificationSelector, postSelector } from './interface.js';
 const rootNode = document.getElementById('root');
+const headNode = document.querySelector('head');
 
 const addedNodesPool = [];
 let repaintQueued = false;
@@ -38,12 +39,16 @@ export const pageModifications = Object.freeze({
     if (!selector) return;
 
     if (modifierFunction.length === 0) {
-      const shouldRun = rootNode.querySelector(selector) !== null;
+      const shouldRun =
+        rootNode.querySelector(selector) !== null || headNode.querySelector(selector) !== null;
       if (shouldRun) modifierFunction();
       return;
     }
 
-    const matchingElements = [...rootNode.querySelectorAll(selector)];
+    const matchingElements = [
+      ...rootNode.querySelectorAll(selector),
+      ...headNode.querySelectorAll(selector)
+    ];
     if (matchingElements.length !== 0) {
       modifierFunction(matchingElements);
     }
@@ -52,6 +57,11 @@ export const pageModifications = Object.freeze({
 
 export const onNewPosts = Object.freeze({
   addListener: callback => pageModifications.register(`${postSelector} article`, callback),
+  removeListener: callback => pageModifications.unregister(callback)
+});
+
+export const onNewNotifications = Object.freeze({
+  addListener: callback => pageModifications.register(notificationSelector, callback),
   removeListener: callback => pageModifications.unregister(callback)
 });
 
@@ -101,3 +111,4 @@ const observer = new MutationObserver(mutations => {
 });
 
 observer.observe(rootNode, { childList: true, subtree: true });
+observer.observe(headNode, { childList: true, subtree: true });

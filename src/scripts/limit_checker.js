@@ -38,7 +38,7 @@ const showUserLimits = ([{ response: { user } }]) => showModal({
 const showError = exception => showModal({
   title: 'Something went wrong.',
   message: [exception.message],
-  buttons: modalCompleteButton
+  buttons: [modalCompleteButton]
 });
 
 const sidebarOptions = {

@@ -16,7 +16,7 @@ const styleElement = buildStyle(`
 `);
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
-const tagChicletCarouselItemSelector = `${listTimelineObjectSelector} ${keyToCss('tagChicletCarouselItem')}`;
+const tagChicletCarouselLinkSelector = `${listTimelineObjectSelector} ${keyToCss('tagChicletLink')}`;
 
 const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
   .map(getTimelineItemWrapper)
@@ -28,7 +28,7 @@ const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
 
 export const main = async function () {
   document.documentElement.append(styleElement);
-  pageModifications.register(tagChicletCarouselItemSelector, createCaughtUpLine);
+  pageModifications.register(tagChicletCarouselLinkSelector, createCaughtUpLine);
 };
 
 export const clean = async function () {

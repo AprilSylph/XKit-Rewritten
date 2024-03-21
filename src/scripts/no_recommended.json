@@ -10,7 +10,7 @@
   "preferences": {
     "hide_recommended_posts": {
       "type": "checkbox",
-      "label": "Hide recommended posts on the dashboard",
+      "label": "Hide experimental types of recommended posts",
       "default": true
     },
     "hide_answertime": {
@@ -38,6 +38,12 @@
       "label": "Hide recommended blogs in the sidebar",
       "default": false,
       "inherit": "tweaks.preferences.hide_recommended_blogs"
+    },
+    "hide_recommended_blogs_modal": {
+      "type": "checkbox",
+      "label": "Hide recommended blogs in the blog view sidebar",
+      "default": false,
+      "inherit": "no_recommended.preferences.hide_recommended_blogs"
     },
     "hide_radar": {
       "type": "checkbox",

@@ -1,4 +1,11 @@
-const className = 'accesskit-blue-links';
+import { keyToCss } from '../../util/css_map.js';
+import { buildStyle } from '../../util/interface.js';
 
-export const main = async () => document.body.classList.add(className);
-export const clean = async () => document.body.classList.remove(className);
+const styleElement = buildStyle(`
+article ${keyToCss('textBlock')} a[target="_blank"] {
+  color: rgba(var(--blue));
+}
+`);
+
+export const main = async () => document.documentElement.append(styleElement);
+export const clean = async () => styleElement.remove();

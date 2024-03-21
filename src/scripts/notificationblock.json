@@ -1,7 +1,6 @@
 {
   "title": "NotificationBlock",
   "description": "Block a post's notifications",
-  "note": "Access NotificationBlock from the ⋯ menu in a post's header!",
   "icon": {
     "class_name": "ri-notification-off-line",
     "color": "white",

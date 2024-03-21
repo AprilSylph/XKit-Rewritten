@@ -1,7 +1,6 @@
 {
   "title": "Trim Reblogs",
   "description": "Trim threads after posting or drafting",
-  "note": "Post or draft your reblog, then press the scissors icon on it!",
   "icon": {
     "class_name": "ri-scissors-cut-line",
     "color": "white",

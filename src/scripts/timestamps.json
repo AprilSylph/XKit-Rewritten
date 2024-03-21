@@ -1,7 +1,6 @@
 {
   "title": "Timestamps",
   "description": "See when a post was made",
-  "note": "Timestamps is deprecated in favor of Tumblr's native timestamps and the Timeformat script!",
   "icon": {
     "class_name": "ri-time-line",
     "color": "white",

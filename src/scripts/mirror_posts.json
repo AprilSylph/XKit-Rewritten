@@ -1,7 +1,6 @@
 {
   "title": "Mirror Posts",
   "description": "Back up posts to public archives",
-  "note": "Access Mirror Posts from the ⋯ menu in a post's header!",
   "icon": {
     "class_name": "ri-file-copy-line",
     "color": "white",

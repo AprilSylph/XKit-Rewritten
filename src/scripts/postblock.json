@@ -1,7 +1,6 @@
 {
   "title": "PostBlock",
   "description": "Disappear all instances of a post",
-  "note": "Access Postblock from the ⋯ menu in a post's header!",
   "icon": {
     "class_name": "ri-file-forbid-line",
     "color": "white",

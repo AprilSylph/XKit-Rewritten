@@ -1,7 +1,6 @@
 {
   "title": "Tag Replacer",
   "description": "Replace old tags in bulk",
-  "note": "Access Tag Replacer from the Tumblr sidebar!",
   "icon": {
     "class_name": "ri-swap-box-line",
     "color": "white",

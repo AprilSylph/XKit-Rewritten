@@ -55,8 +55,7 @@ const processBlogSpecificTimeline = async (timelineElement, timeline) => {
     ]);
     warningElement.dataset.muteMode = mode;
 
-    const firstPost = timelineElement.querySelector(postSelector);
-    firstPost?.parentElement?.prepend(warningElement);
+    timelineElement.querySelector(keyToCss('scrollContainer')).before(warningElement);
   }
 };
 

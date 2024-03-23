@@ -1,0 +1,18 @@
+{
+  "title": "Mutual Activity",
+  "description": "Toggle to only view mutuals in the activity feed",
+  "icon": {
+    "class_name": "ri-team-line",
+    "color": "#e84740",
+    "background_color": "#000000"
+  },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#Mutual-Activity",
+  "preferences": {
+    "showGroupedNotifications": {
+      "label": "Show grouped notifications (Note: this will also show notifications from people you don't follow)",
+      "type": "checkbox",
+      "default": false
+    }
+  },
+  "relatedTerms": ["notification", "feed", "hide", "filter"]
+}

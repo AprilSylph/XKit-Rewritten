@@ -2,6 +2,7 @@ import { dom } from '../util/dom.js';
 import { megaEdit } from '../util/mega_editor.js';
 import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal } from '../util/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
+import { dateTimeFormat, elementsAsList } from '../util/text_format.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { userBlogs } from '../util/user.js';
 
@@ -11,29 +12,6 @@ const createBlogOption = ({ name, title, uuid }) => dom('option', { value: uuid,
 const createTagSpan = tag => dom('span', { class: 'mass-privater-tag' }, null, [tag]);
 const createBlogSpan = name => dom('span', { class: 'mass-privater-blog' }, null, [name]);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-  hour: 'numeric',
-  minute: 'numeric',
-  timeZoneName: 'short'
-});
-
-/**
- * Adds string elements between an array's items to format it as an English prose list.
- * The Oxford comma is included.
- * @param {any[]} array - Input array of any number of items
- * @param {string} andOr - String 'and' or 'or', used before the last item
- * @returns {any[]} An array alternating between the input items and strings
- */
-const elementsAsList = (array, andOr) =>
-  array.flatMap((item, i) => {
-    if (i === array.length - 1) return [item];
-    if (i === array.length - 2) return array.length === 2 ? [item, ` ${andOr} `] : [item, `, ${andOr} `];
-    return [item, ', '];
-  });
 
 const timezoneOffsetMs = new Date().getTimezoneOffset() * 60000;
 

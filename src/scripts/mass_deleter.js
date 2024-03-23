@@ -1,6 +1,6 @@
 import { dom } from '../util/dom.js';
 import { megaEdit } from '../util/mega_editor.js';
-import { modalCancelButton, modalCompleteButton, showModal } from '../util/modals.js';
+import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../util/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 
@@ -62,7 +62,7 @@ const confirmDeleteDrafts = event => {
       dom(
         'button',
         { class: 'red' },
-        { click: () => deleteDrafts({ blogName, before }).catch(showError) },
+        { click: () => deleteDrafts({ blogName, before }).catch(showErrorModal) },
         ['Delete them!']
       )
     ]
@@ -154,7 +154,7 @@ const showClearQueuePrompt = () => showModal({
   ],
   buttons: [
     modalCancelButton,
-    dom('button', { class: 'red' }, { click: () => clearQueue().catch(showError) }, ['Clear it!'])
+    dom('button', { class: 'red' }, { click: () => clearQueue().catch(showErrorModal) }, ['Clear it!'])
   ]
 });
 
@@ -234,12 +234,6 @@ const clearQueue = async function () {
 const showEmptyQueueError = () => showModal({
   title: 'No queued posts!',
   message: ['Looks like there is nothing to clear here.'],
-  buttons: [modalCompleteButton]
-});
-
-const showError = exception => showModal({
-  title: 'Something went wrong.',
-  message: [exception.message],
   buttons: [modalCompleteButton]
 });
 

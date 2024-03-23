@@ -37,6 +37,11 @@
       "label": "Enable integration with Quick Tags",
       "default": true
     },
+    "quickTagsIntegrationSize": {
+      "type": "text",
+      "label": "Quick Tags size (1-20)",
+      "default": 4
+    },
     "showTagsInput": {
       "type": "checkbox",
       "label": "Show the tags field",

@@ -126,7 +126,7 @@ div:first-child + span + #quick-reblog,
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  max-height: calc(var(--button-height) * 4);
+  max-height: calc(var(--button-height) * var(--quick-tags-size));
   overflow-y: auto;
 }
 

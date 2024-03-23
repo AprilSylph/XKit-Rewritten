@@ -2,7 +2,7 @@ import { cloneControlButton, createControlButtonTemplate } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { filterPostElements, postSelector } from '../util/interface.js';
-import { showModal, modalCancelButton, modalCompleteButton, hideModal } from '../util/modals.js';
+import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { getPreferences } from '../util/preferences.js';
@@ -44,7 +44,7 @@ const elementsAsList = (array, andOr) =>
   });
 
 const showInitialPrompt = async () => {
-  const initialForm = dom('form', { id: getPostsFormId }, { submit: confirmInitialPrompt }, [
+  const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event).catch(showErrorModal) }, [
     'This toggles the visibility of the tipping button on your original posts that match the chosen criteria. It has no effect unless you enable tipping in Tumblr settings.',
     dom('label', null, null, [
       'Action:',
@@ -167,7 +167,7 @@ const confirmInitialPrompt = async event => {
       dom(
         'button',
         { class: 'red' },
-        { click: () => togglePosts({ uuid, name, tags, after, newCanBeTipped }).catch(showError) },
+        { click: () => togglePosts({ uuid, name, tags, after, newCanBeTipped }).catch(showErrorModal) },
         ['Go!']
       )
     ]
@@ -197,12 +197,6 @@ const showPostsNotFound = ({ name, newCanBeTipped }) =>
     ],
     buttons: [modalCompleteButton]
   });
-
-const showError = exception => showModal({
-  title: 'Something went wrong.',
-  message: [exception.message],
-  buttons: [modalCompleteButton]
-});
 
 const togglePosts = async ({ uuid, name, tags, after, newCanBeTipped }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);

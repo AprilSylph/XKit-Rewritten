@@ -8,6 +8,7 @@ import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { translate } from '../util/language_data.js';
 import { dom } from '../util/dom.js';
+import { showErrorModal } from '../util/modals.js';
 
 const popupElement = dom('div', { id: 'quick-reblog' });
 const blogSelector = dom('select');
@@ -220,8 +221,8 @@ const reblogPost = async function ({ currentTarget }) {
         }
       }
     }
-  } catch ({ body }) {
-    notify(body.errors[0].detail);
+  } catch (exception) {
+    showErrorModal(exception);
   } finally {
     actionButtons.disabled = false;
   }

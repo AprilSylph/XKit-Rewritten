@@ -1,6 +1,6 @@
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
-import { modalCompleteButton, showModal } from '../util/modals.js';
+import { modalCompleteButton, showErrorModal, showModal } from '../util/modals.js';
 import { dom } from '../util/dom.js';
 
 const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, { dateStyle: 'short', timeStyle: 'short' });
@@ -35,18 +35,12 @@ const showUserLimits = ([{ response: { user } }]) => showModal({
   buttons: [modalCompleteButton]
 });
 
-const showError = exception => showModal({
-  title: 'Something went wrong.',
-  message: [exception.message],
-  buttons: modalCompleteButton
-});
-
 const sidebarOptions = {
   id: 'limit-checker',
   title: 'Limit Checker',
   rows: [{
     label: 'Check daily limits',
-    onclick: () => checkUserLimits().then(showUserLimits).catch(showError),
+    onclick: () => checkUserLimits().then(showUserLimits).catch(showErrorModal),
     carrot: true
   }]
 };

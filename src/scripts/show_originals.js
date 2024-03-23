@@ -69,8 +69,8 @@ const getLocation = timelineElement => {
   const on = {
     dashboard: timeline === '/v2/timeline/dashboard',
     peepr: isInBlogView && !isSinglePostBlogView,
-    blogSubscriptions: timeline.includes('blog_subscriptions') || which === 'blog_subscriptions'
-
+    blogSubscriptions: timeline.includes('blog_subscriptions') || which === 'blog_subscriptions',
+    blogpack: timeline.includes('blogpack') || which === 'blogpack'
   };
   const location = Object.keys(on).find(location => on[location]);
   const isDisabledBlog = disabledBlogs.some(name => timeline.startsWith(`/v2/blog/${name}/`));

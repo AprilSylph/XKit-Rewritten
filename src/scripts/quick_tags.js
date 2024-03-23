@@ -2,12 +2,14 @@ import { cloneControlButton, createControlButtonTemplate } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { postSelector } from '../util/interface.js';
+import { megaEdit } from '../util/mega_editor.js';
+import { showErrorModal } from '../util/modals.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
 import { getPreferences } from '../util/preferences.js';
 import { timelineObject, editPostFormTags } from '../util/react_props.js';
-import { apiFetch, createEditRequestBody } from '../util/tumblr_helpers.js';
+import { apiFetch, createEditRequestBody, isNpfCompatible } from '../util/tumblr_helpers.js';
 
 const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
@@ -148,7 +150,7 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
 
 const addTagsToPost = async function ({ postElement, inputTags = [] }) {
   const postId = postElement.dataset.id;
-  const { blog: { uuid } } = await timelineObject(postElement);
+  const { blog: { uuid }, blogName } = await timelineObject(postElement);
 
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
   const { tags = [] } = postData;
@@ -158,7 +160,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 
   tags.push(...tagsToAdd);
 
-  try {
+  if (isNpfCompatible(postData)) {
     const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
       method: 'PUT',
       body: {
@@ -168,29 +170,30 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
     });
 
     notify(displayText);
-
-    const tagsElement = dom('div', { class: tagsClass });
-
-    const innerTagsDiv = document.createElement('div');
-    tagsElement.appendChild(innerTagsDiv);
-
-    for (const tag of tags) {
-      innerTagsDiv.appendChild(
-        dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`])
-      );
-    }
-
-    postElement.querySelector('footer').parentNode.prepend(tagsElement);
-  } catch ({ body }) {
-    notify(body.errors[0].detail);
+  } else {
+    await megaEdit([postId], { mode: 'add', tags: tagsToAdd });
+    notify(`Edited legacy post on ${blogName}`);
   }
+
+  const tagsElement = dom('div', { class: tagsClass });
+
+  const innerTagsDiv = document.createElement('div');
+  tagsElement.appendChild(innerTagsDiv);
+
+  for (const tag of tags) {
+    innerTagsDiv.appendChild(
+      dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`])
+    );
+  }
+
+  postElement.querySelector('footer').parentNode.prepend(tagsElement);
 };
 
 const processFormSubmit = function ({ currentTarget }) {
   const postElement = currentTarget.closest(postSelector);
   const inputTags = popupInput.value.split(',').map(inputTag => inputTag.trim());
 
-  addTagsToPost({ postElement, inputTags });
+  addTagsToPost({ postElement, inputTags }).catch(showErrorModal);
   currentTarget.reset();
 };
 
@@ -200,7 +203,7 @@ const processBundleClick = function ({ target }) {
   const postElement = target.closest(postSelector);
   const inputTags = target.dataset.tags.split(',').map(inputTag => inputTag.trim());
 
-  addTagsToPost({ postElement, inputTags });
+  addTagsToPost({ postElement, inputTags }).catch(showErrorModal);
   popupElement.remove();
 };
 
@@ -226,7 +229,7 @@ popupForm.addEventListener('submit', processFormSubmit);
 postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 
 export const main = async function () {
-  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
+  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Quick Tags');
 
   pageModifications.register(`${postSelector} footer ${controlIconSelector} a[href*="/edit/"]`, addControlButtons);
   registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });

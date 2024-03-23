@@ -47,11 +47,6 @@
       "label": "Remove the sticky effect from the dashboard tab bar",
       "default": false
     },
-    "unsticky_post_avatars": {
-      "type": "checkbox",
-      "label": "Remove the sticky effect from post avatars",
-      "default": false
-    },
     "hide_mini_follow": {
       "type": "checkbox",
       "label": "Hide mini-follow buttons on posts",
@@ -93,19 +88,19 @@
       "label": "Hide my follower count where possible",
       "default": false
     },
+    "hide_following_notification_badge": {
+      "type": "checkbox",
+      "label": "Hide the Home/Following unread count",
+      "default": false
+    },
     "hide_activity_notification_badge": {
       "type": "checkbox",
-      "label": "Hide the activity notification badge",
+      "label": "Hide the Activity notification badge",
       "default": false
     },
     "no_where_were_we": {
       "type": "checkbox",
       "label": "Hide the \"Now, where were we?\" button",
-      "default": false
-    },
-    "no_live": {
-      "type": "checkbox",
-      "label": "Hide the Tumblr Live carousel",
       "default": false
     }
   }

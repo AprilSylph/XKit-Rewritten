@@ -9,11 +9,11 @@ const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
 const checkForRadar = function (sidebarTitles) {
   sidebarTitles
     .filter(h1 => h1.textContent === translate('Radar'))
-    .forEach(h1 => h1.parentNode.setAttribute(hiddenAttribute, ''));
+    .forEach(h1 => h1.closest('aside > *').setAttribute(hiddenAttribute, ''));
 };
 
 export const main = async function () {
-  pageModifications.register('aside > div > h1', checkForRadar);
+  pageModifications.register('aside h1', checkForRadar);
   document.documentElement.append(styleElement);
 };
 

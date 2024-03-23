@@ -85,11 +85,11 @@
   text-align: center;
 }
 
-#restore-local:enabled::before {
+#restore-local:empty::before {
   content: "Restore";
 }
 
-#restore-local:disabled {
+#restore-local.success {
   border: none;
 
   background-color: transparent;
@@ -97,6 +97,10 @@
   font-weight: bold;
 }
 
-#restore-local:disabled::before {
-  content: "Successfully restored!";
+#restore-local.failure {
+  border: none;
+
+  background-color: transparent;
+  color: #cf0000;
+  font-weight: bold;
 }

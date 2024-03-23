@@ -1,15 +1,42 @@
+/**
+ * @param {string} path - Function file path to run in the page context
+ * @param {Array} [args] - Array of arguments to pass to the function via spread
+ * @param {Element} [target] - Target element; will be accessible as the last argument to the
+ *                             injected function.
+ * @returns {Promise<any>} The return value of the function, or the caught exception
+ */
+export const inject = (path, args = [], target = document.documentElement) =>
+  new Promise((resolve, reject) => {
+    const requestId = String(Math.random());
+    const data = { path: browser.runtime.getURL(path), args, id: requestId };
+
+    const responseHandler = ({ detail }) => {
+      const { id, result, exception } = JSON.parse(detail);
+      if (id !== requestId) return;
+
+      target.removeEventListener('xkitinjectionresponse', responseHandler);
+      exception ? reject(exception) : resolve(result);
+    };
+    target.addEventListener('xkitinjectionresponse', responseHandler);
+
+    target.dispatchEvent(
+      new CustomEvent('xkitinjectionrequest', { detail: JSON.stringify(data), bubbles: true })
+    );
+  });
+
+/*
 import { dom } from './dom.js';
 
 const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
-/**
+ **
  * @param {Function} func - Function to run in the page context (can be async)
  * @param {Array} [args] - Array of arguments to pass to the function via spread
  * @param {Element} [target] - Element to append script to; will be accessible as
  *                             document.currentScript.parentElement in the injected function.
  * @returns {Promise<any>} The return value of the function, or the caught exception
- */
+ *
 export const inject = async (func, args = [], target = document.documentElement) => {
   const name = `xkit$${func.name || 'injected'}`;
   const async = func instanceof AsyncFunction;
@@ -57,3 +84,4 @@ export const inject = async (func, args = [], target = document.documentElement)
     return JSON.parse(script.dataset.result);
   }
 };
+*/

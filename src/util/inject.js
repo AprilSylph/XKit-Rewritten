@@ -38,9 +38,11 @@ export const inject = async (func, args = [], target = document.documentElement)
         if (mutations.some(({ attributeName }) => attributeName === 'data-result')) {
           observer.disconnect();
           resolve(JSON.parse(script.dataset.result));
+          script.remove();
         } else if (mutations.some(({ attributeName }) => attributeName === 'data-exception')) {
           observer.disconnect();
           reject(JSON.parse(script.dataset.exception));
+          script.remove();
         }
       });
 
@@ -49,7 +51,6 @@ export const inject = async (func, args = [], target = document.documentElement)
         attributeFilter: ['data-result', 'data-exception']
       });
       target.append(script);
-      script.remove();
     });
   } else {
     target.append(script);

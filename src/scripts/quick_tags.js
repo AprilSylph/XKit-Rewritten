@@ -3,7 +3,7 @@ import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { postSelector } from '../util/interface.js';
 import { megaEdit } from '../util/mega_editor.js';
-import { showErrorModal } from '../util/modals.js';
+import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../util/modals.js';
 import { pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
@@ -228,6 +228,60 @@ popupElement.addEventListener('click', processBundleClick);
 popupForm.addEventListener('submit', processFormSubmit);
 postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 
+const migrateTags = async ({ detail }) => {
+  const newTagBundles = JSON.parse(detail);
+
+  if (Array.isArray(newTagBundles)) {
+    window.dispatchEvent(new CustomEvent('xkit-quick-tags-migration-success'));
+
+    const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
+
+    const toAdd = newTagBundles
+      .map(({ title, tags }) => ({ title: String(title), tags: String(tags) }))
+      .filter(
+        newTagBundle =>
+          !tagBundles.some(
+            tagBundle =>
+              newTagBundle.title === tagBundle.title && newTagBundle.tags === tagBundle.tags
+          )
+      );
+
+    if (toAdd.length) {
+      await new Promise(resolve => {
+        showModal({
+          title: 'Add tag bundles?',
+          message: [
+            `Would you like to add ${
+              toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'a tag bundle'
+            }?`,
+            '\n\n',
+            `(${toAdd.map(({ title }) => title).join(', ')})`
+          ],
+          buttons: [
+            modalCancelButton,
+            dom('button', { class: 'blue' }, { click: resolve }, ['Confirm'])
+          ]
+        });
+      });
+
+      tagBundles.push(...toAdd);
+      await browser.storage.local.set({ [storageKey]: tagBundles });
+
+      showModal({
+        title: 'Success',
+        message: `Added ${toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'a tag bundle'}!`,
+        buttons: [modalCompleteButton]
+      });
+    } else {
+      showModal({
+        title: 'No new bundles!',
+        message: 'XKit Rewritten has these tag bundles already.',
+        buttons: [modalCompleteButton]
+      });
+    }
+  }
+};
+
 export const main = async function () {
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Quick Tags');
 
@@ -240,6 +294,8 @@ export const main = async function () {
   if (originalPostTag || answerTag || autoTagAsker) {
     pageModifications.register('#selected-tags', processPostForm);
   }
+
+  window.addEventListener('xkit-quick-tags-migration', migrateTags);
 };
 
 export const clean = async function () {
@@ -252,6 +308,8 @@ export const clean = async function () {
   $(`.${buttonClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${tagsClass}`).remove();
+
+  window.removeEventListener('xkit-quick-tags-migration', migrateTags);
 };
 
 export const stylesheet = true;

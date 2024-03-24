@@ -3,7 +3,7 @@ import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { filterPostElements, getTimelineItemWrapper, postSelector } from '../util/interface.js';
 import { bulkCommunityLabel } from '../util/mega_editor.js';
-import { hideModal, modalCancelButton, modalCompleteButton, showModal } from '../util/modals.js';
+import { hideModal, modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { getPreferences } from '../util/preferences.js';
@@ -52,7 +52,7 @@ const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
 const timezoneOffsetMs = new Date().getTimezoneOffset() * 60000;
 
 const showInitialPrompt = async () => {
-  const initialForm = dom('form', { id: getPostsFormId }, { submit: confirmInitialPrompt }, [
+  const initialForm = dom('form', { id: getPostsFormId }, { submit: () => confirmInitialPrompt().catch(showErrorModal) }, [
     'Community labels to apply:',
     ...data.map(({ text, category }) =>
       dom('label', null, null, [text, dom('input', {
@@ -181,7 +181,7 @@ const confirmInitialPrompt = async event => {
       dom(
         'button',
         { class: 'red' },
-        { click: () => setLabelsBulk({ uuid, name, tags, after, addedCategories }).catch(showError) },
+        { click: () => setLabelsBulk({ uuid, name, tags, after, addedCategories }).catch(showErrorModal) },
         ['Go!']
       )
     ]
@@ -211,12 +211,6 @@ const showPostsNotFound = ({ name }) =>
     ],
     buttons: [modalCompleteButton]
   });
-
-const showError = exception => showModal({
-  title: 'Something went wrong.',
-  message: [exception.message],
-  buttons: [modalCompleteButton]
-});
 
 const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
@@ -470,7 +464,7 @@ popupData.forEach(({ category, checkbox }) => {
   checkbox.addEventListener('change', () => {
     checkbox.indeterminate = true;
     popupData.forEach(({ checkbox }) => { checkbox.disabled = true; });
-    handlePopupClick(checkbox, category);
+    handlePopupClick(checkbox, category).catch(showErrorModal);
   });
 });
 

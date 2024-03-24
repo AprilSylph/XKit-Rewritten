@@ -149,14 +149,14 @@ const createIcon = (blogName, color) => {
     xmlns: 'http://www.w3.org/2000/svg',
     class: mutualIconClass,
     viewBox: '0 0 1000 1000',
-    fill: aprilFools ? '#00b8ff' : 'rgb(var(--black))'
+    fill: color || 'rgb(var(--black))'
   }, null, [
     dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
       translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
     ]),
     dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: aprilFools ? aprilFoolsPath : regularPath })
   ]);
-  color && !aprilFools && icon.setAttribute('fill', color);
+  aprilFools && icon.setAttribute('fill', '#00b8ff');
   return icon;
 };
 

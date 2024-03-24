@@ -93,11 +93,15 @@ const addBlogCardIcons = blogCardLinks =>
     if (!blogName) return;
 
     const followingBlog = await getIsFollowing(blogName, blogCardLink);
-    if (!followingBlog) return;
+    const isFollowingYou = await getIsFollowingYou(blogName);
+    const isMutual = followingBlog && isFollowingYou;
 
-    const isMutual = await getIsFollowingYou(blogName);
-    if (isMutual) {
-      blogCardLink.before(createIcon(blogName, blogCardLink.style.color));
+    if (isFollowingYou) {
+      blogCardLink.before(
+        isMutual
+          ? createIcon(blogName, blogCardLink.style.color)
+          : createFollowingIcon(blogName, blogCardLink.style.color)
+      );
     }
   });
 
@@ -159,6 +163,19 @@ const createIcon = (blogName, color) => {
   aprilFools && icon.setAttribute('fill', '#00b8ff');
   return icon;
 };
+
+const createFollowingIcon = (blogName, color) =>
+  dom('svg', {
+    xmlns: 'http://www.w3.org/2000/svg',
+    class: mutualIconClass,
+    viewBox: '0 0 1000 1000',
+    fill: color || 'rgb(var(--black))'
+  }, null, [
+    dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
+      translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
+    ]),
+    dom('use', { xmlns: 'http://www.w3.org/2000/svg', href: '#ri-user-shared-line' })
+  ]);
 
 export const clean = async function () {
   onNewPosts.removeListener(addIcons);

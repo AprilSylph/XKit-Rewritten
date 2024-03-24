@@ -39,6 +39,12 @@
       "default": false,
       "inherit": "tweaks.preferences.hide_recommended_blogs"
     },
+    "hide_recommended_blogs_modal": {
+      "type": "checkbox",
+      "label": "Hide recommended blogs in the blog view sidebar",
+      "default": false,
+      "inherit": "no_recommended.preferences.hide_recommended_blogs"
+    },
     "hide_radar": {
       "type": "checkbox",
       "label": "Hide the Tumblr Radar",

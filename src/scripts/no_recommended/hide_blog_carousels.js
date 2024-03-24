@@ -1,6 +1,7 @@
 import { keyToCss } from '../../util/css_map.js';
 import { buildStyle, getTimelineItemWrapper } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
+import { timelineObject } from '../../util/react_props.js';
 
 const hiddenAttribute = 'data-no-recommended-blog-carousels-hidden';
 
@@ -10,22 +11,23 @@ const styleElement = buildStyle(`
   [${hiddenAttribute}] > div :is(img, video, canvas) { display: none }
 `);
 
-const listTimelineObjectSelector = keyToCss('listTimelineObject');
-const blogCarouselSelector = `${listTimelineObjectSelector} ${keyToCss('blogCarousel')}`;
+const carouselSelector = `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')}`;
 
-const hideBlogCarousels = blogCarousels => blogCarousels
-  .map(getTimelineItemWrapper)
-  .filter(timelineItem =>
-    timelineItem.previousElementSibling.querySelector(keyToCss('titleObject'))
-  )
-  .forEach(timelineItem => {
-    timelineItem.setAttribute(hiddenAttribute, '');
-    timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
+const hideBlogCarousels = carousels =>
+  carousels.forEach(async carousel => {
+    const { elements } = await timelineObject(carousel);
+    if (elements.some(({ objectType }) => objectType === 'blog')) {
+      const timelineItem = getTimelineItemWrapper(carousel);
+      if (timelineItem.previousElementSibling.querySelector(keyToCss('titleObject'))) {
+        timelineItem.setAttribute(hiddenAttribute, '');
+        timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
+      }
+    }
   });
 
 export const main = async function () {
   document.documentElement.append(styleElement);
-  pageModifications.register(blogCarouselSelector, hideBlogCarousels);
+  pageModifications.register(carouselSelector, hideBlogCarousels);
 };
 
 export const clean = async function () {

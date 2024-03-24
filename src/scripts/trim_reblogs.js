@@ -2,7 +2,7 @@ import { createControlButtonTemplate, cloneControlButton } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { filterPostElements, postSelector } from '../util/interface.js';
-import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
+import { showModal, hideModal, modalCancelButton, showErrorModal } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { timelineObject } from '../util/react_props.js';
@@ -41,7 +41,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
         title: 'Note: Legacy post',
         message: [
           'This thread was originally created, or at some point was edited, using the ',
-          dom('strong', null, null, 'legacy post editor'),
+          dom('strong', null, null, ['legacy post editor']),
           ' or a previous XKit version.',
           '\n\n',
           'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
@@ -130,8 +130,8 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       excludeTrailItems
         .map(i => reblogs[i])
         .forEach(reblog => reblog.remove());
-    } catch ({ body }) {
-      notify(body.errors[0].detail);
+    } catch (exception) {
+      showErrorModal(exception);
     }
   };
 
@@ -165,13 +165,13 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const { trail = [], content = [] } = await timelineObject(postElement);
   const items = trail.length + (content.length ? 1 : 0);
 
-  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked }, items < 2);
+  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: event => onButtonClicked(event).catch(showErrorModal) }, items < 2);
   const controlIcon = editButton.closest(controlIconSelector);
   controlIcon.before(clonedControlButton);
 });
 
 export const main = async function () {
-  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
+  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Trim Reblogs');
   onNewPosts.addListener(processPosts);
 };
 

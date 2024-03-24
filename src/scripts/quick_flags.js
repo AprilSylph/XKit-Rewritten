@@ -452,9 +452,7 @@ const updatePostWarningElement = async (postElement) => {
   if (renderedPostStateIncorrect) {
     const footerRow = postElement.querySelector(keyToCss('footerRow'));
     const warningElement = dom('div', { class: warningClass }, null, [
-      dom('div', { class: warningTextClass }, null, [
-        'note: navigate away and back or refresh to see edited community labels!'
-      ])
+      'note: navigate away and back or refresh to see edited community labels!'
     ]);
     footerRow.after(warningElement);
   }

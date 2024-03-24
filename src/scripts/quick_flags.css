@@ -75,15 +75,13 @@
 }
 
 .xkit-quick-flags-warning {
-  background-color: rgb(var(--secondary-accent));
-  line-height: 1;
   display: flex;
-}
+  justify-content: center;
+  padding: 0.5em;
+  line-height: 1;
 
-.xkit-quick-flags-warning-text {
-  margin: 0.5em auto;
+  background-color: rgb(var(--secondary-accent));
 }
-
 
 .quick-flags-bulk-tag,
 .quick-flags-bulk-blog {

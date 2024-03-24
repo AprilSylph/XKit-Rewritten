@@ -74,18 +74,13 @@
   font-weight: bold;
 }
 
-[data-quick-flags-warning] article::before {
+.xkit-quick-flags-warning {
   display: flex;
   justify-content: center;
   padding: 0.5em;
   line-height: 1;
 
-  content: 'note: navigate away and back or refresh to see edited community labels!';
-  border-radius: 8px 8px 0 0;
   background-color: rgb(var(--secondary-accent));
-  color: rgba(var(--black), .65);
-  font-size: .875rem;
-  font-weight: 700;
 }
 
 .quick-flags-bulk-tag,

@@ -341,7 +341,7 @@ const sidebarOptions = {
 
 const buttonClass = 'xkit-quick-flags-button';
 const excludeClass = 'xkit-quick-flags-done';
-const editedAttribute = 'data-quick-flags-warning';
+const warningClass = 'xkit-quick-flags-warning';
 
 const symbolId = 'ri-flag-2-line';
 
@@ -446,10 +446,14 @@ const updatePostWarningElement = async (postElement) => {
     renderedCategories.length !== categories.length ||
     renderedCategories.some(category => !categories.includes(category));
 
+  postElement.querySelector(`.${warningClass}`)?.remove();
+
   if (renderedPostStateIncorrect) {
-    getTimelineItemWrapper(postElement).setAttribute(editedAttribute, '');
-  } else {
-    getTimelineItemWrapper(postElement).removeAttribute(editedAttribute);
+    const footerRow = postElement.querySelector(keyToCss('footerRow'));
+    const warningElement = dom('div', { class: warningClass }, null, [
+      'note: navigate away and back or refresh to see edited community labels!'
+    ]);
+    footerRow.after(warningElement);
   }
 };
 
@@ -495,7 +499,7 @@ export const clean = async function () {
 
   popupElement.remove();
   $(`.${buttonClass}`).remove();
-  $(`[${editedAttribute}]`).removeAttr(editedAttribute);
+  $(`.${warningClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
 
   editedPostStates = new WeakMap();

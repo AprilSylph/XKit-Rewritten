@@ -1,6 +1,6 @@
 import { dom } from '../util/dom.js';
 import { buildStyle } from '../util/interface.js';
-import { hideModal, modalCancelButton, showModal } from '../util/modals.js';
+import { hideModal, modalCancelButton, showErrorModal, showModal } from '../util/modals.js';
 import { buildSvg } from '../util/remixicon.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
@@ -36,7 +36,13 @@ const constructRelativeTimeString = function (unixTime) {
 const sidebarOptions = {
   id: 'find-inactives',
   title: 'Find Inactives',
-  rows: [{ label: 'Find inactive blogs', onclick: () => showFetchBlogs(), carrot: true }],
+  rows: [
+    {
+      label: 'Find inactive blogs',
+      onclick: () => showFetchBlogs().catch(showErrorModal),
+      carrot: true
+    }
+  ],
   visibility: () => /\/following/.test(location.pathname)
 };
 

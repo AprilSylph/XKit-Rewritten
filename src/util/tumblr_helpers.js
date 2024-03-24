@@ -40,8 +40,6 @@ export const apiFetch = async function (...args) {
         }
       }
 
-      if (resource !== '/v2/user/info') return window.tumblr.apiFetch('/oh-no-a-bad-url' + resource, init);
-
       return window.tumblr.apiFetch(resource, init);
     },
     args

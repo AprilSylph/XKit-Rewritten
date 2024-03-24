@@ -342,7 +342,6 @@ const sidebarOptions = {
 const buttonClass = 'xkit-quick-flags-button';
 const excludeClass = 'xkit-quick-flags-done';
 const warningClass = 'xkit-quick-flags-warning';
-const warningTextClass = 'xkit-quick-flags-warning-text';
 
 const symbolId = 'ri-flag-2-line';
 

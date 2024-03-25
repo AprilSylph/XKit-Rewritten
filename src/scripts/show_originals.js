@@ -15,6 +15,7 @@ const includeFiltered = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
+let showReblogsOfNotFollowing;
 let whitelist;
 let disabledBlogs;
 
@@ -99,12 +100,13 @@ const processPosts = async function (postElements) {
 
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {
-      const { rebloggedRootId, content, blogName } = await timelineObject(postElement);
+      const { rebloggedRootId, content, blogName, rebloggedFromFollowing } = await timelineObject(postElement);
       const myPost = await isMyPost(postElement);
 
       if (!rebloggedRootId) { return; }
       if (showOwnReblogs && myPost) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
+      if (showReblogsOfNotFollowing && !rebloggedFromFollowing) { return; }
       if (whitelist.includes(blogName)) { return; }
 
       getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
@@ -116,6 +118,7 @@ export const main = async function () {
   ({
     showOwnReblogs,
     showReblogsWithContributedContent,
+    showReblogsOfNotFollowing,
     whitelistedUsernames
   } = await getPreferences('show_originals'));
 

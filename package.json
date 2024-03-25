@@ -19,6 +19,7 @@
     "web-ext": "^7.11.0"
   },
   "dependencies": {
+    "@highlightjs/cdn-assets": "^11.9.0",
     "jquery": "^3.7.1",
     "moment": "^2.30.1",
     "normalize.css": "^8.0.1",

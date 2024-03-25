@@ -11,6 +11,11 @@
       "type": "checkbox",
       "label": "Translate CSS Map",
       "default": false
+    },
+    "json_editor": {
+      "type": "checkbox",
+      "label": "Enable JSON Editor",
+      "default": false
     }
   },
   "deprecated": true

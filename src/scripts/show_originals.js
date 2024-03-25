@@ -106,13 +106,8 @@ const processPosts = async function (postElements) {
       if (!rebloggedRootId) { return; }
       if (showOwnReblogs && myPost) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
-      if (showReblogsOfNotFollowing && !rebloggedFromFollowing) {
-        getTimelineItemWrapper(postElement).style.outline = '4px solid green';
-        return;
-      }
+      if (showReblogsOfNotFollowing && !rebloggedFromFollowing) { return; }
       if (whitelist.includes(blogName)) { return; }
-
-      getTimelineItemWrapper(postElement).style.outline = '4px solid red';
 
       getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
     });

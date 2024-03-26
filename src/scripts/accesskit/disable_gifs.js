@@ -1,9 +1,85 @@
 import { pageModifications } from '../../util/mutations.js';
 import { keyToCss } from '../../util/css_map.js';
 import { dom } from '../../util/dom.js';
-import { postSelector } from '../../util/interface.js';
+import { buildStyle, postSelector } from '../../util/interface.js';
 
-const className = 'accesskit-disable-gifs';
+const canvasClass = 'xkit-paused-gif-placeholder';
+const labelClass = 'xkit-paused-gif-label';
+const containerClass = 'xkit-paused-gif-container';
+const backgroundGifClass = 'xkit-paused-background-gif';
+
+const inEditor = '.block-editor-writing-flow *';
+const directHovered = ':hover > *';
+const photosetHovered = `.${containerClass}:hover *`;
+
+const gifWithPoster = `figure img[srcset*=".gif"]:has(+ ${keyToCss('poster')}):not(${inEditor})`;
+const poster = `figure img[srcset*=".gif"] + ${keyToCss('poster')}:not(${inEditor})`;
+
+const styleElement = buildStyle(`
+${poster} {
+  visibility: visible !important;
+}
+
+${gifWithPoster}:not(${directHovered}):not(${photosetHovered}),
+${poster}:is(${directHovered}, ${photosetHovered}) {
+  display: none;
+}
+
+.${labelClass} {
+  position: absolute;
+  top: 1ch;
+  right: 1ch;
+
+  height: 1em;
+  padding: 0.6ch;
+  border-radius: 3px;
+
+  background-color: rgb(var(--black));
+  color: rgb(var(--white));
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1em;
+}
+
+.${labelClass}::before {
+  content: "GIF";
+}
+
+.${labelClass}.mini {
+  font-size: 0.6rem;
+}
+
+.${canvasClass} {
+  position: absolute;
+  visibility: visible;
+
+  background-color: rgb(var(--white));
+}
+
+:is(.${canvasClass}, .${labelClass}):is(${directHovered}, ${photosetHovered}) {
+  display: none;
+}
+
+.${backgroundGifClass}:not(:hover) {
+  background-image: none !important;
+  background-color: rgb(var(--secondary-accent));
+}
+
+.${backgroundGifClass}:not(:hover) > div {
+  color: rgb(var(--black));
+}
+`);
+
+const addLabel = (element, inside = false) => {
+  if (element.parentNode.querySelector(`.${labelClass}`) === null) {
+    const gifLabel = document.createElement('p');
+    gifLabel.className = element.clientWidth && element.clientWidth < 150
+      ? `${labelClass} mini`
+      : labelClass;
+
+    inside ? element.append(gifLabel) : element.parentNode.append(gifLabel);
+  }
+};
 
 const pauseGif = function (gifElement) {
   const image = new Image();
@@ -14,24 +90,20 @@ const pauseGif = function (gifElement) {
     canvas.width = image.naturalWidth;
     canvas.height = image.naturalHeight;
     canvas.className = gifElement.className;
-    canvas.classList.add('xkit-paused-gif');
+    canvas.classList.add(canvasClass);
     canvas.getContext('2d').drawImage(image, 0, 0);
-
-    const gifLabel = document.createElement('p');
-    gifLabel.className = gifElement.clientWidth && gifElement.clientWidth < 150
-      ? 'xkit-paused-gif-label mini'
-      : 'xkit-paused-gif-label';
-
-    gifElement.parentNode.append(canvas, gifLabel);
+    gifElement.parentNode.append(canvas);
+    addLabel(gifElement);
   };
 };
 
+const processGifsWithPosters = gifElements => gifElements.forEach(gifElement => addLabel(gifElement));
+
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
-    if (gifElement.closest('.block-editor-writing-flow')) return;
     const pausedGifElements = [
-      ...gifElement.parentNode.querySelectorAll('.xkit-paused-gif'),
-      ...gifElement.parentNode.querySelectorAll('.xkit-paused-gif-label')
+      ...gifElement.parentNode.querySelectorAll(`.${canvasClass}`),
+      ...gifElement.parentNode.querySelectorAll(`.${labelClass}`)
     ];
     if (pausedGifElements.length) {
       gifElement.after(...pausedGifElements);
@@ -48,16 +120,8 @@ const processGifs = function (gifElements) {
 
 const processBackgroundGifs = function (gifBackgroundElements) {
   gifBackgroundElements.forEach(gifBackgroundElement => {
-    gifBackgroundElement.classList.add('xkit-paused-background-gif');
-    const pausedGifElements = [
-      ...gifBackgroundElement.querySelectorAll('.xkit-paused-gif-label')
-    ];
-    if (pausedGifElements.length) {
-      return;
-    }
-    const gifLabel = document.createElement('p');
-    gifLabel.className = 'xkit-paused-gif-label';
-    gifBackgroundElement.append(gifLabel);
+    gifBackgroundElement.classList.add(backgroundGifClass);
+    addLabel(gifBackgroundElement, true);
   });
 };
 
@@ -66,10 +130,10 @@ const processRows = function (rowsElements) {
     [...rowsElement.children].forEach(row => {
       if (!row.querySelector('figure')) return;
 
-      if (row.previousElementSibling?.classList?.contains('xkit-paused-gif-container')) {
+      if (row.previousElementSibling?.classList?.contains(containerClass)) {
         row.previousElementSibling.append(row);
       } else {
-        const wrapper = dom('div', { class: 'xkit-paused-gif-container' });
+        const wrapper = dom('div', { class: containerClass });
         row.replaceWith(wrapper);
         wrapper.append(row);
       }
@@ -78,9 +142,12 @@ const processRows = function (rowsElements) {
 };
 
 export const main = async function () {
-  document.body.classList.add(className);
+  document.documentElement.append(styleElement);
+
+  pageModifications.register(gifWithPoster, processGifsWithPosters);
+
   const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+    ${keyToCss('blogCard', 'tagImage', 'takeoverBanner')} img[srcset*=".gif"]:not(${keyToCss('poster')}):not(${inEditor})
   `;
   pageModifications.register(gifImage, processGifs);
 
@@ -96,16 +163,16 @@ export const main = async function () {
 };
 
 export const clean = async function () {
+  pageModifications.unregister(processGifsWithPosters);
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);
-  document.body.classList.remove(className);
 
-  [...document.querySelectorAll('.xkit-paused-gif-container')].forEach(wrapper =>
+  [...document.querySelectorAll(`.${containerClass}`)].forEach(wrapper =>
     wrapper.replaceWith(...wrapper.children)
   );
 
-  $('.xkit-paused-gif, .xkit-paused-gif-label').remove();
-  $('.xkit-accesskit-disabled-gif').removeClass('xkit-accesskit-disabled-gif');
-  $('.xkit-paused-background-gif').removeClass('xkit-paused-background-gif');
+  styleElement.remove();
+  $(`.${canvasClass}, .${labelClass}`).remove();
+  $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
 };

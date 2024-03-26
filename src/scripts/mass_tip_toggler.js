@@ -385,23 +385,29 @@ const processPosts = postElements =>
   });
 
 export const main = async function () {
-  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
-
   addSidebarItem(sidebarOptions);
 
   const { quickToggle, quickToggleMode, quickToggleAction } = await getPreferences('mass_tip_toggler');
+  showIfCanBeTipped = {
+    enabled: true,
+    disabled: false
+  }[quickToggleMode];
+
+  newCanBeTipped = {
+    default: undefined,
+    enable: true,
+    disable: false
+  }[quickToggleAction];
+
+  const buttonLabel = {
+    default: 'Revert tipping',
+    enable: 'Enable tipping',
+    disable: 'Disable tipping'
+  }[quickToggleAction];
+
+  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, buttonLabel);
+
   if (quickToggle) {
-    showIfCanBeTipped = {
-      enabled: true,
-      disabled: false
-    }[quickToggleMode];
-
-    newCanBeTipped = {
-      default: undefined,
-      enable: true,
-      disable: false
-    }[quickToggleAction];
-
     onNewPosts.addListener(processPosts);
   }
 };

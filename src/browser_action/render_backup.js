@@ -54,16 +54,25 @@ const localRestore = async function () {
   const importText = localImportTextarea.value;
 
   try {
+    localRestoreButton.disabled = true;
+
     const parsedStorage = JSON.parse(importText);
     await browser.storage.local.set(parsedStorage);
 
-    localRestoreButton.disabled = true;
+    localRestoreButton.classList.add('success');
+    localRestoreButton.textContent = 'Successfully restored!';
     localImportTextarea.value = '';
     document.querySelector('a[href="#configuration"]').classList.add('outdated');
+  } catch (exception) {
+    localRestoreButton.classList.add('failure');
+    localRestoreButton.textContent =
+      exception instanceof SyntaxError ? 'Failed to parse backup contents!' : 'Failed to restore!';
+    console.error(exception);
+  } finally {
     await sleep(3000);
     localRestoreButton.disabled = false;
-  } catch (exception) {
-    console.error(exception);
+    localRestoreButton.classList.remove('success', 'failure');
+    localRestoreButton.textContent = '';
   }
 };
 

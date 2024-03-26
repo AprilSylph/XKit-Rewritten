@@ -52,10 +52,10 @@ const getObserveElement = () =>
 const scrollToBottom = () => {
   activeElement.scrollTo({ top: activeElement.scrollHeight });
 
-  const buttonConnected = scrollToBottomButton?.isConnected || modalScrollToBottomButton?.isConnected;
   const loaders = [...activeElement.querySelectorAll(knightRiderLoaderSelector)];
+  const buttonConnected = scrollToBottomButton?.isConnected || modalScrollToBottomButton?.isConnected;
 
-  if (!buttonConnected || activeElement !== getScrollElement() || loaders.length === 0) {
+  if (loaders.length === 0 || !buttonConnected || activeElement !== getScrollElement()) {
     stopScrolling();
   }
 };
@@ -72,7 +72,7 @@ const startScrolling = () => {
 
 const stopScrolling = () => {
   observer.disconnect();
-  activeElement = undefined;
+  activeElement = false;
 
   scrollToBottomButton?.classList.remove(activeClass);
   modalScrollToBottomButton?.classList.remove(activeClass);

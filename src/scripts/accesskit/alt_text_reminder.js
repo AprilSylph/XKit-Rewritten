@@ -3,13 +3,15 @@ import { buildStyle } from '../../util/interface.js';
 import { translate } from '../../util/language_data.js';
 import { pageModifications } from '../../util/mutations.js';
 
+const missingAltTextBlock = `figure:has(img[alt="${translate('Image')}"], img[alt="${translate('Image').toLowerCase()}"])`;
+
 const styleElement = buildStyle(`
-  figure[data-no-alt-text] ${keyToCss('optionsIcon')} {
+  ${missingAltTextBlock} ${keyToCss('optionsIcon')} {
     outline: 3px dashed rgb(var(--accent));
     outline-offset: -1px;
   }
 
-  figure[data-no-alt-text]:hover ${keyToCss('images')} > div::after {
+  ${missingAltTextBlock}:hover ${keyToCss('images')} > div::after {
     position: absolute;
     bottom: 5px;
     right: 0px;
@@ -26,43 +28,18 @@ const styleElement = buildStyle(`
     line-height: 0;
   }
 
-  figure[data-no-alt-text] ${keyToCss('optionsWrapper')} {
+  ${missingAltTextBlock} ${keyToCss('optionsWrapper')} {
     display: unset !important;
   }
 `);
 
-const processEditors = editors =>
-  editors.forEach(editor => {
-    const observerCallback = () => {
-      [...editor.querySelectorAll('figure[data-no-alt-text]')].forEach(element => {
-        delete element.dataset.noAltText;
-      });
-
-      const imagesWithoutAlt = [
-        ...editor.querySelectorAll(`figure img[alt="${translate('Image')}"]`)
-      ];
-
-      imagesWithoutAlt.forEach(image => {
-        image.closest('figure').dataset.noAltText = true;
-      });
-    };
-
-    const observer = new MutationObserver(observerCallback);
-    observer.observe(editor, {
-      subtree: true,
-      childList: true,
-      attributeFilter: ['alt']
-    });
-  });
+const processEditors = ([editor]) => editor.prepend(styleElement);
 
 export const main = async () => {
-  document.documentElement.append(styleElement);
-  pageModifications.register(keyToCss('editor'), processEditors);
+  pageModifications.register('.block-editor-writing-flow', processEditors);
 };
 
 export const clean = async () => {
+  pageModifications.unregister(processEditors);
   styleElement.remove();
-  [...document.querySelectorAll('figure[data-no-alt-text]')].forEach(element => {
-    delete element.dataset.noAltText;
-  });
 };

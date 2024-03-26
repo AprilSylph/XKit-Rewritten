@@ -18,7 +18,9 @@ const pauseGif = function (gifElement) {
     canvas.getContext('2d').drawImage(image, 0, 0);
 
     const gifLabel = document.createElement('p');
-    gifLabel.className = 'xkit-paused-gif-label';
+    gifLabel.className = gifElement.clientWidth && gifElement.clientWidth < 150
+      ? 'xkit-paused-gif-label mini'
+      : 'xkit-paused-gif-label';
 
     gifElement.parentNode.append(canvas, gifLabel);
   };
@@ -87,7 +89,10 @@ export const main = async function () {
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 
-  pageModifications.register(`${postSelector} ${keyToCss('rows')}`, processRows);
+  pageModifications.register(
+    `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
+    processRows
+  );
 };
 
 export const clean = async function () {

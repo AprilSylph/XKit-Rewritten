@@ -6,6 +6,7 @@ export const getPreferences = async function (scriptName) {
   const scriptManifestURL = browser.runtime.getURL(`/scripts/${scriptName}.json`);
   const scriptManifestFile = await fetch(scriptManifestURL);
   const scriptManifest = await scriptManifestFile.json();
+  const storage = await browser.storage.local.get();
 
   const { preferences = {} } = scriptManifest;
   const unsetPreferences = {};
@@ -15,14 +16,13 @@ export const getPreferences = async function (scriptName) {
     if (preference.type === 'iframe') { continue; }
 
     const storageKey = `${scriptName}.preferences.${key}`;
-    const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
+    const savedPreference = storage[storageKey];
 
     if (savedPreference === undefined) {
       if (preference.inherit) {
-        const { [preference.inherit]: inheritedDefault } = await browser.storage.local.get(preference.inherit);
+        const inheritedDefault = storage[preference.inherit];
         if (inheritedDefault !== undefined) {
           preference.default = inheritedDefault;
-          browser.storage.local.remove(preference.inherit);
         }
       }
 

@@ -10,7 +10,7 @@ let lastFocusedElement;
  * @param {object} options - Destructured
  * @param {string} [options.title] - Prompt title
  * @param {(string|Node)[]} [options.message] - Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
- * @param {(HTMLAnchorElement|HTMLButtonElement)[]} [options.buttons] - Array of buttons to be displayed in the modal
+ * @param {(HTMLElement)[]} [options.buttons] - Array of buttons to be displayed in the modal
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {
   const modalElement = dom('div', {
@@ -40,3 +40,17 @@ export const hideModal = () => {
 
 export const modalCancelButton = dom('button', null, { click: hideModal }, ['Cancel']);
 export const modalCompleteButton = dom('button', { class: 'blue' }, { click: hideModal }, ['OK']);
+
+export const showErrorModal = exception => {
+  console.error('XKit Rewritten error:', exception);
+
+  showModal({
+    title: 'Something went wrong.',
+    message: [
+      [exception.body?.errors?.[0]?.detail, exception.errors?.[0]?.detail, exception.message]
+        .filter(Boolean)
+        .join('\n\n')
+    ],
+    buttons: [modalCompleteButton]
+  });
+};

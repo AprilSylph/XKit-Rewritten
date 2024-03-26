@@ -29,6 +29,17 @@ document.getElementById('search').addEventListener('input', event => {
       }
     });
 
+  [...document.querySelectorAll('details.script li')]
+    .forEach(preferenceElement => {
+      if (
+        query.length >= 3 && preferenceElement.textContent.toLowerCase().includes(query)
+      ) {
+        preferenceElement.classList.add('search-highlighted');
+      } else {
+        preferenceElement.classList.remove('search-highlighted');
+      }
+    });
+
   checkForNoResults();
 });
 

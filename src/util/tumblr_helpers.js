@@ -90,6 +90,15 @@ export const createEditRequestBody = postData => {
   };
 };
 
+/**
+ * @param {object} postData - /posts/{post-id} GET request response JSON
+ * @returns {boolean} isNpfCompatible - Whether the post can be edited as NPF
+ */
+export const isNpfCompatible = postData => {
+  const { isBlocksPostFormat, shouldOpenInLegacy } = postData;
+  return isBlocksPostFormat || shouldOpenInLegacy === false;
+};
+
 export const navigate = location =>
   inject(location => window.tumblr.navigate(location), [location]);
 

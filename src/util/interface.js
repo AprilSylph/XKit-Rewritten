@@ -3,11 +3,34 @@ import { dom } from './dom.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
 export const blogViewSelector = '[style*="--blog-title-color"] *';
+export const notificationSelector = `${keyToCss('notification')}[role="listitem"]`;
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
 const cellSelector = keyToCss('cell');
+const targetWrapperSelector = keyToCss(
+  'targetWrapper',
+  'targetWrapperBlock',
+  'targetWrapperFlex',
+  'targetWrapperInline'
+);
 
-export const getTimelineItemWrapper = element => element.closest(cellSelector) || element.closest(listTimelineObjectSelector);
+/**
+ * @param {Element} element Element within a timeline item
+ * @returns {Element | null} The timeline item wrapper
+ */
+export const getTimelineItemWrapper = element =>
+  element.closest(cellSelector) || element.closest(listTimelineObjectSelector);
+
+/**
+ * @param {Element} element Element within a popover wrapper
+ * @returns {Element | null} The outermost popover wrapper
+ */
+export const getPopoverWrapper = element => {
+  const closestWrapper = element.closest(targetWrapperSelector);
+  return closestWrapper?.parentElement?.matches(targetWrapperSelector)
+    ? closestWrapper.parentElement
+    : closestWrapper;
+};
 
 /**
  * @typedef {object} PostFilterOptions

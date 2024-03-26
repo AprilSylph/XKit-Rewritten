@@ -39,6 +39,9 @@ ${keyToCss('drawer')} .${buttonClass} {
 .${activeClass} svg use {
   --icon-color-primary: rgb(var(--yellow));
 }
+${keyToCss('drawer')} .${activeClass}.${buttonClass} {
+  background-color: rgb(var(--black)) !important;
+}
 `);
 
 const getScrollElement = () =>

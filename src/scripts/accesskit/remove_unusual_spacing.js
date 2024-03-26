@@ -14,11 +14,13 @@ const disableButtonClass = 'accesskit-unusual-spacing-disable-button';
 
 const enableButtonTemplate = createControlButtonTemplate(
   'ri-contract-left-right-fill',
-  enableButtonClass
+  enableButtonClass,
+  'Hide unusual spacing'
 );
 const disableButtonTemplate = createControlButtonTemplate(
   'ri-expand-left-right-fill',
-  disableButtonClass
+  disableButtonClass,
+  'Show unusual spacing'
 );
 
 const styleElement = buildStyle(`

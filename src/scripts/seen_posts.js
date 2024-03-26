@@ -1,13 +1,13 @@
-import { filterPostElements, postSelector } from '../util/interface.js';
+import { filterPostElements, getTimelineItemWrapper, postSelector } from '../util/interface.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 
-const excludeClass = 'xkit-seen-posts-done';
+const excludeAttribute = 'data-seen-posts-done';
 const timeline = '/v2/timeline/dashboard';
 const includeFiltered = true;
 
-const dimClass = 'xkit-seen-posts-seen';
+const dimAttribute = 'data-seen-posts-seen';
 const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 const hideClass = 'xkit-seen-posts-hide';
 const lengthenedClass = 'xkit-seen-posts-lengthened';
@@ -19,25 +19,27 @@ let seenPosts = [];
 const timers = new Map();
 
 const observer = new IntersectionObserver(
-  (entries) => entries.forEach(({ isIntersecting, target: articleElement }) => {
+  (entries) => entries.forEach(({ isIntersecting, target: element }) => {
     if (isIntersecting) {
-      if (!timers.has(articleElement)) {
-        timers.set(articleElement, setTimeout(() => markAsSeen(articleElement), 300));
+      if (!timers.has(element)) {
+        timers.set(element, setTimeout(() => markAsSeen(element), 300));
       }
     } else {
-      clearTimeout(timers.get(articleElement));
-      timers.delete(articleElement);
+      clearTimeout(timers.get(element));
+      timers.delete(element);
     }
   }),
   { rootMargin: '-20px 0px' }
 );
 
-const markAsSeen = (articleElement) => {
-  observer.unobserve(articleElement);
-  timers.delete(articleElement);
+const markAsSeen = (element) => {
+  observer.unobserve(element);
+  timers.delete(element);
 
-  const postElement = articleElement.closest(postSelector);
-  seenPosts.push(postElement.dataset.id);
+  const { dataset: { id } } = element.closest(postSelector);
+  if (seenPosts.includes(id)) return;
+
+  seenPosts.push(id);
   seenPosts.splice(0, seenPosts.length - 10000);
   browser.storage.local.set({ [storageKey]: seenPosts });
 };
@@ -52,13 +54,17 @@ const lengthenTimelines = () =>
 const dimPosts = function (postElements) {
   lengthenTimelines();
 
-  for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
+  for (const postElement of filterPostElements(postElements, { timeline, includeFiltered })) {
     const { id } = postElement.dataset;
+    const timelineItem = getTimelineItemWrapper(postElement);
 
-    if (seenPosts.includes(id)) {
-      postElement.classList.add(dimClass);
-    } else {
-      observer.observe(postElement.querySelector('article'));
+    const isFirstRender = timelineItem.getAttribute(excludeAttribute) === null;
+    timelineItem.setAttribute(excludeAttribute, '');
+
+    if (seenPosts.includes(id) === false) {
+      observer.observe(postElement.querySelector('article header + *'));
+    } else if (isFirstRender) {
+      timelineItem.setAttribute(dimAttribute, '');
     }
   }
 };
@@ -108,9 +114,9 @@ export const clean = async function () {
   timers.forEach((timerId) => clearTimeout(timerId));
   timers.clear();
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
+  $(`[${excludeAttribute}]`).removeAttr(excludeAttribute);
+  $(`[${dimAttribute}]`).removeAttr(dimAttribute);
   $(`.${hideClass}`).removeClass(hideClass);
-  $(`.${dimClass}`).removeClass(dimClass);
   $(`.${onlyDimAvatarsClass}`).removeClass(onlyDimAvatarsClass);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
 };

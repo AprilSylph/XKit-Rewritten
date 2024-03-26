@@ -17,9 +17,7 @@ const modalScrollContainerSelector = `${keyToCss('drawerContent')} > ${keyToCss(
 
 let scrollToBottomButton;
 let modalScrollToBottomButton;
-let active = false;
-
-let scrollElement;
+let activeElement = false;
 
 const styleElement = buildStyle(`
 .${buttonClass} {
@@ -52,36 +50,35 @@ const getObserveElement = () =>
   document.documentElement;
 
 const scrollToBottom = () => {
-  scrollElement.scrollTo({ top: scrollElement.scrollHeight });
+  activeElement.scrollTo({ top: activeElement.scrollHeight });
 
   const buttonConnected = scrollToBottomButton?.isConnected || modalScrollToBottomButton?.isConnected;
-  const loaders = [...scrollElement.querySelectorAll(knightRiderLoaderSelector)];
+  const loaders = [...activeElement.querySelectorAll(knightRiderLoaderSelector)];
 
-  if (!buttonConnected || scrollElement !== getScrollElement() || loaders.length === 0) {
+  if (!buttonConnected || activeElement !== getScrollElement() || loaders.length === 0) {
     stopScrolling();
   }
 };
 const observer = new ResizeObserver(scrollToBottom);
 
 const startScrolling = () => {
-  scrollElement = getScrollElement();
-
-  observer.observe(getObserveElement());
-  active = true;
   scrollToBottomButton?.classList.add(activeClass);
   modalScrollToBottomButton?.classList.add(activeClass);
 
+  activeElement = getScrollElement();
+  observer.observe(getObserveElement());
   scrollToBottom();
 };
 
 const stopScrolling = () => {
   observer.disconnect();
-  active = false;
+  activeElement = undefined;
+
   scrollToBottomButton?.classList.remove(activeClass);
   modalScrollToBottomButton?.classList.remove(activeClass);
 };
 
-const onClick = () => active ? stopScrolling() : startScrolling();
+const onClick = () => activeElement ? stopScrolling() : startScrolling();
 const onKeyDown = ({ key }) => key === '.' && stopScrolling();
 
 const cloneButton = (target, mode) => {
@@ -91,7 +88,7 @@ const cloneButton = (target, mode) => {
   clonedButton.addEventListener('click', onClick);
   clonedButton.classList.add(buttonClass, mode);
 
-  clonedButton.classList[active ? 'add' : 'remove'](activeClass);
+  clonedButton.classList[activeElement ? 'add' : 'remove'](activeClass);
   return clonedButton;
 };
 
@@ -125,10 +122,15 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  pageModifications.unregister(addButtonToPage);
-  modalButtonColorObserver.disconnect();
   stopScrolling();
+
+  pageModifications.unregister(addButtonToPage);
+  pageModifications.unregister(addModalButtonToPage);
+  document.documentElement.removeEventListener('keydown', onKeyDown);
+
+  styleElement.remove();
+
   scrollToBottomButton?.remove();
   modalScrollToBottomButton?.remove();
-  styleElement.remove();
+  modalButtonColorObserver.disconnect();
 };

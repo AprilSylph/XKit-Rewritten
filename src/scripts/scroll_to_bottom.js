@@ -27,6 +27,11 @@ const styleElement = buildStyle(`
   transform: rotate(180deg);
 }
 
+#base-container:has(> #glass-container ${modalScrollContainerSelector}) ${keyToCss('lowerRightButtons')} > .${buttonClass} {
+  opacity: 0;
+  pointer-events: none;
+}
+
 ${keyToCss('drawer')} .${buttonClass} {
   margin-top: 1ch;
 }

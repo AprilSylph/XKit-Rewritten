@@ -38,7 +38,8 @@ const processLabels = labels => labels.forEach(label => {
   if (textNode.nodeName !== '#text') return;
 
   const span = dom('span', null, null, [textNode.textContent]);
-  label.replaceChild(span, textNode);
+  label.insertBefore(span, textNode);
+  textNode.textContent = '';
 
   span.style.setProperty('--rendered-width', `${span.getBoundingClientRect().width}px`);
   span.classList.add(spanClass);

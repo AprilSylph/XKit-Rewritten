@@ -1,0 +1,33 @@
+.mass-tip-toggler-tag,
+.mass-tip-toggler-blog {
+  display: inline-block;
+
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.mass-tip-toggler-tag {
+  padding: 0 0.5em;
+  border-radius: 1em;
+  margin: 0.25rem 0;
+
+  background-color: rgb(var(--accent));
+  color: rgb(var(--navy));
+}
+
+.mass-tip-toggler-blog {
+  font-weight: 700;
+}
+
+.mass-tip-toggler-tag::before { content: '#'; }
+.mass-tip-toggler-blog::before { content: '@'; }
+
+.xkit-quick-tip-warning {
+  background-color: rgb(var(--secondary-accent));
+  line-height: 1;
+  display: flex;
+}
+
+.xkit-quick-tip-warning-text {
+  margin: 0.5em auto;
+}

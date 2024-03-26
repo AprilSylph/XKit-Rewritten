@@ -483,7 +483,7 @@ const processPosts = postElements =>
   });
 
 export const main = async function () {
-  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
+  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Quick Flags');
 
   addSidebarItem(sidebarOptions);
 

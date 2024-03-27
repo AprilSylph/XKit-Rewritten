@@ -12,6 +12,11 @@
       "label": "Max. post width",
       "type": "text",
       "default": "800px"
+    },
+    "expandPostMedia": {
+      "label": "Expand media content in posts",
+      "type": "checkbox",
+      "default": true
     }
   }
 }

@@ -17,6 +17,16 @@
       "label": "Expand media content in posts",
       "type": "checkbox",
       "default": true
+    },
+    "mainEnable": {
+      "label": "Apply to most post columns",
+      "type": "checkbox",
+      "default": true
+    },
+    "patioEnable": {
+      "label": "Apply to Tumblr Patio",
+      "type": "checkbox",
+      "default": true
     }
   }
 }

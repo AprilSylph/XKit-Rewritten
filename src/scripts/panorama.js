@@ -6,23 +6,26 @@ import { getPreferences } from '../util/preferences.js';
 const navigationWrapperBasis = 240;
 const navigationWrapperMargin = 20;
 const mainContentWrapperMinWidth = 902;
-const wideDashMinWidth = navigationWrapperBasis + navigationWrapperMargin + mainContentWrapperMinWidth;
+const widenDashMinWidth = navigationWrapperBasis + navigationWrapperMargin + mainContentWrapperMinWidth;
 
 const sidebarMaxWidth = 320;
 const mainRightPadding = 20;
 const mainRightBorder = 1;
 const sidebarOffset = sidebarMaxWidth + mainRightPadding + mainRightBorder;
 
+const mainEnableClass = 'xkit-panorama-main';
+const patioEnableClass = 'xkit-panorama-patio';
 const expandClass = 'xkit-panorama-expand-media';
+
 const maxPostWidthVar = '--xkit-panorama-post-width';
 const aspectRatioVar = '--xkit-panorama-aspect-ratio';
 
 const mainContentWrapper =
-  `${keyToCss('mainContentWrapper')}:not(${keyToCss('mainContentIsMasonry', 'mainContentIsFullWidth')})`;
+  `body.${mainEnableClass} ${keyToCss('mainContentWrapper')}:not(${keyToCss('mainContentIsMasonry', 'mainContentIsFullWidth')})`;
 const mainPostColumn = `main${keyToCss('postColumn', 'postsColumn')}`;
 const patioPostColumn = `[id]${keyToCss('columnWide')}`;
 
-const wideDashStyleElement = buildStyle(`
+const mainStyleElement = buildStyle(`
 ${mainContentWrapper}:has(> div > div > ${mainPostColumn}) {
   flex-grow: 1;
   max-width: calc(var(${maxPostWidthVar}) + ${sidebarOffset}px);
@@ -36,15 +39,15 @@ ${mainContentWrapper} > div > div:has(> ${mainPostColumn}) {
 ${mainContentWrapper} > div > div > ${mainPostColumn} {
   max-width: 100%;
 }
-${keyToCss('queueSettings')} {
+body.${mainEnableClass} ${keyToCss('queueSettings')} {
   box-sizing: border-box;
   width: 100%;
 }
 `);
-wideDashStyleElement.media = `(min-width: ${wideDashMinWidth}px)`;
+mainStyleElement.media = `(min-width: ${widenDashMinWidth}px)`;
 
 const styleElement = buildStyle(`
-${patioPostColumn} {
+body.${patioEnableClass} ${patioPostColumn} {
   width: min(var(${maxPostWidthVar}), 100vw);
 }
 
@@ -110,13 +113,20 @@ export const onStorageChanged = async (changes, areaName) =>
   Object.keys(changes).some(key => key.startsWith('panorama')) && main();
 
 export const main = async () => {
-  const { maxPostWidth: maxPostWidthString, expandPostMedia } = await getPreferences('panorama');
+  const {
+    maxPostWidth: maxPostWidthString,
+    expandPostMedia,
+    mainEnable,
+    patioEnable
+  } = await getPreferences('panorama');
 
   const maxPostWidth = Number(maxPostWidthString.trim().replace('px', '')) || 0;
   document.body.style.setProperty(maxPostWidthVar, `${Math.max(maxPostWidth, 540)}px`);
+  document.body.classList[mainEnable ? 'add' : 'remove'](mainEnableClass);
+  document.body.classList[patioEnable ? 'add' : 'remove'](patioEnableClass);
   document.body.classList[expandPostMedia ? 'add' : 'remove'](expandClass);
 
-  document.documentElement.append(styleElement, wideDashStyleElement);
+  document.documentElement.append(styleElement, mainStyleElement);
 
   pageModifications.register(
     `${postSelector} ${keyToCss('videoBlock')} iframe[style*="max-width"][style*="height"]`,
@@ -131,8 +141,8 @@ export const clean = async () => {
   );
 
   document.body.style.removeProperty(maxPostWidthVar);
-  document.body.classList.remove(expandClass);
+  document.body.classList.remove(mainEnableClass, patioEnableClass, expandClass);
 
   styleElement.remove();
-  wideDashStyleElement.remove();
+  mainStyleElement.remove();
 };

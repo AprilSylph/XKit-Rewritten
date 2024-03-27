@@ -1,6 +1,6 @@
 import { dom } from '../util/dom.js';
 import { megaEdit } from '../util/mega_editor.js';
-import { showModal, modalCancelButton, modalCompleteButton } from '../util/modals.js';
+import { showModal, modalCancelButton, modalCompleteButton, showErrorModal } from '../util/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { userBlogs } from '../util/user.js';
@@ -13,7 +13,7 @@ const createBlogSpan = name => dom('span', { class: 'tag-replacer-blog' }, null,
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const showInitialPrompt = async () => {
-  const initialForm = dom('form', { id: getPostsFormId }, { submit: confirmReplaceTag }, [
+  const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmReplaceTag(event).catch(showErrorModal) }, [
     dom('label', null, null, [
       'Replace tags on:',
       dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption))
@@ -96,7 +96,7 @@ const confirmReplaceTag = async event => {
       dom(
         'button',
         { class: remove ? 'red' : 'blue' },
-        { click: () => replaceTag({ uuid, oldTag, newTag, appendOnly }).catch(showError) },
+        { click: () => replaceTag({ uuid, oldTag, newTag, appendOnly }).catch(showErrorModal) },
         [remove ? 'Remove it!' : 'Replace it!']
       )
     ]
@@ -106,12 +106,6 @@ const confirmReplaceTag = async event => {
 const showTagNotFound = ({ tag, name }) => showModal({
   title: 'No posts found!',
   message: ['It looks like you don\'t have any posts tagged ', createTagSpan(tag.toLowerCase()), ' on ', createBlogSpan(name), '.'],
-  buttons: [modalCompleteButton]
-});
-
-const showError = exception => showModal({
-  title: 'Something went wrong.',
-  message: [exception.message],
   buttons: [modalCompleteButton]
 });
 

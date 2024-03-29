@@ -44,14 +44,15 @@ export const main = async function () {
   localFlaggedBlogs = localBlogFlagging.split(',').map(username => username.trim().toLowerCase());
   localFlaggedTags = localTagFlagging.split(',').map(tag => tag.replaceAll('#', '').trim().toLowerCase());
 
+  const mediaSelector =
+    `.${hiddenClass}:not(:hover) :is(figure:not([aria-label]), [role="application"])`;
+
   styleElement.textContent = `
-  .${hiddenClass}:not(:hover) figure:not([aria-label]),
-  .${hiddenClass}:not(:hover) [role="application"] {
+  ${mediaSelector} {
     position: relative;
   }
 
-  .${hiddenClass}:not(:hover) figure:not([aria-label])::after,
-  .${hiddenClass}:not(:hover) [role="application"]::after {
+  ${mediaSelector}::after {
     position: absolute;
     top: 0;
     left: 0;

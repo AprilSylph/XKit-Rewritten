@@ -16,7 +16,7 @@ const styleElement = buildStyle(`
 `);
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
-const tagChicletCarouselLinkSelector = `${listTimelineObjectSelector} ${keyToCss('tagChicletLink')}`;
+const tagChicletCarouselLinkSelector = `[data-timeline="/v2/timeline/dashboard"] ${listTimelineObjectSelector} ${keyToCss('tagChicletLink')}`;
 
 const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
   .map(getTimelineItemWrapper)

@@ -6,10 +6,12 @@ import { timelineObject } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 
 const hiddenClass = 'xkit-cleanfeed-filtered';
+const hiddenMediaClass = 'xkit-cleanfeed-filtered-media';
 const styleElement = buildStyle();
 const reblogSelector = keyToCss('reblog');
 
 let blockingMode;
+let blurText;
 let localBlogFlagging;
 let localTagFlagging;
 let localFlaggedBlogs;
@@ -17,8 +19,7 @@ let localFlaggedTags;
 
 const processPosts = postElements => filterPostElements(postElements).forEach(async postElement => {
   if (blockingMode === 'all') {
-    postElement.classList.add(hiddenClass);
-    return;
+    postElement.classList.add(hiddenMediaClass);
   }
 
   const { blog: { name, isAdult }, communityLabels, trail, tags } = await timelineObject(postElement);
@@ -27,20 +28,20 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
       communityLabels.hasCommunityLabel ||
       localFlaggedBlogs.includes(name) ||
       localFlaggedTags.some(t => tags.map(tag => tag.toLowerCase()).includes(t))) {
-    postElement.classList.add(hiddenClass);
+    postElement.classList.add(hiddenClass, hiddenMediaClass);
     return;
   }
 
   const reblogs = postElement.querySelectorAll(reblogSelector);
   trail.forEach((trailItem, i) => {
     if (trailItem.blog?.isAdult || localFlaggedBlogs.includes(trailItem.blog?.name)) {
-      reblogs[i].classList.add(hiddenClass);
+      reblogs[i].classList.add(hiddenClass, hiddenMediaClass);
     }
   });
 });
 
 export const main = async function () {
-  ({ blockingMode, localBlogFlagging, localTagFlagging } = await getPreferences('cleanfeed'));
+  ({ blockingMode, blurText, localBlogFlagging, localTagFlagging } = await getPreferences('cleanfeed'));
   localFlaggedBlogs = localBlogFlagging.split(',').map(username => username.trim().toLowerCase());
   localFlaggedTags = localTagFlagging.split(',').map(tag => tag.replaceAll('#', '').trim().toLowerCase());
 
@@ -49,7 +50,7 @@ export const main = async function () {
   })`;
 
   const mediaSelector =
-    `.${hiddenClass}:not(:hover) :is(figure:not([aria-label]), [role="application"], a > ${keyToCss('withImage')})`;
+    `.${hiddenMediaClass}:not(:hover) :is(figure:not([aria-label]), [role="application"], a > ${keyToCss('withImage')})`;
 
   styleElement.textContent = `
   ${localFlaggedBlogsTitleSelector} img[alt="${translate('Avatar')}"] {
@@ -82,6 +83,14 @@ export const main = async function () {
   }
   `;
 
+  if (blurText) {
+    styleElement.textContent += `
+      .${hiddenClass}:not(:hover) :is(${keyToCss('textBlock', 'pollBlock')}, ${keyToCss('linkCard')} > a > div > div) {
+        filter: blur(4px);
+      }
+    `;
+  }
+
   document.documentElement.append(styleElement);
   onNewPosts.addListener(processPosts);
 };
@@ -91,4 +100,5 @@ export const clean = async function () {
   styleElement.remove();
 
   $(`.${hiddenClass}`).removeClass(hiddenClass);
+  $(`.${hiddenMediaClass}`).removeClass(hiddenMediaClass);
 };

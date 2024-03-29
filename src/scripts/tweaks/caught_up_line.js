@@ -13,6 +13,13 @@ const styleElement = buildStyle(`
     overflow-y: hidden;
     border-top: 4px solid rgb(var(--white-on-dark));
   }
+
+  @media (max-width: 540px) {
+    [${borderAttribute}] > div {
+      margin-top: 2px;
+      border-bottom: 2px solid transparent;
+    }
+  }
 `);
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');

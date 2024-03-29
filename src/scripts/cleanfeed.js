@@ -45,7 +45,7 @@ export const main = async function () {
   localFlaggedTags = localTagFlagging.split(',').map(tag => tag.replaceAll('#', '').trim().toLowerCase());
 
   const mediaSelector =
-    `.${hiddenClass}:not(:hover) :is(figure:not([aria-label]), [role="application"])`;
+    `.${hiddenClass}:not(:hover) :is(figure:not([aria-label]), [role="application"], a > ${keyToCss('withImage')})`;
 
   styleElement.textContent = `
   ${mediaSelector} {

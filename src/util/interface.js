@@ -26,11 +26,8 @@ export const getTimelineItemWrapper = element =>
  * @returns {Element} The outermost popover wrapper or the element
  */
 export const getPopoverWrapper = element => {
-  let result = element;
-  while (result.parentElement.closest(targetWrapperSelector)) {
-    result = result.parentElement.closest(targetWrapperSelector);
-  }
-  return result;
+  const closestWrapper = element.closest(targetWrapperSelector);
+  return closestWrapper?.parentElement?.closest(targetWrapperSelector) ?? closestWrapper ?? element;
 };
 
 /**

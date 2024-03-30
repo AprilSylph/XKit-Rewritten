@@ -2,7 +2,7 @@ import { dom } from '../util/dom.js';
 import { megaEdit } from '../util/mega_editor.js';
 import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal } from '../util/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
-import { dateTimeFormat, elementsAsList } from '../util/text_format.js';
+import { constructDurationString, dateTimeFormat, elementsAsList } from '../util/text_format.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { userBlogs } from '../util/user.js';
 
@@ -78,18 +78,21 @@ const confirmInitialPrompt = async event => {
     .map(tag => tag.trim().toLowerCase())
     .filter(Boolean);
 
-  if (tags.length) {
-    const getTagCount = async tag => {
-      const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag } });
-      return totalPosts ?? 0;
-    };
-    const counts = await Promise.all(tags.map(getTagCount));
-    const count = counts.reduce((a, b) => a + b, 0);
+  const getTagCount = async tag => {
+    const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag } });
+    return totalPosts ?? 0;
+  };
+  const getCount = async () => {
+    const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`);
+    return totalPosts ?? 0;
+  };
+  const toCheckCount = tags.length
+    ? (await Promise.all(tags.map(getTagCount))).reduce((a, b) => a + b, 0)
+    : await getCount();
 
-    if (count === 0) {
-      showTagsNotFound({ tags, name });
-      return;
-    }
+  if (toCheckCount === 0) {
+    tags.length ? showTagsNotFound({ tags, name }) : showPostsNotFound({ name });
+    return;
   }
 
   const beforeMs = elements.before.valueAsNumber + timezoneOffsetMs;
@@ -125,7 +128,7 @@ const confirmInitialPrompt = async event => {
       dom(
         'button',
         { class: 'red' },
-        { click: () => privatePosts({ uuid, name, tags, before }).catch(showErrorModal) },
+        { click: () => privatePosts({ uuid, name, tags, before, toCheckCount }).catch(showErrorModal) },
         ['Private them!']
       )
     ]
@@ -156,9 +159,10 @@ const showPostsNotFound = ({ name }) =>
     buttons: [modalCompleteButton]
   });
 
-const privatePosts = async ({ uuid, name, tags, before }) => {
+const privatePosts = async ({ uuid, name, tags, before, toCheckCount }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const privateStatus = dom('span');
+  const remainingStatus = dom('span');
 
   showModal({
     title: 'Making posts private...',
@@ -166,20 +170,59 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
       dom('small', null, null, ['Do not navigate away from this page.']),
       '\n\n',
       gatherStatus,
-      privateStatus
+      privateStatus,
+      '\n\n',
+      remainingStatus
     ]
   });
 
   const allPostIdsSet = new Set();
   const filteredPostIdsSet = new Set();
 
+  let fetchCount = 0;
+  let checkedCount = 0;
+
+  const collectDurations = [1];
+  const privateDurations = [1];
+  const average = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+
+  let privatedCount = 0;
+  let privatedFailCount = 0;
+
+  const updateEstimates = () => {
+    const estimates = [];
+    const collectRemaining = constructDurationString((toCheckCount - checkedCount) / (checkedCount / fetchCount) * average(collectDurations));
+    collectRemaining && estimates.push(`Collection: ${collectRemaining}`);
+
+    if (privatedCount || privatedFailCount) {
+      const privateRemaining = constructDurationString(filteredPostIds.length / 100 * average(privateDurations));
+      privateRemaining && estimates.push(`Privating: ${privateRemaining}`);
+    } else {
+      const privateEstimate = constructDurationString(toCheckCount / 100 * average(privateDurations));
+      privateEstimate && estimates.push(`Privating: up to ${privateEstimate}`);
+    }
+    remainingStatus.replaceChildren(
+      ...(estimates.length
+        ? [
+            dom('span', null, null, ['Estimated time remaining:']),
+            '\n',
+            dom('small', null, null, [estimates.join('\n')])
+          ]
+        : [])
+    );
+  };
+
   const collect = async resource => {
     while (resource) {
+      const now = Date.now();
       await Promise.all([
         apiFetch(resource).then(({ response }) => {
           const posts = response.posts
             .filter(({ canEdit }) => canEdit === true)
             .filter(({ state }) => state === 'published');
+
+          fetchCount += 1;
+          checkedCount += posts.length;
 
           posts.forEach(({ id }) => allPostIdsSet.add(id));
 
@@ -190,9 +233,11 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
           resource = response.links?.next?.href;
 
           gatherStatus.textContent = `Found ${filteredPostIdsSet.size} posts (checked ${allPostIdsSet.size})${resource ? '...' : '.'}`;
+          updateEstimates();
         }),
         sleep(1000)
       ]);
+      collectDurations.push((Date.now() - now) / 1000);
     }
   };
 
@@ -210,14 +255,12 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
     return;
   }
 
-  let privatedCount = 0;
-  let privatedFailCount = 0;
-
   while (filteredPostIds.length !== 0) {
     const postIds = filteredPostIds.splice(0, 100);
 
     if (privateStatus.textContent === '') privateStatus.textContent = '\nPrivating posts...';
 
+    const now = Date.now();
     await Promise.all([
       megaEdit(postIds, { mode: 'private' }).then(() => {
         privatedCount += postIds.length;
@@ -225,9 +268,11 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
         privatedFailCount += postIds.length;
       }).finally(() => {
         privateStatus.textContent = `\nPrivated ${privatedCount} posts... ${privatedFailCount ? `(failed: ${privatedFailCount})` : ''}`;
+        updateEstimates();
       }),
       sleep(1000)
     ]);
+    privateDurations.push((Date.now() - now) / 1000);
   }
 
   await sleep(1000);

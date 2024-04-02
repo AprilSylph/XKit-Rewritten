@@ -20,13 +20,19 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Setup Package Manager
+      uses: pnpm/action-setup@v3
+      with:
+        version: 8
+
     - name: Setup Node.js environment
       uses: actions/setup-node@v4
       with:
         node-version: lts/*
+        cache: pnpm
 
     - name: Install dependencies
-      run: npm ci
+      run: pnpm install
 
     - name: Run tests
-      run: npm test
+      run: pnpm test && pnpm posttest

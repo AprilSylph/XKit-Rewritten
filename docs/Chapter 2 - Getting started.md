@@ -2,15 +2,15 @@
 
 ## Prerequisites
 
-- [Download and install Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for your platform
+- [Download and install Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for your platform and the [PNPM package manager](https://pnpm.io/installation).
 - [Install EditorConfig](https://editorconfig.org/#download) for your favourite text editor
-- Install the project dependencies with **`npm install`**
+- Install the project dependencies with **`pnpm install`**
 
 ## CLI commands
 
-- **`npm test`**: Runs all linters. Will report any syntax or style errors.
-- **`npm test --ignore-scripts`**: Runs only the addon linter. Only reports syntax and WebExtension API errors.
-- **`npm run build`**: Creates an unsigned ZIP of the addon. Useful for debugging issues you can't reproduce.
+- **`pnpm test`**: Runs all linters. Will report any syntax or style errors.
+- **`pnpm test --ignore-scripts`**: Runs only the addon linter. Only reports syntax and WebExtension API errors.
+- **`pnpm build`**: Creates an unsigned ZIP of the addon. Useful for debugging issues you can't reproduce.
 
 ### Web-only development
 

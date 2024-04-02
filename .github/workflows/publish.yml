@@ -12,19 +12,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Package Manager
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
 
       - name: Lint WebExtension
-        run: npm test --ignore-scripts
+        run: pnpm test
 
       - name: Sign WebExtension
-        run: npx web-ext sign
+        run: pnpm exec web-ext sign
         continue-on-error: true
         env:
           WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
@@ -37,16 +43,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Package Manager
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
 
       - name: Upload to Web Store
-        run: npx chrome-webstore-upload upload --source=src/ --auto-publish
+        run: pnpm exec chrome-webstore-upload upload --source=src/ --auto-publish
         env:
           EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}

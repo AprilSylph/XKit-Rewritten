@@ -73,7 +73,8 @@ const addIcons = function (postElements) {
     const isMutual = await mutuals[blogName];
     if (isMutual) {
       postElement.classList.add(mutualsClass);
-      getPopoverWrapper(postAttribution)?.before(icon.cloneNode(true));
+      const iconTarget = getPopoverWrapper(postAttribution) ?? postAttribution;
+      iconTarget?.before(icon.cloneNode(true));
     } else if (showOnlyMutuals) {
       getTimelineItemWrapper(postElement)?.setAttribute(hiddenAttribute, '');
     }

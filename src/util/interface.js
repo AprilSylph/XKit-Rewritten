@@ -22,12 +22,14 @@ export const getTimelineItemWrapper = element =>
   element.closest(cellSelector) || element.closest(listTimelineObjectSelector);
 
 /**
- * @param {Element} element - Element that may be within a popover wrapper
- * @returns {Element} The outermost popover wrapper or the element
+ * @param {Element} element Element within a popover wrapper
+ * @returns {Element | null} The outermost popover wrapper
  */
 export const getPopoverWrapper = element => {
   const closestWrapper = element.closest(targetWrapperSelector);
-  return closestWrapper?.parentElement?.closest(targetWrapperSelector) ?? closestWrapper ?? element;
+  return closestWrapper?.parentElement?.matches(targetWrapperSelector)
+    ? closestWrapper.parentElement
+    : closestWrapper;
 };
 
 /**

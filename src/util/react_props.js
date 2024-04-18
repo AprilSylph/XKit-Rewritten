@@ -25,7 +25,14 @@ const unburyTimelineObject = () => {
  */
 export const timelineObject = async function (postElement) {
   if (!timelineObjectCache.has(postElement)) {
-    timelineObjectCache.set(postElement, inject(unburyTimelineObject, [], postElement));
+    timelineObjectCache.set(
+      postElement,
+      inject(unburyTimelineObject, [], postElement).then(data =>
+        data && data.community && data.authorBlog
+          ? { ...data, blog: data.authorBlog, communityBlog: data.blog }
+          : data
+      )
+    );
   }
   return timelineObjectCache.get(postElement);
 };

@@ -1,5 +1,5 @@
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
-import { showModal, modalCancelButton, modalCompleteButton } from '../util/modals.js';
+import { showModal, modalCancelButton, modalCompleteButton, showErrorModal } from '../util/modals.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { dom } from '../util/dom.js';
 
@@ -75,7 +75,7 @@ const modalConfirmButton = dom(
       gatherStatusElement.textContent = '';
       unlikeStatusElement.textContent = '';
       showModal(modalWorkingOptions);
-      unlikePosts();
+      unlikePosts().catch(showErrorModal);
     }
   },
   ['Clear my likes']

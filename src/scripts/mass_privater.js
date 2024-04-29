@@ -1,6 +1,6 @@
 import { dom } from '../util/dom.js';
 import { megaEdit } from '../util/mega_editor.js';
-import { showModal, modalCancelButton, modalCompleteButton, hideModal } from '../util/modals.js';
+import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal } from '../util/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
 import { apiFetch } from '../util/tumblr_helpers.js';
 import { userBlogs } from '../util/user.js';
@@ -50,7 +50,7 @@ const createNowString = () => {
 };
 
 const showInitialPrompt = async () => {
-  const initialForm = dom('form', { id: getPostsFormId }, { submit: confirmInitialPrompt }, [
+  const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event).catch(showErrorModal) }, [
     dom('label', null, null, [
       'Posts on blog:',
       dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption))
@@ -147,7 +147,7 @@ const confirmInitialPrompt = async event => {
       dom(
         'button',
         { class: 'red' },
-        { click: () => privatePosts({ uuid, name, tags, before }).catch(showError) },
+        { click: () => privatePosts({ uuid, name, tags, before }).catch(showErrorModal) },
         ['Private them!']
       )
     ]
@@ -177,12 +177,6 @@ const showPostsNotFound = ({ name }) =>
     ],
     buttons: [modalCompleteButton]
   });
-
-const showError = exception => showModal({
-  title: 'Something went wrong.',
-  message: [exception.message],
-  buttons: [modalCompleteButton]
-});
 
 const privatePosts = async ({ uuid, name, tags, before }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);

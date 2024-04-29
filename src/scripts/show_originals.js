@@ -1,4 +1,4 @@
-import { filterPostElements, blogViewSelector, getTimelineItemWrapper } from '../util/interface.js';
+import { filterPostElements, getTimelineItemWrapper } from '../util/interface.js';
 import { isMyPost, timelineObject } from '../util/react_props.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -11,11 +11,15 @@ const whitelistedAttribute = 'data-show-originals-whitelisted';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
 
+const blogTimelineRegex = /^\/v2\/blog\/[a-z0-9-]{1,32}\/posts$/;
+const channelSelector = `${keyToCss('bar')} ~ *`;
+
 const storageKey = 'show_originals.savedModes';
 const includeFiltered = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
+let showReblogsOfNotFollowing;
 let whitelist;
 let disabledBlogs;
 
@@ -65,21 +69,15 @@ const addControls = async (timelineElement, location) => {
 const getLocation = timelineElement => {
   const { timeline, which } = timelineElement.dataset;
 
-  const isInBlogView = timelineElement.matches(blogViewSelector);
-  const isSinglePostBlogView = timeline.includes('permalink');
+  const isBlog = blogTimelineRegex.test(timeline) && !timelineElement.matches(channelSelector);
 
   const on = {
     dashboard: timeline === '/v2/timeline/dashboard',
-    peepr: isInBlogView && !isSinglePostBlogView,
+    disabled: isBlog && disabledBlogs.some(name => timeline === `/v2/blog/${name}/posts`),
+    peepr: isBlog,
     blogSubscriptions: timeline.includes('blog_subscriptions') || which === 'blog_subscriptions'
-
   };
-  const location = Object.keys(on).find(location => on[location]);
-  const isDisabledBlog = disabledBlogs.some(name => timeline.startsWith(`/v2/blog/${name}/`));
-
-  if (!location || isSinglePostBlogView) return undefined;
-  if (isDisabledBlog) return 'disabled';
-  return location;
+  return Object.keys(on).find(location => on[location]);
 };
 
 const processTimelines = async () => {
@@ -101,11 +99,12 @@ const processPosts = async function (postElements) {
 
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {
-      const { rebloggedRootId, content, blogName } = await timelineObject(postElement);
+      const { rebloggedRootId, content, blogName, rebloggedFromFollowing } = await timelineObject(postElement);
       const myPost = await isMyPost(postElement);
 
       if (!rebloggedRootId) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
+      if (showReblogsOfNotFollowing && !rebloggedFromFollowing) { return; }
 
       getTimelineItemWrapper(postElement).setAttribute(
         (showOwnReblogs && myPost) || disabledBlogs.includes(blogName)
@@ -121,6 +120,7 @@ export const main = async function () {
   ({
     showOwnReblogs,
     showReblogsWithContributedContent,
+    showReblogsOfNotFollowing,
     whitelistedUsernames
   } = await getPreferences('show_originals'));
 

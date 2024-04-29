@@ -2,7 +2,8 @@ import { createControlButtonTemplate, cloneControlButton } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { filterPostElements, postSelector } from '../util/interface.js';
-import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
+import { translate } from '../util/language_data.js';
+import { showModal, hideModal, modalCancelButton, showErrorModal } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { timelineObject } from '../util/react_props.js';
@@ -130,8 +131,8 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       excludeTrailItems
         .map(i => reblogs[i])
         .forEach(reblog => reblog.remove());
-    } catch ({ body }) {
-      notify(body.errors[0].detail);
+    } catch (exception) {
+      showErrorModal(exception);
     }
   };
 
@@ -159,19 +160,19 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const existingButton = postElement.querySelector(`.${buttonClass}`);
   if (existingButton !== null) { return; }
 
-  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"]`);
+  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"][aria-label=${translate('Edit')}]`);
   if (!editButton) { return; }
 
   const { trail = [], content = [] } = await timelineObject(postElement);
   const items = trail.length + (content.length ? 1 : 0);
 
-  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: onButtonClicked }, items < 2);
+  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: event => onButtonClicked(event).catch(showErrorModal) }, items < 2);
   const controlIcon = editButton.closest(controlIconSelector);
   controlIcon.before(clonedControlButton);
 });
 
 export const main = async function () {
-  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass);
+  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Trim Reblogs');
   onNewPosts.addListener(processPosts);
 };
 

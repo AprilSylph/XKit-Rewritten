@@ -139,7 +139,16 @@ const renderScripts = async function () {
   for (const scriptName of [...orderedEnabledScripts, ...disabledScripts]) {
     const url = getURL(`/scripts/${scriptName}.json`);
     const file = await fetch(url);
-    const { title = scriptName, description = '', icon = {}, help = '', relatedTerms = [], preferences = {}, deprecated = false } = await file.json();
+    const {
+      title = scriptName,
+      description = '',
+      note = '',
+      icon = {},
+      help = '',
+      relatedTerms = [],
+      preferences = {},
+      deprecated = false
+    } = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 
@@ -181,6 +190,11 @@ const renderScripts = async function () {
     enabledInput.id = scriptName;
     enabledInput.checked = enabledScripts.includes(scriptName);
     enabledInput.addEventListener('input', writeEnabled);
+
+    if (note !== '') {
+      const noteParagraph = scriptTemplateClone.querySelector('.note');
+      noteParagraph.textContent = note;
+    }
 
     if (Object.keys(preferences).length !== 0) {
       const preferenceList = scriptTemplateClone.querySelector('.preferences');

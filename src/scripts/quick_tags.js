@@ -2,6 +2,7 @@ import { cloneControlButton, createControlButtonTemplate } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { postSelector } from '../util/interface.js';
+import { translate } from '../util/language_data.js';
 import { megaEdit } from '../util/mega_editor.js';
 import { showErrorModal } from '../util/modals.js';
 import { pageModifications } from '../util/mutations.js';
@@ -231,7 +232,7 @@ postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 export const main = async function () {
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Quick Tags');
 
-  pageModifications.register(`${postSelector} footer ${controlIconSelector} a[href*="/edit/"]`, addControlButtons);
+  pageModifications.register(`${postSelector} footer ${controlIconSelector} a[href*="/edit/"][aria-label=${translate('Edit')}]`, addControlButtons);
   registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });
 
   populatePopups();

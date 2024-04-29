@@ -282,13 +282,13 @@ const migrateTags = async ({ detail }) => {
 
       showModal({
         title: 'Success',
-        message: `Added ${toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'a tag bundle'}!`,
+        message: `Imported ${toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'a tag bundle'}!`,
         buttons: [modalCompleteButton]
       });
     } else {
       showModal({
         title: 'No new bundles!',
-        message: 'XKit Rewritten has these tag bundles already.',
+        message: 'Your XKit Rewritten configuration has these tag bundles already.',
         buttons: [modalCompleteButton]
       });
     }

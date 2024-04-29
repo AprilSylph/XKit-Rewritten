@@ -1,10 +1,10 @@
 {
-  "title": "Quick Flags",
-  "description": "Label your mature posts easily",
+  "title": "Mass Labeler",
+  "description": "Label mature posts in bulk",
   "icon": {
     "class_name": "ri-flag-2-line",
     "color": "white",
-    "background_color": "#434343"
+    "background_color": "#9d318b"
   },
   "relatedTerms": [ "Mature", "NSFW", "NSFT", "Flag", "Community Label" ]
 }

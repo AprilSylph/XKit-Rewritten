@@ -1,0 +1,23 @@
+.mass-labeler-tag,
+.mass-labeler-blog {
+  display: inline-block;
+
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.mass-labeler-tag {
+  padding: 0 0.5em;
+  border-radius: 1em;
+  margin: 0.25rem 0;
+
+  background-color: rgb(var(--accent));
+  color: rgb(var(--navy));
+}
+
+.mass-labeler-blog {
+  font-weight: 700;
+}
+
+.mass-labeler-tag::before { content: '#'; }
+.mass-labeler-blog::before { content: '@'; }

@@ -98,7 +98,7 @@ const addBlogCardIcons = blogCardLinks =>
 
     const isMutual = await getIsFollowingYou(blogName);
     if (isMutual) {
-      blogCardLink.before(createIcon(blogName, blogCardLink.style.color));
+      blogCardLink.before(createIcon(blogName, getComputedStyle(blogCardLink).color));
     }
   });
 

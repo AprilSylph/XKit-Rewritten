@@ -142,7 +142,7 @@ export const main = async function () {
   }
 };
 
-const createIcon = (blogName, color) => {
+const createIcon = (blogName, color = 'rgb(var(--black))') => {
   const today = new Date();
   const aprilFools = (today.getMonth() === 3 && today.getDate() === 1);
 
@@ -150,7 +150,7 @@ const createIcon = (blogName, color) => {
     xmlns: 'http://www.w3.org/2000/svg',
     class: mutualIconClass,
     viewBox: '0 0 1000 1000',
-    fill: color || 'rgb(var(--black))'
+    fill: color
   }, null, [
     dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
       translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)

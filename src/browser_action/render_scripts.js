@@ -139,7 +139,16 @@ const renderScripts = async function () {
   for (const scriptName of [...orderedEnabledScripts, ...disabledScripts]) {
     const url = getURL(`/scripts/${scriptName}.json`);
     const file = await fetch(url);
-    const { title = scriptName, description = '', note = '', icon = {}, help = '', relatedTerms = [], preferences = {}, deprecated = false } = await file.json();
+    const {
+      title = scriptName,
+      description = '',
+      note = '',
+      icon = {},
+      help = '',
+      relatedTerms = [],
+      preferences = {},
+      deprecated = false
+    } = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 

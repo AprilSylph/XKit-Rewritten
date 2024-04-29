@@ -38,9 +38,7 @@ const renderMutedBlogs = async function () {
   const mutedBlogs = await getMutedBlogs();
   const blogNames = await getBlogNames();
 
-  mutedBlogList.textContent = '';
-
-  for (const [uuid, mode] of Object.entries(mutedBlogs)) {
+  mutedBlogList.replaceChildren(...Object.entries(mutedBlogs).map(([uuid, mode]) => {
     const templateClone = mutedBlogTemplate.content.cloneNode(true);
     const li = templateClone.querySelector('li');
     const linkElement = templateClone.querySelector('a');
@@ -57,8 +55,8 @@ const renderMutedBlogs = async function () {
 
     unmuteButton.addEventListener('click', unmuteUser);
 
-    mutedBlogList.append(templateClone);
-  }
+    return templateClone;
+  }));
 };
 
 browser.storage.onChanged.addListener((changes, areaName) => {

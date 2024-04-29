@@ -266,7 +266,7 @@ const migrateTags = async ({ detail }) => {
           message: [
             `Would you like to import the following ${
               toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'tag bundle'
-            } from New XKit to XKit Rewritten??`,
+            } from New XKit to XKit Rewritten?`,
             '\n\n',
             dom('ul', null, null, toAdd.map(({ title }) => dom('li', null, null, [title])))
           ],

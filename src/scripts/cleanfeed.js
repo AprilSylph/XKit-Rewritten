@@ -44,10 +44,18 @@ export const main = async function () {
   localFlaggedBlogs = localBlogFlagging.split(',').map(username => username.trim().toLowerCase());
   localFlaggedTags = localTagFlagging.split(',').map(tag => tag.replaceAll('#', '').trim().toLowerCase());
 
+  const localFlaggedBlogsTitleSelector = `:is(${
+    localFlaggedBlogs.map(username => `[title="${username}"]`).join(', ')
+  })`;
+
   const mediaSelector =
     `.${hiddenClass}:not(:hover) :is(figure:not([aria-label]), [role="application"], a > ${keyToCss('withImage')})`;
 
   styleElement.textContent = `
+  ${localFlaggedBlogsTitleSelector} img[alt="${translate('Avatar')}"] {
+    filter: blur(20px);
+  }
+
   ${mediaSelector} {
     position: relative;
   }
@@ -72,9 +80,7 @@ export const main = async function () {
     color: rgba(var(--black), 0.65);
     object-fit: cover;
   }
-  ` + localFlaggedBlogs
-      .map(username => `[title="${username}"] img[alt="${translate('Avatar')}"] { filter: blur(20px); }`)
-      .join('');
+  `;
 
   document.documentElement.append(styleElement);
   onNewPosts.addListener(processPosts);

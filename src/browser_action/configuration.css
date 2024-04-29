@@ -155,8 +155,8 @@ label[for="filter"] {
   margin: 0;
 
   background-color: var(--in-content-box-info-background);
-  text-align: center;
   font-size: 0.875rem;
+  text-align: center;
 }
 
 .script .note:empty {

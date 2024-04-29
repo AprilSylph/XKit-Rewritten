@@ -10,7 +10,7 @@ import { getPreferences } from '../util/preferences.js';
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenAttribute = 'data-mutual-checker-hidden';
 const mutualsClass = 'from-mutual';
-const postAttributionSelector = `header ${keyToCss('attribution')} > span:not(${keyToCss('reblogAttribution')}) a`;
+const postAttributionSelector = `header ${keyToCss('attribution')} a:not(${keyToCss('reblogAttribution', 'rebloggedFromName')} *)`;
 
 const styleElement = buildStyle(`${keyToCss('notification')}:not([data-mutuals]) { display: none !important; }`);
 
@@ -73,7 +73,8 @@ const addIcons = function (postElements) {
     const isMutual = await mutuals[blogName];
     if (isMutual) {
       postElement.classList.add(mutualsClass);
-      getPopoverWrapper(postAttribution)?.before(icon.cloneNode(true));
+      const iconTarget = getPopoverWrapper(postAttribution) ?? postAttribution;
+      iconTarget?.before(icon.cloneNode(true));
     } else if (showOnlyMutuals) {
       getTimelineItemWrapper(postElement)?.setAttribute(hiddenAttribute, '');
     }

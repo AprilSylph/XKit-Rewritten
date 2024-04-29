@@ -1,11 +1,11 @@
 import { cloneControlButton, createControlButtonTemplate } from '../util/control_buttons.js';
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
-import { postSelector } from '../util/interface.js';
+import { filterPostElements, getTimelineItemWrapper, postSelector } from '../util/interface.js';
 import { translate } from '../util/language_data.js';
 import { megaEdit } from '../util/mega_editor.js';
 import { showErrorModal } from '../util/modals.js';
-import { pageModifications } from '../util/mutations.js';
+import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
 import { getPreferences } from '../util/preferences.js';
@@ -58,6 +58,8 @@ popupForm.appendChild(popupInput);
 const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option' });
 
 const storageKey = 'quick_tags.preferences.tagBundles';
+
+let editedTagsMap = new WeakMap();
 
 const populatePopups = async function () {
   popupElement.textContent = '';
@@ -176,6 +178,11 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
     notify(`Edited legacy post on ${blogName}`);
   }
 
+  editedTagsMap.set(getTimelineItemWrapper(postElement), tags);
+  addFakeTagsToFooter(postElement, tags);
+};
+
+const addFakeTagsToFooter = (postElement, tags) => {
   const tagsElement = dom('div', { class: tagsClass });
 
   const innerTagsDiv = document.createElement('div');
@@ -215,15 +222,20 @@ const processPostOptionBundleClick = function ({ target }) {
   editPostFormTags({ add: bundleTags });
 };
 
-const addControlButtons = function (editButtons) {
-  editButtons
-    .filter(editButton => editButton.matches(`.${buttonClass} ~ div a[href*="/edit/"]`) === false)
-    .forEach(editButton => {
-      const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
-      const controlIcon = editButton.closest(controlIconSelector);
-      controlIcon.before(clonedControlButton);
-    });
-};
+const processPosts = postElements => filterPostElements(postElements).forEach(postElement => {
+  const tags = editedTagsMap.get(getTimelineItemWrapper(postElement));
+  tags && addFakeTagsToFooter(postElement, tags);
+
+  const existingButton = postElement.querySelector(`.${buttonClass}`);
+  if (existingButton !== null) { return; }
+
+  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"][aria-label=${translate('Edit')}]`);
+  if (!editButton) { return; }
+
+  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
+  const controlIcon = editButton.closest(controlIconSelector);
+  controlIcon.before(clonedControlButton);
+});
 
 popupElement.addEventListener('click', processBundleClick);
 popupForm.addEventListener('submit', processFormSubmit);
@@ -232,7 +244,7 @@ postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
 export const main = async function () {
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Quick Tags');
 
-  pageModifications.register(`${postSelector} footer ${controlIconSelector} a[href*="/edit/"][aria-label=${translate('Edit')}]`, addControlButtons);
+  onNewPosts.addListener(processPosts);
   registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });
 
   populatePopups();
@@ -244,7 +256,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  pageModifications.unregister(addControlButtons);
+  onNewPosts.removeListener(processPosts);
   pageModifications.unregister(processPostForm);
   popupElement.remove();
 
@@ -253,6 +265,8 @@ export const clean = async function () {
   $(`.${buttonClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${tagsClass}`).remove();
+
+  editedTagsMap = new WeakMap();
 };
 
 export const stylesheet = true;

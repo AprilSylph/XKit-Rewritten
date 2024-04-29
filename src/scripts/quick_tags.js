@@ -264,11 +264,11 @@ const migrateTags = async ({ detail }) => {
         showModal({
           title: 'Add tag bundles?',
           message: [
-            `Would you like to add ${
-              toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'a tag bundle'
-            }?`,
+            `Would you like to import the following ${
+              toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'tag bundle'
+            } from New XKit to XKit Rewritten??`,
             '\n\n',
-            `(${toAdd.map(({ title }) => title).join(', ')})`
+            dom('ul', null, null, toAdd.map(({ title }) => dom('li', null, null, [title])))
           ],
           buttons: [
             modalCancelButton,

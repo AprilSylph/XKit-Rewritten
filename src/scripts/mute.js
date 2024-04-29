@@ -164,19 +164,24 @@ const onMeatballButtonClicked = function ({ currentTarget }) {
 
   form.elements.muteOption.value = currentMode;
 
-  showModal({
-    title: currentMode ? `Mute options for ${name}:` : `Mute ${name}?`,
-    message: [form],
-    buttons: [
-      modalCancelButton,
-      ...(currentMode
-        ? [
-            dom('button', { class: 'blue' }, { click: () => unmuteUser(uuid) }, ['Unmute']),
-            dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Update Mute' })
-          ]
-        : [dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Mute' })])
-    ]
-  });
+  currentMode
+    ? showModal({
+      title: `Mute options for ${name}:`,
+      message: [form],
+      buttons: [
+        modalCancelButton,
+        dom('button', { class: 'blue' }, { click: () => unmuteUser(uuid) }, ['Unmute']),
+        dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Update Mute' })
+      ]
+    })
+    : showModal({
+      title: `Mute ${name}?`,
+      message: [form],
+      buttons: [
+        modalCancelButton,
+        dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Mute' })
+      ]
+    });
 };
 
 const muteUser = event => {

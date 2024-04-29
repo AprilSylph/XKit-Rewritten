@@ -150,14 +150,13 @@ const createIcon = (blogName, color = 'rgb(var(--black))') => {
     xmlns: 'http://www.w3.org/2000/svg',
     class: mutualIconClass,
     viewBox: '0 0 1000 1000',
-    fill: color
+    fill: aprilFools ? '#00b8ff' : color
   }, null, [
     dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
       translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
     ]),
     dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: aprilFools ? aprilFoolsPath : regularPath })
   ]);
-  aprilFools && icon.setAttribute('fill', '#00b8ff');
   return icon;
 };
 

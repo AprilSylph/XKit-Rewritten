@@ -20,7 +20,7 @@
     },
     "showReblogsOfNotFollowing": {
       "type": "checkbox",
-      "label": "Always show reblogs of accounts you don't follow",
+      "label": "Always show reblogs of blogs I don't follow",
       "default": false
     },
     "whitelistedUsernames": {

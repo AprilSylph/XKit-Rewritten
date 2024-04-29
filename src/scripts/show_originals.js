@@ -72,7 +72,8 @@ const getLocation = timelineElement => {
     dashboard: timeline === '/v2/timeline/dashboard',
     disabled: isBlog && disabledBlogs.some(name => timeline === `/v2/blog/${name}/posts`),
     peepr: isBlog,
-    blogSubscriptions: timeline.includes('blog_subscriptions') || which === 'blog_subscriptions'
+    blogSubscriptions: timeline.includes('blog_subscriptions') || which === 'blog_subscriptions',
+    blogpack: timeline.includes('blogpack') || which === 'blogpack'
   };
   return Object.keys(on).find(location => on[location]);
 };

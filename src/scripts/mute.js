@@ -169,12 +169,12 @@ const onMeatballButtonClicked = function ({ currentTarget }) {
     message: [form],
     buttons: [
       modalCancelButton,
-      ...(currentMode ? [
-        dom('button', { class: 'blue' }, { click: () => unmuteUser(uuid) }, ['Unmute']),
-        dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Update Mute' })
-      ] : [
-        dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Mute' })
-      ])
+      ...(currentMode
+        ? [
+            dom('button', { class: 'blue' }, { click: () => unmuteUser(uuid) }, ['Unmute']),
+            dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Update Mute' })
+          ]
+        : [dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Mute' })])
     ]
   });
 };

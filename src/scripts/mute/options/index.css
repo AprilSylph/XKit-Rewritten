@@ -44,6 +44,10 @@ header {
   border-bottom: 1px solid rgb(var(--grey));
 }
 
+#muted-blogs:not(:empty) + #no-muted-blogs {
+  display: none;
+}
+
 .muted-blog {
   padding: 1ch 0;
   border-top: 1px solid rgb(var(--grey));

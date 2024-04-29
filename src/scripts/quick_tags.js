@@ -2,6 +2,7 @@ import { cloneControlButton, createControlButtonTemplate } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { filterPostElements, getTimelineItemWrapper, postSelector } from '../util/interface.js';
+import { translate } from '../util/language_data.js';
 import { megaEdit } from '../util/mega_editor.js';
 import { showErrorModal } from '../util/modals.js';
 import { onNewPosts, pageModifications } from '../util/mutations.js';
@@ -228,7 +229,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(po
   const existingButton = postElement.querySelector(`.${buttonClass}`);
   if (existingButton !== null) { return; }
 
-  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"]`);
+  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"][aria-label=${translate('Edit')}]`);
   if (!editButton) { return; }
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });

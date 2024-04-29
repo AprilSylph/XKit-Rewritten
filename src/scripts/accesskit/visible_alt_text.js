@@ -34,7 +34,7 @@ const processImages = function (imageElements) {
     if (imageBlock.classList.contains(processedClass)) continue;
     imageBlock.classList.add(processedClass);
 
-    const isDefaultAltText = alt === translate('Image') || alt === 'image';
+    const isDefaultAltText = [translate('Image'), translate('Image').toLowerCase(), 'image'].includes(alt);
     const shouldShowCaption = mode === 'show' || !isDefaultAltText;
     if (!shouldShowCaption) continue;
 

@@ -167,16 +167,15 @@ const onMeatballButtonClicked = function ({ currentTarget }) {
   showModal({
     title: currentMode ? `Mute options for ${name}:` : `Mute ${name}?`,
     message: [form],
-    buttons: currentMode
-      ? [
-          modalCancelButton,
-          dom('button', { class: 'blue' }, { click: () => unmuteUser(uuid) }, ['Unmute']),
-          dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Update Mute' })
-        ]
-      : [
-          modalCancelButton,
-          dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Mute' })
-        ]
+    buttons: [
+      modalCancelButton,
+      ...(currentMode ? [
+        dom('button', { class: 'blue' }, { click: () => unmuteUser(uuid) }, ['Unmute']),
+        dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Update Mute' })
+      ] : [
+        dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Mute' })
+      ])
+    ]
   });
 };
 

@@ -1,7 +1,7 @@
 import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
 
-const wrapper = keyToCss('leftContent');
+const wrapper = keyToCss('leftContentMain', 'username');
 const badgeContainer = keyToCss('badgeContainer');
 const badgeImage = ':is(svg, img)';
 

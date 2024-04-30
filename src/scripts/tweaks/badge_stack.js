@@ -1,17 +1,14 @@
 import { keyToCss } from '../../util/css_map.js';
 import { buildStyle } from '../../util/interface.js';
-import { pageModifications } from '../../util/mutations.js';
 
 const wrapper = keyToCss('leftContent');
 const badgeContainer = keyToCss('badgeContainer');
 const badgeImage = ':is(svg, img)';
 
-const stackedClass = 'xkit-tweaks-badge-stacked';
-
 const styleElement = buildStyle(`
 
-${wrapper}:not(:hover) .${stackedClass} {
-  margin-right: -7px;
+${wrapper}:not(:hover) ${badgeContainer} + ${badgeContainer} {
+  margin-left: -7px;
 }
 
 ${wrapper}:not(:hover) ${badgeContainer} ${badgeImage} {
@@ -42,24 +39,15 @@ ${badgeContainer} ${badgeImage} {
 }
 `);
 
-const processBadges = badgeContainers =>
-  badgeContainers
-    .filter(badge => badge.nextElementSibling?.matches(badgeContainer))
-    .forEach(badge => badge.classList.add(stackedClass));
-
 const waitForRender = () =>
   new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
 export const main = async () => {
   document.documentElement.append(styleElement);
   waitForRender().then(() => document.documentElement.append(transitionStyleElement));
-
-  pageModifications.register(`${wrapper} ${badgeContainer}`, processBadges);
 };
 
 export const clean = async () => {
   styleElement.remove();
   transitionStyleElement.remove();
-
-  $(`.${stackedClass}`).removeClass(stackedClass);
 };

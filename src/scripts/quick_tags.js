@@ -25,7 +25,6 @@ let autoTagAsker;
 let controlButtonTemplate;
 
 const popupElement = dom('div', { id: 'quick-tags' });
-const popupForm = dom('form', null, { submit: event => event.preventDefault() });
 const popupInput = dom(
   'input',
   {
@@ -53,7 +52,7 @@ const checkLength = ({ currentTarget }) => {
   }
 };
 popupInput.addEventListener('input', checkLength);
-popupForm.appendChild(popupInput);
+const popupForm = dom('form', null, { submit: event => event.preventDefault() }, [popupInput]);
 
 const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option' });
 

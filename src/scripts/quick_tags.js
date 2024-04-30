@@ -182,16 +182,10 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 };
 
 const addFakeTagsToFooter = (postElement, tags) => {
-  const tagsElement = dom('div', { class: tagsClass });
-
-  const innerTagsDiv = document.createElement('div');
-  tagsElement.appendChild(innerTagsDiv);
-
-  for (const tag of tags) {
-    innerTagsDiv.appendChild(
-      dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`])
-    );
-  }
+  const fakeTags = tags.map(tag =>
+    dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`])
+  );
+  const tagsElement = dom('div', { class: tagsClass }, null, [dom('div', null, null, fakeTags)]);
 
   postElement.querySelector('footer').parentNode.prepend(tagsElement);
 };

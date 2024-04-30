@@ -250,12 +250,12 @@ const processPosts = async function (postElements) {
 };
 
 const renderQuickTags = async function () {
-  quickTagsList.textContent = '';
-
   const { [quickTagsStorageKey]: tagBundles = [] } = await browser.storage.local.get(quickTagsStorageKey);
-  tagBundles.forEach(tagBundle => {
+
+  quickTagsList.replaceChildren(...tagBundles.map(tagBundle => {
     const bundleTags = tagBundle.tags.split(',').map(tag => tag.trim().toLowerCase());
     const bundleButton = dom('button', null, null, [tagBundle.title]);
+
     bundleButton.addEventListener('click', ({ currentTarget: { dataset } }) => {
       const checked = dataset.checked === 'true';
 
@@ -274,8 +274,8 @@ const renderQuickTags = async function () {
       dataset.checked = !checked;
     });
 
-    quickTagsList.appendChild(bundleButton);
-  });
+    return bundleButton;
+  }));
 };
 
 const updateQuickTags = (changes, areaName) => {

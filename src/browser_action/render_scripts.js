@@ -127,15 +127,13 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
 };
 
 const renderScripts = async function () {
-  const scriptClones = [];
-  scriptsDiv.textContent = '';
-
   const installedScripts = await getInstalledScripts();
   const { enabledScripts = [], specialAccess = [] } = await browser.storage.local.get();
 
   const orderedEnabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName));
   const disabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName) === false);
 
+  const scriptClones = [];
   for (const scriptName of [...orderedEnabledScripts, ...disabledScripts]) {
     const url = getURL(`/scripts/${scriptName}.json`);
     const file = await fetch(url);
@@ -204,7 +202,7 @@ const renderScripts = async function () {
     scriptClones.push(scriptTemplateClone);
   }
 
-  scriptsDiv.append(...scriptClones);
+  scriptsDiv.replaceChildren(...scriptClones);
 };
 
 renderScripts();

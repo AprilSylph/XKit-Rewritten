@@ -138,33 +138,24 @@ const confirmInitialPrompt = async event => {
 
   const after = afterMs / 1000;
 
-  const message = tags.length
-    ? [
-        'Every post on ',
-        createBlogSpan(name),
-        ' tagged ',
-        ...elementsAsList(tags.map(createTagSpan), 'or'),
-        ' from after ',
-        afterElement,
-        ' will be labelled as ',
-        dom('strong', null, null, [
-          'Mature Content',
-          ...addedCategoryText.flatMap(text => [' + ', text])
-        ]),
-        '.'
-      ]
-    : [
-        'Every post on ',
-        createBlogSpan(name),
-        ' from after ',
-        afterElement,
-        ' will be labelled as ',
-        dom('strong', null, null, [
-          'Mature Content',
-          ...addedCategoryText.flatMap(text => [' + ', text])
-        ]),
-        '.'
-      ];
+  const message = [
+    'Every post on ',
+    createBlogSpan(name),
+    ...(tags.length
+      ? [
+          ' tagged ',
+          ...elementsAsList(tags.map(createTagSpan), 'or')
+        ]
+      : []),
+    ' from after ',
+    afterElement,
+    ' will be labelled as ',
+    dom('strong', null, null, [
+      'Mature Content',
+      ...addedCategoryText.flatMap(text => [' + ', text])
+    ]),
+    '.'
+  ];
 
   showModal({
     title: 'Are you sure?',
@@ -198,7 +189,7 @@ const showPostsNotFound = ({ name }) =>
   showModal({
     title: 'No posts found!',
     message: [
-      'It looks like you don\'t have any unlabelled posts with the selected criteria on ',
+      "It looks like you don't have any unlabelled posts with the selected criteria on ",
       createBlogSpan(name),
       '.'
     ],

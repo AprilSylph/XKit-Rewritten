@@ -1,5 +1,3 @@
-import { inject } from './inject.js';
-
 let formKey;
 
 const pathnames = {
@@ -44,15 +42,11 @@ export const megaEdit = async function (postIds, options) {
     delete requestBody.tags;
   }
 
-  return inject(
-    async (resource, body) =>
-      fetch(resource, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-        body
-      }).then(async response =>
-        response.ok ? response.json() : Promise.reject(await response.json())
-      ),
-    [`https://www.tumblr.com/${pathname}`, $.param(requestBody)]
+  await fetch(`https://www.tumblr.com/${pathname}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+    body: $.param(requestBody)
+  }).then(async response =>
+    response.ok ? response.json() : Promise.reject(await response.json())
   );
 };

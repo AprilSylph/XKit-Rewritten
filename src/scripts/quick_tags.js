@@ -163,7 +163,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 
   tags.push(...tagsToAdd);
 
-  if (false) {
+  if (isNpfCompatible(postData)) {
     const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
       method: 'PUT',
       body: {

@@ -42,7 +42,7 @@ export const megaEdit = async function (postIds, options) {
     delete requestBody.tags;
   }
 
-  await fetch(`https://www.tumblr.com/${pathname}`, {
+  return fetch(`https://www.tumblr.com/${pathname}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
     body: $.param(requestBody)

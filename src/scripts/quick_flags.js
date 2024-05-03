@@ -2,6 +2,7 @@ import { cloneControlButton, createControlButtonTemplate } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { filterPostElements, getTimelineItemWrapper, postSelector } from '../util/interface.js';
+import { translate } from '../util/language_data.js';
 import { bulkCommunityLabel } from '../util/mega_editor.js';
 import { showErrorModal } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
@@ -150,7 +151,7 @@ const processPosts = postElements =>
     if (!canEdit) return;
 
     const editButton = postElement.querySelector(
-      `footer ${keyToCss('controlIcon')} a[href*="/edit/"]`
+      `footer ${keyToCss('controlIcon')} a[href*="/edit/"][aria-label=${translate('Edit')}]`
     );
     if (!editButton) return;
 

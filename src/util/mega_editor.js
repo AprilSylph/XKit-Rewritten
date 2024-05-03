@@ -1,21 +1,15 @@
 import { inject } from './inject.js';
 
-let savedFormKey;
-
-const getFormKey = async () => {
-  savedFormKey ??= await fetch('https://www.tumblr.com/neue_web/iframe/new/text').then(response => {
-    if (response.ok) {
-      return response.text();
-    } else {
-      throw Object.assign(new Error(response.status), { response });
-    }
-  }).then(responseText => {
-    const responseDocument = (new DOMParser()).parseFromString(responseText, 'text/html');
-    return responseDocument.getElementById('tumblr_form_key').getAttribute('content');
-  }).catch(console.error);
-
-  return savedFormKey;
-};
+const formKeyPromise = fetch('https://www.tumblr.com/neue_web/iframe/new/text').then(response => {
+  if (response.ok) {
+    return response.text();
+  } else {
+    throw Object.assign(new Error(response.status), { response });
+  }
+}).then(responseText => {
+  const responseDocument = (new DOMParser()).parseFromString(responseText, 'text/html');
+  return responseDocument.getElementById('tumblr_form_key').getAttribute('content');
+}).catch(console.error);
 
 const pathnames = {
   add: 'add_tags_to_posts',
@@ -38,7 +32,7 @@ const pathnames = {
 export const megaEdit = async function (postIds, options) {
   const pathname = pathnames[options.mode];
 
-  const formKey = await getFormKey();
+  const formKey = await formKeyPromise;
 
   const requestBody = {
     post_ids: postIds.join(','),
@@ -75,7 +69,7 @@ export const megaEdit = async function (postIds, options) {
  * @returns {Promise<Response>} Response from constructed request
  */
 export const bulkCommunityLabel = async function (blogName, postIds, options) {
-  const formKey = await getFormKey();
+  const formKey = await formKeyPromise;
 
   const requestBody = {
     form_key: formKey,

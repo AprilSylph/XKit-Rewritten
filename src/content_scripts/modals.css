@@ -116,6 +116,7 @@
 
 #xkit-modal .buttons :is(a, button, input) {
   padding: 0.75ch 1.5ch;
+  min-width: 10ch;
   border: none;
   border-radius: 3px;
 

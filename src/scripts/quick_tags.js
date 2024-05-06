@@ -25,7 +25,6 @@ let autoTagAsker;
 let controlButtonTemplate;
 
 const popupElement = dom('div', { id: 'quick-tags' });
-const popupForm = dom('form', null, { submit: event => event.preventDefault() });
 const popupInput = dom(
   'input',
   {
@@ -53,7 +52,7 @@ const checkLength = ({ currentTarget }) => {
   }
 };
 popupInput.addEventListener('input', checkLength);
-popupForm.appendChild(popupInput);
+const popupForm = dom('form', null, { submit: event => event.preventDefault() }, [popupInput]);
 
 const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option' });
 
@@ -61,21 +60,17 @@ const storageKey = 'quick_tags.preferences.tagBundles';
 
 let editedTagsMap = new WeakMap();
 
+const createBundleButton = tagBundle => {
+  const bundleButton = dom('button', null, null, [tagBundle.title]);
+  bundleButton.dataset.tags = tagBundle.tags;
+  return bundleButton;
+};
+
 const populatePopups = async function () {
-  popupElement.textContent = '';
-  postOptionPopupElement.textContent = '';
-
-  popupElement.appendChild(popupForm);
-
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-  for (const tagBundle of tagBundles) {
-    const bundleButton = document.createElement('button');
-    bundleButton.textContent = tagBundle.title;
-    bundleButton.dataset.tags = tagBundle.tags;
-    popupElement.appendChild(bundleButton);
 
-    postOptionPopupElement.appendChild(bundleButton.cloneNode(true));
-  }
+  popupElement.replaceChildren(popupForm, ...tagBundles.map(createBundleButton));
+  postOptionPopupElement.replaceChildren(...tagBundles.map(createBundleButton));
 };
 
 const processPostForm = async function ([selectedTagsElement]) {
@@ -183,16 +178,10 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 };
 
 const addFakeTagsToFooter = (postElement, tags) => {
-  const tagsElement = dom('div', { class: tagsClass });
-
-  const innerTagsDiv = document.createElement('div');
-  tagsElement.appendChild(innerTagsDiv);
-
-  for (const tag of tags) {
-    innerTagsDiv.appendChild(
-      dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`])
-    );
-  }
+  const fakeTags = tags.map(tag =>
+    dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`])
+  );
+  const tagsElement = dom('div', { class: tagsClass }, null, [dom('div', null, null, fakeTags)]);
 
   postElement.querySelector('footer').parentNode.prepend(tagsElement);
 };

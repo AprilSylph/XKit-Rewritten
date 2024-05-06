@@ -28,7 +28,7 @@ const styleElement = buildStyle(`
   svg.xkit-mutual-icon {
     vertical-align: text-bottom;
 
-    width: 1.125rem;
+    height: 1.125rem;
     margin-top: 0;
     margin-left: 0;
     margin-right: 0.5ch;
@@ -44,7 +44,15 @@ const styleElement = buildStyle(`
   }
 
   ${keyToCss('blogCardBlogLink')} svg.xkit-mutual-icon {
-    width: 1.5rem;
+    position: relative;
+    top: 3px;
+
+    flex: none;
+    align-self: start;
+
+    box-sizing: border-box;
+    height: 1.5rem;
+    padding: 0.25rem 0;
   }
 `);
 

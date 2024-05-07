@@ -52,7 +52,7 @@ const styleElement = buildStyle(`
 
     box-sizing: border-box;
     height: 1.5rem;
-    padding: 0.25rem 0;
+    padding: 0.1875rem 0;
   }
 `);
 

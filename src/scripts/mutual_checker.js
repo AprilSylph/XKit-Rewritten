@@ -40,17 +40,14 @@ const styleElement = buildStyle(`
 
   ${keyToCss('blogCardBlogLink')} {
     display: flex;
-    align-items: end;
   }
 
   ${keyToCss('blogCardBlogLink')} svg.xkit-mutual-icon {
     position: relative;
     top: 3px;
 
-    flex: none;
-    align-self: start;
-
     box-sizing: border-box;
+    flex: none;
     height: 1.5rem;
     padding: 0.1875rem 0;
   }

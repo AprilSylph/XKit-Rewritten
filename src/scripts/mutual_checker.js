@@ -86,7 +86,7 @@ const addIcons = function (postElements) {
     if (isMutual) {
       postElement.classList.add(mutualsClass);
       const iconTarget = getPopoverWrapper(postAttribution) ?? postAttribution;
-      iconTarget?.before(createIcon(blogName));
+      iconTarget?.before(createMutualIcon(blogName));
     } else if (showOnlyMutuals) {
       getTimelineItemWrapper(postElement)?.setAttribute(hiddenAttribute, '');
     }
@@ -99,11 +99,15 @@ const addBlogCardIcons = blogCardLinks =>
     if (!blogName) return;
 
     const followingBlog = await getIsFollowing(blogName, blogCardLink);
-    if (!followingBlog) return;
+    const isFollowingYou = await getIsFollowingYou(blogName);
+    const isMutual = followingBlog && isFollowingYou;
 
-    const isMutual = await getIsFollowingYou(blogName);
-    if (isMutual) {
-      blogCardLink.before(createIcon(blogName, getComputedStyle(blogCardLink).color));
+    if (isFollowingYou) {
+      blogCardLink.before(
+        isMutual
+          ? createMutualIcon(blogName, getComputedStyle(blogCardLink).color)
+          : createFollowingIcon(blogName, getComputedStyle(blogCardLink).color)
+      );
     }
   });
 
@@ -147,11 +151,11 @@ export const main = async function () {
   }
 };
 
-const createIcon = (blogName, color = 'rgb(var(--black))') => {
+const createMutualIcon = (blogName, color = 'rgb(var(--black))') => {
   const today = new Date();
   const aprilFools = (today.getMonth() === 3 && today.getDate() === 1);
 
-  const icon = dom('svg', {
+  return dom('svg', {
     xmlns: 'http://www.w3.org/2000/svg',
     class: mutualIconClass,
     viewBox: '0 0 1000 1000',
@@ -162,8 +166,20 @@ const createIcon = (blogName, color = 'rgb(var(--black))') => {
     ]),
     dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: aprilFools ? aprilFoolsPath : regularPath })
   ]);
-  return icon;
 };
+
+const createFollowingIcon = (blogName, color = 'rgb(var(--black))') =>
+  dom('svg', {
+    xmlns: 'http://www.w3.org/2000/svg',
+    class: mutualIconClass,
+    viewBox: '0 0 1000 1000',
+    fill: color
+  }, null, [
+    dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
+      translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
+    ]),
+    dom('use', { xmlns: 'http://www.w3.org/2000/svg', href: '#ri-user-shared-line' })
+  ]);
 
 export const clean = async function () {
   onNewPosts.removeListener(addIcons);

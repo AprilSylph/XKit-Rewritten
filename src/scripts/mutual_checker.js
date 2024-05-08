@@ -151,35 +151,36 @@ export const main = async function () {
   }
 };
 
+const createIcon = (content, color, tooltip) => dom('svg', {
+  xmlns: 'http://www.w3.org/2000/svg',
+  class: mutualIconClass,
+  viewBox: '0 0 1000 1000',
+  fill: color
+}, null, [
+  dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [tooltip]),
+  content
+]);
+
 const createMutualIcon = (blogName, color = 'rgb(var(--black))') => {
   const today = new Date();
   const aprilFools = (today.getMonth() === 3 && today.getDate() === 1);
 
-  return dom('svg', {
-    xmlns: 'http://www.w3.org/2000/svg',
-    class: mutualIconClass,
-    viewBox: '0 0 1000 1000',
-    fill: aprilFools ? '#00b8ff' : color
-  }, null, [
-    dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
-      translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
-    ]),
-    dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: aprilFools ? aprilFoolsPath : regularPath })
-  ]);
+  return createIcon(
+    dom('path', {
+      xmlns: 'http://www.w3.org/2000/svg',
+      d: aprilFools ? aprilFoolsPath : regularPath
+    }),
+    aprilFools ? '#00b8ff' : color,
+    translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
+  );
 };
 
 const createFollowingIcon = (blogName, color = 'rgb(var(--black))') =>
-  dom('svg', {
-    xmlns: 'http://www.w3.org/2000/svg',
-    class: mutualIconClass,
-    viewBox: '0 0 1000 1000',
-    fill: color
-  }, null, [
-    dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
-      translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
-    ]),
-    dom('use', { xmlns: 'http://www.w3.org/2000/svg', href: '#ri-user-shared-line' })
-  ]);
+  createIcon(
+    dom('use', { xmlns: 'http://www.w3.org/2000/svg', href: '#ri-user-shared-line' }),
+    color,
+    translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
+  );
 
 export const clean = async function () {
   onNewPosts.removeListener(addIcons);

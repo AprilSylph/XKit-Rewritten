@@ -100,10 +100,10 @@ const handlePopupClick = async (checkbox, category) => {
     notify('Updated community labels!');
     editedPostStates.set(getTimelineItemWrapper(postElement), { hasCommunityLabel, categories });
     updatePostWarningElement(postElement);
+    updateCheckboxes({ hasCommunityLabel, categories });
   } catch ({ body }) {
     notify(body?.errors?.[0]?.detail || 'Failed to update community labels!');
-  } finally {
-    updateCheckboxes({ hasCommunityLabel, categories });
+    updateCheckboxes({ hasCommunityLabel: currentHasCommunityLabel, categories: currentCategories });
   }
 };
 

@@ -2,7 +2,7 @@ name: Sync wiki content
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - wiki/**
       - .github/workflows/sync-wiki.yml

@@ -1,0 +1,1 @@
+This wiki has restricted editing to collaborators only. To report any missing or unclear information, please [open a documentation issue](https://github.com/AprilSylph/XKit-Rewritten/issues/new?assignees=&labels=documentation&template=documentation_issue.yml).

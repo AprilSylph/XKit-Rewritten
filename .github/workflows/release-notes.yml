@@ -3,8 +3,8 @@ name: Release Notes
 on:
   workflow_dispatch:
     inputs:
-      previousTag:
-        description: Previous tag
+      previousVersion:
+        description: 'optional: set previous version (i.e. v0.1.0)'
         type: string
         required: false
 
@@ -19,10 +19,10 @@ jobs:
           fetch-depth: 0
 
       - name: Create release notes
-        run: git log ${{ inputs.previousTag || '$(git describe --tags --abbrev=0)' }}..HEAD --reverse --pretty --format="- %h **%an** %s" --follow src/ > release-notes.md
+        run: git log ${{ inputs.previousVersion || '$(git describe --tags --abbrev=0)' }}..HEAD --reverse --pretty --format="- %h **%an** %s" --follow src/ > release-notes.md
 
       - name: Print release notes
-        run: git log ${{ inputs.previousTag || '$(git describe --tags --abbrev=0)' }}..HEAD --reverse --pretty --format="- %h **%an** %s" --follow src/ > $GITHUB_STEP_SUMMARY
+        run: git log ${{ inputs.previousVersion || '$(git describe --tags --abbrev=0)' }}..HEAD --reverse --pretty --format="- %h **%an** %s" --follow src/ > $GITHUB_STEP_SUMMARY
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

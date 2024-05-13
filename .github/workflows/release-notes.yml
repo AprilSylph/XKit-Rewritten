@@ -16,7 +16,7 @@ jobs:
         run: git log $(git describe --tags --abbrev=0)..HEAD --reverse --pretty --format="- %h **%an** %s" --follow src/ > release-notes.md
 
       - name: Print release notes
-        run: cat release-notes.md
+        run: git log $(git describe --tags --abbrev=0)..HEAD --reverse --pretty --format="- %h **%an** %s" --follow src/ > $GITHUB_STEP_SUMMARY
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

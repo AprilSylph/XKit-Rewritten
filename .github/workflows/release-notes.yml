@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       previousVersion:
-        description: 'optional: set previous version (i.e. v0.1.0)'
+        description: '[Optional] Starting ref (e.g. 8f462fa or v0.1.0)'
         type: string
         required: false
 

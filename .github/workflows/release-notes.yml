@@ -18,14 +18,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create release notes
-        run: git log ${{ inputs.previousVersion || '$(git describe --tags --abbrev=0)' }}..HEAD --reverse --pretty --format="- %h **%an** %s" --follow src/ > release-notes.md
-
       - name: Print release notes
-        run: git log ${{ inputs.previousVersion || '$(git describe --tags --abbrev=0)' }}..HEAD --reverse --pretty --format="- %h **%an** %s" --follow src/ > $GITHUB_STEP_SUMMARY
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-notes
-          path: release-notes.md
+        run: |
+          echo "\`\`\`md" >> $GITHUB_STEP_SUMMARY
+          git log ${{ inputs.previousVersion || '$(git describe --tags --abbrev=0)' }}..HEAD --reverse --pretty --format="- %h **%an** %s" --follow src/ >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY

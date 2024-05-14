@@ -20,6 +20,6 @@ jobs:
 
       - name: Print release notes
         run: |
-          echo "```md" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`md" >> $GITHUB_STEP_SUMMARY
           git log ${{ inputs.previousVersion || '$(git describe --tags --abbrev=0)' }}..HEAD --reverse --pretty --format="- %h **%an** %s" --follow src/ >> $GITHUB_STEP_SUMMARY
-          echo "```" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY

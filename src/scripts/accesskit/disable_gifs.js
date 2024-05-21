@@ -46,8 +46,6 @@ const styleElement = buildStyle(`
 .${canvasClass} {
   position: absolute;
   visibility: visible;
-
-  background-color: rgb(var(--white));
 }
 
 :is(.${loadedClass} > ${posterSelector}, .${canvasClass}, .${labelClass})${hovered} {

@@ -8,6 +8,16 @@ const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
 
+const loadedClass = 'xkit-paused-gif-loaded';
+const forceLoadClass = 'xkit-paused-gif-force-load';
+
+const hovered = `:is(:hover > *, .${containerClass}:hover *)`;
+
+const inEditor = '.block-editor-writing-flow *';
+
+const gifSelector = `img[srcset*=".gif"]:not(${keyToCss('poster')}):not(${inEditor})`;
+const posterSelector = `${gifSelector} + ${keyToCss('poster')}`;
+
 const styleElement = buildStyle(`
 .${labelClass} {
   position: absolute;
@@ -40,11 +50,16 @@ const styleElement = buildStyle(`
   background-color: rgb(var(--white));
 }
 
-*:hover > .${canvasClass},
-*:hover > .${labelClass},
-.${containerClass}:hover .${canvasClass},
-.${containerClass}:hover .${labelClass} {
+:is(.${loadedClass} > ${posterSelector}, .${canvasClass}, .${labelClass})${hovered} {
   display: none;
+}
+
+${gifSelector}:not(${hovered}):not(.${forceLoadClass}) {
+  display: none;
+}
+
+${posterSelector} {
+  visibility: visible !important;
 }
 
 .${backgroundGifClass}:not(:hover) {
@@ -68,7 +83,7 @@ const addLabel = (element, inside = false) => {
   }
 };
 
-const pauseGif = function (gifElement) {
+const addPlaceholder = function (gifElement) {
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
@@ -79,28 +94,36 @@ const pauseGif = function (gifElement) {
       canvas.className = gifElement.className;
       canvas.classList.add(canvasClass);
       canvas.getContext('2d').drawImage(image, 0, 0);
-      gifElement.parentNode.append(canvas);
-      addLabel(gifElement);
+      gifElement.after(canvas);
+      gifElement.parentNode.classList.add(loadedClass);
     }
   };
 };
 
+const loaded = gifElement =>
+  (gifElement.complete && gifElement.currentSrc) ||
+  new Promise(resolve => gifElement.addEventListener('load', resolve, { once: true }));
+
 const processGifs = function (gifElements) {
-  gifElements.forEach(gifElement => {
-    if (gifElement.closest('.block-editor-writing-flow')) return;
+  gifElements.forEach(async gifElement => {
     const pausedGifElements = [
       ...gifElement.parentNode.querySelectorAll(`.${canvasClass}`),
       ...gifElement.parentNode.querySelectorAll(`.${labelClass}`)
     ];
     if (pausedGifElements.length) {
-      gifElement.after(...pausedGifElements);
+      gifElement.parentNode.append(...pausedGifElements);
       return;
     }
 
-    if (gifElement.complete && gifElement.currentSrc) {
-      pauseGif(gifElement);
+    addLabel(gifElement);
+    if (gifElement.parentNode.querySelector(posterSelector)) {
+      await loaded(gifElement);
+      gifElement.parentNode.classList.add(loadedClass);
     } else {
-      gifElement.onload = () => pauseGif(gifElement);
+      gifElement.classList.add(forceLoadClass);
+      await loaded(gifElement);
+      gifElement.classList.remove(forceLoadClass);
+      addPlaceholder(gifElement);
     }
   });
 };
@@ -131,10 +154,7 @@ const processRows = function (rowsElements) {
 export const main = async function () {
   document.documentElement.append(styleElement);
 
-  const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
-  `;
-  pageModifications.register(gifImage, processGifs);
+  pageModifications.register(gifSelector, processGifs);
 
   const gifBackgroundImage = `
     ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
@@ -158,5 +178,7 @@ export const clean = async function () {
 
   styleElement.remove();
   $(`.${canvasClass}, .${labelClass}`).remove();
+  $(`.${loadedClass}`).removeClass(loadedClass);
+  $(`.${forceLoadClass}`).removeClass(forceLoadClass);
   $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
 };

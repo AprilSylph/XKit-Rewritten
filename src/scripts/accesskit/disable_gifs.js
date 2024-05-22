@@ -33,6 +33,10 @@ const styleElement = buildStyle(`
   font-size: 0.6rem;
 }
 
+${keyToCss('background')} > .${labelClass} {
+  display: none;
+}
+
 .${canvasClass} {
   position: absolute;
   visibility: visible;
@@ -128,6 +132,9 @@ const processRows = function (rowsElements) {
   });
 };
 
+const processRecommendedBlogCards = cards =>
+  cards.forEach(card => card.classList.add(containerClass));
+
 export const main = async function () {
   document.documentElement.append(styleElement);
 
@@ -142,6 +149,11 @@ export const main = async function () {
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 
   pageModifications.register(
+    `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`,
+    processRecommendedBlogCards
+  );
+
+  pageModifications.register(
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
     processRows
   );
@@ -151,6 +163,7 @@ export const clean = async function () {
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);
+  pageModifications.unregister(processRecommendedBlogCards);
 
   [...document.querySelectorAll(`.${containerClass}`)].forEach(wrapper =>
     wrapper.replaceWith(...wrapper.children)

@@ -52,7 +52,7 @@ const styleElement = buildStyle(`
   display: none;
 }
 
-${gifSelector}:not(${hovered}):not(.${forceLoadClass}) {
+:is(${gifSelector}, ${gifSelector} ~ ${keyToCss('loader')}):not(${hovered}):not(.${forceLoadClass}) {
   display: none;
 }
 

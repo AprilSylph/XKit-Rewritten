@@ -15,7 +15,8 @@ const hovered = `:is(:hover > *, .${containerClass}:hover *)`;
 
 const inEditor = '.block-editor-writing-flow *';
 
-const gifSelector = `img[srcset*=".gif"]:not(${keyToCss('poster')}):not(${inEditor})`;
+const gifSelector =
+  `:is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')}):not(${inEditor})`;
 const posterSelector = `${gifSelector} + ${keyToCss('poster')}`;
 
 const styleElement = buildStyle(`

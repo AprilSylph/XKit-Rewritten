@@ -171,7 +171,7 @@ const createMutualIcon = (blogName, color = 'rgb(var(--black))') => {
       d: aprilFools ? aprilFoolsPath : regularPath
     }),
     aprilFools ? '#00b8ff' : color,
-    translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
+    translate('Mutuals')
   );
 };
 

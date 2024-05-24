@@ -1,4 +1,7 @@
-const className = 'accesskit-no-user-colours';
+import { buildStyle } from '../../util/interface.js';
 
-export const main = async () => document.body.classList.add(className);
-export const clean = async () => document.body.classList.remove(className);
+export const styleElement = buildStyle(`
+article span[style^="color"] {
+  color: inherit !important;
+}
+`);

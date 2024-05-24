@@ -16,7 +16,8 @@ const shortenClass = 'xkit-shorten-posts-shortened';
 const tagsClass = 'xkit-shorten-posts-tags';
 const buttonClass = 'xkit-shorten-posts-expand';
 
-const styleElement = buildStyle();
+export const styleElement = buildStyle();
+
 const expandButton = dom('button', { class: buttonClass }, null, ['Expand']);
 
 const unshortenOnClick = ({ currentTarget }) => {
@@ -59,15 +60,12 @@ export const main = async function () {
   ({ showTags, maxHeight } = await getPreferences('shorten_posts'));
 
   styleElement.textContent = `body { --xkit-shorten-posts-max-height: ${maxHeight}; }`;
-  document.documentElement.append(styleElement);
 
   onNewPosts.addListener(shortenPosts);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(shortenPosts);
-
-  styleElement.remove();
 
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${shortenClass}`).removeClass(shortenClass);

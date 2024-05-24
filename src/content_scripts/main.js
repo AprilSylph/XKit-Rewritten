@@ -9,16 +9,20 @@
 
   const runScript = async function (name) {
     const scriptPath = getURL(`/scripts/${name}.js`);
-    const { main, clean, stylesheet, onStorageChanged } = await import(scriptPath);
+    const { main, clean, stylesheet, styleElement, onStorageChanged } = await import(scriptPath);
 
-    main().catch(console.error);
-
+    if (main) {
+      main().catch(console.error);
+    }
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
         href: getURL(`/scripts/${name}.css`)
       });
       document.documentElement.appendChild(link);
+    }
+    if (styleElement) {
+      document.documentElement.append(styleElement);
     }
 
     restartListeners[name] = function (changes, areaName) {
@@ -39,12 +43,16 @@
 
   const destroyScript = async function (name) {
     const scriptPath = getURL(`/scripts/${name}.js`);
-    const { clean, stylesheet } = await import(scriptPath);
+    const { clean, stylesheet, styleElement } = await import(scriptPath);
 
-    clean().catch(console.error);
-
+    if (clean) {
+      clean().catch(console.error);
+    }
     if (stylesheet) {
       document.querySelector(`link[href="${getURL(`/scripts/${name}.css`)}"]`)?.remove();
+    }
+    if (styleElement) {
+      styleElement.remove();
     }
 
     browser.storage.onChanged.removeListener(restartListeners[name]);

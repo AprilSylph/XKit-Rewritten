@@ -3,13 +3,23 @@ import { getPreferences } from '../util/preferences.js';
 let enabledOptions;
 
 const runOption = async function (name) {
-  const { main: run } = await import(`./accesskit/${name}.js`);
-  run().catch(console.error);
+  const { main: run, styleElement } = await import(`./accesskit/${name}.js`);
+  if (run) {
+    run().catch(console.error);
+  }
+  if (styleElement) {
+    document.documentElement.append(styleElement);
+  }
 };
 
 const destroyOption = async function (name) {
-  const { clean: destroy } = await import(`./accesskit/${name}.js`);
-  destroy().catch(console.error);
+  const { clean: destroy, styleElement } = await import(`./accesskit/${name}.js`);
+  if (destroy) {
+    destroy().catch(console.error);
+  }
+  if (styleElement) {
+    styleElement.remove();
+  }
 };
 
 export const onStorageChanged = async function (changes, areaName) {

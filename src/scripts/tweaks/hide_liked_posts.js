@@ -5,7 +5,8 @@ import { isMyPost, timelineObject } from '../../util/react_props.js';
 const timeline = /\/v2\/timeline\/dashboard/;
 
 const hiddenAttribute = 'data-tweaks-hide-liked-posts-hidden';
-const styleElement = buildStyle(`[${hiddenAttribute}] article { display: none; }`);
+
+export const styleElement = buildStyle(`[${hiddenAttribute}] article { display: none; }`);
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { timeline }).forEach(async postElement => {
@@ -18,12 +19,10 @@ const processPosts = async function (postElements) {
 
 export const main = async function () {
   onNewPosts.addListener(processPosts);
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  styleElement.remove();
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

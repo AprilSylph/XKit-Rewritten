@@ -4,7 +4,8 @@ import { onNewPosts } from '../util/mutations.js';
 import { timelineObject } from '../util/react_props.js';
 import { keyToCss } from '../util/css_map.js';
 
-const styleElement = buildStyle();
+export const styleElement = buildStyle();
+
 const blogs = new Set();
 const groupsFromHex = /^#(?<red>[A-Fa-f0-9]{1,2})(?<green>[A-Fa-f0-9]{1,2})(?<blue>[A-Fa-f0-9]{1,2})$/;
 const reblogSelector = keyToCss('reblog');
@@ -110,17 +111,14 @@ export const main = async function () {
     }
   }
 
-  document.documentElement.append(styleElement);
   onNewPosts.addListener(processPosts);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  styleElement.remove();
-  styleElement.textContent = '';
-
   $('[data-xkit-themed]').removeAttr('data-xkit-themed');
 
+  styleElement.textContent = '';
   blogs.clear();
 };

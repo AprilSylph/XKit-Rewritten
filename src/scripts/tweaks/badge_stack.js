@@ -20,6 +20,7 @@ ${wrapper} {
   isolation: isolate;
 }
 
+/* do not apply this on hover or the hover popups break */
 ${wrapper}:not(:hover) ${badgeContainer} {
   position: relative;
   z-index: calc(0 - var(--badges-index));

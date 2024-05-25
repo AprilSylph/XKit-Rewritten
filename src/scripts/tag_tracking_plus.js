@@ -63,7 +63,7 @@ const refreshCount = async function (tag) {
 
   try {
     const unreadCount = await getUnreadCount(tag);
-    unreadCountString = unreadCount > maxUnreadCount ? `${maxUnreadCount}+` : unreadCount;
+    unreadCountString = unreadCount > maxUnreadCount ? `${maxUnreadCount}+` : `${unreadCount}`;
   } catch (exception) {
     console.error(exception);
   }

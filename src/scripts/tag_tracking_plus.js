@@ -23,13 +23,16 @@ const unreadCounts = new Map();
 
 let sidebarItem;
 
-const refreshCount = async function (tag) {
-  if (!trackedTags.includes(tag)) return;
+const maxUnreadCount = 10;
 
-  let unreadCountString = '⚠️';
+const getUnreadCount = async function (tag) {
+  const savedTimestamp = timestamps[tag] ?? 0;
+  const isUnread = ({ timestamp }) => timestamp > savedTimestamp;
 
-  try {
-    const savedTimestamp = timestamps[tag] ?? 0;
+  const posts = [];
+
+  let resource = `/v2/hubs/${encodeURIComponent(tag)}/timeline?${$.param({ limit: 20, sort: 'recent' })}`;
+  while (resource) {
     const {
       response: {
         timeline: {
@@ -37,29 +40,33 @@ const refreshCount = async function (tag) {
           links
         }
       }
-    } = await apiFetch(
-      `/v2/hubs/${encodeURIComponent(tag)}/timeline`,
-      { queryParams: { limit: 20, sort: 'recent' } }
-    );
+    } = await apiFetch(resource);
+    resource = links?.next?.href;
 
-    const posts = elements.filter(({ objectType, displayType, recommendedSource }) =>
+    posts.push(...elements.filter(({ objectType, displayType, recommendedSource }) =>
       objectType === 'post' &&
       displayType === undefined &&
       recommendedSource === null
-    );
+    ));
 
-    let unreadCount = 0;
-
-    for (const { timestamp } of posts) {
-      if (timestamp <= savedTimestamp) {
-        break;
-      } else {
-        unreadCount++;
-      }
+    if (posts.every(isUnread) === false) {
+      break;
     }
+    if (resource && posts.length >= maxUnreadCount) {
+      return Infinity;
+    }
+  }
+  return posts.filter(isUnread).length;
+};
 
-    const showPlus = unreadCount === posts.length && links?.next;
-    unreadCountString = `${unreadCount}${showPlus ? '+' : ''}`;
+const refreshCount = async function (tag) {
+  if (!trackedTags.includes(tag)) return;
+
+  let unreadCountString = '⚠️';
+
+  try {
+    const unreadCount = await getUnreadCount(tag);
+    unreadCountString = unreadCount > maxUnreadCount ? `${maxUnreadCount}+` : unreadCount;
   } catch (exception) {
     console.error(exception);
   }

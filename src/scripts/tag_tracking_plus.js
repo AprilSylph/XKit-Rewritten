@@ -32,7 +32,7 @@ const getUnreadCount = async function (tag) {
   const posts = [];
 
   let resource = `/v2/hubs/${encodeURIComponent(tag)}/timeline?${$.param({ limit: 20, sort: 'recent' })}`;
-  while (resource) {
+  while (posts.length < maxUnreadCount) {
     const {
       response: {
         timeline: {
@@ -49,14 +49,11 @@ const getUnreadCount = async function (tag) {
       recommendedSource === null
     ));
 
-    if (posts.every(isUnread) === false) {
-      break;
-    }
-    if (resource && posts.length >= maxUnreadCount) {
-      return Infinity;
+    if (!resource || posts.every(isUnread) === false) {
+      return posts.filter(isUnread).length;
     }
   }
-  return posts.filter(isUnread).length;
+  return Infinity;
 };
 
 const refreshCount = async function (tag) {

@@ -20,10 +20,6 @@ ${wrapper} {
   isolation: isolate;
 }
 
-/**
- * this reversal of the regular stacking order must be removed on hover or the popups
- * break, though it causes slight visual corruption during the animation ;(
- */
 ${wrapper}:not(:hover) ${badgeContainer} {
   position: relative;
   z-index: calc(0 - var(--badges-index));
@@ -33,6 +29,13 @@ ${wrapper}:not(:hover) ${badgeContainer} {
 const transitionStyleElement = buildStyle(`
 ${badgeContainer} {
   transition: margin 0.5s ease;
+}
+${wrapper}:hover ${badgeContainer} {
+  transition:
+    margin 0.5s ease,
+    position 0s 0.5s,
+    z-index 0s 0.5s;
+  transition-behavior: allow-discrete;
 }
 ${badgeContainer} ${badgeImage} {
   transition: filter 0.35s linear;

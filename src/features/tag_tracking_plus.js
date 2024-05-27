@@ -1,11 +1,11 @@
-import { apiFetch, onClickNavigate } from '../util/tumblr_helpers.js';
-import { filterPostElements } from '../util/interface.js';
-import { timelineObject } from '../util/react_props.js';
-import { keyToCss } from '../util/css_map.js';
-import { onNewPosts, pageModifications } from '../util/mutations.js';
-import { dom } from '../util/dom.js';
-import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
-import { getPreferences } from '../util/preferences.js';
+import { apiFetch, onClickNavigate } from '../utils/tumblr_helpers.js';
+import { filterPostElements } from '../utils/interface.js';
+import { timelineObject } from '../utils/react_props.js';
+import { keyToCss } from '../utils/css_map.js';
+import { onNewPosts, pageModifications } from '../utils/mutations.js';
+import { dom } from '../utils/dom.js';
+import { addSidebarItem, removeSidebarItem } from '../utils/sidebar.js';
+import { getPreferences } from '../utils/preferences.js';
 
 const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
 let timestamps;

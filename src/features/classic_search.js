@@ -1,6 +1,6 @@
-import { getPreferences } from '../util/preferences.js';
-import { pageModifications } from '../util/mutations.js';
-import { navigate } from '../util/tumblr_helpers.js';
+import { getPreferences } from '../utils/preferences.js';
+import { pageModifications } from '../utils/mutations.js';
+import { navigate } from '../utils/tumblr_helpers.js';
 
 let newTab;
 

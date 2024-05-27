@@ -1,12 +1,12 @@
-import { createControlButtonTemplate, cloneControlButton } from '../util/control_buttons.js';
-import { keyToCss } from '../util/css_map.js';
-import { dom } from '../util/dom.js';
-import { filterPostElements, postSelector } from '../util/interface.js';
-import { showModal, hideModal, modalCancelButton, showErrorModal } from '../util/modals.js';
-import { onNewPosts } from '../util/mutations.js';
-import { notify } from '../util/notifications.js';
-import { timelineObject } from '../util/react_props.js';
-import { apiFetch, createEditRequestBody } from '../util/tumblr_helpers.js';
+import { createControlButtonTemplate, cloneControlButton } from '../utils/control_buttons.js';
+import { keyToCss } from '../utils/css_map.js';
+import { dom } from '../utils/dom.js';
+import { filterPostElements, postSelector } from '../utils/interface.js';
+import { showModal, hideModal, modalCancelButton, showErrorModal } from '../utils/modals.js';
+import { onNewPosts } from '../utils/mutations.js';
+import { notify } from '../utils/notifications.js';
+import { timelineObject } from '../utils/react_props.js';
+import { apiFetch, createEditRequestBody } from '../utils/tumblr_helpers.js';
 
 const symbolId = 'ri-scissors-cut-line';
 const buttonClass = 'xkit-trim-reblogs-button';

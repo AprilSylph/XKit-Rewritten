@@ -1,6 +1,6 @@
-import { onNewPosts } from '../../util/mutations.js';
-import { buildStyle, getTimelineItemWrapper, filterPostElements } from '../../util/interface.js';
-import { isMyPost } from '../../util/react_props.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { buildStyle, getTimelineItemWrapper, filterPostElements } from '../../utils/interface.js';
+import { isMyPost } from '../../utils/react_props.js';
 
 const excludeClass = 'xkit-tweaks-hide-my-posts-done';
 const timeline = /\/v2\/timeline\/dashboard/;

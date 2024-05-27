@@ -1,4 +1,4 @@
-import { buildStyle } from '../../util/interface.js';
+import { buildStyle } from '../../utils/interface.js';
 
 const styleElement = buildStyle('[data-is-contributed-content="true"] { display: flow-root; background-color: rgb(var(--follow)); }');
 

@@ -1,7 +1,7 @@
-import { pageModifications } from '../../util/mutations.js';
-import { keyToCss } from '../../util/css_map.js';
-import { dom } from '../../util/dom.js';
-import { buildStyle, postSelector } from '../../util/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { dom } from '../../utils/dom.js';
+import { buildStyle, postSelector } from '../../utils/interface.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
 const labelClass = 'xkit-paused-gif-label';

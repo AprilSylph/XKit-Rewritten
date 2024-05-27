@@ -1,12 +1,12 @@
-import { buildStyle, getTimelineItemWrapper, filterPostElements, getPopoverWrapper } from '../util/interface.js';
-import { blogData, notificationObject, timelineObject } from '../util/react_props.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
-import { primaryBlogName } from '../util/user.js';
-import { keyToCss } from '../util/css_map.js';
-import { onNewPosts, onNewNotifications, pageModifications } from '../util/mutations.js';
-import { dom } from '../util/dom.js';
-import { getPreferences } from '../util/preferences.js';
-import { translate } from '../util/language_data.js';
+import { buildStyle, getTimelineItemWrapper, filterPostElements, getPopoverWrapper } from '../utils/interface.js';
+import { blogData, notificationObject, timelineObject } from '../utils/react_props.js';
+import { apiFetch } from '../utils/tumblr_helpers.js';
+import { primaryBlogName } from '../utils/user.js';
+import { keyToCss } from '../utils/css_map.js';
+import { onNewPosts, onNewNotifications, pageModifications } from '../utils/mutations.js';
+import { dom } from '../utils/dom.js';
+import { getPreferences } from '../utils/preferences.js';
+import { translate } from '../utils/language_data.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenAttribute = 'data-mutual-checker-hidden';

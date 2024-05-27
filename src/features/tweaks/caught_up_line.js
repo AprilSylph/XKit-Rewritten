@@ -1,6 +1,6 @@
-import { keyToCss } from '../../util/css_map.js';
-import { buildStyle, getTimelineItemWrapper } from '../../util/interface.js';
-import { pageModifications } from '../../util/mutations.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
 
 const hiddenAttribute = 'data-tweaks-caught-up-line-title';
 const borderAttribute = 'data-tweaks-caught-up-line-border';

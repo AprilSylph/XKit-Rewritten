@@ -1,8 +1,8 @@
-import { buildStyle, filterPostElements, blogViewSelector, postSelector } from '../util/interface.js';
-import { getPreferences } from '../util/preferences.js';
-import { onNewPosts } from '../util/mutations.js';
-import { timelineObject } from '../util/react_props.js';
-import { keyToCss } from '../util/css_map.js';
+import { buildStyle, filterPostElements, blogViewSelector, postSelector } from '../utils/interface.js';
+import { getPreferences } from '../utils/preferences.js';
+import { onNewPosts } from '../utils/mutations.js';
+import { timelineObject } from '../utils/react_props.js';
+import { keyToCss } from '../utils/css_map.js';
 
 const styleElement = buildStyle();
 const blogs = new Set();

@@ -67,14 +67,14 @@
     }
   ],
 
-  "minimum_chrome_version": "90",
+  "minimum_chrome_version": "105",
   "browser_specific_settings": {
     "gecko": {
       "id": "{6e710c58-36cc-49d6-b772-bfc3030fa56e}",
-      "strict_min_version": "109.0"
+      "strict_min_version": "121.0"
     },
     "gecko_android": {
-      "strict_min_version": "113.0"
+      "strict_min_version": "121.0"
     }
   }
 }

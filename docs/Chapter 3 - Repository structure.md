@@ -1,6 +1,7 @@
 # Repository structure
 
 ## `XKit-Rewritten/`
+
 ```
 XKit-Rewritten/
 ├── assets/               Source files for original images
@@ -21,21 +22,21 @@ Extension source code directory. Only contains files necessary for operation.
 
 ```
 src/
-├── browser_action/       Files for extension popup
+├── action/               Files for extension popup
 ├── content_scripts/      Main boot script and static CSS
+├── features/             User-facing features
 ├── icons/                Extension icons
 ├── lib/                  External libraries
-├── scripts/              User-facing features
-├── util/                 Helpers for writing features
+├── utils/                Helpers for writing features
 └── manifest.json
 ```
 
-#### `scripts/`
+#### `features/`
 
-User-facing features directory. 
+User-facing features directory.
 
 ```
-scripts/
+features/
 ├── _index.json           Index of feature names
 ├── *.css                 Feature stylesheets
 ├── *.js                  Feature scripts

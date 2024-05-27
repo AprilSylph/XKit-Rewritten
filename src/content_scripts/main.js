@@ -77,8 +77,18 @@
     return installedScripts;
   };
 
+  const initPageContext = () => {
+    const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
+    const script = document.createElement('script');
+    script.nonce = nonce;
+    script.src = browser.runtime.getURL('/page_context.js');
+    document.documentElement.append(script);
+  };
+
   const init = async function () {
     $('style.xkit').remove();
+
+    initPageContext();
 
     browser.storage.onChanged.addListener(onStorageChanged);
 

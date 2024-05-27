@@ -27,7 +27,7 @@
     "tagBundles": {
       "type": "iframe",
       "label": "Manage tag bundles",
-      "src": "/scripts/quick_tags/options/index.html",
+      "src": "/features/quick_tags/options/index.html",
       "default": []
     }
   }

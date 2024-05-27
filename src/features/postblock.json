@@ -11,7 +11,7 @@
     "manageBlockedPosts": {
       "type": "iframe",
       "label": "Manage blocked posts",
-      "src": "/scripts/postblock/options/index.html"
+      "src": "/features/postblock/options/index.html"
     }
   }
 }

@@ -17,8 +17,7 @@
     "128": "icons/128.png"
   },
 
-  "browser_action": {
-    "browser_style": true,
+  "action": {
     "default_title": "XKit Rewritten",
     "default_popup": "action/popup.html",
     "default_icon": {

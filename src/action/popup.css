@@ -75,8 +75,18 @@ body {
   text-align: center;
 }
 
-#permissions-banner {
-  cursor: pointer;
+#grant-host-permission {
+  display: block;
+  padding: 0.5ch 1ch;
+  border-radius: 0.5ch;
+  margin: 8px auto 0;
+
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 1;
+}
+
+#grant-host-permission:focus {
+  outline: 2px solid rgb(var(--accent));
 }
 
 #permissions-banner:not([hidden]) + #embedded-banner {

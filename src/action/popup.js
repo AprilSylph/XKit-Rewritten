@@ -67,10 +67,11 @@ const versionElement = document.getElementById('version');
 versionElement.textContent = browser.runtime.getManifest().version;
 
 const permissionsBannerElement = document.getElementById('permissions-banner');
+const permissionsButton = document.getElementById('grant-host-permission');
 const updatePermissionsBannerVisibility = hasHostPermission => {
   permissionsBannerElement.hidden = hasHostPermission;
 };
-permissionsBannerElement.addEventListener('click', () => {
+permissionsButton.addEventListener('click', () => {
   browser.permissions
     .request({ origins: ['*://www.tumblr.com/*'] })
     .then(updatePermissionsBannerVisibility);

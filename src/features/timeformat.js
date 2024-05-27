@@ -1,7 +1,7 @@
 import moment from '../lib/moment.js';
-import { keyToCss } from '../util/css_map.js';
-import { pageModifications } from '../util/mutations.js';
-import { getPreferences } from '../util/preferences.js';
+import { keyToCss } from '../utils/css_map.js';
+import { pageModifications } from '../utils/mutations.js';
+import { getPreferences } from '../utils/preferences.js';
 
 let format;
 let displayRelative;

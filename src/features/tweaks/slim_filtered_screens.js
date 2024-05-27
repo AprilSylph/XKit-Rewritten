@@ -1,5 +1,5 @@
-import { keyToCss } from '../../util/css_map.js';
-import { postSelector, buildStyle } from '../../util/interface.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { postSelector, buildStyle } from '../../utils/interface.js';
 
 const filteredScreenSelector = `${postSelector}:not(${keyToCss('masonryTimelineObject')}) ${keyToCss('filteredScreen')}`;
 

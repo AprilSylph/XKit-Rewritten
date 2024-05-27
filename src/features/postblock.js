@@ -1,9 +1,9 @@
-import { getTimelineItemWrapper, filterPostElements } from '../util/interface.js';
-import { registerMeatballItem, unregisterMeatballItem } from '../util/meatballs.js';
-import { showModal, hideModal, modalCancelButton } from '../util/modals.js';
-import { timelineObject } from '../util/react_props.js';
-import { onNewPosts, pageModifications } from '../util/mutations.js';
-import { dom } from '../util/dom.js';
+import { getTimelineItemWrapper, filterPostElements } from '../utils/interface.js';
+import { registerMeatballItem, unregisterMeatballItem } from '../utils/meatballs.js';
+import { showModal, hideModal, modalCancelButton } from '../utils/modals.js';
+import { timelineObject } from '../utils/react_props.js';
+import { onNewPosts, pageModifications } from '../utils/mutations.js';
+import { dom } from '../utils/dom.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';

@@ -1,5 +1,5 @@
-import { keyToCss } from '../../util/css_map.js';
-import { buildStyle } from '../../util/interface.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { buildStyle } from '../../utils/interface.js';
 
 const flexLayoutSelector = `${keyToCss('glass')} ${keyToCss('flexLayout')}`;
 const mainSectionSelector = `${flexLayoutSelector} > ${keyToCss('mainSection')}`;

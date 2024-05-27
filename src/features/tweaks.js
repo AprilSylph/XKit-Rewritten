@@ -1,4 +1,4 @@
-import { getPreferences } from '../util/preferences.js';
+import { getPreferences } from '../utils/preferences.js';
 
 let enabledTweaks;
 

@@ -1,7 +1,7 @@
-import { onNewPosts } from '../../util/mutations.js';
-import { keyToCss } from '../../util/css_map.js';
-import { timelineObject } from '../../util/react_props.js';
-import { navigate } from '../../util/tumblr_helpers.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { timelineObject } from '../../utils/react_props.js';
+import { navigate } from '../../utils/tumblr_helpers.js';
 
 const postAttributionLinkSelector = `header ${keyToCss('attribution')} > span:not(${keyToCss('reblogAttribution')}) a`;
 const reblogAttributionLinkSelector = `header ${keyToCss('rebloggedFromName')} a`;

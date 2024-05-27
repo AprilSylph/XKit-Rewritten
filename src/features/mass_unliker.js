@@ -1,7 +1,7 @@
-import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
-import { showModal, modalCancelButton, modalCompleteButton, showErrorModal } from '../util/modals.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
-import { dom } from '../util/dom.js';
+import { addSidebarItem, removeSidebarItem } from '../utils/sidebar.js';
+import { showModal, modalCancelButton, modalCompleteButton, showErrorModal } from '../utils/modals.js';
+import { apiFetch } from '../utils/tumblr_helpers.js';
+import { dom } from '../utils/dom.js';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 

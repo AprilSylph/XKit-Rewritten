@@ -1,8 +1,8 @@
-import { filterPostElements } from '../util/interface.js';
-import { timelineObject } from '../util/react_props.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
-import { getPreferences } from '../util/preferences.js';
-import { onNewPosts } from '../util/mutations.js';
+import { filterPostElements } from '../utils/interface.js';
+import { timelineObject } from '../utils/react_props.js';
+import { apiFetch } from '../utils/tumblr_helpers.js';
+import { getPreferences } from '../utils/preferences.js';
+import { onNewPosts } from '../utils/mutations.js';
 
 let ownColour;
 let originalColour;

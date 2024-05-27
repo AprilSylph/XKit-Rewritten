@@ -1,9 +1,9 @@
-import { getPostElements } from '../util/interface.js';
-import { timelineObject } from '../util/react_props.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
-import { onNewPosts } from '../util/mutations.js';
-import { getPreferences } from '../util/preferences.js';
-import { keyToCss } from '../util/css_map.js';
+import { getPostElements } from '../utils/interface.js';
+import { timelineObject } from '../utils/react_props.js';
+import { apiFetch } from '../utils/tumblr_helpers.js';
+import { onNewPosts } from '../utils/mutations.js';
+import { getPreferences } from '../utils/preferences.js';
+import { keyToCss } from '../utils/css_map.js';
 
 const noteCountSelector = keyToCss('noteCount');
 const reblogHeaderSelector = keyToCss('reblogHeader');

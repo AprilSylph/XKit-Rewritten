@@ -1,14 +1,14 @@
-import { keyToCss } from '../util/css_map.js';
-import { dom } from '../util/dom.js';
-import { inject } from '../util/inject.js';
-import { showErrorModal } from '../util/modals.js';
-import { notificationSelector } from '../util/interface.js';
-import { pageModifications } from '../util/mutations.js';
-import { notify } from '../util/notifications.js';
-import { getPreferences } from '../util/preferences.js';
-import { buildSvg } from '../util/remixicon.js';
-import { apiFetch, navigate } from '../util/tumblr_helpers.js';
-import { userBlogs } from '../util/user.js';
+import { keyToCss } from '../utils/css_map.js';
+import { dom } from '../utils/dom.js';
+import { inject } from '../utils/inject.js';
+import { showErrorModal } from '../utils/modals.js';
+import { notificationSelector } from '../utils/interface.js';
+import { pageModifications } from '../utils/mutations.js';
+import { notify } from '../utils/notifications.js';
+import { getPreferences } from '../utils/preferences.js';
+import { buildSvg } from '../utils/remixicon.js';
+import { apiFetch, navigate } from '../utils/tumblr_helpers.js';
+import { userBlogs } from '../utils/user.js';
 
 const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';

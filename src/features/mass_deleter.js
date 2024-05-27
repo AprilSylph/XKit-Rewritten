@@ -1,8 +1,8 @@
-import { dom } from '../util/dom.js';
-import { megaEdit } from '../util/mega_editor.js';
-import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../util/modals.js';
-import { addSidebarItem, removeSidebarItem } from '../util/sidebar.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
+import { dom } from '../utils/dom.js';
+import { megaEdit } from '../utils/mega_editor.js';
+import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../utils/modals.js';
+import { addSidebarItem, removeSidebarItem } from '../utils/sidebar.js';
+import { apiFetch } from '../utils/tumblr_helpers.js';
 
 const timezoneOffsetMs = new Date().getTimezoneOffset() * 60000;
 

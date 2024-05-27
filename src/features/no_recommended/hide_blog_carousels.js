@@ -1,7 +1,7 @@
-import { keyToCss } from '../../util/css_map.js';
-import { buildStyle, getTimelineItemWrapper } from '../../util/interface.js';
-import { pageModifications } from '../../util/mutations.js';
-import { timelineObject } from '../../util/react_props.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
+import { timelineObject } from '../../utils/react_props.js';
 
 const hiddenAttribute = 'data-no-recommended-blog-carousels-hidden';
 

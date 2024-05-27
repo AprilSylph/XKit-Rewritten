@@ -1,6 +1,6 @@
-import { buildStyle, getTimelineItemWrapper, filterPostElements, postSelector } from '../../util/interface.js';
-import { onNewPosts } from '../../util/mutations.js';
-import { timelineObject } from '../../util/react_props.js';
+import { buildStyle, getTimelineItemWrapper, filterPostElements, postSelector } from '../../utils/interface.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { timelineObject } from '../../utils/react_props.js';
 
 const excludeClass = 'xkit-no-recommended-posts-done';
 const hiddenAttribute = 'data-no-recommended-posts-hidden';

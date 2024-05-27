@@ -1,6 +1,6 @@
-import { pageModifications } from '../../util/mutations.js';
-import { keyToCss } from '../../util/css_map.js';
-import { buildStyle, getTimelineItemWrapper } from '../../util/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
 
 const hiddenAttribute = 'data-tweaks-hide-filtered-posts-hidden';
 const styleElement = buildStyle(`[${hiddenAttribute}] article { display: none; }`);

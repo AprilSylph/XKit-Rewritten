@@ -1,14 +1,14 @@
-import { sha256 } from '../util/crypto.js';
-import { timelineObject } from '../util/react_props.js';
-import { apiFetch } from '../util/tumblr_helpers.js';
-import { postSelector, filterPostElements, postType } from '../util/interface.js';
-import { userBlogs } from '../util/user.js';
-import { getPreferences } from '../util/preferences.js';
-import { onNewPosts } from '../util/mutations.js';
-import { notify } from '../util/notifications.js';
-import { translate } from '../util/language_data.js';
-import { dom } from '../util/dom.js';
-import { showErrorModal } from '../util/modals.js';
+import { sha256 } from '../utils/crypto.js';
+import { timelineObject } from '../utils/react_props.js';
+import { apiFetch } from '../utils/tumblr_helpers.js';
+import { postSelector, filterPostElements, postType } from '../utils/interface.js';
+import { userBlogs } from '../utils/user.js';
+import { getPreferences } from '../utils/preferences.js';
+import { onNewPosts } from '../utils/mutations.js';
+import { notify } from '../utils/notifications.js';
+import { translate } from '../utils/language_data.js';
+import { dom } from '../utils/dom.js';
+import { showErrorModal } from '../utils/modals.js';
 
 const popupElement = dom('div', { id: 'quick-reblog' });
 const blogSelector = dom('select');

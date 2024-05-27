@@ -1,8 +1,8 @@
-import { keyToCss } from '../../util/css_map.js';
-import { buildStyle } from '../../util/interface.js';
-import { translate } from '../../util/language_data.js';
-import { pageModifications } from '../../util/mutations.js';
-import { getPreferences } from '../../util/preferences.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { buildStyle } from '../../utils/interface.js';
+import { translate } from '../../utils/language_data.js';
+import { pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 
 let mode;
 

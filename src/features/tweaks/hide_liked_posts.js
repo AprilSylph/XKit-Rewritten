@@ -1,6 +1,6 @@
-import { onNewPosts } from '../../util/mutations.js';
-import { buildStyle, getTimelineItemWrapper, filterPostElements } from '../../util/interface.js';
-import { isMyPost, timelineObject } from '../../util/react_props.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { buildStyle, getTimelineItemWrapper, filterPostElements } from '../../utils/interface.js';
+import { isMyPost, timelineObject } from '../../utils/react_props.js';
 
 const timeline = /\/v2\/timeline\/dashboard/;
 

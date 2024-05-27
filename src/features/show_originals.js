@@ -1,10 +1,10 @@
-import { filterPostElements, getTimelineItemWrapper } from '../util/interface.js';
-import { isMyPost, timelineObject } from '../util/react_props.js';
-import { getPreferences } from '../util/preferences.js';
-import { onNewPosts } from '../util/mutations.js';
-import { keyToCss } from '../util/css_map.js';
-import { translate } from '../util/language_data.js';
-import { userBlogs } from '../util/user.js';
+import { filterPostElements, getTimelineItemWrapper } from '../utils/interface.js';
+import { isMyPost, timelineObject } from '../utils/react_props.js';
+import { getPreferences } from '../utils/preferences.js';
+import { onNewPosts } from '../utils/mutations.js';
+import { keyToCss } from '../utils/css_map.js';
+import { translate } from '../utils/language_data.js';
+import { userBlogs } from '../utils/user.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';

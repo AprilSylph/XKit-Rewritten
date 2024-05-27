@@ -63,11 +63,24 @@ body {
   user-select: none;
 }
 
+#permissions-banner,
 #embedded-banner {
-  padding: 4px 8px;
+  box-sizing: border-box;
+  width: 375px;
+  min-width: 100%;
+  max-width: 100%;
+  padding: 8px 4px;
   border-bottom: 1px solid rgb(var(--active-grey));
 
   text-align: center;
+}
+
+#permissions-banner {
+  cursor: pointer;
+}
+
+#permissions-banner:not([hidden]) + #embedded-banner {
+  display: none;
 }
 
 nav {

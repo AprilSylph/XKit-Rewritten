@@ -4,45 +4,18 @@ import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 const timelineObjectCache = new WeakMap();
 const notificationObjectCache = new WeakMap();
 
-const unburyTimelineObject = () => {
-  const postElement = document.currentScript.parentElement;
-  const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
-  let fiber = postElement[reactKey];
-
-  while (fiber !== null) {
-    const { timelineObject } = fiber.memoizedProps || {};
-    if (timelineObject !== undefined) {
-      return timelineObject;
-    } else {
-      fiber = fiber.return;
-    }
-  }
-};
-
 /**
  * @param {Element} postElement - An on-screen post
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
 export const timelineObject = async function (postElement) {
   if (!timelineObjectCache.has(postElement)) {
-    timelineObjectCache.set(postElement, inject(unburyTimelineObject, [], postElement));
+    timelineObjectCache.set(
+      postElement,
+      inject('/utils/inject/unbury_timeline_object.js', [], postElement)
+    );
   }
   return timelineObjectCache.get(postElement);
-};
-
-const unburyBlog = () => {
-  const element = document.currentScript.parentElement;
-  const reactKey = Object.keys(element).find(key => key.startsWith('__reactFiber'));
-  let fiber = element[reactKey];
-
-  while (fiber !== null) {
-    const { blog, blogSettings } = fiber.memoizedProps || {};
-    if (blog ?? blogSettings) {
-      return blog ?? blogSettings;
-    } else {
-      fiber = fiber.return;
-    }
-  }
 };
 
 const unburyNotification = async () => {
@@ -75,7 +48,7 @@ export const notificationObject = function (notificationElement) {
  * @param {Element} meatballMenu - An on-screen meatball menu element in a blog modal header or blog card
  * @returns {Promise<object>} - The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
  */
-export const blogData = async (meatballMenu) => inject(unburyBlog, [], meatballMenu);
+export const blogData = async (meatballMenu) => inject('/utils/inject/unbury_blog.js', [], meatballMenu);
 
 export const isMyPost = async (postElement) => {
   const { blog, isSubmission, postAuthor } = await timelineObject(postElement);

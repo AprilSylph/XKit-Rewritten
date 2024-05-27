@@ -45,14 +45,7 @@ export const megaEdit = async function (postIds, options) {
   }
 
   return inject(
-    async (resource, body) =>
-      fetch(resource, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-        body
-      }).then(async response =>
-        response.ok ? response.json() : Promise.reject(await response.json())
-      ),
+    '/utils/inject/post_request.js',
     [`https://www.tumblr.com/${pathname}`, $.param(requestBody)]
   );
 };

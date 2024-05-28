@@ -1,7 +1,7 @@
 /**
  * @param {string} path - Absolute path of script to inject (will be fed to `runtime.getURL()`)
  * @param {Array} [args] - Array of arguments to pass to the script
- * @param {Element} [target] - Target element; will be accessible as the `this` in the injected function.
+ * @param {Element} [target] - Target element; will be accessible as the `this` value in the injected function.
  * @returns {Promise<any>} The transmitted result of the script
  */
 export const inject = (path, args = [], target = document.documentElement) =>

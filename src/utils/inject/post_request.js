@@ -1,4 +1,4 @@
-export default async function postRequest(resource, body) {
+export default function postRequest(resource, body) {
   return fetch(resource, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },

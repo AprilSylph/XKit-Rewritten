@@ -8,7 +8,7 @@ document.documentElement.addEventListener('xkitinjectionrequest', async event =>
     moduleCache[path] ??= await import(path);
     const func = moduleCache[path].default;
 
-    const result = await (func.bind(target))(...args);
+    const result = await func.apply(target, args);
     target.dispatchEvent(
       new CustomEvent('xkitinjectionresponse', { detail: JSON.stringify({ id, result }) })
     );

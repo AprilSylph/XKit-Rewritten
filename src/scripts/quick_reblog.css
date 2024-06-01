@@ -6,6 +6,8 @@
   border-radius: 3px;
   overflow: hidden;
   color: rgb(var(--black));
+  font-size: .875rem;
+  font-weight: normal;
   background-color: rgb(var(--white));
   background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
   display: flex;

@@ -34,7 +34,8 @@ const styleElement = buildStyle(`
     margin-right: 0.5ch;
   }
 
-  [data-timeline="/v2/timeline/dashboard"] [${hiddenAttribute}] article {
+  /* todo: update for future patio id tweaks */
+  :is([data-timeline="/v2/timeline/dashboard"], [data-timeline-id="/dashboard/following"], [data-timeline-id^="following-"]) [${hiddenAttribute}] article {
     display: none;
   }
 

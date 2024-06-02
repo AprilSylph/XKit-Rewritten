@@ -5,6 +5,9 @@ import { keyToCss } from '../util/css_map.js';
 
 const excludeAttribute = 'data-seen-posts-done';
 const timeline = '/v2/timeline/dashboard';
+
+// todo: update for future patio id tweaks
+const timelineId = /(^\/dashboard\/following$)|(^following-)/;
 const includeFiltered = true;
 
 const dimAttribute = 'data-seen-posts-seen';
@@ -45,7 +48,8 @@ const markAsSeen = (element) => {
 };
 
 const lengthenTimelines = () =>
-  [...document.querySelectorAll(`[data-timeline="${timeline}"]`)].forEach(timelineElement => {
+  // todo: update for future patio id tweaks
+  [...document.querySelectorAll(`:is([data-timeline="${timeline}"], [data-timeline-id="/dashboard/following"], [data-timeline-id^="following-"])`)].forEach(timelineElement => {
     if (!timelineElement.querySelector(keyToCss('manualPaginatorButtons'))) {
       timelineElement.classList.add(lengthenedClass);
     }
@@ -54,7 +58,7 @@ const lengthenTimelines = () =>
 const dimPosts = function (postElements) {
   lengthenTimelines();
 
-  for (const postElement of filterPostElements(postElements, { timeline, includeFiltered })) {
+  for (const postElement of filterPostElements(postElements, { timeline, timelineId, includeFiltered })) {
     const { id } = postElement.dataset;
     const timelineItem = getTimelineItemWrapper(postElement);
 

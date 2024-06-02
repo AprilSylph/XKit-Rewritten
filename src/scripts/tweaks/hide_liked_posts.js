@@ -4,11 +4,14 @@ import { isMyPost, timelineObject } from '../../util/react_props.js';
 
 const timeline = /\/v2\/timeline\/dashboard/;
 
+// todo: update for future patio id tweaks
+const timelineId = /(^\/dashboard\/following$)|(^following-)/;
+
 const hiddenAttribute = 'data-tweaks-hide-liked-posts-hidden';
 const styleElement = buildStyle(`[${hiddenAttribute}] article { display: none; }`);
 
 const processPosts = async function (postElements) {
-  filterPostElements(postElements, { timeline }).forEach(async postElement => {
+  filterPostElements(postElements, { timeline, timelineId }).forEach(async postElement => {
     const { liked } = await timelineObject(postElement);
     const myPost = await isMyPost(postElement);
 

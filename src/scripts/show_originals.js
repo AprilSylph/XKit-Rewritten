@@ -10,7 +10,16 @@ const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
 
+// todo: update for future patio id tweaks
+const followingTimelineIdRegex = /(^\/dashboard\/following$)|(^following-)/;
+
 const blogTimelineRegex = /^\/v2\/blog\/[a-z0-9-]{1,32}\/posts$/;
+const blogTimelineIdRegex = /^peepr-posts-[a-z0-9-]{1,32}-undefined/;
+
+// todo: update for future patio id tweaks
+const patioBlogTimelineIdRegex = /^blog-.*-[a-z0-9-]{1,32}$/;
+const patioSelector = '.__draggable-item__ *';
+
 const channelSelector = `${keyToCss('bar')} ~ *`;
 
 const storageKey = 'show_originals.savedModes';
@@ -65,21 +74,36 @@ const addControls = async (timelineElement, location) => {
 };
 
 const getLocation = timelineElement => {
-  const { timeline, which } = timelineElement.dataset;
+  const { timeline, timelineId, which } = timelineElement.dataset;
 
-  const isBlog = blogTimelineRegex.test(timeline) && !timelineElement.matches(channelSelector);
+  const isBlog =
+    (blogTimelineRegex.test(timeline) && !timelineElement.matches(channelSelector)) ||
+    blogTimelineIdRegex.test(timelineId) ||
+    (patioBlogTimelineIdRegex.test(timelineId) && timelineElement.matches(patioSelector));
 
   const on = {
-    dashboard: timeline === '/v2/timeline/dashboard',
-    disabled: isBlog && disabledBlogs.some(name => timeline === `/v2/blog/${name}/posts`),
+    dashboard:
+      timeline === '/v2/timeline/dashboard' || followingTimelineIdRegex.test(timelineId),
+    disabled:
+      isBlog &&
+      disabledBlogs.some(
+        name =>
+          timeline === `/v2/blog/${name}/posts` ||
+          timelineId?.startsWith(`peepr-posts-${name}-undefined`) ||
+          (timelineId?.startsWith('blog-') &&
+            timelineId?.endsWith(`-${name}`) &&
+            timelineElement.matches(patioSelector))
+      ),
     peepr: isBlog,
-    blogSubscriptions: timeline.includes('blog_subscriptions') || which === 'blog_subscriptions'
+    blogSubscriptions:
+      timeline?.includes('blog_subscriptions') || which === 'blog_subscriptions' ||
+      timelineId === '/dashboard/blog_subs'
   };
   return Object.keys(on).find(location => on[location]);
 };
 
 const processTimelines = async () => {
-  [...document.querySelectorAll('[data-timeline]')].forEach(async timelineElement => {
+  [...document.querySelectorAll(':is([data-timeline], [data-timeline-id])')].forEach(async timelineElement => {
     const location = getLocation(timelineElement);
 
     const currentControls = [...timelineElement.children]

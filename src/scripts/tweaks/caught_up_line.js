@@ -23,7 +23,9 @@ const styleElement = buildStyle(`
 `);
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
-const tagChicletCarouselLinkSelector = `[data-timeline="/v2/timeline/dashboard"] ${listTimelineObjectSelector} ${keyToCss('tagChicletLink')}`;
+
+// todo: update for future patio id tweaks
+const tagChicletCarouselLinkSelector = `:is([data-timeline="/v2/timeline/dashboard"], [data-timeline-id="/dashboard/following"], [data-timeline-id^="following-"]) ${listTimelineObjectSelector} ${keyToCss('tagChicletLink')}`;
 
 const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
   .map(getTimelineItemWrapper)

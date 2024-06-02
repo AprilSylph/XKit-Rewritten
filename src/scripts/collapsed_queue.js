@@ -9,9 +9,10 @@ const containerClass = 'xkit-collapsed-queue-container';
 const footerSelector = keyToCss('footerWrapper');
 
 let timelineRegex;
+let timelineIdRegex;
 
 const processPosts = async function (postElements) {
-  filterPostElements(postElements, { excludeClass, timeline: timelineRegex }).forEach(async postElement => {
+  filterPostElements(postElements, { excludeClass, timeline: timelineRegex, timelineId: timelineIdRegex }).forEach(async postElement => {
     const headerElement = postElement.querySelector('header');
     const footerElement = postElement.querySelector(footerSelector);
 
@@ -35,6 +36,9 @@ export const main = async function () {
     ...runInDrafts ? ['draft'] : []
   ].join('|');
   timelineRegex = new RegExp(`/v2/blog/[^/]+/posts/(${regexGroup})`);
+
+  // todo: update for future patio id tweaks
+  timelineIdRegex = new RegExp(`^${regexGroup}`);
 
   onNewPosts.addListener(processPosts);
 };

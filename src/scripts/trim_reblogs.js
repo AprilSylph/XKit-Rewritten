@@ -2,6 +2,7 @@ import { createControlButtonTemplate, cloneControlButton } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { filterPostElements, postSelector } from '../util/interface.js';
+import { translate } from '../util/language_data.js';
 import { showModal, hideModal, modalCancelButton, showErrorModal } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
@@ -159,9 +160,8 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const existingButton = postElement.querySelector(`.${buttonClass}`);
   if (existingButton !== null) { return; }
 
-  const editIcon = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"] use[href="#managed-icon__edit"]`);
-  if (!editIcon) { return; }
-  const editButton = editIcon.closest('a');
+  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"][aria-label=${translate('Edit')}]`);
+  if (!editButton) { return; }
 
   const { trail = [], content = [] } = await timelineObject(postElement);
   const items = trail.length + (content.length ? 1 : 0);

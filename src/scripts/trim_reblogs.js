@@ -2,7 +2,6 @@ import { createControlButtonTemplate, cloneControlButton } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { filterPostElements, postSelector } from '../util/interface.js';
-import { translate } from '../util/language_data.js';
 import { showModal, hideModal, modalCancelButton, showErrorModal } from '../util/modals.js';
 import { onNewPosts } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
@@ -160,7 +159,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const existingButton = postElement.querySelector(`.${buttonClass}`);
   if (existingButton !== null) { return; }
 
-  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"][aria-label=${translate('Edit')}]`);
+  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"]:has(use[href="#managed-icon__edit"])`);
   if (!editButton) { return; }
 
   const { trail = [], content = [] } = await timelineObject(postElement);

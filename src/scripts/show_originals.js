@@ -14,7 +14,7 @@ const controlsClass = 'xkit-show-originals-controls';
 const followingTimelineIdRegex = /(^\/dashboard\/following$)|(^following-)/;
 
 const blogTimelineRegex = /^\/v2\/blog\/[a-z0-9-]{1,32}\/posts$/;
-const blogTimelineIdRegex = /^peepr-posts-[a-z0-9-]{1,32}-undefined/;
+const blogTimelineIdRegex = /^peepr-posts-[a-z0-9-]{1,32}-undefined-undefined-undefined-undefined-undefined-undefined$/;
 
 // todo: update for future patio id tweaks
 const patioBlogTimelineIdRegex = /^blog-.*-[a-z0-9-]{1,32}$/;
@@ -89,7 +89,7 @@ const getLocation = timelineElement => {
       disabledBlogs.some(
         name =>
           timeline === `/v2/blog/${name}/posts` ||
-          timelineId?.startsWith(`peepr-posts-${name}-undefined`) ||
+          timelineId === `peepr-posts-${name}-undefined-undefined-undefined-undefined-undefined-undefined` ||
           (timelineId?.startsWith('blog-') &&
             timelineId?.endsWith(`-${name}`) &&
             timelineElement.matches(patioSelector))

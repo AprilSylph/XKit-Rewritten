@@ -2,9 +2,8 @@ import { cloneControlButton, createControlButtonTemplate } from '../util/control
 import { keyToCss } from '../util/css_map.js';
 import { dom } from '../util/dom.js';
 import { filterPostElements, getTimelineItemWrapper, postSelector } from '../util/interface.js';
-import { translate } from '../util/language_data.js';
 import { megaEdit } from '../util/mega_editor.js';
-import { showErrorModal } from '../util/modals.js';
+import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../util/modals.js';
 import { onNewPosts, pageModifications } from '../util/mutations.js';
 import { notify } from '../util/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../util/post_actions.js';
@@ -25,7 +24,6 @@ let autoTagAsker;
 let controlButtonTemplate;
 
 const popupElement = dom('div', { id: 'quick-tags' });
-const popupForm = dom('form', null, { submit: event => event.preventDefault() });
 const popupInput = dom(
   'input',
   {
@@ -53,7 +51,7 @@ const checkLength = ({ currentTarget }) => {
   }
 };
 popupInput.addEventListener('input', checkLength);
-popupForm.appendChild(popupInput);
+const popupForm = dom('form', null, { submit: event => event.preventDefault() }, [popupInput]);
 
 const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option' });
 
@@ -61,21 +59,17 @@ const storageKey = 'quick_tags.preferences.tagBundles';
 
 let editedTagsMap = new WeakMap();
 
+const createBundleButton = tagBundle => {
+  const bundleButton = dom('button', null, null, [tagBundle.title]);
+  bundleButton.dataset.tags = tagBundle.tags;
+  return bundleButton;
+};
+
 const populatePopups = async function () {
-  popupElement.textContent = '';
-  postOptionPopupElement.textContent = '';
-
-  popupElement.appendChild(popupForm);
-
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-  for (const tagBundle of tagBundles) {
-    const bundleButton = document.createElement('button');
-    bundleButton.textContent = tagBundle.title;
-    bundleButton.dataset.tags = tagBundle.tags;
-    popupElement.appendChild(bundleButton);
 
-    postOptionPopupElement.appendChild(bundleButton.cloneNode(true));
-  }
+  popupElement.replaceChildren(popupForm, ...tagBundles.map(createBundleButton));
+  postOptionPopupElement.replaceChildren(...tagBundles.map(createBundleButton));
 };
 
 const processPostForm = async function ([selectedTagsElement]) {
@@ -183,16 +177,10 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 };
 
 const addFakeTagsToFooter = (postElement, tags) => {
-  const tagsElement = dom('div', { class: tagsClass });
-
-  const innerTagsDiv = document.createElement('div');
-  tagsElement.appendChild(innerTagsDiv);
-
-  for (const tag of tags) {
-    innerTagsDiv.appendChild(
-      dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`])
-    );
-  }
+  const fakeTags = tags.map(tag =>
+    dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`])
+  );
+  const tagsElement = dom('div', { class: tagsClass }, null, [dom('div', null, null, fakeTags)]);
 
   postElement.querySelector('footer').parentNode.prepend(tagsElement);
 };
@@ -229,8 +217,9 @@ const processPosts = postElements => filterPostElements(postElements).forEach(po
   const existingButton = postElement.querySelector(`.${buttonClass}`);
   if (existingButton !== null) { return; }
 
-  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"][aria-label=${translate('Edit')}]`);
-  if (!editButton) { return; }
+  const editIcon = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"] use[href="#managed-icon__edit"]`);
+  if (!editIcon) { return; }
+  const editButton = editIcon.closest('a');
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
   const controlIcon = editButton.closest(controlIconSelector);
@@ -240,6 +229,60 @@ const processPosts = postElements => filterPostElements(postElements).forEach(po
 popupElement.addEventListener('click', processBundleClick);
 popupForm.addEventListener('submit', processFormSubmit);
 postOptionPopupElement.addEventListener('click', processPostOptionBundleClick);
+
+const migrateTags = async ({ detail }) => {
+  const newTagBundles = JSON.parse(detail);
+
+  if (Array.isArray(newTagBundles)) {
+    window.dispatchEvent(new CustomEvent('xkit-quick-tags-migration-success'));
+
+    const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
+
+    const toAdd = newTagBundles
+      .map(({ title, tags }) => ({ title: String(title), tags: String(tags) }))
+      .filter(
+        newTagBundle =>
+          !tagBundles.some(
+            tagBundle =>
+              newTagBundle.title === tagBundle.title && newTagBundle.tags === tagBundle.tags
+          )
+      );
+
+    if (toAdd.length) {
+      await new Promise(resolve => {
+        showModal({
+          title: 'Add tag bundles?',
+          message: [
+            `Would you like to import the following ${
+              toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'tag bundle'
+            } from New XKit to XKit Rewritten?`,
+            '\n\n',
+            dom('ul', null, null, toAdd.map(({ title }) => dom('li', null, null, [title])))
+          ],
+          buttons: [
+            modalCancelButton,
+            dom('button', { class: 'blue' }, { click: resolve }, ['Confirm'])
+          ]
+        });
+      });
+
+      tagBundles.push(...toAdd);
+      await browser.storage.local.set({ [storageKey]: tagBundles });
+
+      showModal({
+        title: 'Success',
+        message: `Imported ${toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'a tag bundle'}!`,
+        buttons: [modalCompleteButton]
+      });
+    } else {
+      showModal({
+        title: 'No new bundles!',
+        message: 'Your XKit Rewritten configuration has these tag bundles already.',
+        buttons: [modalCompleteButton]
+      });
+    }
+  }
+};
 
 export const main = async function () {
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Quick Tags');
@@ -253,6 +296,8 @@ export const main = async function () {
   if (originalPostTag || answerTag || autoTagAsker) {
     pageModifications.register('#selected-tags', processPostForm);
   }
+
+  window.addEventListener('xkit-quick-tags-migration', migrateTags);
 };
 
 export const clean = async function () {
@@ -267,6 +312,8 @@ export const clean = async function () {
   $(`.${tagsClass}`).remove();
 
   editedTagsMap = new WeakMap();
+
+  window.removeEventListener('xkit-quick-tags-migration', migrateTags);
 };
 
 export const stylesheet = true;

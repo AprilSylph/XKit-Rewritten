@@ -200,7 +200,7 @@ const reblogPost = async function ({ currentTarget }) {
   };
 
   try {
-    const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
+    const { meta, response } = await apiFetch('sdlfjsljk', { method: 'POST', body: requestBody });
     if (meta.status === 201) {
       makeButtonReblogged({ buttonDiv: currentReblogButton, state });
 

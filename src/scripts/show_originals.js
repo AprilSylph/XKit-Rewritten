@@ -5,12 +5,16 @@ import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { userBlogs } from '../util/user.js';
+import { timelineFilters } from '../util/timeline_id.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
 
-const blogTimelineRegex = /^\/v2\/blog\/[a-z0-9-]{1,32}\/posts$/;
+const followingTimelineFilter = timelineFilters.following();
+const blogTimelineFilters = [timelineFilters.blog(), timelineFilters.peepr()];
+const blogSubsTimelineFilter = timelineFilters.blogSubs();
+
 const channelSelector = `${keyToCss('bar')} ~ *`;
 
 const storageKey = 'show_originals.savedModes';
@@ -65,21 +69,27 @@ const addControls = async (timelineElement, location) => {
 };
 
 const getLocation = timelineElement => {
-  const { timeline, which } = timelineElement.dataset;
-
-  const isBlog = blogTimelineRegex.test(timeline) && !timelineElement.matches(channelSelector);
+  const isBlog =
+    blogTimelineFilters.some(filter => filter(timelineElement)) &&
+    !timelineElement.matches(channelSelector);
 
   const on = {
-    dashboard: timeline === '/v2/timeline/dashboard',
-    disabled: isBlog && disabledBlogs.some(name => timeline === `/v2/blog/${name}/posts`),
+    dashboard: followingTimelineFilter(timelineElement),
+    disabled:
+      isBlog &&
+      disabledBlogs.some(
+        name =>
+          timelineFilters.blog(name)(timelineElement) ||
+          timelineFilters.peepr(name)(timelineElement)
+      ),
     peepr: isBlog,
-    blogSubscriptions: timeline.includes('blog_subscriptions') || which === 'blog_subscriptions'
+    blogSubscriptions: blogSubsTimelineFilter(timelineElement)
   };
   return Object.keys(on).find(location => on[location]);
 };
 
 const processTimelines = async () => {
-  [...document.querySelectorAll('[data-timeline]')].forEach(async timelineElement => {
+  [...document.querySelectorAll(':is([data-timeline], [data-timeline-id])')].forEach(async timelineElement => {
     const location = getLocation(timelineElement);
 
     const currentControls = [...timelineElement.children]

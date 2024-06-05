@@ -2,16 +2,17 @@ import { filterPostElements } from '../util/interface.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
+import { timelineFilters } from '../util/timeline_id.js';
 
 const excludeClass = 'xkit-collapsed-queue-done';
 const wrapperClass = 'xkit-collapsed-queue-wrapper';
 const containerClass = 'xkit-collapsed-queue-container';
 const footerSelector = keyToCss('footerWrapper');
 
-let timelineRegex;
+let timeline;
 
 const processPosts = async function (postElements) {
-  filterPostElements(postElements, { excludeClass, timeline: timelineRegex }).forEach(async postElement => {
+  filterPostElements(postElements, { excludeClass, timeline }).forEach(async postElement => {
     const headerElement = postElement.querySelector('header');
     const footerElement = postElement.querySelector(footerSelector);
 
@@ -30,11 +31,10 @@ export const main = async function () {
   const { runInQueue, runInDrafts } = await getPreferences('collapsed_queue');
   if (![runInQueue, runInDrafts].some(Boolean)) return;
 
-  const regexGroup = [
-    ...runInQueue ? ['queue'] : [],
-    ...runInDrafts ? ['draft'] : []
-  ].join('|');
-  timelineRegex = new RegExp(`/v2/blog/[^/]+/posts/(${regexGroup})`);
+  timeline = [
+    runInQueue && timelineFilters.queue(),
+    runInDrafts && timelineFilters.drafts()
+  ];
 
   onNewPosts.addListener(processPosts);
 };

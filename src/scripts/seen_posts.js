@@ -2,9 +2,12 @@ import { filterPostElements, getTimelineItemWrapper, postSelector } from '../uti
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
+import { timelineFilters, timelineSelectors } from '../util/timeline_id.js';
 
 const excludeAttribute = 'data-seen-posts-done';
-const timeline = '/v2/timeline/dashboard';
+const timeline = timelineFilters.following();
+const timelineSelector = timelineSelectors.following();
+
 const includeFiltered = true;
 
 const dimAttribute = 'data-seen-posts-seen';
@@ -45,7 +48,7 @@ const markAsSeen = (element) => {
 };
 
 const lengthenTimelines = () =>
-  [...document.querySelectorAll(`[data-timeline="${timeline}"]`)].forEach(timelineElement => {
+  [...document.querySelectorAll(timelineSelector)].forEach(timelineElement => {
     if (!timelineElement.querySelector(keyToCss('manualPaginatorButtons'))) {
       timelineElement.classList.add(lengthenedClass);
     }

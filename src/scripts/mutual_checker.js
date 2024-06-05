@@ -7,6 +7,7 @@ import { onNewPosts, onNewNotifications, pageModifications } from '../util/mutat
 import { dom } from '../util/dom.js';
 import { getPreferences } from '../util/preferences.js';
 import { translate } from '../util/language_data.js';
+import { timelineSelectors } from '../util/timeline_id.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenAttribute = 'data-mutual-checker-hidden';
@@ -34,7 +35,7 @@ const styleElement = buildStyle(`
     margin-right: 0.5ch;
   }
 
-  [data-timeline="/v2/timeline/dashboard"] [${hiddenAttribute}] article {
+  ${timelineSelectors.following()} [${hiddenAttribute}] article {
     display: none;
   }
 

@@ -69,6 +69,8 @@ const addControls = async (timelineElement, location) => {
 };
 
 const getLocation = timelineElement => {
+  const { timeline, timelineId } = timelineElement.dataset;
+
   const isBlog =
     blogTimelineFilters.some(filter => filter(timelineElement)) &&
     !timelineElement.matches(channelSelector);
@@ -79,8 +81,11 @@ const getLocation = timelineElement => {
       isBlog &&
       disabledBlogs.some(
         name =>
-          timelineFilters.blog(name)(timelineElement) ||
-          timelineFilters.peepr(name)(timelineElement)
+          timeline === `/v2/blog/${name}/posts` ||
+          timelineId === `peepr-posts-${name}-undefined-undefined-undefined-undefined-undefined-undefined` ||
+          (timelineId?.startsWith('blog-') &&
+            timelineId?.endsWith(`-${name}`) &&
+            timelineElement.matches('.__draggable-item__ *'))
       ),
     peepr: isBlog,
     blogSubscriptions: blogSubsTimelineFilter(timelineElement)

@@ -175,7 +175,6 @@ const reblogPost = async function ({ currentTarget }) {
 
   currentTarget.blur();
   actionButtons.disabled = true;
-  lastPostID = null;
 
   const postElement = currentTarget.closest(postSelector);
   const postID = postElement.dataset.id;
@@ -205,9 +204,10 @@ const reblogPost = async function ({ currentTarget }) {
     if (meta.status === 201) {
       makeButtonReblogged({ buttonDiv: currentReblogButton, state });
 
-      const popupHasNotMoved = lastPostID === null;
+      const popupHasNotMoved = lastPostID === postID;
       if (popupHasNotMoved) {
         popupElement.remove();
+        lastPostID = null;
       }
 
       notify(response.displayText);

@@ -5,7 +5,7 @@ import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { userBlogs } from '../util/user.js';
-import { timelineFilters } from '../util/timeline_id.js';
+import { timelineFilters, timelineSelector } from '../util/timeline_id.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
@@ -94,7 +94,7 @@ const getLocation = timelineElement => {
 };
 
 const processTimelines = async () => {
-  [...document.querySelectorAll(':is([data-timeline], [data-timeline-id])')].forEach(async timelineElement => {
+  [...document.querySelectorAll(timelineSelector)].forEach(async timelineElement => {
     const location = getLocation(timelineElement);
 
     const currentControls = [...timelineElement.children]

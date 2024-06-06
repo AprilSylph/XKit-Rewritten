@@ -12,6 +12,8 @@ const createRegex = (...components) =>
 const createSelector = (...components) =>
   `:is(${components.filter(Boolean).join(', ') || matchesNothingCss})`;
 
+export const timelineSelector = ':is([data-timeline], [data-timeline-id])';
+
 const anyBlog = '[a-z0-9-]{1,32}';
 const anySegment = '[^/]+';
 

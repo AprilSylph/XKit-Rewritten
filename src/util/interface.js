@@ -1,5 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { timelineSelector } from './timeline_id.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
 export const blogViewSelector = '[style*="--blog-title-color"] *';
@@ -35,7 +36,7 @@ export const getPopoverWrapper = element => {
 /**
  * @typedef {object} PostFilterOptions
  * @property {string} [excludeClass] - Classname to exclude and add
- * @property {Function} [timeline] - Filter results to matching timelines
+ * @property {Function|Function[]} [timeline] - Filter results to matching timeline element children
  * @property {boolean} [noBlogView] - Whether to exclude posts in the blog view modal
  * @property {boolean} [includeFiltered] - Whether to include filtered posts
  */
@@ -52,12 +53,14 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
     .filter(Boolean);
 
   if (timeline) {
-    postElements = postElements.filter(postElement =>
-      [timeline]
-        .flat()
-        .filter(Boolean)
-        .some(timelineFilter => timelineFilter(postElement.closest('[data-timeline], [data-timeline-id]')))
-    );
+    postElements = postElements.filter(postElement => {
+      const timelineElement = postElement.closest(timelineSelector);
+      const timelineFilters = [timeline].flat().filter(Boolean);
+      return (
+        timelineElement &&
+        timelineFilters.some(timelineFilter => timelineFilter(timelineElement))
+      );
+    });
   }
 
   if (noBlogView) {

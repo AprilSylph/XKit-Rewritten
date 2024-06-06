@@ -1,6 +1,7 @@
 import { keyToCss } from '../../util/css_map.js';
 import { buildStyle, getTimelineItemWrapper } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
+import { followingTimelineSelector } from '../../util/timeline_id.js';
 
 const hiddenAttribute = 'data-tweaks-caught-up-line-title';
 const borderAttribute = 'data-tweaks-caught-up-line-border';
@@ -23,9 +24,7 @@ const styleElement = buildStyle(`
 `);
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
-
-// todo: update for future patio id tweaks
-const tagChicletCarouselLinkSelector = `:is([data-timeline="/v2/timeline/dashboard"], [data-timeline-id="/dashboard/following"], [data-timeline-id^="following-"]) ${listTimelineObjectSelector} ${keyToCss('tagChicletLink')}`;
+const tagChicletCarouselLinkSelector = `${followingTimelineSelector} ${listTimelineObjectSelector} ${keyToCss('tagChicletLink')}`;
 
 const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
   .map(getTimelineItemWrapper)

@@ -1,14 +1,12 @@
 import { buildStyle, getTimelineItemWrapper, filterPostElements, postSelector } from '../../util/interface.js';
 import { onNewPosts } from '../../util/mutations.js';
 import { timelineObject } from '../../util/react_props.js';
+import { followingTimelineFilter } from '../../util/timeline_id.js';
 
 const excludeClass = 'xkit-no-recommended-posts-done';
 const hiddenAttribute = 'data-no-recommended-posts-hidden';
 const unHiddenAttribute = 'data-no-recommended-posts-many';
-const timeline = /\/v2\/timeline\/dashboard/;
-
-// todo: update for future patio id tweaks
-const timelineId = /(^\/dashboard\/following$)|(^following-)/;
+const timeline = followingTimelineFilter;
 const includeFiltered = true;
 
 const styleElement = buildStyle(`
@@ -45,7 +43,7 @@ const precedingHiddenPosts = ({ previousElementSibling: previousElement }, count
 };
 
 const processPosts = async function (postElements) {
-  filterPostElements(postElements, { excludeClass, timeline, timelineId, includeFiltered }).forEach(async postElement => {
+  filterPostElements(postElements, { excludeClass, timeline, includeFiltered }).forEach(async postElement => {
     const { recommendationReason } = await timelineObject(postElement);
     if (!recommendationReason) return;
 

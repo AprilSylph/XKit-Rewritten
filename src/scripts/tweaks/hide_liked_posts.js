@@ -1,17 +1,15 @@
 import { onNewPosts } from '../../util/mutations.js';
 import { buildStyle, getTimelineItemWrapper, filterPostElements } from '../../util/interface.js';
 import { isMyPost, timelineObject } from '../../util/react_props.js';
+import { followingTimelineFilter } from '../../util/timeline_id.js';
 
-const timeline = /\/v2\/timeline\/dashboard/;
-
-// todo: update for future patio id tweaks
-const timelineId = /(^\/dashboard\/following$)|(^following-)/;
+const timeline = followingTimelineFilter;
 
 const hiddenAttribute = 'data-tweaks-hide-liked-posts-hidden';
 const styleElement = buildStyle(`[${hiddenAttribute}] article { display: none; }`);
 
 const processPosts = async function (postElements) {
-  filterPostElements(postElements, { timeline, timelineId }).forEach(async postElement => {
+  filterPostElements(postElements, { timeline }).forEach(async postElement => {
     const { liked } = await timelineObject(postElement);
     const myPost = await isMyPost(postElement);
 

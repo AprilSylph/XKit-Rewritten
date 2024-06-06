@@ -1,5 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { timelineSelector } from './timeline_id.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
 export const blogViewSelector = '[style*="--blog-title-color"] *';
@@ -35,8 +36,7 @@ export const getPopoverWrapper = element => {
 /**
  * @typedef {object} PostFilterOptions
  * @property {string} [excludeClass] - Classname to exclude and add
- * @property {RegExp|string} [timeline] - Filter results to matching [data-timeline] children
- * @property {RegExp|string} [timelineId] - Filter results to matching [data-timeline-id] children
+ * @property {Function|Function[]} [timeline] - Filter results to matching timeline element children
  * @property {boolean} [noBlogView] - Whether to exclude posts in the blog view modal
  * @property {boolean} [includeFiltered] - Whether to include filtered posts
  */
@@ -46,28 +46,21 @@ export const getPopoverWrapper = element => {
  * @param {PostFilterOptions} [postFilterOptions] - Post filter options
  * @returns {HTMLDivElement[]} Matching post elements
  */
-export const filterPostElements = function (postElements, { excludeClass, timeline, timelineId, noBlogView = false, includeFiltered = false } = {}) {
+export const filterPostElements = function (postElements, { excludeClass, timeline, noBlogView = false, includeFiltered = false } = {}) {
   postElements = postElements
     .filter(element => element.isConnected)
     .map(element => element.closest(postSelector))
     .filter(Boolean);
 
-  if (timeline || timelineId) {
-    const filtered = [];
-
-    if (timeline instanceof RegExp) {
-      filtered.push(...postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]')?.dataset.timeline)));
-    } else if (timeline) {
-      filtered.push(...postElements.filter(postElement => timeline === postElement.closest('[data-timeline]')?.dataset.timeline));
-    }
-
-    if (timelineId instanceof RegExp) {
-      filtered.push(...postElements.filter(postElement => timelineId.test(postElement.closest('[data-timeline-id]')?.dataset.timelineId)));
-    } else if (timelineId) {
-      filtered.push(...postElements.filter(postElement => timelineId === postElement.closest('[data-timeline-id]')?.dataset.timelineId));
-    }
-
-    postElements = [...new Set(filtered)];
+  if (timeline) {
+    const timelineFilters = [timeline].flat().filter(Boolean);
+    postElements = postElements.filter(postElement => {
+      const timelineElement = postElement.closest(timelineSelector);
+      return (
+        timelineElement &&
+        timelineFilters.some(timelineFilter => timelineFilter(timelineElement))
+      );
+    });
   }
 
   if (noBlogView) {

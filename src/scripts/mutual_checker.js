@@ -7,6 +7,7 @@ import { onNewPosts, onNewNotifications, pageModifications } from '../util/mutat
 import { dom } from '../util/dom.js';
 import { getPreferences } from '../util/preferences.js';
 import { translate } from '../util/language_data.js';
+import { followingTimelineSelector } from '../util/timeline_id.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenAttribute = 'data-mutual-checker-hidden';
@@ -34,8 +35,7 @@ const styleElement = buildStyle(`
     margin-right: 0.5ch;
   }
 
-  /* todo: update for future patio id tweaks */
-  :is([data-timeline="/v2/timeline/dashboard"], [data-timeline-id="/dashboard/following"], [data-timeline-id^="following-"]) [${hiddenAttribute}] article {
+  ${followingTimelineSelector} [${hiddenAttribute}] article {
     display: none;
   }
 

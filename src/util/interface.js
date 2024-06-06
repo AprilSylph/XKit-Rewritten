@@ -52,16 +52,12 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
     .filter(Boolean);
 
   if (timeline) {
-    postElements = postElements.filter(postElement => {
-      const timelineElement = postElement.closest('[data-timeline], [data-timeline-id]');
-      return (
-        timelineElement &&
-        [timeline]
-          .flat()
-          .filter(Boolean)
-          .some(timelineFilter => timelineFilter(timelineElement))
-      );
-    });
+    postElements = postElements.filter(postElement =>
+      [timeline]
+        .flat()
+        .filter(Boolean)
+        .some(timelineFilter => timelineFilter(postElement.closest('[data-timeline], [data-timeline-id]')))
+    );
   }
 
   if (noBlogView) {

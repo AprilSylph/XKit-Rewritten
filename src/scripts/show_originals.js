@@ -5,15 +5,11 @@ import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
 import { translate } from '../util/language_data.js';
 import { userBlogs } from '../util/user.js';
-import { timelineFilters } from '../util/timeline_id.js';
+import { followingTimelineFilter, anyBlogTimelineFilter, blogTimelineFilter, blogSubsTimelineFilter } from '../util/timeline_id.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
-
-const followingTimelineFilter = timelineFilters.following();
-const blogTimelineFilters = [timelineFilters.blog(), timelineFilters.peepr()];
-const blogSubsTimelineFilter = timelineFilters.blogSubs();
 
 const channelSelector = `${keyToCss('bar')} ~ *`;
 
@@ -69,24 +65,12 @@ const addControls = async (timelineElement, location) => {
 };
 
 const getLocation = timelineElement => {
-  const { timeline, timelineId } = timelineElement.dataset;
-
   const isBlog =
-    blogTimelineFilters.some(filter => filter(timelineElement)) &&
-    !timelineElement.matches(channelSelector);
+    anyBlogTimelineFilter(timelineElement) && !timelineElement.matches(channelSelector);
 
   const on = {
     dashboard: followingTimelineFilter(timelineElement),
-    disabled:
-      isBlog &&
-      disabledBlogs.some(
-        name =>
-          timeline === `/v2/blog/${name}/posts` ||
-          timelineId === `peepr-posts-${name}-undefined-undefined-undefined-undefined-undefined-undefined` ||
-          (timelineId?.startsWith('blog-') &&
-            timelineId?.endsWith(`-${name}`) &&
-            timelineElement.matches('.__draggable-item__ *'))
-      ),
+    disabled: isBlog && disabledBlogs.some(name => blogTimelineFilter(name)(timelineElement)),
     peepr: isBlog,
     blogSubscriptions: blogSubsTimelineFilter(timelineElement)
   };

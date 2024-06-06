@@ -1,7 +1,7 @@
 import { keyToCss } from '../../util/css_map.js';
 import { buildStyle, getTimelineItemWrapper } from '../../util/interface.js';
 import { pageModifications } from '../../util/mutations.js';
-import { timelineSelectors } from '../../util/timeline_id.js';
+import { followingTimelineSelector } from '../../util/timeline_id.js';
 
 const hiddenAttribute = 'data-tweaks-caught-up-line-title';
 const borderAttribute = 'data-tweaks-caught-up-line-border';
@@ -24,7 +24,7 @@ const styleElement = buildStyle(`
 `);
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
-const tagChicletCarouselLinkSelector = `${timelineSelectors.following()} ${listTimelineObjectSelector} ${keyToCss('tagChicletLink')}`;
+const tagChicletCarouselLinkSelector = `${followingTimelineSelector} ${listTimelineObjectSelector} ${keyToCss('tagChicletLink')}`;
 
 const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
   .map(getTimelineItemWrapper)

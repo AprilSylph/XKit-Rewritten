@@ -2,7 +2,7 @@ import { filterPostElements } from '../util/interface.js';
 import { getPreferences } from '../util/preferences.js';
 import { onNewPosts } from '../util/mutations.js';
 import { keyToCss } from '../util/css_map.js';
-import { timelineFilters } from '../util/timeline_id.js';
+import { anyQueueTimelineFilter, anyDraftsTimelineFilter } from '../util/timeline_id.js';
 
 const excludeClass = 'xkit-collapsed-queue-done';
 const wrapperClass = 'xkit-collapsed-queue-wrapper';
@@ -32,8 +32,8 @@ export const main = async function () {
   if (![runInQueue, runInDrafts].some(Boolean)) return;
 
   timeline = [
-    runInQueue && timelineFilters.queue(),
-    runInDrafts && timelineFilters.drafts()
+    runInQueue && anyQueueTimelineFilter,
+    runInDrafts && anyDraftsTimelineFilter
   ];
 
   onNewPosts.addListener(processPosts);

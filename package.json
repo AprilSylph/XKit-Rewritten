@@ -3,7 +3,7 @@
   "repository": "github:AprilSylph/XKit-Rewritten",
   "scripts": {
     "test": "web-ext lint",
-    "posttest": "eslint src/",
+    "posttest": "eslint src/ --cache",
     "start": "web-ext run",
     "build": "web-ext build",
     "enable-hooks": "husky",
@@ -19,7 +19,6 @@
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.2.0",
     "husky": "^9.0.11",
-    "lint-staged": "^15.2.5",
     "web-ext": "^7.12.0"
   },
   "dependencies": {

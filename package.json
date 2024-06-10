@@ -3,9 +3,11 @@
   "repository": "github:AprilSylph/XKit-Rewritten",
   "scripts": {
     "test": "web-ext lint",
-    "posttest": "eslint src/",
+    "posttest": "eslint src/ --cache",
     "start": "web-ext run",
-    "build": "web-ext build"
+    "build": "web-ext build",
+    "enable-hooks": "husky",
+    "disable-hooks": "git config --unset core.hooksPath"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^3.3.0",
@@ -16,6 +18,7 @@
     "eslint-plugin-jsdoc": "^48.5.0",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.4.0",
+    "husky": "^9.0.11",
     "web-ext": "^7.12.0"
   },
   "dependencies": {

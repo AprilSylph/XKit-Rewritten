@@ -5,7 +5,8 @@
     "test": "web-ext lint",
     "posttest": "eslint src/",
     "start": "web-ext run",
-    "build": "web-ext build"
+    "build": "web-ext build",
+    "enable-hooks": "simple-git-hooks"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^3.1.0",
@@ -16,7 +17,11 @@
     "eslint-plugin-jsdoc": "^48.2.7",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.2.0",
+    "simple-git-hooks": "^2.11.1",
     "web-ext": "^7.12.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx eslint src/ --cache --cache-location \"node_modules/.cache/eslint/.eslintcache\""
   },
   "dependencies": {
     "jquery": "^3.7.1",

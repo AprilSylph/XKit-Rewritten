@@ -11,6 +11,8 @@
 - **`npm test`**: Runs all linters. Will report any syntax or style errors.
 - **`npm test --ignore-scripts`**: Runs only the addon linter. Only reports syntax and WebExtension API errors.
 - **`npm run build`**: Creates an unsigned ZIP of the addon. Useful for debugging issues you can't reproduce.
+- **`npm run enable-hooks`**: Enables a git hook that lints staged files locally before they are committed.
+- **`npm run disable-hooks`**: Disables git hooks.
 
 ### Web-only development
 

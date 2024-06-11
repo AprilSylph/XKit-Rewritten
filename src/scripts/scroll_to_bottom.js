@@ -8,8 +8,8 @@ $(`.${buttonClass}`).remove();
 const activeClass = 'xkit-scroll-to-bottom-active';
 
 const loaderSelector = `
-${keyToCss('timeline', 'blogRows')} > :last-child,
-${keyToCss('notifications')} + ${keyToCss('loader')}
+${keyToCss('timeline', 'blogRows')} > ${keyToCss('scrollContainer')} + div,
+${keyToCss('notifications')} + div
 `;
 const knightRiderLoaderSelector = `:is(${loaderSelector}) > ${keyToCss('knightRiderLoader')}`;
 
@@ -49,15 +49,30 @@ const getObserveElement = () =>
   document.querySelector(modalScrollContainerSelector)?.firstElementChild ||
   document.documentElement;
 
+let timeoutID;
+
+const onLoadersAdded = loaders => {
+  if (activeElement && loaders.some(loader => activeElement.contains(loader))) {
+    clearTimeout(timeoutID);
+  }
+};
+
 const scrollToBottom = () => {
   activeElement.scrollTo({ top: activeElement.scrollHeight });
+  clearTimeout(timeoutID);
 
-  const loaders = [...activeElement.querySelectorAll(knightRiderLoaderSelector)];
   const buttonConnected = scrollToBottomButton?.isConnected || modalScrollToBottomButton?.isConnected;
 
-  if (loaders.length === 0 || !buttonConnected || activeElement !== getScrollElement()) {
+  if (!buttonConnected || activeElement !== getScrollElement()) {
     stopScrolling();
+    return;
   }
+
+  timeoutID = setTimeout(() => {
+    if (!activeElement.querySelector(knightRiderLoaderSelector)) {
+      stopScrolling();
+    }
+  }, 150);
 };
 const observer = new ResizeObserver(scrollToBottom);
 
@@ -73,6 +88,8 @@ const startScrolling = () => {
 const stopScrolling = () => {
   observer.disconnect();
   activeElement = false;
+
+  clearTimeout(timeoutID);
 
   scrollToBottomButton?.classList.remove(activeClass);
   modalScrollToBottomButton?.classList.remove(activeClass);
@@ -116,6 +133,7 @@ const addModalButtonToPage = async function ([modalScrollToTopButton]) {
 export const main = async function () {
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
   pageModifications.register(`button[aria-label="${translate('Back to top')}"]`, addModalButtonToPage);
+  pageModifications.register(knightRiderLoaderSelector, onLoadersAdded);
   document.documentElement.addEventListener('keydown', onKeyDown);
 
   document.documentElement.append(styleElement);
@@ -126,6 +144,7 @@ export const clean = async function () {
 
   pageModifications.unregister(addButtonToPage);
   pageModifications.unregister(addModalButtonToPage);
+  pageModifications.unregister(onLoadersAdded);
   document.documentElement.removeEventListener('keydown', onKeyDown);
 
   styleElement.remove();

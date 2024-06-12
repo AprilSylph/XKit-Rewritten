@@ -97,14 +97,14 @@ const processPosts = async function (postElements) {
 
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {
-      const { rebloggedRootId, content, blogName, rebloggedFromFollowing } = await timelineObject(postElement);
+      const { rebloggedRootId, content, blogName, postAuthor, rebloggedFromFollowing } = await timelineObject(postElement);
       const myPost = await isMyPost(postElement);
 
       if (!rebloggedRootId) { return; }
       if (showOwnReblogs && myPost) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
       if (showReblogsOfNotFollowing && !rebloggedFromFollowing) { return; }
-      if (whitelist.includes(blogName)) { return; }
+      if (whitelist.includes(blogName) || whitelist.includes(postAuthor)) { return; }
 
       getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
     });

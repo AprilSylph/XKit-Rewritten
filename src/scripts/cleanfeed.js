@@ -21,11 +21,13 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
     return;
   }
 
-  const { blog: { name, isAdult }, communityLabels, trail, tags } = await timelineObject(postElement);
+  const { blog, authorBlog, communityLabels, trail, tags } = await timelineObject(postElement);
 
-  if (isAdult ||
+  if (blog.isAdult ||
+      authorBlog?.isAdult ||
       communityLabels.hasCommunityLabel ||
-      localFlaggedBlogs.includes(name) ||
+      localFlaggedBlogs.includes(blog.name) ||
+      localFlaggedBlogs.includes(authorBlog?.name) ||
       localFlaggedTags.some(t => tags.map(tag => tag.toLowerCase()).includes(t))) {
     postElement.classList.add(hiddenClass);
     return;

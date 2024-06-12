@@ -30,7 +30,8 @@ const processPosts = async function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (postElement.matches(blogViewSelector) && !enableOnPeepr) return;
 
-    const { blog, trail = [], content } = await timelineObject(postElement);
+    const { blog: owningBlog, authorBlog, trail = [], content, community } = await timelineObject(postElement);
+    const blog = community ? authorBlog : owningBlog;
 
     const blogData = [
       blog,

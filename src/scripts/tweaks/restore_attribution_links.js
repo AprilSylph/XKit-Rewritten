@@ -20,16 +20,19 @@ const onLinkClick = event => {
 const processPosts = async function (postElements) {
   postElements.forEach(async postElement => {
     const {
-      blogName,
+      blogName: owningBlogName,
+      postAuthor,
+      community,
       id,
       postUrl,
       rebloggedFromId,
       rebloggedFromName,
       rebloggedFromUrl
     } = await timelineObject(postElement);
-    const postAttributionLink = postElement.querySelector(postAttributionLinkSelector);
+    const blogName = community ? postAuthor : owningBlogName;
 
-    if (postAttributionLink !== null) {
+    const postAttributionLink = postElement.querySelector(postAttributionLinkSelector);
+    if (postAttributionLink && postAttributionLink.textContent === blogName) {
       postAttributionLink.href = postUrl;
       postAttributionLink.dataset.blogName = blogName;
       postAttributionLink.dataset.postId = id;
@@ -37,7 +40,7 @@ const processPosts = async function (postElements) {
     }
 
     const reblogAttributionLink = postElement.querySelector(reblogAttributionLinkSelector);
-    if (reblogAttributionLink !== null && rebloggedFromUrl !== undefined) {
+    if (reblogAttributionLink && reblogAttributionLink.textContent === rebloggedFromName) {
       reblogAttributionLink.href = rebloggedFromUrl;
       reblogAttributionLink.dataset.blogName = rebloggedFromName;
       reblogAttributionLink.dataset.postId = rebloggedFromId;

@@ -47,13 +47,16 @@ export const unregisterBlogMeatballItem = id => {
   $(`[data-xkit-blog-meatball-button="${id}"]`).remove();
 };
 
+// stop processing on inject error
+const neverResolved = new Promise(() => {});
+
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
-  const inPostHeader = await inject('/utils/inject/test_header_element.js', [postHeaderSelector], meatballMenu);
+  const inPostHeader = await inject('/utils/inject/test_header_element.js', [postHeaderSelector], meatballMenu).catch(() => neverResolved);
   if (inPostHeader) {
     addPostMeatballItem(meatballMenu);
     return;
   }
-  const inBlogHeader = await inject('/utils/inject/test_header_element.js', [blogHeaderSelector], meatballMenu);
+  const inBlogHeader = await inject('/utils/inject/test_header_element.js', [blogHeaderSelector], meatballMenu).catch(() => neverResolved);
   if (inBlogHeader) {
     addBlogMeatballItem(meatballMenu);
   }

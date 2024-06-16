@@ -27,6 +27,10 @@ export const inject = async (path, args = [], target = document.documentElement)
         observer.disconnect();
         reject(JSON.parse(script.dataset.exception));
         script.remove();
+      } else if (mutations.some(({ attributeName }) => attributeName === 'data-disconnected')) {
+        observer.disconnect();
+        // promise is never resolved nor rejected
+        script.remove();
       }
     });
 

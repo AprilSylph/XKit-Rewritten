@@ -1,4 +1,4 @@
-export default function testHeaderElement(selector) {
+export default function testHeaderElement (selector) {
   const menuElement = this;
   const reactKey = Object.keys(menuElement).find(key => key.startsWith('__reactFiber'));
   let fiber = menuElement[reactKey];

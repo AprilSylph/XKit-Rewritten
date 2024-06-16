@@ -16,7 +16,7 @@
   },
   "rules": {
     "import/no-cycle": "error",
-    "jsdoc/require-jsdoc": false
+    "jsdoc/require-jsdoc": "off"
   },
   "ignorePatterns": [
     "lib/"

@@ -1,4 +1,4 @@
-export default function apiFetch(resource, init = {}) {
+export default function apiFetch (resource, init = {}) {
   // add XKit header to all API requests
   init.headers ??= {};
   init.headers['X-XKit'] = '1';

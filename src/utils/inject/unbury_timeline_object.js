@@ -1,4 +1,4 @@
-export default function unburyTimelineObject() {
+export default function unburyTimelineObject () {
   const postElement = this;
   const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
   let fiber = postElement[reactKey];

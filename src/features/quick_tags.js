@@ -2,7 +2,6 @@ import { cloneControlButton, createControlButtonTemplate } from '../utils/contro
 import { keyToCss } from '../utils/css_map.js';
 import { dom } from '../utils/dom.js';
 import { filterPostElements, getTimelineItemWrapper, postSelector } from '../utils/interface.js';
-import { translate } from '../utils/language_data.js';
 import { megaEdit } from '../utils/mega_editor.js';
 import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../utils/modals.js';
 import { onNewPosts, pageModifications } from '../utils/mutations.js';
@@ -218,8 +217,9 @@ const processPosts = postElements => filterPostElements(postElements).forEach(po
   const existingButton = postElement.querySelector(`.${buttonClass}`);
   if (existingButton !== null) { return; }
 
-  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"][aria-label=${translate('Edit')}]`);
-  if (!editButton) { return; }
+  const editIcon = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"] use[href="#managed-icon__edit"]`);
+  if (!editIcon) { return; }
+  const editButton = editIcon.closest('a');
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
   const controlIcon = editButton.closest(controlIconSelector);

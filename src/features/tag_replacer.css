@@ -11,7 +11,7 @@
   border-radius: 1em;
   margin: 0.25rem 0;
 
-  background-color: rgb(var(--accent));
+  background-color: rgb(var(--deprecated-accent));
   color: rgb(var(--navy));
 }
 

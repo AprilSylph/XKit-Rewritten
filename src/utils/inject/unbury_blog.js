@@ -1,4 +1,4 @@
-export default function unburyBlog() {
+export default function unburyBlog () {
   const element = this;
   const reactKey = Object.keys(element).find(key => key.startsWith('__reactFiber'));
   let fiber = element[reactKey];

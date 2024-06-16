@@ -17,7 +17,7 @@ ${keyToCss('postLikeHeartAnimation')} {
   display: none;
 }
 
-canvas#fire-everywhere {
+canvas#fire-everywhere, [style*="--fire-container-height"] {
   display: none;
 }
 `);

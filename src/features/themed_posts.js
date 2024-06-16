@@ -57,8 +57,8 @@ const processPosts = async function (postElements) {
           [data-xkit-themed="${name}"] {
             --white: ${backgroundColorRGB};
             --black: ${titleColorRGB};
-            --accent: ${linkColorRGB};
-            --color-primary-link: rgb(var(--accent));
+            --deprecated-accent: ${linkColorRGB};
+            --color-primary-link: rgb(var(--deprecated-accent));
           }
         `;
       }
@@ -98,13 +98,13 @@ export const main = async function () {
         ${timelineSelector} {
           --xkit-root-white: var(--white);
           --xkit-root-black: var(--black);
-          --xkit-root-accent: var(--accent);
+          --xkit-root-accent: var(--deprecated-accent);
         }
 
         [data-xkit-themed] {
           --white: var(--xkit-root-white);
           --black: var(--xkit-root-black);
-          --accent: var(--xkit-root-accent);
+          --deprecated-accent: var(--xkit-root-accent);
         }
       `;
     }

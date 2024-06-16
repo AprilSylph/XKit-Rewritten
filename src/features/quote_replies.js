@@ -24,15 +24,12 @@ let originalPostTag;
 let tagReplyingBlog;
 let newTab;
 
-// stop processing on inject error
-const neverResolved = new Promise(() => {});
-
 const processNotifications = notifications => notifications.forEach(async notification => {
   const { notification: notificationProps, tumblelogName } = await inject(
     '/features/quote_replies/get_notification_props.js',
     [],
     notification
-  ).catch(() => neverResolved);
+  );
 
   if (!['reply', 'note_mention'].includes(notificationProps.type)) return;
 

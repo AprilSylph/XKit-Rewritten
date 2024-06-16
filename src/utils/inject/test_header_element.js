@@ -15,7 +15,7 @@
     }
   };
 
-  testHeaderElement(...JSON.parse(dataset.arguments))
+  document.currentScript.isConnected && testHeaderElement(...JSON.parse(dataset.arguments))
     .then(result => { dataset.result = JSON.stringify(result ?? null); })
     .catch(exception => {
       dataset.exception = JSON.stringify({

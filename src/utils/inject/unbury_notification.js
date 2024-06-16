@@ -16,7 +16,7 @@
     }
   };
 
-  unburyNotification()
+  document.currentScript.isConnected && unburyNotification()
     .then(result => { dataset.result = JSON.stringify(result ?? null); })
     .catch(exception => {
       dataset.exception = JSON.stringify({

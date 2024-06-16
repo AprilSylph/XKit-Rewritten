@@ -16,7 +16,7 @@
     }
   };
 
-  unburyTimelineObject()
+  document.currentScript.isConnected && unburyTimelineObject()
     .then(result => { dataset.result = JSON.stringify(result ?? null); })
     .catch(exception => {
       dataset.exception = JSON.stringify({

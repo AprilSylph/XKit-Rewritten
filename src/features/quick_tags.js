@@ -219,10 +219,10 @@ const processPosts = postElements => filterPostElements(postElements).forEach(po
 
   const editIcon = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"] use[href="#managed-icon__edit"]`);
   if (!editIcon) { return; }
-  const editButton = editIcon.closest('a');
+
+  const controlIcon = editIcon.closest(controlIconSelector);
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
-  const controlIcon = editButton.closest(controlIconSelector);
   controlIcon.before(clonedControlButton);
 });
 

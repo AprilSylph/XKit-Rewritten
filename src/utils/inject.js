@@ -4,6 +4,9 @@ const { getURL } = browser.runtime;
 const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
 
 /**
+ * Runs a script in the page's "main" execution environment and returns its result.
+ * This permits access to variables exposed by the Tumblr web platform that are normally inaccessible
+ * in the content script sandbox.
  * @param {string} path - Absolute path of script to inject (will be fed to `runtime.getURL()`)
  * @param {Array} [args] - Array of arguments to pass to the script
  * @param {Element} [target] - Element to append the `<script>` to; will be accessible as

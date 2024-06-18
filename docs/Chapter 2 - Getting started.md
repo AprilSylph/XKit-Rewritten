@@ -24,3 +24,9 @@ The extension source code is located in `src/`. Before loading your development 
 - Chromium: [Load an unpacked extension](https://developer.chrome.com/docs/extensions/mv2/getstarted/#manifest)
 
 Be sure to reload the extension each time you modify its files, and refresh any open Tumblr tabs in that browser. Otherwise, your changes may not be reflected.
+
+Alternatively—particularly for testing a fresh install by a new user—you can run:
+
+- **`npm start`**: Loads the addon into a temporary browser process and automatically refreshes it when changed.
+
+You can run `npm start -- --f=nightly`, `npm start -- --f=deved` or `npm start -- --t=chromium` to run the test in Firefox Nightly, Firefox Developer Edition, or Chrome, respectively, if you have those browsers installed.

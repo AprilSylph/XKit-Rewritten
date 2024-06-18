@@ -20,7 +20,7 @@
   "browser_action": {
     "browser_style": true,
     "default_title": "XKit Rewritten",
-    "default_popup": "browser_action/popup.html",
+    "default_popup": "action/popup.html",
     "default_icon": {
       "16": "icons/16.png",
       "32": "icons/32.png",
@@ -31,7 +31,7 @@
     }
   },
   "options_ui": {
-    "page": "browser_action/popup.html?embedded=true",
+    "page": "action/popup.html?embedded=true",
     "open_in_tab": false
   },
 

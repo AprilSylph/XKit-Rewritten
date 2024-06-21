@@ -20,7 +20,7 @@ const targetWrapperSelector = keyToCss(
  * @returns {Element | null} The timeline item wrapper
  */
 export const getTimelineItemWrapper = element =>
-  (element.closest('[data-timeline-id]') && element.parentElement) ||
+  (element.closest('[data-timeline-id]') && element.closest(listTimelineObjectSelector)?.parentElement) ||
   element.closest(cellSelector) ||
   element.closest(listTimelineObjectSelector);
 

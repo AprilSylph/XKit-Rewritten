@@ -7,6 +7,14 @@ const addedNodesPool = [];
 let repaintQueued = false;
 let timerId;
 
+const isolateErrors = func => {
+  try {
+    func();
+  } catch (exception) {
+    console.error(exception);
+  }
+};
+
 export const pageModifications = Object.freeze({
   listeners: new Map(),
 
@@ -77,7 +85,7 @@ const onBeforeRepaint = () => {
   for (const [modifierFunction, selector] of pageModifications.listeners) {
     if (modifierFunction.length === 0) {
       const shouldRun = addedNodes.some(addedNode => addedNode.matches(selector) || addedNode.querySelector(selector) !== null);
-      if (shouldRun) modifierFunction();
+      if (shouldRun) isolateErrors(() => modifierFunction());
       continue;
     }
 
@@ -87,7 +95,7 @@ const onBeforeRepaint = () => {
     ].filter((value, index, array) => index === array.indexOf(value));
 
     if (matchingElements.length !== 0) {
-      modifierFunction(matchingElements);
+      isolateErrors(() => modifierFunction(matchingElements));
     }
   }
 };

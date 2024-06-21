@@ -39,4 +39,5 @@ export const anyQueueTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
 
 export const tagTimelineFilter = encodedTag =>
   ({ dataset: { timeline, timelineId } }) =>
-    timeline === `/v2/hubs/${encodedTag}/timeline`;
+    timeline === `/v2/hubs/${encodedTag}/timeline` ||
+    timelineId?.startsWith(`hubsTimeline-${encodedTag}-recent-`);

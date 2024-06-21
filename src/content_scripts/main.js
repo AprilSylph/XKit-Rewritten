@@ -22,6 +22,7 @@
       document.documentElement.appendChild(link);
     }
     if (styleElement) {
+      styleElement.dataset.xkitFeature = name;
       document.documentElement.append(styleElement);
     }
 

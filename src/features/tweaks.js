@@ -8,6 +8,7 @@ const runTweak = async function (name) {
     run().catch(console.error);
   }
   if (styleElement) {
+    styleElement.dataset.xkitFeature = `tweaks_${name}`;
     document.documentElement.append(styleElement);
   }
 };

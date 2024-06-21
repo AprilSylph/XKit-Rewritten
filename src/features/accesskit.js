@@ -8,6 +8,7 @@ const runOption = async function (name) {
     run().catch(console.error);
   }
   if (styleElement) {
+    styleElement.dataset.xkitFeature = `accesskit_${name}`;
     document.documentElement.append(styleElement);
   }
 };

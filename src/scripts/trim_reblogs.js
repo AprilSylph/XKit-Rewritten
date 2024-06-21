@@ -159,8 +159,9 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const existingButton = postElement.querySelector(`.${buttonClass}`);
   if (existingButton !== null) { return; }
 
-  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"]`);
-  if (!editButton) { return; }
+  const editIcon = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"] use[href="#managed-icon__edit"]`);
+  if (!editIcon) { return; }
+  const editButton = editIcon.closest('a');
 
   const { trail = [], content = [] } = await timelineObject(postElement);
   const items = trail.length + (content.length ? 1 : 0);

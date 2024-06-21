@@ -44,9 +44,44 @@ export const main = async function () {
   localFlaggedBlogs = localBlogFlagging.split(',').map(username => username.trim().toLowerCase());
   localFlaggedTags = localTagFlagging.split(',').map(tag => tag.replaceAll('#', '').trim().toLowerCase());
 
-  styleElement.textContent = localFlaggedBlogs
-    .map(username => `[title="${username}"] img[alt="${translate('Avatar')}"] { filter: blur(20px); }`)
-    .join('');
+  const localFlaggedBlogsTitleSelector = `:is(${
+    localFlaggedBlogs.map(username => `[title="${username}"]`).join(', ')
+  })`;
+
+  const mediaSelector =
+    `.${hiddenClass}:not(:hover) :is(figure:not([aria-label]), [role="application"], a > ${keyToCss('withImage')})`;
+
+  styleElement.textContent = `
+  ${localFlaggedBlogsTitleSelector} img[alt="${translate('Avatar')}"] {
+    filter: blur(20px);
+  }
+
+  ${mediaSelector} {
+    position: relative;
+  }
+
+  ${mediaSelector}::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    line-height: 1.5;
+    overflow: hidden;
+
+    background-color: rgb(var(--white));
+    background-image: linear-gradient(rgba(var(--black), 0.07), rgba(var(--black), 0.07));
+    content: "Hidden by CleanFeed";
+    color: rgba(var(--black), 0.65);
+    object-fit: cover;
+  }
+  `;
+
   document.documentElement.append(styleElement);
   onNewPosts.addListener(processPosts);
 };
@@ -57,5 +92,3 @@ export const clean = async function () {
 
   $(`.${hiddenClass}`).removeClass(hiddenClass);
 };
-
-export const stylesheet = true;

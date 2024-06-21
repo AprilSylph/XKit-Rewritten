@@ -117,7 +117,7 @@ const processPosts = async function (postElements) {
   const currentTag = decodeURIComponent(encodedCurrentTag);
   if (!trackedTags.includes(currentTag)) return;
 
-  const timeline = tagTimelineFilter(encodedCurrentTag);
+  const timeline = tagTimelineFilter(currentTag);
 
   let updated = false;
 

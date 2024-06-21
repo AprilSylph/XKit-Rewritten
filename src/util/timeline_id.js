@@ -37,7 +37,7 @@ export const anyDraftsTimelineFilter = ({ dataset: { timeline, timelineId } }) =
 export const anyQueueTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.match(`/v2/blog/${anyBlog}/posts/queue`);
 
-export const tagTimelineFilter = encodedTag =>
+export const tagTimelineFilter = tag =>
   ({ dataset: { timeline, timelineId } }) =>
-    timeline === `/v2/hubs/${encodedTag}/timeline` ||
-    timelineId?.startsWith(`hubsTimeline-${encodedTag}-recent-`);
+    timeline === `/v2/hubs/${encodeURIComponent(tag)}/timeline` ||
+    timelineId?.startsWith(`hubsTimeline-${tag}-recent-`);

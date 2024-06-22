@@ -8,7 +8,7 @@
   const restartListeners = {};
 
   const runScript = async function (name) {
-    const scriptPath = getURL(`/scripts/${name}.js`);
+    const scriptPath = getURL(`/features/${name}.js`);
     const { main, clean, stylesheet, styleElement, onStorageChanged } = await import(scriptPath);
 
     if (main) {
@@ -17,7 +17,7 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: getURL(`/scripts/${name}.css`)
+        href: getURL(`/features/${name}.css`)
       });
       document.documentElement.appendChild(link);
     }
@@ -42,14 +42,14 @@
   };
 
   const destroyScript = async function (name) {
-    const scriptPath = getURL(`/scripts/${name}.js`);
+    const scriptPath = getURL(`/features/${name}.js`);
     const { clean, stylesheet, styleElement } = await import(scriptPath);
 
     if (clean) {
       clean().catch(console.error);
     }
     if (stylesheet) {
-      document.querySelector(`link[href="${getURL(`/scripts/${name}.css`)}"]`)?.remove();
+      document.querySelector(`link[href="${getURL(`/features/${name}.css`)}"]`)?.remove();
     }
     if (styleElement) {
       styleElement.remove();
@@ -78,7 +78,7 @@
   };
 
   const getInstalledScripts = async function () {
-    const url = getURL('/scripts/_index.json');
+    const url = getURL('/features/_index.json');
     const file = await fetch(url);
     const installedScripts = await file.json();
 
@@ -97,7 +97,7 @@
      * fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
      * @see https://github.com/sveltejs/kit/issues/7805#issuecomment-1330078207
      */
-    await Promise.all(['css_map', 'language_data', 'user'].map(name => import(getURL(`/util/${name}.js`))));
+    await Promise.all(['css_map', 'language_data', 'user'].map(name => import(getURL(`/utils/${name}.js`))));
 
     installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))

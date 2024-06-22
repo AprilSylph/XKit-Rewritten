@@ -12,7 +12,7 @@ const storageKey = 'postblock.blockedPostRootIDs';
 
 let blockedPostRootIDs = [];
 
-const processPosts = async function (postElements) {
+const processPosts = postElements =>
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     const postID = postElement.dataset.id;
     const { rebloggedRootId } = await timelineObject(postElement);
@@ -25,9 +25,8 @@ const processPosts = async function (postElements) {
       getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
     }
   });
-};
 
-const onButtonClicked = async function ({ currentTarget }) {
+const onButtonClicked = ({ currentTarget }) => {
   const { id, rebloggedRootId } = currentTarget.__timelineObjectData;
   const rootID = rebloggedRootId || id;
 

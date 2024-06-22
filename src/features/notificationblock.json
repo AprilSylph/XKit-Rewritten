@@ -12,7 +12,7 @@
     "manageBlockedPosts": {
       "type": "iframe",
       "label": "Manage posts with blocked notifications",
-      "src": "/scripts/notificationblock/options/index.html"
+      "src": "/features/notificationblock/options/index.html"
     }
   }
 }

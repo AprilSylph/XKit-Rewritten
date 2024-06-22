@@ -1,6 +1,12 @@
 name: Release Notes
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      previousVersion:
+        description: '[Optional] Starting ref (e.g. 8f462fa or v0.1.0)'
+        type: string
+        required: false
 
 jobs:
   create:
@@ -8,15 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Create release notes
-        run: git log $(git describe --tags --abbrev=0)..HEAD --reverse --pretty --format="- %h **%an** %s" --follow src/ > release-notes.md
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: release-notes
-          path: release-notes.md
+      - name: Print release notes
+        run: |
+          echo "\`\`\`md" >> $GITHUB_STEP_SUMMARY
+          git log ${{ inputs.previousVersion || '$(git describe --tags --abbrev=0)' }}..HEAD --reverse --pretty --format="- %h **%an** %s" --follow src/ >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY

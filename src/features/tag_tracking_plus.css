@@ -1,0 +1,34 @@
+#tag-tracking-plus ul::after {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 36px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  margin: 10px 10px 0 10px;
+
+  background-color: rgba(var(--white-on-dark), 0.13);
+  color: rgba(var(--white-on-dark), 0.6);
+  font-size: .875rem;
+}
+
+#tag-tracking-plus ul:empty::after {
+  content: 'No tracked tags!';
+}
+
+#tag-tracking-plus[data-only-show-new="true"][data-loading="true"] ul:not(:empty)::after {
+  content: 'Loading...';
+}
+
+#tag-tracking-plus[data-only-show-new="true"][data-loading="false"][data-has-new="false"] ul:not(:empty)::after {
+  content: 'No unread tags.';
+}
+
+#tag-tracking-plus[data-only-show-new="true"] li:not([data-new="true"]) {
+  display: none;
+}
+
+[data-tag-tracking-plus-show-sidebar="false"] #tag-tracking-plus,
+[data-tag-tracking-plus-show-search="false"] .xkit-tag-tracking-plus-search-count {
+  display: none;
+}

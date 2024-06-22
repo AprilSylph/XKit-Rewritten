@@ -1,7 +1,7 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "XKit Rewritten",
-  "version": "0.21.15",
+  "version": "1.0.0",
 
   "short_name": "XKit",
   "author": "April Sylph",
@@ -17,10 +17,9 @@
     "128": "icons/128.png"
   },
 
-  "browser_action": {
-    "browser_style": true,
-    "default_title": "XKit Control Panel",
-    "default_popup": "browser_action/popup.html",
+  "action": {
+    "default_title": "XKit Rewritten",
+    "default_popup": "action/popup.html",
     "default_icon": {
       "16": "icons/16.png",
       "32": "icons/32.png",
@@ -31,12 +30,15 @@
     }
   },
   "options_ui": {
-    "page": "browser_action/popup.html?embedded=true",
+    "page": "action/popup.html?embedded=true",
     "open_in_tab": false
   },
 
   "permissions": [ "storage" ],
-  "web_accessible_resources": [ "*.js", "*.json", "*.css", "*.svg" ],
+  "web_accessible_resources": [{
+    "resources": [ "*.js", "*.json", "*.css", "*.svg" ],
+    "matches": [ "*://www.tumblr.com/*" ]
+  }],
   "content_scripts": [
     {
       "matches": [
@@ -65,10 +67,14 @@
     }
   ],
 
-  "minimum_chrome_version": "89",
+  "minimum_chrome_version": "105",
   "browser_specific_settings": {
     "gecko": {
-      "strict_min_version": "89.0a1"
+      "id": "{6e710c58-36cc-49d6-b772-bfc3030fa56e}",
+      "strict_min_version": "121.0"
+    },
+    "gecko_android": {
+      "strict_min_version": "121.0"
     }
   }
 }

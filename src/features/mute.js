@@ -1,4 +1,4 @@
-import { filterPostElements, postSelector, getTimelineItemWrapper } from '../utils/interface.js';
+import { filterPostElements, blogViewSelector, postSelector, getTimelineItemWrapper } from '../utils/interface.js';
 import { registerBlogMeatballItem, registerMeatballItem, unregisterBlogMeatballItem, unregisterMeatballItem } from '../utils/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../utils/modals.js';
 import { timelineObject } from '../utils/react_props.js';
@@ -61,21 +61,27 @@ const processBlogSpecificTimeline = async (timelineElement, timeline) => {
 
 const processTimelines = async (timelineElements) => {
   for (const timelineElement of [...new Set(timelineElements)]) {
-    const { timeline, timelineId, muteProcessedTimeline } = timelineElement.dataset;
+    const { timeline, muteProcessedTimeline } = timelineElement.dataset;
 
-    const alreadyProcessed = [timeline, timelineId].filter(Boolean).includes(muteProcessedTimeline);
+    const alreadyProcessed = timeline === muteProcessedTimeline;
     if (alreadyProcessed) return;
 
-    timelineElement.dataset.muteProcessedTimeline = timeline || timelineId;
+    timelineElement.dataset.muteProcessedTimeline = timeline;
 
     [...timelineElement.querySelectorAll(`.${warningClass}`)].forEach(el => el.remove());
     delete timelineElement.dataset.muteOnBlogUuid;
 
-    timelineElement.classList.add(activeClass);
-    lengthenTimeline(timelineElement);
+    const isChannel = timeline.startsWith('/v2/blog/') && !timelineElement.matches(blogViewSelector);
+    const isSinglePostBlogView = timeline.endsWith('/permalink');
+    const isLikes = timeline.endsWith('/likes');
 
-    if (timeline?.startsWith('/v2/blog/')) {
-      await processBlogSpecificTimeline(timelineElement, timeline);
+    if (!isChannel && !isSinglePostBlogView && !isLikes) {
+      timelineElement.classList.add(activeClass);
+      lengthenTimeline(timelineElement);
+
+      if (timeline.startsWith('/v2/blog/')) {
+        await processBlogSpecificTimeline(timelineElement, timeline);
+      }
     }
   }
 };
@@ -93,7 +99,7 @@ const updateStoredName = (uuid, name) => {
 const getVisibleBlog = ({ blog, authorBlog, community }) => (community ? authorBlog : blog);
 
 const processPosts = async function (postElements) {
-  await processTimelines(postElements.map(postElement => postElement.closest('[data-timeline], [data-timeline-id]')));
+  await processTimelines(postElements.map(postElement => postElement.closest('[data-timeline]')));
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     const timelineObjectData = await timelineObject(postElement);
@@ -104,7 +110,7 @@ const processPosts = async function (postElements) {
       trail = []
     } = timelineObjectData;
 
-    const { muteOnBlogUuid: currentBlogViewUuid } = postElement.closest('[data-timeline], [data-timeline-id]').dataset;
+    const { muteOnBlogUuid: currentBlogViewUuid } = postElement.closest('[data-timeline]').dataset;
 
     if (mutedBlogs[uuid] && blogNames[uuid] !== name) {
       updateStoredName(uuid, name);

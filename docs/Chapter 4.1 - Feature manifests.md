@@ -102,4 +102,10 @@ If the preference `type` is `"select"`, this value should be a string that match
 - Type: String
 - Required: No
 
-The storage key to inherit the value of, if the preference has not been set. Only to be used when moving preferences between scripts; the storage key specified here will be deleted in the process.
+The storage key to inherit the value of, if the preference has not been set.
+
+### `"deprecated"`
+- Type: Boolean
+- Required: No
+
+Whether to hide the feature on installations on which it was not enabled at the time of deprecation.

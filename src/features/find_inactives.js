@@ -201,7 +201,7 @@ const showSelectBlogs = blogs => {
   const gridColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.2)`;
   const selectionColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.8)`;
   const dotColor = `rgba(${computedStyle.getPropertyValue('--navy')}, 0.6)`;
-  const selectedDotColor = `rgb(${computedStyle.getPropertyValue('--accent')})`;
+  const selectedDotColor = `rgb(${computedStyle.getPropertyValue('--deprecated-accent')})`;
 
   const timeToCanvasX = time => ((time - minTime) * canvasInnerWidth) / dateRange + canvasBorder;
 

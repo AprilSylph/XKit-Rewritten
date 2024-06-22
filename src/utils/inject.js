@@ -1,6 +1,5 @@
 import { dom } from './dom.js';
 
-const { getURL } = browser.runtime;
 const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
 
 /**
@@ -14,7 +13,7 @@ export const inject = async (path, args = [], target = document.documentElement)
   const script = dom('script', {
     'data-arguments': JSON.stringify(args),
     nonce,
-    src: getURL(path)
+    src: browser.runtime.getURL(path)
   });
 
   return new Promise((resolve, reject) => {

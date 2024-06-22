@@ -5,9 +5,9 @@ Features are comprised of a minimum of two files:
 - `.js` module file (required)
 - `.css` stylesheet file (optional)
 
-These files all live in the `src/scripts/` directory. The filenames (minus the file extension) must match for the files to be recognised as belonging to the same feature.
+These files all live in the `src/features/` directory. The filenames (minus the file extension) must match for the files to be recognised as belonging to the same feature.
 
-For a feature to be visible to the user, its name must be added to `/src/scripts/_index.json`.
+For a feature to be visible to the user, its name must be added to `/src/features/_index.json`.
 
 ---
 
@@ -21,7 +21,7 @@ The stylesheet file is a normal CSS file which, assuming the module file correct
 
 # Example feature
 
-`/src/scripts/example.json`
+`/src/features/example.json`
 ```json
 {
   "title": "Example Script",
@@ -60,9 +60,9 @@ The stylesheet file is a normal CSS file which, assuming the module file correct
 }
 ```
 
-`/src/scripts/example.js`
+`/src/features/example.js`
 ```js
-import { getPreferences } from '../util/preferences.js';
+import { getPreferences } from '../utils/preferences.js';
 
 export const main = async function () {
   const { log, whatToLog, level } = await getPreferences('example');
@@ -79,7 +79,7 @@ export const clean = async function () {
 export const stylesheet = true;
 ```
 
-`/src/scripts/example.css`
+`/src/features/example.css`
 ```css
 :root {
   --navy: 4, 9, 128;

@@ -45,6 +45,17 @@
   font-size: 80%;
 }
 
+#xkit-modal .message :is(ol, ul) {
+  display: block;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: 100%;
+  padding-left: 2ch;
+  margin: 1em auto 0;
+
+  text-align: left;
+}
+
 #xkit-modal .message :is(form, table) {
   box-sizing: border-box;
   width: 476px;

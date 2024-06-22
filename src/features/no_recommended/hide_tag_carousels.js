@@ -4,7 +4,7 @@ import { pageModifications } from '../../utils/mutations.js';
 
 const hiddenAttribute = 'data-no-recommended-tag-carousels-hidden';
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
   [${hiddenAttribute}] { position: relative; }
   [${hiddenAttribute}] > div { visibility: hidden; position: absolute; max-width: 100%; }
   [${hiddenAttribute}] > div img, [${hiddenAttribute}] > div canvas { visibility: hidden; }
@@ -23,12 +23,11 @@ const hideTagCarousels = carouselWrappers => carouselWrappers
   });
 
 export const main = async function () {
-  document.documentElement.append(styleElement);
   pageModifications.register(carouselWrapperSelector, hideTagCarousels);
 };
 
 export const clean = async function () {
   pageModifications.unregister(hideTagCarousels);
-  styleElement.remove();
+
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

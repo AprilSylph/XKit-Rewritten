@@ -1,4 +1,5 @@
 {
+  "root": true,
   "env": {
     "browser": true,
     "es2021": true,
@@ -17,14 +18,6 @@
   "rules": {
     "import/no-cycle": "error"
   },
-  "overrides": [
-    {
-      "files": ["src/utils/inject/**", "src/features/quote_replies/**"],
-      "rules": {
-        "jsdoc/require-jsdoc": "off"
-      }
-    }
-  ],
   "ignorePatterns": [
     "lib/"
   ]

@@ -8,7 +8,7 @@ import { dom } from '../utils/dom.js';
 import { getPreferences } from '../utils/preferences.js';
 
 const meatballButtonId = 'mute';
-const meatballButtonLabel = ({ blogName, name }) => `Mute options for ${blogName ?? name}`;
+const meatballButtonLabel = (data) => `Mute options for ${data.name ?? getVisibleBlog(data).name}`;
 
 const hiddenAttribute = 'data-mute-hidden';
 const onBlogHiddenAttribute = 'data-mute-hidden-on-blog';
@@ -96,16 +96,20 @@ const updateStoredName = (uuid, name) => {
   browser.storage.local.set({ [blogNamesStorageKey]: blogNames });
 };
 
+const getVisibleBlog = ({ blog, authorBlog, community }) => (community ? authorBlog : blog);
+
 const processPosts = async function (postElements) {
   await processTimelines(postElements.map(postElement => postElement.closest('[data-timeline]')));
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
+    const timelineObjectData = await timelineObject(postElement);
+    const { uuid, name } = getVisibleBlog(timelineObjectData);
     const {
-      blog: { uuid, name },
       rebloggedRootUuid,
       content = [],
       trail = []
-    } = await timelineObject(postElement);
+    } = timelineObjectData;
+
     const { muteOnBlogUuid: currentBlogViewUuid } = postElement.closest('[data-timeline]').dataset;
 
     if (mutedBlogs[uuid] && blogNames[uuid] !== name) {
@@ -146,7 +150,9 @@ const processPosts = async function (postElements) {
 };
 
 const onMeatballButtonClicked = function ({ currentTarget }) {
-  const { name, uuid } = currentTarget?.__timelineObjectData?.blog || currentTarget?.__blogData;
+  const { name, uuid } = currentTarget.__timelineObjectData
+    ? getVisibleBlog(currentTarget.__timelineObjectData)
+    : currentTarget.__blogData;
 
   const currentMode = mutedBlogs[uuid];
 

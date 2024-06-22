@@ -76,19 +76,19 @@
     return installedScripts;
   };
 
-  const initPageContext = () => {
+  const initMainWorld = () => {
     const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
     const script = document.createElement('script');
     script.type = 'module';
     script.nonce = nonce;
-    script.src = browser.runtime.getURL('/page_context.js');
+    script.src = browser.runtime.getURL('/main_world/index.js');
     document.documentElement.append(script);
   };
 
   const init = async function () {
     $('style.xkit').remove();
 
-    initPageContext();
+    initMainWorld();
 
     browser.storage.onChanged.addListener(onStorageChanged);
 

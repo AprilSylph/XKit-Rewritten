@@ -1,4 +1,4 @@
-import { buildStyle } from '../../util/interface.js';
+import { buildStyle } from '../../utils/interface.js';
 
 export const styleElement = buildStyle(`
 article span[style^="color"] {

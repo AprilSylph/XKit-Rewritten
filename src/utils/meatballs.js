@@ -8,20 +8,6 @@ import { blogData, timelineObject } from './react_props.js';
 const postHeaderSelector = `${postSelector} article > header`;
 const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
 
-const testHeaderElement = (selector) => {
-  const menuElement = document.currentScript.parentElement;
-  const reactKey = Object.keys(menuElement).find(key => key.startsWith('__reactFiber'));
-  let fiber = menuElement[reactKey];
-
-  while (fiber !== null) {
-    if (fiber.elementType === 'header') {
-      return fiber.stateNode.matches(selector);
-    } else {
-      fiber = fiber.return;
-    }
-  }
-};
-
 const meatballItems = {};
 const blogMeatballItems = {};
 
@@ -62,12 +48,12 @@ export const unregisterBlogMeatballItem = id => {
 };
 
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
-  const inPostHeader = await inject(testHeaderElement, [postHeaderSelector], meatballMenu);
+  const inPostHeader = await inject('/utils/inject/test_header_element.js', [postHeaderSelector], meatballMenu);
   if (inPostHeader) {
     addPostMeatballItem(meatballMenu);
     return;
   }
-  const inBlogHeader = await inject(testHeaderElement, [blogHeaderSelector], meatballMenu);
+  const inBlogHeader = await inject('/utils/inject/test_header_element.js', [blogHeaderSelector], meatballMenu);
   if (inBlogHeader) {
     addBlogMeatballItem(meatballMenu);
   }

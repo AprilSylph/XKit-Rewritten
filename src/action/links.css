@@ -39,7 +39,3 @@
 #version::before {
   content: "v";
 }
-
-#version::after {
-  content: " (Beta)";
-}

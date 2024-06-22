@@ -24,23 +24,12 @@ let originalPostTag;
 let tagReplyingBlog;
 let newTab;
 
-const getNotificationProps = function () {
-  const notificationElement = document.currentScript.parentElement;
-  const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactFiber'));
-  let fiber = notificationElement[reactKey];
-
-  while (fiber !== null) {
-    const props = fiber.memoizedProps || {};
-    if (props?.notification !== undefined) {
-      return props;
-    } else {
-      fiber = fiber.return;
-    }
-  }
-};
-
 const processNotifications = notifications => notifications.forEach(async notification => {
-  const { notification: notificationProps, tumblelogName } = await inject(getNotificationProps, [], notification);
+  const { notification: notificationProps, tumblelogName } = await inject(
+    '/features/quote_replies/get_notification_props.js',
+    [],
+    notification
+  );
 
   if (!['reply', 'note_mention'].includes(notificationProps.type)) return;
 

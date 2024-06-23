@@ -1,42 +1,27 @@
-import { dom } from './dom.js';
-
-const { getURL } = browser.runtime;
-const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
-
 /**
  * Runs a script in the page's "main" execution environment and returns its result.
  * This permits access to variables exposed by the Tumblr web platform that are normally inaccessible
  * in the content script sandbox.
  * @param {string} path - Absolute path of script to inject (will be fed to `runtime.getURL()`)
  * @param {Array} [args] - Array of arguments to pass to the script
- * @param {Element} [target] - Element to append the `<script>` to; will be accessible as
- *                             `document.currentScript.parentElement` in the injected script
+ * @param {Element} [target] - Target element; will be accessible as the `this` value in the injected function.
  * @returns {Promise<any>} The transmitted result of the script
  */
-export const inject = async (path, args = [], target = document.documentElement) => {
-  const script = dom('script', {
-    'data-arguments': JSON.stringify(args),
-    nonce,
-    src: getURL(path)
-  });
+export const inject = (path, args = [], target = document.documentElement) =>
+  new Promise((resolve, reject) => {
+    const requestId = String(Math.random());
+    const data = { path: browser.runtime.getURL(path), args, id: requestId };
 
-  return new Promise((resolve, reject) => {
-    const attributeObserver = new MutationObserver((mutations, observer) => {
-      if (mutations.some(({ attributeName }) => attributeName === 'data-result')) {
-        observer.disconnect();
-        resolve(JSON.parse(script.dataset.result));
-        script.remove();
-      } else if (mutations.some(({ attributeName }) => attributeName === 'data-exception')) {
-        observer.disconnect();
-        reject(JSON.parse(script.dataset.exception));
-        script.remove();
-      }
-    });
+    const responseHandler = ({ detail }) => {
+      const { id, result, exception } = JSON.parse(detail);
+      if (id !== requestId) return;
 
-    attributeObserver.observe(script, {
-      attributes: true,
-      attributeFilter: ['data-result', 'data-exception']
-    });
-    target.append(script);
+      target.removeEventListener('xkitinjectionresponse', responseHandler);
+      exception ? reject(exception) : resolve(result);
+    };
+    target.addEventListener('xkitinjectionresponse', responseHandler);
+
+    target.dispatchEvent(
+      new CustomEvent('xkitinjectionrequest', { detail: JSON.stringify(data), bubbles: true })
+    );
   });
-};

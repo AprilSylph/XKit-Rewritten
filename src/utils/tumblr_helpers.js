@@ -5,7 +5,7 @@ import { inject } from './inject.js';
  * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#apifetch}
  * @returns {Promise<Response|Error>} Resolves or rejects with result of window.tumblr.apiFetch()
  */
-export const apiFetch = async (...args) => inject('/utils/inject/api_fetch.js', args);
+export const apiFetch = async (...args) => inject('/main_world/api_fetch.js', args);
 
 /**
  * Create an NPF edit request body.
@@ -60,7 +60,7 @@ export const isNpfCompatible = postData => {
   return isBlocksPostFormat || shouldOpenInLegacy === false;
 };
 
-export const navigate = location => inject('/utils/inject/navigate.js', [location]);
+export const navigate = location => inject('/main_world/navigate.js', [location]);
 
 export const onClickNavigate = event => {
   if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;

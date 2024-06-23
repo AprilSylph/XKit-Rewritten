@@ -12,7 +12,7 @@ export const timelineObject = async function (postElement) {
   if (!timelineObjectCache.has(postElement)) {
     timelineObjectCache.set(
       postElement,
-      inject('/utils/inject/unbury_timeline_object.js', [], postElement)
+      inject('/main_world/unbury_timeline_object.js', [], postElement)
     );
   }
   return timelineObjectCache.get(postElement);
@@ -26,7 +26,7 @@ export const notificationObject = function (notificationElement) {
   if (!notificationObjectCache.has(notificationElement)) {
     notificationObjectCache.set(
       notificationElement,
-      inject('/utils/inject/unbury_notification.js', [], notificationElement)
+      inject('/main_world/unbury_notification.js', [], notificationElement)
     );
   }
   return notificationObjectCache.get(notificationElement);
@@ -36,7 +36,7 @@ export const notificationObject = function (notificationElement) {
  * @param {Element} meatballMenu - An on-screen meatball menu element in a blog modal header or blog card
  * @returns {Promise<object>} - The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
  */
-export const blogData = async (meatballMenu) => inject('/utils/inject/unbury_blog.js', [], meatballMenu);
+export const blogData = async (meatballMenu) => inject('/main_world/unbury_blog.js', [], meatballMenu);
 
 export const isMyPost = async (postElement) => {
   const { blog, isSubmission, postAuthor } = await timelineObject(postElement);
@@ -66,4 +66,4 @@ export const isMyPost = async (postElement) => {
  * @returns {Promise<void>} Resolves when finished
  */
 export const editPostFormTags = async ({ add = [], remove = [] }) =>
-  inject('/utils/inject/control_tags_input.js', [{ add, remove }]);
+  inject('/main_world/control_tags_input.js', [{ add, remove }]);

@@ -26,7 +26,7 @@ let newTab;
 
 const processNotifications = notifications => notifications.forEach(async notification => {
   const { notification: notificationProps, tumblelogName } = await inject(
-    '/features/quote_replies/get_notification_props.js',
+    '/main_world/get_notification_props.js',
     [],
     notification
   );

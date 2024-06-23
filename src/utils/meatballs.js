@@ -48,12 +48,12 @@ export const unregisterBlogMeatballItem = id => {
 };
 
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
-  const inPostHeader = await inject('/utils/inject/test_header_element.js', [postHeaderSelector], meatballMenu);
+  const inPostHeader = await inject('/main_world/test_header_element.js', [postHeaderSelector], meatballMenu);
   if (inPostHeader) {
     addPostMeatballItem(meatballMenu);
     return;
   }
-  const inBlogHeader = await inject('/utils/inject/test_header_element.js', [blogHeaderSelector], meatballMenu);
+  const inBlogHeader = await inject('/main_world/test_header_element.js', [blogHeaderSelector], meatballMenu);
   if (inBlogHeader) {
     addBlogMeatballItem(meatballMenu);
   }

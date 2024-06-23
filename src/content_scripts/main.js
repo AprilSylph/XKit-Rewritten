@@ -1,14 +1,13 @@
 'use strict';
 
 {
-  const { getURL } = browser.runtime;
   const redpop = [...document.scripts].some(({ src }) => src.includes('/pop/'));
   const isReactLoaded = () => document.querySelector('[data-rh]') === null;
 
   const restartListeners = {};
 
   const runScript = async function (name) {
-    const scriptPath = getURL(`/features/${name}.js`);
+    const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
     const { main, clean, stylesheet, styleElement, onStorageChanged } = await import(scriptPath);
 
     if (main) {
@@ -17,7 +16,7 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: getURL(`/features/${name}.css`)
+        href: browser.runtime.getURL(`/features/${name}.css`)
       });
       document.documentElement.appendChild(link);
     }
@@ -42,14 +41,14 @@
   };
 
   const destroyScript = async function (name) {
-    const scriptPath = getURL(`/features/${name}.js`);
+    const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
     const { clean, stylesheet, styleElement } = await import(scriptPath);
 
     if (clean) {
       clean().catch(console.error);
     }
     if (stylesheet) {
-      document.querySelector(`link[href="${getURL(`/features/${name}.css`)}"]`)?.remove();
+      document.querySelector(`link[href="${browser.runtime.getURL(`/features/${name}.css`)}"]`)?.remove();
     }
     if (styleElement) {
       styleElement.remove();
@@ -78,15 +77,26 @@
   };
 
   const getInstalledScripts = async function () {
-    const url = getURL('/features/_index.json');
+    const url = browser.runtime.getURL('/features/_index.json');
     const file = await fetch(url);
     const installedScripts = await file.json();
 
     return installedScripts;
   };
 
+  const initMainWorld = () => {
+    const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.nonce = nonce;
+    script.src = browser.runtime.getURL('/main_world/index.js');
+    document.documentElement.append(script);
+  };
+
   const init = async function () {
     $('style.xkit').remove();
+
+    initMainWorld();
 
     browser.storage.onChanged.addListener(onStorageChanged);
 
@@ -97,7 +107,7 @@
      * fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
      * @see https://github.com/sveltejs/kit/issues/7805#issuecomment-1330078207
      */
-    await Promise.all(['css_map', 'language_data', 'user'].map(name => import(getURL(`/utils/${name}.js`))));
+    await Promise.all(['css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
 
     installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))

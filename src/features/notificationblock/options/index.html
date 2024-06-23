@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XKit: Manage posts with blocked notifications</title>
+    <link rel="icon" href="/icons/128.png" type="image/png">
+    <link rel="stylesheet" href="/lib/normalize.min.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="/action/resize_frames.js" defer></script>
+    <script src="/lib/browser-polyfill.min.js" defer></script>
+    <script src="index.js" defer></script>
+  </head>
+  <body>
+    <template id="notification-blocked-post">
+      <li class="notification-blocked-post">
+        <a href="javascript:void(0);"><span></span></a>
+        <button data-post-id="">Remove</button>
+      </li>
+    </template>
+    <main>
+      <header>
+        <span id="notification-blocked-count"></span>
+      </header>
+      <ul id="notification-blocked-posts"></ul>
+    </main>
+  </body>
+</html>

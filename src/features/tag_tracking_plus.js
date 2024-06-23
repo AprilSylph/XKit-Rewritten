@@ -6,6 +6,7 @@ import { onNewPosts, pageModifications } from '../utils/mutations.js';
 import { dom } from '../utils/dom.js';
 import { addSidebarItem, removeSidebarItem } from '../utils/sidebar.js';
 import { getPreferences } from '../utils/preferences.js';
+import { tagTimelineFilter } from '../utils/timeline_id.js';
 
 const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
 let timestamps;
@@ -116,7 +117,7 @@ const processPosts = async function (postElements) {
   const currentTag = decodeURIComponent(encodedCurrentTag);
   if (!trackedTags.includes(currentTag)) return;
 
-  const timeline = new RegExp(`/v2/hubs/${encodedCurrentTag}/timeline`);
+  const timeline = tagTimelineFilter(currentTag);
 
   let updated = false;
 

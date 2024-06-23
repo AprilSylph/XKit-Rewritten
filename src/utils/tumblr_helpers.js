@@ -5,7 +5,7 @@ import { inject } from './inject.js';
  * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#apifetch}
  * @returns {Promise<Response|Error>} Resolves or rejects with result of window.tumblr.apiFetch()
  */
-export const apiFetch = async (...args) => inject('/main_world/api_fetch.js', args);
+export const apiFetch = (...args) => inject('/main_world/api_fetch.js', args);
 
 /**
  * Create an NPF edit request body.

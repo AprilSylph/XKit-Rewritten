@@ -63,7 +63,7 @@ header {
 
   appearance: none;
   background-color: transparent;
-  color: rgb(var(--deprecated-accent));
+  color: rgb(var(--accent));
   cursor: pointer;
   font-weight: bold;
 }

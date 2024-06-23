@@ -16,7 +16,16 @@
     "sourceType": "module"
   },
   "rules": {
-    "import/no-cycle": "error"
+    "import/no-cycle": "error",
+    "jsdoc/require-jsdoc": [
+      "warn",
+      {
+        "publicOnly": true,
+        "contexts": [
+          ":not([id.name=\"main\"], [id.name=\"clean\"], [id.name=\"onStorageChanged\"]) > :matches(FunctionExpression, ArrowFunctionExpression)"
+        ]
+      }
+    ]
   },
   "ignorePatterns": [
     "lib/"

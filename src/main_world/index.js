@@ -29,4 +29,4 @@ document.documentElement.addEventListener('xkitinjectionrequest', async event =>
   }
 });
 
-setTimeout(() => document.documentElement.dispatchEvent(new CustomEvent('xkitinjectionready')), 5000);
+document.documentElement.dispatchEvent(new CustomEvent('xkitinjectionready'));

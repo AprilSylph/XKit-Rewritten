@@ -45,7 +45,7 @@ export const megaEdit = async function (postIds, options) {
   }
 
   return inject(
-    '/utils/inject/post_request.js',
+    '/main_world/post_request.js',
     [`https://www.tumblr.com/${pathname}`, $.param(requestBody)]
   );
 };

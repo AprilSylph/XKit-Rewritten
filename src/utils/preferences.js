@@ -2,7 +2,7 @@
  * @param {string} scriptName - Filename (without file extension) of script
  * @returns {Promise<object>} The script's preference values
  */
-export const getPreferences = async function (scriptName) {
+export const getPreferences = async scriptName => {
   const scriptManifestURL = browser.runtime.getURL(`/features/${scriptName}.json`);
   const scriptManifestFile = await fetch(scriptManifestURL);
   const scriptManifest = await scriptManifestFile.json();

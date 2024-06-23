@@ -39,7 +39,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   });
 });
 
-export const main = async function () {
+export const main = async () => {
   ({ blockingMode, localBlogFlagging, localTagFlagging } = await getPreferences('cleanfeed'));
   localFlaggedBlogs = localBlogFlagging.split(',').map(username => username.trim().toLowerCase());
   localFlaggedTags = localTagFlagging.split(',').map(tag => tag.replaceAll('#', '').trim().toLowerCase());
@@ -86,7 +86,7 @@ export const main = async function () {
   onNewPosts.addListener(processPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(processPosts);
   styleElement.remove();
 

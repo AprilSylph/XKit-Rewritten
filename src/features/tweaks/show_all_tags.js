@@ -10,10 +10,10 @@ ${keyToCss('seeAll')} {
 }
 `);
 
-export const main = async function () {
+export const main = async () => {
   document.documentElement.append(styleElement);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   styleElement.remove();
 };

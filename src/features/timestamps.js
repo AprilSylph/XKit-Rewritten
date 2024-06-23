@@ -50,7 +50,7 @@ const thresholds = [
   { unit: 'second', denominator: 1 }
 ];
 
-const constructTimeString = function (unixTime) {
+const constructTimeString = unixTime => {
   const date = new Date(unixTime * 1000);
   const now = new Date();
 
@@ -64,12 +64,12 @@ const constructTimeString = function (unixTime) {
   return sameYear && !alwaysShowYear ? currentYearTimeFormat.format(date) : shortTimeFormat.format(date);
 };
 
-const constructLongTimeString = function (unixTime) {
+const constructLongTimeString = unixTime => {
   const date = new Date(unixTime * 1000);
   return longTimeFormat.format(date);
 };
 
-const constructISOString = function (unixTime) {
+const constructISOString = unixTime => {
   const date = new Date(unixTime * 1000);
 
   const fourDigitYear = date.getFullYear().toString().padStart(4, '0');
@@ -91,7 +91,7 @@ const constructISOString = function (unixTime) {
   return `${fourDigitYear}-${twoDigitMonth}-${twoDigitDate}T${twoDigitHours}:${twoDigitMinutes}:${twoDigitSeconds}${timezoneOffsetIsNegative ? '+' : '-'}${twoDigitTimezoneOffsetHours}:${twoDigitTimezoneOffsetMinutes}`;
 };
 
-const constructRelativeTimeString = function (unixTime) {
+const constructRelativeTimeString = unixTime => {
   const now = Math.trunc(new Date().getTime() / 1000);
   const unixDiff = unixTime - now;
   const unixDiffAbsolute = Math.abs(unixDiff);
@@ -106,7 +106,7 @@ const constructRelativeTimeString = function (unixTime) {
   return relativeTimeFormat.format(-0, 'second');
 };
 
-const addPostTimestamps = async function () {
+const addPostTimestamps = () => {
   getPostElements({ excludeClass: 'xkit-timestamps-done' }).forEach(async postElement => {
     const { id } = postElement.dataset;
 
@@ -136,13 +136,13 @@ const addPostTimestamps = async function () {
   });
 };
 
-const removePostTimestamps = function () {
+const removePostTimestamps = () => {
   $('.xkit-timestamp').remove();
   $('.xkit-long-timestamp').remove();
   $('.xkit-timestamps-done').removeClass('xkit-timestamps-done');
 };
 
-const addReblogTimestamps = async function () {
+const addReblogTimestamps = () => {
   getPostElements({ excludeClass: 'xkit-reblog-timestamps-done' }).forEach(async postElement => {
     let { trail } = await timelineObject(postElement);
     if (!trail.length) {
@@ -155,7 +155,7 @@ const addReblogTimestamps = async function () {
       trail = [trail[0]];
     }
 
-    trail.forEach(async (trailItem, i) => {
+    trail.forEach((trailItem, i) => {
       if (trailItem.blog === undefined || trailItem.blog.active === false || !reblogHeaders[i]) {
         return;
       }
@@ -181,7 +181,7 @@ const addReblogTimestamps = async function () {
   });
 };
 
-const removeReblogTimestamps = function () {
+const removeReblogTimestamps = () => {
   $('.xkit-reblog-timestamp').remove();
   $('.xkit-reblog-timestamps-done').removeClass('xkit-reblog-timestamps-done');
 };
@@ -214,7 +214,7 @@ const preferenceHandlers = {
   }
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async (changes, areaName) => {
   ({ alwaysShowYear, headerTimestamps, isoFormat, reblogTimestamps } = await getPreferences('timestamps'));
 
   const changesKeys = Object.keys(changes);
@@ -226,7 +226,7 @@ export const onStorageChanged = async function (changes, areaName) {
     .forEach(preferenceKey => preferenceHandlers[preferenceKey]());
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ alwaysShowYear, headerTimestamps, isoFormat, reblogTimestamps } = await getPreferences('timestamps'));
 
   onNewPosts.addListener(addPostTimestamps);
@@ -236,7 +236,7 @@ export const main = async function () {
   }
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(addPostTimestamps);
   onNewPosts.removeListener(addReblogTimestamps);
   removePostTimestamps();

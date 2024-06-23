@@ -65,14 +65,14 @@ const createBundleButton = tagBundle => {
   return bundleButton;
 };
 
-const populatePopups = async function () {
+const populatePopups = async () => {
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
 
   popupElement.replaceChildren(popupForm, ...tagBundles.map(createBundleButton));
   postOptionPopupElement.replaceChildren(...tagBundles.map(createBundleButton));
 };
 
-const processPostForm = async function ([selectedTagsElement]) {
+const processPostForm = async ([selectedTagsElement]) => {
   if (selectedTagsElement.classList.contains(excludeClass)) {
     return;
   } else {
@@ -102,7 +102,7 @@ const processPostForm = async function ([selectedTagsElement]) {
   }
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async (changes, areaName) => {
   if (Object.keys(changes).some(key => key.startsWith('quick_tags'))) {
     if (Object.keys(changes).includes(storageKey)) populatePopups();
 
@@ -123,7 +123,7 @@ const appendWithoutViewportOverflow = (element, target) => {
   }
 };
 
-const togglePopupDisplay = async function ({ target, currentTarget: controlButton }) {
+const togglePopupDisplay = ({ target, currentTarget: controlButton }) => {
   if (target === popupElement || popupElement.contains(target)) { return; }
 
   const buttonContainer = controlButton.parentElement;
@@ -135,7 +135,7 @@ const togglePopupDisplay = async function ({ target, currentTarget: controlButto
   }
 };
 
-const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) {
+const togglePostOptionPopupDisplay = ({ target, currentTarget }) => {
   if (target === postOptionPopupElement || postOptionPopupElement.contains(target)) { return; }
 
   if (currentTarget.contains(postOptionPopupElement)) {
@@ -145,7 +145,7 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
   }
 };
 
-const addTagsToPost = async function ({ postElement, inputTags = [] }) {
+const addTagsToPost = async ({ postElement, inputTags = [] }) => {
   const postId = postElement.dataset.id;
   const { blog: { uuid }, blogName } = await timelineObject(postElement);
 
@@ -185,7 +185,7 @@ const addFakeTagsToFooter = (postElement, tags) => {
   postElement.querySelector('footer').parentNode.prepend(tagsElement);
 };
 
-const processFormSubmit = function ({ currentTarget }) {
+const processFormSubmit = ({ currentTarget }) => {
   const postElement = currentTarget.closest(postSelector);
   const inputTags = popupInput.value.split(',').map(inputTag => inputTag.trim());
 
@@ -193,7 +193,7 @@ const processFormSubmit = function ({ currentTarget }) {
   currentTarget.reset();
 };
 
-const processBundleClick = function ({ target }) {
+const processBundleClick = ({ target }) => {
   if (target.tagName !== 'BUTTON') { return; }
 
   const postElement = target.closest(postSelector);
@@ -203,7 +203,7 @@ const processBundleClick = function ({ target }) {
   popupElement.remove();
 };
 
-const processPostOptionBundleClick = function ({ target }) {
+const processPostOptionBundleClick = ({ target }) => {
   if (target.tagName !== 'BUTTON') { return; }
   const bundleTags = target.dataset.tags.split(',').map(bundleTag => bundleTag.trim());
 
@@ -284,7 +284,7 @@ const migrateTags = async ({ detail }) => {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Quick Tags');
 
   onNewPosts.addListener(processPosts);
@@ -300,7 +300,7 @@ export const main = async function () {
   window.addEventListener('xkit-quick-tags-migration', migrateTags);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(processPosts);
   pageModifications.unregister(processPostForm);
   popupElement.remove();

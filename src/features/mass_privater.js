@@ -49,7 +49,7 @@ const createNowString = () => {
   return `${YYYY}-${MM}-${DD}T${hh}:${mm}`;
 };
 
-const showInitialPrompt = async () => {
+const showInitialPrompt = () => {
   const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event).catch(showErrorModal) }, [
     dom('label', null, null, [
       'Posts on blog:',

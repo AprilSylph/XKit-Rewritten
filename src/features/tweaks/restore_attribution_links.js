@@ -17,7 +17,7 @@ const onLinkClick = event => {
   }
 };
 
-const processPosts = async function (postElements) {
+const processPosts = postElements => {
   postElements.forEach(async postElement => {
     const {
       blogName,
@@ -46,10 +46,10 @@ const processPosts = async function (postElements) {
   });
 };
 
-export const main = async function () {
+export const main = async () => {
   onNewPosts.addListener(processPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(processPosts);
 };

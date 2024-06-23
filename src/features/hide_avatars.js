@@ -4,7 +4,7 @@ import { buildStyle } from '../utils/interface.js';
 
 const styleElement = buildStyle();
 
-export const main = async function () {
+export const main = async () => {
   const { hiddenAvatars } = await getPreferences('hide_avatars');
 
   styleElement.textContent = hiddenAvatars
@@ -15,6 +15,6 @@ export const main = async function () {
   document.documentElement.append(styleElement);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   styleElement.remove();
 };

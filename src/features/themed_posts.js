@@ -18,7 +18,7 @@ let blacklist;
 
 let reblogTrailTheming = true;
 
-const hexToRGB = (hex) => {
+const hexToRGB = hex => {
   const { red, green, blue } = hex.match(groupsFromHex).groups;
   return [red, green, blue]
     .map(color => color.padEnd(2, color))
@@ -26,7 +26,7 @@ const hexToRGB = (hex) => {
     .join(', ');
 };
 
-const processPosts = async function (postElements) {
+const processPosts = postElements => {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (postElement.matches(blogViewSelector) && !enableOnPeepr) return;
 
@@ -78,7 +78,7 @@ const processPosts = async function (postElements) {
   });
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ reblogTrailTheming, enableOnPeepr, blacklistedUsernames, missingPostMode } = await getPreferences('themed_posts'));
   blacklist = blacklistedUsernames.split(',').map(username => username.trim());
 
@@ -114,7 +114,7 @@ export const main = async function () {
   onNewPosts.addListener(processPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(processPosts);
 
   styleElement.remove();

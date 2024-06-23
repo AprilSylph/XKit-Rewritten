@@ -21,12 +21,12 @@ const onClickBlogViewLink = event => {
   window.open(`https://${blogName}.tumblr.com/${postId ? `post/${postId}` : ''}`);
 };
 
-export const main = async function () {
+export const main = async () => {
   document.documentElement.addEventListener('click', onDocumentClick, { capture: true });
   $('#base-container').on('click', 'a[href^="/blog/view/"]', onClickBlogViewLink);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   document.documentElement.removeEventListener('click', onDocumentClick, { capture: true });
   $('#base-container').off('click', 'a[href^="/blog/view/"]', onClickBlogViewLink);
 };

@@ -8,7 +8,7 @@ const notificationObjectCache = new WeakMap();
  * @param {Element} postElement - An on-screen post
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
-export const timelineObject = async function (postElement) {
+export const timelineObject = async postElement => {
   if (!timelineObjectCache.has(postElement)) {
     timelineObjectCache.set(
       postElement,
@@ -22,7 +22,7 @@ export const timelineObject = async function (postElement) {
  * @param {Element} notificationElement - An on-screen notification
  * @returns {Promise<object>} - The notification's buried notification property
  */
-export const notificationObject = function (notificationElement) {
+export const notificationObject = notificationElement => {
   if (!notificationObjectCache.has(notificationElement)) {
     notificationObjectCache.set(
       notificationElement,
@@ -36,9 +36,9 @@ export const notificationObject = function (notificationElement) {
  * @param {Element} meatballMenu - An on-screen meatball menu element in a blog modal header or blog card
  * @returns {Promise<object>} - The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
  */
-export const blogData = async (meatballMenu) => inject('/main_world/unbury_blog.js', [], meatballMenu);
+export const blogData = async meatballMenu => inject('/main_world/unbury_blog.js', [], meatballMenu);
 
-export const isMyPost = async (postElement) => {
+export const isMyPost = async postElement => {
   const { blog, isSubmission, postAuthor } = await timelineObject(postElement);
   const userIsMember = userBlogNames.includes(blog.name);
   const userIsAdmin = adminBlogNames.includes(blog.name);

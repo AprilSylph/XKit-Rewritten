@@ -60,7 +60,7 @@ const paint = postElements => filterPostElements(postElements, { excludeClass })
   }
 });
 
-const strip = function () {
+const strip = () => {
   $(`.${excludeClass} article`)
     .css('border-top', '')
     .css('border-image-source', '')
@@ -68,7 +68,7 @@ const strip = function () {
   $(`.${excludeClass}`).removeClass(excludeClass);
 };
 
-export const main = async function () {
+export const main = async () => {
   ({
     ownColour,
     originalColour,
@@ -90,7 +90,7 @@ export const main = async function () {
   onNewPosts.addListener(paint);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(paint);
   strip();
 };

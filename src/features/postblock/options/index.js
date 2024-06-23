@@ -4,7 +4,7 @@ const blockedPostTemplate = document.getElementById('blocked-post');
 
 const storageKey = 'postblock.blockedPostRootIDs';
 
-const unblockPost = async function ({ currentTarget }) {
+const unblockPost = async ({ currentTarget }) => {
   let { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
 
   blockedPostRootIDs = blockedPostRootIDs.filter(id => id !== currentTarget.dataset.postId);
@@ -13,7 +13,7 @@ const unblockPost = async function ({ currentTarget }) {
   currentTarget.remove();
 };
 
-const renderBlockedPosts = async function () {
+const renderBlockedPosts = async () => {
   const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
 
   postsBlockedCount.textContent = `${blockedPostRootIDs.length} blocked ${blockedPostRootIDs.length === 1 ? 'post' : 'posts'}`;

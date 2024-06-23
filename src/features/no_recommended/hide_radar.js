@@ -6,18 +6,18 @@ const hiddenAttribute = 'data-no-recommended-radar-hidden';
 
 const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
 
-const checkForRadar = function (sidebarTitles) {
+const checkForRadar = sidebarTitles => {
   sidebarTitles
     .filter(h1 => h1.textContent === translate('Radar'))
     .forEach(h1 => h1.closest('aside > *').setAttribute(hiddenAttribute, ''));
 };
 
-export const main = async function () {
+export const main = async () => {
   pageModifications.register('aside h1', checkForRadar);
   document.documentElement.append(styleElement);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(checkForRadar);
   styleElement.remove();
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

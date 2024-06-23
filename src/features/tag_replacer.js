@@ -12,7 +12,7 @@ const createTagSpan = tag => dom('span', { class: 'tag-replacer-tag' }, null, [t
 const createBlogSpan = name => dom('span', { class: 'tag-replacer-blog' }, null, [name]);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const showInitialPrompt = async () => {
+const showInitialPrompt = () => {
   const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmReplaceTag(event).catch(showErrorModal) }, [
     dom('label', null, null, [
       'Replace tags on:',

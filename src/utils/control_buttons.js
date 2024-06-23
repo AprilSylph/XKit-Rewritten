@@ -11,7 +11,7 @@ $('.xkit-control-button-container').remove();
  * @param {string} label - Descriptive text to be set as the button aria-label property and tooltip
  * @returns {HTMLDivElement} A button that can be cloned with cloneControlButton()
  */
-export const createControlButtonTemplate = function (symbolId, buttonClass, label = '') {
+export const createControlButtonTemplate = (symbolId, buttonClass, label = '') => {
   return dom('div', { class: `xkit-control-button-container ${buttonClass}` }, null, [
     dom('button', { class: 'xkit-control-button', 'aria-label': label, title: label }, null, [
       dom('span', { class: 'xkit-control-button-inner', tabindex: '-1' }, null, [
@@ -29,7 +29,7 @@ export const createControlButtonTemplate = function (symbolId, buttonClass, labe
  * @param {boolean} disabled - Whether to disable the button clone
  * @returns {HTMLDivElement} A clone of the button template, with the specified event handlers attached
  */
-export const cloneControlButton = function (template, events, disabled = false) {
+export const cloneControlButton = (template, events, disabled = false) => {
   const newButtonContainer = template.cloneNode(true);
   const newButton = newButtonContainer.querySelector('button');
   Object.entries(events).forEach(([type, listener]) => newButton.addEventListener(type, listener));

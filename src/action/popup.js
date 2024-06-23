@@ -1,4 +1,4 @@
-const checkForNoResults = function () {
+const checkForNoResults = () => {
   const nothingFound =
     [...document.querySelectorAll('details.script')]
       .every(detailsElement => detailsElement.classList.contains('search-hidden') || detailsElement.classList.contains('filter-hidden'));

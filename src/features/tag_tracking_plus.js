@@ -24,7 +24,7 @@ const unreadCounts = new Map();
 
 let sidebarItem;
 
-const refreshCount = async function (tag) {
+const refreshCount = async tag => {
   if (!trackedTags.includes(tag)) return;
 
   let unreadCountString = '⚠️';
@@ -107,7 +107,7 @@ let intervalID = 0;
 const startRefreshInterval = () => { intervalID = setInterval(refreshAllCounts, 30000 * trackedTags.length); };
 const stopRefreshInterval = () => clearInterval(intervalID);
 
-const processPosts = async function (postElements) {
+const processPosts = async postElements => {
   const { pathname, searchParams } = new URL(location);
   if (!pathname.startsWith('/tagged/') || searchParams.get('sort') === 'top') {
     return;
@@ -141,7 +141,7 @@ const processPosts = async function (postElements) {
   }
 };
 
-const processTagLinks = function (tagLinkElements) {
+const processTagLinks = tagLinkElements => {
   tagLinkElements.forEach(tagLinkElement => {
     if (tagLinkElement.querySelector('[data-count-for]') !== null) return;
 
@@ -175,7 +175,7 @@ export const onStorageChanged = async (changes, areaName) => {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   const trackedTagsData = (await apiFetch('/v2/user/tags')) ?? {};
   trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
 
@@ -206,7 +206,7 @@ export const main = async function () {
   refreshAllCounts(true).then(startRefreshInterval);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   stopRefreshInterval();
   onNewPosts.removeListener(processPosts);
   pageModifications.unregister(processTagLinks);

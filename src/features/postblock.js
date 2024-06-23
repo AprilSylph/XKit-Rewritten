@@ -10,7 +10,7 @@ const meatballButtonLabel = 'Block this post';
 const hiddenAttribute = 'data-postblock-hidden';
 const storageKey = 'postblock.blockedPostRootIDs';
 
-const processPosts = async function (postElements) {
+const processPosts = async postElements => {
   const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
@@ -27,7 +27,7 @@ const processPosts = async function (postElements) {
   });
 };
 
-const onButtonClicked = async function ({ currentTarget }) {
+const onButtonClicked = ({ currentTarget }) => {
   const { id, rebloggedRootId } = currentTarget.__timelineObjectData;
   const rootID = rebloggedRootId || id;
 
@@ -50,19 +50,19 @@ const blockPost = async rootID => {
   browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = (changes, areaName) => {
   if (Object.keys(changes).includes(storageKey)) {
     pageModifications.trigger(processPosts);
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
 
   onNewPosts.addListener(processPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   unregisterMeatballItem(meatballButtonId);
   onNewPosts.removeListener(processPosts);
 

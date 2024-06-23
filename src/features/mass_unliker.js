@@ -8,7 +8,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const gatherStatusElement = dom('span');
 const unlikeStatusElement = dom('span');
 
-const gatherLikes = async function () {
+const gatherLikes = async () => {
   const likes = [];
   let resource = '/v2/user/likes';
 
@@ -24,7 +24,7 @@ const gatherLikes = async function () {
   return likes;
 };
 
-const unlikePosts = async function () {
+const unlikePosts = async () => {
   gatherStatusElement.textContent = 'Gathering likes...';
   const likes = await gatherLikes();
   let unlikedCount = 0;
@@ -105,10 +105,10 @@ const sidebarOptions = {
   visibility: () => /^\/likes/.test(location.pathname)
 };
 
-export const main = async function () {
+export const main = async () => {
   addSidebarItem(sidebarOptions);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   removeSidebarItem(sidebarOptions.id);
 };

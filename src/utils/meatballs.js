@@ -19,7 +19,7 @@ const blogMeatballItems = {};
  * @param {Function} options.onclick - Button click listener function
  * @param {Function} [options.postFilter] - Filter function, called with the timelineObject data of the post element being actioned on. Must return true for button to be added
  */
-export const registerMeatballItem = function ({ id, label, onclick, postFilter }) {
+export const registerMeatballItem = ({ id, label, onclick, postFilter }) => {
   meatballItems[id] = { label, onclick, postFilter };
   pageModifications.trigger(addMeatballItems);
 };
@@ -37,7 +37,7 @@ export const unregisterMeatballItem = id => {
  * @param {Function} options.onClick - Button click listener function
  * @param {Function} [options.blogFilter] - Filter function, called with the blog data of the menu element being actioned on. Must return true for button to be added. Some blog data fields, such as "followed", are not available in blog cards.
  */
-export const registerBlogMeatballItem = function ({ id, label, onClick, blogFilter }) {
+export const registerBlogMeatballItem = ({ id, label, onClick, blogFilter }) => {
   blogMeatballItems[id] = { label, onClick, blogFilter };
   pageModifications.trigger(addMeatballItems);
 };

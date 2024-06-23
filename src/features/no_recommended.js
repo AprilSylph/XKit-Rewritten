@@ -2,17 +2,17 @@ import { getPreferences } from '../utils/preferences.js';
 
 let enabledOptions;
 
-const runOption = async function (name) {
+const runOption = async name => {
   const { main: run } = await import(`./no_recommended/${name}.js`);
   run().catch(console.error);
 };
 
-const destroyOption = async function (name) {
+const destroyOption = async name => {
   const { clean: destroy } = await import(`./no_recommended/${name}.js`);
   destroy().catch(console.error);
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async (changes, areaName) => {
   if (Object.keys(changes).some(key => key.startsWith('no_recommended') && changes[key].oldValue !== undefined)) {
     const preferences = await getPreferences('no_recommended');
 
@@ -28,13 +28,13 @@ export const onStorageChanged = async function (changes, areaName) {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   const preferences = await getPreferences('no_recommended');
 
   enabledOptions = Object.keys(preferences).filter(key => preferences[key] === true);
   enabledOptions.forEach(runOption);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   enabledOptions.forEach(destroyOption);
 };

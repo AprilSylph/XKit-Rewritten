@@ -2,6 +2,7 @@ const createSelector = (...components) => `:is(${components.filter(Boolean).join
 
 export const timelineSelector = ':is([data-timeline], [data-timeline-id])';
 
+const exactly = string => `^${string}$`;
 const anyBlog = '[a-z0-9-]{1,32}';
 
 export const followingTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
@@ -15,9 +16,9 @@ export const followingTimelineSelector = createSelector(
 
 // includes "channel" user blog view page
 export const anyBlogTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
-  timeline?.match(`/v2/blog/${anyBlog}/posts`) ||
-  timelineId?.match(`peepr-posts-${anyBlog}-undefined-undefined-undefined-undefined-undefined-undefined`) ||
-  timelineId?.match(`blog-view-${anyBlog}`);
+  timeline?.match(exactly(`/v2/blog/${anyBlog}/posts`)) ||
+  timelineId?.match(exactly(`peepr-posts-${anyBlog}-undefined-undefined-undefined-undefined-undefined-undefined`)) ||
+  timelineId?.match(exactly(`blog-view-${anyBlog}`));
 
 // includes "channel" user blog view page
 export const blogTimelineFilter = blog =>
@@ -32,10 +33,10 @@ export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId 
   timelineId === '/dashboard/blog_subs';
 
 export const anyDraftsTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
-  timeline?.match(`/v2/blog/${anyBlog}/posts/draft`);
+  timeline?.match(exactly(`/v2/blog/${anyBlog}/posts/draft`));
 
 export const anyQueueTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
-  timeline?.match(`/v2/blog/${anyBlog}/posts/queue`);
+  timeline?.match(exactly(`/v2/blog/${anyBlog}/posts/queue`));
 
 export const tagTimelineFilter = tag =>
   ({ dataset: { timeline, timelineId } }) =>

@@ -8,7 +8,7 @@ document.documentElement.addEventListener('xkitinjectionrequest', async event =>
     moduleCache[path] ??= await import(path);
     const func = moduleCache[path].default;
 
-    if (target instanceof Node && target.isConnected === false) return;
+    if (target.isConnected === false) return;
 
     const result = await func.apply(target, args);
     target.dispatchEvent(

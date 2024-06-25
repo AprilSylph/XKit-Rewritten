@@ -104,8 +104,8 @@ If the preference `type` is `"select"`, this value should be a string that match
 
 The storage key to inherit the value of, if the preference has not been set.
 
-### `"deprecated"`
-- Type: Boolean
+### `"deprecationReason"`
+- Type: String
 - Required: No
 
-Whether to hide the feature on installations on which it was not enabled at the time of deprecation.
+If set, the feature will be hidden on installations on which it was not enabled at the time of deprecation. 

@@ -145,7 +145,8 @@ const renderScripts = async function () {
       help = '',
       relatedTerms = [],
       preferences = {},
-      deprecated = false
+      deprecated = false,
+      deprecationReason = 'deprecated'
     } = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
@@ -173,6 +174,9 @@ const renderScripts = async function () {
 
     const titleHeading = scriptTemplateClone.querySelector('h4.title');
     titleHeading.textContent = title;
+    if (deprecated) {
+      titleHeading.dataset.deprecationReason = `(${deprecationReason})`;
+    }
 
     if (description !== '') {
       const descriptionParagraph = scriptTemplateClone.querySelector('p.description');

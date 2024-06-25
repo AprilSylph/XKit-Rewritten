@@ -109,3 +109,9 @@ The storage key to inherit the value of, if the preference has not been set.
 - Required: No
 
 Whether to hide the feature on installations on which it was not enabled at the time of deprecation.
+
+### `"deprecationReason"`
+- Type: String
+- Required: No
+
+String to show in the configuration panel if the script is deprecated but enabled (default: "deprecated")

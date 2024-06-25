@@ -25,7 +25,7 @@ const writeEnabled = async function ({ currentTarget }) {
     enabledScripts = enabledScripts.filter(x => x !== id);
     detailsElement.classList.add('disabled');
 
-    if (detailsElement.dataset.deprecationReason && !specialAccess.includes(id)) {
+    if (detailsElement.dataset.deprecated === 'true' && !specialAccess.includes(id)) {
       specialAccess.push(id);
     }
   }
@@ -145,18 +145,19 @@ const renderScripts = async function () {
       help = '',
       relatedTerms = [],
       preferences = {},
-      deprecationReason
+      deprecated = false
     } = await file.json();
 
     const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
 
     const detailsElement = scriptTemplateClone.querySelector('details.script');
     detailsElement.dataset.relatedTerms = relatedTerms;
+    detailsElement.dataset.deprecated = deprecated;
 
     if (enabledScripts.includes(scriptName) === false) {
       detailsElement.classList.add('disabled');
 
-      if (deprecationReason && !specialAccess.includes(scriptName)) {
+      if (deprecated && !specialAccess.includes(scriptName)) {
         continue;
       }
     }
@@ -172,11 +173,6 @@ const renderScripts = async function () {
 
     const titleHeading = scriptTemplateClone.querySelector('h4.title');
     titleHeading.textContent = title;
-
-    if (deprecationReason) {
-      detailsElement.dataset.deprecationReason = `(${deprecationReason})`;
-      titleHeading.dataset.deprecationReason = `(${deprecationReason})`;
-    }
 
     if (description !== '') {
       const descriptionParagraph = scriptTemplateClone.querySelector('p.description');

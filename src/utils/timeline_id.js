@@ -39,6 +39,7 @@ export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId 
 
 export const anyDraftsTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.match(exactly(`/v2/blog/${anyBlog}/posts/draft`)) ||
+  timelineId?.match(exactly(`drafts-${anyBlog}`)) ||
   timelineId?.match(exactly(`drafts-${uuidV4}-${anyBlog}`));
 
 export const anyQueueTimelineFilter = ({ dataset: { timeline, timelineId } }) =>

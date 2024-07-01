@@ -108,6 +108,8 @@ const addPostMeatballItem = async meatballMenu => {
 const addBlogMeatballItem = async meatballMenu => {
   const __blogData = await blogData(meatballMenu);
 
+  console.log('__blogData', __blogData);
+
   $(meatballMenu).children('[data-xkit-meatball-button]').remove();
 
   Object.keys(blogMeatballItems).sort().forEach(id => {

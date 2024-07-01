@@ -104,7 +104,7 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
   ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
 
@@ -118,12 +118,12 @@ export const main = async function () {
   }
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(processNotifications);
   $(`.${buttonClass}`).remove();
 };
 
-export const onStorageChanged = async function (changes) {
+export const onStorageChanged = async changes => {
   if (Object.keys(changes).includes(originalPostTagStorageKey)) {
     ({ [originalPostTagStorageKey]: { newValue: originalPostTag } } = changes);
   }

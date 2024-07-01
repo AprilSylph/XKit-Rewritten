@@ -24,7 +24,7 @@ const blogPlaceholder = {
   name: 'anonymous'
 };
 
-const onButtonClicked = async function ({ currentTarget: controlButton }) {
+const onButtonClicked = async ({ currentTarget: controlButton }) => {
   const postElement = controlButton.closest(postSelector);
   const postId = postElement.dataset.id;
 
@@ -171,12 +171,12 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   controlIcon.before(clonedControlButton);
 });
 
-export const main = async function () {
+export const main = async () => {
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Trim Reblogs');
   onNewPosts.addListener(processPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(processPosts);
   $(`.${buttonClass}`).remove();
 };

@@ -19,7 +19,7 @@ const styleElement = buildStyle();
 const buildCss = () => `:is(${blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')
   }) { display: none !important; }`;
 
-const processNotifications = (notificationElements) => {
+const processNotifications = notificationElements => {
   notificationElements.forEach(async notificationElement => {
     const notification = await notificationObject(notificationElement);
     if (notification !== undefined) {
@@ -37,7 +37,7 @@ const muteNotificationsMessage = [
   'It will completely prevent the post from generating notifications while it is enabled, and can be applied temporarily or permanently.'
 ];
 
-const onButtonClicked = async function ({ currentTarget }) {
+const onButtonClicked = async ({ currentTarget }) => {
   const { id, rebloggedRootId, blog: { uuid } } = currentTarget.__timelineObjectData;
   const { response: { muted } } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
 
@@ -79,7 +79,7 @@ const onButtonClicked = async function ({ currentTarget }) {
   });
 };
 
-const blockPostFilter = async ({ blogName, rebloggedRootName, rebloggedFromName, id, rebloggedRootId }) => {
+const blockPostFilter = ({ blogName, rebloggedRootName, rebloggedFromName, id, rebloggedRootId }) => {
   const rootId = rebloggedRootId || id;
   const canReceiveActivity = userBlogNames.includes(blogName) ||
     userBlogNames.includes(rebloggedFromName) ||
@@ -88,7 +88,7 @@ const blockPostFilter = async ({ blogName, rebloggedRootName, rebloggedFromName,
   return canReceiveActivity && blockedPostTargetIDs.includes(rootId) === false;
 };
 
-const unblockPostFilter = async ({ id, rebloggedRootId }) => {
+const unblockPostFilter = ({ id, rebloggedRootId }) => {
   const rootId = rebloggedRootId || id;
   return blockedPostTargetIDs.includes(rootId);
 };
@@ -100,7 +100,7 @@ export const onStorageChanged = (changes, areaName) => {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
   styleElement.textContent = buildCss();
   document.documentElement.append(styleElement);
@@ -110,7 +110,7 @@ export const main = async function () {
   registerMeatballItem({ id: meatballButtonUnblockId, label: meatballButtonUnblockLabel, onclick: onButtonClicked, postFilter: unblockPostFilter });
 };
 
-export const clean = async function () {
+export const clean = async () => {
   styleElement.remove();
   onNewNotifications.removeListener(processNotifications);
   unregisterMeatballItem(meatballButtonBlockId);

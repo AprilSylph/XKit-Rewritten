@@ -6,7 +6,7 @@
 
   const restartListeners = {};
 
-  const runScript = async function (name) {
+  const runScript = async name => {
     const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
     const { main, clean, stylesheet, onStorageChanged } = await import(scriptPath);
 
@@ -20,7 +20,7 @@
       document.documentElement.appendChild(link);
     }
 
-    restartListeners[name] = function (changes, areaName) {
+    restartListeners[name] = (changes, areaName) => {
       if (areaName !== 'local') return;
 
       const { enabledScripts } = changes;
@@ -36,7 +36,7 @@
     browser.storage.onChanged.addListener(restartListeners[name]);
   };
 
-  const destroyScript = async function (name) {
+  const destroyScript = async name => {
     const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
     const { clean, stylesheet } = await import(scriptPath);
 
@@ -50,7 +50,7 @@
     delete restartListeners[name];
   };
 
-  const onStorageChanged = async function (changes, areaName) {
+  const onStorageChanged = (changes, areaName) => {
     if (areaName !== 'local') {
       return;
     }
@@ -68,7 +68,7 @@
     }
   };
 
-  const getInstalledScripts = async function () {
+  const getInstalledScripts = async () => {
     const url = browser.runtime.getURL('/features/_index.json');
     const file = await fetch(url);
     const installedScripts = await file.json();
@@ -85,7 +85,7 @@
     document.documentElement.append(script);
   };
 
-  const init = async function () {
+  const init = async () => {
     $('style.xkit').remove();
 
     initMainWorld();

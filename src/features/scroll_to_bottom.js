@@ -16,7 +16,7 @@ const knightRiderLoaderSelector = `:is(${loaderSelector}) > ${keyToCss('knightRi
 let scrollToBottomButton;
 let active = false;
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 .${activeClass} svg use {
   --icon-color-primary: rgb(var(--yellow));
 }
@@ -79,7 +79,6 @@ const addButtonToPage = async function ([scrollToTopButton]) {
 
 export const main = async function () {
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {
@@ -87,5 +86,4 @@ export const clean = async function () {
   pageModifications.unregister(checkForButtonRemoved);
   stopScrolling();
   scrollToBottomButton?.remove();
-  styleElement.remove();
 };

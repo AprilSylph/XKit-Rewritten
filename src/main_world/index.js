@@ -10,21 +10,11 @@ document.documentElement.addEventListener('xkitinjectionrequest', async event =>
 
     const result = await func.apply(target, args);
     target.dispatchEvent(
-      new CustomEvent('xkitinjectionresponse', { detail: JSON.stringify({ id, result }) })
+      new CustomEvent('xkitinjectionresponse', { detail: { id, result } })
     );
   } catch (exception) {
     target.dispatchEvent(
-      new CustomEvent('xkitinjectionresponse', {
-        detail: JSON.stringify({
-          id,
-          exception: {
-            message: exception.message,
-            name: exception.name,
-            stack: exception.stack,
-            ...exception
-          }
-        })
-      })
+      new CustomEvent('xkitinjectionresponse', { detail: { id, exception } })
     );
   }
 });

@@ -130,13 +130,6 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
   target.appendChild(element);
 
   const preventOverflowTarget = closestWithOverflow(target);
-
-  // debug
-  preventOverflowTarget.dataset.tempHighlight = '';
-  setTimeout(() => {
-    delete preventOverflowTarget.dataset.tempHighlight;
-  }, 1000);
-
   const preventOverflowTargetRect = preventOverflowTarget.getBoundingClientRect();
   const elementRect = element.getBoundingClientRect();
 

@@ -1,9 +1,3 @@
-/* debug */
-[data-temp-highlight] {
-  outline: 4px dashed red;
-  outline-offset: -2px;
-}
-
 #quick-reblog {
   position: absolute;
   z-index: 97;

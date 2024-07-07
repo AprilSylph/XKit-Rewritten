@@ -75,7 +75,7 @@ ${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
 const renderBlogAvatar = async () => {
   const { value: selectedUuid } = blogSelector;
   const { avatar } = userBlogs.find(({ uuid }) => uuid === selectedUuid);
-  const { url } = avatar[avatar.length - 1];
+  const { url } = avatar.at(-1);
   blogAvatar.style.backgroundImage = `url(${url})`;
 };
 blogSelector.addEventListener('change', renderBlogAvatar);

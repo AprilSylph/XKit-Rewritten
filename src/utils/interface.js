@@ -116,11 +116,11 @@ export const postType = ({ trail = [], content = [], layout = [] }) => {
   else return 'text';
 };
 
-const closestWithOverflow = element => {
+const getClosestWithOverflow = element => {
   const parent = element.parentElement;
   if (!parent) return element;
   if (getComputedStyle(parent).overflowX !== 'visible') return parent;
-  return closestWithOverflow(parent);
+  return getClosestWithOverflow(parent);
 };
 
 export const appendWithoutOverflow = (element, target, defaultPosition = 'below') => {
@@ -129,7 +129,7 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
 
   target.appendChild(element);
 
-  const preventOverflowTarget = closestWithOverflow(target);
+  const preventOverflowTarget = getClosestWithOverflow(target);
   const preventOverflowTargetRect = preventOverflowTarget.getBoundingClientRect();
   const elementRect = element.getBoundingClientRect();
 

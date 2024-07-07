@@ -118,9 +118,13 @@ export const postType = ({ trail = [], content = [], layout = [] }) => {
 
 const getClosestWithOverflow = element => {
   const parent = element.parentElement;
-  if (!parent) return element;
-  if (getComputedStyle(parent).overflowX !== 'visible') return parent;
-  return getClosestWithOverflow(parent);
+  if (!parent) {
+    return element;
+  } else if (getComputedStyle(parent).overflowX !== 'visible') {
+    return parent;
+  } else {
+    return getClosestWithOverflow(parent);
+  }
 };
 
 export const appendWithoutOverflow = (element, target, defaultPosition = 'below') => {

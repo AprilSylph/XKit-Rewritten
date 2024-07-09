@@ -116,7 +116,7 @@ const addSidebarToPage = (siblingCandidates) => {
 const addSidebarToDrawer = (navItems) => {
   updateSidebarItemVisibility();
 
-  const lastNavItem = navItems[navItems.length - 1];
+  const lastNavItem = navItems.at(-1);
   lastNavItem?.after(sidebarItems);
 };
 

@@ -76,19 +76,8 @@
     return installedScripts;
   };
 
-  const initMainWorld = () => {
-    const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
-    const script = document.createElement('script');
-    script.type = 'module';
-    script.nonce = nonce;
-    script.src = browser.runtime.getURL('/main_world/index.js');
-    document.documentElement.append(script);
-  };
-
   const init = async function () {
     $('style.xkit').remove();
-
-    initMainWorld();
 
     browser.storage.onChanged.addListener(onStorageChanged);
 

@@ -52,6 +52,22 @@
       ],
       "run_at": "document_end",
       "js": [
+        "main_world/index.js"
+      ],
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "*://www.tumblr.com/*"
+      ],
+      "exclude_matches": [
+        "*://www.tumblr.com/login",
+        "*://www.tumblr.com/register",
+        "*://www.tumblr.com/register?*",
+        "*://www.tumblr.com/privacy/*"
+      ],
+      "run_at": "document_end",
+      "js": [
         "lib/browser-polyfill.min.js",
         "lib/jquery.min.js",
         "content_scripts/main.js"
@@ -71,10 +87,10 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{6e710c58-36cc-49d6-b772-bfc3030fa56e}",
-      "strict_min_version": "121.0"
+      "strict_min_version": "128.0"
     },
     "gecko_android": {
-      "strict_min_version": "121.0"
+      "strict_min_version": "128.0"
     }
   }
 }

@@ -175,7 +175,6 @@ const reblogPost = async function ({ currentTarget }) {
 
   currentTarget.blur();
   actionButtons.disabled = true;
-  lastPostID = null;
 
   const postElement = currentTarget.closest(postSelector);
   const postID = postElement.dataset.id;
@@ -204,8 +203,12 @@ const reblogPost = async function ({ currentTarget }) {
     const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
     if (meta.status === 201) {
       makeButtonReblogged({ buttonDiv: currentReblogButton, state });
-      if (lastPostID === null) {
+
+      if (lastPostID === postID) {
         popupElement.remove();
+        lastPostID = null;
+      } else {
+        // popup was moved to another post during apiFetch
       }
 
       notify(response.displayText);

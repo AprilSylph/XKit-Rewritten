@@ -38,7 +38,7 @@ const scrollToBottom = () => {
     if (!document.querySelector(knightRiderLoaderSelector)) {
       stopScrolling();
     }
-  }, 150);
+  }, 500);
 };
 const observer = new ResizeObserver(scrollToBottom);
 

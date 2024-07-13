@@ -1,9 +1,10 @@
 import { onNewPosts } from '../../utils/mutations.js';
 import { buildStyle, getTimelineItemWrapper, filterPostElements } from '../../utils/interface.js';
 import { isMyPost } from '../../utils/react_props.js';
+import { followingTimelineFilter } from '../../utils/timeline_id.js';
 
 const excludeClass = 'xkit-tweaks-hide-my-posts-done';
-const timeline = /\/v2\/timeline\/dashboard/;
+const timeline = followingTimelineFilter;
 
 const hiddenAttribute = 'data-tweaks-hide-my-posts-hidden';
 

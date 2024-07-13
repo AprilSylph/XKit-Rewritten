@@ -28,5 +28,3 @@ document.documentElement.addEventListener('xkitinjectionrequest', async event =>
     );
   }
 });
-
-document.documentElement.dispatchEvent(new CustomEvent('xkitinjectionready'));

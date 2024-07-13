@@ -76,30 +76,24 @@
     return installedScripts;
   };
 
-  const initMainWorld = () => new Promise(resolve => {
-    document.documentElement.addEventListener('xkitinjectionready', resolve, { once: true });
-
+  const initMainWorld = () => {
     const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
     const script = document.createElement('script');
     script.type = 'module';
     script.nonce = nonce;
     script.src = browser.runtime.getURL('/main_world/index.js');
     document.documentElement.append(script);
-  });
+  };
 
   const init = async function () {
     $('style.xkit').remove();
 
+    initMainWorld();
+
     browser.storage.onChanged.addListener(onStorageChanged);
 
-    const [
-      installedScripts,
-      { enabledScripts = [] }
-    ] = await Promise.all([
-      getInstalledScripts(),
-      browser.storage.local.get('enabledScripts'),
-      initMainWorld()
-    ]);
+    const installedScripts = await getInstalledScripts();
+    const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
     /**
      * fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await

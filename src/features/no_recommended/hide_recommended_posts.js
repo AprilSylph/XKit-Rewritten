@@ -1,11 +1,12 @@
 import { buildStyle, getTimelineItemWrapper, filterPostElements, postSelector } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { timelineObject } from '../../utils/react_props.js';
+import { followingTimelineFilter } from '../../utils/timeline_id.js';
 
 const excludeClass = 'xkit-no-recommended-posts-done';
 const hiddenAttribute = 'data-no-recommended-posts-hidden';
 const unHiddenAttribute = 'data-no-recommended-posts-many';
-const timeline = /\/v2\/timeline\/dashboard/;
+const timeline = followingTimelineFilter;
 const includeFiltered = true;
 
 const styleElement = buildStyle(`

@@ -44,7 +44,7 @@ const markAsSeen = (element) => {
 
   seenPosts.push(id);
   seenPosts.splice(0, seenPosts.length - 10000);
-  // browser.storage.local.set({ [storageKey]: seenPosts });
+  browser.storage.local.set({ [storageKey]: seenPosts });
 };
 
 const lengthenTimelines = () =>

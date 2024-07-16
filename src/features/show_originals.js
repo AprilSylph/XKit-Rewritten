@@ -5,7 +5,14 @@ import { onNewPosts } from '../utils/mutations.js';
 import { keyToCss } from '../utils/css_map.js';
 import { translate } from '../utils/language_data.js';
 import { userBlogs } from '../utils/user.js';
-import { followingTimelineFilter, anyBlogTimelineFilter, blogTimelineFilter, blogSubsTimelineFilter, timelineSelector } from '../utils/timeline_id.js';
+import {
+  followingTimelineFilter,
+  anyBlogTimelineFilter,
+  blogTimelineFilter,
+  blogSubsTimelineFilter,
+  timelineSelector,
+  anyCommunityTimelineFilter
+} from '../utils/timeline_id.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
@@ -72,7 +79,8 @@ const getLocation = timelineElement => {
     dashboard: followingTimelineFilter(timelineElement),
     disabled: isBlog && disabledBlogs.some(name => blogTimelineFilter(name)(timelineElement)),
     peepr: isBlog,
-    blogSubscriptions: blogSubsTimelineFilter(timelineElement)
+    blogSubscriptions: blogSubsTimelineFilter(timelineElement),
+    community: anyCommunityTimelineFilter(timelineElement)
   };
   return Object.keys(on).find(location => on[location]);
 };

@@ -81,8 +81,13 @@
 
     browser.storage.onChanged.addListener(onStorageChanged);
 
-    const installedScripts = await getInstalledScripts();
-    const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
+    const [
+      installedScripts,
+      { enabledScripts = [] }
+    ] = await Promise.all([
+      getInstalledScripts(),
+      browser.storage.local.get('enabledScripts')
+    ]);
 
     /**
      * fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await

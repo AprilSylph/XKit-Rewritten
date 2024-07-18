@@ -6,3 +6,4 @@ release-notes.md
 .vscode/
 .DS_Store
 src/lib/remixicon/remixicon.glyph.json
+.eslintcache

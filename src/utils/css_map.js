@@ -14,7 +14,7 @@ export const keyToClasses = (...keys) => keys.flatMap(key => cssMap[key]).filter
  */
 export const keyToCss = function (...keys) {
   const selectors = keyToClasses(...keys).map(className => `.${className}`);
-  return selectors.length > 1
-    ? `:is(${selectors.join(', ')})`
-    : selectors[0];
+  return selectors.length === 1
+    ? selectors[0]
+    : `:is(${selectors.join(', ')})`;
 };

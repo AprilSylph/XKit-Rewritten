@@ -10,9 +10,11 @@ export const keyToClasses = (...keys) => keys.flatMap(key => cssMap[key]).filter
 
 /**
  * @param {...string} keys - One or more element source names
- * @returns {string} - A CSS :is() selector which targets all elements that match any of the given source names
+ * @returns {string} - A CSS selector which targets all elements that match any of the given source names
  */
 export const keyToCss = function (...keys) {
-  const classes = keyToClasses(...keys);
-  return `:is(${classes.map(className => `.${className}`).join(', ')})`;
+  const selectors = keyToClasses(...keys).map(className => `.${className}`);
+  return selectors.length > 1
+    ? `:is(${selectors.join(', ')})`
+    : selectors[0];
 };

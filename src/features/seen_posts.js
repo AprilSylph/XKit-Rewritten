@@ -13,7 +13,7 @@ const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 const hideClass = 'xkit-seen-posts-hide';
 const lengthenedClass = 'xkit-seen-posts-lengthened';
 
-const softRefreshLoaderSelector = `${followingTimelineSelector} ${keyToCss('container')}:has(+ ${keyToCss('scrollContainer')}) > ${keyToCss('knightRiderLoader')}`;
+const softRefreshLoaderSelector = `${followingTimelineSelector} ${keyToCss('container')}:has(~ div ${postSelector}) > ${keyToCss('knightRiderLoader')}`;
 
 const storageKey = 'seen_posts.seenPosts';
 let seenPosts = [];

@@ -8,8 +8,8 @@ $(`.${buttonClass}`).remove();
 const activeClass = 'xkit-scroll-to-bottom-active';
 
 const loaderSelector = `
-${keyToCss('timeline', 'blogRows')} > :last-child,
-${keyToCss('notifications')} + ${keyToCss('loader')}
+${keyToCss('timeline', 'blogRows')} > :is(${keyToCss('scrollContainer')}, .sortableContainer) + div,
+${keyToCss('notifications')} + div
 `;
 const knightRiderLoaderSelector = `:is(${loaderSelector}) > ${keyToCss('knightRiderLoader')}`;
 
@@ -27,7 +27,6 @@ const styleElement = buildStyle(`
 .${buttonClass}.modal {
   margin-top: 1ch;
 }
-
 #base-container:has(> #glass-container ${modalScrollContainerSelector}) .${buttonClass}.normal {
   opacity: 0;
   pointer-events: none;
@@ -41,6 +40,8 @@ const styleElement = buildStyle(`
 }
 `);
 
+let timeoutID;
+
 const getScrollElement = () =>
   document.querySelector(modalScrollContainerSelector) ||
   document.documentElement;
@@ -49,15 +50,28 @@ const getObserveElement = () =>
   document.querySelector(modalScrollContainerSelector)?.firstElementChild ||
   document.documentElement;
 
+const onLoadersAdded = loaders => {
+  if (activeElement && loaders.some(loader => activeElement.contains(loader))) {
+    clearTimeout(timeoutID);
+  }
+};
+
 const scrollToBottom = () => {
+  clearTimeout(timeoutID);
   activeElement.scrollTo({ top: activeElement.scrollHeight });
 
-  const loaders = [...activeElement.querySelectorAll(knightRiderLoaderSelector)];
   const buttonConnected = scrollToBottomButton?.isConnected || modalScrollToBottomButton?.isConnected;
 
-  if (loaders.length === 0 || !buttonConnected || activeElement !== getScrollElement()) {
+  if (!buttonConnected || activeElement !== getScrollElement()) {
     stopScrolling();
+    return;
   }
+
+  timeoutID = setTimeout(() => {
+    if (!activeElement.querySelector(knightRiderLoaderSelector)) {
+      stopScrolling();
+    }
+  }, 500);
 };
 const observer = new ResizeObserver(scrollToBottom);
 
@@ -71,9 +85,9 @@ const startScrolling = () => {
 };
 
 const stopScrolling = () => {
+  clearTimeout(timeoutID);
   observer.disconnect();
   activeElement = false;
-
   scrollToBottomButton?.classList.remove(activeClass);
   modalScrollToBottomButton?.classList.remove(activeClass);
 };
@@ -116,21 +130,22 @@ const addModalButtonToPage = async function ([modalScrollToTopButton]) {
 export const main = async function () {
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
   pageModifications.register(`button[aria-label="${translate('Back to top')}"]`, addModalButtonToPage);
+  pageModifications.register(knightRiderLoaderSelector, onLoadersAdded);
   document.documentElement.addEventListener('keydown', onKeyDown);
 
   document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {
-  stopScrolling();
-
   pageModifications.unregister(addButtonToPage);
   pageModifications.unregister(addModalButtonToPage);
+  pageModifications.unregister(onLoadersAdded);
   document.documentElement.removeEventListener('keydown', onKeyDown);
 
-  styleElement.remove();
+  stopScrolling();
 
   scrollToBottomButton?.remove();
   modalScrollToBottomButton?.remove();
   modalButtonColorObserver.disconnect();
+  styleElement.remove();
 };

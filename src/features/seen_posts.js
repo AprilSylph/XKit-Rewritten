@@ -1,4 +1,4 @@
-import { filterPostElements, getPostElements, getTimelineItemWrapper, postSelector } from '../utils/interface.js';
+import { filterPostElements, getTimelineItemWrapper, postSelector } from '../utils/interface.js';
 import { getPreferences } from '../utils/preferences.js';
 import { onNewPosts, pageModifications } from '../utils/mutations.js';
 import { keyToCss } from '../utils/css_map.js';
@@ -54,14 +54,14 @@ const lengthenTimelines = () =>
     }
   });
 
-const dimPosts = function (postElements) {
+const dimPosts = function (postElements, reprocessPosts = false) {
   lengthenTimelines();
 
   for (const postElement of filterPostElements(postElements, { timeline, includeFiltered })) {
     const { id } = postElement.dataset;
     const timelineItem = getTimelineItemWrapper(postElement);
 
-    const isFirstRender = timelineItem.getAttribute(excludeAttribute) === null;
+    const isFirstRender = reprocessPosts || timelineItem.getAttribute(excludeAttribute) === null;
     timelineItem.setAttribute(excludeAttribute, '');
 
     if (seenPosts.includes(id) === false) {
@@ -74,16 +74,9 @@ const dimPosts = function (postElements) {
 
 const onSoftRefresh = loaderElements => {
   const refreshedTimelineElements = loaderElements.map(element => element.closest(timelineSelector));
-  const refreshedPostElements = getPostElements({ timeline: element => refreshedTimelineElements.includes(element), includeFiltered });
+  const refreshedPostElements = refreshedTimelineElements.flatMap(element => [...element.querySelectorAll(postSelector)]);
 
-  for (const postElement of refreshedPostElements) {
-    const { id } = postElement.dataset;
-    const timelineItem = getTimelineItemWrapper(postElement);
-
-    if (seenPosts.includes(id)) {
-      timelineItem.setAttribute(dimAttribute, '');
-    }
-  }
+  dimPosts(refreshedPostElements, true);
 };
 
 export const onStorageChanged = async function (changes, areaName) {

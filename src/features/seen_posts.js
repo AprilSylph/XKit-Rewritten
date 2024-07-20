@@ -61,12 +61,12 @@ const dimPosts = function (postElements, reprocessPosts = false) {
     const { id } = postElement.dataset;
     const timelineItem = getTimelineItemWrapper(postElement);
 
-    const isFirstRender = reprocessPosts || timelineItem.getAttribute(excludeAttribute) === null;
+    const isFirstRender = timelineItem.getAttribute(excludeAttribute) === null;
     timelineItem.setAttribute(excludeAttribute, '');
 
     if (seenPosts.includes(id) === false) {
       observer.observe(postElement.querySelector('article header + *'));
-    } else if (isFirstRender) {
+    } else if (isFirstRender || reprocessPosts) {
       timelineItem.setAttribute(dimAttribute, '');
     }
   }

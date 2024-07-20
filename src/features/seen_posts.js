@@ -73,8 +73,9 @@ const dimPosts = function (postElements, reprocessPosts = false) {
 };
 
 const onSoftRefresh = loaderElements => {
-  const refreshedTimelineElements = loaderElements.map(element => element.closest(timelineSelector));
-  const refreshedPostElements = refreshedTimelineElements.flatMap(element => [...element.querySelectorAll(postSelector)]);
+  const refreshedPostElements = loaderElements.flatMap(
+    element => [...element.closest(timelineSelector).querySelectorAll(postSelector)]
+  );
 
   dimPosts(refreshedPostElements, true);
 };

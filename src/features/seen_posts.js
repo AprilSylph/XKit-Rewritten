@@ -76,7 +76,6 @@ const onSoftRefresh = loaderElements => {
   const refreshedPostElements = loaderElements.flatMap(
     element => [...element.closest(timelineSelector).querySelectorAll(postSelector)]
   );
-
   dimPosts(refreshedPostElements, true);
 };
 

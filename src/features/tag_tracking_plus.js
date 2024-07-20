@@ -1,9 +1,7 @@
 import { apiFetch, onClickNavigate } from '../utils/tumblr_helpers.js';
 import { filterPostElements } from '../utils/interface.js';
 import { timelineObject } from '../utils/react_props.js';
-import { keyToCss } from '../utils/css_map.js';
-import { onNewPosts, pageModifications } from '../utils/mutations.js';
-import { dom } from '../utils/dom.js';
+import { onNewPosts } from '../utils/mutations.js';
 import { addSidebarItem, removeSidebarItem } from '../utils/sidebar.js';
 import { getPreferences } from '../utils/preferences.js';
 import { tagTimelineFilter } from '../utils/timeline_id.js';
@@ -11,13 +9,8 @@ import { tagTimelineFilter } from '../utils/timeline_id.js';
 const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
 let timestamps;
 
-const searchCountClass = 'xkit-tag-tracking-plus-search-count';
-
 const excludeClass = 'xkit-tag-tracking-plus-done';
 const includeFiltered = true;
-
-const tagLinkSelector = `${keyToCss('searchResult')} h3 ~ a${keyToCss('typeaheadRow')}[href^="/tagged/"]`;
-const tagTextSelector = keyToCss('tagText');
 
 let trackedTags;
 const unreadCounts = new Map();
@@ -65,19 +58,12 @@ const refreshCount = async tag => {
     console.error(exception);
   }
 
-  [document, ...(!sidebarItem || document.contains(sidebarItem) ? [] : [sidebarItem])]
-    .flatMap(node =>
-      [...node.querySelectorAll('[data-count-for]')].filter(
-        ({ dataset: { countFor } }) => countFor === `#${tag}`
-      )
-    )
-    .filter((value, index, array) => array.indexOf(value) === index)
-    .forEach(unreadCountElement => {
-      unreadCountElement.textContent = unreadCountString;
-      if (unreadCountElement.closest('li')) {
-        unreadCountElement.closest('li').dataset.new = unreadCountString !== '0';
-      }
-    });
+  const unreadCountElement = sidebarItem.querySelector(`[data-count-for="#${tag}"]`);
+
+  unreadCountElement.textContent = unreadCountString;
+  if (unreadCountElement.closest('li')) {
+    unreadCountElement.closest('li').dataset.new = unreadCountString !== '0';
+  }
 
   unreadCounts.set(tag, unreadCountString);
   updateSidebarStatus();
@@ -141,36 +127,12 @@ const processPosts = async postElements => {
   }
 };
 
-const processTagLinks = tagLinkElements => {
-  tagLinkElements.forEach(tagLinkElement => {
-    if (tagLinkElement.querySelector('[data-count-for]') !== null) return;
-
-    const tagTextElement = tagLinkElement.querySelector(tagTextSelector);
-    const tag = tagTextElement.textContent;
-    const unreadCountElement = dom(
-      'span',
-      {
-        class: searchCountClass,
-        'data-count-for': `#${tag}`,
-        style: 'margin-left: auto; margin-right: 1ch; opacity: 0.65;'
-      },
-      null,
-      [unreadCounts.get(tag) ?? '\u22EF']
-    );
-
-    tagTextElement.after(unreadCountElement);
-  });
-};
-
 export const onStorageChanged = async (changes, areaName) => {
   if (Object.keys(changes).includes(storageKey)) {
     timestamps = changes[storageKey].newValue;
   }
   if (Object.keys(changes).some(key => key.startsWith('tag_tracking_plus.preferences'))) {
-    const { showUnread, onlyShowNew } = await getPreferences('tag_tracking_plus');
-
-    document.body.dataset.tagTrackingPlusShowSearch = showUnread === 'both' || showUnread === 'search';
-    document.body.dataset.tagTrackingPlusShowSidebar = showUnread === 'both' || showUnread === 'sidebar';
+    const { onlyShowNew } = await getPreferences('tag_tracking_plus');
     sidebarItem.dataset.onlyShowNew = onlyShowNew;
   }
 };
@@ -183,11 +145,7 @@ export const main = async () => {
 
   ({ [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey));
 
-  const { showUnread, onlyShowNew } = await getPreferences('tag_tracking_plus');
-  document.body.dataset.tagTrackingPlusShowSearch = showUnread === 'both' || showUnread === 'search';
-  document.body.dataset.tagTrackingPlusShowSidebar = showUnread === 'both' || showUnread === 'sidebar';
-
-  pageModifications.register(tagLinkSelector, processTagLinks);
+  const { onlyShowNew } = await getPreferences('tag_tracking_plus');
 
   sidebarItem = addSidebarItem({
     id: 'tag-tracking-plus',
@@ -209,16 +167,10 @@ export const main = async () => {
 export const clean = async () => {
   stopRefreshInterval();
   onNewPosts.removeListener(processPosts);
-  pageModifications.unregister(processTagLinks);
 
   removeSidebarItem('tag-tracking-plus');
-  $(`.${searchCountClass}`).remove();
-
-  document.body.removeAttribute('data-tag-tracking-plus-show-sidebar');
-  document.body.removeAttribute('data-tag-tracking-plus-show-search');
 
   unreadCounts.clear();
-  sidebarItem = undefined;
 };
 
 export const stylesheet = true;

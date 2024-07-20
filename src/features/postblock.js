@@ -10,9 +10,9 @@ const meatballButtonLabel = 'Block this post';
 const hiddenAttribute = 'data-postblock-hidden';
 const storageKey = 'postblock.blockedPostRootIDs';
 
-const processPosts = async postElements => {
-  const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
+let blockedPostRootIDs = [];
 
+const processPosts = postElements =>
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     const postID = postElement.dataset.id;
     const { rebloggedRootId } = await timelineObject(postElement);
@@ -25,7 +25,6 @@ const processPosts = async postElements => {
       getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
     }
   });
-};
 
 const onButtonClicked = ({ currentTarget }) => {
   const { id, rebloggedRootId } = currentTarget.__timelineObjectData;
@@ -52,11 +51,14 @@ const blockPost = async rootID => {
 
 export const onStorageChanged = (changes, areaName) => {
   if (Object.keys(changes).includes(storageKey)) {
+    ({ newValue: blockedPostRootIDs = [] } = changes[storageKey]);
     pageModifications.trigger(processPosts);
   }
 };
 
 export const main = async () => {
+  ({ [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey));
+
   registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
 
   onNewPosts.addListener(processPosts);

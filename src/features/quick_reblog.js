@@ -75,7 +75,7 @@ ${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
 const renderBlogAvatar = () => {
   const { value: selectedUuid } = blogSelector;
   const { avatar } = userBlogs.find(({ uuid }) => uuid === selectedUuid);
-  const { url } = avatar[avatar.length - 1];
+  const { url } = avatar.at(-1);
   blogAvatar.style.backgroundImage = `url(${url})`;
 };
 blogSelector.addEventListener('change', renderBlogAvatar);
@@ -175,7 +175,6 @@ const reblogPost = async ({ currentTarget }) => {
 
   currentTarget.blur();
   actionButtons.disabled = true;
-  lastPostID = null;
 
   const postElement = currentTarget.closest(postSelector);
   const postID = postElement.dataset.id;
@@ -204,8 +203,12 @@ const reblogPost = async ({ currentTarget }) => {
     const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
     if (meta.status === 201) {
       makeButtonReblogged({ buttonDiv: currentReblogButton, state });
-      if (lastPostID === null) {
+
+      if (lastPostID === postID) {
         popupElement.remove();
+        lastPostID = null;
+      } else {
+        // popup was moved to another post during apiFetch
       }
 
       notify(response.displayText);

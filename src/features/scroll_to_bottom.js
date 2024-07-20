@@ -8,8 +8,8 @@ $(`[id="${scrollToBottomButtonId}"]`).remove();
 const activeClass = 'xkit-scroll-to-bottom-active';
 
 const loaderSelector = `
-${keyToCss('timeline', 'blogRows')} > :last-child,
-${keyToCss('notifications')} + ${keyToCss('loader')}
+${keyToCss('timeline', 'blogRows')} > :is(${keyToCss('scrollContainer')}, .sortableContainer) + div,
+${keyToCss('notifications')} + div
 `;
 const knightRiderLoaderSelector = `:is(${loaderSelector}) > ${keyToCss('knightRiderLoader')}`;
 
@@ -22,13 +22,23 @@ const styleElement = buildStyle(`
 }
 `);
 
-const scrollToBottom = () => {
-  window.scrollTo({ top: document.documentElement.scrollHeight });
-  const loaders = [...document.querySelectorAll(knightRiderLoaderSelector)];
+let timeoutID;
 
-  if (loaders.length === 0) {
-    stopScrolling();
+const onLoadersAdded = loaders => {
+  if (active) {
+    clearTimeout(timeoutID);
   }
+};
+
+const scrollToBottom = () => {
+  clearTimeout(timeoutID);
+  window.scrollTo({ top: document.documentElement.scrollHeight });
+
+  timeoutID = setTimeout(() => {
+    if (!document.querySelector(knightRiderLoaderSelector)) {
+      stopScrolling();
+    }
+  }, 500);
 };
 const observer = new ResizeObserver(scrollToBottom);
 
@@ -40,6 +50,7 @@ const startScrolling = () => {
 };
 
 const stopScrolling = () => {
+  clearTimeout(timeoutID);
   observer.disconnect();
   active = false;
   scrollToBottomButton?.classList.remove(activeClass);
@@ -79,12 +90,14 @@ const addButtonToPage = ([scrollToTopButton]) => {
 
 export const main = async () => {
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
+  pageModifications.register(knightRiderLoaderSelector, onLoadersAdded);
   document.documentElement.append(styleElement);
 };
 
 export const clean = async () => {
   pageModifications.unregister(addButtonToPage);
   pageModifications.unregister(checkForButtonRemoved);
+  pageModifications.unregister(onLoadersAdded);
   stopScrolling();
   scrollToBottomButton?.remove();
   styleElement.remove();

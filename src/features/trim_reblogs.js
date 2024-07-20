@@ -73,7 +73,7 @@ const onButtonClicked = async ({ currentTarget: controlButton }) => {
 
   const createPreviewItem = ({ blog, brokenBlog, content, disableCheckbox = false }) => {
     const { avatar, name } = blog ?? brokenBlog ?? blogPlaceholder;
-    const { url: src } = avatar[avatar.length - 1];
+    const { url: src } = avatar.at(-1);
     const textContent = content.map(({ text }) => text).find(Boolean) ?? '\u22EF';
 
     const checkbox = dom('input', { type: 'checkbox' });

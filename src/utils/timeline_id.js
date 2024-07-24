@@ -54,3 +54,6 @@ export const tagTimelineFilter = tag =>
 
 export const anyCommunityTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timelineId?.match(exactly(`communities-${anyBlog}-recent`));
+
+export const communitiesTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timelineId === 'communities-for_you';

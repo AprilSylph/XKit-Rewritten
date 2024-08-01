@@ -3,7 +3,11 @@ import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
 
 const hiddenAttribute = 'data-tweaks-hide-filtered-posts-hidden';
-const styleElement = buildStyle(`[${hiddenAttribute}] article { display: none; }`);
+const styleElement = buildStyle(`
+[${hiddenAttribute}] {
+  content: linear-gradient(transparent, transparent);
+  height: 0;
+}`);
 
 const hideFilteredPosts = filteredScreens => filteredScreens
   .map(getTimelineItemWrapper)

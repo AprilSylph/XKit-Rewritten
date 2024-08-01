@@ -17,6 +17,7 @@
         rel: 'stylesheet',
         href: browser.runtime.getURL(`/features/${name}.css`)
       });
+      link.dataset.xkitRewritten = '';
       document.documentElement.appendChild(link);
     }
 
@@ -83,11 +84,12 @@
     const script = document.createElement('script');
     script.nonce = nonce;
     script.src = browser.runtime.getURL('/main_world/index.js');
+    script.dataset.xkitRewritten = '';
     document.documentElement.append(script);
   });
 
   const init = async function () {
-    $('style.xkit').remove();
+    $('[data-xkit-rewritten]').remove();
 
     browser.storage.onChanged.addListener(onStorageChanged);
 

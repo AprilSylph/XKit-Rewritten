@@ -15,6 +15,8 @@ export function dom (tagName, attributes = {}, events = {}, children = []) {
   events && Object.entries(events).forEach(([type, listener]) => element.addEventListener(type, listener));
   children && element.replaceChildren(...children);
 
+  element.dataset.xkitRewritten = '';
+
   element.normalize();
   return element;
 }

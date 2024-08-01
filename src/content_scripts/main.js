@@ -76,16 +76,6 @@
     return installedScripts;
   };
 
-  const initMainWorld = () => new Promise(resolve => {
-    document.documentElement.addEventListener('xkitinjectionready', resolve, { once: true });
-
-    const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
-    const script = document.createElement('script');
-    script.nonce = nonce;
-    script.src = browser.runtime.getURL('/main_world/index.js');
-    document.documentElement.append(script);
-  });
-
   const init = async function () {
     $('style.xkit').remove();
 
@@ -96,8 +86,7 @@
       { enabledScripts = [] }
     ] = await Promise.all([
       getInstalledScripts(),
-      browser.storage.local.get('enabledScripts'),
-      initMainWorld()
+      browser.storage.local.get('enabledScripts')
     ]);
 
     /**

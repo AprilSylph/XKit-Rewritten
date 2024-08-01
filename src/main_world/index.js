@@ -33,6 +33,4 @@
       );
     }
   });
-
-  document.documentElement.dispatchEvent(new CustomEvent('xkitinjectionready'));
 }

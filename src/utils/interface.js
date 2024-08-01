@@ -115,3 +115,32 @@ export const postType = ({ trail = [], content = [], layout = [] }) => {
   else if (content.some(({ type }) => type === 'link')) return 'link';
   else return 'text';
 };
+
+const getClosestWithOverflow = element => {
+  const parent = element.parentElement;
+  if (!parent) {
+    return element;
+  } else if (getComputedStyle(parent).overflowX !== 'visible') {
+    return parent;
+  } else {
+    return getClosestWithOverflow(parent);
+  }
+};
+
+export const appendWithoutOverflow = (element, target, defaultPosition = 'below') => {
+  element.className = defaultPosition;
+  element.style.removeProperty('--horizontal-offset');
+
+  target.appendChild(element);
+
+  const preventOverflowTarget = getClosestWithOverflow(target);
+  const preventOverflowTargetRect = preventOverflowTarget.getBoundingClientRect();
+  const elementRect = element.getBoundingClientRect();
+
+  if (elementRect.bottom > document.documentElement.clientHeight) {
+    element.className = 'above';
+  }
+  if (elementRect.right > preventOverflowTargetRect.right - 15) {
+    element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.right - 15 - elementRect.right}px`);
+  }
+};

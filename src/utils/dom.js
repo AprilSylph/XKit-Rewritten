@@ -6,7 +6,7 @@
  * @param {(Node|string)[]} [children] - Zero or more valid children
  * @returns {Element} Element created to specification
  */
-export function dom (tagName, attributes = {}, events = {}, children = []) {
+export const dom = (tagName, attributes = {}, events = {}, children = []) => {
   const element = attributes?.xmlns
     ? document.createElementNS(attributes.xmlns, tagName)
     : document.createElement(tagName);
@@ -17,4 +17,4 @@ export function dom (tagName, attributes = {}, events = {}, children = []) {
 
   element.normalize();
   return element;
-}
+};

@@ -55,7 +55,7 @@ const shortenPosts = postElements => filterPostElements(postElements, { excludeC
   }
 });
 
-export const main = async function () {
+export const main = async () => {
   ({ showTags, maxHeight } = await getPreferences('shorten_posts'));
 
   styleElement.textContent = `body { --xkit-shorten-posts-max-height: ${maxHeight}; }`;
@@ -64,7 +64,7 @@ export const main = async function () {
   onNewPosts.addListener(shortenPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(shortenPosts);
 
   styleElement.remove();

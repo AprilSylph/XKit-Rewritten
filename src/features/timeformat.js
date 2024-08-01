@@ -17,7 +17,7 @@ const thresholds = [
   { unit: 'second', denominator: 1 }
 ];
 
-const constructRelativeTimeString = function (unixTime) {
+const constructRelativeTimeString = unixTime => {
   const now = Math.trunc(new Date().getTime() / 1000);
   const unixDiff = unixTime - now;
   const unixDiffAbsolute = Math.abs(unixDiff);
@@ -32,7 +32,7 @@ const constructRelativeTimeString = function (unixTime) {
   return relativeTimeFormat.format(-0, 'second');
 };
 
-const formatTimeElements = function (timeElements) {
+const formatTimeElements = timeElements => {
   timeElements.forEach(timeElement => {
     const momentDate = moment(timeElement.dateTime, moment.ISO_8601);
     timeElement.dataset.formattedTime = momentDate.format(format);
@@ -43,12 +43,12 @@ const formatTimeElements = function (timeElements) {
   });
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ format, displayRelative } = await getPreferences('timeformat'));
   pageModifications.register(`${keyToCss('timestamp')}[datetime]`, formatTimeElements);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(formatTimeElements);
   $('[data-formatted-time]').removeAttr('data-formatted-time');
   $('[data-formatted-relative-time]').removeAttr('data-formatted-relative-time');

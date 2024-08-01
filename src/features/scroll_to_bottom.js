@@ -67,7 +67,7 @@ const checkForButtonRemoved = () => {
   }
 };
 
-const addButtonToPage = async function ([scrollToTopButton]) {
+const addButtonToPage = ([scrollToTopButton]) => {
   if (!scrollToBottomButton) {
     const hiddenClasses = keyToClasses('hidden');
 
@@ -88,13 +88,13 @@ const addButtonToPage = async function ([scrollToTopButton]) {
   pageModifications.register('*', checkForButtonRemoved);
 };
 
-export const main = async function () {
+export const main = async () => {
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
   pageModifications.register(knightRiderLoaderSelector, onLoadersAdded);
   document.documentElement.append(styleElement);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(addButtonToPage);
   pageModifications.unregister(checkForButtonRemoved);
   pageModifications.unregister(onLoadersAdded);

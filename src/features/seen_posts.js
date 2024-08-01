@@ -20,7 +20,7 @@ let seenPosts = [];
 const timers = new Map();
 
 const observer = new IntersectionObserver(
-  (entries) => entries.forEach(({ isIntersecting, target: element }) => {
+  entries => entries.forEach(({ isIntersecting, target: element }) => {
     if (isIntersecting) {
       if (!timers.has(element)) {
         timers.set(element, setTimeout(() => markAsSeen(element), 300));
@@ -33,7 +33,7 @@ const observer = new IntersectionObserver(
   { rootMargin: '-20px 0px' }
 );
 
-const markAsSeen = (element) => {
+const markAsSeen = element => {
   observer.unobserve(element);
   timers.delete(element);
 
@@ -52,7 +52,7 @@ const lengthenTimelines = () =>
     }
   });
 
-const dimPosts = function (postElements) {
+const dimPosts = postElements => {
   lengthenTimelines();
 
   for (const postElement of filterPostElements(postElements, { timeline, includeFiltered })) {
@@ -70,7 +70,7 @@ const dimPosts = function (postElements) {
   }
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = (changes, areaName) => {
   const {
     'seen_posts.preferences.hideSeenPosts': hideSeenPostsChanges,
     'seen_posts.preferences.onlyDimAvatars': onlyDimAvatarsChanges,
@@ -94,7 +94,7 @@ export const onStorageChanged = async function (changes, areaName) {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ [storageKey]: seenPosts = [] } = await browser.storage.local.get(storageKey));
 
   const { hideSeenPosts, onlyDimAvatars } = await getPreferences('seen_posts');
@@ -108,11 +108,11 @@ export const main = async function () {
   onNewPosts.addListener(dimPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(dimPosts);
 
   observer.disconnect();
-  timers.forEach((timerId) => clearTimeout(timerId));
+  timers.forEach(timerId => clearTimeout(timerId));
   timers.clear();
 
   $(`[${excludeAttribute}]`).removeAttr(excludeAttribute);

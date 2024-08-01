@@ -11,14 +11,14 @@ const hideModalRecommended = blogsLists =>
     .filter(ul => ul.matches(blogViewSelector))
     .forEach(ul => ul.parentNode.setAttribute(hiddenAttribute, ''));
 
-export const main = async function () {
+export const main = async () => {
   const blogsListSelector = `${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
   pageModifications.register(blogsListSelector, hideModalRecommended);
 
   document.documentElement.append(styleElement);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(hideModalRecommended);
   styleElement.remove();
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

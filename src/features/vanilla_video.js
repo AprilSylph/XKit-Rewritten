@@ -26,7 +26,7 @@ const cloneVideoElements = videoElements => videoElements.forEach(videoElement =
   videoElement.before(newVideoElement);
 });
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = (changes, areaName) => {
   const {
     'vanilla_video.preferences.defaultVolume': defaultVolumeChanges
   } = changes;
@@ -36,12 +36,12 @@ export const onStorageChanged = async function (changes, areaName) {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ defaultVolume } = await getPreferences('vanilla_video'));
   pageModifications.register(`${keyToCss('videoPlayer')} video:not(.${vanillaVideoClass})`, cloneVideoElements);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(cloneVideoElements);
   $(`.${vanillaVideoClass}`).remove();
 };

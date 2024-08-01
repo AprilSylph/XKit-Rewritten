@@ -1,6 +1,6 @@
 import { apiFetch } from './tumblr_helpers.js';
 
-const fetchedUserInfo = await apiFetch('/v2/user/info').catch((error) => {
+const fetchedUserInfo = await apiFetch('/v2/user/info').catch(error => {
   console.error(error);
   return { response: {} };
 });

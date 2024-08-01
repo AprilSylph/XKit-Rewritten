@@ -7,7 +7,7 @@ const hiddenAttribute = 'data-no-recommended-blogs-hidden';
 
 const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
 
-const hideDashboardRecommended = function (sidebarTitles) {
+const hideDashboardRecommended = sidebarTitles => {
   sidebarTitles
     .filter(h1 => h1.textContent === translate('Check out these blogs'))
     .forEach(h1 => h1.closest('aside > *').setAttribute(hiddenAttribute, ''));
@@ -18,7 +18,7 @@ const hideTagPageRecommended = blogsLists =>
     .filter(ul => !ul.matches(blogViewSelector))
     .forEach(ul => ul.parentNode.setAttribute(hiddenAttribute, ''));
 
-export const main = async function () {
+export const main = async () => {
   pageModifications.register('aside h1', hideDashboardRecommended);
 
   const blogsListSelector = `${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
@@ -27,7 +27,7 @@ export const main = async function () {
   document.documentElement.append(styleElement);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(hideDashboardRecommended);
   pageModifications.unregister(hideTagPageRecommended);
   styleElement.remove();

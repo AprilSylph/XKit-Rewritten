@@ -144,9 +144,10 @@ const showPopupOnHover = ({ currentTarget }) => {
     commentInput.value = '';
     [...quickTagsList.children].forEach(({ dataset }) => delete dataset.checked);
     tagsInput.value = '';
-    timelineObject(thisPost).then(({ tags, trail, content, layout, blogName, rebloggedRootName }) => {
+    timelineObject(thisPost).then(({ tags, trail, content, layout, blogName, postAuthor, rebloggedRootName }) => {
       suggestableTags = tags;
       if (blogName) suggestableTags.push(blogName);
+      if (postAuthor) suggestableTags.push(postAuthor);
       if (rebloggedRootName) suggestableTags.push(rebloggedRootName);
       suggestableTags.push(postType({ trail, content, layout }));
       renderTagSuggestions();

@@ -17,6 +17,11 @@
       "type": "checkbox",
       "label": "Open created posts in new tabs",
       "default": false
+    },
+    "enableReblogReplies": {
+      "type": "checkbox",
+      "label": "Enable replying in a reblog",
+      "default": false
     }
   }
 }

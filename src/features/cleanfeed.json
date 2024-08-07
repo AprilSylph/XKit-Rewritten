@@ -18,6 +18,11 @@
       ],
       "default": "smart"
     },
+    "blurText": {
+      "label": "Blur text in mature posts",
+      "type": "checkbox",
+      "default": false
+    },
     "localBlogFlagging": {
       "label": "Treat these blogs as mature (comma-separated)",
       "type": "textarea",

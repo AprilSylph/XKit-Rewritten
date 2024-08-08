@@ -68,11 +68,6 @@
       "label": "Make original poster indicators on replies more subtle",
       "default": false
     },
-    "hide_reply_original_poster": {
-      "type": "checkbox",
-      "label": "Hide original poster indicators on replies",
-      "default": false
-    },
     "hide_footer_tooltips": {
       "type": "checkbox",
       "label": "Hide control button tooltips in the post footer",

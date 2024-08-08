@@ -68,11 +68,12 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   if (!reply) throw new Error('No replies found on target post.');
   if (Math.floor(reply.timestamp) !== timestamp) throw new Error('Reply not found.');
 
-  const text = {
-    reply: `@${reply.blog.name} replied to your post \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`,
-    note_mention: `@${reply.blog.name} mentioned you on a post \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`,
-    reply_to_comment: `@${reply.blog.name} replied to you in a post \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`
+  const message = {
+    reply: 'replied to your post',
+    reply_to_comment: 'replied to you in a post',
+    note_mention: 'mentioned you on a post'
   }[type];
+  const text = `@${reply.blog.name} ${message} \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`;
   const formatting = [
     { start: 0, end: reply.blog.name.length + 1, type: 'mention', blog: { uuid: reply.blog.uuid } },
     { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: `https://${targetTumblelogName}.tumblr.com/post/${targetPostId}` }

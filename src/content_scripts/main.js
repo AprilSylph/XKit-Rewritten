@@ -24,7 +24,7 @@
       document.documentElement.append(styleElement);
     }
 
-    restartListeners[name] = function (changes, areaName) {
+    restartListeners[name] = async (changes, areaName) => {
       if (areaName !== 'local') return;
 
       const { enabledScripts } = changes;
@@ -33,7 +33,8 @@
       if (onStorageChanged instanceof Function) {
         onStorageChanged(changes, areaName);
       } else if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
-        clean().then(main);
+        await clean?.();
+        await main?.();
       }
     };
 

@@ -31,7 +31,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
     notification
   );
 
-  if (!['reply', 'note_mention'].includes(notificationProps.type)) return;
+  if (!['reply', 'reply_to_comment', 'note_mention'].includes(notificationProps.type)) return;
 
   const activityElement = notification.querySelector(activitySelector);
   if (!activityElement) return;
@@ -58,7 +58,6 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
   const { type, targetPostId, targetPostSummary, targetTumblelogName, targetTumblelogUuid, timestamp } = notificationProps;
 
-  const isReply = type === 'reply';
   const { response } = await apiFetch(
     `/v2/blog/${targetTumblelogUuid}/post/${targetPostId}/notes/timeline`,
     { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } }
@@ -69,9 +68,12 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   if (!reply) throw new Error('No replies found on target post.');
   if (Math.floor(reply.timestamp) !== timestamp) throw new Error('Reply not found.');
 
-  const text = isReply
-    ? `@${reply.blog.name} replied to your post \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`
-    : `@${reply.blog.name} mentioned you on a post \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`;
+  const verbiage = {
+    reply: 'replied to your post',
+    reply_to_comment: 'replied to you in a post',
+    note_mention: 'mentioned you on a post'
+  }[type];
+  const text = `@${reply.blog.name} ${verbiage} \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`;
   const formatting = [
     { start: 0, end: reply.blog.name.length + 1, type: 'mention', blog: { uuid: reply.blog.uuid } },
     { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: `https://${targetTumblelogName}.tumblr.com/post/${targetPostId}` }

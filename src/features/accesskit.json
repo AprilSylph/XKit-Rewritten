@@ -11,7 +11,7 @@
   "preferences": {
     "disable_gifs": {
       "type": "checkbox",
-      "label": "Pause GIFs until they are hovered over",
+      "label": "Pause GIF/WebP images until they are hovered over",
       "default": false
     },
     "boring_tag_chiclets": {

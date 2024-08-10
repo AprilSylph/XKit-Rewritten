@@ -67,11 +67,11 @@ It is recommended to use camelCase for each preference name, so that the script 
 - Type: String
 - Required: Yes
 
-Type of preference. Supported values: `"checkbox"`, `"text"`, `"color"`, `"select"`, `"textarea"`, `"iframe"`
+Type of preference. Supported values: `"checkbox"`, `"text"`, `"color"`, `"select"`, `"textarea"`, `"iframe"`, `"gap"`
 
 #### `"preferences"`: \<preference name\>: `"label"`
 - Type: String
-- Required: Yes
+- Required: Yes, unless `type` is `"gap"`
 
 Label displayed to the user to describe the preference.
 
@@ -89,7 +89,7 @@ For `"iframe"`-type preferences, a relative address to be embedded in the script
 
 #### `"preferences"`: \<preference name\>: `"default"`
 - Type: Any
-- Required: Yes, unless `type` is `"iframe"`
+- Required: Yes, unless `type` is `"iframe"` or `"gap"`
 
 Default value of the preference to display to the user.
 

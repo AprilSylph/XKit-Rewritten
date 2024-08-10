@@ -24,7 +24,7 @@
     },
     "show_all_tags": {
       "type": "checkbox",
-      "label": "Show every line of tags by default",
+      "label": "Show every line of post tags by default",
       "default": false
     },
 
@@ -43,7 +43,7 @@
     },
     "no_focus_shadow": {
       "type": "checkbox",
-      "label": "Remove the coloured shadow from focused posts",
+      "label": "Hide the coloured shadow on focused posts",
       "default": false
     },
     "no_where_were_we": {
@@ -62,7 +62,7 @@
     },
     "hide_following_notification_badge": {
       "type": "checkbox",
-      "label": "Hide the Home/Following unread count",
+      "label": "Hide the Home/Following unread count badge",
       "default": false
     },
     "hide_activity_notification_badge": {
@@ -81,7 +81,7 @@
     },
     "hide_activity_mutuals": {
       "type": "checkbox",
-      "label": "Hide following/mutuals indicators on notifications",
+      "label": "Hide following/mutuals indicators on notifications entirely",
       "default": false
     },
 
@@ -96,7 +96,7 @@
     },
     "hide_blaze_tip_labels": {
       "type": "checkbox",
-      "label": "Hide the \"blaze\" and \"tip\" button labels",
+      "label": "Hide \"blaze\" and \"tip\" button labels in the post footer",
       "default": false
     },
     "hide_footer_tooltips": {

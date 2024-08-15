@@ -27,6 +27,14 @@ export const styleElement = buildStyle(`
 [data-formatted-time][title]::after {
   cursor: help;
 }
+
+${keyToCss('blogLinkWrapper')}:has(+ [data-formatted-time]) {
+  flex: none;
+}
+${keyToCss('blogLinkWrapper')} + [data-formatted-time] {
+  white-space: nowrap;
+  overflow-x: hidden;
+}
 `);
 
 const relativeTimeFormat = new Intl.RelativeTimeFormat(document.documentElement.lang, { style: 'long' });

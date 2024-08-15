@@ -83,7 +83,7 @@
     }
   ],
 
-  "minimum_chrome_version": "105",
+  "minimum_chrome_version": "111",
   "browser_specific_settings": {
     "gecko": {
       "id": "{6e710c58-36cc-49d6-b772-bfc3030fa56e}",

@@ -32,7 +32,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   } = await timelineObject(postElement);
 
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
-  const { blog, content = [], trail = [], isBlocksPostFormat } = postData;
+  const { blog, community, authorBlog, content = [], trail = [], isBlocksPostFormat } = postData;
 
   if (isBlocksPostFormat === false) {
     await new Promise(resolve => {
@@ -70,8 +70,8 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     });
   }
 
-  const createPreviewItem = ({ blog, brokenBlog, content, disableCheckbox = false }) => {
-    const { avatar, name } = blog ?? brokenBlog ?? blogPlaceholder;
+  const createPreviewItem = ({ blog, community, authorBlog, brokenBlog, content, disableCheckbox = false }) => {
+    const { avatar, name } = (community && authorBlog) ?? blog ?? brokenBlog ?? blogPlaceholder;
     const { url: src } = avatar.at(-1);
     const textContent = content.map(({ text }) => text).find(Boolean) ?? '\u22EF';
 
@@ -97,7 +97,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   trailData.slice(0, -1).forEach(({ checkbox }) => { checkbox.checked = true; });
 
   const contentData = content.length
-    ? [createPreviewItem({ blog, content, disableCheckbox: true })]
+    ? [createPreviewItem({ blog, community, authorBlog, content, disableCheckbox: true })]
     : [];
 
   const previewElement = dom(

@@ -1,3 +1,4 @@
+import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 import { buildSvg } from './remixicon.js';
 
@@ -35,4 +36,23 @@ export const cloneControlButton = function (template, events, disabled = false) 
   Object.entries(events).forEach(([type, listener]) => newButton.addEventListener(type, listener));
   newButton.disabled = disabled;
   return newButtonContainer;
+};
+
+const controlIconSelector = keyToCss('controlIcon');
+
+/**
+ * Inserts a clone of a button template before the post edit icon, if the post is editable
+ * @param {HTMLElement} postElement - The target post element
+ * @param {HTMLDivElement} clonedControlButton - Button clone to insert if the post is editable
+ * @param {string} buttonClass - Button HTML class
+ */
+export const insertControlButtonEditable = (postElement, clonedControlButton, buttonClass) => {
+  const existingButton = postElement.querySelector(`.${buttonClass}`);
+  if (existingButton !== null) { return; }
+
+  const editIcon = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"] use[href="#managed-icon__edit"]`);
+  if (!editIcon) { return; }
+
+  const controlIcon = editIcon.closest(controlIconSelector);
+  controlIcon.before(clonedControlButton);
 };

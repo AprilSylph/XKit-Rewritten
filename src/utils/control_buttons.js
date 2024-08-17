@@ -1,5 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { buildStyle } from './interface.js';
 import { timelineObject } from './react_props.js';
 import { buildSvg } from './remixicon.js';
 
@@ -63,3 +64,11 @@ export const insertControlButtonEditable = async (postElement, clonedControlButt
     }
   }
 };
+
+const styleElement = buildStyle(`
+${keyToCss('noteCountContainer')} > .xkit-control-button-container {
+    margin: 0 12px 0 0;
+    align-self: center;
+}
+`);
+document.documentElement.append(styleElement);

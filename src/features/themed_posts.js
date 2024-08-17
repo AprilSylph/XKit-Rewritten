@@ -65,12 +65,12 @@ const processPosts = async function (postElements) {
       }
     });
 
-    postElement.dataset.xkitThemed = blog.name ?? '';
+    postElement.dataset.xkitThemed = visibleBlog.name ?? '';
 
     if (reblogTrailTheming) {
       const blogNameTrail = trail.map(item => item?.blog?.name);
       if (content.length > 0) {
-        blogNameTrail.push(blog?.name);
+        blogNameTrail.push(visibleBlog?.name);
       }
       [...postElement.querySelectorAll(reblogSelector)].forEach((reblog, i) => {
         reblog.dataset.xkitThemed = blogNameTrail[i] ?? '';

@@ -1,5 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { timelineObject } from './react_props.js';
 import { buildSvg } from './remixicon.js';
 
 // Remove outdated buttons when loading module
@@ -45,14 +46,20 @@ const controlIconSelector = keyToCss('controlIcon');
  * @param {HTMLElement} postElement - The target post element
  * @param {HTMLDivElement} clonedControlButton - Button clone to insert if the post is editable
  * @param {string} buttonClass - Button HTML class
+ * @returns {Promise<void>} Resolves when finished
  */
-export const insertControlButtonEditable = (postElement, clonedControlButton, buttonClass) => {
+export const insertControlButtonEditable = async (postElement, clonedControlButton, buttonClass) => {
   const existingButton = postElement.querySelector(`.${buttonClass}`);
   if (existingButton !== null) { return; }
 
-  const editIcon = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"] use[href="#managed-icon__edit"]`);
-  if (!editIcon) { return; }
-
-  const controlIcon = editIcon.closest(controlIconSelector);
-  controlIcon.before(clonedControlButton);
+  const editIcon = postElement.querySelector(`footer ${keyToCss('controlIcon')} a[href*="/edit/"] use[href="#managed-icon__edit"]`);
+  if (editIcon) {
+    const controlIcon = editIcon.closest(controlIconSelector);
+    controlIcon.before(clonedControlButton);
+  } else {
+    const { community, canEdit } = await timelineObject(postElement);
+    if (community && canEdit) {
+      postElement.querySelector(`${keyToCss('noteCountContainer')} > ${keyToCss('container')}`).before(clonedControlButton);
+    }
+  }
 };

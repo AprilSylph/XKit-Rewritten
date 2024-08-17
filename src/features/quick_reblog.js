@@ -49,6 +49,7 @@ let lastPostID;
 let timeoutID;
 let suggestableTags;
 let accountKey;
+let joinedCommunities;
 
 let popupPosition;
 let showBlogSelector;
@@ -66,17 +67,15 @@ const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
 const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 const blogHashes = {};
+const avatarUrls = {};
 
 const reblogButtonSelector = `
 ${postSelector} footer a[href*="/reblog/"],
 ${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
 `;
 
-const renderBlogAvatar = async () => {
-  const { value: selectedUuid } = blogSelector;
-  const { avatar } = userBlogs.find(({ uuid }) => uuid === selectedUuid);
-  const { url } = avatar.at(-1);
-  blogAvatar.style.backgroundImage = `url(${url})`;
+const renderBlogAvatar = () => {
+  blogAvatar.style.backgroundImage = `url(${avatarUrls[blogSelector.value]})`;
 };
 blogSelector.addEventListener('change', renderBlogAvatar);
 
@@ -200,6 +199,10 @@ const reblogPost = async function ({ currentTarget }) {
   };
 
   try {
+    if (state !== 'published' && joinedCommunities.some(({ uuid }) => uuid === blog)) {
+      throw new Error('Posts cannot be queued/drafted to communities!');
+    }
+
     const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
     if (meta.status === 201) {
       makeButtonReblogged({ buttonDiv: currentReblogButton, state });
@@ -331,12 +334,24 @@ export const main = async function () {
 
   popupElement.className = popupPosition;
 
+  joinedCommunities = await apiFetch('/v2/communities')
+    .then(({ response }) => response)
+    .catch(() => []);
+
   blogSelector.replaceChildren(
-    ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name]))
+    ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name])),
+    ...joinedCommunities.length ? [dom('hr')] : [],
+    ...joinedCommunities.map(({ title, uuid, blog: { name } }) => dom('option', { value: uuid }, null, [`${title} (${name})`]))
   );
 
+  [...userBlogs, ...joinedCommunities].forEach((data) => {
+    const avatar = data.avatarImage ?? data.avatar;
+    const { url } = avatar.at(-1);
+    avatarUrls[data.uuid] = url;
+  });
+
   if (rememberLastBlog) {
-    for (const { uuid } of userBlogs) {
+    for (const { uuid } of [...userBlogs, ...joinedCommunities]) {
       blogHashes[uuid] = await sha256(uuid);
     }
 

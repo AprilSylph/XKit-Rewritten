@@ -184,7 +184,7 @@ const showSelectBlogs = blogs => {
 
   let visibleBlogs = [];
 
-  const selectionInfo = dom('div');
+  const selectionInfo = dom('div', { style: 'margin-bottom: 1em' });
   const table = dom('table', null, null, blogs.map(({ selectTableRow }) => selectTableRow));
 
   const canvasScale = 2;
@@ -295,8 +295,7 @@ const showSelectBlogs = blogs => {
         canvasElement,
         slider,
         selectionInfo,
-        dom('div', { style: 'height: 0.5em' }),
-        dom('div', null, null, [
+        dom('div', { style: 'margin-bottom: 1ch' }, null, [
           'select: ',
           selectNoneButton,
           ' / ',

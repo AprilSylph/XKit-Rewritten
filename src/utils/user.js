@@ -46,6 +46,6 @@ export const adminBlogs = userInfo?.blogs?.filter(blog => blog.admin) ?? [];
 export const adminBlogNames = adminBlogs.map(blog => blog.name);
 
 /**
- * {object?} userInfo - The contents of the /v2/user/info API endpoint
+ * {object?} joinedCommunities - An array of community objects the current user has joined
  */
 export const joinedCommunities = fetchedCommunitiesInfo.response;

@@ -64,7 +64,7 @@ const tableContainerClass = 'xkit-find-inactives-table-container';
 const confirmContainerClass = 'xkit-find-inactives-confirm-container';
 const avatarClass = 'xkit-find-inactives-avatar';
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 .${canvasClass} {
   width: ${canvasOuterWidth}px;
   height: ${canvasOuterHeight}px;
@@ -381,11 +381,9 @@ const unfollowBlogs = async blogs => {
 };
 
 export const main = async () => {
-  document.documentElement.append(styleElement);
   addSidebarItem(sidebarOptions);
 };
 
 export const clean = async () => {
-  styleElement.remove();
   removeSidebarItem(sidebarOptions.id);
 };

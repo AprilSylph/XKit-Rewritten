@@ -114,11 +114,11 @@ const getIsFollowing = async (blogName, element) => {
       await blogData(element),
       (await timelineObject(element))?.blog,
       (await timelineObject(element))?.authorBlog
-    ].find((data) => console.log('searching', data) || blogName === data?.name);
+    ].find((data) => blogName === data?.name);
 
     following[blogName] = blog
-      ? console.log('FOUND', blogName) || Promise.resolve(blog.followed && !blog.isMember)
-      : console.log('NOT FOUND', blogName) || apiFetch(`/v2/blog/${blogName}/info`)
+      ? Promise.resolve(blog.followed && !blog.isMember)
+      : apiFetch(`/v2/blog/${blogName}/info`)
         .then(({ response: { blog: { followed } } }) => followed)
         .catch(() => Promise.resolve(false));
   }

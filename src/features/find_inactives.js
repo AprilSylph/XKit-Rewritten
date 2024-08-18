@@ -159,7 +159,7 @@ const showSelectBlogs = blogs => {
     followingIcon.style = `visibility: ${blog.isFollowingYou ? 'shown' : 'hidden'};`;
 
     const avatar = dom('img', {
-      src: blog.avatar[blog.avatar.length - 1]?.url,
+      src: blog.avatar.at(-1)?.url,
       class: avatarClass
     });
     blog.checkbox = dom('input', { type: 'checkbox' });

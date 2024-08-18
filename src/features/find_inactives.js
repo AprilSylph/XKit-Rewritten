@@ -120,7 +120,7 @@ const showFetchBlogs = async () => {
 
   const blogs = [];
   let resource =
-    '/v2/user/following?fields[blogs]=name,avatar,title,updated,?is_following_you';
+    '/v2/user/following?fields[blogs]=name,avatar,title,updated,blog_view_url,?is_following_you';
 
   while (resource) {
     await Promise.all([
@@ -165,7 +165,7 @@ const showSelectBlogs = blogs => {
     blog.checkbox = dom('input', { type: 'checkbox' });
     const link = dom(
       'a',
-      { href: `https://www.tumblr.com/blog/view/${blog.name}`, target: '_blank' },
+      { href: blog.blogViewUrl, target: '_blank' },
       null,
       [blog.name]
     );

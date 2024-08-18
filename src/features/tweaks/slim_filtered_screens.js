@@ -3,7 +3,7 @@ import { postSelector, buildStyle } from '../../utils/interface.js';
 
 const filteredScreenSelector = `${postSelector}:not(${keyToCss('masonryTimelineObject')}) ${keyToCss('filteredScreen')}`;
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 ${filteredScreenSelector} {
   flex-direction: row;
   justify-content: space-between;
@@ -30,6 +30,3 @@ ${filteredScreenSelector} ${keyToCss('viewPostLinkWrapper')} {
   margin-left: 1ch;
 }
 `);
-
-export const main = async () => document.documentElement.append(styleElement);
-export const clean = async () => styleElement.remove();

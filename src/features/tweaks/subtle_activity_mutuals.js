@@ -3,7 +3,7 @@ import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
 import { dom } from '../../utils/dom.js';
 
-const labelSelector = keyToCss('followingBadgeContainer', 'mutualsBadgeContainer');
+const labelSelector = `${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')}:has(> svg)`;
 
 const spanClass = 'xkit-tweaks-subtle-activity-span';
 

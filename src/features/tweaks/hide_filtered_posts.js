@@ -3,7 +3,7 @@ import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
 
 const hiddenAttribute = 'data-tweaks-hide-filtered-posts-hidden';
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 [${hiddenAttribute}] {
   content: linear-gradient(transparent, transparent);
   height: 0;
@@ -16,12 +16,10 @@ const hideFilteredPosts = filteredScreens => filteredScreens
 export const main = async function () {
   const filteredScreenSelector = `article ${keyToCss('filteredScreen')}`;
   pageModifications.register(filteredScreenSelector, hideFilteredPosts);
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {
   pageModifications.unregister(hideFilteredPosts);
-  styleElement.remove();
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

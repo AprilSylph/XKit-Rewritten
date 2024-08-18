@@ -7,7 +7,7 @@ const excludeClass = 'xkit-tweaks-hide-my-posts-done';
 const timeline = followingTimelineFilter;
 
 const hiddenAttribute = 'data-tweaks-hide-my-posts-hidden';
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 [${hiddenAttribute}] {
   content: linear-gradient(transparent, transparent);
   height: 0;
@@ -25,12 +25,10 @@ const processPosts = async function (postElements) {
 
 export const main = async function () {
   onNewPosts.addListener(processPosts);
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  styleElement.remove();
 
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

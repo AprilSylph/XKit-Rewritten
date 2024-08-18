@@ -83,6 +83,7 @@ export const styleElement = buildStyle(`
 .${tableContainerClass} {
   height: 300px;
   overflow: auto;
+  margin-top: 1ch;
 }
 
 .${tableContainerClass} svg, .${confirmContainerClass} svg {
@@ -295,7 +296,7 @@ const showSelectBlogs = blogs => {
         canvasElement,
         slider,
         selectionInfo,
-        dom('div', { style: 'margin-bottom: 1ch' }, null, [
+        dom('div', null, null, [
           'select: ',
           selectNoneButton,
           ' / ',

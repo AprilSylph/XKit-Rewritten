@@ -5,8 +5,9 @@ import { translate } from '../utils/language_data.js';
 import { timelineObject } from '../utils/react_props.js';
 import { getPreferences } from '../utils/preferences.js';
 
+export const styleElement = buildStyle();
+
 const hiddenClass = 'xkit-cleanfeed-filtered';
-const styleElement = buildStyle();
 const reblogSelector = keyToCss('reblog');
 
 let blockingMode;
@@ -84,13 +85,11 @@ export const main = async function () {
   }
   `;
 
-  document.documentElement.append(styleElement);
   onNewPosts.addListener(processPosts);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  styleElement.remove();
 
   $(`.${hiddenClass}`).removeClass(hiddenClass);
 };

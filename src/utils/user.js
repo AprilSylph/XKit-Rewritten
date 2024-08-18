@@ -5,6 +5,11 @@ const fetchedUserInfo = await apiFetch('/v2/user/info').catch((error) => {
   return { response: {} };
 });
 
+const fetchedCommunitiesInfo = await apiFetch('/v2/communities').catch((error) => {
+  console.error(error);
+  return { response: [] };
+});
+
 /**
  * {object?} userInfo - The contents of the /v2/user/info API endpoint
  */
@@ -39,3 +44,8 @@ export const adminBlogs = userInfo?.blogs?.filter(blog => blog.admin) ?? [];
  * {string[]} adminBlogNames - An array of blog names the current user is admin of
  */
 export const adminBlogNames = adminBlogs.map(blog => blog.name);
+
+/**
+ * {object?} userInfo - The contents of the /v2/user/info API endpoint
+ */
+export const joinedCommunities = fetchedCommunitiesInfo.response;

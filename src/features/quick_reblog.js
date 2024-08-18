@@ -2,7 +2,7 @@ import { sha256 } from '../utils/crypto.js';
 import { timelineObject } from '../utils/react_props.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
 import { postSelector, filterPostElements, postType, appendWithoutOverflow } from '../utils/interface.js';
-import { userBlogs } from '../utils/user.js';
+import { joinedCommunities, userBlogs } from '../utils/user.js';
 import { getPreferences } from '../utils/preferences.js';
 import { onNewPosts } from '../utils/mutations.js';
 import { notify } from '../utils/notifications.js';
@@ -50,7 +50,6 @@ let lastPostID;
 let timeoutID;
 let suggestableTags;
 let accountKey;
-let joinedCommunities;
 
 let popupPosition;
 let showBlogSelector;
@@ -333,10 +332,6 @@ export const main = async function () {
     alreadyRebloggedEnabled,
     alreadyRebloggedLimit
   } = await getPreferences('quick_reblog'));
-
-  joinedCommunities = await apiFetch('/v2/communities')
-    .then(({ response }) => response)
-    .catch(() => []);
 
   blogSelector.replaceChildren(
     ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name])),

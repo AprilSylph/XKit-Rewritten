@@ -261,12 +261,12 @@ const showSelectBlogs = blogs => {
       checkbox.checked = false;
     })
   );
-  const selectAllNoMutualsButton = createButton('all (no mutuals)', () =>
+  const selectNonMutualsButton = createButton('non-mutuals', () =>
     visibleBlogs.forEach(({ checkbox, isFollowingYou }) => {
       checkbox.checked = !isFollowingYou;
     })
   );
-  const selectAllWithMutualsButton = createButton('all (including mutuals)', () =>
+  const selectAllButton = createButton('all', () =>
     visibleBlogs.forEach(({ checkbox }) => {
       checkbox.checked = true;
     })
@@ -300,9 +300,9 @@ const showSelectBlogs = blogs => {
           'select: ',
           selectNoneButton,
           ' / ',
-          selectAllNoMutualsButton,
+          selectNonMutualsButton,
           ' / ',
-          selectAllWithMutualsButton
+          selectAllButton
         ]),
         dom('div', { class: tableContainerClass }, null, [table])
       ],

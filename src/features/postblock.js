@@ -6,6 +6,7 @@ import { onNewPosts, pageModifications } from '../utils/mutations.js';
 import { dom } from '../utils/dom.js';
 import { apiFetch, navigate } from '../utils/tumblr_helpers.js';
 import { notify } from '../utils/notifications.js';
+import { postPermalinkTimelineFilter, timelineSelector } from '../utils/timeline_id.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
@@ -61,8 +62,9 @@ const processPosts = postElements =>
     if (blockedPostRootIDs.includes(rootID)) {
       getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
 
-      const { timeline } = postElement.closest('[data-timeline]').dataset;
-      timeline.includes(`posts/${rootID}/permalink`) && addWarningElement(postElement, rootID);
+      if (postPermalinkTimelineFilter(rootID)(postElement.closest(timelineSelector))) {
+        addWarningElement(postElement, rootID);
+      }
     } else {
       getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
     }

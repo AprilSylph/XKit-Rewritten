@@ -65,6 +65,11 @@
       "label": "Hide the Home/Following unread count badge",
       "default": false
     },
+    "hide_communities_notification_badge": {
+      "type": "checkbox",
+      "label": "Hide the Communities notification badge",
+      "default": false
+    },
     "hide_activity_notification_badge": {
       "type": "checkbox",
       "label": "Hide the Activity notification badge",

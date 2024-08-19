@@ -56,3 +56,9 @@ export const postPermalinkTimelineFilter = id =>
   ({ dataset: { timeline, timelineId } }) =>
     timeline === `posts/${id}/permalink` ||
     timelineId?.match(exactly(`peepr-posts-${anyBlog}-${id}-undefined-undefined-undefined-undefined-undefined`));
+
+export const anyCommunityTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timelineId?.match(exactly(`communities-${anyBlog}-recent`));
+
+export const communitiesTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timelineId === 'communities-for_you';

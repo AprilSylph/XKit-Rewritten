@@ -148,6 +148,11 @@ export const main = async function () {
   if (toOpen) {
     browser.storage.local.remove(toOpenStorageKey);
     openPostById(toOpen.blockedPostID);
+  } else {
+    const blockedPostID = new URLSearchParams(location.search).get('notificationblock-id');
+    if (blockedPostID) {
+      openPostById(blockedPostID);
+    }
   }
 };
 

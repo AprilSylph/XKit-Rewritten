@@ -30,7 +30,10 @@ const renderBlocked = async function () {
     unblockButton.dataset.postId = blockedPostID;
     unblockButton.addEventListener('click', unblockPost);
 
-    anchorElement.addEventListener('click', async () => {
+    anchorElement.href = `https://www.tumblr.com/?notificationblock-id=${blockedPostID}`;
+
+    anchorElement.addEventListener('click', async event => {
+      event.preventDefault();
       await browser.storage.local.set({
         [toOpenStorageKey]: { blockedPostID }
       });

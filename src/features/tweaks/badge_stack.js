@@ -5,7 +5,7 @@ const wrapper = keyToCss('leftContentMain', 'username');
 const badgeContainer = keyToCss('badgeContainer');
 const badgeImage = ':is(svg, img)';
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 
 ${wrapper}:not(:hover) ${badgeContainer} + ${badgeContainer} {
   margin-left: -7px;
@@ -47,11 +47,9 @@ const waitForRender = () =>
   new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
 export const main = async () => {
-  document.documentElement.append(styleElement);
   waitForRender().then(() => document.documentElement.append(transitionStyleElement));
 };
 
 export const clean = async () => {
-  styleElement.remove();
   transitionStyleElement.remove();
 };

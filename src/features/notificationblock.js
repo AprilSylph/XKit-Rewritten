@@ -103,9 +103,11 @@ export const onStorageChanged = (changes, areaName) => {
 };
 
 const openPostById = async id => {
+  let canceled = false;
   const timeoutId = setTimeout(() => showModal({
     title: 'NotificationBlock',
-    message: [`Searching for post ${id} on your blogs. Please wait...`]
+    message: [`Searching for post ${id} on your blogs. Please wait...`],
+    buttons: [dom('button', { class: 'red' }, { click: () => { canceled = true; } }, ['Cancel'])]
   }), 500);
 
   const sortedUserBlogs = [...userBlogs].sort((a, b) => b.posts - a.posts);
@@ -117,7 +119,12 @@ const openPostById = async id => {
       navigate(`/@${name}/${id}`);
       return;
     } catch {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      if (canceled) {
+        hideModal();
+        return;
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
     }
   }
 

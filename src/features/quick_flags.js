@@ -1,7 +1,7 @@
 import { cloneControlButton, createControlButtonTemplate } from '../utils/control_buttons.js';
 import { keyToCss } from '../utils/css_map.js';
 import { dom } from '../utils/dom.js';
-import { filterPostElements, getTimelineItemWrapper, postSelector } from '../utils/interface.js';
+import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../utils/interface.js';
 import { translate } from '../utils/language_data.js';
 import { bulkCommunityLabel } from '../utils/mega_editor.js';
 import { showErrorModal } from '../utils/modals.js';
@@ -44,25 +44,15 @@ const buttons = popupData.map(({ text, category, checkbox }) => {
 });
 const popupElement = dom('div', { id: 'quick-flags' }, null, buttons);
 
-const appendWithoutViewportOverflow = (element, target) => {
-  element.className = 'below';
-  target.appendChild(element);
-  if (element.getBoundingClientRect().bottom > document.documentElement.clientHeight) {
-    element.className = 'above';
-  }
-};
-
-const togglePopupDisplay = async function ({ target, currentTarget }) {
+const togglePopupDisplay = async function ({ target, currentTarget: controlButton }) {
   if (target === popupElement || popupElement.contains(target)) { return; }
 
-  if (currentTarget.contains(popupElement)) {
-    currentTarget.removeChild(popupElement);
-  } else {
-    const postElement = target.closest(postSelector);
-    const { communityLabels } = await timelineObject(postElement);
-    updateCheckboxes(editedPostStates.get(getTimelineItemWrapper(postElement)) ?? communityLabels);
+  const buttonContainer = controlButton.parentElement;
 
-    appendWithoutViewportOverflow(popupElement, currentTarget);
+  if (buttonContainer.contains(popupElement)) {
+    buttonContainer.removeChild(popupElement);
+  } else {
+    appendWithoutOverflow(popupElement, buttonContainer);
   }
 };
 

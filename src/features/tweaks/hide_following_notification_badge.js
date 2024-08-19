@@ -11,7 +11,7 @@ const customTitleElement = dom('title', { 'data-xkit': true });
 
 export const styleElement = buildStyle(`
 :is(${followingHomeButton}, ${mobileMenuButton}) ${keyToCss('notificationBadge')} {
-  display: none;
+  opacity: 0.5;
 }
 `);
 
@@ -25,6 +25,7 @@ const onTitleChanged = ([titleElement]) => {
 };
 
 const clearAppBadge = () => {
+  console.log('clearing app badge because title was updated to', document.querySelector('head title:not([data-xkit])').textContent);
   try {
     navigator.clearAppBadge?.();
   } catch {}

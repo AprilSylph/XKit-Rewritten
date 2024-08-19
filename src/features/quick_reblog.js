@@ -67,7 +67,7 @@ const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
 const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 const blogHashes = new Map();
-const avatarUrls = {};
+const avatarUrls = new Map();
 
 const reblogButtonSelector = `
 ${postSelector} footer a[href*="/reblog/"],
@@ -75,7 +75,7 @@ ${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
 `;
 
 const renderBlogAvatar = () => {
-  blogAvatar.style.backgroundImage = `url(${avatarUrls[blogSelector.value]})`;
+  blogAvatar.style.backgroundImage = `url(${avatarUrls.get(blogSelector.value)})`;
 };
 blogSelector.addEventListener('change', renderBlogAvatar);
 
@@ -342,7 +342,7 @@ export const main = async function () {
   [...userBlogs, ...joinedCommunities].forEach((data) => {
     const avatar = data.avatarImage ?? data.avatar;
     const { url } = avatar.at(-1);
-    avatarUrls[data.uuid] = url;
+    avatarUrls.set(data.uuid, url);
   });
 
   if (rememberLastBlog) {

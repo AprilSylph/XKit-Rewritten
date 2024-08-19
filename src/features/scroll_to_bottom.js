@@ -19,7 +19,7 @@ let scrollToBottomButton;
 let modalScrollToBottomButton;
 let activeElement = false;
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 .${buttonClass} {
   margin-top: 0.5ch;
   transform: rotate(180deg);
@@ -132,8 +132,6 @@ export const main = async function () {
   pageModifications.register(`button[aria-label="${translate('Back to top')}"]`, addModalButtonToPage);
   pageModifications.register(knightRiderLoaderSelector, onLoadersAdded);
   document.documentElement.addEventListener('keydown', onKeyDown);
-
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {
@@ -147,5 +145,4 @@ export const clean = async function () {
   scrollToBottomButton?.remove();
   modalScrollToBottomButton?.remove();
   modalButtonColorObserver.disconnect();
-  styleElement.remove();
 };

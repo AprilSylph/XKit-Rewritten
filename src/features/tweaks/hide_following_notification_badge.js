@@ -8,7 +8,8 @@ const followingHomeButton = `:is(li[title="${translate('Home')}"], button[aria-l
 const mobileMenuButton = `button[aria-label="${translate('Menu')}"]`;
 
 const customTitleElement = dom('title', { 'data-xkit': true });
-const styleElement = buildStyle(`
+
+export const styleElement = buildStyle(`
 :is(${followingHomeButton}, ${mobileMenuButton}) ${keyToCss('notificationBadge')} {
   display: none;
 }
@@ -23,10 +24,8 @@ const onTitleChanged = ([titleElement]) => {
 export const main = async () => {
   pageModifications.register('head title:not([data-xkit])', onTitleChanged);
   document.head.prepend(customTitleElement);
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async () => {
   customTitleElement.remove();
-  styleElement.remove();
 };

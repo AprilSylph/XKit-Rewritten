@@ -11,7 +11,7 @@ import { timelineObject } from '../utils/react_props.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
 
 const data = [
-  { text: 'Community Label: Mature', category: undefined },
+  { text: 'Content Label: Mature', category: undefined },
   { text: 'Drug/Alcohol Addiction', category: 'drug_use' },
   { text: 'Violence', category: 'violence' },
   { text: 'Sexual Themes', category: 'sexual_themes' }
@@ -85,7 +85,7 @@ const handlePopupClick = async (checkbox, category) => {
       ? currentCategories.filter(item => item !== category)
       : [...currentCategories, category];
 
-    // community label will be enabled in every possible state
+    // label will be enabled in every possible state
     hasCommunityLabel = true;
   } else {
     hasCommunityLabel = !currentHasCommunityLabel;
@@ -97,12 +97,12 @@ const handlePopupClick = async (checkbox, category) => {
   try {
     await bulkCommunityLabel(name, [id], { hasCommunityLabel, categories });
 
-    notify('Updated community labels!');
+    notify('Updated content labels!');
     editedPostStates.set(getTimelineItemWrapper(postElement), { hasCommunityLabel, categories });
     updatePostWarningElement(postElement);
     updateCheckboxes({ hasCommunityLabel, categories });
   } catch ({ body }) {
-    notify(body?.errors?.[0]?.detail || 'Failed to update community labels!');
+    notify(body?.errors?.[0]?.detail || 'Failed to update content labels!');
     updateCheckboxes({ hasCommunityLabel: currentHasCommunityLabel, categories: currentCategories });
   }
 };
@@ -129,7 +129,7 @@ const updatePostWarningElement = async (postElement) => {
   if (renderedPostStateIncorrect) {
     const footerRow = postElement.querySelector(keyToCss('footerRow'));
     const warningElement = dom('div', { class: warningClass }, null, [
-      'note: navigate away and back or refresh to see edited community labels!'
+      'note: navigate away and back or refresh to see edited content labels!'
     ]);
     footerRow.after(warningElement);
   }

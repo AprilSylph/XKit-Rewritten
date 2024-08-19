@@ -1,6 +1,6 @@
 {
   "title": "Mass Labeler",
-  "description": "Label mature posts in bulk",
+  "description": "Content label posts in bulk",
   "icon": {
     "class_name": "ri-flag-2-line",
     "color": "white",

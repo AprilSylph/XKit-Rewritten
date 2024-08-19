@@ -6,7 +6,7 @@ import { apiFetch } from '../utils/tumblr_helpers.js';
 import { userBlogs } from '../utils/user.js';
 
 const data = [
-  { text: 'Community Label: Mature', category: undefined },
+  { text: 'Content Label: Mature', category: undefined },
   { text: 'Drug/Alcohol Addiction', category: 'drug_use' },
   { text: 'Violence', category: 'violence' },
   { text: 'Sexual Themes', category: 'sexual_themes' }
@@ -46,7 +46,7 @@ const timezoneOffsetMs = new Date().getTimezoneOffset() * 60000;
 
 const showInitialPrompt = async () => {
   const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event).catch(showErrorModal) }, [
-    'Community labels to apply:',
+    'Content labels to apply:',
     ...data.map(({ text, category }) =>
       dom('label', null, null, [text, dom('input', {
         type: 'checkbox',
@@ -81,7 +81,7 @@ const showInitialPrompt = async () => {
   }
 
   showModal({
-    title: 'Add community labels in bulk:',
+    title: 'Add content labels in bulk:',
     message: [initialForm],
     buttons: [
       modalCancelButton,
@@ -201,7 +201,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
   const labelStatus = dom('span');
 
   showModal({
-    title: 'Setting community labels on posts...',
+    title: 'Setting content labels on posts...',
     message: [
       dom('small', null, null, ['Do not navigate away from this page.']),
       '\n\n',
@@ -282,7 +282,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
         }).catch(() => {
           labelledFailCount += postIds.length;
         }).finally(() => {
-          labelStatus.textContent = `Set community labels on ${labelledCount} posts... ${labelledFailCount ? `(failed: ${labelledFailCount})` : ''}`;
+          labelStatus.textContent = `Set content labels on ${labelledCount} posts... ${labelledFailCount ? `(failed: ${labelledFailCount})` : ''}`;
         }),
         sleep(1000)
       ]);
@@ -294,7 +294,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
   showModal({
     title: 'All done!',
     message: [
-      `Set community labels on ${labelledCount} posts${labelledFailCount ? ` (failed: ${labelledFailCount})` : ''}.\n`,
+      `Set content labels on ${labelledCount} posts${labelledFailCount ? ` (failed: ${labelledFailCount})` : ''}.\n`,
       'Refresh the page to see the result.'
     ],
     buttons: [
@@ -308,7 +308,7 @@ const sidebarOptions = {
   id: 'mass-labeler',
   title: 'Mass Labeler',
   rows: [{
-    label: 'Add community labels',
+    label: 'Add content labels',
     onclick: showInitialPrompt,
     carrot: true
   }],

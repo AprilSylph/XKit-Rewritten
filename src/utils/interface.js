@@ -1,5 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { timelineSelector } from './timeline_id.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
 export const blogViewSelector = '[style*="--blog-title-color"] *';
@@ -19,7 +20,9 @@ const targetWrapperSelector = keyToCss(
  * @returns {Element | null} The timeline item wrapper
  */
 export const getTimelineItemWrapper = element =>
-  element.closest(cellSelector) || element.closest(listTimelineObjectSelector);
+  (element.closest('[data-timeline-id]') && element.closest(listTimelineObjectSelector)?.parentElement) ||
+  element.closest(cellSelector) ||
+  element.closest(listTimelineObjectSelector);
 
 /**
  * @param {Element} element Element within a popover wrapper
@@ -35,7 +38,7 @@ export const getPopoverWrapper = element => {
 /**
  * @typedef {object} PostFilterOptions
  * @property {string} [excludeClass] - Classname to exclude and add
- * @property {RegExp|string} [timeline] - Filter results to matching [data-timeline] children
+ * @property {Function|Function[]} [timeline] - Filter results to matching timeline element children
  * @property {boolean} [noBlogView] - Whether to exclude posts in the blog view modal
  * @property {boolean} [includeFiltered] - Whether to include filtered posts
  */
@@ -51,10 +54,15 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
     .map(element => element.closest(postSelector))
     .filter(Boolean);
 
-  if (timeline instanceof RegExp) {
-    postElements = postElements.filter(postElement => timeline.test(postElement.closest('[data-timeline]')?.dataset.timeline));
-  } else if (timeline) {
-    postElements = postElements.filter(postElement => timeline === postElement.closest('[data-timeline]')?.dataset.timeline);
+  if (timeline) {
+    const timelineFilters = [timeline].flat().filter(Boolean);
+    postElements = postElements.filter(postElement => {
+      const timelineElement = postElement.closest(timelineSelector);
+      return (
+        timelineElement &&
+        timelineFilters.some(timelineFilter => timelineFilter(timelineElement))
+      );
+    });
   }
 
   if (noBlogView) {
@@ -106,4 +114,33 @@ export const postType = ({ trail = [], content = [], layout = [] }) => {
   else if (content.some(({ type, subtype }) => type === 'text' && subtype === 'chat')) return 'chat';
   else if (content.some(({ type }) => type === 'link')) return 'link';
   else return 'text';
+};
+
+const getClosestWithOverflow = element => {
+  const parent = element.parentElement;
+  if (!parent) {
+    return element;
+  } else if (getComputedStyle(parent).overflowX !== 'visible') {
+    return parent;
+  } else {
+    return getClosestWithOverflow(parent);
+  }
+};
+
+export const appendWithoutOverflow = (element, target, defaultPosition = 'below') => {
+  element.className = defaultPosition;
+  element.style.removeProperty('--horizontal-offset');
+
+  target.appendChild(element);
+
+  const preventOverflowTarget = getClosestWithOverflow(target);
+  const preventOverflowTargetRect = preventOverflowTarget.getBoundingClientRect();
+  const elementRect = element.getBoundingClientRect();
+
+  if (elementRect.bottom > document.documentElement.clientHeight) {
+    element.className = 'above';
+  }
+  if (elementRect.right > preventOverflowTargetRect.right - 15) {
+    element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.right - 15 - elementRect.right}px`);
+  }
 };

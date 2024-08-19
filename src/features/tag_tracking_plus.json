@@ -1,6 +1,6 @@
 {
   "title": "Tag Tracking+",
-  "description": "Unread counts on followed tags",
+  "description": "Unread counts for followed tags",
   "icon": {
     "class_name": "ri-hashtag",
     "color": "white",
@@ -8,19 +8,9 @@
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tag-tracking",
   "preferences": {
-    "showUnread": {
-      "type": "select",
-      "label": "Show unread counts",
-      "options": [
-        { "value": "both", "label": "Both in search & sidebar" },
-        { "value": "search", "label": "Only in the search dropdown" },
-        { "value": "sidebar", "label": "Only in the sidebar" }
-      ],
-      "default": "both"
-    },
     "onlyShowNew": {
       "type": "checkbox",
-      "label": "Only show tags with new posts in the sidebar",
+      "label": "Only show tags with new posts",
       "default": false
     }
   }

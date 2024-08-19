@@ -66,7 +66,7 @@ let alreadyRebloggedLimit;
 const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
 const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
-const blogHashes = {};
+const blogHashes = new Map();
 const avatarUrls = {};
 
 const reblogButtonSelector = `
@@ -296,7 +296,7 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
     [rememberedBlogStorageKey]: rememberedBlogs = {}
   } = await browser.storage.local.get(rememberedBlogStorageKey);
 
-  const selectedBlogHash = blogHashes[selectedBlog];
+  const selectedBlogHash = blogHashes.get(selectedBlog);
 
   rememberedBlogs[accountKey] = selectedBlogHash;
   browser.storage.local.set({ [rememberedBlogStorageKey]: rememberedBlogs });
@@ -347,18 +347,18 @@ export const main = async function () {
 
   if (rememberLastBlog) {
     for (const { uuid } of [...userBlogs, ...joinedCommunities]) {
-      blogHashes[uuid] = await sha256(uuid);
+      blogHashes.set(uuid, await sha256(uuid));
     }
 
     const { uuid: primaryUuid } = userBlogs.find(({ primary }) => primary === true);
-    accountKey = blogHashes[primaryUuid];
+    accountKey = blogHashes.get(primaryUuid);
 
     const {
       [rememberedBlogStorageKey]: rememberedBlogs = {}
     } = await browser.storage.local.get(rememberedBlogStorageKey);
 
     const savedBlogHash = rememberedBlogs[accountKey];
-    const savedBlogUuid = Object.keys(blogHashes).find(uuid => blogHashes[uuid] === savedBlogHash);
+    const savedBlogUuid = [...blogHashes.keys()].find(uuid => blogHashes.get(uuid) === savedBlogHash);
     if (savedBlogUuid) blogSelector.value = savedBlogUuid;
 
     blogSelector.addEventListener('change', updateRememberedBlog);

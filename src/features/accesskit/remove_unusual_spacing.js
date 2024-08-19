@@ -23,7 +23,7 @@ const disableButtonTemplate = createControlButtonTemplate(
   'Show unusual spacing'
 );
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 .${newTextClass} {
   white-space: pre-line;
 }
@@ -123,8 +123,6 @@ const processPostContainers = postContainers =>
   });
 
 export const main = async () => {
-  document.documentElement.append(styleElement);
-
   pageModifications.register(
     `${postSelector} article, ${keyToCss('blockEditorContainer')} > ${keyToCss('trail')}`,
     processPostContainers
@@ -133,7 +131,6 @@ export const main = async () => {
 
 export const clean = async () => {
   pageModifications.unregister(processPostContainers);
-  styleElement.remove();
 
   $(`.${oldTextClass}`).removeClass(oldTextClass);
   $('[data-remove-unusual-spacing]').removeAttr('data-remove-unusual-spacing');

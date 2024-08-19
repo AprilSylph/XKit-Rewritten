@@ -5,9 +5,10 @@ import { translate } from '../utils/language_data.js';
 import { timelineObject } from '../utils/react_props.js';
 import { getPreferences } from '../utils/preferences.js';
 
+export const styleElement = buildStyle();
+
 const hiddenClass = 'xkit-cleanfeed-filtered';
 const hiddenMediaClass = 'xkit-cleanfeed-filtered-media';
-const styleElement = buildStyle();
 const reblogSelector = keyToCss('reblog');
 
 let blockingMode;
@@ -22,11 +23,13 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
     postElement.classList.add(hiddenMediaClass);
   }
 
-  const { blog: { name, isAdult }, communityLabels, trail, tags } = await timelineObject(postElement);
+  const { blog, authorBlog, communityLabels, trail, tags } = await timelineObject(postElement);
 
-  if (isAdult ||
+  if (blog.isAdult ||
+      authorBlog?.isAdult ||
       communityLabels.hasCommunityLabel ||
-      localFlaggedBlogs.includes(name) ||
+      localFlaggedBlogs.includes(blog.name) ||
+      localFlaggedBlogs.includes(authorBlog?.name) ||
       localFlaggedTags.some(t => tags.map(tag => tag.toLowerCase()).includes(t))) {
     postElement.classList.add(hiddenClass, hiddenMediaClass);
     return;
@@ -91,13 +94,11 @@ export const main = async function () {
     `;
   }
 
-  document.documentElement.append(styleElement);
   onNewPosts.addListener(processPosts);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  styleElement.remove();
 
   $(`.${hiddenClass}`).removeClass(hiddenClass);
   $(`.${hiddenMediaClass}`).removeClass(hiddenMediaClass);

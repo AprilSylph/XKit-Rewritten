@@ -52,6 +52,9 @@ export const isMyPost = async (postElement) => {
   // Post was created by the user on a group blog
   if (postAuthor === primaryBlogName && !isSubmission) return true;
 
+  // Post was created by the user in a community
+  if (postAuthor === primaryBlogName && !isSubmission) return true;
+
   // Submission belongs to group blog which the user is admin of
   if (isSubmission && userIsAdmin) return true;
 

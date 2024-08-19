@@ -19,7 +19,7 @@ const gifSelector =
   `img[srcset*=".gif"]:not(${keyToCss('poster')}):is(figure *, ${keyToCss('tagImage', 'takeoverBanner')} *):not(${inEditor})`;
 const posterSelector = `${gifSelector} + ${keyToCss('poster')}`;
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 .${labelClass} {
   position: absolute;
   top: 1ch;
@@ -152,8 +152,6 @@ const processRows = function (rowsElements) {
 };
 
 export const main = async function () {
-  document.documentElement.append(styleElement);
-
   pageModifications.register(gifSelector, processGifs);
 
   const gifBackgroundImage = `
@@ -176,7 +174,6 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children)
   );
 
-  styleElement.remove();
   $(`.${canvasClass}, .${labelClass}`).remove();
   $(`.${loadedClass}`).removeClass(loadedClass);
   $(`.${forceLoadClass}`).removeClass(forceLoadClass);

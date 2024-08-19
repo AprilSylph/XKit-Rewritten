@@ -1,12 +1,3 @@
-.sortableContainer header {
-  padding-top: 10px;
-  padding-left: calc(var(--post-padding) - 10px);
-  margin-bottom: 10px;
-}
-.sortableContainer footer {
-  margin-top: 5px;
-  padding-bottom: 5px;
-}
 .xkit-collapsed-queue-wrapper {
   position: relative;
 }

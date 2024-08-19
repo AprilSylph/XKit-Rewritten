@@ -42,9 +42,9 @@ const addWarningElement = (postElement, rootID) => {
   postElement.before(warningElement);
 };
 
-const processPosts = async function (postElements) {
-  const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
+let blockedPostRootIDs = [];
 
+const processPosts = postElements =>
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     const postID = postElement.dataset.id;
     const {
@@ -78,9 +78,8 @@ const processPosts = async function (postElements) {
     saveUuidPair(id, uuid);
     saveUuidPair(rebloggedFromId, rebloggedFromUuid);
   });
-};
 
-const onButtonClicked = async function ({ currentTarget }) {
+const onButtonClicked = ({ currentTarget }) => {
   const { id, rebloggedRootId } = currentTarget.__timelineObjectData;
   const rootID = rebloggedRootId || id;
 
@@ -117,11 +116,13 @@ export const onStorageChanged = async function (changes, areaName) {
   }
 
   if (blockedPostChanges) {
+    ({ newValue: blockedPostRootIDs = [] } = blockedPostChanges);
     pageModifications.trigger(processPosts);
   }
 };
 
 export const main = async function () {
+  ({ [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey));
   ({ [uuidsStorageKey]: uuids = {} } = await browser.storage.local.get(uuidsStorageKey));
 
   registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });

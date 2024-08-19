@@ -40,8 +40,6 @@ export const cloneControlButton = function (template, events, disabled = false) 
   return newButtonContainer;
 };
 
-const controlIconSelector = keyToCss('controlIcon');
-
 /**
  * Inserts a clone of a button template before the post edit icon, if the post is editable
  * @param {HTMLElement} postElement - The target post element
@@ -53,10 +51,9 @@ export const insertControlButtonEditable = async (postElement, clonedControlButt
   const existingButton = postElement.querySelector(`.${buttonClass}`);
   if (existingButton !== null) { return; }
 
-  const editIcon = postElement.querySelector(`footer ${keyToCss('controlIcon')} a[href*="/edit/"] use[href="#managed-icon__edit"]`);
-  if (editIcon) {
-    const controlIcon = editIcon.closest(controlIconSelector);
-    controlIcon.before(clonedControlButton);
+  const editControlIcon = postElement.querySelector(`footer ${keyToCss('controlIcon')}:has(a[href*="/edit/"] use[href="#managed-icon__edit"])`);
+  if (editControlIcon) {
+    editControlIcon.before(clonedControlButton);
   } else {
     const { community, canEdit } = await timelineObject(postElement);
     if (community && canEdit) {

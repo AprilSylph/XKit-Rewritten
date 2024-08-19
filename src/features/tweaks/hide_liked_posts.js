@@ -6,7 +6,8 @@ import { followingTimelineFilter } from '../../utils/timeline_id.js';
 const timeline = followingTimelineFilter;
 
 const hiddenAttribute = 'data-tweaks-hide-liked-posts-hidden';
-const styleElement = buildStyle(`[${hiddenAttribute}] article { display: none; }`);
+
+export const styleElement = buildStyle(`[${hiddenAttribute}] article { display: none; }`);
 
 const processPosts = postElements => {
   filterPostElements(postElements, { timeline }).forEach(async postElement => {
@@ -19,12 +20,10 @@ const processPosts = postElements => {
 
 export const main = async () => {
   onNewPosts.addListener(processPosts);
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async () => {
   onNewPosts.removeListener(processPosts);
-  styleElement.remove();
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

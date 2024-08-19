@@ -4,7 +4,7 @@ import { buildStyle } from '../../utils/interface.js';
 
 const hiddenAttribute = 'data-no-recommended-radar-hidden';
 
-const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
+export const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
 
 const checkForRadar = sidebarTitles => {
   sidebarTitles
@@ -14,11 +14,10 @@ const checkForRadar = sidebarTitles => {
 
 export const main = async () => {
   pageModifications.register('aside h1', checkForRadar);
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async () => {
   pageModifications.unregister(checkForRadar);
-  styleElement.remove();
+
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

@@ -128,12 +128,16 @@ const processPosts = async postElements => {
 };
 
 export const onStorageChanged = async (changes, areaName) => {
-  if (Object.keys(changes).includes(storageKey)) {
-    timestamps = changes[storageKey].newValue;
+  const {
+    [storageKey]: timestampsChanges,
+    'tag_tracking_plus.preferences.onlyShowNew': onlyShowNewChanges
+  } = changes;
+
+  if (timestampsChanges) {
+    timestamps = timestampsChanges.newValue;
   }
-  if (Object.keys(changes).some(key => key.startsWith('tag_tracking_plus.preferences'))) {
-    const { onlyShowNew } = await getPreferences('tag_tracking_plus');
-    sidebarItem.dataset.onlyShowNew = onlyShowNew;
+  if (onlyShowNewChanges) {
+    sidebarItem.dataset.onlyShowNew = onlyShowNewChanges.newValue;
   }
 };
 

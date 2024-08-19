@@ -5,7 +5,7 @@ import { blogViewSelector, buildStyle } from '../../utils/interface.js';
 
 const hiddenAttribute = 'data-no-recommended-blogs-hidden';
 
-const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
+export const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
 
 const hideDashboardRecommended = sidebarTitles => {
   sidebarTitles
@@ -23,13 +23,10 @@ export const main = async () => {
 
   const blogsListSelector = `${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
   pageModifications.register(blogsListSelector, hideTagPageRecommended);
-
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async () => {
   pageModifications.unregister(hideDashboardRecommended);
   pageModifications.unregister(hideTagPageRecommended);
-  styleElement.remove();
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

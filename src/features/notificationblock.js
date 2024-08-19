@@ -15,7 +15,8 @@ const meatballButtonUnblockLabel = 'Unblock notifications';
 
 let blockedPostTargetIDs;
 
-const styleElement = buildStyle();
+export const styleElement = buildStyle();
+
 const buildCss = () => `:is(${blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')
   }) { display: none !important; }`;
 
@@ -103,7 +104,6 @@ export const onStorageChanged = (changes, areaName) => {
 export const main = async () => {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
   styleElement.textContent = buildCss();
-  document.documentElement.append(styleElement);
   onNewNotifications.addListener(processNotifications);
 
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
@@ -111,7 +111,6 @@ export const main = async () => {
 };
 
 export const clean = async () => {
-  styleElement.remove();
   onNewNotifications.removeListener(processNotifications);
   unregisterMeatballItem(meatballButtonBlockId);
   unregisterMeatballItem(meatballButtonUnblockId);

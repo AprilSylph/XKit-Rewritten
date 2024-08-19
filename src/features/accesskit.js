@@ -2,14 +2,25 @@ import { getPreferences } from '../utils/preferences.js';
 
 let enabledOptions;
 
-const runOption = async name => {
-  const { main: run } = await import(`./accesskit/${name}.js`);
-  run().catch(console.error);
+const runOption = async (name) => {
+  const { main: run, styleElement } = await import(`./accesskit/${name}.js`);
+  if (run) {
+    run().catch(console.error);
+  }
+  if (styleElement) {
+    styleElement.dataset.xkitFeature = `accesskit_${name}`;
+    document.documentElement.append(styleElement);
+  }
 };
 
-const destroyOption = async name => {
-  const { clean: destroy } = await import(`./accesskit/${name}.js`);
-  destroy().catch(console.error);
+const destroyOption = async (name) => {
+  const { clean: destroy, styleElement } = await import(`./accesskit/${name}.js`);
+  if (destroy) {
+    destroy().catch(console.error);
+  }
+  if (styleElement) {
+    styleElement.remove();
+  }
 };
 
 export const onStorageChanged = async (changes, areaName) => {

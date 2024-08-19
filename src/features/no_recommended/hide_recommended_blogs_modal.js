@@ -4,7 +4,7 @@ import { blogViewSelector, buildStyle } from '../../utils/interface.js';
 
 const hiddenAttribute = 'data-no-recommended-blogs-modal-hidden';
 
-const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
+export const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
 
 const hideModalRecommended = blogsLists =>
   blogsLists
@@ -14,12 +14,9 @@ const hideModalRecommended = blogsLists =>
 export const main = async () => {
   const blogsListSelector = `${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
   pageModifications.register(blogsListSelector, hideModalRecommended);
-
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async () => {
   pageModifications.unregister(hideModalRecommended);
-  styleElement.remove();
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

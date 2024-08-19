@@ -9,7 +9,7 @@ const unHiddenAttribute = 'data-no-recommended-posts-many';
 const timeline = followingTimelineFilter;
 const includeFiltered = true;
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 [${hiddenAttribute}]:not([${unHiddenAttribute}]) article {
   display: none;
 }
@@ -66,13 +66,12 @@ const processPosts = postElements => {
 
 export const main = async () => {
   onNewPosts.addListener(processPosts);
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async () => {
   onNewPosts.removeListener(processPosts);
+
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`[${unHiddenAttribute}]`).removeAttr(unHiddenAttribute);
-  styleElement.remove();
 };

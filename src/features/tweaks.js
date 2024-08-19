@@ -3,13 +3,24 @@ import { getPreferences } from '../utils/preferences.js';
 let enabledTweaks;
 
 const runTweak = async name => {
-  const { main: run } = await import(`./tweaks/${name}.js`);
-  run().catch(console.error);
+  const { main: run, styleElement } = await import(`./tweaks/${name}.js`);
+  if (run) {
+    run().catch(console.error);
+  }
+  if (styleElement) {
+    styleElement.dataset.xkitFeature = `tweaks_${name}`;
+    document.documentElement.append(styleElement);
+  }
 };
 
 const destroyTweak = async name => {
-  const { clean: destroy } = await import(`./tweaks/${name}.js`);
-  destroy().catch(console.error);
+  const { clean: destroy, styleElement } = await import(`./tweaks/${name}.js`);
+  if (destroy) {
+    destroy().catch(console.error);
+  }
+  if (styleElement) {
+    styleElement.remove();
+  }
 };
 
 export const onStorageChanged = async (changes, areaName) => {

@@ -12,7 +12,7 @@ const imageBlockSelector = keyToCss('imageBlock');
 const imageBlockLinkSelector = keyToCss('imageBlockLink');
 const imageBlockButtonInnerSelector = `${keyToCss('imageBlockButton')} ${keyToCss('buttonInner')}`;
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 ${imageBlockLinkSelector}, ${imageBlockButtonInnerSelector} {
   height: 100%;
 }
@@ -62,7 +62,6 @@ const onStorageChanged = (changes, areaName) => {
 export const main = async () => {
   ({ visible_alt_text_mode: mode } = await getPreferences('accesskit'));
 
-  document.documentElement.append(styleElement);
   pageModifications.register(`article ${imageBlockSelector} img[alt]`, processImages);
   browser.storage.onChanged.addListener(onStorageChanged);
 };
@@ -70,8 +69,6 @@ export const main = async () => {
 export const clean = async () => {
   pageModifications.unregister(processImages);
   browser.storage.onChanged.removeListener(onStorageChanged);
-
-  styleElement.remove();
 
   $(`.${processedClass} figcaption`).remove();
   $(`.${processedClass}`).removeClass(processedClass);

@@ -1,7 +1,7 @@
 import { sha256 } from '../utils/crypto.js';
 import { timelineObject } from '../utils/react_props.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
-import { postSelector, filterPostElements, postType } from '../utils/interface.js';
+import { postSelector, filterPostElements, postType, appendWithoutOverflow } from '../utils/interface.js';
 import { userBlogs } from '../utils/user.js';
 import { getPreferences } from '../utils/preferences.js';
 import { onNewPosts } from '../utils/mutations.js';
@@ -9,6 +9,7 @@ import { notify } from '../utils/notifications.js';
 import { translate } from '../utils/language_data.js';
 import { dom } from '../utils/dom.js';
 import { showErrorModal } from '../utils/modals.js';
+import { keyToCss } from '../utils/css_map.js';
 
 const popupElement = dom('div', { id: 'quick-reblog' });
 const blogSelector = dom('select');
@@ -131,7 +132,7 @@ tagsInput.addEventListener('input', checkLength);
 const showPopupOnHover = ({ currentTarget }) => {
   clearTimeout(timeoutID);
 
-  currentTarget.closest('div').appendChild(popupElement);
+  appendWithoutOverflow(popupElement, currentTarget.closest(keyToCss('controlIcon')), popupPosition);
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
   const thisPost = currentTarget.closest(postSelector);
@@ -144,9 +145,10 @@ const showPopupOnHover = ({ currentTarget }) => {
     commentInput.value = '';
     [...quickTagsList.children].forEach(({ dataset }) => delete dataset.checked);
     tagsInput.value = '';
-    timelineObject(thisPost).then(({ tags, trail, content, layout, blogName, rebloggedRootName }) => {
+    timelineObject(thisPost).then(({ tags, trail, content, layout, blogName, postAuthor, rebloggedRootName }) => {
       suggestableTags = tags;
       if (blogName) suggestableTags.push(blogName);
+      if (postAuthor) suggestableTags.push(postAuthor);
       if (rebloggedRootName) suggestableTags.push(rebloggedRootName);
       suggestableTags.push(postType({ trail, content, layout }));
       renderTagSuggestions();
@@ -328,8 +330,6 @@ export const main = async () => {
     alreadyRebloggedEnabled,
     alreadyRebloggedLimit
   } = await getPreferences('quick_reblog'));
-
-  popupElement.className = popupPosition;
 
   blogSelector.replaceChildren(
     ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name]))

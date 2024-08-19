@@ -2,7 +2,7 @@ import { getPreferences } from '../utils/preferences.js';
 import { translate } from '../utils/language_data.js';
 import { buildStyle } from '../utils/interface.js';
 
-const styleElement = buildStyle();
+export const styleElement = buildStyle();
 
 export const main = async () => {
   const { hiddenAvatars } = await getPreferences('hide_avatars');
@@ -11,10 +11,4 @@ export const main = async () => {
     .split(',')
     .map(username => `[title="${username.trim()}"] img[alt="${translate('Avatar')}"] { display: none; }`)
     .join('\n');
-
-  document.documentElement.append(styleElement);
-};
-
-export const clean = async () => {
-  styleElement.remove();
 };

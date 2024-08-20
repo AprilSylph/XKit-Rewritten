@@ -11,40 +11,38 @@ import { dom } from '../utils/dom.js';
 import { showErrorModal } from '../utils/modals.js';
 import { keyToCss } from '../utils/css_map.js';
 
-const popupElement = dom('div', { id: 'quick-reblog' });
 const blogSelector = dom('select');
 const blogAvatar = dom('div', { class: 'avatar' });
-const blogSelectorContainer = dom('div', { class: 'select-container' }, null, [blogAvatar, blogSelector]);
-const commentInput = dom(
-  'input',
-  {
-    placeholder: 'Comment',
-    autocomplete: 'off'
-  },
-  { keydown: event => event.stopPropagation() }
-);
-const quickTagsList = dom('div', {
-  class: 'quick-tags',
-  tabIndex: -1
-});
-const tagsInput = dom(
-  'input',
-  {
-    placeholder: 'Tags (comma separated)',
-    autocomplete: 'off',
-    list: 'quick-reblog-tag-suggestions'
-  },
-  { keydown: event => event.stopPropagation() }
-);
-const tagSuggestions = dom('datalist', { id: 'quick-reblog-tag-suggestions' });
-const actionButtons = dom('fieldset', { class: 'action-buttons' });
-const reblogButton = dom('button', null, null, ['Reblog']);
-reblogButton.dataset.state = 'published';
-const queueButton = dom('button', null, null, ['Queue']);
-queueButton.dataset.state = 'queue';
-const draftButton = dom('button', null, null, ['Draft']);
-draftButton.dataset.state = 'draft';
-[blogSelectorContainer, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons].forEach(element => popupElement.appendChild(element));
+const blogSelectorContainer = dom('div', { class: 'select-container' }, null, [
+  blogAvatar,
+  blogSelector
+]);
+
+const commentInput = dom('input', { placeholder: 'Comment', autocomplete: 'off' }, { keydown: event => event.stopPropagation() });
+
+const quickTagsList = dom('div', { class: 'quick-tags', tabIndex: -1 });
+
+const datalistId = 'quick-reblog-tag-suggestions';
+const tagsInput = dom('input', { placeholder: 'Tags (comma separated)', autocomplete: 'off', list: datalistId }, { keydown: event => event.stopPropagation() });
+const tagSuggestions = dom('datalist', { id: datalistId });
+
+const reblogButton = dom('button', { 'data-state': 'published' }, null, ['Reblog']);
+const queueButton = dom('button', { 'data-state': 'queue' }, null, ['Queue']);
+const draftButton = dom('button', { 'data-state': 'draft' }, null, ['Draft']);
+const actionButtons = dom('fieldset', { class: 'action-buttons' }, null, [
+  reblogButton,
+  queueButton,
+  draftButton
+]);
+
+const popupElement = dom('div', { id: 'quick-reblog' }, null, [
+  blogSelectorContainer,
+  commentInput,
+  quickTagsList,
+  tagsInput,
+  tagSuggestions,
+  actionButtons
+]);
 
 let lastPostID;
 let timeoutID;
@@ -104,7 +102,6 @@ const updateTagSuggestions = () => {
     renderTagSuggestions();
   }
 };
-
 const doSmartQuotes = ({ currentTarget }) => {
   const { value } = currentTarget;
   currentTarget.value = value
@@ -112,7 +109,6 @@ const doSmartQuotes = ({ currentTarget }) => {
     .replace(/ "/g, ' \u201C')
     .replace(/"/g, '\u201D');
 };
-
 const checkLength = ({ currentTarget }) => {
   const { value } = currentTarget;
   const tags = value.split(',').map(tag => tag.trim());
@@ -123,7 +119,6 @@ const checkLength = ({ currentTarget }) => {
     tagsInput.setCustomValidity('');
   }
 };
-
 tagsInput.addEventListener('input', updateTagSuggestions);
 tagsInput.addEventListener('input', doSmartQuotes);
 tagsInput.addEventListener('input', checkLength);
@@ -231,11 +226,7 @@ const reblogPost = async function ({ currentTarget }) {
     actionButtons.disabled = false;
   }
 };
-
-[reblogButton, queueButton, draftButton].forEach(button => {
-  button.addEventListener('click', reblogPost);
-  actionButtons.appendChild(button);
-});
+[reblogButton, queueButton, draftButton].forEach(button => button.addEventListener('click', reblogPost));
 
 const processPosts = async function (postElements) {
   const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(alreadyRebloggedStorageKey);
@@ -281,7 +272,6 @@ const renderQuickTags = async function () {
     quickTagsList.appendChild(bundleButton);
   });
 };
-
 const updateQuickTags = (changes, areaName) => {
   if (areaName === 'local' && Object.keys(changes).includes(quickTagsStorageKey)) {
     renderQuickTags();

@@ -2,7 +2,7 @@ import { sha256 } from '../utils/crypto.js';
 import { timelineObject } from '../utils/react_props.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
 import { postSelector, filterPostElements, postType, appendWithoutOverflow } from '../utils/interface.js';
-import { joinedCommunities, userBlogs } from '../utils/user.js';
+import { joinedCommunities, joinedCommunityUuids, userBlogs } from '../utils/user.js';
 import { getPreferences } from '../utils/preferences.js';
 import { onNewPosts } from '../utils/mutations.js';
 import { notify } from '../utils/notifications.js';
@@ -74,10 +74,11 @@ ${postSelector} footer a[href*="/reblog/"],
 ${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
 `;
 
-const renderBlogAvatar = () => {
+const onBlogSelectorChange = () => {
   blogAvatar.style.backgroundImage = `url(${avatarUrls.get(blogSelector.value)})`;
+  actionButtons.classList[joinedCommunityUuids.includes(blogSelector.value) ? 'add' : 'remove']('community-selected');
 };
-blogSelector.addEventListener('change', renderBlogAvatar);
+blogSelector.addEventListener('change', onBlogSelectorChange);
 
 const renderTagSuggestions = () => {
   tagSuggestions.textContent = '';
@@ -138,7 +139,7 @@ const showPopupOnHover = ({ currentTarget }) => {
   if (thisPostID !== lastPostID) {
     if (!rememberLastBlog) {
       blogSelector.value = blogSelector.options[0].value;
-      renderBlogAvatar();
+      onBlogSelectorChange();
     }
     commentInput.value = '';
     [...quickTagsList.children].forEach(({ dataset }) => delete dataset.checked);
@@ -200,10 +201,6 @@ const reblogPost = async function ({ currentTarget }) {
   };
 
   try {
-    if (state !== 'published' && joinedCommunities.some(({ uuid }) => uuid === blog)) {
-      throw new Error('Posts cannot be queued/drafted to communities!');
-    }
-
     const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
     if (meta.status === 201) {
       makeButtonReblogged({ buttonDiv: currentReblogButton, state });
@@ -363,7 +360,7 @@ export const main = async function () {
 
     blogSelector.addEventListener('change', updateRememberedBlog);
   }
-  renderBlogAvatar();
+  onBlogSelectorChange();
 
   blogSelectorContainer.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;

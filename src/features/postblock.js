@@ -137,7 +137,7 @@ export const main = async function () {
     try {
       const { uuid, blockedPostID } = toOpen;
       const { response: { blog: { name } } } = await apiFetch(`/v2/blog/${uuid}/info`);
-      navigate(`/${name}/${blockedPostID}`);
+      navigate(`/@${name}/${blockedPostID}`);
     } catch (e) {
       notify('Failed to open blocked post!');
     }

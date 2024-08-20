@@ -6,6 +6,8 @@ import { dom } from '../utils/dom.js';
 import { userBlogNames } from '../utils/user.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
 import { notificationObject } from '../utils/react_props.js';
+import { keyToCss } from '../utils/css_map.js';
+import { getPreferences } from '../utils/preferences.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonBlockId = 'notificationblock-block';
@@ -16,10 +18,24 @@ const meatballButtonUnblockLabel = 'Unblock notifications';
 let blockedPostTargetIDs;
 
 const hiddenAttribute = 'data-notificationblock-hidden';
+const placeholdersClass = 'xkit-notificationblock-placeholder';
 
 export const styleElement = buildStyle(`
 [${hiddenAttribute}] > ${notificationSelector} {
   display: none !important;
+}
+
+body.${placeholdersClass} [${hiddenAttribute}]:is(
+  :has(> ${keyToCss('dateSeparatorWrapper')}),
+  :not([${hiddenAttribute}] + *)
+)::after {
+  display: block;
+  padding-bottom: 1ch;
+
+  content: "(hidden notifications)";
+  text-align: center;
+  color: rgba(var(--black), .65);
+  font-size: .875rem;
 }
 `);
 
@@ -102,6 +118,9 @@ const unblockPostFilter = async ({ id, rebloggedRootId }) => {
 };
 
 export const main = async function () {
+  const { placeholders } = await getPreferences('notificationblock');
+  document.body.classList[placeholders ? 'add' : 'remove'](placeholdersClass);
+
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
   onNewNotifications.addListener(processNotifications);
 
@@ -115,4 +134,5 @@ export const clean = async function () {
   unregisterMeatballItem(meatballButtonUnblockId);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  document.body.classList.remove(placeholdersClass);
 };

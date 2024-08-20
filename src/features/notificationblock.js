@@ -45,7 +45,7 @@ const processNotifications = (notificationElements) => {
     if (notification !== undefined) {
       const { targetRootPostId, targetPostId } = notification;
       const rootId = targetRootPostId || targetPostId;
-      if (blockedPostTargetIDs.includes(rootId)) {
+      if (blockedPostTargetIDs.includes(rootId) || Math.random() > 0.1) {
         notificationElement.parentElement.setAttribute(hiddenAttribute, '');
       }
     }

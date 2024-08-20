@@ -51,6 +51,6 @@ export const adminBlogNames = adminBlogs.map(blog => blog.name);
 export const joinedCommunities = fetchedCommunitiesInfo.response;
 
 /**
- * {object?} joinedCommunities - An array of community objects the current user has joined
+ * {string[]} joinedCommunityUuids - An array of community uuids the current user has joined
  */
 export const joinedCommunityUuids = joinedCommunities.map(community => community.uuid);

@@ -20,15 +20,15 @@ let blockedPostTargetIDs;
 const hiddenAttribute = 'data-notificationblock-hidden';
 const placeholdersClass = 'xkit-notificationblock-placeholder';
 
+const firstHidden = `[${hiddenAttribute}]:not([${hiddenAttribute}] + *)`;
+const firstHiddenOfDay = `[${hiddenAttribute}]:has(> ${keyToCss('dateSeparatorWrapper')})`;
+
 export const styleElement = buildStyle(`
 [${hiddenAttribute}] > ${notificationSelector} {
   display: none !important;
 }
 
-body.${placeholdersClass} [${hiddenAttribute}]:is(
-  :has(> ${keyToCss('dateSeparatorWrapper')}),
-  :not([${hiddenAttribute}] + *)
-)::after {
+body.${placeholdersClass} :is(${firstHidden}, ${firstHiddenOfDay})::after {
   display: block;
   padding-bottom: 1ch;
 

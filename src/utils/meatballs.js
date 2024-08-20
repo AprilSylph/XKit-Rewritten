@@ -8,8 +8,8 @@ import { blogData, timelineObject } from './react_props.js';
 const postHeaderSelector = `${postSelector} article > header`;
 const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
 
-const meatballItems = {};
-const blogMeatballItems = {};
+const meatballItems = new Map();
+const blogMeatballItems = new Map();
 
 /**
  * Add a custom button to posts' meatball menus.
@@ -20,12 +20,12 @@ const blogMeatballItems = {};
  * @param {Function} [options.postFilter] - Filter function, called with the timelineObject data of the post element being actioned on. Must return true for button to be added
  */
 export const registerMeatballItem = function ({ id, label, onclick, postFilter }) {
-  meatballItems[id] = { label, onclick, postFilter };
+  meatballItems.set(id, { label, onclick, postFilter });
   pageModifications.trigger(addMeatballItems);
 };
 
 export const unregisterMeatballItem = id => {
-  delete meatballItems[id];
+  meatballItems.delete(id);
   $(`[data-xkit-meatball-button="${id}"]`).remove();
 };
 
@@ -38,12 +38,12 @@ export const unregisterMeatballItem = id => {
  * @param {Function} [options.blogFilter] - Filter function, called with the blog data of the menu element being actioned on. Must return true for button to be added. Some blog data fields, such as "followed", are not available in blog cards.
  */
 export const registerBlogMeatballItem = function ({ id, label, onClick, blogFilter }) {
-  blogMeatballItems[id] = { label, onClick, blogFilter };
+  blogMeatballItems.set(id, { label, onClick, blogFilter });
   pageModifications.trigger(addMeatballItems);
 };
 
 export const unregisterBlogMeatballItem = id => {
-  delete blogMeatballItems[id];
+  blogMeatballItems.delete(id);
   $(`[data-xkit-blog-meatball-button="${id}"]`).remove();
 };
 
@@ -64,8 +64,8 @@ const addPostMeatballItem = async meatballMenu => {
 
   $(meatballMenu).children('[data-xkit-meatball-button]').remove();
 
-  Object.keys(meatballItems).sort().forEach(id => {
-    const { label, onclick, postFilter } = meatballItems[id];
+  [...meatballItems.keys()].sort().forEach(id => {
+    const { label, onclick, postFilter } = meatballItems.get(id);
 
     const meatballItemButton = dom('button', {
       class: 'xkit-meatball-button',
@@ -110,8 +110,8 @@ const addBlogMeatballItem = async meatballMenu => {
 
   $(meatballMenu).children('[data-xkit-meatball-button]').remove();
 
-  Object.keys(blogMeatballItems).sort().forEach(id => {
-    const { label, onClick, blogFilter } = blogMeatballItems[id];
+  [...blogMeatballItems.keys()].sort().forEach(id => {
+    const { label, onClick, blogFilter } = blogMeatballItems.get(id);
 
     const meatballItemButton = dom('button', {
       class: 'xkit-meatball-button',

@@ -2,7 +2,7 @@ import { sha256 } from '../utils/crypto.js';
 import { timelineObject } from '../utils/react_props.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
 import { postSelector, filterPostElements, postType, appendWithoutOverflow } from '../utils/interface.js';
-import { userBlogs } from '../utils/user.js';
+import { joinedCommunities, joinedCommunityUuids, userBlogs } from '../utils/user.js';
 import { getPreferences } from '../utils/preferences.js';
 import { onNewPosts } from '../utils/mutations.js';
 import { notify } from '../utils/notifications.js';
@@ -66,20 +66,19 @@ let alreadyRebloggedLimit;
 const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
 const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
-const blogHashes = {};
+const blogHashes = new Map();
+const avatarUrls = new Map();
 
 const reblogButtonSelector = `
 ${postSelector} footer a[href*="/reblog/"],
 ${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
 `;
 
-const renderBlogAvatar = () => {
-  const { value: selectedUuid } = blogSelector;
-  const { avatar } = userBlogs.find(({ uuid }) => uuid === selectedUuid);
-  const { url } = avatar.at(-1);
-  blogAvatar.style.backgroundImage = `url(${url})`;
+const onBlogSelectorChange = () => {
+  blogAvatar.style.backgroundImage = `url(${avatarUrls.get(blogSelector.value)})`;
+  actionButtons.classList[joinedCommunityUuids.includes(blogSelector.value) ? 'add' : 'remove']('community-selected');
 };
-blogSelector.addEventListener('change', renderBlogAvatar);
+blogSelector.addEventListener('change', onBlogSelectorChange);
 
 const renderTagSuggestions = () => {
   tagSuggestions.textContent = '';
@@ -140,7 +139,7 @@ const showPopupOnHover = ({ currentTarget }) => {
   if (thisPostID !== lastPostID) {
     if (!rememberLastBlog) {
       blogSelector.value = blogSelector.options[0].value;
-      renderBlogAvatar();
+      onBlogSelectorChange();
     }
     commentInput.value = '';
     [...quickTagsList.children].forEach(({ dataset }) => delete dataset.checked);
@@ -294,7 +293,7 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
     [rememberedBlogStorageKey]: rememberedBlogs = {}
   } = await browser.storage.local.get(rememberedBlogStorageKey);
 
-  const selectedBlogHash = blogHashes[selectedBlog];
+  const selectedBlogHash = blogHashes.get(selectedBlog);
 
   rememberedBlogs[accountKey] = selectedBlogHash;
   browser.storage.local.set({ [rememberedBlogStorageKey]: rememberedBlogs });
@@ -332,28 +331,36 @@ export const main = async () => {
   } = await getPreferences('quick_reblog'));
 
   blogSelector.replaceChildren(
-    ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name]))
+    ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name])),
+    ...joinedCommunities.length ? [dom('hr')] : [],
+    ...joinedCommunities.map(({ title, uuid, blog: { name } }) => dom('option', { value: uuid }, null, [`${title} (${name})`]))
   );
 
+  [...userBlogs, ...joinedCommunities].forEach((data) => {
+    const avatar = data.avatarImage ?? data.avatar;
+    const { url } = avatar.at(-1);
+    avatarUrls.set(data.uuid, url);
+  });
+
   if (rememberLastBlog) {
-    for (const { uuid } of userBlogs) {
-      blogHashes[uuid] = await sha256(uuid);
+    for (const { uuid } of [...userBlogs, ...joinedCommunities]) {
+      blogHashes.set(uuid, await sha256(uuid));
     }
 
     const { uuid: primaryUuid } = userBlogs.find(({ primary }) => primary === true);
-    accountKey = blogHashes[primaryUuid];
+    accountKey = blogHashes.get(primaryUuid);
 
     const {
       [rememberedBlogStorageKey]: rememberedBlogs = {}
     } = await browser.storage.local.get(rememberedBlogStorageKey);
 
     const savedBlogHash = rememberedBlogs[accountKey];
-    const savedBlogUuid = Object.keys(blogHashes).find(uuid => blogHashes[uuid] === savedBlogHash);
+    const savedBlogUuid = [...blogHashes.keys()].find(uuid => blogHashes.get(uuid) === savedBlogHash);
     if (savedBlogUuid) blogSelector.value = savedBlogUuid;
 
     blogSelector.addEventListener('change', updateRememberedBlog);
   }
-  renderBlogAvatar();
+  onBlogSelectorChange();
 
   blogSelectorContainer.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;

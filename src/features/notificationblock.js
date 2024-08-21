@@ -80,11 +80,12 @@ const onButtonClicked = async ({ currentTarget }) => {
   });
 };
 
-const blockPostFilter = ({ blogName, rebloggedRootName, rebloggedFromName, id, rebloggedRootId }) => {
+const blockPostFilter = ({ blogName, rebloggedRootName, rebloggedFromName, id, rebloggedRootId, community, postAuthor }) => {
   const rootId = rebloggedRootId || id;
   const canReceiveActivity = userBlogNames.includes(blogName) ||
     userBlogNames.includes(rebloggedFromName) ||
-    userBlogNames.includes(rebloggedRootName);
+    userBlogNames.includes(rebloggedRootName) ||
+    (community && userBlogNames.includes(postAuthor));
 
   return canReceiveActivity && blockedPostTargetIDs.includes(rootId) === false;
 };

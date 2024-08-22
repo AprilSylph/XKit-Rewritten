@@ -34,10 +34,10 @@ export const styleElement = buildStyle(`
 const precedingHiddenPosts = ({ previousElementSibling: previousElement }, count = 0) => {
   // If there is no previous sibling, stop counting
   if (!previousElement) return count;
-  // If the previous sibling is not a post, skip over it
-  if (!previousElement.matches(postSelector) || !previousElement.querySelector(postSelector)) return precedingHiddenPosts(previousElement, count);
   // If the previous sibling is hidden, count it and continue
   if (previousElement.matches(`[${hiddenAttribute}]`)) return precedingHiddenPosts(previousElement, count + 1);
+  // If the previous sibling is not a post, skip over it
+  if (!previousElement.matches(postSelector) || !previousElement.querySelector(postSelector)) return precedingHiddenPosts(previousElement, count);
   // Otherwise, we've hit a non-hidden post; stop counting
   return count;
 };

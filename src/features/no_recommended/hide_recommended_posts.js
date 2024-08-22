@@ -59,7 +59,7 @@ const processPosts = async function (postElements) {
     timelineItem.setAttribute(hiddenAttribute, '');
 
     if (precedingHiddenPosts(timelineItem) >= 10) {
-      timelineItem.setAttribute(hiddenAttribute, '');
+      timelineItem.setAttribute(unHiddenAttribute, '');
     }
   });
 };

@@ -10,6 +10,10 @@ const timeline = followingTimelineFilter;
 const includeFiltered = true;
 
 export const styleElement = buildStyle(`
+[${hiddenAttribute}] {
+  outline: 3px dotted red;
+}
+
 [${hiddenAttribute}]:not([${unHiddenAttribute}]) article {
   display: none;
 }
@@ -33,32 +37,47 @@ export const styleElement = buildStyle(`
 
 const precedingHiddenPosts = ({ previousElementSibling: previousElement }, count = 0) => {
   // If there is no previous sibling, stop counting
-  if (!previousElement) return count;
+  if (!previousElement) {
+    console.log('--', count, 'there is no previous sibling, stop counting');
+    return count;
+  }
   // If the previous sibling is hidden, count it and continue
-  if (previousElement.matches(`[${hiddenAttribute}]`)) return precedingHiddenPosts(previousElement, count + 1);
+  if (previousElement.matches(`[${hiddenAttribute}]`)) {
+    console.log('--', count, 'the previous sibling is hidden, count it and continue', previousElement);
+    return precedingHiddenPosts(previousElement, count + 1);
+  }
   // If the previous sibling is not a post, skip over it
-  if (!previousElement.matches(postSelector) || !previousElement.querySelector(postSelector)) return precedingHiddenPosts(previousElement, count);
+  if (!previousElement.matches(postSelector) || !previousElement.querySelector(postSelector)) {
+    console.log('--', count, 'the previous sibling is not a post, skip over it', previousElement);
+    return precedingHiddenPosts(previousElement, count);
+  }
   // Otherwise, we've hit a non-hidden post; stop counting
+  console.log('--', count, "we've hit a non-hidden post; stop counting", previousElement);
   return count;
 };
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { excludeClass, timeline, includeFiltered }).forEach(async postElement => {
-    const { recommendationReason } = await timelineObject(postElement);
-    if (!recommendationReason) return;
+    if (Math.random() < 0.1) {
+      const { recommendationReason } = await timelineObject(postElement);
+      if (!recommendationReason) return;
 
-    const { loggingReason } = recommendationReason;
-    if (!loggingReason) return;
+      const { loggingReason } = recommendationReason;
+      if (!loggingReason) return;
 
-    if (loggingReason.startsWith('pin:')) return;
-    if (loggingReason.startsWith('search:')) return;
-    if (loggingReason === 'orbitznews') return;
+      if (loggingReason.startsWith('pin:')) return;
+      if (loggingReason.startsWith('search:')) return;
+      if (loggingReason === 'orbitznews') return;
+    }
 
     const timelineItem = getTimelineItemWrapper(postElement);
 
     timelineItem.setAttribute(hiddenAttribute, '');
 
-    if (precedingHiddenPosts(timelineItem) >= 10) {
+    const count = precedingHiddenPosts(timelineItem);
+    console.log(count);
+
+    if (count >= 10) {
       timelineItem.setAttribute(unHiddenAttribute, '');
     }
   });

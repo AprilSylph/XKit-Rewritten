@@ -207,7 +207,7 @@ const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
       if (appendStatus.textContent === '') appendStatus.textContent = '\nAdding new tags...';
 
       await Promise.all([
-        megaEdit(postIds, { mode: 'add', tags: [toAdd.join(',')] }).then(() => {
+        megaEdit(postIds, { mode: 'add', tags: toAdd }).then(() => {
           appendedCount += postIds.length;
         }).catch(() => {
           appendedFailCount += postIds.length;
@@ -222,7 +222,7 @@ const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
       if (removeStatus.textContent === '') removeStatus.textContent = '\nRemoving old tags...';
 
       await Promise.all([
-        megaEdit(postIds, { mode: 'remove', tags: [toRemove.join(',')] }).then(() => {
+        megaEdit(postIds, { mode: 'remove', tags: toRemove }).then(() => {
           removedCount += postIds.length;
         }).catch(() => {
           removedFailCount += postIds.length;

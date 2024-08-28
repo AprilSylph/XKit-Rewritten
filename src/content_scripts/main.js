@@ -86,16 +86,6 @@
     return installedScripts;
   };
 
-  const initMainWorld = () => new Promise(resolve => {
-    document.documentElement.addEventListener('xkitinjectionready', resolve, { once: true });
-
-    const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
-    const script = document.createElement('script');
-    script.nonce = nonce;
-    script.src = browser.runtime.getURL('/main_world/index.js');
-    document.documentElement.append(script);
-  });
-
   const init = async function () {
     $('style.xkit').remove();
 
@@ -106,15 +96,14 @@
       { enabledScripts = [] }
     ] = await Promise.all([
       getInstalledScripts(),
-      browser.storage.local.get('enabledScripts'),
-      initMainWorld()
+      browser.storage.local.get('enabledScripts')
     ]);
 
     /**
      * fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
      * @see https://github.com/sveltejs/kit/issues/7805#issuecomment-1330078207
      */
-    await Promise.all(['css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
+    await Promise.all(['inject', 'css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
 
     installedScripts
       .filter(scriptName => enabledScripts.includes(scriptName))

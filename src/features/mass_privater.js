@@ -1,5 +1,5 @@
 import { dom } from '../utils/dom.js';
-// import { megaEdit } from '../utils/mega_editor.js';
+import { megaEdit } from '../utils/mega_editor.js';
 import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal } from '../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../utils/sidebar.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
@@ -241,7 +241,7 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
     if (privateStatus.textContent === '') privateStatus.textContent = '\nPrivating posts...';
 
     await Promise.all([
-      Promise.resolve().then(() => {
+      megaEdit(postIds, { mode: 'private' }).then(() => {
         privatedCount += postIds.length;
       }).catch(() => {
         privatedFailCount += postIds.length;

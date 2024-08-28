@@ -1,3 +1,13 @@
+await new Promise(resolve => {
+  document.documentElement.addEventListener('xkitinjectionready', resolve, { once: true });
+
+  const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
+  const script = document.createElement('script');
+  script.nonce = nonce;
+  script.src = browser.runtime.getURL('/main_world/index.js');
+  document.documentElement.append(script);
+});
+
 /**
  * Runs a script in the page's "main" execution environment and returns its result.
  * This permits access to variables exposed by the Tumblr web platform that are normally inaccessible

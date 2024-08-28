@@ -249,7 +249,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
       await collect(`/v2/blog/${uuid}/posts?${$.param({ tag, limit: 50, reblog_info: true })}`);
     }
   } else {
-    await collect(`/v2/blog/${uuid}/posts?${$.param({ reblog_info: true })}`);
+    await collect(`/v2/blog/${uuid}/posts?${$.param({ limit: 50, reblog_info: true })}`);
   }
   if (filteredPostsMap.size === 0) {
     showPostsNotFound({ name });

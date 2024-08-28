@@ -2,10 +2,12 @@
 
 {
   const moduleCache = {};
+  const injectKey = Math.random();
 
   document.documentElement.addEventListener('xkitinjectionrequest', async event => {
     const { detail, target } = event;
-    const { id, path, args } = JSON.parse(detail);
+    const { injectKey: requestInjectKey, id, path, args } = JSON.parse(detail);
+    if (injectKey !== requestInjectKey) return;
 
     try {
       moduleCache[path] ??= await import(path);
@@ -34,5 +36,5 @@
     }
   });
 
-  document.documentElement.dispatchEvent(new CustomEvent('xkitinjectionready'));
+  document.documentElement.dispatchEvent(new CustomEvent('xkitinjectionready', { detail: JSON.stringify({ injectKey }) }));
 }

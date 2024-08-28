@@ -1,5 +1,10 @@
+let injectKey;
+
 await new Promise(resolve => {
-  document.documentElement.addEventListener('xkitinjectionready', resolve, { once: true });
+  document.documentElement.addEventListener('xkitinjectionready', ({ detail }) => {
+    ({ injectKey } = JSON.parse(detail));
+    resolve();
+  }, { once: true });
 
   const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
   const script = document.createElement('script');
@@ -21,7 +26,7 @@ await new Promise(resolve => {
 export const inject = (path, args = [], target = document.documentElement) =>
   new Promise((resolve, reject) => {
     const requestId = String(Math.random());
-    const data = { path: browser.runtime.getURL(path), args, id: requestId };
+    const data = { path: browser.runtime.getURL(path), args, injectKey, id: requestId };
 
     const responseHandler = ({ detail }) => {
       const { id, result, exception } = JSON.parse(detail);

@@ -1,9 +1,14 @@
+import { getRandomHexString } from './crypto.js';
+
+const injectKey = getRandomHexString();
+
 await new Promise(resolve => {
-  document.documentElement.addEventListener('xkitinjectionready', resolve, { once: true });
+  document.documentElement.addEventListener(`xkitinjectionready-${injectKey}`, resolve, { once: true });
 
   const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
   const script = document.createElement('script');
   script.nonce = nonce;
+  script.dataset.injectKey = injectKey;
   script.src = browser.runtime.getURL('/main_world/index.js');
   document.documentElement.append(script);
 });
@@ -27,12 +32,12 @@ export const inject = (path, args = [], target = document.documentElement) =>
       const { id, result, exception } = JSON.parse(detail);
       if (id !== requestId) return;
 
-      target.removeEventListener('xkitinjectionresponse', responseHandler);
+      target.removeEventListener(`xkitinjectionresponse-${injectKey}`, responseHandler);
       exception ? reject(exception) : resolve(result);
     };
-    target.addEventListener('xkitinjectionresponse', responseHandler);
+    target.addEventListener(`xkitinjectionresponse-${injectKey}`, responseHandler);
 
     target.dispatchEvent(
-      new CustomEvent('xkitinjectionrequest', { detail: JSON.stringify(data), bubbles: true })
+      new CustomEvent(`xkitinjectionrequest-${injectKey}`, { detail: JSON.stringify(data), bubbles: true })
     );
   });

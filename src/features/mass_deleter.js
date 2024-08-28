@@ -85,7 +85,7 @@ const deleteDrafts = async function ({ blogName, before }) {
   });
 
   const drafts = [];
-  let resource = `/v2/blog/${blogName}/posts/draft`;
+  let resource = `/v2/blog/${blogName}/posts/draft?limit=50`;
 
   while (resource) {
     await Promise.all([

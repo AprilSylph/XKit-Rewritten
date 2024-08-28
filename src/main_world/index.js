@@ -2,8 +2,11 @@
 
 {
   const moduleCache = {};
+  const xkitMainWorldKey = Math.random();
+  window.xkitMainWorldKey = xkitMainWorldKey;
 
   document.documentElement.addEventListener('xkit-injection-request', async event => {
+    if (window.xkitMainWorldKey !== xkitMainWorldKey) return;
     const { detail, target } = event;
     const { id, path, args } = JSON.parse(detail);
 

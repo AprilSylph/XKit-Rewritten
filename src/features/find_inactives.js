@@ -121,7 +121,7 @@ const showFetchBlogs = async () => {
 
   const blogs = [];
   let resource =
-    '/v2/user/following?fields[blogs]=name,avatar,title,updated,blog_view_url,?is_following_you';
+    '/v2/user/following?limit=100&fields[blogs]=name,avatar,title,updated,blog_view_url,?is_following_you';
 
   while (resource) {
     await Promise.all([

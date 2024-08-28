@@ -3,6 +3,11 @@
 {
   const moduleCache = {};
 
+  window.removeXKitListener?.();
+
+  const controller = new AbortController();
+  window.removeXKitListener = () => controller.abort();
+
   document.documentElement.addEventListener('xkit-injection-request', async event => {
     const { detail, target } = event;
     const { id, path, args } = JSON.parse(detail);
@@ -32,7 +37,7 @@
         })
       );
     }
-  });
+  }, { signal: controller.signal });
 
   document.documentElement.dispatchEvent(new CustomEvent('xkit-injection-ready'));
 }

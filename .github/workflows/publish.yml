@@ -24,8 +24,7 @@ jobs:
         run: npm test --ignore-scripts
 
       - name: Sign WebExtension
-        run: npx web-ext sign
-        continue-on-error: true
+        run: npx web-ext sign --approval-timeout=0
         env:
           WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
           WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}

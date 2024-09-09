@@ -3,7 +3,12 @@
 {
   const moduleCache = {};
 
-  document.documentElement.addEventListener('xkitinjectionrequest', async event => {
+  window.removeXKitListener?.();
+
+  const controller = new AbortController();
+  window.removeXKitListener = () => controller.abort();
+
+  document.documentElement.addEventListener('xkit-injection-request', async event => {
     const { detail, target } = event;
     const { id, path, args } = JSON.parse(detail);
 
@@ -15,11 +20,11 @@
 
       const result = await func.apply(target, args);
       target.dispatchEvent(
-        new CustomEvent('xkitinjectionresponse', { detail: JSON.stringify({ id, result }) })
+        new CustomEvent('xkit-injection-response', { detail: JSON.stringify({ id, result }) })
       );
     } catch (exception) {
       target.dispatchEvent(
-        new CustomEvent('xkitinjectionresponse', {
+        new CustomEvent('xkit-injection-response', {
           detail: JSON.stringify({
             id,
             exception: {
@@ -32,5 +37,5 @@
         })
       );
     }
-  });
+  }, { signal: controller.signal });
 }

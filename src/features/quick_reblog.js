@@ -31,12 +31,12 @@ const tagsInput = dom(
   'input',
   {
     placeholder: 'Tags (comma separated)',
-    autocomplete: 'off',
-    list: 'quick-reblog-tag-suggestions'
+    autocomplete: 'off'
   },
   { keydown: event => event.stopPropagation() }
 );
-const tagSuggestions = dom('datalist', { id: 'quick-reblog-tag-suggestions' });
+const tagSuggestions = dom('div', { class: 'tag-suggestions' });
+const tagsInputWrapper = dom('div', { class: 'tags-input-wrapper' }, null, [tagsInput]);
 const actionButtons = dom('fieldset', { class: 'action-buttons' });
 const reblogButton = dom('button', null, null, ['Reblog']);
 reblogButton.dataset.state = 'published';
@@ -44,7 +44,7 @@ const queueButton = dom('button', null, null, ['Queue']);
 queueButton.dataset.state = 'queue';
 const draftButton = dom('button', null, null, ['Draft']);
 draftButton.dataset.state = 'draft';
-[blogSelectorContainer, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons].forEach(element => popupElement.appendChild(element));
+[blogSelectorContainer, commentInput, quickTagsList, tagsInputWrapper, actionButtons].forEach(element => popupElement.appendChild(element));
 
 let lastPostID;
 let timeoutID;
@@ -80,28 +80,35 @@ const onBlogSelectorChange = () => {
 };
 blogSelector.addEventListener('change', onBlogSelectorChange);
 
-const renderTagSuggestions = () => {
-  tagSuggestions.textContent = '';
-  if (!showTagSuggestions) return;
+tagSuggestions.addEventListener('click', event => {
+  if (event.target.dataset.value) {
+    tagsInput.value += `${event.target.dataset.value}, `;
+    tagsInput.focus();
+    renderTagSuggestions();
+  }
+});
 
+const renderTagSuggestions = () => {
   const currentTags = tagsInput.value
     .split(',')
     .map(tag => tag.trim().toLowerCase())
     .filter(tag => tag !== '');
 
-  const includeSpace = !tagsInput.value.endsWith(' ') && tagsInput.value.trim() !== '';
-
   const tagsToSuggest = suggestableTags
     .filter(tag => !currentTags.includes(tag.toLowerCase()))
-    .filter((tag, index, array) => array.indexOf(tag) === index)
-    .map(tag => `${tagsInput.value}${includeSpace ? ' ' : ''}${tag}`);
+    .filter((tag, index, array) => array.indexOf(tag) === index);
 
-  tagSuggestions.append(...tagsToSuggest.map(value => dom('option', { value })));
+  tagSuggestions.replaceChildren(
+    dom('div', null, null, tagsToSuggest.map(value => dom('button', { 'data-value': value }, null, [value])))
+  );
 };
 
 const updateTagSuggestions = () => {
-  if (tagsInput.value.trim().endsWith(',') || tagsInput.value.trim() === '') {
+  if (showTagSuggestions && (tagsInput.value.trim().endsWith(',') || tagsInput.value.trim() === '')) {
     renderTagSuggestions();
+    tagsInputWrapper.append(tagSuggestions);
+  } else {
+    tagSuggestions.remove();
   }
 };
 
@@ -150,7 +157,7 @@ const showPopupOnHover = ({ currentTarget }) => {
       if (postAuthor) suggestableTags.push(postAuthor);
       if (rebloggedRootName) suggestableTags.push(rebloggedRootName);
       suggestableTags.push(postType({ trail, content, layout }));
-      renderTagSuggestions();
+      updateTagSuggestions();
     });
   }
   lastPostID = thisPostID;
@@ -386,6 +393,7 @@ export const clean = async function () {
   popupElement.remove();
 
   blogSelector.removeEventListener('change', updateRememberedBlog);
+  tagSuggestions.remove();
 
   browser.storage.onChanged.removeListener(updateQuickTags);
   onNewPosts.removeListener(processPosts);

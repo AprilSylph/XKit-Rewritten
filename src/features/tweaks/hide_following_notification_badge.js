@@ -15,10 +15,14 @@ export const styleElement = buildStyle(`
 }
 `);
 
-const onTitleChanged = ([titleElement]) => {
+const onTitleChanged = () => {
+  const titleElement = document.querySelector('head title:not([data-xkit])');
+
   const rawTitle = titleElement.textContent;
   const newTitle = rawTitle.replace(/^\(\d{1,2}\) /, '');
   customTitleElement.textContent = newTitle;
+
+  new MutationObserver(onTitleChanged).observe(titleElement, { characterData: true, subtree: true });
 };
 
 export const main = async () => {

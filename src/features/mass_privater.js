@@ -192,26 +192,24 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
     ]
   });
 
-  const allPostIdsSet = new Set();
+  let fetchedPosts = 0;
   const filteredPostIdsSet = new Set();
 
   const collect = async resource => {
     while (resource) {
       await Promise.all([
         apiFetch(resource).then(({ response }) => {
-          const posts = response.posts
+          response.posts
             .filter(({ canEdit }) => canEdit === true)
-            .filter(({ state }) => state === 'published');
-
-          posts.forEach(({ id }) => allPostIdsSet.add(id));
-
-          posts
+            .filter(({ state }) => state === 'published')
             .filter(({ timestamp }) => timestamp < before)
             .forEach(({ id }) => filteredPostIdsSet.add(id));
 
+          fetchedPosts += response.posts.length;
+
           resource = response.links?.next?.href;
 
-          gatherStatus.textContent = `Found ${filteredPostIdsSet.size} posts (checked ${allPostIdsSet.size})${resource ? '...' : '.'}`;
+          gatherStatus.textContent = `Found ${filteredPostIdsSet.size} posts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
         }),
         sleep(1000)
       ]);

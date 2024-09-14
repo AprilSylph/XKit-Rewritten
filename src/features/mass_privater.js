@@ -198,10 +198,10 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
 
   if (tags.length) {
     for (const tag of tags) {
-      await collect(`/v2/blog/${uuid}/posts?${$.param({ tag, limit: 50 })}`);
+      await collect(`/v2/blog/${uuid}/posts?${$.param({ tag, before, limit: 50 })}`);
     }
   } else {
-    await collect(`/v2/blog/${uuid}/posts`);
+    await collect(`/v2/blog/${uuid}/posts?${$.param({ before, limit: 50 })}`);
   }
   const filteredPostIds = [...filteredPostIdsSet];
 

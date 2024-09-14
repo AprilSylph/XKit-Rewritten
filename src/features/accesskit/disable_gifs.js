@@ -8,7 +8,7 @@ const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 .${labelClass} {
   position: absolute;
   top: 1ch;
@@ -136,8 +136,6 @@ const processRecommendedBlogCards = cards =>
   cards.forEach(card => card.classList.add(containerClass));
 
 export const main = async function () {
-  document.documentElement.append(styleElement);
-
   const gifImage = `
     :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
   `;
@@ -169,7 +167,6 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children)
   );
 
-  styleElement.remove();
   $(`.${canvasClass}, .${labelClass}`).remove();
   $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
 };

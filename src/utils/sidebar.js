@@ -96,7 +96,7 @@ const updateSidebarItemVisibility = () => [...sidebarItems.children]
   .forEach(sidebarItem => { sidebarItem.hidden = !conditions.get(sidebarItem)(); });
 
 const addSidebarToPage = (siblingCandidates) => {
-  if (/^\/settings/.test(location.pathname)) { return; }
+  if (/^\/settings/.test(location.pathname) || /^\/communities.*\/settings$/.test(location.pathname)) { return; }
 
   updateSidebarItemVisibility();
 
@@ -116,7 +116,7 @@ const addSidebarToPage = (siblingCandidates) => {
 const addSidebarToDrawer = (navItems) => {
   updateSidebarItemVisibility();
 
-  const lastNavItem = navItems[navItems.length - 1];
+  const lastNavItem = navItems.at(-1);
   lastNavItem?.after(sidebarItems);
 };
 

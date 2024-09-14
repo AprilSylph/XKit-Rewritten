@@ -3,11 +3,11 @@ import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
 import { dom } from '../../utils/dom.js';
 
-const labelSelector = keyToCss('followingBadgeContainer', 'mutualsBadgeContainer');
+const labelSelector = `${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')}:has(> svg)`;
 
 const spanClass = 'xkit-tweaks-subtle-activity-span';
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 .${spanClass} {
   display: inline-block;
   overflow-x: clip;
@@ -51,13 +51,11 @@ const waitForRender = () =>
 export const main = async function () {
   pageModifications.register(labelSelector, processLabels);
 
-  document.documentElement.append(styleElement);
   waitForRender().then(() => document.documentElement.append(transitionStyleElement));
 };
 
 export const clean = async function () {
   pageModifications.unregister(processLabels);
-  styleElement.remove();
   transitionStyleElement.remove();
 
   [...document.querySelectorAll(`.${spanClass}`)].forEach(span => {

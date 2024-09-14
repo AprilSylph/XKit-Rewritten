@@ -27,8 +27,3 @@
 #tag-tracking-plus[data-only-show-new="true"] li:not([data-new="true"]) {
   display: none;
 }
-
-[data-tag-tracking-plus-show-sidebar="false"] #tag-tracking-plus,
-[data-tag-tracking-plus-show-search="false"] .xkit-tag-tracking-plus-search-count {
-  display: none;
-}

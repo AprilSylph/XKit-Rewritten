@@ -39,7 +39,7 @@ export const notificationObject = function (notificationElement) {
 export const blogData = async (meatballMenu) => inject('/main_world/unbury_blog.js', [], meatballMenu);
 
 export const isMyPost = async (postElement) => {
-  const { blog, isSubmission, postAuthor } = await timelineObject(postElement);
+  const { blog, isSubmission, postAuthor, community } = await timelineObject(postElement);
   const userIsMember = userBlogNames.includes(blog.name);
   const userIsAdmin = adminBlogNames.includes(blog.name);
 
@@ -51,6 +51,9 @@ export const isMyPost = async (postElement) => {
 
   // Post was created by the user on a group blog
   if (postAuthor === primaryBlogName && !isSubmission) return true;
+
+  // Post was created by the user in a community
+  if (community && userBlogNames.includes(postAuthor)) return true;
 
   // Submission belongs to group blog which the user is admin of
   if (isSubmission && userIsAdmin) return true;

@@ -8,27 +8,37 @@ $(`[id="${scrollToBottomButtonId}"]`).remove();
 const activeClass = 'xkit-scroll-to-bottom-active';
 
 const loaderSelector = `
-${keyToCss('timeline', 'blogRows')} > :last-child,
-${keyToCss('notifications')} + ${keyToCss('loader')}
+${keyToCss('timeline', 'blogRows')} > :is(${keyToCss('scrollContainer')}, .sortableContainer) + div,
+${keyToCss('notifications')} + div
 `;
 const knightRiderLoaderSelector = `:is(${loaderSelector}) > ${keyToCss('knightRiderLoader')}`;
 
 let scrollToBottomButton;
 let active = false;
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 .${activeClass} svg use {
   --icon-color-primary: rgb(var(--yellow));
 }
 `);
 
-const scrollToBottom = () => {
-  window.scrollTo({ top: document.documentElement.scrollHeight });
-  const loaders = [...document.querySelectorAll(knightRiderLoaderSelector)];
+let timeoutID;
 
-  if (loaders.length === 0) {
-    stopScrolling();
+const onLoadersAdded = loaders => {
+  if (active) {
+    clearTimeout(timeoutID);
   }
+};
+
+const scrollToBottom = () => {
+  clearTimeout(timeoutID);
+  window.scrollTo({ top: document.documentElement.scrollHeight });
+
+  timeoutID = setTimeout(() => {
+    if (!document.querySelector(knightRiderLoaderSelector)) {
+      stopScrolling();
+    }
+  }, 500);
 };
 const observer = new ResizeObserver(scrollToBottom);
 
@@ -40,6 +50,7 @@ const startScrolling = () => {
 };
 
 const stopScrolling = () => {
+  clearTimeout(timeoutID);
   observer.disconnect();
   active = false;
   scrollToBottomButton?.classList.remove(activeClass);
@@ -79,13 +90,13 @@ const addButtonToPage = async function ([scrollToTopButton]) {
 
 export const main = async function () {
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
-  document.documentElement.append(styleElement);
+  pageModifications.register(knightRiderLoaderSelector, onLoadersAdded);
 };
 
 export const clean = async function () {
   pageModifications.unregister(addButtonToPage);
   pageModifications.unregister(checkForButtonRemoved);
+  pageModifications.unregister(onLoadersAdded);
   stopScrolling();
   scrollToBottomButton?.remove();
-  styleElement.remove();
 };

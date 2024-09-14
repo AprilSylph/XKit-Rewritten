@@ -20,56 +20,22 @@
   display: none !important;
 }
 
-@media (max-width: 650px) {
-  #quick-reblog {
-    top: 50%;
-    right: 100%;
-    transform: translateY(-50%);
-  }
+#quick-reblog {
+  --icon-spacing: 12px;
 }
-
-@media (min-width: 650px) {
-  #quick-reblog {
-    transform: translateX(50%);
-  }
-
-  #quick-reblog.above {
-    bottom: 100%;
-    right: 50%;
-  }
-
-  #quick-reblog.below {
-    top: 100%;
-    right: 50%;
-  }
-}
-
-@media (min-width: 990px) {
-  #quick-reblog.above {
-    transform: translate(50%, -12px)
-  }
-
-  #quick-reblog.below {
-    transform: translate(50%, 12px);
-  }
-}
-
 @media (max-width: 990px) {
-  [role="dialog"] #quick-reblog {
-    top: 50%;
-    bottom: unset;
-    right: 100%;
-    transform: translateY(-50%);
+  #quick-reblog {
+    --icon-spacing: 0px;
   }
 }
 
-@media (min-width: 990px) and (max-width: 1145px) {
-  [role="dialog"] #quick-reblog {
-    top: 50%;
-    bottom: unset;
-    right: 100%;
-    transform: translate(-20px, -50%);
-  }
+#quick-reblog.below {
+  inset: 100% 50% auto auto;
+  transform: translate(calc(50% + var(--horizontal-offset, 0%)), var(--icon-spacing));
+}
+#quick-reblog.above {
+  inset: auto 50% 100% auto;
+  transform: translate(calc(50% + var(--horizontal-offset, 0%)), calc(0px - var(--icon-spacing)));
 }
 
 div:first-child + span + #quick-reblog,
@@ -220,6 +186,8 @@ div:first-child + span + #quick-reblog,
 #quick-reblog button[data-state="published"] { color: rgb(var(--blue)); }
 #quick-reblog button[data-state="queue"] { color: rgb(var(--pink)); }
 #quick-reblog button[data-state="draft"] { color: rgb(var(--orange)); }
+
+#quick-reblog .action-buttons.community-selected button:not([data-state="published"]) { display: none; }
 
 .published :is(a[role="button"], button[class=""]) svg[style*="--black"] use { --icon-color-primary: rgb(var(--green)); }
 .queue :is(a[role="button"], button[class=""]) svg[style*="--black"] use { --icon-color-primary: rgb(var(--purple)); }

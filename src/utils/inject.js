@@ -1,4 +1,8 @@
 /**
+ * Runs a script in the page's "main" execution environment and returns its result.
+ * This permits access to variables exposed by the Tumblr web platform that are normally inaccessible
+ * in the content script sandbox.
+ * See the src/main_world directory and [../main_world/index.js](../main_world/index.js).
  * @param {string} path - Absolute path of script to inject (will be fed to `runtime.getURL()`)
  * @param {Array} [args] - Array of arguments to pass to the script
  * @param {Element} [target] - Target element; will be accessible as the `this` value in the injected function.
@@ -13,12 +17,12 @@ export const inject = (path, args = [], target = document.documentElement) =>
       const { id, result, exception } = JSON.parse(detail);
       if (id !== requestId) return;
 
-      target.removeEventListener('xkitinjectionresponse', responseHandler);
+      target.removeEventListener('xkit-injection-response', responseHandler);
       exception ? reject(exception) : resolve(result);
     };
-    target.addEventListener('xkitinjectionresponse', responseHandler);
+    target.addEventListener('xkit-injection-response', responseHandler);
 
     target.dispatchEvent(
-      new CustomEvent('xkitinjectionrequest', { detail: JSON.stringify(data), bubbles: true })
+      new CustomEvent('xkit-injection-request', { detail: JSON.stringify(data), bubbles: true })
     );
   });

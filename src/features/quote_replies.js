@@ -32,6 +32,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
   );
 
   if (!['reply', 'reply_to_comment', 'note_mention'].includes(notificationProps.type)) return;
+  if (notificationProps.community) return;
 
   const activityElement = notification.querySelector(activitySelector);
   if (!activityElement) return;

@@ -31,10 +31,11 @@ const processPosts = async function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (postElement.matches(blogViewSelector) && !enableOnPeepr) return;
 
-    const { blog, trail = [], content } = await timelineObject(postElement);
+    const { blog, authorBlog, trail = [], content, community } = await timelineObject(postElement);
+    const visibleBlog = community ? authorBlog : blog;
 
     const blogData = [
-      blog,
+      visibleBlog,
       ...reblogTrailTheming ? trail.map(item => item.blog).filter(item => item !== undefined) : []
     ];
 
@@ -65,12 +66,12 @@ const processPosts = async function (postElements) {
       }
     });
 
-    postElement.dataset.xkitThemed = blog.name ?? '';
+    postElement.dataset.xkitThemed = visibleBlog.name ?? '';
 
     if (reblogTrailTheming) {
       const blogNameTrail = trail.map(item => item?.blog?.name);
       if (content.length > 0) {
-        blogNameTrail.push(blog?.name);
+        blogNameTrail.push(visibleBlog?.name);
       }
       [...postElement.querySelectorAll(reblogSelector)].forEach((reblog, i) => {
         reblog.dataset.xkitThemed = blogNameTrail[i] ?? '';

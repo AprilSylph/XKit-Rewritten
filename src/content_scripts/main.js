@@ -21,6 +21,7 @@
       document.documentElement.appendChild(link);
     }
     if (styleElement) {
+      styleElement.dataset.xkitFeature = name;
       document.documentElement.append(styleElement);
     }
 
@@ -86,7 +87,7 @@
   };
 
   const initMainWorld = () => new Promise(resolve => {
-    document.documentElement.addEventListener('xkitinjectionready', resolve, { once: true });
+    document.documentElement.addEventListener('xkit-injection-ready', resolve, { once: true });
 
     const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
     const script = document.createElement('script');

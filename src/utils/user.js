@@ -1,14 +1,18 @@
 import { apiFetch } from './tumblr_helpers.js';
 
-const fetchedUserInfo = await apiFetch('/v2/user/info').catch((error) => {
-  console.error(error);
-  return { response: {} };
-});
-
-const fetchedCommunitiesInfo = await apiFetch('/v2/communities').catch((error) => {
-  console.error(error);
-  return { response: [] };
-});
+const [
+  fetchedUserInfo,
+  fetchedCommunitiesInfo
+] = await Promise.all([
+  apiFetch('/v2/user/info').catch((error) => {
+    console.error(error);
+    return { response: {} };
+  }),
+  apiFetch('/v2/communities').catch((error) => {
+    console.error(error);
+    return { response: [] };
+  })
+]);
 
 /**
  * {object?} userInfo - The contents of the /v2/user/info API endpoint

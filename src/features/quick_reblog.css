@@ -187,6 +187,8 @@ div:first-child + span + #quick-reblog,
 #quick-reblog button[data-state="queue"] { color: rgb(var(--pink)); }
 #quick-reblog button[data-state="draft"] { color: rgb(var(--orange)); }
 
+#quick-reblog .action-buttons.community-selected button:not([data-state="published"]) { display: none; }
+
 .published :is(a[role="button"], button[class=""]) svg[style*="--black"] use { --icon-color-primary: rgb(var(--green)); }
 .queue :is(a[role="button"], button[class=""]) svg[style*="--black"] use { --icon-color-primary: rgb(var(--purple)); }
 .draft :is(a[role="button"], button[class=""]) svg[style*="--black"] use { --icon-color-primary: rgb(var(--red)); }

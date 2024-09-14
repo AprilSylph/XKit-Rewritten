@@ -1,4 +1,7 @@
+import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { buildStyle } from './interface.js';
+import { timelineObject } from './react_props.js';
 import { buildSvg } from './remixicon.js';
 
 // Remove outdated buttons when loading module
@@ -36,3 +39,33 @@ export const cloneControlButton = function (template, events, disabled = false) 
   newButton.disabled = disabled;
   return newButtonContainer;
 };
+
+/**
+ * Inserts a clone of a button template before the post edit icon, if the post is editable
+ * @param {HTMLElement} postElement - The target post element
+ * @param {HTMLDivElement} clonedControlButton - Button clone to insert if the post is editable
+ * @param {string} buttonClass - Button HTML class
+ * @returns {Promise<void>} Resolves when finished
+ */
+export const insertControlButtonEditable = async (postElement, clonedControlButton, buttonClass) => {
+  const existingButton = postElement.querySelector(`.${buttonClass}`);
+  if (existingButton !== null) { return; }
+
+  const editControlIcon = postElement.querySelector(`footer ${keyToCss('controlIcon')}:has(a[href*="/edit/"] use[href="#managed-icon__edit"])`);
+  if (editControlIcon) {
+    editControlIcon.before(clonedControlButton);
+  } else {
+    const { community, canEdit } = await timelineObject(postElement);
+    if (community && canEdit) {
+      postElement.querySelector(`${keyToCss('noteCountContainer')} > ${keyToCss('container')}`).before(clonedControlButton);
+    }
+  }
+};
+
+const styleElement = buildStyle(`
+${keyToCss('noteCountContainer')} > .xkit-control-button-container {
+    margin: 0 12px 0 0;
+    align-self: center;
+}
+`);
+document.documentElement.append(styleElement);

@@ -6,7 +6,7 @@ import { getPreferences } from '../utils/preferences.js';
 import { onClickNavigate } from '../utils/tumblr_helpers.js';
 import { userBlogs } from '../utils/user.js';
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
   .xkit-header-avatar {
     height: 26px;
     width: 26px;
@@ -69,7 +69,6 @@ export const main = async function () {
     dom('div', { id: 'xkit-header-blogs-inner' }, null, avatarElements)
   ]);
 
-  document.head.append(styleElement);
   pageModifications.register(`header > ${keyToCss('menuRight')}`, processRightMenu);
   pageModifications.register(keyToCss('navigationLinks'), processNavigationLinks);
 };
@@ -79,5 +78,4 @@ export const clean = async function () {
   pageModifications.unregister(processNavigationLinks);
 
   headerBlogElement.remove();
-  styleElement.remove();
 };

@@ -5,7 +5,15 @@ import { onNewPosts } from '../utils/mutations.js';
 import { keyToCss } from '../utils/css_map.js';
 import { translate } from '../utils/language_data.js';
 import { userBlogs } from '../utils/user.js';
-import { followingTimelineFilter, anyBlogTimelineFilter, blogTimelineFilter, blogSubsTimelineFilter, timelineSelector } from '../utils/timeline_id.js';
+import {
+  followingTimelineFilter,
+  anyBlogTimelineFilter,
+  blogTimelineFilter,
+  blogSubsTimelineFilter,
+  timelineSelector,
+  anyCommunityTimelineFilter,
+  communitiesTimelineFilter
+} from '../utils/timeline_id.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
@@ -72,7 +80,8 @@ const getLocation = timelineElement => {
     dashboard: followingTimelineFilter(timelineElement),
     disabled: isBlog && disabledBlogs.some(name => blogTimelineFilter(name)(timelineElement)),
     peepr: isBlog,
-    blogSubscriptions: blogSubsTimelineFilter(timelineElement)
+    blogSubscriptions: blogSubsTimelineFilter(timelineElement),
+    community: anyCommunityTimelineFilter(timelineElement) || communitiesTimelineFilter(timelineElement)
   };
   return Object.keys(on).find(location => on[location]);
 };
@@ -96,14 +105,15 @@ const processPosts = async function (postElements) {
 
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {
-      const { rebloggedRootId, content, blogName, rebloggedFromFollowing } = await timelineObject(postElement);
+      const { rebloggedRootId, content, blogName, community, postAuthor, rebloggedFromFollowing } = await timelineObject(postElement);
       const myPost = await isMyPost(postElement);
 
       if (!rebloggedRootId) { return; }
       if (showOwnReblogs && myPost) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
       if (showReblogsOfNotFollowing && !rebloggedFromFollowing) { return; }
-      if (whitelist.includes(blogName)) { return; }
+      const visibleBlogName = community ? postAuthor : blogName;
+      if (whitelist.includes(visibleBlogName)) { return; }
 
       getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
     });

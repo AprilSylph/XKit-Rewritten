@@ -8,10 +8,11 @@
 
   const runScript = async function (name) {
     const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
-    const { main, clean, stylesheet, onStorageChanged } = await import(scriptPath);
+    const { main, clean, stylesheet, styleElement, onStorageChanged } = await import(scriptPath);
 
-    main().catch(console.error);
-
+    if (main) {
+      main().catch(console.error);
+    }
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
@@ -19,8 +20,12 @@
       });
       document.documentElement.appendChild(link);
     }
+    if (styleElement) {
+      styleElement.dataset.xkitFeature = name;
+      document.documentElement.append(styleElement);
+    }
 
-    restartListeners[name] = function (changes, areaName) {
+    restartListeners[name] = async (changes, areaName) => {
       if (areaName !== 'local') return;
 
       const { enabledScripts } = changes;
@@ -29,7 +34,8 @@
       if (onStorageChanged instanceof Function) {
         onStorageChanged(changes, areaName);
       } else if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
-        clean().then(main);
+        await clean?.();
+        await main?.();
       }
     };
 
@@ -38,12 +44,16 @@
 
   const destroyScript = async function (name) {
     const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
-    const { clean, stylesheet } = await import(scriptPath);
+    const { clean, stylesheet, styleElement } = await import(scriptPath);
 
-    clean().catch(console.error);
-
+    if (clean) {
+      clean().catch(console.error);
+    }
     if (stylesheet) {
       document.querySelector(`link[href="${browser.runtime.getURL(`/features/${name}.css`)}"]`)?.remove();
+    }
+    if (styleElement) {
+      styleElement.remove();
     }
 
     browser.storage.onChanged.removeListener(restartListeners[name]);
@@ -77,7 +87,7 @@
   };
 
   const initMainWorld = () => new Promise(resolve => {
-    document.documentElement.addEventListener('xkitinjectionready', resolve, { once: true });
+    document.documentElement.addEventListener('xkit-injection-ready', resolve, { once: true });
 
     const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
     const script = document.createElement('script');

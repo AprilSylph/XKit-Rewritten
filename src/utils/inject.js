@@ -17,12 +17,12 @@ export const inject = (path, args = [], target = document.documentElement) =>
       const { id, result, exception } = JSON.parse(detail);
       if (id !== requestId) return;
 
-      target.removeEventListener('xkitinjectionresponse', responseHandler);
+      target.removeEventListener('xkit-injection-response', responseHandler);
       exception ? reject(exception) : resolve(result);
     };
-    target.addEventListener('xkitinjectionresponse', responseHandler);
+    target.addEventListener('xkit-injection-response', responseHandler);
 
     target.dispatchEvent(
-      new CustomEvent('xkitinjectionrequest', { detail: JSON.stringify(data), bubbles: true })
+      new CustomEvent('xkit-injection-request', { detail: JSON.stringify(data), bubbles: true })
     );
   });

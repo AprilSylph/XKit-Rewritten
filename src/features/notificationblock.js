@@ -15,7 +15,8 @@ const meatballButtonUnblockLabel = 'Unblock notifications';
 
 let blockedPostTargetIDs;
 
-const styleElement = buildStyle();
+export const styleElement = buildStyle();
+
 const buildCss = () => `:is(${blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')
   }) { display: none !important; }`;
 
@@ -79,11 +80,12 @@ const onButtonClicked = async function ({ currentTarget }) {
   });
 };
 
-const blockPostFilter = async ({ blogName, rebloggedRootName, rebloggedFromName, id, rebloggedRootId }) => {
+const blockPostFilter = async ({ blogName, rebloggedRootName, rebloggedFromName, id, rebloggedRootId, community, postAuthor }) => {
   const rootId = rebloggedRootId || id;
   const canReceiveActivity = userBlogNames.includes(blogName) ||
     userBlogNames.includes(rebloggedFromName) ||
-    userBlogNames.includes(rebloggedRootName);
+    userBlogNames.includes(rebloggedRootName) ||
+    (community && userBlogNames.includes(postAuthor));
 
   return canReceiveActivity && blockedPostTargetIDs.includes(rootId) === false;
 };
@@ -103,7 +105,6 @@ export const onStorageChanged = (changes, areaName) => {
 export const main = async function () {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
   styleElement.textContent = buildCss();
-  document.documentElement.append(styleElement);
   onNewNotifications.addListener(processNotifications);
 
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
@@ -111,7 +112,6 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  styleElement.remove();
   onNewNotifications.removeListener(processNotifications);
   unregisterMeatballItem(meatballButtonBlockId);
   unregisterMeatballItem(meatballButtonUnblockId);

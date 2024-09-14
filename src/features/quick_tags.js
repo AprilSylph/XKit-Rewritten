@@ -1,6 +1,6 @@
 import { cloneControlButton, createControlButtonTemplate, insertControlButtonEditable } from '../utils/control_buttons.js';
 import { dom } from '../utils/dom.js';
-import { filterPostElements, getTimelineItemWrapper, postSelector } from '../utils/interface.js';
+import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../utils/interface.js';
 import { megaEdit } from '../utils/mega_editor.js';
 import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../utils/modals.js';
 import { onNewPosts, pageModifications } from '../utils/mutations.js';
@@ -113,14 +113,6 @@ export const onStorageChanged = async function (changes, areaName) {
   }
 };
 
-const appendWithoutViewportOverflow = (element, target) => {
-  element.className = 'below';
-  target.appendChild(element);
-  if (element.getBoundingClientRect().bottom > document.documentElement.clientHeight) {
-    element.className = 'above';
-  }
-};
-
 const togglePopupDisplay = async function ({ target, currentTarget: controlButton }) {
   if (target === popupElement || popupElement.contains(target)) { return; }
 
@@ -129,7 +121,7 @@ const togglePopupDisplay = async function ({ target, currentTarget: controlButto
   if (buttonContainer.contains(popupElement)) {
     buttonContainer.removeChild(popupElement);
   } else {
-    appendWithoutViewportOverflow(popupElement, buttonContainer);
+    appendWithoutOverflow(popupElement, buttonContainer);
   }
 };
 
@@ -139,7 +131,7 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
   if (currentTarget.contains(postOptionPopupElement)) {
     currentTarget.removeChild(postOptionPopupElement);
   } else {
-    appendWithoutViewportOverflow(postOptionPopupElement, currentTarget);
+    appendWithoutOverflow(postOptionPopupElement, currentTarget);
   }
 };
 

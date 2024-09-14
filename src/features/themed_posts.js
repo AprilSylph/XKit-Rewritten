@@ -4,7 +4,8 @@ import { onNewPosts } from '../utils/mutations.js';
 import { timelineObject } from '../utils/react_props.js';
 import { keyToCss } from '../utils/css_map.js';
 
-const styleElement = buildStyle();
+export const styleElement = buildStyle();
+
 const blogs = new Set();
 const groupsFromHex = /^#(?<red>[A-Fa-f0-9]{1,2})(?<green>[A-Fa-f0-9]{1,2})(?<blue>[A-Fa-f0-9]{1,2})$/;
 const reblogSelector = keyToCss('reblog');
@@ -30,10 +31,11 @@ const processPosts = async function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (postElement.matches(blogViewSelector) && !enableOnPeepr) return;
 
-    const { blog, trail = [], content } = await timelineObject(postElement);
+    const { blog, authorBlog, trail = [], content, community } = await timelineObject(postElement);
+    const visibleBlog = community ? authorBlog : blog;
 
     const blogData = [
-      blog,
+      visibleBlog,
       ...reblogTrailTheming ? trail.map(item => item.blog).filter(item => item !== undefined) : []
     ];
 
@@ -64,12 +66,12 @@ const processPosts = async function (postElements) {
       }
     });
 
-    postElement.dataset.xkitThemed = blog.name ?? '';
+    postElement.dataset.xkitThemed = visibleBlog.name ?? '';
 
     if (reblogTrailTheming) {
       const blogNameTrail = trail.map(item => item?.blog?.name);
       if (content.length > 0) {
-        blogNameTrail.push(blog?.name);
+        blogNameTrail.push(visibleBlog?.name);
       }
       [...postElement.querySelectorAll(reblogSelector)].forEach((reblog, i) => {
         reblog.dataset.xkitThemed = blogNameTrail[i] ?? '';
@@ -110,17 +112,14 @@ export const main = async function () {
     }
   }
 
-  document.documentElement.append(styleElement);
   onNewPosts.addListener(processPosts);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  styleElement.remove();
-  styleElement.textContent = '';
-
   $('[data-xkit-themed]').removeAttr('data-xkit-themed');
 
+  styleElement.textContent = '';
   blogs.clear();
 };

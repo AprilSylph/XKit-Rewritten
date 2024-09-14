@@ -123,7 +123,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       });
       notify(displayText);
 
-      controlButton.remove();
+      controlButton.closest('.xkit-control-button-container').remove();
 
       const reblogs = [...postElement.querySelectorAll(reblogSelector)];
       excludeTrailItems

@@ -1,8 +1,8 @@
 import { filterPostElements, getTimelineItemWrapper, postSelector } from '../utils/interface.js';
 import { getPreferences } from '../utils/preferences.js';
-import { onNewPosts } from '../utils/mutations.js';
+import { onNewPosts, pageModifications } from '../utils/mutations.js';
 import { keyToCss } from '../utils/css_map.js';
-import { followingTimelineFilter, followingTimelineSelector } from '../utils/timeline_id.js';
+import { followingTimelineFilter, followingTimelineSelector, timelineSelector } from '../utils/timeline_id.js';
 
 const excludeAttribute = 'data-seen-posts-done';
 const timeline = followingTimelineFilter;
@@ -12,6 +12,8 @@ const dimAttribute = 'data-seen-posts-seen';
 const onlyDimAvatarsClass = 'xkit-seen-posts-only-dim-avatar';
 const hideClass = 'xkit-seen-posts-hide';
 const lengthenedClass = 'xkit-seen-posts-lengthened';
+
+const softRefreshLoaderSelector = `${followingTimelineSelector} ${keyToCss('container')}:has(~ div ${postSelector}) > ${keyToCss('knightRiderLoader')}`;
 
 const storageKey = 'seen_posts.seenPosts';
 let seenPosts = [];
@@ -52,7 +54,7 @@ const lengthenTimelines = () =>
     }
   });
 
-const dimPosts = function (postElements) {
+const dimPosts = function (postElements, reprocessPosts = false) {
   lengthenTimelines();
 
   for (const postElement of filterPostElements(postElements, { timeline, includeFiltered })) {
@@ -64,10 +66,17 @@ const dimPosts = function (postElements) {
 
     if (seenPosts.includes(id) === false) {
       observer.observe(postElement.querySelector('article header + *'));
-    } else if (isFirstRender) {
+    } else if (isFirstRender || reprocessPosts) {
       timelineItem.setAttribute(dimAttribute, '');
     }
   }
+};
+
+const onSoftRefresh = loaderElements => {
+  const refreshedPostElements = loaderElements.flatMap(
+    element => [...element.closest(timelineSelector).querySelectorAll(postSelector)]
+  );
+  dimPosts(refreshedPostElements, true);
 };
 
 export const onStorageChanged = async function (changes, areaName) {
@@ -106,10 +115,12 @@ export const main = async function () {
   }
 
   onNewPosts.addListener(dimPosts);
+  pageModifications.register(softRefreshLoaderSelector, onSoftRefresh);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(dimPosts);
+  pageModifications.unregister(onSoftRefresh);
 
   observer.disconnect();
   timers.forEach((timerId) => clearTimeout(timerId));

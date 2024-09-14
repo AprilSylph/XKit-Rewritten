@@ -3,13 +3,24 @@ import { getPreferences } from '../utils/preferences.js';
 let enabledTools;
 
 const runTool = async function (name) {
-  const { main: run } = await import(`./dev_tools/${name}.js`);
-  run().catch(console.error);
+  const { main: run, styleElement } = await import(`./dev_tools/${name}.js`);
+  if (run) {
+    run().catch(console.error);
+  }
+  if (styleElement) {
+    styleElement.dataset.xkitFeature = `tweaks_${name}`;
+    document.documentElement.append(styleElement);
+  }
 };
 
 const destroyTool = async function (name) {
-  const { clean: destroy } = await import(`./dev_tools/${name}.js`);
-  destroy().catch(console.error);
+  const { clean: destroy, styleElement } = await import(`./dev_tools/${name}.js`);
+  if (destroy) {
+    destroy().catch(console.error);
+  }
+  if (styleElement) {
+    styleElement.remove();
+  }
 };
 
 export const onStorageChanged = async function (changes, areaName) {

@@ -37,9 +37,7 @@ const showInitialPrompt = async () => {
   const submitButton = dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Replace Tag', disabled: true });
   const updateSubmitButton = () => {
     const { mode } = processTagInputs(initialForm.elements.oldTag, initialForm.elements.newTag);
-    if (mode === 'disabled') {
-      submitButton.disabled = true;
-    } else {
+    if (mode) {
       submitButton.disabled = false;
       submitButton.className = {
         add: 'blue',
@@ -51,6 +49,8 @@ const showInitialPrompt = async () => {
         remove: 'Remove Tag',
         replace: 'Replace Tag'
       }[mode];
+    } else {
+      submitButton.disabled = true;
     }
   };
   initialForm.elements.oldTag.addEventListener('input', updateSubmitButton);
@@ -70,21 +70,28 @@ const showInitialPrompt = async () => {
 };
 
 const processTagInputs = (oldTagInput, newTagInput) => {
-  const oldTagText = oldTagInput.value.replace(/"|#/g, '');
-  const oldTags = oldTagText.split(',').map(tag => tag.trim()).filter(Boolean);
-  const newTagText = newTagInput.value.replace(/"|#/g, '');
-  const newTags = newTagText.split(',').map(tag => tag.trim()).filter(Boolean);
+  const oldTags = oldTagInput.value
+    .replace(/"|#/g, '')
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(Boolean);
+  const newTags = newTagInput.value
+    .replace(/"|#/g, '')
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(Boolean);
 
-  if (oldTags.length !== 1) return { mode: 'disabled' };
-  const oldTag = oldTags[0];
+  if (oldTags.length === 1) {
+    const oldTag = oldTags[0];
 
-  const toAdd = newTags.filter(tag => tag.toLowerCase() !== oldTag.toLowerCase());
-  const toRemove = newTags.some(tag => tag.toLowerCase() === oldTag.toLowerCase()) ? [] : [oldTag];
+    const toAdd = newTags.filter(tag => tag.toLowerCase() !== oldTag.toLowerCase());
+    const toRemove = newTags.some(tag => tag.toLowerCase() === oldTag.toLowerCase()) ? [] : [oldTag];
 
-  if (toAdd.length && toRemove.length) return { oldTag, toAdd, toRemove, mode: 'replace' };
-  if (toAdd.length) return { oldTag, toAdd, toRemove, mode: 'add' };
-  if (toRemove.length) return { oldTag, toAdd, toRemove, mode: 'remove' };
-  return { mode: 'disabled' };
+    if (toAdd.length && toRemove.length) return { mode: 'replace', oldTag, toAdd, toRemove };
+    if (toAdd.length) return { mode: 'add', oldTag, toAdd, toRemove };
+    if (toRemove.length) return { mode: 'remove', oldTag, toAdd, toRemove };
+  }
+  return {};
 };
 
 const confirmReplaceTag = async event => {
@@ -141,6 +148,9 @@ const confirmReplaceTag = async event => {
     ]
   }[mode];
 
+  const buttonClass = { add: 'blue', remove: 'red', replace: 'blue' }[mode];
+  const buttonText = { add: 'Add them!', remove: 'Remove it!', replace: 'Replace it!' }[mode];
+
   showModal({
     title,
     message,
@@ -148,9 +158,9 @@ const confirmReplaceTag = async event => {
       modalCancelButton,
       dom(
         'button',
-        { class: { add: 'blue', remove: 'red', replace: 'blue' }[mode] },
+        { class: buttonClass },
         { click: () => replaceTag({ uuid, oldTag, toAdd, toRemove, mode }).catch(showErrorModal) },
-        [{ add: 'Add them!', remove: 'Remove it!', replace: 'Replace it!' }[mode]]
+        [buttonText]
       )
     ]
   });

@@ -4,14 +4,19 @@ const localDownloadButton = document.getElementById('download-local');
 
 const localImportTextarea = document.getElementById('local-storage-import');
 const localRestoreButton = document.getElementById('restore-local');
+const clearToggleLabel = document.getElementById('clear-toggle-label');
+const clearToggle = document.getElementById('clear-toggle');
 
 const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
 
+let storageLocal = {};
+
 const updateLocalExportDisplay = async function () {
-  const storageLocal = await browser.storage.local.get();
+  storageLocal = await browser.storage.local.get();
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
 
   localExportDisplayElement.textContent = stringifiedStorage;
+  updateClearToggle();
 };
 
 const localCopy = async function () {
@@ -27,7 +32,7 @@ const localCopy = async function () {
 };
 
 const localExport = async function () {
-  const storageLocal = await browser.storage.local.get();
+  storageLocal = await browser.storage.local.get();
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
   const storageBlob = new Blob([stringifiedStorage], { type: 'application/json' });
   const blobUrl = URL.createObjectURL(storageBlob);
@@ -56,12 +61,25 @@ const localRestore = async function () {
   try {
     localRestoreButton.disabled = true;
 
+    storageLocal = await browser.storage.local.get();
+
     const parsedStorage = JSON.parse(importText);
+    if (typeof parsedStorage !== 'object') throw new Error();
+
+    const oldKeys = Object.keys(storageLocal);
+    const newKeys = Object.keys(parsedStorage);
+    const staleKeys = oldKeys.filter(key => !newKeys.includes(key));
+
+    if (staleKeys.length && clearToggle.checked) {
+      await browser.storage.local.remove(staleKeys);
+    }
+
     await browser.storage.local.set(parsedStorage);
 
     localRestoreButton.classList.add('success');
     localRestoreButton.textContent = 'Successfully restored!';
     localImportTextarea.value = '';
+    clearToggleLabel.dataset.staleKeys = 0;
     document.querySelector('a[href="#configuration"]').classList.add('outdated');
   } catch (exception) {
     localRestoreButton.classList.add('failure');
@@ -76,6 +94,23 @@ const localRestore = async function () {
   }
 };
 
+const updateClearToggle = () => {
+  const importText = localImportTextarea.value;
+
+  try {
+    const parsedStorage = JSON.parse(importText);
+    if (typeof parsedStorage !== 'object') throw new Error();
+
+    const oldKeys = Object.keys(storageLocal);
+    const newKeys = Object.keys(parsedStorage);
+    const staleKeys = oldKeys.filter(key => !newKeys.includes(key));
+
+    clearToggleLabel.dataset.staleKeys = staleKeys.length;
+  } catch {
+    clearToggleLabel.dataset.staleKeys = 0;
+  }
+};
+
 const renderLocalBackup = async function () {
   updateLocalExportDisplay();
   browser.storage.onChanged.addListener((changes, areaName) => {
@@ -87,6 +122,7 @@ const renderLocalBackup = async function () {
   localCopyButton.addEventListener('click', localCopy);
   localDownloadButton.addEventListener('click', localExport);
 
+  localImportTextarea.addEventListener('input', updateClearToggle);
   localRestoreButton.addEventListener('click', localRestore);
 };
 

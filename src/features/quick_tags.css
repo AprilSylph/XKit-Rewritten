@@ -129,3 +129,25 @@
 .xkit-quick-tags-tags a:hover {
   text-decoration: underline;
 }
+
+.xkit-removable-tag {
+  border: 1px solid rgba(var(--black), .13);
+  border-radius: 1em;
+}
+
+.xkit-removable-tag + .xkit-removable-tag {
+  margin-left: 5px;
+}
+
+.xkit-removable-tag > button {
+  opacity: .5;
+  margin-left: 5px;
+}
+
+.xkit-removable-tag > button:hover:not(:disabled) {
+  opacity: 1;
+}
+
+.xkit-removable-tag > button:disabled {
+  opacity: .13;
+}

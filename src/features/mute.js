@@ -1,4 +1,4 @@
-import { filterPostElements, blogViewSelector, postSelector, getTimelineItemWrapper } from '../utils/interface.js';
+import { filterPostElements, postSelector, getTimelineItemWrapper } from '../utils/interface.js';
 import { registerBlogMeatballItem, registerMeatballItem, unregisterBlogMeatballItem, unregisterMeatballItem } from '../utils/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../utils/modals.js';
 import { timelineObject } from '../utils/react_props.js';
@@ -6,6 +6,7 @@ import { onNewPosts } from '../utils/mutations.js';
 import { keyToCss } from '../utils/css_map.js';
 import { dom } from '../utils/dom.js';
 import { getPreferences } from '../utils/preferences.js';
+import { anyBlogPostTimelineFilter, anyBlogTimelineFilter, channelSelector, likesTimelineFilter, timelineSelector } from '../utils/timeline_id.js';
 
 const meatballButtonId = 'mute';
 const meatballButtonLabel = (data) => `Mute options for ${data.name ?? getVisibleBlog(data).name}`;
@@ -31,18 +32,32 @@ const lengthenTimeline = timeline => {
   }
 };
 
-const getNameAndUuid = async (timelineElement, timeline) => {
-  const uuidOrName = timeline.split('/')?.[3];
+const exactly = (string) => `^${string}$`;
+const captureAnyBlog = '(t:[a-zA-Z0-9-_]{22}|[a-z0-9-]{1,32})';
+const uuidV4 = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}';
+
+const getNameOrUuid = ({ dataset: { timeline, timelineId } }) =>
+  [
+    timeline?.match(exactly(`/v2/blog/${captureAnyBlog}/posts`)),
+    timelineId?.match(exactly(`peepr-posts-${captureAnyBlog}-undefined-undefined-undefined-undefined-undefined-undefined`)),
+    timelineId?.match(exactly(`blog-view-${captureAnyBlog}`)),
+    timelineId?.match(exactly(`blog-${uuidV4}-${captureAnyBlog}`))
+  ]
+    .map((match) => match?.[1])
+    .find(Boolean);
+
+const getNameAndUuid = async (timelineElement) => {
+  const uuidOrName = getNameOrUuid(timelineElement);
   const posts = [...timelineElement.querySelectorAll(postSelector)];
   for (const post of posts) {
     const { blog: { name, uuid } } = await timelineObject(post);
     if ([name, uuid].includes(uuidOrName)) return [name, uuid];
   }
-  throw new Error(`could not determine blog name / UUID for timeline with ${timeline}`);
+  throw new Error('could not determine blog name / UUID for timeline', timelineElement);
 };
 
-const processBlogSpecificTimeline = async (timelineElement, timeline) => {
-  const [name, uuid] = await getNameAndUuid(timelineElement, timeline);
+const processBlogSpecificTimeline = async (timelineElement) => {
+  const [name, uuid] = await getNameAndUuid(timelineElement);
   const mode = mutedBlogs[uuid];
 
   timelineElement.dataset.muteOnBlogUuid = uuid;
@@ -59,28 +74,41 @@ const processBlogSpecificTimeline = async (timelineElement, timeline) => {
   }
 };
 
+const getLocation = timelineElement => {
+  const on = {
+    channel: timelineElement.matches(channelSelector),
+    singlePostBlogView: anyBlogPostTimelineFilter(timelineElement),
+    likes: likesTimelineFilter(timelineElement),
+
+    activeBlogView: anyBlogTimelineFilter(timelineElement),
+    active: true
+  };
+  return Object.keys(on).find(location => on[location]);
+};
+
 const processTimelines = async (timelineElements) => {
   for (const timelineElement of [...new Set(timelineElements)]) {
-    const { timeline, muteProcessedTimeline } = timelineElement.dataset;
+    const { timeline, timelineId, muteProcessedTimeline, muteProcessedTimelineId } = timelineElement.dataset;
 
-    const alreadyProcessed = timeline === muteProcessedTimeline;
+    const alreadyProcessed =
+      (timeline && timeline === muteProcessedTimeline) ||
+      (timelineId && timelineId === muteProcessedTimelineId);
     if (alreadyProcessed) continue;
 
     timelineElement.dataset.muteProcessedTimeline = timeline;
+    timelineElement.dataset.muteProcessedTimelineId = timelineId;
 
     [...timelineElement.querySelectorAll(`.${warningClass}`)].forEach(el => el.remove());
     delete timelineElement.dataset.muteOnBlogUuid;
 
-    const isChannel = timeline.startsWith('/v2/blog/') && !timelineElement.matches(blogViewSelector);
-    const isSinglePostBlogView = timeline.endsWith('/permalink');
-    const isLikes = timeline.endsWith('/likes');
+    const location = getLocation(timelineElement);
 
-    if (!isChannel && !isSinglePostBlogView && !isLikes) {
+    if (['active', 'activeBlogView'].includes(location)) {
       timelineElement.classList.add(activeClass);
       lengthenTimeline(timelineElement);
 
-      if (timeline.startsWith('/v2/blog/')) {
-        await processBlogSpecificTimeline(timelineElement, timeline);
+      if (location === 'activeBlogView') {
+        await processBlogSpecificTimeline(timelineElement).catch(console.log);
       }
     }
   }
@@ -99,7 +127,7 @@ const updateStoredName = (uuid, name) => {
 const getVisibleBlog = ({ blog, authorBlog, community }) => (community ? authorBlog : blog);
 
 const processPosts = async function (postElements) {
-  await processTimelines(postElements.map(postElement => postElement.closest('[data-timeline]')));
+  await processTimelines(postElements.map(postElement => postElement.closest(timelineSelector)));
 
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     const timelineObjectData = await timelineObject(postElement);
@@ -110,7 +138,7 @@ const processPosts = async function (postElements) {
       trail = []
     } = timelineObjectData;
 
-    const { muteOnBlogUuid: currentBlogViewUuid } = postElement.closest('[data-timeline]').dataset;
+    const { muteOnBlogUuid: currentBlogViewUuid } = postElement.closest(timelineSelector).dataset;
 
     if (mutedBlogs[uuid] && blogNames[uuid] !== name) {
       updateStoredName(uuid, name);
@@ -264,6 +292,7 @@ export const clean = async function () {
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
   $(`.${warningClass}`).remove();
   $('[data-mute-processed-timeline]').removeAttr('data-mute-processed-timeline');
+  $('[data-mute-processed-timeline-id]').removeAttr('data-mute-processed-timeline-id');
   $('[data-mute-on-blog-uuid]').removeAttr('data-mute-on-blog-uuid');
 };
 

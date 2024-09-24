@@ -64,7 +64,7 @@ const processTimelines = async (timelineElements) => {
     const { timeline, muteProcessedTimeline } = timelineElement.dataset;
 
     const alreadyProcessed = timeline === muteProcessedTimeline;
-    if (alreadyProcessed) return;
+    if (alreadyProcessed) continue;
 
     timelineElement.dataset.muteProcessedTimeline = timeline;
 

@@ -19,8 +19,8 @@
   border-radius: 3px;
   margin-bottom: var(--post-padding);
 
-  background-color: var(--blog-title-color-15);
-  color: var(--blog-title-color);
+  background-color: var(--blog-title-color-15, rgba(var(--white-on-dark), .25));
+  color: var(--blog-title-color, rgba(var(--white-on-dark)));
 
   font-weight: 700;
   text-align: center;
@@ -28,5 +28,5 @@
 }
 
 .xkit-mute-warning button {
-  color: var(--blog-link-color);
+  color: var(--blog-link-color, rgb(var(--deprecated-accent)));
 }

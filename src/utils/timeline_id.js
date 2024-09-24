@@ -4,6 +4,7 @@ export const timelineSelector = ':is([data-timeline], [data-timeline-id])';
 
 const exactly = string => `^${string}$`;
 const anyBlog = '[a-z0-9-]{1,32}';
+const anyPostId = '[0-9]{1,18}';
 const uuidV4 = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}';
 
 export const followingTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
@@ -31,6 +32,10 @@ export const blogTimelineFilter = blog =>
     timelineId === `peepr-posts-${blog}-undefined-undefined-undefined-undefined-undefined-undefined` ||
     timelineId === `blog-view-${blog}` ||
     timelineId?.match(exactly(`blog-${uuidV4}-${blog}`));
+
+export const anyBlogPostTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timeline?.match(exactly(`/v2/blog/${anyBlog}/posts/${anyPostId}/permalink`)) ||
+  timelineId?.match(exactly(`peepr-posts-${anyBlog}-${anyPostId}-undefined-undefined-undefined-undefined-undefined`));
 
 export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId } }) =>
   timeline === '/v2/timeline?which=blog_subscriptions' ||

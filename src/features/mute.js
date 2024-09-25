@@ -9,7 +9,7 @@ import { getPreferences } from '../utils/preferences.js';
 import { anyBlogPostTimelineFilter, anyBlogTimelineFilter, channelSelector, likesTimelineFilter, timelineSelector } from '../utils/timeline_id.js';
 
 const meatballButtonId = 'mute';
-const meatballButtonLabel = (data) => `Mute options for ${data.name ?? getVisibleBlog(data).name}`;
+const meatballButtonLabel = data => `Mute options for ${data.name ?? getVisibleBlog(data).name}`;
 
 const hiddenAttribute = 'data-mute-hidden';
 const onBlogHiddenAttribute = 'data-mute-hidden-on-blog';
@@ -32,7 +32,7 @@ const lengthenTimeline = timeline => {
   }
 };
 
-const exactly = (string) => `^${string}$`;
+const exactly = string => `^${string}$`;
 const captureAnyBlog = '(t:[a-zA-Z0-9-_]{22}|[a-z0-9-]{1,32})';
 const uuidV4 = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}';
 
@@ -43,10 +43,10 @@ const getNameOrUuid = ({ dataset: { timeline, timelineId } }) =>
     timelineId?.match(exactly(`blog-view-${captureAnyBlog}`)),
     timelineId?.match(exactly(`blog-${uuidV4}-${captureAnyBlog}`))
   ]
-    .map((match) => match?.[1])
+    .map(match => match?.[1])
     .find(Boolean);
 
-const getNameAndUuid = async (timelineElement) => {
+const getNameAndUuid = async timelineElement => {
   const uuidOrName = getNameOrUuid(timelineElement);
   const posts = [...timelineElement.querySelectorAll(postSelector)];
   for (const post of posts) {
@@ -56,7 +56,7 @@ const getNameAndUuid = async (timelineElement) => {
   throw new Error('could not determine blog name / UUID for timeline', timelineElement);
 };
 
-const processBlogSpecificTimeline = async (timelineElement) => {
+const processBlogSpecificTimeline = async timelineElement => {
   const [name, uuid] = await getNameAndUuid(timelineElement);
   const mode = mutedBlogs[uuid];
 
@@ -86,7 +86,7 @@ const getLocation = timelineElement => {
   return Object.keys(on).find(location => on[location]);
 };
 
-const processTimelines = async (timelineElements) => {
+const processTimelines = async timelineElements => {
   for (const timelineElement of [...new Set(timelineElements)]) {
     const { timeline, timelineId, muteProcessedTimeline, muteProcessedTimelineId } = timelineElement.dataset;
 

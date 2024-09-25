@@ -2,7 +2,7 @@ import { filterPostElements, postSelector, getTimelineItemWrapper } from '../uti
 import { registerBlogMeatballItem, registerMeatballItem, unregisterBlogMeatballItem, unregisterMeatballItem } from '../utils/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../utils/modals.js';
 import { timelineObject } from '../utils/react_props.js';
-import { onNewPosts } from '../utils/mutations.js';
+import { onNewPosts, pageModifications } from '../utils/mutations.js';
 import { keyToCss } from '../utils/css_map.js';
 import { dom } from '../utils/dom.js';
 import { getPreferences } from '../utils/preferences.js';
@@ -252,16 +252,21 @@ export const onStorageChanged = async function (changes, areaName) {
     [mutedBlogsEntriesStorageKey]: mutedBlogsEntriesChanges
   } = changes;
 
-  if (
-    Object.keys(changes).some(key => key.startsWith('mute.preferences') && changes[key].oldValue !== undefined) ||
-    mutedBlogsEntriesChanges
-  ) {
+  if (Object.keys(changes).some(key => key.startsWith('mute.preferences') && changes[key].oldValue !== undefined)) {
     clean().then(main);
     return;
   }
 
   if (blogNamesChanges) {
     ({ newValue: blogNames } = blogNamesChanges);
+  }
+
+  if (mutedBlogsEntriesChanges) {
+    const { newValue: mutedBlogsEntries } = mutedBlogsEntriesChanges;
+    mutedBlogs = Object.fromEntries(mutedBlogsEntries ?? []);
+
+    unprocess();
+    pageModifications.trigger(processPosts);
   }
 };
 
@@ -284,11 +289,7 @@ export const main = async function () {
   onNewPosts.addListener(processPosts);
 };
 
-export const clean = async function () {
-  unregisterMeatballItem(meatballButtonId);
-  unregisterBlogMeatballItem(meatballButtonId);
-  onNewPosts.removeListener(processPosts);
-
+const unprocess = () => {
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`[${mutedBlogHiddenAttribute}]`).removeAttr(mutedBlogHiddenAttribute);
   $(`.${activeClass}`).removeClass(activeClass);
@@ -297,6 +298,13 @@ export const clean = async function () {
   $('[data-mute-processed-timeline]').removeAttr('data-mute-processed-timeline');
   $('[data-mute-processed-timeline-id]').removeAttr('data-mute-processed-timeline-id');
   $('[data-mute-blog-uuid]').removeAttr('data-mute-blog-uuid');
+};
+
+export const clean = async function () {
+  unprocess();
+  unregisterMeatballItem(meatballButtonId);
+  unregisterBlogMeatballItem(meatballButtonId);
+  onNewPosts.removeListener(processPosts);
 };
 
 export const stylesheet = true;

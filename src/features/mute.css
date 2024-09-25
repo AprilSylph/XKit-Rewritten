@@ -1,25 +1,27 @@
-.xkit-mute-active [data-mute-hidden] article,
-:is([data-mute-mode="original"], [data-mute-mode="reblogged"]) ~ div [data-mute-hidden-on-blog] article {
+.xkit-mute-active [data-mute-hidden] article {
   display: none;
 }
 
-[data-mute-mode="all"] ~ div article {
+.xkit-muted-blog-controls:is([data-mode='original'], [data-mode='reblogged']) ~ div [data-muted-blog-hidden] article {
+  display: none;
+}
+.xkit-muted-blog-controls[data-mode='all'] ~ div article {
   visibility: hidden !important;
 }
-[data-mute-mode="all"] ~ div article :is(img, video, canvas) {
-  display: none;
+.xkit-muted-blog-controls[data-mode='all'] ~ div article :is(img, video, canvas) {
+  visibility: hidden !important;
 }
 
 .xkit-mute-lengthened {
   min-height: 100vh;
 }
 
-.xkit-mute-warning {
+.xkit-muted-blog-controls {
   padding: 25px 20px;
   border-radius: 3px;
   margin-bottom: var(--post-padding);
 
-  background-color: var(--blog-title-color-15, rgba(var(--white-on-dark), .25));
+  background-color: var(--blog-title-color-15, rgba(var(--white-on-dark), 0.25));
   color: var(--blog-title-color, rgba(var(--white-on-dark)));
 
   font-weight: 700;
@@ -27,6 +29,6 @@
   line-height: 1.5em;
 }
 
-.xkit-mute-warning button {
+.xkit-muted-blog-controls button {
   color: var(--blog-link-color, rgb(var(--deprecated-accent)));
 }

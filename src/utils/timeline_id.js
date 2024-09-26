@@ -3,7 +3,7 @@ const createSelector = (...components) => `:is(${components.filter(Boolean).join
 export const timelineSelector = ':is([data-timeline], [data-timeline-id])';
 
 const exactly = string => `^${string}$`;
-const anyBlog = '[a-z0-9-]{1,32}';
+const anyBlog = '(?:t:[a-zA-Z0-9-_]{22}|[a-z0-9-]{1,32})';
 const uuidV4 = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}';
 
 export const followingTimelineFilter = ({ dataset: { timeline, timelineId } }) =>

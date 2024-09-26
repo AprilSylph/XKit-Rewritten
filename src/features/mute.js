@@ -7,6 +7,7 @@ import { keyToCss } from '../utils/css_map.js';
 import { dom } from '../utils/dom.js';
 import { getPreferences } from '../utils/preferences.js';
 import { anyBlogPostTimelineFilter, anyBlogTimelineFilter, channelSelector, likesTimelineFilter, timelineSelector } from '../utils/timeline_id.js';
+import { controlsClass as showOriginalsControlsClass } from './show_originals.js';
 
 const meatballButtonId = 'mute';
 const meatballButtonLabel = data => `Mute options for ${data.name ?? getVisibleBlog(data).name}`;
@@ -71,7 +72,8 @@ const processBlogTimelineElement = async timelineElement => {
     ]);
     mutedBlogControls.dataset.mode = mode;
 
-    timelineElement.querySelector(keyToCss('scrollContainer')).before(mutedBlogControls);
+    timelineElement.prepend(mutedBlogControls);
+    timelineElement.querySelector(`.${showOriginalsControlsClass}`)?.after(mutedBlogControls);
   }
 };
 

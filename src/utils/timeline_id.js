@@ -7,7 +7,7 @@ export const channelSelector = `${keyToCss('bar')} ~ *`;
 
 const exactly = string => `^${string}$`;
 const anyBlog = '[a-z0-9-]{1,32}';
-const anyPostId = '[0-9]{1,19}';
+const anyPostId = '[0-9]{1,20}';
 const uuidV4 = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}';
 
 export const followingTimelineFilter = ({ dataset: { timeline, timelineId } }) =>

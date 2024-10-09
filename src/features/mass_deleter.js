@@ -69,7 +69,7 @@ const confirmDeleteDrafts = event => {
   });
 };
 
-const deleteDrafts = async function ({ blogName, before }) {
+const deleteDrafts = async ({ blogName, before }) => {
   const foundPostsElement = dom('span', null, null, ['Gathering drafts...']);
   const deleteCountElement = dom('span');
 
@@ -158,7 +158,7 @@ const showClearQueuePrompt = () => showModal({
   ]
 });
 
-const clearQueue = async function () {
+const clearQueue = async () => {
   const foundPostsElement = dom('span', null, null, ['Gathering queued posts...']);
   const deleteCountElement = dom('span');
 
@@ -259,12 +259,12 @@ const clearQueueSidebarOptions = {
   visibility: () => /\/blog\/.+\/queue/.test(location.pathname)
 };
 
-export const main = async function () {
+export const main = async () => {
   addSidebarItem(deleteDraftsSidebarOptions);
   addSidebarItem(clearQueueSidebarOptions);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   removeSidebarItem(deleteDraftsSidebarOptions.id);
   removeSidebarItem(clearQueueSidebarOptions.id);
 };

@@ -4,11 +4,11 @@ const [
   fetchedUserInfo,
   fetchedCommunitiesInfo
 ] = await Promise.all([
-  apiFetch('/v2/user/info').catch((error) => {
+  apiFetch('/v2/user/info').catch(error => {
     console.error(error);
     return { response: {} };
   }),
-  apiFetch('/v2/communities').catch((error) => {
+  apiFetch('/v2/communities').catch(error => {
     console.error(error);
     return { response: [] };
   })

@@ -6,7 +6,7 @@
 
   const restartListeners = {};
 
-  const runScript = async function (name) {
+  const runScript = async name => {
     const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
     const { main, clean, stylesheet, styleElement, onStorageChanged } = await import(scriptPath);
 
@@ -42,7 +42,7 @@
     browser.storage.onChanged.addListener(restartListeners[name]);
   };
 
-  const destroyScript = async function (name) {
+  const destroyScript = async name => {
     const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
     const { clean, stylesheet, styleElement } = await import(scriptPath);
 
@@ -60,7 +60,7 @@
     delete restartListeners[name];
   };
 
-  const onStorageChanged = async function (changes, areaName) {
+  const onStorageChanged = (changes, areaName) => {
     if (areaName !== 'local') {
       return;
     }
@@ -78,7 +78,7 @@
     }
   };
 
-  const getInstalledScripts = async function () {
+  const getInstalledScripts = async () => {
     const url = browser.runtime.getURL('/features/_index.json');
     const file = await fetch(url);
     const installedScripts = await file.json();
@@ -96,7 +96,7 @@
     document.documentElement.append(script);
   });
 
-  const init = async function () {
+  const init = async () => {
     $('style.xkit').remove();
 
     browser.storage.onChanged.addListener(onStorageChanged);

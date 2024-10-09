@@ -2,7 +2,7 @@ import { getPreferences } from '../utils/preferences.js';
 
 let enabledTweaks;
 
-const runTweak = async function (name) {
+const runTweak = async name => {
   const { main: run, styleElement } = await import(`./tweaks/${name}.js`);
   if (run) {
     run().catch(console.error);
@@ -13,7 +13,7 @@ const runTweak = async function (name) {
   }
 };
 
-const destroyTweak = async function (name) {
+const destroyTweak = async name => {
   const { clean: destroy, styleElement } = await import(`./tweaks/${name}.js`);
   if (destroy) {
     destroy().catch(console.error);
@@ -23,7 +23,7 @@ const destroyTweak = async function (name) {
   }
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async (changes, areaName) => {
   if (Object.keys(changes).some(key => key.startsWith('tweaks') && changes[key].oldValue !== undefined)) {
     const preferences = await getPreferences('tweaks');
 
@@ -39,13 +39,13 @@ export const onStorageChanged = async function (changes, areaName) {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   const preferences = await getPreferences('tweaks');
 
   enabledTweaks = Object.keys(preferences).filter(key => preferences[key] === true);
   enabledTweaks.forEach(runTweak);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   enabledTweaks.forEach(destroyTweak);
 };

@@ -11,7 +11,7 @@ const footerSelector = keyToCss('footerWrapper');
 
 let timeline;
 
-const processPosts = async function (postElements) {
+const processPosts = postElements => {
   filterPostElements(postElements, { excludeClass, timeline }).forEach(async postElement => {
     const headerElement = postElement.querySelector('header');
     const footerElement = postElement.querySelector(footerSelector);
@@ -27,7 +27,7 @@ const processPosts = async function (postElements) {
   });
 };
 
-export const main = async function () {
+export const main = async () => {
   const { runInQueue, runInDrafts } = await getPreferences('collapsed_queue');
   if (![runInQueue, runInDrafts].some(Boolean)) return;
 
@@ -39,7 +39,7 @@ export const main = async function () {
   onNewPosts.addListener(processPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(processPosts);
 
   [...document.querySelectorAll(`.${wrapperClass}`)].forEach(wrapper => {

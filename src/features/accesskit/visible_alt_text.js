@@ -1,6 +1,6 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
-import { translate } from '../../utils/language_data.js';
+import { advancedTranslate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 
@@ -34,7 +34,7 @@ const processImages = function (imageElements) {
     if (imageBlock.classList.contains(processedClass)) continue;
     imageBlock.classList.add(processedClass);
 
-    const isDefaultAltText = [translate('Image'), translate('Image').toLowerCase(), 'image'].includes(alt);
+    const isDefaultAltText = [...advancedTranslate('Image'), 'image'].includes(alt);
     const shouldShowCaption = mode === 'show' || !isDefaultAltText;
     if (!shouldShowCaption) continue;
 

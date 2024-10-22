@@ -53,4 +53,5 @@
 .xkit-control-button-container.in-community {
   margin: 4px;
   align-self: center;
+  line-height: 0;
 }

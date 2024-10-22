@@ -1,6 +1,5 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
-import { buildStyle } from './interface.js';
 import { timelineObject } from './react_props.js';
 import { buildSvg } from './remixicon.js';
 
@@ -57,15 +56,8 @@ export const insertControlButtonEditable = async (postElement, clonedControlButt
   } else {
     const { community, canEdit } = await timelineObject(postElement);
     if (community && canEdit) {
-      postElement.querySelector(`${keyToCss('noteCountContainer')} > ${keyToCss('container')}`).before(clonedControlButton);
+      clonedControlButton.classList.add('in-community');
+      postElement.querySelector(`${keyToCss('controls')}`).append(clonedControlButton);
     }
   }
 };
-
-const styleElement = buildStyle(`
-${keyToCss('noteCountContainer')} > .xkit-control-button-container {
-    margin: 0 12px 0 0;
-    align-self: center;
-}
-`);
-document.documentElement.append(styleElement);

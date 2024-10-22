@@ -37,15 +37,20 @@
 }
 
 @media (max-width: 990px) {
-  .xkit-control-button-container {
+  .xkit-control-button-container:not(.in-community) {
     margin-left: 0;
   }
 
-  .xkit-control-button {
+  .xkit-control-button-container:not(.in-community) .xkit-control-button {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 48px;
     width: 48px;
   }
+}
+
+.xkit-control-button-container.in-community {
+  margin: 4px;
+  align-self: center;
 }

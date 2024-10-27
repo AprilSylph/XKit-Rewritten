@@ -6,7 +6,7 @@
 
   const restartListeners = {};
 
-  const randomId = Math.random();
+  const timestamp = Date.now();
 
   const runScript = async function (name) {
     const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
@@ -18,7 +18,7 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: browser.runtime.getURL(`/features/${name}.css?v=${randomId}`)
+        href: browser.runtime.getURL(`/features/${name}.css?t=${timestamp}`)
       });
       link.className = 'xkit';
       document.documentElement.appendChild(link);

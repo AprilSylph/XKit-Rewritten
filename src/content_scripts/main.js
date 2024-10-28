@@ -6,6 +6,8 @@
 
   const restartListeners = {};
 
+  const timestamp = Date.now();
+
   const runScript = async function (name) {
     const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
     const { main, clean, stylesheet, styleElement, onStorageChanged } = await import(scriptPath);
@@ -16,8 +18,9 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: browser.runtime.getURL(`/features/${name}.css`)
+        href: browser.runtime.getURL(`/features/${name}.css?t=${timestamp}`)
       });
+      link.className = 'xkit';
       document.documentElement.appendChild(link);
     }
     if (styleElement) {
@@ -50,7 +53,7 @@
       clean().catch(console.error);
     }
     if (stylesheet) {
-      document.querySelector(`link[href="${browser.runtime.getURL(`/features/${name}.css`)}"]`)?.remove();
+      document.querySelector(`link[href^="${browser.runtime.getURL(`/features/${name}.css`)}"]`)?.remove();
     }
     if (styleElement) {
       styleElement.remove();
@@ -97,7 +100,7 @@
   });
 
   const init = async function () {
-    $('style.xkit').remove();
+    $('style.xkit, link.xkit').remove();
 
     browser.storage.onChanged.addListener(onStorageChanged);
 

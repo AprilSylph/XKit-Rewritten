@@ -84,7 +84,7 @@ export const main = async function () {
       )
     )
   );
-  pageModifications.register(keyToCss('navigationLinks'), processNavigationLinks);
+  pageModifications.register(`[role="banner"] ${keyToCss('navigationLinks')}`, processNavigationLinks);
 };
 
 export const clean = async function () {

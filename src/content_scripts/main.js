@@ -9,8 +9,13 @@
   const timestamp = Date.now();
 
   const runScript = async function (name) {
-    const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
-    const { main, clean, stylesheet, styleElement, onStorageChanged } = await import(scriptPath);
+    const {
+      main,
+      clean,
+      stylesheet,
+      styleElement,
+      onStorageChanged
+    } = await import(browser.runtime.getURL(`/features/${name}.js`));
 
     if (main) {
       main().catch(console.error);
@@ -46,8 +51,11 @@
   };
 
   const destroyScript = async function (name) {
-    const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
-    const { clean, stylesheet, styleElement } = await import(scriptPath);
+    const {
+      clean,
+      stylesheet,
+      styleElement
+    } = await import(browser.runtime.getURL(`/features/${name}.js`));
 
     if (clean) {
       clean().catch(console.error);

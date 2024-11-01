@@ -9,20 +9,20 @@
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^3.3.1",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-config-semistandard": "^17.0.0",
     "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsdoc": "^50.2.3",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsdoc": "^50.3.1",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.6.0",
-    "web-ext": "^8.2.0"
+    "web-ext": "^8.3.0"
   },
   "dependencies": {
     "jquery": "^3.7.1",
     "moment": "^2.30.1",
     "normalize.css": "^8.0.1",
-    "remixicon": "^4.2.0",
+    "remixicon": "^4.5.0",
     "spectrum-colorpicker": "^1.8.1",
     "webextension-polyfill": "^0.12.0"
   },

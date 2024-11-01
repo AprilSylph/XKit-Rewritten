@@ -2,7 +2,7 @@ import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
 
 const wrapper = keyToCss('leftContentMain', 'username');
-const badgeContainer = keyToCss('badgeContainer');
+const badgeContainer = '[style*="--badges-index"]';
 const badgeImage = ':is(svg, img)';
 
 export const styleElement = buildStyle(`

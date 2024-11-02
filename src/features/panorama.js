@@ -13,15 +13,13 @@ const mainRightPadding = 20;
 const mainRightBorder = 1;
 const sidebarOffset = sidebarMaxWidth + mainRightPadding + mainRightBorder;
 
-const mainEnableClass = 'xkit-panorama-main';
-const patioEnableClass = 'xkit-panorama-patio';
 const expandMediaClass = 'xkit-panorama-expand-media';
 
 const maxPostWidthVar = '--xkit-panorama-post-width';
 const aspectRatioVar = '--xkit-panorama-aspect-ratio';
 
 const mainContentWrapper =
-  `body.${mainEnableClass} ${keyToCss('mainContentWrapper')}:not(${keyToCss('mainContentIsMasonry', 'mainContentIsFullWidth')})`;
+  `${keyToCss('mainContentWrapper')}:not(${keyToCss('mainContentIsMasonry', 'mainContentIsFullWidth')})`;
 const mainPostColumn = `main${keyToCss('postColumn', 'postsColumn')}`;
 const patioPostColumn = `[id]${keyToCss('columnWide')}`;
 
@@ -39,18 +37,20 @@ ${mainContentWrapper} > div > div:has(> ${mainPostColumn}) {
 ${mainContentWrapper} > div > div > ${mainPostColumn} {
   max-width: 100%;
 }
-body.${mainEnableClass} ${keyToCss('queueSettings')} {
+${keyToCss('queueSettings')} {
   box-sizing: border-box;
   width: 100%;
 }
 `);
 mainStyleElement.media = `(min-width: ${widenDashMinWidth}px)`;
 
-const styleElement = buildStyle(`
-body.${patioEnableClass} ${patioPostColumn} {
+const patioStyleElement = buildStyle(`
+${patioPostColumn} {
   width: min(var(${maxPostWidthVar}), 100vw);
 }
+`);
 
+const styleElement = buildStyle(`
 /* Widen posts */
 ${keyToCss('cell')}, ${postSelector}
   :is(
@@ -122,11 +122,11 @@ export const main = async () => {
 
   const maxPostWidth = Number(maxPostWidthString.trim().replace('px', '')) || 0;
   document.body.style.setProperty(maxPostWidthVar, `${Math.max(maxPostWidth, 540)}px`);
-  document.body.classList[mainEnable ? 'add' : 'remove'](mainEnableClass);
-  document.body.classList[patioEnable ? 'add' : 'remove'](patioEnableClass);
   document.body.classList[expandPostMedia ? 'add' : 'remove'](expandMediaClass);
 
-  document.documentElement.append(styleElement, mainStyleElement);
+  document.documentElement.append(styleElement);
+  mainEnable ? document.documentElement.append(mainStyleElement) : mainStyleElement.remove();
+  patioEnable ? document.documentElement.append(patioStyleElement) : patioStyleElement.remove();
 
   pageModifications.register(
     `${postSelector} ${keyToCss('videoBlock')} iframe[style*="max-width"][style*="height"]`,
@@ -141,8 +141,9 @@ export const clean = async () => {
   );
 
   document.body.style.removeProperty(maxPostWidthVar);
-  document.body.classList.remove(mainEnableClass, patioEnableClass, expandMediaClass);
+  document.body.classList.remove(expandMediaClass);
 
   styleElement.remove();
   mainStyleElement.remove();
+  patioStyleElement.remove();
 };

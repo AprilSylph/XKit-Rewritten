@@ -19,7 +19,7 @@
       "default": true
     },
     "mainEnable": {
-      "label": "Apply to most post columns",
+      "label": "Apply to single post columns",
       "type": "checkbox",
       "default": true
     },

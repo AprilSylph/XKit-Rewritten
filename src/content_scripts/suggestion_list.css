@@ -32,6 +32,7 @@
   padding-right: calc(1ch + 1em + 1ch);
   max-width: 100%;
 
+  justify-content: unset !important;
   overflow-x: hidden;
   white-space: nowrap;
 }

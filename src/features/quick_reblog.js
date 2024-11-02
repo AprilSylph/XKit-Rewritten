@@ -106,6 +106,13 @@ const renderTagSuggestions = () => {
     tagSuggestions.replaceChildren(
       dom('div', null, null, tagsToSuggest.map(value => dom('button', { 'data-value': value }, null, [value])))
     );
+    tagSuggestions.hidden = false;
+  }
+};
+
+const onInputKeyDown = ({ key }) => {
+  if (key === 'Escape') {
+    tagSuggestions.hidden = true;
   }
 };
 
@@ -129,6 +136,7 @@ const checkLength = ({ currentTarget }) => {
 };
 
 tagsInput.addEventListener('input', renderTagSuggestions);
+tagsInput.addEventListener('keydown', onInputKeyDown);
 tagsInput.addEventListener('input', doSmartQuotes);
 tagsInput.addEventListener('input', checkLength);
 

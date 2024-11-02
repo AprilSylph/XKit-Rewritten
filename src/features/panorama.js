@@ -15,7 +15,7 @@ const sidebarOffset = sidebarMaxWidth + mainRightPadding + mainRightBorder;
 
 const mainEnableClass = 'xkit-panorama-main';
 const patioEnableClass = 'xkit-panorama-patio';
-const expandClass = 'xkit-panorama-expand-media';
+const expandMediaClass = 'xkit-panorama-expand-media';
 
 const maxPostWidthVar = '--xkit-panorama-post-width';
 const aspectRatioVar = '--xkit-panorama-aspect-ratio';
@@ -62,7 +62,7 @@ ${keyToCss('cell')}, ${postSelector}
 }
 
 /* Center non-expanded content */
-body:not(.${expandClass}) ${postSelector}
+body:not(.${expandMediaClass}) ${postSelector}
   :is(
     ${keyToCss('videoBlock', 'audioBlock', 'link', 'pollBlock', 'imageBlockLink')},
     figure${keyToCss('imageBlock')}:not(${keyToCss('unstretched')})
@@ -72,18 +72,18 @@ body:not(.${expandClass}) ${postSelector}
 }
 
 /* Widen + lock aspect ratios of expanded content */
-body.${expandClass} ${postSelector}
+body.${expandMediaClass} ${postSelector}
   :is(
     ${keyToCss('videoBlock', 'audioBlock', 'link', 'pollBlock')},
     ${keyToCss('videoBlock')} iframe
   ) {
   max-width: unset !important;
 }
-body.${expandClass} ${postSelector} ${keyToCss('videoBlock')} iframe[style*="${aspectRatioVar}"] {
+body.${expandMediaClass} ${postSelector} ${keyToCss('videoBlock')} iframe[style*="${aspectRatioVar}"] {
   aspect-ratio: var(${aspectRatioVar});
   height: unset !important;
 }
-body.${expandClass} ${postSelector} a > ${keyToCss('withImage')} {
+body.${expandMediaClass} ${postSelector} a > ${keyToCss('withImage')} {
   aspect-ratio: 2;
   height: unset !important;
 }
@@ -124,7 +124,7 @@ export const main = async () => {
   document.body.style.setProperty(maxPostWidthVar, `${Math.max(maxPostWidth, 540)}px`);
   document.body.classList[mainEnable ? 'add' : 'remove'](mainEnableClass);
   document.body.classList[patioEnable ? 'add' : 'remove'](patioEnableClass);
-  document.body.classList[expandPostMedia ? 'add' : 'remove'](expandClass);
+  document.body.classList[expandPostMedia ? 'add' : 'remove'](expandMediaClass);
 
   document.documentElement.append(styleElement, mainStyleElement);
 
@@ -141,7 +141,7 @@ export const clean = async () => {
   );
 
   document.body.style.removeProperty(maxPostWidthVar);
-  document.body.classList.remove(mainEnableClass, patioEnableClass, expandClass);
+  document.body.classList.remove(mainEnableClass, patioEnableClass, expandMediaClass);
 
   styleElement.remove();
   mainStyleElement.remove();

@@ -3,10 +3,7 @@ import { buildStyle, postSelector } from '../utils/interface.js';
 import { pageModifications } from '../utils/mutations.js';
 import { getPreferences } from '../utils/preferences.js';
 
-const navigationWrapperBasis = 240;
-const navigationWrapperMargin = 20;
-const mainContentWrapperMinWidth = 902;
-const widenDashMinWidth = navigationWrapperBasis + navigationWrapperMargin + mainContentWrapperMinWidth;
+const widenDashMinWidth = 1162;
 
 const sidebarMaxWidth = 320;
 const mainRightPadding = 20;

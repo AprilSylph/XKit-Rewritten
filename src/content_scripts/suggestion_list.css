@@ -1,0 +1,45 @@
+.xkit-suggestion-list {
+  position: absolute;
+  z-index: 1;
+  max-width: 250px;
+  margin: 7px;
+  padding: 2px;
+
+  border-radius: 4px;
+  color: rgb(var(--black), 0.65);
+  background-color: rgb(var(--white));
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, .5);
+}
+
+.xkit-suggestion-list::before {
+  position: absolute;
+  bottom: 100%;
+  left: 10px;
+
+  content: '';
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 9px solid rgb(var(--white));
+}
+
+.xkit-suggestion-list > div {
+  max-height: 250px;
+  overflow-y: scroll;
+}
+
+.xkit-suggestion-list button {
+  padding: 0.75ch 1ch;
+  padding-right: calc(1ch + 1em + 1ch);
+  max-width: 100%;
+
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+
+:not(:focus, :focus-within) > .xkit-suggestion-list {
+  display: none;
+}
+
+.xkit-suggestion-list:empty {
+  display: none;
+}

@@ -144,52 +144,6 @@ div:first-child + span + #quick-reblog,
   box-sizing: border-box;
 }
 
-#quick-reblog .tags-input-wrapper:not(:focus, :focus-within) > .tag-suggestions {
-  display: none;
-}
-
-#quick-reblog .tag-suggestions:has(> div:empty) {
-  display: none;
-}
-
-#quick-reblog .tag-suggestions {
-  position: absolute;
-  z-index: 1;
-  max-width: 250px;
-  margin: 7px;
-  padding: 2px;
-
-  border-radius: 4px;
-  color: rgb(var(--black), 0.65);
-  background-color: rgb(var(--white));
-  box-shadow: 0 0 15px 0 rgba(0, 0, 0, .5);
-}
-
-#quick-reblog .tag-suggestions::before {
-  position: absolute;
-  bottom: 100%;
-  left: 10px;
-
-  content: '';
-  border-left: 9px solid transparent;
-  border-right: 9px solid transparent;
-  border-bottom: 9px solid rgb(var(--white));
-}
-
-#quick-reblog .tag-suggestions > div {
-  max-height: 250px;
-  overflow-y: scroll;
-}
-
-#quick-reblog .tag-suggestions button {
-  padding: 0.75ch 1ch;
-  padding-right: calc(1ch + 1em + 1ch);
-  max-width: 100%;
-
-  overflow-x: hidden;
-  white-space: nowrap;
-}
-
 #quick-reblog .action-buttons {
   display: flex;
   flex-direction: row;

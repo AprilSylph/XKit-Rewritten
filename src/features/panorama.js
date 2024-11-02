@@ -10,6 +10,10 @@ const mainRightPadding = 20;
 const mainRightBorder = 1;
 const sidebarOffset = sidebarMaxWidth + mainRightPadding + mainRightBorder;
 
+const communityGap = 20;
+const communitySidebarMinWidth = 280;
+const communitySidebarMaxWidth = 360;
+
 const expandMediaClass = 'xkit-panorama-expand-media';
 
 const maxPostWidthVar = '--xkit-panorama-post-width';
@@ -40,6 +44,21 @@ ${keyToCss('queueSettings')} {
 }
 `);
 mainStyleElement.media = `(min-width: ${widenDashMinWidth}px)`;
+
+const communityStyleElement = buildStyle(`
+${keyToCss('grid')}${keyToCss('community')} {
+  grid-template-columns:
+    min(calc(100% - ${communityGap * 3}px - ${communitySidebarMaxWidth}px), var(${maxPostWidthVar}))
+
+    /* not modified from tumblr style */
+    minmax(${communitySidebarMinWidth}px, ${communitySidebarMaxWidth}px);
+}
+${keyToCss('grid')}${keyToCss('community')} ${keyToCss('newPostBar')} > ${keyToCss('bar')},
+${keyToCss('grid')}${keyToCss('community')} ${keyToCss('timeline')} {
+  max-width: unset;
+}
+`);
+communityStyleElement.media = `(min-width: ${widenDashMinWidth + communityGap * 2}px)`;
 
 const patioStyleElement = buildStyle(`
 ${patioPostColumn} {
@@ -122,7 +141,12 @@ export const main = async () => {
   document.body.classList[expandPostMedia ? 'add' : 'remove'](expandMediaClass);
 
   document.documentElement.append(styleElement);
-  mainEnable ? document.documentElement.append(mainStyleElement) : mainStyleElement.remove();
+  if (mainEnable) {
+    document.documentElement.append(mainStyleElement, communityStyleElement);
+  } else {
+    mainStyleElement.remove();
+    communityStyleElement.remove();
+  }
   patioEnable ? document.documentElement.append(patioStyleElement) : patioStyleElement.remove();
 
   pageModifications.register(
@@ -142,5 +166,6 @@ export const clean = async () => {
 
   styleElement.remove();
   mainStyleElement.remove();
+  communityStyleElement.remove();
   patioStyleElement.remove();
 };

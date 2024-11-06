@@ -51,7 +51,7 @@ export const adminBlogNames = adminBlogs.map(blog => blog.name);
 
 let communitiesOrder = [];
 try {
-  communitiesOrder = JSON.parse(localStorage.getItem('sortableCommunitiesOrder'));
+  communitiesOrder = JSON.parse(localStorage.getItem('sortableCommunitiesOrder')) ?? [];
 } catch {}
 
 const getOrder = community => {

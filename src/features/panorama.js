@@ -78,7 +78,7 @@ ${keyToCss('cell')}, ${postSelector}
 }
 
 /* Center non-expanded content */
-body:not(.${expandMediaClass}) ${postSelector}
+:root:not(.${expandMediaClass}) ${postSelector}
   :is(
     ${keyToCss('videoBlock', 'audioBlock', 'link', 'pollBlock', 'imageBlockLink')},
     figure${keyToCss('imageBlock')}:not(${keyToCss('unstretched')})
@@ -88,18 +88,18 @@ body:not(.${expandMediaClass}) ${postSelector}
 }
 
 /* Widen + lock aspect ratios of expanded content */
-body.${expandMediaClass} ${postSelector}
+:root.${expandMediaClass} ${postSelector}
   :is(
     ${keyToCss('videoBlock', 'audioBlock', 'link', 'pollBlock')},
     ${keyToCss('videoBlock')} iframe
   ) {
   max-width: unset !important;
 }
-body.${expandMediaClass} ${postSelector} ${keyToCss('videoBlock')} iframe[style*="${aspectRatioVar}"] {
+:root.${expandMediaClass} ${postSelector} ${keyToCss('videoBlock')} iframe[style*="${aspectRatioVar}"] {
   aspect-ratio: var(${aspectRatioVar});
   height: unset !important;
 }
-body.${expandMediaClass} ${postSelector} a > ${keyToCss('withImage')} {
+:root.${expandMediaClass} ${postSelector} a > ${keyToCss('withImage')} {
   aspect-ratio: 2;
   height: unset !important;
 }

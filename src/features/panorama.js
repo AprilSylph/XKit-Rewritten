@@ -137,8 +137,8 @@ export const main = async () => {
   } = await getPreferences('panorama');
 
   const maxPostWidth = Number(maxPostWidthString.trim().replace('px', '')) || 0;
-  document.body.style.setProperty(maxPostWidthVar, `${Math.max(maxPostWidth, 540)}px`);
-  document.body.classList[expandPostMedia ? 'add' : 'remove'](expandMediaClass);
+  document.documentElement.style.setProperty(maxPostWidthVar, `${Math.max(maxPostWidth, 540)}px`);
+  document.documentElement.classList[expandPostMedia ? 'add' : 'remove'](expandMediaClass);
 
   document.documentElement.append(styleElement);
   if (mainEnable) {
@@ -161,8 +161,8 @@ export const clean = async () => {
     el.style.removeProperty(aspectRatioVar)
   );
 
-  document.body.style.removeProperty(maxPostWidthVar);
-  document.body.classList.remove(expandMediaClass);
+  document.documentElement.style.removeProperty(maxPostWidthVar);
+  document.documentElement.classList.remove(expandMediaClass);
 
   styleElement.remove();
   mainStyleElement.remove();

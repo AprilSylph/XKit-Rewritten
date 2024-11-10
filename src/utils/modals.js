@@ -62,3 +62,6 @@ export const showErrorModal = exception => {
     buttons: [modalCompleteButton]
   });
 };
+
+export const createTagSpan = tag => dom('span', { class: 'xkit-modal-tag' }, null, [tag]);
+export const createBlogSpan = name => dom('span', { class: 'xkit-modal-blog' }, null, [name]);

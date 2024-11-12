@@ -46,7 +46,7 @@ jobs:
         run: npm ci
 
       - name: Upload to Web Store
-        run: npx chrome-webstore-upload upload --source=src/ --auto-publish
+        run: npx chrome-webstore-upload --source=src/
         env:
           EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}

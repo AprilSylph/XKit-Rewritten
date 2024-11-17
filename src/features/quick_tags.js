@@ -20,6 +20,7 @@ const controlIconSelector = keyToCss('controlIcon');
 let originalPostTag;
 let answerTag;
 let autoTagAsker;
+let tagBundles;
 
 let controlButtonTemplate;
 
@@ -65,13 +66,6 @@ const createBundleButton = tagBundle => {
   return bundleButton;
 };
 
-const populatePopups = async function () {
-  const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-
-  popupElement.replaceChildren(popupForm, ...tagBundles.map(createBundleButton));
-  postOptionPopupElement.replaceChildren(...tagBundles.map(createBundleButton));
-};
-
 const processPostForm = async function ([selectedTagsElement]) {
   if (selectedTagsElement.classList.contains(excludeClass)) {
     return;
@@ -104,7 +98,9 @@ const processPostForm = async function ([selectedTagsElement]) {
 
 export const onStorageChanged = async function (changes, areaName) {
   if (Object.keys(changes).some(key => key.startsWith('quick_tags'))) {
-    if (Object.keys(changes).includes(storageKey)) populatePopups();
+    if (Object.keys(changes).includes(storageKey)) {
+      ({ newValue: tagBundles = [] } = changes[storageKey]);
+    }
 
     ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
     if (originalPostTag || answerTag || autoTagAsker) {
@@ -123,6 +119,7 @@ const togglePopupDisplay = async function ({ target, currentTarget: controlButto
   if (buttonContainer.contains(popupElement)) {
     buttonContainer.removeChild(popupElement);
   } else {
+    popupElement.replaceChildren(popupForm, ...tagBundles.map(createBundleButton));
     appendWithoutOverflow(popupElement, buttonContainer);
   }
 };
@@ -133,6 +130,7 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
   if (currentTarget.contains(postOptionPopupElement)) {
     currentTarget.removeChild(postOptionPopupElement);
   } else {
+    postOptionPopupElement.replaceChildren(...tagBundles.map(createBundleButton));
     appendWithoutOverflow(postOptionPopupElement, currentTarget);
   }
 };
@@ -282,7 +280,7 @@ export const main = async function () {
   onNewPosts.addListener(processPosts);
   registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });
 
-  populatePopups();
+  ({ [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey));
 
   ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
   if (originalPostTag || answerTag || autoTagAsker) {

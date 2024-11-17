@@ -20,6 +20,7 @@ const controlIconSelector = keyToCss('controlIcon');
 let originalPostTag;
 let answerTag;
 let autoTagAsker;
+let showReblogSuggestions;
 let tagBundles;
 
 let controlButtonTemplate;
@@ -102,7 +103,7 @@ export const onStorageChanged = async function (changes, areaName) {
       ({ newValue: tagBundles = [] } = changes[storageKey]);
     }
 
-    ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+    ({ originalPostTag, answerTag, autoTagAsker, showReblogSuggestions } = await getPreferences('quick_tags'));
     if (originalPostTag || answerTag || autoTagAsker) {
       pageModifications.register('#selected-tags', processPostForm);
     } else {
@@ -121,6 +122,24 @@ const togglePopupDisplay = async function ({ target, currentTarget: controlButto
   } else {
     popupElement.replaceChildren(popupForm, ...tagBundles.map(createBundleButton));
     appendWithoutOverflow(popupElement, buttonContainer);
+
+    if (showReblogSuggestions) {
+      const { rebloggedFromUuid, rebloggedFromId } = await timelineObject(controlButton.closest(postSelector));
+      if (rebloggedFromUuid && rebloggedFromId) {
+        const { response: { tags, blogName, postAuthor, rebloggedRootName } } = await apiFetch(`/v2/blog/${rebloggedFromUuid}/posts/${rebloggedFromId}`);
+
+        const suggestableTags = tags;
+        if (blogName) suggestableTags.push(blogName);
+        if (postAuthor) suggestableTags.push(postAuthor);
+        if (rebloggedRootName) suggestableTags.push(rebloggedRootName);
+        const tagsToSuggest = suggestableTags.filter((tag, index, array) => array.indexOf(tag) === index);
+
+        if (tagsToSuggest.length) {
+          popupElement.lastElementChild?.style?.setProperty('margin-bottom', '6px');
+          popupElement.append(...tagsToSuggest.map(tag => createBundleButton({ title: tag, tags: tag })));
+        }
+      }
+    }
   }
 };
 
@@ -282,7 +301,7 @@ export const main = async function () {
 
   ({ [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey));
 
-  ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+  ({ originalPostTag, answerTag, autoTagAsker, showReblogSuggestions } = await getPreferences('quick_tags'));
   if (originalPostTag || answerTag || autoTagAsker) {
     pageModifications.register('#selected-tags', processPostForm);
   }

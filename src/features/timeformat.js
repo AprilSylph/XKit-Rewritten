@@ -31,6 +31,7 @@ export const styleElement = buildStyle(`
 ${keyToCss('blogLinkWrapper')}:has(+ [data-formatted-time]) {
   flex: none;
 }
+
 ${keyToCss('blogLinkWrapper')} + [data-formatted-time] {
   white-space: nowrap;
   overflow-x: hidden;

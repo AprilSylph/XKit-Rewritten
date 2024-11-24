@@ -8,7 +8,7 @@
 
   const timestamp = Date.now();
 
-  const runScript = async function (name) {
+  const runScript = async name => {
     const {
       main,
       clean,
@@ -50,7 +50,7 @@
     browser.storage.onChanged.addListener(restartListeners[name]);
   };
 
-  const destroyScript = async function (name) {
+  const destroyScript = async name => {
     const {
       clean,
       stylesheet,
@@ -71,7 +71,7 @@
     delete restartListeners[name];
   };
 
-  const onStorageChanged = async function (changes, areaName) {
+  const onStorageChanged = (changes, areaName) => {
     if (areaName !== 'local') {
       return;
     }
@@ -89,7 +89,7 @@
     }
   };
 
-  const getInstalledScripts = async function () {
+  const getInstalledScripts = async () => {
     const url = browser.runtime.getURL('/features/_index.json');
     const file = await fetch(url);
     const installedScripts = await file.json();
@@ -107,7 +107,7 @@
     document.documentElement.append(script);
   });
 
-  const init = async function () {
+  const init = async () => {
     $('style.xkit, link.xkit').remove();
 
     browser.storage.onChanged.addListener(onStorageChanged);

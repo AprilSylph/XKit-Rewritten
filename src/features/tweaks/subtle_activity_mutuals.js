@@ -48,13 +48,13 @@ const processLabels = labels => labels.forEach(label => {
 const waitForRender = () =>
   new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-export const main = async function () {
+export const main = async () => {
   pageModifications.register(labelSelector, processLabels);
 
   waitForRender().then(() => document.documentElement.append(transitionStyleElement));
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(processLabels);
   transitionStyleElement.remove();
 

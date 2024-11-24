@@ -1,4 +1,4 @@
-import { createControlButtonTemplate, cloneControlButton } from '../utils/control_buttons.js';
+import { createControlButtonTemplate, cloneControlButton, insertControlButtonEditable } from '../utils/control_buttons.js';
 import { keyToCss } from '../utils/css_map.js';
 import { dom } from '../utils/dom.js';
 import { filterPostElements, postSelector } from '../utils/interface.js';
@@ -14,7 +14,6 @@ const reblogPreviewClass = 'xkit-trim-reblogs-preview';
 const avatarPreviewClass = 'xkit-trim-reblogs-avatar-preview';
 const textPreviewClass = 'xkit-trim-reblogs-text-preview';
 
-const controlIconSelector = keyToCss('controlIcon');
 const reblogSelector = keyToCss('reblog');
 
 let controlButtonTemplate;
@@ -33,7 +32,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   } = await timelineObject(postElement);
 
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
-  const { blog, content = [], trail = [], isBlocksPostFormat } = postData;
+  const { blog, community, authorBlog, content = [], trail = [], isBlocksPostFormat } = postData;
 
   if (isBlocksPostFormat === false) {
     await new Promise(resolve => {
@@ -71,8 +70,8 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     });
   }
 
-  const createPreviewItem = ({ blog, brokenBlog, content, disableCheckbox = false }) => {
-    const { avatar, name } = blog ?? brokenBlog ?? blogPlaceholder;
+  const createPreviewItem = ({ blog, community, authorBlog, brokenBlog, content, disableCheckbox = false }) => {
+    const { avatar, name } = (community && authorBlog) ?? blog ?? brokenBlog ?? blogPlaceholder;
     const { url: src } = avatar.at(-1);
     const textContent = content.map(({ text }) => text).find(Boolean) ?? '\u22EF';
 
@@ -98,7 +97,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   trailData.slice(0, -1).forEach(({ checkbox }) => { checkbox.checked = true; });
 
   const contentData = content.length
-    ? [createPreviewItem({ blog, content, disableCheckbox: true })]
+    ? [createPreviewItem({ blog, community, authorBlog, content, disableCheckbox: true })]
     : [];
 
   const previewElement = dom(
@@ -156,19 +155,11 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
 };
 
 const processPosts = postElements => filterPostElements(postElements).forEach(async postElement => {
-  const existingButton = postElement.querySelector(`.${buttonClass}`);
-  if (existingButton !== null) { return; }
-
-  const editIcon = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"] use[href="#managed-icon__edit"]`);
-  if (!editIcon) { return; }
-  const editButton = editIcon.closest('a');
-
   const { trail = [], content = [] } = await timelineObject(postElement);
   const items = trail.length + (content.length ? 1 : 0);
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: event => onButtonClicked(event).catch(showErrorModal) }, items < 2);
-  const controlIcon = editButton.closest(controlIconSelector);
-  controlIcon.before(clonedControlButton);
+  insertControlButtonEditable(postElement, clonedControlButton, buttonClass);
 });
 
 export const main = async function () {

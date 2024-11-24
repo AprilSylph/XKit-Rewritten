@@ -2,7 +2,7 @@ import { sha256 } from '../utils/crypto.js';
 import { timelineObject } from '../utils/react_props.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
 import { postSelector, filterPostElements, postType, appendWithoutOverflow } from '../utils/interface.js';
-import { joinedCommunities, joinedCommunityUuids, userBlogs } from '../utils/user.js';
+import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../utils/user.js';
 import { getPreferences } from '../utils/preferences.js';
 import { onNewPosts } from '../utils/mutations.js';
 import { notify } from '../utils/notifications.js';
@@ -138,7 +138,7 @@ const showPopupOnHover = ({ currentTarget }) => {
   const thisPostID = thisPost.dataset.id;
   if (thisPostID !== lastPostID) {
     if (!rememberLastBlog) {
-      blogSelector.value = blogSelector.options[0].value;
+      blogSelector.value = primaryBlog.uuid;
       onBlogSelectorChange();
     }
     commentInput.value = '';
@@ -331,9 +331,9 @@ export const main = async function () {
   } = await getPreferences('quick_reblog'));
 
   blogSelector.replaceChildren(
-    ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name])),
+    ...joinedCommunities.map(({ title, uuid, blog: { name } }) => dom('option', { value: uuid }, null, [`${title} (${name})`])),
     ...joinedCommunities.length ? [dom('hr')] : [],
-    ...joinedCommunities.map(({ title, uuid, blog: { name } }) => dom('option', { value: uuid }, null, [`${title} (${name})`]))
+    ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name]))
   );
 
   [...userBlogs, ...joinedCommunities].forEach((data) => {

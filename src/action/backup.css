@@ -78,6 +78,18 @@
   border-top: 1px dotted rgb(var(--active-grey));
 }
 
+#import input[type="checkbox"] {
+  margin: 0.5ch;
+}
+
+[data-stale-keys="0"] {
+  display: none;
+}
+
+[data-stale-keys]::after {
+  content: "Clear " attr(data-stale-keys) " Existing Value(s)";
+}
+
 #restore-local {
   display: block;
   width: 100%;

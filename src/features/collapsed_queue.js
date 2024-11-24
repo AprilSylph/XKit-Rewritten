@@ -4,7 +4,6 @@ import { onNewPosts } from '../utils/mutations.js';
 import { keyToCss } from '../utils/css_map.js';
 import { anyQueueTimelineFilter, anyDraftsTimelineFilter } from '../utils/timeline_id.js';
 
-const excludeClass = 'xkit-collapsed-queue-done';
 const wrapperClass = 'xkit-collapsed-queue-wrapper';
 const containerClass = 'xkit-collapsed-queue-container';
 const footerSelector = keyToCss('footerWrapper');
@@ -12,7 +11,9 @@ const footerSelector = keyToCss('footerWrapper');
 let timeline;
 
 const processPosts = postElements => {
-  filterPostElements(postElements, { excludeClass, timeline }).forEach(async postElement => {
+  filterPostElements(postElements, { timeline }).forEach(async postElement => {
+    if (postElement.querySelector(`.${wrapperClass}`)) return;
+
     const headerElement = postElement.querySelector('header');
     const footerElement = postElement.querySelector(footerSelector);
 
@@ -46,8 +47,6 @@ export const clean = async () => {
     const container = wrapper.querySelector(`.${containerClass}`);
     wrapper.replaceWith(...container.children);
   });
-
-  $(`.${excludeClass}`).removeClass(excludeClass);
 };
 
 export const stylesheet = true;

@@ -1,1 +1,1 @@
-.xkit-vanilla-video-player ~ * { display: none !important; }
+.xkit-vanilla-video-player ~ :is(video, div) { display: none !important; }

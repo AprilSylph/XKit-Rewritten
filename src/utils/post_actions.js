@@ -6,7 +6,7 @@ import { dom } from './dom.js';
 // Remove outdated post options when loading module
 $('.xkit-post-option').remove();
 
-const postOptions = {};
+const postOptions = new Map();
 
 const addPostOptions = ([postFormButton]) => {
   if (!postFormButton) { return; }
@@ -14,9 +14,9 @@ const addPostOptions = ([postFormButton]) => {
   const postActions = postFormButton.parentElement;
 
   postFormButton.before(
-    ...Object.keys(postOptions)
+    ...[...postOptions.keys()]
       .sort()
-      .map(id => postOptions[id])
+      .map(id => postOptions.get(id))
       .filter(postOption => !postActions.contains(postOption))
   );
 };
@@ -31,9 +31,9 @@ pageModifications.register(keyToCss('postFormButton'), addPostOptions);
  * @param {Function} options.onclick - Click handler function for this button
  */
 export const registerPostOption = async function (id, { symbolId, onclick }) {
-  postOptions[id] = dom('label', { class: 'xkit-post-option' }, null, [
+  postOptions.set(id, dom('label', { class: 'xkit-post-option' }, null, [
     dom('button', null, { click: onclick }, [buildSvg(symbolId)])
-  ]);
+  ]));
 
   pageModifications.trigger(addPostOptions);
 };
@@ -42,6 +42,6 @@ export const registerPostOption = async function (id, { symbolId, onclick }) {
  * @param {string} id - Identifier for the previously registered post option
  */
 export const unregisterPostOption = id => {
-  postOptions[id]?.remove();
-  delete postOptions[id];
+  postOptions.get(id)?.remove();
+  postOptions.delete(id);
 };

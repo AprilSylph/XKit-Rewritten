@@ -3,9 +3,10 @@ import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
 import { dom } from '../../utils/dom.js';
 
-const labelSelector = `${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')}:has(> svg)`;
+const labelSelector = `${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')}`;
 
 const spanClass = 'xkit-tweaks-subtle-activity-span';
+const iconClass = 'xkit-tweaks-subtle-activity-icon';
 
 export const styleElement = buildStyle(`
 .${spanClass} {
@@ -21,6 +22,13 @@ a:not(:hover) .${spanClass} {
 
 a:not(:hover) ${labelSelector} > svg {
   margin-left: 0;
+}
+
+.${iconClass} {
+  vertical-align: middle;
+  margin-left: 4px;
+  position: relative;
+  bottom: 1px;
 }
 `);
 
@@ -43,6 +51,21 @@ const processLabels = labels => labels.forEach(label => {
 
   span.style.setProperty('--rendered-width', `${span.getBoundingClientRect().width}px`);
   span.classList.add(spanClass);
+
+  const iconHref = label.matches(keyToCss('mutualsBadgeContainer'))
+    ? '#managed-icon__profile-double'
+    : '#managed-icon__profile-checkmark';
+
+  if (!label.querySelector(`:scope > svg:not(.${iconClass})`) && document.querySelector(iconHref)) {
+    label.append(
+      dom(
+        'svg',
+        { class: iconClass, width: 14, height: 14, xmlns: 'http://www.w3.org/2000/svg' },
+        null,
+        [dom('use', { href: iconHref, xmlns: 'http://www.w3.org/2000/svg' })]
+      )
+    );
+  }
 });
 
 const waitForRender = () =>
@@ -62,4 +85,5 @@ export const clean = async function () {
     const textNode = document.createTextNode(span.textContent);
     span.parentNode.replaceChild(textNode, span);
   });
+  $(`.${iconClass}`).remove();
 };

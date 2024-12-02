@@ -84,7 +84,7 @@ const deleteDrafts = async function ({ blogName, before }) {
     ]
   });
 
-  const allDrafts = [];
+  let fetchedPosts = 0;
   const drafts = [];
   let resource = `/v2/blog/${blogName}/posts/draft?limit=50`;
 
@@ -94,12 +94,12 @@ const deleteDrafts = async function ({ blogName, before }) {
         const posts = response.posts
           .filter(({ canEdit }) => canEdit === true);
 
-        allDrafts.push(...posts);
+        fetchedPosts += response.posts.length;
         drafts.push(...posts.filter(({ timestamp }) => timestamp < before));
 
         resource = response.links?.next?.href;
 
-        foundPostsElement.textContent = `Found ${drafts.length} drafts (checked ${allDrafts.length})${resource ? '...' : '.'}`;
+        foundPostsElement.textContent = `Found ${drafts.length} drafts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
       }),
       sleep(1000)
     ]);

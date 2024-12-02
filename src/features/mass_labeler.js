@@ -211,7 +211,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
     ]
   });
 
-  const allPostIdsSet = new Set();
+  let fetchedPosts = 0;
   const filteredPostsMap = new Map();
 
   const collect = async resource => {
@@ -222,7 +222,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
             .filter(({ canEdit }) => canEdit === true)
             .filter(({ state }) => state === 'published');
 
-          posts.forEach(({ id }) => allPostIdsSet.add(id));
+          fetchedPosts += response.posts.length;
 
           posts
             .filter(({ timestamp }) => timestamp > after)
@@ -237,7 +237,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
           resource = done ? false : response.links?.next?.href;
 
           gatherStatus.textContent =
-            `Found ${filteredPostsMap.size} unlabelled posts (checked ${allPostIdsSet.size})${resource ? '...' : '.'}`;
+            `Found ${filteredPostsMap.size} unlabelled posts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
         }),
         sleep(1000)
       ]);

@@ -18,6 +18,10 @@ const cloneVideoElements = videoElements => videoElements.forEach(videoElement =
   });
   newVideoElement.setAttribute('playsinline', true);
 
+  if (videoElement.width && videoElement.height) {
+    newVideoElement.style.setProperty('aspect-ratio', `${videoElement.width} / ${videoElement.height}`);
+  }
+
   const videoSources = [...videoElement.children];
   newVideoElement.append(
     ...videoSources.map(sourceElement => sourceElement.cloneNode(true))

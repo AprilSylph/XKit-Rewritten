@@ -16,7 +16,7 @@ const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
 
-const activitySelector = `${keyToCss('notification')} > ${keyToCss('activity')}`;
+const activitySelector = `:is(${keyToCss('notification')} > ${keyToCss('activity')}, ${keyToCss('activityContent')})`;
 
 const dropdownSelector = '[role="tabpanel"] *';
 
@@ -31,8 +31,9 @@ const processNotifications = notifications => notifications.forEach(async notifi
     notification
   );
 
-  if (!['reply', 'reply_to_comment', 'note_mention'].includes(notificationProps.type)) return;
-  if (notificationProps.community) return;
+  if (!['reply', 'reply_to_comment', 'note_mention'].includes(notificationProps.type === 'generic' ? notificationProps.subtype : notificationProps.type)) return;
+
+  if (notificationProps.community) return; // need a new way to determine this!
 
   const activityElement = notification.querySelector(activitySelector);
   if (!activityElement) return;
@@ -46,7 +47,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
     {
       click () {
         this.disabled = true;
-        quoteReply(tumblelogName, notificationProps)
+        quoteReply(tumblelogName /* how do we get this information now? */)
           .catch(showErrorModal)
           .finally(() => { this.disabled = false; });
       }

@@ -34,7 +34,9 @@ button.xkit-quote-replies-dropdown {
     transform: scale(0);
   }
 
-  :is(:hover, :focus-within) > button.xkit-quote-replies svg {
+  /* temporary. this probably needs keyToCss */
+  [aria-label="Notification"]:is(:hover, :focus-within) button.xkit-quote-replies svg,
+  [aria-label="Notification"]:is(:hover, :focus-within) + div button.xkit-quote-replies svg {
     opacity: 1;
     transform: scale(1);
   }

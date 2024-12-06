@@ -6,6 +6,8 @@
     "color": "white",
     "background_color": "#00b8ff"
   },
+  "note": "This feature is not currently functional.",
+  "outdated": true,
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quote-replies",
   "preferences": {
     "tagReplyingBlog": {

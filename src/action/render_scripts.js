@@ -141,6 +141,7 @@ const renderScripts = async function () {
       title = scriptName,
       description = '',
       note = '',
+      outdated = false,
       icon = {},
       help = '',
       relatedTerms = [],
@@ -153,6 +154,7 @@ const renderScripts = async function () {
     const detailsElement = scriptTemplateClone.querySelector('details.script');
     detailsElement.dataset.relatedTerms = relatedTerms;
     detailsElement.dataset.deprecated = deprecated;
+    detailsElement.dataset.outdated = outdated;
 
     if (enabledScripts.includes(scriptName) === false) {
       detailsElement.classList.add('disabled');

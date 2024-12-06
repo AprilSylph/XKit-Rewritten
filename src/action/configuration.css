@@ -150,6 +150,16 @@ label[for="filter"] {
   font-weight: normal;
 }
 
+.script:not(.disabled)[data-outdated="true"] .title::after {
+  content: "(outdated)";
+  margin-left: 0.5ch;
+  font-weight: normal;
+}
+
+.script[data-outdated="true"] .meta {
+  opacity: 0.6;
+}
+
 .script .note {
   padding: 1ch 2ch;
   margin: 0;

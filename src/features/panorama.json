@@ -2,6 +2,7 @@
   "title": "Panorama",
   "description": "Widescreen dashboard",
   "note": "This feature is not currently functional.",
+  "outdated": true,
   "icon": {
     "class_name": "ri-align-justify",
     "color": "white",

@@ -59,8 +59,6 @@ const processNotifications = notifications => notifications.forEach(async notifi
 const quoteGenericReply = async (tumblelogName, notificationProps) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
 
-  console.log({ tumblelogName, notificationProps });
-
   const {
     title: { textContent: titleContent },
     body: { content: [bodyDescriptionContent, bodyQuoteContent] },
@@ -68,7 +66,6 @@ const quoteGenericReply = async (tumblelogName, notificationProps) => {
   } = notificationProps;
 
   const replyingBlog = titleContent.formatting.find(({ type }) => type === 'mention').blog;
-  console.log({ replyingBlog });
 
   const toConvertToLink = bodyDescriptionContent.formatting.find(({ type }) => type === 'semantic_color');
 
@@ -93,8 +90,6 @@ const quoteGenericReply = async (tumblelogName, notificationProps) => {
     ...originalPostTag ? [originalPostTag] : [],
     ...tagReplyingBlog ? [replyingBlog.name] : []
   ].join(',');
-
-  console.log({ content, tags });
 
   createDraft({ uuid, content, tags, tumblelogName });
 };

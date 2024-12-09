@@ -1,6 +1,6 @@
-import { buildStyle } from '../utils/interface.js';
+import { buildStyle, notificationSelector } from '../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../utils/meatballs.js';
-import { onNewNotifications } from '../utils/mutations.js';
+import { onNewNotifications, pageModifications } from '../utils/mutations.js';
 import { showModal, hideModal, modalCancelButton } from '../utils/modals.js';
 import { dom } from '../utils/dom.js';
 import { userBlogNames } from '../utils/user.js';
@@ -15,17 +15,25 @@ const meatballButtonUnblockLabel = 'Unblock notifications';
 
 let blockedPostTargetIDs;
 
-export const styleElement = buildStyle();
+const hiddenAttribute = 'data-notificationblock-hidden';
 
-const buildCss = () => `:is(${blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')
-  }) { display: none !important; }`;
+export const styleElement = buildStyle(`
+[${hiddenAttribute}] > ${notificationSelector} {
+  display: none !important;
+}
+`);
 
 const processNotifications = (notificationElements) => {
   notificationElements.forEach(async notificationElement => {
     const notification = await notificationObject(notificationElement);
     if (notification !== undefined) {
       const { targetRootPostId, targetPostId } = notification;
-      notificationElement.dataset.targetRootPostId = targetRootPostId || targetPostId;
+      const rootId = targetRootPostId || targetPostId;
+      if (blockedPostTargetIDs.includes(rootId)) {
+        notificationElement.parentElement.setAttribute(hiddenAttribute, '');
+      } else {
+        notificationElement.parentElement.removeAttribute(hiddenAttribute);
+      }
     }
   });
 };
@@ -97,14 +105,13 @@ const unblockPostFilter = async ({ id, rebloggedRootId }) => {
 
 export const onStorageChanged = (changes, areaName) => {
   if (Object.keys(changes).includes(storageKey)) {
-    blockedPostTargetIDs = changes[storageKey].newValue;
-    styleElement.textContent = buildCss();
+    blockedPostTargetIDs = changes[storageKey].newValue ?? [];
+    pageModifications.trigger(processNotifications);
   }
 };
 
 export const main = async function () {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
-  styleElement.textContent = buildCss();
   onNewNotifications.addListener(processNotifications);
 
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
@@ -115,4 +122,6 @@ export const clean = async function () {
   onNewNotifications.removeListener(processNotifications);
   unregisterMeatballItem(meatballButtonBlockId);
   unregisterMeatballItem(meatballButtonUnblockId);
+
+  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

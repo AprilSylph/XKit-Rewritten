@@ -25,15 +25,15 @@ let tagReplyingBlog;
 let newTab;
 
 const processNotifications = notifications => notifications.forEach(async notification => {
-  const { notification: notificationProps, tumblelogName } = await inject(
-    '/main_world/get_notification_props.js',
-    [],
-    notification
-  );
+  const [notificationProps, tumblelogName] = await Promise.all([
+    inject('/main_world/get_notification_props.js', [], notification),
+    inject('/main_world/get_tumblelogname_prop.js', [], notification)
+  ]);
 
   if (!['reply', 'reply_to_comment', 'note_mention'].includes(notificationProps.type === 'generic' ? notificationProps.subtype : notificationProps.type)) return;
+  if (notificationProps.community) return;
 
-  if (notificationProps.community) return; // need a new way to determine this!
+  const quoteReply = notificationProps.type === 'generic' ? quoteGenericReply : quoteLegacyReply;
 
   const activityElement = notification.querySelector(activitySelector);
   if (!activityElement) return;
@@ -47,7 +47,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
     {
       click () {
         this.disabled = true;
-        quoteReply(tumblelogName /* how do we get this information now? */)
+        quoteReply(tumblelogName, notificationProps)
           .catch(showErrorModal)
           .finally(() => { this.disabled = false; });
       }
@@ -56,7 +56,50 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
-const quoteReply = async (tumblelogName, notificationProps) => {
+const quoteGenericReply = async (tumblelogName, notificationProps) => {
+  const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
+
+  console.log({ tumblelogName, notificationProps });
+
+  const {
+    title: { textContent: titleContent },
+    body: { content: [bodyDescriptionContent, bodyQuoteContent] },
+    actions
+  } = notificationProps;
+
+  const replyingBlog = titleContent.formatting.find(({ type }) => type === 'mention').blog;
+  console.log({ replyingBlog });
+
+  const toConvertToLink = bodyDescriptionContent.formatting.find(({ type }) => type === 'semantic_color');
+
+  const content = [
+    {
+      type: 'text',
+      text: `@${replyingBlog.name}`,
+      formatting: [
+        { start: 0, end: replyingBlog.name.length + 1, type: 'mention', blog: { uuid: replyingBlog.uuid } }]
+    },
+    {
+      type: 'text',
+      text: bodyDescriptionContent.text,
+      formatting: [
+        { start: toConvertToLink.start, end: toConvertToLink.end, type: 'link', url: actions.tap.href }
+      ]
+    },
+    bodyQuoteContent,
+    { type: 'text', text: '\u200B' }
+  ];
+  const tags = [
+    ...originalPostTag ? [originalPostTag] : [],
+    ...tagReplyingBlog ? [replyingBlog.name] : []
+  ].join(',');
+
+  console.log({ content, tags });
+
+  createDraft({ uuid, content, tags, tumblelogName });
+};
+
+const quoteLegacyReply = async (tumblelogName, notificationProps) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
   const { type, targetPostId, targetPostSummary, targetTumblelogName, targetTumblelogUuid, timestamp } = notificationProps;
 
@@ -91,6 +134,10 @@ const quoteReply = async (tumblelogName, notificationProps) => {
     ...tagReplyingBlog ? [reply.blog.name] : []
   ].join(',');
 
+  createDraft({ uuid, content, tags, tumblelogName });
+};
+
+const createDraft = async ({ uuid, content, tags, tumblelogName }) => {
   const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
 
   const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;

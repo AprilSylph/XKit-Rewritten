@@ -23,15 +23,13 @@ const buildCss = () => `:is(${blockedPostTargetIDs.map(rootId => `[data-target-r
 const processNotifications = (notificationElements) => {
   notificationElements.forEach(async notificationElement => {
     const notification = await notificationObject(notificationElement);
-    if (notification?.targetRootPostId || notification?.targetPostId) {
+    if (notification !== undefined) {
       const { targetRootPostId, targetPostId } = notification;
-      notificationElement.dataset.targetRootPostId = targetRootPostId || targetPostId;
-    } else if (notification?.actions) {
-      // const postId = notification.actions.longTap.meta.postId;
-      const postId = Object.values(notification.actions).map(action => action?.meta?.postId).find(Boolean);
 
-      console.log(postId);
-      // hm. I guess we do an api fetch here now.
+      // available on "replied to your post" notifications, which appear to always target the root post
+      const blockablePostId = notification.actions?.longTap?.meta?.postId;
+
+      notificationElement.dataset.targetRootPostId = targetRootPostId || targetPostId || blockablePostId || '';
     }
   });
 };

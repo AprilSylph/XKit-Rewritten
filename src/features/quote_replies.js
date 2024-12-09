@@ -2,7 +2,7 @@ import { keyToCss } from '../utils/css_map.js';
 import { dom } from '../utils/dom.js';
 import { inject } from '../utils/inject.js';
 import { showErrorModal } from '../utils/modals.js';
-import { notificationSelector } from '../utils/interface.js';
+import { buildStyle, notificationSelector } from '../utils/interface.js';
 import { pageModifications } from '../utils/mutations.js';
 import { notify } from '../utils/notifications.js';
 import { getPreferences } from '../utils/preferences.js';
@@ -14,9 +14,53 @@ const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';
 const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
+export const styleElement = buildStyle(`
+button.xkit-quote-replies {
+  position: relative;
+  align-self: center;
+  transform: translateY(-2px);
+
+  display: inline-flex;
+  align-items: center;
+  margin: 0 6px;
+
+  cursor: pointer;
+}
+
+button.xkit-quote-replies svg {
+  width: 21.5px;
+  height: 21.5px;
+
+  fill: rgb(var(--blue));
+  transition: all .25s ease-out .4s;
+}
+
+button.xkit-quote-replies:disabled svg {
+  fill: rgba(var(--black), 0.65);
+  transition-property: none;
+}
+
+button.xkit-quote-replies-dropdown {
+  align-self: flex-start;
+  margin: 10px 0 0;
+}
+
+@media (hover: hover) {
+  button.xkit-quote-replies svg {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  ${notificationSelector}:is(:hover, :focus-within) button.xkit-quote-replies svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+`);
+
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
 
-const activitySelector = `${keyToCss('notification')} > ${keyToCss('activity')}`;
+const activitySelector = `:is(${keyToCss('notification')} > ${keyToCss('activity')}, ${keyToCss('activityContent')})`;
 
 const dropdownSelector = '[role="tabpanel"] *';
 
@@ -25,14 +69,15 @@ let tagReplyingBlog;
 let newTab;
 
 const processNotifications = notifications => notifications.forEach(async notification => {
-  const { notification: notificationProps, tumblelogName } = await inject(
-    '/main_world/get_notification_props.js',
-    [],
-    notification
-  );
+  const [notificationProps, tumblelogName] = await Promise.all([
+    inject('/main_world/get_notification_props.js', [], notification),
+    inject('/main_world/get_tumblelogname_prop.js', [], notification)
+  ]);
 
-  if (!['reply', 'reply_to_comment', 'note_mention'].includes(notificationProps.type)) return;
+  if (!['reply', 'reply_to_comment', 'note_mention'].includes(notificationProps.type === 'generic' ? notificationProps.subtype : notificationProps.type)) return;
   if (notificationProps.community) return;
+
+  const quoteReply = notificationProps.type === 'generic' ? quoteGenericReply : quoteLegacyReply;
 
   const activityElement = notification.querySelector(activitySelector);
   if (!activityElement) return;
@@ -55,7 +100,45 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
-const quoteReply = async (tumblelogName, notificationProps) => {
+const quoteGenericReply = async (tumblelogName, notificationProps) => {
+  const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
+
+  const {
+    title: { textContent: titleContent },
+    body: { content: [bodyDescriptionContent, bodyQuoteContent] },
+    actions
+  } = notificationProps;
+
+  const replyingBlog = titleContent.formatting.find(({ type }) => type === 'mention').blog;
+
+  const toConvertToLink = bodyDescriptionContent.formatting.find(({ type }) => type === 'semantic_color');
+
+  const content = [
+    {
+      type: 'text',
+      text: `@${replyingBlog.name}`,
+      formatting: [
+        { start: 0, end: replyingBlog.name.length + 1, type: 'mention', blog: { uuid: replyingBlog.uuid } }]
+    },
+    {
+      type: 'text',
+      text: bodyDescriptionContent.text,
+      formatting: [
+        { start: toConvertToLink.start, end: toConvertToLink.end, type: 'link', url: actions.tap.href }
+      ]
+    },
+    bodyQuoteContent,
+    { type: 'text', text: '\u200B' }
+  ];
+  const tags = [
+    ...originalPostTag ? [originalPostTag] : [],
+    ...tagReplyingBlog ? [replyingBlog.name] : []
+  ].join(',');
+
+  createDraft({ uuid, content, tags, tumblelogName });
+};
+
+const quoteLegacyReply = async (tumblelogName, notificationProps) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
   const { type, targetPostId, targetPostSummary, targetTumblelogName, targetTumblelogUuid, timestamp } = notificationProps;
 
@@ -90,6 +173,10 @@ const quoteReply = async (tumblelogName, notificationProps) => {
     ...tagReplyingBlog ? [reply.blog.name] : []
   ].join(',');
 
+  createDraft({ uuid, content, tags, tumblelogName });
+};
+
+const createDraft = async ({ uuid, content, tags, tumblelogName }) => {
   const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
 
   const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;
@@ -135,5 +222,3 @@ export const onStorageChanged = async function (changes) {
     ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
   }
 };
-
-export const stylesheet = true;

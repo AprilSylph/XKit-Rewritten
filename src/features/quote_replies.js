@@ -2,7 +2,7 @@ import { keyToCss } from '../utils/css_map.js';
 import { dom } from '../utils/dom.js';
 import { inject } from '../utils/inject.js';
 import { showErrorModal } from '../utils/modals.js';
-import { notificationSelector } from '../utils/interface.js';
+import { buildStyle, notificationSelector } from '../utils/interface.js';
 import { pageModifications } from '../utils/mutations.js';
 import { notify } from '../utils/notifications.js';
 import { getPreferences } from '../utils/preferences.js';
@@ -13,6 +13,50 @@ import { userBlogs } from '../utils/user.js';
 const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';
 const dropdownButtonClass = 'xkit-quote-replies-dropdown';
+
+export const styleElement = buildStyle(`
+button.xkit-quote-replies {
+  position: relative;
+  align-self: center;
+  transform: translateY(-2px);
+
+  display: inline-flex;
+  align-items: center;
+  margin: 0 6px;
+
+  cursor: pointer;
+}
+
+button.xkit-quote-replies svg {
+  width: 21.5px;
+  height: 21.5px;
+
+  fill: rgb(var(--blue));
+  transition: all .25s ease-out .4s;
+}
+
+button.xkit-quote-replies:disabled svg {
+  fill: rgba(var(--black), 0.65);
+  transition-property: none;
+}
+
+button.xkit-quote-replies-dropdown {
+  align-self: flex-start;
+  margin: 10px 0 0;
+}
+
+@media (hover: hover) {
+  button.xkit-quote-replies svg {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  ${notificationSelector}:is(:hover, :focus-within) button.xkit-quote-replies svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+`);
 
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
 
@@ -178,5 +222,3 @@ export const onStorageChanged = async function (changes) {
     ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
   }
 };
-
-export const stylesheet = true;

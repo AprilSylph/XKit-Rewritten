@@ -1,4 +1,4 @@
-import neostandard, { resolveIgnoresFromGitignore } from 'neostandard';
+import neostandard, { plugins, resolveIgnoresFromGitignore } from 'neostandard';
 import globals from 'globals';
 import jsdoc from 'eslint-plugin-jsdoc';
 
@@ -16,6 +16,7 @@ export default [
   jsdoc.configs['flat/recommended'],
   {
     rules: {
+      ...plugins['import-x'].flatConfigs.recommended.rules,
       'import-x/no-cycle': 'error'
     }
   },

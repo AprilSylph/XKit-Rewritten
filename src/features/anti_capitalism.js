@@ -6,12 +6,7 @@ const hiddenAttribute = 'data-anti-capitalism-hidden';
 
 const listTimelineObjectInnerSelector = keyToCss('listTimelineObjectInner');
 
-export const styleElement = buildStyle(`
-[${hiddenAttribute}] > div,
-${keyToCss('adTimelineObject', 'instreamAd', 'mrecContainer', 'nativeIponWebAd', 'takeoverBanner')} {
-  display: none !important;
-}`
-);
+export const styleElement = buildStyle();
 
 const processVideoCTAs = videoCTAs => videoCTAs
   .map(getTimelineItemWrapper)
@@ -19,6 +14,13 @@ const processVideoCTAs = videoCTAs => videoCTAs
   .forEach(timelineItem => timelineItem.setAttribute(hiddenAttribute, ''));
 
 export const main = async () => {
+  styleElement.textContent = `
+    [${hiddenAttribute}] > div,
+    ${keyToCss('adTimelineObject', 'instreamAd', 'mrecContainer', 'nativeIponWebAd', 'takeoverBanner')} {
+      display: none !important;
+    }
+  `;
+
   pageModifications.register(
     `
       ${listTimelineObjectInnerSelector}:first-child ${keyToCss('videoCTA', 'videoImageCTA')},

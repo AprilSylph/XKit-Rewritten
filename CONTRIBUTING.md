@@ -22,9 +22,7 @@ All pull requests must be compatible with the repository license (GPL-3.0).
 
 ### Style guide
 
-[![js-semistandard-style](https://raw.githubusercontent.com/standard/semistandard/master/badge.svg)](https://github.com/standard/semistandard)
-
-This project follows JavaScript Semi-Standard Style via [`eslint-config-semistandard`](https://github.com/standard/eslint-config-semistandard).
+This project follows JavaScript Standard Style with semicolons via [`neostandard`](https://github.com/neostandard/neostandard).
 
 Stylesheets should aim to follow Nicolas Gallagher's [Idiomatic CSS](https://github.com/necolas/idiomatic-css#readme) principles. Additionally, element classnames and IDs should be `kebab-case`, to fit with the automatic casing of [`data-*` attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/data-*).
 

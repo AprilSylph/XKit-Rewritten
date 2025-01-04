@@ -68,21 +68,23 @@ const addLabel = (element, inside = false) => {
   }
 };
 
-const pauseGif = function (gifElement) {
+const pauseGif = async function (gifElement) {
+  await gifElement.decode();
+
   const image = new Image();
   image.src = gifElement.currentSrc;
-  image.onload = () => {
-    if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      canvas.className = gifElement.className;
-      canvas.classList.add(canvasClass);
-      canvas.getContext('2d').drawImage(image, 0, 0);
-      gifElement.parentNode.append(canvas);
-      addLabel(gifElement);
-    }
-  };
+  await image.decode();
+
+  if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
+    const canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    canvas.className = gifElement.className;
+    canvas.classList.add(canvasClass);
+    canvas.getContext('2d').drawImage(image, 0, 0);
+    gifElement.parentNode.append(canvas);
+    addLabel(gifElement);
+  }
 };
 
 const processGifs = function (gifElements) {
@@ -96,12 +98,7 @@ const processGifs = function (gifElements) {
       gifElement.after(...pausedGifElements);
       return;
     }
-
-    if (gifElement.complete && gifElement.currentSrc) {
-      pauseGif(gifElement);
-    } else {
-      gifElement.onload = () => pauseGif(gifElement);
-    }
+    pauseGif(gifElement);
   });
 };
 

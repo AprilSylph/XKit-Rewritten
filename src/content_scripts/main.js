@@ -23,9 +23,9 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: browser.runtime.getURL(`/features/${name}.css?t=${timestamp}`)
+        href: browser.runtime.getURL(`/features/${name}.css?t=${timestamp}`),
+        className: 'xkit'
       });
-      link.className = 'xkit';
       document.documentElement.appendChild(link);
     }
     if (styleElement) {
@@ -101,9 +101,10 @@
     document.documentElement.addEventListener('xkit-injection-ready', resolve, { once: true });
 
     const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
-    const script = document.createElement('script');
-    script.nonce = nonce;
-    script.src = browser.runtime.getURL('/main_world/index.js');
+    const script = Object.assign(document.createElement('script'), {
+      nonce,
+      src: browser.runtime.getURL('/main_world/index.js')
+    });
     document.documentElement.append(script);
   });
 

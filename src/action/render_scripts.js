@@ -95,10 +95,11 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
         break;
       case 'select':
         for (const { value, label } of preference.options) {
-          const option = document.createElement('option');
-          option.value = value;
-          option.textContent = label;
-          option.selected = value === preference.value;
+          const option = Object.assign(document.createElement('option'), {
+            value,
+            textContent: label,
+            selected: value === preference.value
+          });
           preferenceInput.appendChild(option);
         }
         break;

@@ -14,6 +14,7 @@ import {
   anyCommunityTimelineFilter,
   communitiesTimelineFilter
 } from '../utils/timeline_id.js';
+import { dom } from '../utils/dom.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
@@ -36,14 +37,11 @@ const lengthenTimeline = async (timeline) => {
   }
 };
 
-const createButton = (textContent, onclick, mode) => {
-  const button = Object.assign(document.createElement('a'), { textContent, onclick });
-  button.dataset.mode = mode;
-  return button;
-};
+const createButton = (buttonText, onclick, mode) =>
+  dom('a', { 'data-mode': mode }, { click: onclick }, [buttonText]);
 
 const addControls = async (timelineElement, location) => {
-  const controls = Object.assign(document.createElement('div'), { className: controlsClass });
+  const controls = dom('div', { class: controlsClass });
   controls.dataset.location = location;
 
   timelineElement.prepend(controls);

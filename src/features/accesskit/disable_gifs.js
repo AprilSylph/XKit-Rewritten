@@ -44,13 +44,14 @@ export const styleElement = buildStyle(`
 *:hover > .${canvasClass},
 *:hover > .${labelClass},
 .${containerClass}:hover .${canvasClass},
-.${containerClass}:hover .${labelClass} {
+.${containerClass}:hover .${labelClass},
+a:hover + div .${labelClass} {
   display: none;
 }
 
 .${backgroundGifClass}:not(:hover) {
   background-image: none !important;
-  background-color: rgb(var(--secondary-accent));
+  background-color: rgb(var(--secondary-accent)) !important;
 }
 
 .${backgroundGifClass}:not(:hover) > div {
@@ -113,7 +114,7 @@ const pausedBackgroundRules = {};
 const backgroundStyleElement = buildStyle();
 const updateBackgroundStyle = () => {
   backgroundStyleElement.textContent = Object.entries(pausedBackgroundRules)
-    .map(([id, style]) => `[data-disable-gifs-id="${id}"]:not(:hover) ${style}`)
+    .map(([id, style]) => `[data-disable-gifs-id="${id}"]:not(:hover):not(a:hover + div > *) ${style}`)
     .join('\n');
 };
 
@@ -174,7 +175,7 @@ export const main = async function () {
   pageModifications.register(gifImage, processGifs);
 
   const gifBackgroundImage = `
-    ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
+    ${keyToCss('communityHeaderImage', 'communityCategoryImage', 'bannerImage')}[style*=".gif"]
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
   document.documentElement.append(backgroundStyleElement);

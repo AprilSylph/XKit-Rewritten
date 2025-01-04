@@ -2,6 +2,7 @@ import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
+import { sha256 } from '../../utils/crypto.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
 const labelClass = 'xkit-paused-gif-label';
@@ -105,9 +106,47 @@ const processGifs = function (gifElements) {
   });
 };
 
+const sourceUrlRegex = /(?<=url\(["'])[^)]*?\.gifv?(?=["']\))/g;
+
+const pausedBackgroundRules = {};
+
+const backgroundStyleElement = buildStyle();
+const updateBackgroundStyle = () => {
+  backgroundStyleElement.textContent = Object.entries(pausedBackgroundRules)
+    .map(([id, style]) => `[data-disable-gifs-id="${id}"]:not(:hover) ${style}`)
+    .join('\n');
+};
+
+const createPausedBackgroundRule = (sourceRule, sourceUrl) => new Promise(resolve => {
+  const image = new Image();
+  image.crossOrigin = 'anonymous';
+  image.src = sourceUrl;
+  image.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    canvas.getContext('2d').drawImage(image, 0, 0);
+    canvas.toBlob(blob => {
+      const blobUrl = URL.createObjectURL(blob);
+      resolve(`{ background-image: ${sourceRule.replaceAll(sourceUrlRegex, blobUrl)} !important; }`);
+    });
+  };
+});
+
 const processBackgroundGifs = function (gifBackgroundElements) {
-  gifBackgroundElements.forEach(gifBackgroundElement => {
-    gifBackgroundElement.classList.add(backgroundGifClass);
+  gifBackgroundElements.forEach(async gifBackgroundElement => {
+    const sourceRule = gifBackgroundElement.style.backgroundImage;
+    const sourceUrl = sourceRule.match(sourceUrlRegex)?.[0];
+
+    if (sourceUrl) {
+      const id = await sha256(sourceRule);
+      pausedBackgroundRules[id] ??= await createPausedBackgroundRule(sourceRule, sourceUrl);
+      updateBackgroundStyle();
+
+      gifBackgroundElement.dataset.disableGifsId = id;
+    } else {
+      gifBackgroundElement.classList.add(backgroundGifClass);
+    }
     addLabel(gifBackgroundElement, true);
   });
 };
@@ -138,6 +177,7 @@ export const main = async function () {
     ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
+  document.documentElement.append(backgroundStyleElement);
 
   pageModifications.register(
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
@@ -156,4 +196,7 @@ export const clean = async function () {
 
   $(`.${canvasClass}, .${labelClass}`).remove();
   $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
+  $('[data-disable-gifs-id]').removeAttr('data-disable-gifs-id');
+
+  backgroundStyleElement.remove();
 };

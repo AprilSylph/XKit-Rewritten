@@ -146,12 +146,6 @@ const processNoteProps = ([noteProps, parentNoteProps]) => {
   return false;
 };
 
-const meatballButtonLabel = notePropsObjects => {
-  const mode = processNoteProps(notePropsObjects);
-
-  return `Quote this reply (mode: ${mode})`;
-};
-
 const onMeatballButtonClicked = async ({ currentTarget }) => {
   const [{ note: reply }] = currentTarget.__notePropsData;
 
@@ -175,7 +169,7 @@ export const main = async function () {
 
   registerReplyMeatballItem({
     id: meatballButtonId,
-    label: meatballButtonLabel,
+    label: 'Quote this reply',
     notePropsFilter: notePropsData => Boolean(processNoteProps(notePropsData)),
     onclick: event => onMeatballButtonClicked(event).catch(showErrorModal)
   });

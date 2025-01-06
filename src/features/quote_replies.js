@@ -10,6 +10,7 @@ import { buildSvg } from '../utils/remixicon.js';
 import { apiFetch, navigate } from '../utils/tumblr_helpers.js';
 import { userBlogNames, userBlogs } from '../utils/user.js';
 import { registerReplyMeatballItem, unregisterReplyMeatballItem } from '../utils/meatballs.js';
+import { timelineObject } from '../utils/react_props.js';
 
 const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';
@@ -59,7 +60,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
 
 const quoteReply = async (tumblelogName, notificationProps) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
-  const { type, targetPostId, targetPostSummary, targetTumblelogName, targetTumblelogUuid, timestamp } = notificationProps;
+  const { type, targetPostId, targetPostSummary, postUrl, targetTumblelogUuid, timestamp } = notificationProps;
 
   const { response } = await apiFetch(
     `/v2/blog/${targetTumblelogUuid}/post/${targetPostId}/notes/timeline`,
@@ -71,15 +72,22 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   if (!reply) throw new Error('No replies found on target post.');
   if (Math.floor(reply.timestamp) !== timestamp) throw new Error('Reply not found.');
 
+  const replyingBlogName = reply.blog.name;
+  const replyingBlogUuid = reply.blog.uuid;
+
+  openQuoteReplyPost({ type, replyingBlogName, replyingBlogUuid, reply, postSummary: targetPostSummary, postUrl, targetBlogUuid: uuid, targetBlogName: tumblelogName });
+};
+
+const openQuoteReplyPost = async ({ type, replyingBlogName, replyingBlogUuid, postSummary, postUrl, reply, targetBlogUuid, targetBlogName }) => {
   const verbiage = {
     reply: 'replied to your post',
     reply_to_comment: 'replied to you in a post',
     note_mention: 'mentioned you on a post'
   }[type];
-  const text = `@${reply.blog.name} ${verbiage} \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`;
+  const text = `@${replyingBlogName} ${verbiage} \u201C${postSummary.replace(/\n/g, ' ')}\u201D:`;
   const formatting = [
-    { start: 0, end: reply.blog.name.length + 1, type: 'mention', blog: { uuid: reply.blog.uuid } },
-    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: `https://${targetTumblelogName}.tumblr.com/post/${targetPostId}` }
+    { start: 0, end: replyingBlogName.length + 1, type: 'mention', blog: { uuid: replyingBlogUuid } },
+    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: postUrl }
   ];
 
   const content = [
@@ -89,17 +97,17 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   ];
   const tags = [
     ...originalPostTag ? [originalPostTag] : [],
-    ...tagReplyingBlog ? [reply.blog.name] : []
+    ...tagReplyingBlog ? [replyingBlogName] : []
   ].join(',');
 
-  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
+  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${targetBlogUuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
 
-  const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;
+  const currentDraftLocation = `/edit/${targetBlogName}/${responseId}`;
 
   if (newTab) {
     await browser.storage.local.set({ [storageKey]: currentDraftLocation });
 
-    const openedTab = window.open(`/blog/${tumblelogName}/drafts`);
+    const openedTab = window.open(`/blog/${targetBlogName}/drafts`);
     if (openedTab === null) {
       browser.storage.local.remove(storageKey);
       notify(displayText);
@@ -114,13 +122,26 @@ const processNoteProps = ([noteProps, parentNoteProps]) => {
     return false;
   }
   if (parentNoteProps && userBlogNames.includes(parentNoteProps.note.blogName)) {
-    return 'reply_to_comment';
+    return {
+      type: 'reply_to_comment',
+      targetBlogName: parentNoteProps.note.blogName
+    };
   }
   if (userBlogNames.includes(noteProps.blog.name)) {
-    return 'reply';
+    return {
+      type: 'reply',
+      targetBlogName: noteProps.blog.name
+    };
   }
-  if (noteProps.note.content.some(({ formatting }) => formatting?.some(({ type, blog }) => type === 'mention' && userBlogNames.includes(blog.name)))) {
-    return 'note_mention';
+  for (const { formatting } of noteProps.note.content) {
+    for (const { type, blog } of formatting ?? []) {
+      if (type === 'mention' && userBlogNames.includes(blog.name)) {
+        return {
+          type: 'note_mention',
+          targetBlogName: blog.name
+        };
+      }
+    }
   }
   return false;
 };
@@ -131,7 +152,20 @@ const meatballButtonLabel = notePropsObjects => {
   return `Quote this reply (mode: ${mode})`;
 };
 
-const onMeatballButtonClicked = () => {};
+const onMeatballButtonClicked = async ({ currentTarget }) => {
+  const [{ note: reply }] = currentTarget.__notePropsData;
+
+  const { type, targetBlogName } = processNoteProps(currentTarget.__notePropsData);
+  const targetBlogUuid = userBlogs.find(({ name }) => name === targetBlogName).uuid;
+
+  const { summary: postSummary, postUrl } = await timelineObject(currentTarget.closest(keyToCss('meatballMenu')));
+
+  const replyingBlogName = reply.blogName;
+  const replyingBlogUuid = await apiFetch(`/v2/blog/${replyingBlogName}/info?fields[blogs]=uuid`)
+    .then(({ response: { blog: { uuid } } }) => uuid);
+
+  openQuoteReplyPost({ type, replyingBlogName, replyingBlogUuid, reply, postSummary, postUrl, targetBlogUuid, targetBlogName });
+};
 
 export const main = async function () {
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
@@ -142,8 +176,8 @@ export const main = async function () {
   registerReplyMeatballItem({
     id: meatballButtonId,
     label: meatballButtonLabel,
-    notePropsFilter: notePropsObjects => console.log('notePropsObjects', notePropsObjects) && Boolean(processNoteProps(notePropsObjects)),
-    onclick: onMeatballButtonClicked
+    notePropsFilter: notePropsData => Boolean(processNoteProps(notePropsData)),
+    onclick: event => onMeatballButtonClicked(event).catch(showErrorModal)
   });
 
   const { [storageKey]: draftLocation } = await browser.storage.local.get(storageKey);

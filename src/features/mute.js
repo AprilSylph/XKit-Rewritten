@@ -286,7 +286,7 @@ export const main = async function () {
   registerBlogMeatballItem({
     id: meatballButtonId,
     label: meatballButtonLabel,
-    onClick: onMeatballButtonClicked
+    onclick: onMeatballButtonClicked
   });
   onNewPosts.addListener(processPosts);
 };

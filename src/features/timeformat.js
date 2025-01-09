@@ -77,7 +77,7 @@ const formatTimeElements = function (timeElements) {
 
 export const main = async function () {
   ({ format, displayRelative } = await getPreferences('timeformat'));
-  pageModifications.register(`${keyToCss('timestamp')}[datetime]`, formatTimeElements);
+  pageModifications.register(`${keyToCss('timestamp')}[datetime], ${keyToCss('timestamp')} > [datetime]`, formatTimeElements);
 };
 
 export const clean = async function () {

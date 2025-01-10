@@ -24,6 +24,11 @@ ${keyToCss('tumblelogName', 'activityHeader')}:not(:hover) ${labelSelector} > sv
   margin-left: 0;
 }
 
+/* fixes hover detection when covered by the "activityItemLink" <a> element */
+${keyToCss('activityHeader')} div:has(> .${spanClass}) {
+  isolation: isolate;
+}
+
 .${iconClass} {
   vertical-align: middle;
   margin-left: 4px;

@@ -28,7 +28,8 @@ export const styleElement = buildStyle(`
   cursor: help;
 }
 
-${keyToCss('blogLinkWrapper')}:has(+ [data-formatted-time]) {
+${keyToCss('blogLinkWrapper')}:has(+ [data-formatted-time]),
+${keyToCss('info')}:has(+ ${keyToCss('timestamp')} > [data-formatted-time]) {
   flex: none;
 }
 

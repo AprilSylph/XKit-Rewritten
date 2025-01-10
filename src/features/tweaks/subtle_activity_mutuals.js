@@ -16,11 +16,11 @@ export const styleElement = buildStyle(`
   width: var(--rendered-width);
 }
 
-a:not(:hover) .${spanClass} {
+${keyToCss('tumblelogName', 'activityHeader')}:not(:hover) .${spanClass} {
   width: 0;
 }
 
-a:not(:hover) ${labelSelector} > svg {
+${keyToCss('tumblelogName', 'activityHeader')}:not(:hover) ${labelSelector} > svg {
   margin-left: 0;
 }
 

@@ -92,14 +92,14 @@ const stopScrolling = () => {
   modalScrollToBottomButton?.classList.remove(activeClass);
 };
 
-const onClick = () => activeElement ? stopScrolling() : startScrolling();
+const onclick = () => activeElement ? stopScrolling() : startScrolling();
 const onKeyDown = ({ key }) => key === '.' && stopScrolling();
 
 const cloneButton = (target, mode) => {
   const clonedButton = target.cloneNode(true);
   keyToClasses('hidden').forEach(className => clonedButton.classList.remove(className));
   clonedButton.removeAttribute('aria-label');
-  clonedButton.addEventListener('click', onClick);
+  clonedButton.addEventListener('click', onclick);
   clonedButton.classList.add(buttonClass, mode);
 
   clonedButton.classList[activeElement ? 'add' : 'remove'](activeClass);

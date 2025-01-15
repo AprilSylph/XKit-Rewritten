@@ -316,6 +316,7 @@ const preventLongPressMenu = ({ originalEvent: event }) => {
 };
 
 export const main = async function () {
+  if (!userBlogs.find(({ primary }) => primary === true)) return;
   ({
     popupPosition,
     showBlogSelector,

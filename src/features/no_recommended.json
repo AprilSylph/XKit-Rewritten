@@ -28,6 +28,16 @@
       "label": "Hide recommended tags between posts",
       "default": false
     },
+    "hide_community_carousels": {
+      "type": "checkbox",
+      "label": "Hide recommended communities between posts",
+      "default": false
+    },
+    "hide_search_communities": {
+      "type": "checkbox",
+      "label": "Hide suggested communities in the search dropdown",
+      "default": false
+    },
     "hide_lightbox_related": {
       "type": "checkbox",
       "label": "Hide related posts in the photo lightbox",

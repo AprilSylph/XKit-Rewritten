@@ -108,6 +108,9 @@ const processPosts = async function (postElements) {
   let updated = false;
 
   for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
+    // see https://github.com/AprilSylph/XKit-Rewritten/issues/1666
+    if (!postElement.isConnected) continue;
+
     const { tags, timestamp } = await timelineObject(postElement);
 
     if (tags.every(tag => tag.toLowerCase() !== currentTag.toLowerCase())) {

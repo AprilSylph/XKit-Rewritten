@@ -1,11 +1,32 @@
 {
   "title": "Panorama",
   "description": "Widescreen dashboard",
-  "note": "This feature is not currently functional.",
   "icon": {
     "class_name": "ri-align-justify",
     "color": "white",
     "background_color": "#1a2735"
   },
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#panorama"
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#panorama",
+  "preferences": {
+    "maxPostWidth": {
+      "label": "Max. post width",
+      "type": "text",
+      "default": "800px"
+    },
+    "expandPostMedia": {
+      "label": "Expand media content in posts",
+      "type": "checkbox",
+      "default": true
+    },
+    "mainEnable": {
+      "label": "Apply to single post columns",
+      "type": "checkbox",
+      "default": true
+    },
+    "patioEnable": {
+      "label": "Apply to Tumblr Patio",
+      "type": "checkbox",
+      "default": true
+    }
+  }
 }

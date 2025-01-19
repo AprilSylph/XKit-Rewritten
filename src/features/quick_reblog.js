@@ -1,14 +1,15 @@
 import { sha256 } from '../utils/crypto.js';
 import { timelineObject } from '../utils/react_props.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
-import { postSelector, filterPostElements, postType } from '../utils/interface.js';
-import { userBlogs } from '../utils/user.js';
+import { postSelector, filterPostElements, postType, appendWithoutOverflow } from '../utils/interface.js';
+import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../utils/user.js';
 import { getPreferences } from '../utils/preferences.js';
 import { onNewPosts } from '../utils/mutations.js';
 import { notify } from '../utils/notifications.js';
 import { translate } from '../utils/language_data.js';
 import { dom } from '../utils/dom.js';
 import { showErrorModal } from '../utils/modals.js';
+import { keyToCss } from '../utils/css_map.js';
 
 const popupElement = dom('div', { id: 'quick-reblog' });
 const blogSelector = dom('select');
@@ -65,20 +66,19 @@ let alreadyRebloggedLimit;
 const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
 const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
 const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
-const blogHashes = {};
+const blogHashes = new Map();
+const avatarUrls = new Map();
 
 const reblogButtonSelector = `
 ${postSelector} footer a[href*="/reblog/"],
 ${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
 `;
 
-const renderBlogAvatar = async () => {
-  const { value: selectedUuid } = blogSelector;
-  const { avatar } = userBlogs.find(({ uuid }) => uuid === selectedUuid);
-  const { url } = avatar.at(-1);
-  blogAvatar.style.backgroundImage = `url(${url})`;
+const onBlogSelectorChange = () => {
+  blogAvatar.style.backgroundImage = `url(${avatarUrls.get(blogSelector.value)})`;
+  actionButtons.classList[joinedCommunityUuids.includes(blogSelector.value) ? 'add' : 'remove']('community-selected');
 };
-blogSelector.addEventListener('change', renderBlogAvatar);
+blogSelector.addEventListener('change', onBlogSelectorChange);
 
 const renderTagSuggestions = () => {
   tagSuggestions.textContent = '';
@@ -131,7 +131,7 @@ tagsInput.addEventListener('input', checkLength);
 const showPopupOnHover = ({ currentTarget }) => {
   clearTimeout(timeoutID);
 
-  currentTarget.closest('div').appendChild(popupElement);
+  appendWithoutOverflow(popupElement, currentTarget.closest(keyToCss('controlIcon')), popupPosition);
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
   const thisPost = currentTarget.closest(postSelector);
@@ -139,14 +139,15 @@ const showPopupOnHover = ({ currentTarget }) => {
   if (thisPostID !== lastPostID) {
     if (!rememberLastBlog) {
       blogSelector.value = blogSelector.options[0].value;
-      renderBlogAvatar();
+      onBlogSelectorChange();
     }
     commentInput.value = '';
     [...quickTagsList.children].forEach(({ dataset }) => delete dataset.checked);
     tagsInput.value = '';
-    timelineObject(thisPost).then(({ tags, trail, content, layout, blogName, rebloggedRootName }) => {
+    timelineObject(thisPost).then(({ tags, trail, content, layout, blogName, postAuthor, rebloggedRootName }) => {
       suggestableTags = tags;
       if (blogName) suggestableTags.push(blogName);
+      if (postAuthor) suggestableTags.push(postAuthor);
       if (rebloggedRootName) suggestableTags.push(rebloggedRootName);
       suggestableTags.push(postType({ trail, content, layout }));
       renderTagSuggestions();
@@ -292,7 +293,7 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
     [rememberedBlogStorageKey]: rememberedBlogs = {}
   } = await browser.storage.local.get(rememberedBlogStorageKey);
 
-  const selectedBlogHash = blogHashes[selectedBlog];
+  const selectedBlogHash = blogHashes.get(selectedBlog);
 
   rememberedBlogs[accountKey] = selectedBlogHash;
   browser.storage.local.set({ [rememberedBlogStorageKey]: rememberedBlogs });
@@ -315,6 +316,7 @@ const preventLongPressMenu = ({ originalEvent: event }) => {
 };
 
 export const main = async function () {
+  if (!primaryBlog) return;
   ({
     popupPosition,
     showBlogSelector,
@@ -329,31 +331,36 @@ export const main = async function () {
     alreadyRebloggedLimit
   } = await getPreferences('quick_reblog'));
 
-  popupElement.className = popupPosition;
-
   blogSelector.replaceChildren(
-    ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name]))
+    ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name])),
+    ...joinedCommunities.length ? [dom('hr')] : [],
+    ...joinedCommunities.map(({ title, uuid, blog: { name } }) => dom('option', { value: uuid }, null, [`${title} (${name})`]))
   );
 
+  [...userBlogs, ...joinedCommunities].forEach((data) => {
+    const avatar = data.avatarImage ?? data.avatar;
+    const { url } = avatar.at(-1);
+    avatarUrls.set(data.uuid, url);
+  });
+
   if (rememberLastBlog) {
-    for (const { uuid } of userBlogs) {
-      blogHashes[uuid] = await sha256(uuid);
+    for (const { uuid } of [...userBlogs, ...joinedCommunities]) {
+      blogHashes.set(uuid, await sha256(uuid));
     }
 
-    const { uuid: primaryUuid } = userBlogs.find(({ primary }) => primary === true);
-    accountKey = blogHashes[primaryUuid];
+    accountKey = blogHashes.get(primaryBlog.uuid);
 
     const {
       [rememberedBlogStorageKey]: rememberedBlogs = {}
     } = await browser.storage.local.get(rememberedBlogStorageKey);
 
     const savedBlogHash = rememberedBlogs[accountKey];
-    const savedBlogUuid = Object.keys(blogHashes).find(uuid => blogHashes[uuid] === savedBlogHash);
+    const savedBlogUuid = [...blogHashes.keys()].find(uuid => blogHashes.get(uuid) === savedBlogHash);
     if (savedBlogUuid) blogSelector.value = savedBlogUuid;
 
     blogSelector.addEventListener('change', updateRememberedBlog);
   }
-  renderBlogAvatar();
+  onBlogSelectorChange();
 
   blogSelectorContainer.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;

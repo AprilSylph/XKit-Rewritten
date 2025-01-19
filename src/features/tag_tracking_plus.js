@@ -108,6 +108,9 @@ const processPosts = async function (postElements) {
   let updated = false;
 
   for (const postElement of filterPostElements(postElements, { excludeClass, timeline, includeFiltered })) {
+    // see https://github.com/AprilSylph/XKit-Rewritten/issues/1666
+    if (!postElement.isConnected) continue;
+
     const { tags, timestamp } = await timelineObject(postElement);
 
     if (tags.every(tag => tag.toLowerCase() !== currentTag.toLowerCase())) {
@@ -128,12 +131,16 @@ const processPosts = async function (postElements) {
 };
 
 export const onStorageChanged = async (changes, areaName) => {
-  if (Object.keys(changes).includes(storageKey)) {
-    timestamps = changes[storageKey].newValue;
+  const {
+    [storageKey]: timestampsChanges,
+    'tag_tracking_plus.preferences.onlyShowNew': onlyShowNewChanges
+  } = changes;
+
+  if (timestampsChanges) {
+    timestamps = timestampsChanges.newValue;
   }
-  if (Object.keys(changes).some(key => key.startsWith('tag_tracking_plus.preferences'))) {
-    const { onlyShowNew } = await getPreferences('tag_tracking_plus');
-    sidebarItem.dataset.onlyShowNew = onlyShowNew;
+  if (onlyShowNewChanges) {
+    sidebarItem.dataset.onlyShowNew = onlyShowNewChanges.newValue;
   }
 };
 

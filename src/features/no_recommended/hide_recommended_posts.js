@@ -9,7 +9,7 @@ const unHiddenAttribute = 'data-no-recommended-posts-many';
 const timeline = followingTimelineFilter;
 const includeFiltered = true;
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
 [${hiddenAttribute}]:not([${unHiddenAttribute}]) article {
   display: none;
 }
@@ -34,10 +34,10 @@ const styleElement = buildStyle(`
 const precedingHiddenPosts = ({ previousElementSibling: previousElement }, count = 0) => {
   // If there is no previous sibling, stop counting
   if (!previousElement) return count;
-  // If the previous sibling is not a post, skip over it
-  if (!previousElement.matches(postSelector) || !previousElement.querySelector(postSelector)) return precedingHiddenPosts(previousElement, count);
   // If the previous sibling is hidden, count it and continue
   if (previousElement.matches(`[${hiddenAttribute}]`)) return precedingHiddenPosts(previousElement, count + 1);
+  // If the previous sibling is not a post, skip over it
+  if (!previousElement.matches(postSelector) || !previousElement.querySelector(postSelector)) return precedingHiddenPosts(previousElement, count);
   // Otherwise, we've hit a non-hidden post; stop counting
   return count;
 };
@@ -59,20 +59,19 @@ const processPosts = async function (postElements) {
     timelineItem.setAttribute(hiddenAttribute, '');
 
     if (precedingHiddenPosts(timelineItem) >= 10) {
-      timelineItem.setAttribute(hiddenAttribute, '');
+      timelineItem.setAttribute(unHiddenAttribute, '');
     }
   });
 };
 
 export const main = async function () {
   onNewPosts.addListener(processPosts);
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
+
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`[${unHiddenAttribute}]`).removeAttr(unHiddenAttribute);
-  styleElement.remove();
 };

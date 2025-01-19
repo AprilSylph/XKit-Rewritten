@@ -56,7 +56,7 @@ const stopScrolling = () => {
   scrollToBottomButton?.classList.remove(activeClass);
 };
 
-const onClick = () => active ? stopScrolling() : startScrolling();
+const onclick = () => active ? stopScrolling() : startScrolling();
 const onKeyDown = ({ key }) => key === '.' && stopScrolling();
 
 const checkForButtonRemoved = () => {
@@ -76,7 +76,7 @@ const addButtonToPage = ([scrollToTopButton]) => {
     scrollToBottomButton.removeAttribute('aria-label');
     scrollToBottomButton.style.marginTop = '0.5ch';
     scrollToBottomButton.style.transform = 'rotate(180deg)';
-    scrollToBottomButton.addEventListener('click', onClick);
+    scrollToBottomButton.addEventListener('click', onclick);
     scrollToBottomButton.id = scrollToBottomButtonId;
 
     scrollToBottomButton.classList[active ? 'add' : 'remove'](activeClass);

@@ -12,7 +12,7 @@ import { followingTimelineSelector } from '../utils/timeline_id.js';
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenAttribute = 'data-mutual-checker-hidden';
 const mutualsClass = 'from-mutual';
-const postAttributionSelector = `header ${keyToCss('attribution')} a:not(${keyToCss('reblogAttribution', 'rebloggedFromName')} *)`;
+const postAttributionSelector = 'header a[rel="author"]';
 
 const onlyMutualsStyleElement = buildStyle(`${keyToCss('notification')}:not([data-mutuals]) { display: none !important; }`);
 

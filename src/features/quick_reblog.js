@@ -2,7 +2,7 @@ import { sha256 } from '../utils/crypto.js';
 import { timelineObject } from '../utils/react_props.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
 import { postSelector, filterPostElements, postType, appendWithoutOverflow } from '../utils/interface.js';
-import { joinedCommunities, joinedCommunityUuids, userBlogs } from '../utils/user.js';
+import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../utils/user.js';
 import { getPreferences } from '../utils/preferences.js';
 import { onNewPosts } from '../utils/mutations.js';
 import { notify } from '../utils/notifications.js';
@@ -316,6 +316,7 @@ const preventLongPressMenu = ({ originalEvent: event }) => {
 };
 
 export const main = async () => {
+  if (!primaryBlog) return;
   ({
     popupPosition,
     showBlogSelector,
@@ -347,8 +348,7 @@ export const main = async () => {
       blogHashes.set(uuid, await sha256(uuid));
     }
 
-    const { uuid: primaryUuid } = userBlogs.find(({ primary }) => primary === true);
-    accountKey = blogHashes.get(primaryUuid);
+    accountKey = blogHashes.get(primaryBlog.uuid);
 
     const {
       [rememberedBlogStorageKey]: rememberedBlogs = {}

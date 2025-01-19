@@ -2,7 +2,7 @@ const configSection = document.getElementById('configuration');
 const configSectionLink = document.querySelector('a[href="#configuration"]');
 const scriptsDiv = configSection.querySelector('.scripts');
 
-const getInstalledScripts = async function () {
+const getInstalledScripts = async () => {
   const url = browser.runtime.getURL('/features/_index.json');
   const file = await fetch(url);
   const installedScripts = await file.json();
@@ -10,7 +10,7 @@ const getInstalledScripts = async function () {
   return installedScripts;
 };
 
-const writeEnabled = async function ({ currentTarget }) {
+const writeEnabled = async ({ currentTarget }) => {
   const { checked, id } = currentTarget;
   const detailsElement = currentTarget.closest('details');
   let { enabledScripts = [], specialAccess = [] } = await browser.storage.local.get();
@@ -41,7 +41,7 @@ const debounce = (func, ms) => {
   };
 };
 
-const writePreference = async function ({ target }) {
+const writePreference = ({ target }) => {
   const { id } = target;
   const [scriptName, preferenceType, preferenceName] = id.split('.');
   const storageKey = `${scriptName}.preferences.${preferenceName}`;
@@ -59,7 +59,7 @@ const writePreference = async function ({ target }) {
   }
 };
 
-const renderPreferences = async function ({ scriptName, preferences, preferenceList }) {
+const renderPreferences = async ({ scriptName, preferences, preferenceList }) => {
   for (const [key, preference] of Object.entries(preferences)) {
     const storageKey = `${scriptName}.preferences.${key}`;
     const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
@@ -124,7 +124,7 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
   }
 };
 
-const renderScripts = async function () {
+const renderScripts = async () => {
   const scriptClones = [];
   scriptsDiv.textContent = '';
 

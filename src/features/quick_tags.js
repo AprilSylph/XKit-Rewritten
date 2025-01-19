@@ -209,8 +209,9 @@ const processPosts = postElements => filterPostElements(postElements).forEach(po
   const existingButton = postElement.querySelector(`.${buttonClass}`);
   if (existingButton !== null) { return; }
 
-  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"]:has(use[href="#managed-icon__edit"])`);
-  if (!editButton) { return; }
+  const editIcon = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"] use[href="#managed-icon__edit"]`);
+  if (!editIcon) { return; }
+  const editButton = editIcon.closest('a');
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
   const controlIcon = editButton.closest(controlIconSelector);

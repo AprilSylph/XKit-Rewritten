@@ -4,7 +4,7 @@
   const redpop = [...document.scripts].some(({ src }) => src.includes('/pop/'));
   const isReactLoaded = () => document.querySelector('[data-rh]') === null;
 
-  const restartListeners = {};
+  const restartListeners = new Map();
 
   const timestamp = Date.now();
 
@@ -33,7 +33,7 @@
       document.documentElement.append(styleElement);
     }
 
-    restartListeners[name] = async (changes, areaName) => {
+    restartListeners.set(name, async (changes, areaName) => {
       if (areaName !== 'local') return;
 
       const { enabledScripts } = changes;
@@ -45,9 +45,9 @@
         await clean?.();
         await main?.();
       }
-    };
+    });
 
-    browser.storage.onChanged.addListener(restartListeners[name]);
+    browser.storage.onChanged.addListener(restartListeners.get(name));
   };
 
   const destroyScript = async function (name) {
@@ -67,8 +67,8 @@
       styleElement.remove();
     }
 
-    browser.storage.onChanged.removeListener(restartListeners[name]);
-    delete restartListeners[name];
+    browser.storage.onChanged.removeListener(restartListeners.get(name));
+    restartListeners.delete(name);
   };
 
   const onStorageChanged = async function (changes, areaName) {

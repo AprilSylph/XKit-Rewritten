@@ -56,7 +56,7 @@ export const pageModifications = Object.freeze({
 });
 
 export const onNewPosts = Object.freeze({
-  addListener: callback => pageModifications.register(`${postSelector} article`, callback),
+  addListener: callback => pageModifications.register(`${postSelector}:not(.sortable-fallback) article`, callback),
   removeListener: callback => pageModifications.unregister(callback)
 });
 

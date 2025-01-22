@@ -36,8 +36,6 @@ export const styleElement = buildStyle(`
 .${canvasClass} {
   position: absolute;
   visibility: visible;
-
-  background-color: rgb(var(--white));
 }
 
 *:hover > .${canvasClass},

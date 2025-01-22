@@ -8,6 +8,8 @@ const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
 
+const hovered = `:is(:hover > *, .${containerClass}:hover *)`;
+
 export const styleElement = buildStyle(`
 .${labelClass} {
   position: absolute;
@@ -38,10 +40,9 @@ export const styleElement = buildStyle(`
   visibility: visible;
 }
 
-*:hover > .${canvasClass},
-*:hover > .${labelClass},
-.${containerClass}:hover .${canvasClass},
-.${containerClass}:hover .${labelClass} {
+.${canvasClass}${hovered},
+.${labelClass}${hovered},
+img:has(~ .${canvasClass}):not(${hovered}) {
   display: none;
 }
 

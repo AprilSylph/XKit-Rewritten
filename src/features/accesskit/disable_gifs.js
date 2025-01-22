@@ -108,16 +108,16 @@ const processGifs = function (gifElements) {
 
 const sourceUrlRegex = /(?<=url\(["'])[^)]*?\.gifv?(?=["']\))/g;
 
-const pausedBackgroundRules = {};
+const pausedBackgroundImageValues = {};
 
 const backgroundStyleElement = buildStyle();
 const updateBackgroundStyle = () => {
-  backgroundStyleElement.textContent = Object.entries(pausedBackgroundRules)
-    .map(([id, style]) => `[data-disable-gifs-id="${id}"]:not(:hover) ${style}`)
+  backgroundStyleElement.textContent = Object.entries(pausedBackgroundImageValues)
+    .map(([id, value]) => `[data-disable-gifs-id="${id}"]:not(:hover) { background-image: ${value} !important; }`)
     .join('\n');
 };
 
-const createPausedBackgroundRule = (sourceRule, sourceUrl) => new Promise(resolve => {
+const createPausedCssValue = (sourceValue, sourceUrl) => new Promise(resolve => {
   const image = new Image();
   image.crossOrigin = 'anonymous';
   image.src = sourceUrl;
@@ -128,19 +128,19 @@ const createPausedBackgroundRule = (sourceRule, sourceUrl) => new Promise(resolv
     canvas.getContext('2d').drawImage(image, 0, 0);
     canvas.toBlob(blob => {
       const blobUrl = URL.createObjectURL(blob);
-      resolve(`{ background-image: ${sourceRule.replaceAll(sourceUrlRegex, blobUrl)} !important; }`);
+      resolve(sourceValue.replaceAll(sourceUrlRegex, blobUrl));
     });
   };
 });
 
 const processBackgroundGifs = function (gifBackgroundElements) {
   gifBackgroundElements.forEach(async gifBackgroundElement => {
-    const sourceRule = gifBackgroundElement.style.backgroundImage;
-    const sourceUrl = sourceRule.match(sourceUrlRegex)?.[0];
+    const sourceValue = gifBackgroundElement.style.backgroundImage;
+    const sourceUrl = sourceValue.match(sourceUrlRegex)?.[0];
 
     if (sourceUrl) {
-      const id = await sha256(sourceRule);
-      pausedBackgroundRules[id] ??= await createPausedBackgroundRule(sourceRule, sourceUrl);
+      const id = await sha256(sourceValue);
+      pausedBackgroundImageValues[id] ??= await createPausedCssValue(sourceValue, sourceUrl);
       updateBackgroundStyle();
 
       gifBackgroundElement.dataset.disableGifsId = id;

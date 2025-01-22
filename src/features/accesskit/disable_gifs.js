@@ -78,8 +78,8 @@ const pauseGif = function (gifElement) {
       canvas.className = gifElement.className;
       canvas.classList.add(canvasClass);
       canvas.getContext('2d').drawImage(image, 0, 0);
-      gifElement.before(canvas);
       addLabel(gifElement);
+      gifElement.before(canvas);
     }
   };
 };

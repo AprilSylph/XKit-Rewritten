@@ -3,10 +3,12 @@ import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
 
-const canvasClass = 'xkit-paused-gif-placeholder';
+const pausedContentVar = '--xkit-paused-gif-content';
 const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
+
+const hovered = `:is(:hover > *, .${containerClass}:hover *)`;
 
 export const styleElement = buildStyle(`
 .${labelClass} {
@@ -33,21 +35,15 @@ export const styleElement = buildStyle(`
   font-size: 0.6rem;
 }
 
-.${canvasClass} {
-  position: absolute;
-  visibility: visible;
-
-  background-color: rgb(var(--white));
-}
-
-*:hover > .${canvasClass},
-*:hover > .${labelClass},
-.${containerClass}:hover .${canvasClass},
-.${containerClass}:hover .${labelClass} {
+.${labelClass}${hovered} {
   display: none;
 }
 
-[style*="${pausedBackgroundImageVar}"]:not(:hover) {
+img[style*="${pausedContentVar}"]:not(${hovered}) {
+  content: var(${pausedContentVar});
+}
+
+[style*="${pausedBackgroundImageVar}"]:not(${hovered}) {
   background-image: var(${pausedBackgroundImageVar}) !important;
 }
 `);
@@ -63,32 +59,17 @@ const addLabel = (element, inside = false) => {
   }
 };
 
-const pauseGif = function (gifElement) {
-  const image = new Image();
-  image.src = gifElement.currentSrc;
-  image.onload = () => {
-    if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      canvas.className = gifElement.className;
-      canvas.classList.add(canvasClass);
-      canvas.getContext('2d').drawImage(image, 0, 0);
-      gifElement.parentNode.append(canvas);
-      addLabel(gifElement);
-    }
-  };
+const pauseGif = async function (gifElement) {
+  gifElement.style.setProperty(pausedContentVar, `url(${await createPausedUrl(gifElement.currentSrc)})`);
+  addLabel(gifElement);
 };
 
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
     if (gifElement.closest('.block-editor-writing-flow')) return;
-    const pausedGifElements = [
-      ...gifElement.parentNode.querySelectorAll(`.${canvasClass}`),
-      ...gifElement.parentNode.querySelectorAll(`.${labelClass}`)
-    ];
-    if (pausedGifElements.length) {
-      gifElement.after(...pausedGifElements);
+    const existingLabelElements = gifElement.parentNode.querySelectorAll(`.${labelClass}`);
+    if (existingLabelElements.length) {
+      gifElement.after(...existingLabelElements);
       return;
     }
 
@@ -178,7 +159,9 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children)
   );
 
-  $(`.${canvasClass}, .${labelClass}`).remove();
+  $(`.${labelClass}`).remove();
+  [...document.querySelectorAll(`img[style*="${pausedContentVar}"]`)]
+    .forEach(element => element.style.removeProperty(pausedContentVar));
   [...document.querySelectorAll(`img[style*="${pausedBackgroundImageVar}"]`)]
     .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
 };

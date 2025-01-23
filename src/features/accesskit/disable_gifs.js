@@ -2,6 +2,7 @@ import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
+import { memoize } from '../../utils/memoize.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
 const labelClass = 'xkit-paused-gif-label';
@@ -69,7 +70,7 @@ const addLabel = (element, inside = false) => {
 };
 
 const isAnimatedDefault = true;
-const isAnimated = async (sourceUrl) => {
+const isAnimated = memoize(async (sourceUrl) => {
   // treat all GIFs like they're animated
   if (sourceUrl.includes('.gif')) return true;
 
@@ -89,7 +90,7 @@ const isAnimated = async (sourceUrl) => {
   });
   await decoder.decode();
   return decoder.tracks.selectedTrack.animated;
-};
+});
 
 const pauseGif = async function (gifElement) {
   if (!await isAnimated(gifElement.currentSrc)) {

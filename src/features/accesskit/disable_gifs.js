@@ -112,20 +112,24 @@ const processGifs = function (gifElements) {
 
 const sourceUrlRegex = /(?<=url\(["'])[^)]*?\.gifv?(?=["']\))/g;
 
-const createPausedUrl = (sourceUrl) => new Promise(resolve => {
-  const image = new Image();
-  image.crossOrigin = 'anonymous';
-  image.src = sourceUrl;
-  image.onload = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = image.naturalWidth;
-    canvas.height = image.naturalHeight;
-    canvas.getContext('2d').drawImage(image, 0, 0);
-    canvas.toBlob(blob =>
-      resolve(URL.createObjectURL(blob))
-    );
-  };
-});
+const pausedUrlCache = {};
+const createPausedUrl = (sourceUrl) => {
+  pausedUrlCache[sourceUrl] ??= new Promise(resolve => {
+    const image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.src = sourceUrl;
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      canvas.getContext('2d').drawImage(image, 0, 0);
+      canvas.toBlob(blob =>
+        resolve(URL.createObjectURL(blob))
+      );
+    };
+  });
+  return pausedUrlCache[sourceUrl];
+};
 
 const processBackgroundGifs = function (gifBackgroundElements) {
   gifBackgroundElements.forEach(async gifBackgroundElement => {

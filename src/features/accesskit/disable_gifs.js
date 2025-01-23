@@ -7,7 +7,6 @@ const canvasClass = 'xkit-paused-gif-placeholder';
 const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
-const backgroundGifClass = 'xkit-paused-background-gif';
 
 export const styleElement = buildStyle(`
 .${labelClass} {
@@ -50,15 +49,6 @@ export const styleElement = buildStyle(`
 
 [style*="${pausedBackgroundImageVar}"]:not(:hover) {
   background-image: var(${pausedBackgroundImageVar}) !important;
-}
-
-.${backgroundGifClass}:not(:hover) {
-  background-image: none !important;
-  background-color: rgb(var(--secondary-accent));
-}
-
-.${backgroundGifClass}:not(:hover) > div {
-  color: rgb(var(--black));
 }
 `);
 
@@ -141,10 +131,8 @@ const processBackgroundGifs = function (gifBackgroundElements) {
         pausedBackgroundImageVar,
         sourceValue.replaceAll(sourceUrlRegex, await createPausedUrl(sourceUrl))
       );
-    } else {
-      gifBackgroundElement.classList.add(backgroundGifClass);
+      addLabel(gifBackgroundElement, true);
     }
-    addLabel(gifBackgroundElement, true);
   });
 };
 
@@ -191,7 +179,6 @@ export const clean = async function () {
   );
 
   $(`.${canvasClass}, .${labelClass}`).remove();
-  $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
   [...document.querySelectorAll(`img[style*="${pausedBackgroundImageVar}"]`)]
     .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
 };

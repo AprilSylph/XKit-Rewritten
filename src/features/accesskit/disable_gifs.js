@@ -2,11 +2,11 @@ import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
-import { sha256 } from '../../utils/crypto.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
 const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
+const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const backgroundGifClass = 'xkit-paused-background-gif';
 
 export const styleElement = buildStyle(`
@@ -46,6 +46,10 @@ export const styleElement = buildStyle(`
 .${containerClass}:hover .${canvasClass},
 .${containerClass}:hover .${labelClass} {
   display: none;
+}
+
+[style*="${pausedBackgroundImageVar}"]:not(:hover) {
+  background-image: var(${pausedBackgroundImageVar}) !important;
 }
 
 .${backgroundGifClass}:not(:hover) {
@@ -108,15 +112,6 @@ const processGifs = function (gifElements) {
 
 const sourceUrlRegex = /(?<=url\(["'])[^)]*?\.gifv?(?=["']\))/g;
 
-const pausedBackgroundImageValues = {};
-
-const backgroundStyleElement = buildStyle();
-const updateBackgroundStyle = () => {
-  backgroundStyleElement.textContent = Object.entries(pausedBackgroundImageValues)
-    .map(([id, value]) => `[data-disable-gifs-id="${id}"]:not(:hover) { background-image: ${value} !important; }`)
-    .join('\n');
-};
-
 const createPausedUrl = (sourceUrl) => new Promise(resolve => {
   const image = new Image();
   image.crossOrigin = 'anonymous';
@@ -138,11 +133,10 @@ const processBackgroundGifs = function (gifBackgroundElements) {
     const sourceUrl = sourceValue.match(sourceUrlRegex)?.[0];
 
     if (sourceUrl) {
-      const id = await sha256(sourceValue);
-      pausedBackgroundImageValues[id] ??= sourceValue.replaceAll(sourceUrlRegex, await createPausedUrl(sourceUrl));
-      updateBackgroundStyle();
-
-      gifBackgroundElement.dataset.disableGifsId = id;
+      gifBackgroundElement.style.setProperty(
+        pausedBackgroundImageVar,
+        sourceValue.replaceAll(sourceUrlRegex, await createPausedUrl(sourceUrl))
+      );
     } else {
       gifBackgroundElement.classList.add(backgroundGifClass);
     }
@@ -176,7 +170,6 @@ export const main = async function () {
     ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
-  document.documentElement.append(backgroundStyleElement);
 
   pageModifications.register(
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
@@ -195,7 +188,6 @@ export const clean = async function () {
 
   $(`.${canvasClass}, .${labelClass}`).remove();
   $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
-  $('[data-disable-gifs-id]').removeAttr('data-disable-gifs-id');
-
-  backgroundStyleElement.remove();
+  [...document.querySelectorAll(`img[style*="${pausedBackgroundImageVar}"]`)]
+    .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
 };

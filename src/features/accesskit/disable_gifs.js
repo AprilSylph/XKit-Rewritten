@@ -68,7 +68,34 @@ const addLabel = (element, inside = false) => {
   }
 };
 
-const pauseGif = function (gifElement) {
+const isAnimatedDefault = true;
+const isAnimated = async (sourceUrl) => {
+  // treat all GIFs like they're animated
+  if (sourceUrl.includes('.gif')) return true;
+
+  if (typeof ImageDecoder !== 'function') return isAnimatedDefault;
+  /* globals ImageDecoder */
+
+  const response = await fetch(sourceUrl);
+
+  const contentType = response.headers.get('Content-Type');
+  const supported = await ImageDecoder.isTypeSupported(contentType);
+  if (!supported) return isAnimatedDefault;
+
+  const decoder = new ImageDecoder({
+    type: contentType,
+    data: response.body,
+    preferAnimation: true
+  });
+  await decoder.decode();
+  return decoder.tracks.selectedTrack.animated;
+};
+
+const pauseGif = async function (gifElement) {
+  if (!await isAnimated(gifElement.currentSrc)) {
+    console.log("this webp image isn't animated!", gifElement);
+    return;
+  }
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
@@ -130,7 +157,7 @@ const processRows = function (rowsElements) {
 
 export const main = async function () {
   const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img:is([srcset*=".gif"], [srcset*=".webp"]):not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 

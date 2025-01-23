@@ -108,6 +108,10 @@ const createPausedUrl = (sourceUrl) => {
 
 const processBackgroundGifs = function (gifBackgroundElements) {
   gifBackgroundElements.forEach(async gifBackgroundElement => {
+    // "tumblr tv" video cards may be initially rendered with the wrong background
+    if (!gifBackgroundElement.matches('[style*=".gif"]')) await new Promise(requestAnimationFrame);
+    if (!gifBackgroundElement.matches('[style*=".gif"]')) return;
+
     const sourceValue = gifBackgroundElement.style.backgroundImage;
     const sourceUrl = sourceValue.match(sourceUrlRegex)?.[0];
 
@@ -147,7 +151,7 @@ export const main = async function () {
   pageModifications.register(gifImage, processGifs);
 
   const gifBackgroundImage = `
-    ${keyToCss('communityHeaderImage', 'communityCategoryImage', 'bannerImage', 'videoHubCardWrapper')}[style*=".gif"]
+    ${keyToCss('communityHeaderImage', 'communityCategoryImage', 'bannerImage', 'videoHubCardWrapper')}
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 

@@ -93,10 +93,7 @@ const isAnimated = memoize(async (sourceUrl) => {
 });
 
 const pauseGif = async function (gifElement) {
-  if (!await isAnimated(gifElement.currentSrc)) {
-    console.log("this webp image isn't animated!", gifElement);
-    return;
-  }
+  if (!await isAnimated(gifElement.currentSrc)) return;
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {

@@ -133,10 +133,6 @@ const processBackgroundGifs = function (gifBackgroundElements) {
     if (sourceUrl) {
       gifBackgroundElement.style.setProperty(
         pausedBackgroundImageVar,
-        'linear-gradient(rgb(var(--secondary-accent), 0.1), rgb(var(--secondary-accent), 0.1))'
-      );
-      gifBackgroundElement.style.setProperty(
-        pausedBackgroundImageVar,
         sourceValue.replaceAll(sourceUrlRegex, await createPausedUrl(sourceUrl))
       );
       addLabel(gifBackgroundElement, true);

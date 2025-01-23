@@ -117,7 +117,7 @@ const updateBackgroundStyle = () => {
     .join('\n');
 };
 
-const createPausedCssValue = (sourceValue, sourceUrl) => new Promise(resolve => {
+const createPausedUrl = (sourceUrl) => new Promise(resolve => {
   const image = new Image();
   image.crossOrigin = 'anonymous';
   image.src = sourceUrl;
@@ -126,10 +126,9 @@ const createPausedCssValue = (sourceValue, sourceUrl) => new Promise(resolve => 
     canvas.width = image.naturalWidth;
     canvas.height = image.naturalHeight;
     canvas.getContext('2d').drawImage(image, 0, 0);
-    canvas.toBlob(blob => {
-      const blobUrl = URL.createObjectURL(blob);
-      resolve(sourceValue.replaceAll(sourceUrlRegex, blobUrl));
-    });
+    canvas.toBlob(blob =>
+      resolve(URL.createObjectURL(blob))
+    );
   };
 });
 
@@ -140,7 +139,7 @@ const processBackgroundGifs = function (gifBackgroundElements) {
 
     if (sourceUrl) {
       const id = await sha256(sourceValue);
-      pausedBackgroundImageValues[id] ??= await createPausedCssValue(sourceValue, sourceUrl);
+      pausedBackgroundImageValues[id] ??= sourceValue.replaceAll(sourceUrlRegex, await createPausedUrl(sourceUrl));
       updateBackgroundStyle();
 
       gifBackgroundElement.dataset.disableGifsId = id;

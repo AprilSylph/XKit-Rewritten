@@ -8,7 +8,7 @@ const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 
-const hovered = `:is(:hover > *, .${containerClass}:hover *)`;
+const hovered = `:is(:hover > *, .${containerClass}:hover *, a:hover + div *)`;
 
 export const styleElement = buildStyle(`
 .${labelClass} {
@@ -140,7 +140,7 @@ export const main = async function () {
   pageModifications.register(gifImage, processGifs);
 
   const gifBackgroundImage = `
-    ${keyToCss('communityHeaderImage', 'bannerImage', 'videoHubCardWrapper')}[style*=".gif"]
+    ${keyToCss('communityHeaderImage', 'communityCategoryImage', 'bannerImage', 'videoHubCardWrapper')}[style*=".gif"]
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 

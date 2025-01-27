@@ -14,7 +14,7 @@ import { timelineObject } from '../utils/react_props.js';
 
 const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';
-const meatballButtonId = 'quote_replies';
+const meatballButtonId = 'quote-replies';
 const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
@@ -72,10 +72,16 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   if (!reply) throw new Error('No replies found on target post.');
   if (Math.floor(reply.timestamp) !== timestamp) throw new Error('Reply not found.');
 
-  const replyingBlogName = reply.blog.name;
-  const replyingBlogUuid = reply.blog.uuid;
-
-  openQuoteReplyPost({ type, replyingBlogName, replyingBlogUuid, reply, postSummary: targetPostSummary, postUrl, targetBlogUuid: uuid, targetBlogName: tumblelogName });
+  openQuoteReplyPost({
+    type,
+    replyingBlogName: reply.blog.name,
+    replyingBlogUuid: reply.blog.uuid,
+    reply,
+    postSummary: targetPostSummary,
+    postUrl,
+    targetBlogUuid: uuid,
+    targetBlogName: tumblelogName
+  });
 };
 
 const openQuoteReplyPost = async ({ type, replyingBlogName, replyingBlogUuid, postSummary, postUrl, reply, targetBlogUuid, targetBlogName }) => {
@@ -133,8 +139,8 @@ const processNoteProps = ([noteProps, parentNoteProps]) => {
       targetBlogName: noteProps.blog.name
     };
   }
-  for (const { formatting } of noteProps.note.content) {
-    for (const { type, blog } of formatting ?? []) {
+  for (const { formatting = [] } of noteProps.note.content) {
+    for (const { type, blog } of formatting) {
       if (type === 'mention' && userBlogNames.includes(blog.name)) {
         return {
           type: 'note_mention',

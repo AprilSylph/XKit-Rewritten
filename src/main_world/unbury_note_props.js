@@ -3,14 +3,15 @@ export default function unburyNoteProps () {
   const reactKey = Object.keys(noteElement).find(key => key.startsWith('__reactFiber'));
   let fiber = noteElement[reactKey];
 
-  const results = {};
+  const resultsByReplyId = {};
   while (fiber !== null) {
     const props = fiber.memoizedProps || {};
     if (typeof props?.note?.replyId === 'string') {
-      // returns the last set of props corresponding to each replyId, which contains the most information
-      results[props.note.replyId] = props;
+      // multiple sets of props correspond to each replyId;
+      // prefer the last set, as it contains the most information
+      resultsByReplyId[props.note.replyId] = props;
     }
     fiber = fiber.return;
   }
-  return Object.values(results);
+  return Object.values(resultsByReplyId);
 }

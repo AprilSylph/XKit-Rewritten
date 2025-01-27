@@ -26,7 +26,7 @@ export const registerMeatballItem = function ({ id, label, onclick, postFilter }
 
 export const unregisterMeatballItem = id => {
   delete meatballItems[id];
-  $(`[data-xkit-meatball-button="${id}"]`).remove();
+  $(`[data-xkit-post-meatball-button="${id}"]`).remove();
 };
 
 /**
@@ -53,7 +53,7 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
     addTypedMeatballItems({
       meatballMenu,
       meatballItems,
-      buttonDataAttr: 'data-xkit-meatball-button',
+      buttonDataAttr: 'data-xkit-post-meatball-button',
       reactData: await timelineObject(meatballMenu),
       reactDataKey: '__timelineObjectData'
     });

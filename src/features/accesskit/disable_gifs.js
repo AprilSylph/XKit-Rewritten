@@ -77,7 +77,8 @@ const isAnimated = memoize(async (sourceUrl) => {
   if (typeof ImageDecoder !== 'function') return isAnimatedDefault;
   /* globals ImageDecoder */
 
-  const response = await fetch(sourceUrl);
+  const controller = new AbortController();
+  const response = await fetch(sourceUrl, { signal: controller.signal });
 
   const contentType = response.headers.get('Content-Type');
   const supported = await ImageDecoder.isTypeSupported(contentType);
@@ -89,6 +90,7 @@ const isAnimated = memoize(async (sourceUrl) => {
     preferAnimation: true
   });
   await decoder.decode();
+  controller.abort();
   return decoder.tracks.selectedTrack.animated;
 });
 

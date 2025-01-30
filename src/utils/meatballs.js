@@ -82,12 +82,12 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
       {
         class: 'xkit-meatball-button',
         [`data-xkit-${type}-meatball-button`]: id,
-        [reactDataKey]: reactData,
         hidden: true
       },
       { click: onclick },
       ['\u22EF']
     );
+    meatballItemButton[reactDataKey] = reactData;
 
     if (label instanceof Function) {
       const labelResult = label(reactData);

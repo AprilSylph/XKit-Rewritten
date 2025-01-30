@@ -77,16 +77,15 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
   Object.keys(meatballItems[type]).sort().forEach(id => {
     const { label, onclick, filter } = meatballItems[type][id];
 
-    const meatballItemButton = dom(
-      'button',
-      {
-        class: 'xkit-meatball-button',
-        [`data-xkit-${type}-meatball-button`]: id,
-        hidden: true
-      },
-      { click: onclick },
-      ['\u22EF']
-    );
+    const meatballItemButton = dom('button', {
+      class: 'xkit-meatball-button',
+      [`data-xkit-${type}-meatball-button`]: id,
+      hidden: true
+    }, {
+      click: onclick
+    }, [
+      '\u22EF'
+    ]);
     meatballItemButton[reactDataKey] = reactData;
 
     if (label instanceof Function) {

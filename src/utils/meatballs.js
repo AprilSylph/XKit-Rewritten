@@ -3,13 +3,14 @@ import { dom } from './dom.js';
 import { postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { inject } from './inject.js';
-import { blogData, timelineObject } from './react_props.js';
+import { blogData, notePropsObjects, timelineObject } from './react_props.js';
 
 const postHeaderSelector = `${postSelector} article > header`;
 const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
 
 const meatballItems = {};
 const blogMeatballItems = {};
+const replyMeatballItems = {};
 
 /**
  * Add a custom button to posts' meatball menus.
@@ -47,6 +48,24 @@ export const unregisterBlogMeatballItem = id => {
   $(`[data-xkit-blog-meatball-button="${id}"]`).remove();
 };
 
+/**
+ * Add a custom button to post replies' meatball menus.
+ * @param {object} options - Destructured
+ * @param {string} options.id - Identifier for this button (must be unique)
+ * @param {string|Function} options.label - Button text to display. May be a function accepting the note component props data of the reply element being actioned on.
+ * @param {Function} options.onclick - Button click listener function
+ * @param {Function} [options.notePropsFilter] - Filter function, called with the note component props data of the reply element being actioned on. Must return true for button to be added.
+ */
+export const registerReplyMeatballItem = function ({ id, label, onclick, notePropsFilter }) {
+  replyMeatballItems[id] = { label, onclick, notePropsFilter };
+  pageModifications.trigger(addMeatballItems);
+};
+
+export const unregisterReplyMeatballItem = id => {
+  delete replyMeatballItems[id];
+  $(`[data-xkit-reply-meatball-button="${id}"]`).remove();
+};
+
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
   const inPostHeader = await inject('/main_world/test_header_element.js', [postHeaderSelector], meatballMenu);
   if (inPostHeader) {
@@ -56,6 +75,11 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
   const inBlogHeader = await inject('/main_world/test_header_element.js', [blogHeaderSelector], meatballMenu);
   if (inBlogHeader) {
     addBlogMeatballItem(meatballMenu);
+    return;
+  }
+  const inPostFooter = await inject('/main_world/test_parent_element.js', ['footer *'], meatballMenu);
+  if (inPostFooter) {
+    addPostFooterMeatballItem(meatballMenu);
   }
 });
 
@@ -149,6 +173,54 @@ const addBlogMeatballItem = async meatballMenu => {
 
     meatballMenu.append(meatballItemButton);
   });
+};
+
+const addPostFooterMeatballItem = async meatballMenu => {
+  const __notePropsData = await notePropsObjects(meatballMenu);
+
+  if (__notePropsData[0]?.note?.type === 'reply') {
+    $(meatballMenu).children('[data-xkit-reply-meatball-button]').remove();
+
+    Object.keys(replyMeatballItems).sort().forEach(id => {
+      const { label, onclick, notePropsFilter } = replyMeatballItems[id];
+
+      const meatballItemButton = dom('button', {
+        class: 'xkit-meatball-button',
+        'data-xkit-reply-meatball-button': id,
+        hidden: true
+      }, {
+        click: onclick
+      }, [
+        '\u22EF'
+      ]);
+      meatballItemButton.__notePropsData = __notePropsData;
+
+      if (label instanceof Function) {
+        const labelResult = label(__notePropsData);
+
+        if (labelResult instanceof Promise) {
+          labelResult.then(result => { meatballItemButton.textContent = result; });
+        } else {
+          meatballItemButton.textContent = labelResult;
+        }
+      } else {
+        meatballItemButton.textContent = label;
+      }
+
+      if (notePropsFilter instanceof Function) {
+        const shouldShowItem = notePropsFilter(__notePropsData);
+        meatballItemButton.hidden = shouldShowItem !== true;
+
+        if (shouldShowItem instanceof Promise) {
+          shouldShowItem.then(result => { meatballItemButton.hidden = result !== true; });
+        }
+      } else {
+        meatballItemButton.hidden = false;
+      }
+
+      meatballMenu.append(meatballItemButton);
+    });
+  }
 };
 
 pageModifications.register(keyToCss('meatballMenu'), addMeatballItems);

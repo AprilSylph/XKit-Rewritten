@@ -3,6 +3,7 @@ import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
 const timelineObjectCache = new WeakMap();
 const notificationObjectCache = new WeakMap();
+const notePropsCache = new WeakMap();
 
 /**
  * @param {Element} postElement - An on-screen post
@@ -30,6 +31,21 @@ export const notificationObject = function (notificationElement) {
     );
   }
   return notificationObjectCache.get(notificationElement);
+};
+
+/**
+ * @param {Element} noteElement - An on-screen post note element
+ * @returns {Promise<object[]>} - An array containing the element's buried note component props and, if it is a
+ *                                threaded reply, its parents' buried note component props values
+ */
+export const notePropsObjects = function (noteElement) {
+  if (!notePropsCache.has(noteElement)) {
+    notePropsCache.set(
+      noteElement,
+      inject('/main_world/unbury_note_props.js', [], noteElement)
+    );
+  }
+  return notePropsCache.get(noteElement);
 };
 
 /**

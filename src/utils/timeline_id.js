@@ -17,6 +17,11 @@ export const followingTimelineSelector = createSelector(
   `[data-timeline-id^="${'following-'}"]`
 );
 
+export const forYouTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timeline?.startsWith('/v2/tabs/for_you') ||
+  timelineId === '/dashboard/stuff_for_you' ||
+  timelineId?.startsWith('for-you-');
+
 // includes "channel" user blog view page
 export const anyBlogTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.match(exactly(`/v2/blog/${anyBlog}/posts`)) ||

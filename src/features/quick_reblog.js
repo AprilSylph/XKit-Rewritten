@@ -31,12 +31,12 @@ const tagsInput = dom(
   'input',
   {
     placeholder: 'Tags (comma separated)',
-    autocomplete: 'off',
-    list: 'quick-reblog-tag-suggestions'
+    autocomplete: 'off'
   },
   { keydown: event => event.stopPropagation() }
 );
-const tagSuggestions = dom('datalist', { id: 'quick-reblog-tag-suggestions' });
+const tagSuggestions = dom('div', { class: 'xkit-suggestion-list' });
+const tagsInputWrapper = dom('div', { class: 'tags-input-wrapper' }, null, [tagsInput, tagSuggestions]);
 const actionButtons = dom('fieldset', { class: 'action-buttons' });
 const reblogButton = dom('button', null, null, ['Reblog']);
 reblogButton.dataset.state = 'published';
@@ -44,7 +44,7 @@ const queueButton = dom('button', null, null, ['Queue']);
 queueButton.dataset.state = 'queue';
 const draftButton = dom('button', null, null, ['Draft']);
 draftButton.dataset.state = 'draft';
-[blogSelectorContainer, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons].forEach(element => popupElement.appendChild(element));
+[blogSelectorContainer, commentInput, quickTagsList, tagsInputWrapper, actionButtons].forEach(element => popupElement.appendChild(element));
 
 let lastPostID;
 let timeoutID;
@@ -80,6 +80,15 @@ const onBlogSelectorChange = () => {
 };
 blogSelector.addEventListener('change', onBlogSelectorChange);
 
+tagSuggestions.addEventListener('click', event => {
+  if (event.target.dataset.value) {
+    const includeSpace = !tagsInput.value.endsWith(' ') && tagsInput.value.trim() !== '';
+    tagsInput.value += `${includeSpace ? ' ' : ''}${event.target.dataset.value}, `;
+    tagsInput.focus();
+    renderTagSuggestions();
+  }
+});
+
 const renderTagSuggestions = () => {
   tagSuggestions.textContent = '';
   if (!showTagSuggestions) return;
@@ -89,19 +98,21 @@ const renderTagSuggestions = () => {
     .map(tag => tag.trim().toLowerCase())
     .filter(tag => tag !== '');
 
-  const includeSpace = !tagsInput.value.endsWith(' ') && tagsInput.value.trim() !== '';
-
   const tagsToSuggest = suggestableTags
     .filter(tag => !currentTags.includes(tag.toLowerCase()))
-    .filter((tag, index, array) => array.indexOf(tag) === index)
-    .map(tag => `${tagsInput.value}${includeSpace ? ' ' : ''}${tag}`);
+    .filter((tag, index, array) => array.indexOf(tag) === index);
 
-  tagSuggestions.append(...tagsToSuggest.map(value => dom('option', { value })));
+  if (tagsToSuggest.length && (tagsInput.value.trim().endsWith(',') || tagsInput.value.trim() === '')) {
+    tagSuggestions.replaceChildren(
+      dom('div', null, null, tagsToSuggest.map(value => dom('button', { 'data-value': value }, null, [value])))
+    );
+    tagSuggestions.hidden = false;
+  }
 };
 
-const updateTagSuggestions = () => {
-  if (tagsInput.value.trim().endsWith(',') || tagsInput.value.trim() === '') {
-    renderTagSuggestions();
+const onInputKeyDown = ({ key }) => {
+  if (key === 'Escape') {
+    tagSuggestions.hidden = true;
   }
 };
 
@@ -124,7 +135,8 @@ const checkLength = ({ currentTarget }) => {
   }
 };
 
-tagsInput.addEventListener('input', updateTagSuggestions);
+tagsInput.addEventListener('input', renderTagSuggestions);
+tagsInput.addEventListener('keydown', onInputKeyDown);
 tagsInput.addEventListener('input', doSmartQuotes);
 tagsInput.addEventListener('input', checkLength);
 

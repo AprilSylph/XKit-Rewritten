@@ -171,7 +171,7 @@ const makeButtonReblogged = ({ buttonDiv, state }) => {
   buttonDiv.classList.add(state);
 };
 
-const reblogPost = async function ({ currentTarget }) {
+const reblogPost = async ({ currentTarget }) => {
   const currentReblogButton = popupElement.parentNode;
 
   currentTarget.blur();
@@ -237,7 +237,7 @@ const reblogPost = async function ({ currentTarget }) {
   actionButtons.appendChild(button);
 });
 
-const processPosts = async function (postElements) {
+const processPosts = async postElements => {
   const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(alreadyRebloggedStorageKey);
   filterPostElements(postElements).forEach(async postElement => {
     const { id } = postElement.dataset;
@@ -253,7 +253,7 @@ const processPosts = async function (postElements) {
   });
 };
 
-const renderQuickTags = async function () {
+const renderQuickTags = async () => {
   quickTagsList.textContent = '';
 
   const { [quickTagsStorageKey]: tagBundles = [] } = await browser.storage.local.get(quickTagsStorageKey);
@@ -315,7 +315,7 @@ const preventLongPressMenu = ({ originalEvent: event }) => {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   if (!primaryBlog) return;
   ({
     popupPosition,
@@ -380,7 +380,7 @@ export const main = async function () {
   }
 };
 
-export const clean = async function () {
+export const clean = async () => {
   $(document.body).off('mouseenter', reblogButtonSelector, showPopupOnHover);
   $(document.body).off('contextmenu', reblogButtonSelector, preventLongPressMenu);
   popupElement.remove();

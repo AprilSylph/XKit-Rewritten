@@ -16,6 +16,7 @@ import {
   blogTimelineFilter,
   inboxTimelineFilter,
   likesTimelineFilter,
+  peeprLikesTimelineFilter,
   peeprTimelineFilter,
   timelineSelector
 } from '../utils/timeline_id.js';
@@ -87,6 +88,7 @@ const shouldDisable = timelineElement => Boolean(
   anyQueueTimelineFilter(timelineElement) ||
   anyFlaggedReviewTimelineFilter(timelineElement) ||
   likesTimelineFilter(timelineElement) ||
+  userBlogNames.some(name => peeprLikesTimelineFilter(name)(timelineElement)) ||
   inboxTimelineFilter(timelineElement) ||
   anyBlogPostTimelineFilter(timelineElement)
 );

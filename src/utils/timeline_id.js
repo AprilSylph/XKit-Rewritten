@@ -71,6 +71,13 @@ export const likesTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timelineId === 'likes' ||
   timelineId?.match(exactly(`likes-${uuidV4}`));
 
+export const peeprLikesTimelineFilter = blog =>
+  ({ dataset: { timeline, timelineId } }) =>
+    timelineId === `peepr-likes-${blog}`;
+
+export const anyPeeprLikesTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timelineId?.match(exactly(`peepr-likes-${anyBlog}`));
+
 export const inboxTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.startsWith('/v2/user/inbox');
 

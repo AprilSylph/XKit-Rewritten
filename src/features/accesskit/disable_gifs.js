@@ -68,9 +68,9 @@ const addLabel = (element, inside = false) => {
   }
 };
 
-const pauseGif = function (gifElement) {
+const pauseGif = function (gifElement, src) {
   const image = new Image();
-  image.src = gifElement.currentSrc;
+  image.src = src;
   image.onload = () => {
     if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
       const canvas = document.createElement('canvas');
@@ -97,10 +97,11 @@ const processGifs = function (gifElements) {
       return;
     }
 
-    if (gifElement.complete && gifElement.currentSrc) {
-      pauseGif(gifElement);
+    const srcElement = gifElement.parentElement.querySelector(keyToCss('poster')) ?? gifElement;
+    if (srcElement.complete && srcElement.currentSrc) {
+      pauseGif(gifElement, srcElement.currentSrc);
     } else {
-      gifElement.onload = () => pauseGif(gifElement);
+      srcElement.onload = () => pauseGif(gifElement, srcElement.currentSrc);
     }
   });
 };

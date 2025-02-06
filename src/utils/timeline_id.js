@@ -1,9 +1,6 @@
-import { keyToCss } from './css_map.js';
-
 const createSelector = (...components) => `:is(${components.filter(Boolean).join(', ')})`;
 
 export const timelineSelector = ':is([data-timeline], [data-timeline-id])';
-export const channelSelector = `${keyToCss('bar')} ~ *`;
 
 const exactly = string => `^${string}$`;
 const anyBlog = '[a-z0-9-]{1,32}';

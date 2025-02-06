@@ -54,10 +54,16 @@ export const anyQueueTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.match(exactly(`/v2/blog/${anyBlog}/posts/queue`)) ||
   timelineId?.match(exactly(`queue-${uuidV4}-${anyBlog}`));
 
+export const anyFlaggedReviewTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timeline?.match(exactly(`/v2/blog/${anyBlog}/posts/review`));
+
 export const likesTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline === 'v2/user/likes' ||
   timelineId === 'likes' ||
   timelineId?.match(exactly(`likes-${uuidV4}`));
+
+export const inboxTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timeline?.startsWith('/v2/user/inbox');
 
 export const tagTimelineFilter = tag =>
   ({ dataset: { timeline, timelineId } }) =>

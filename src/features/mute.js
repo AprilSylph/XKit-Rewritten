@@ -9,12 +9,16 @@ import { getPreferences } from '../utils/preferences.js';
 import {
   anyBlogPostTimelineFilter,
   anyBlogTimelineFilter,
+  anyDraftsTimelineFilter,
+  anyFlaggedReviewTimelineFilter,
+  anyQueueTimelineFilter,
   blogTimelineFilter,
-  channelSelector,
+  inboxTimelineFilter,
   likesTimelineFilter,
   timelineSelector
 } from '../utils/timeline_id.js';
 import { controlsClass as showOriginalsControlsClass } from './show_originals.js';
+import { userBlogNames } from '../utils/user.js';
 
 const meatballButtonId = 'mute';
 const meatballButtonLabel = data => `Mute options for ${data.name ?? getVisibleBlog(data).name}`;
@@ -70,9 +74,13 @@ const processBlogTimelineElement = async timelineElement => {
 };
 
 const shouldDisable = timelineElement => Boolean(
-  (anyBlogTimelineFilter(timelineElement) && timelineElement.matches(channelSelector)) ||
-  anyBlogPostTimelineFilter(timelineElement) ||
-  likesTimelineFilter(timelineElement)
+  userBlogNames.some(name => blogTimelineFilter(name)(timelineElement)) ||
+  anyDraftsTimelineFilter(timelineElement) ||
+  anyQueueTimelineFilter(timelineElement) ||
+  anyFlaggedReviewTimelineFilter(timelineElement) ||
+  likesTimelineFilter(timelineElement) ||
+  inboxTimelineFilter(timelineElement) ||
+  anyBlogPostTimelineFilter(timelineElement)
 );
 
 const processTimelines = async timelineElements => {

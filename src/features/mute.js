@@ -28,7 +28,7 @@ const meatballButtonLabel = data => `Mute options for ${data.name ?? getVisibleB
 
 const hiddenAttribute = 'data-mute-hidden';
 const mutedBlogControlsHiddenAttribute = 'data-muted-blog-controls-hidden';
-const activeClass = 'xkit-mute-active';
+const activeAttribute = 'data-mute-active';
 const mutedBlogControlsClass = 'xkit-muted-blog-controls';
 const lengthenedClass = 'xkit-mute-lengthened';
 
@@ -107,10 +107,10 @@ const processTimelines = async timelineElements => {
 
     [...timelineElement.querySelectorAll(`.${mutedBlogControlsClass}`)].forEach(el => el.remove());
     delete timelineElement.dataset.muteBlogUuid;
-    timelineElement.classList.remove(activeClass);
+    timelineElement.removeAttribute(activeAttribute);
 
     if (shouldDisable(timelineElement) === false) {
-      timelineElement.classList.add(activeClass);
+      timelineElement.setAttribute(activeAttribute, '');
       lengthenTimeline(timelineElement);
 
       if (anyBlogTimelineFilter(timelineElement) || anyPeeprTimelineFilter(timelineElement)) {
@@ -297,7 +297,7 @@ export const main = async function () {
 const unprocess = () => {
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`[${mutedBlogControlsHiddenAttribute}]`).removeAttr(mutedBlogControlsHiddenAttribute);
-  $(`.${activeClass}`).removeClass(activeClass);
+  $(`[${activeAttribute}]`).removeAttr(activeAttribute);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
   $(`.${mutedBlogControlsClass}`).remove();
   $('[data-mute-processed-timeline]').removeAttr('data-mute-processed-timeline');

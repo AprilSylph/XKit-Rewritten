@@ -1,14 +1,10 @@
-.xkit-mute-active [data-mute-hidden] article {
+.xkit-mute-active [data-mute-hidden] article,
+[data-mute-mode='original'] ~ div [data-muted-blog-hidden] article,
+[data-mute-mode='reblogged'] ~ div [data-muted-blog-hidden] article {
   display: none;
 }
-
-.xkit-muted-blog-controls:is([data-mode='original'], [data-mode='reblogged']) ~ div [data-muted-blog-hidden] article {
-  display: none;
-}
-.xkit-muted-blog-controls[data-mode='all'] ~ div article {
-  visibility: hidden !important;
-}
-.xkit-muted-blog-controls[data-mode='all'] ~ div article :is(img, video, canvas) {
+[data-mute-mode='all'] ~ div article,
+[data-mute-mode='all'] ~ div article :is(img, video, canvas) {
   visibility: hidden !important;
 }
 

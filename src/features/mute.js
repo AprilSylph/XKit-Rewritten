@@ -6,7 +6,14 @@ import { onNewPosts, pageModifications } from '../utils/mutations.js';
 import { keyToCss } from '../utils/css_map.js';
 import { dom } from '../utils/dom.js';
 import { getPreferences } from '../utils/preferences.js';
-import { anyBlogPostTimelineFilter, anyBlogTimelineFilter, channelSelector, likesTimelineFilter, timelineSelector } from '../utils/timeline_id.js';
+import {
+  anyBlogPostTimelineFilter,
+  anyBlogTimelineFilter,
+  blogTimelineFilter,
+  channelSelector,
+  likesTimelineFilter,
+  timelineSelector
+} from '../utils/timeline_id.js';
 import { controlsClass as showOriginalsControlsClass } from './show_originals.js';
 
 const meatballButtonId = 'mute';
@@ -33,27 +40,14 @@ const lengthenTimeline = timeline => {
   }
 };
 
-const exactly = string => `^${string}$`;
-const captureAnyBlog = '(t:[a-zA-Z0-9-_]{22}|[a-z0-9-]{1,32})';
-const uuidV4 = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}';
-
-const getNameOrUuid = ({ dataset: { timeline, timelineId } }) =>
-  [
-    timeline?.match(exactly(`/v2/blog/${captureAnyBlog}/posts`)),
-    timelineId?.match(exactly(`peepr-posts-${captureAnyBlog}-undefined-undefined-undefined-undefined-undefined-undefined`)),
-    timelineId?.match(exactly(`blog-view-${captureAnyBlog}`)),
-    timelineId?.match(exactly(`blog-${uuidV4}-${captureAnyBlog}`))
-  ]
-    .map(match => match?.[1])
-    .find(Boolean);
-
 // Attempts to get the blog name and blog UUID of a timeline element if it contains the posts from a single blog.
 // The element itself doesn't contain both values, so a post object must be found with the required data.
 const getNameAndUuid = async timelineElement => {
-  const nameOrUuid = getNameOrUuid(timelineElement);
   for (const post of [...timelineElement.querySelectorAll(postSelector)]) {
     const { blog: { name, uuid } } = await timelineObject(post);
-    if ([name, uuid].includes(nameOrUuid)) return { name, uuid };
+    if (blogTimelineFilter(name)(timelineElement) || blogTimelineFilter(uuid)(timelineElement)) {
+      return { name, uuid };
+    }
   }
   throw new Error('could not determine blog name / UUID for timeline element:', timelineElement);
 };
@@ -65,29 +59,21 @@ const processBlogTimelineElement = async timelineElement => {
   if (mode) {
     timelineElement.dataset.muteBlogUuid = uuid;
 
-    const mutedBlogControls = dom('div', { class: mutedBlogControlsClass }, null, [
+    const mutedBlogControls = dom('div', { class: mutedBlogControlsClass, 'data-mute-mode': mode }, null, [
       `You have muted ${mode} posts from ${name}!`,
       dom('br'),
       dom('button', null, { click: () => mutedBlogControls.remove() }, ['show posts anyway'])
     ]);
-    mutedBlogControls.dataset.mode = mode;
-
     timelineElement.prepend(mutedBlogControls);
     timelineElement.querySelector(`.${showOriginalsControlsClass}`)?.after(mutedBlogControls);
   }
 };
 
-const getLocation = timelineElement => {
-  const on = {
-    channel: timelineElement.matches(channelSelector),
-    singlePostBlogView: anyBlogPostTimelineFilter(timelineElement),
-    likes: likesTimelineFilter(timelineElement),
-
-    activeBlogTimeline: anyBlogTimelineFilter(timelineElement),
-    active: true
-  };
-  return Object.keys(on).find(location => on[location]);
-};
+const shouldDisable = timelineElement => Boolean(
+  (anyBlogTimelineFilter(timelineElement) && timelineElement.matches(channelSelector)) ||
+  anyBlogPostTimelineFilter(timelineElement) ||
+  likesTimelineFilter(timelineElement)
+);
 
 const processTimelines = async timelineElements => {
   for (const timelineElement of [...new Set(timelineElements)]) {
@@ -105,13 +91,11 @@ const processTimelines = async timelineElements => {
     delete timelineElement.dataset.muteBlogUuid;
     timelineElement.classList.remove(activeClass);
 
-    const location = getLocation(timelineElement);
-
-    if (['active', 'activeBlogTimeline'].includes(location)) {
+    if (shouldDisable(timelineElement) === false) {
       timelineElement.classList.add(activeClass);
       lengthenTimeline(timelineElement);
 
-      if (location === 'activeBlogTimeline') {
+      if (anyBlogTimelineFilter(timelineElement)) {
         await processBlogTimelineElement(timelineElement).catch(console.log);
       }
     }

@@ -1,10 +1,12 @@
 .xkit-mute-active [data-mute-hidden] article,
-[data-mute-mode='original'] ~ div [data-muted-blog-hidden] article,
-[data-mute-mode='reblogged'] ~ div [data-muted-blog-hidden] article {
+[data-muted-blog-controls-mode='original'] ~ div [data-muted-blog-controls-hidden] article,
+[data-muted-blog-controls-mode='reblogged'] ~ div [data-muted-blog-controls-hidden] article {
   display: none;
 }
-[data-mute-mode='all'] ~ div article,
-[data-mute-mode='all'] ~ div article :is(img, video, canvas) {
+
+/* prevents endless post loading by preserving post height */
+[data-muted-blog-controls-mode='all'] ~ div article,
+[data-muted-blog-controls-mode='all'] ~ div article :is(img, video, canvas) {
   visibility: hidden !important;
 }
 

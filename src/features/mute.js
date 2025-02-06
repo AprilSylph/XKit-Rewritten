@@ -20,13 +20,13 @@ const meatballButtonId = 'mute';
 const meatballButtonLabel = data => `Mute options for ${data.name ?? getVisibleBlog(data).name}`;
 
 const hiddenAttribute = 'data-mute-hidden';
-const mutedBlogHiddenAttribute = 'data-muted-blog-hidden';
+const mutedBlogControlsHiddenAttribute = 'data-muted-blog-controls-hidden';
 const activeClass = 'xkit-mute-active';
 const mutedBlogControlsClass = 'xkit-muted-blog-controls';
 const lengthenedClass = 'xkit-mute-lengthened';
 
 const blogNamesStorageKey = 'mute.blogNames';
-const mutedBlogsEntriesStorageKey = 'mute.mutedBlogEntries';
+const mutedBlogEntriesStorageKey = 'mute.mutedBlogEntries';
 
 let checkTrail;
 let contributedContentOriginal;
@@ -54,13 +54,13 @@ const getNameAndUuid = async timelineElement => {
 
 const processBlogTimelineElement = async timelineElement => {
   const { name, uuid } = await getNameAndUuid(timelineElement);
-  const mode = mutedBlogs[uuid];
+  const mutedBlogMode = mutedBlogs[uuid];
 
-  if (mode) {
+  if (mutedBlogMode) {
     timelineElement.dataset.muteBlogUuid = uuid;
 
-    const mutedBlogControls = dom('div', { class: mutedBlogControlsClass, 'data-mute-mode': mode }, null, [
-      `You have muted ${mode} posts from ${name}!`,
+    const mutedBlogControls = dom('div', { class: mutedBlogControlsClass, 'data-muted-blog-controls-mode': mutedBlogMode }, null, [
+      `You have muted ${mutedBlogMode} posts from ${name}!`,
       dom('br'),
       dom('button', null, { click: () => mutedBlogControls.remove() }, ['show posts anyway'])
     ]);
@@ -128,6 +128,16 @@ const processPosts = async function (postElements) {
       updateStoredName(uuid, name);
     }
 
+    const hidePost = relevantBlogUuid =>
+      getTimelineItemWrapper(postElement).setAttribute(
+        // Posts hidden on blog timelines can be revealed by muted blog timeline controls
+        // if and only if they are hidden because the current blog is muted.
+        relevantBlogUuid === timelineBlogUuid
+          ? mutedBlogControlsHiddenAttribute
+          : hiddenAttribute,
+        ''
+      );
+
     const isRebloggedPost = contributedContentOriginal
       ? rebloggedRootUuid && !content.length
       : rebloggedRootUuid;
@@ -136,25 +146,16 @@ const processPosts = async function (postElements) {
     const reblogUuid = isRebloggedPost ? uuid : null;
 
     if (['all', 'original'].includes(mutedBlogs[originalUuid])) {
-      getTimelineItemWrapper(postElement).setAttribute(
-        originalUuid === timelineBlogUuid ? mutedBlogHiddenAttribute : hiddenAttribute,
-        ''
-      );
+      hidePost(originalUuid);
     }
     if (['all', 'reblogged'].includes(mutedBlogs[reblogUuid])) {
-      getTimelineItemWrapper(postElement).setAttribute(
-        reblogUuid === timelineBlogUuid ? mutedBlogHiddenAttribute : hiddenAttribute,
-        ''
-      );
+      hidePost(reblogUuid);
     }
 
     if (checkTrail) {
       for (const { blog } of trail) {
         if (['all'].includes(mutedBlogs[blog?.uuid])) {
-          getTimelineItemWrapper(postElement).setAttribute(
-            blog?.uuid === timelineBlogUuid ? mutedBlogHiddenAttribute : hiddenAttribute,
-            ''
-          );
+          hidePost(blog.uuid);
         }
       }
     }
@@ -194,7 +195,7 @@ const onMeatballButtonClicked = function ({ currentTarget }) {
       buttons: [
         modalCancelButton,
         dom('button', { class: 'blue' }, { click: () => unmuteUser(uuid) }, ['Unmute']),
-        dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Update Mute' })
+        dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Update Mode' })
       ]
     })
     : showModal({
@@ -218,7 +219,7 @@ const muteUser = event => {
   blogNames[uuid] = name;
 
   browser.storage.local.set({
-    [mutedBlogsEntriesStorageKey]: Object.entries(mutedBlogs),
+    [mutedBlogEntriesStorageKey]: Object.entries(mutedBlogs),
     [blogNamesStorageKey]: blogNames
   });
 
@@ -227,7 +228,7 @@ const muteUser = event => {
 
 const unmuteUser = uuid => {
   delete mutedBlogs[uuid];
-  browser.storage.local.set({ [mutedBlogsEntriesStorageKey]: Object.entries(mutedBlogs) });
+  browser.storage.local.set({ [mutedBlogEntriesStorageKey]: Object.entries(mutedBlogs) });
 
   hideModal();
 };
@@ -235,7 +236,7 @@ const unmuteUser = uuid => {
 export const onStorageChanged = async function (changes, areaName) {
   const {
     [blogNamesStorageKey]: blogNamesChanges,
-    [mutedBlogsEntriesStorageKey]: mutedBlogsEntriesChanges
+    [mutedBlogEntriesStorageKey]: mutedBlogsEntriesChanges
   } = changes;
 
   if (Object.keys(changes).some(key => key.startsWith('mute.preferences') && changes[key].oldValue !== undefined)) {
@@ -259,7 +260,7 @@ export const onStorageChanged = async function (changes, areaName) {
 export const main = async function () {
   ({ checkTrail, contributedContentOriginal } = await getPreferences('mute'));
   ({ [blogNamesStorageKey]: blogNames = {} } = await browser.storage.local.get(blogNamesStorageKey));
-  const { [mutedBlogsEntriesStorageKey]: mutedBlogsEntries } = await browser.storage.local.get(mutedBlogsEntriesStorageKey);
+  const { [mutedBlogEntriesStorageKey]: mutedBlogsEntries } = await browser.storage.local.get(mutedBlogEntriesStorageKey);
   mutedBlogs = Object.fromEntries(mutedBlogsEntries ?? []);
 
   registerMeatballItem({
@@ -277,7 +278,7 @@ export const main = async function () {
 
 const unprocess = () => {
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
-  $(`[${mutedBlogHiddenAttribute}]`).removeAttr(mutedBlogHiddenAttribute);
+  $(`[${mutedBlogControlsHiddenAttribute}]`).removeAttr(mutedBlogControlsHiddenAttribute);
   $(`.${activeClass}`).removeClass(activeClass);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
   $(`.${mutedBlogControlsClass}`).remove();

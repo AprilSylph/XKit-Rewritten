@@ -40,6 +40,15 @@ export const anyBlogPostTimelineFilter = ({ dataset: { timeline, timelineId } })
   timeline?.match(exactly(`/v2/blog/${anyBlog}/posts/${anyPostId}/permalink`)) ||
   timelineId?.match(exactly(`peepr-posts-${anyBlog}-${anyPostId}-undefined-undefined-undefined-undefined-undefined`));
 
+// includes viewing a blog on and searching/tag searching a blog on peepr
+export const anyPeeprTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timelineId?.startsWith('peepr-posts-');
+
+// includes viewing a blog on and searching/tag searching a blog on peepr
+export const peeprTimelineFilter = blog =>
+  ({ dataset: { timeline, timelineId } }) =>
+    timelineId?.startsWith(`peepr-posts-${blog}-`);
+
 export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId } }) =>
   timeline === '/v2/timeline?which=blog_subscriptions' ||
   which === 'blog_subscriptions' ||

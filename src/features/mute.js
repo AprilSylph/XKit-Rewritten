@@ -11,10 +11,12 @@ import {
   anyBlogTimelineFilter,
   anyDraftsTimelineFilter,
   anyFlaggedReviewTimelineFilter,
+  anyPeeprTimelineFilter,
   anyQueueTimelineFilter,
   blogTimelineFilter,
   inboxTimelineFilter,
   likesTimelineFilter,
+  peeprTimelineFilter,
   timelineSelector
 } from '../utils/timeline_id.js';
 import { controlsClass as showOriginalsControlsClass } from './show_originals.js';
@@ -49,7 +51,12 @@ const lengthenTimeline = timeline => {
 const getNameAndUuid = async timelineElement => {
   for (const post of [...timelineElement.querySelectorAll(postSelector)]) {
     const { blog: { name, uuid } } = await timelineObject(post);
-    if (blogTimelineFilter(name)(timelineElement) || blogTimelineFilter(uuid)(timelineElement)) {
+    if (
+      blogTimelineFilter(name)(timelineElement) ||
+      peeprTimelineFilter(name)(timelineElement) ||
+      blogTimelineFilter(uuid)(timelineElement) ||
+      peeprTimelineFilter(uuid)(timelineElement)
+    ) {
       return { name, uuid };
     }
   }
@@ -75,6 +82,7 @@ const processBlogTimelineElement = async timelineElement => {
 
 const shouldDisable = timelineElement => Boolean(
   userBlogNames.some(name => blogTimelineFilter(name)(timelineElement)) ||
+  userBlogNames.some(name => peeprTimelineFilter(name)(timelineElement)) ||
   anyDraftsTimelineFilter(timelineElement) ||
   anyQueueTimelineFilter(timelineElement) ||
   anyFlaggedReviewTimelineFilter(timelineElement) ||
@@ -103,7 +111,7 @@ const processTimelines = async timelineElements => {
       timelineElement.classList.add(activeClass);
       lengthenTimeline(timelineElement);
 
-      if (anyBlogTimelineFilter(timelineElement)) {
+      if (anyBlogTimelineFilter(timelineElement) || anyPeeprTimelineFilter(timelineElement)) {
         await processBlogTimelineElement(timelineElement).catch(console.log);
       }
     }

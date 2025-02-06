@@ -1,13 +1,12 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
-import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
 
-const missingAltTextBlock = `figure:has(img[alt="${translate('Image')}"], img[alt="${translate('Image').toLowerCase()}"])`;
+const missingAltTextBlock = 'figure:has(img:not([alt]), img[alt=""])';
 
 const styleElement = buildStyle(`
   ${missingAltTextBlock} ${keyToCss('optionsIcon')} {
-    outline: 3px dashed rgb(var(--accent));
+    outline: 3px dashed rgb(var(--deprecated-accent));
     outline-offset: -1px;
   }
 

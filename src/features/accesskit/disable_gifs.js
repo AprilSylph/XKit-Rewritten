@@ -63,21 +63,26 @@ const addLabel = (element, inside = false) => {
   }
 };
 
-const pauseGif = function (gifElement) {
+const createCanvas = src => new Promise(resolve => {
   const image = new Image();
-  image.src = gifElement.currentSrc;
+  image.src = src;
   image.onload = () => {
-    if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      canvas.className = gifElement.className;
-      canvas.classList.add(canvasClass);
-      canvas.getContext('2d').drawImage(image, 0, 0);
-      gifElement.parentNode.append(canvas);
-      addLabel(gifElement);
-    }
+    const canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    canvas.getContext('2d').drawImage(image, 0, 0);
+    resolve(canvas);
   };
+});
+
+const pauseGif = async function (gifElement) {
+  const canvas = await createCanvas(gifElement.currentSrc);
+  if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
+    canvas.className = gifElement.className;
+    canvas.classList.add(canvasClass);
+    gifElement.parentNode.append(canvas);
+    addLabel(gifElement);
+  }
 };
 
 const processGifs = function (gifElements) {

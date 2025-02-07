@@ -8,23 +8,28 @@
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#panorama",
   "preferences": {
+    "mainEnable": {
+      "label": "Widen the main post column",
+      "type": "checkbox",
+      "default": true
+    },
+    "communitiesEnable": {
+      "label": "Widen Tumblr Community columns",
+      "type": "checkbox",
+      "default": true
+    },
+    "patioEnable": {
+      "label": "Widen Tumblr Patio columns",
+      "type": "checkbox",
+      "default": true
+    },
     "maxPostWidth": {
       "label": "Max. post width",
       "type": "text",
       "default": "800px"
     },
     "expandPostMedia": {
-      "label": "Expand media content in posts",
-      "type": "checkbox",
-      "default": true
-    },
-    "mainEnable": {
-      "label": "Widen single post columns",
-      "type": "checkbox",
-      "default": true
-    },
-    "patioEnable": {
-      "label": "Widen Tumblr Patio columns",
+      "label": "Expand media content in wide posts",
       "type": "checkbox",
       "default": true
     }

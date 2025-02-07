@@ -133,6 +133,7 @@ export const main = async () => {
     maxPostWidth: maxPostWidthString,
     expandPostMedia,
     mainEnable,
+    communitiesEnable,
     patioEnable
   } = await getPreferences('panorama');
 
@@ -141,12 +142,8 @@ export const main = async () => {
   document.documentElement.classList[expandPostMedia ? 'add' : 'remove'](expandMediaClass);
 
   document.documentElement.append(styleElement);
-  if (mainEnable) {
-    document.documentElement.append(mainStyleElement, communityStyleElement);
-  } else {
-    mainStyleElement.remove();
-    communityStyleElement.remove();
-  }
+  mainEnable ? document.documentElement.append(mainStyleElement) : mainStyleElement.remove();
+  communitiesEnable ? document.documentElement.append(communityStyleElement) : communityStyleElement.remove();
   patioEnable ? document.documentElement.append(patioStyleElement) : patioStyleElement.remove();
 
   pageModifications.register(

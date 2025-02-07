@@ -66,6 +66,7 @@ const addLabel = (element, inside = false) => {
 const createCanvas = src => new Promise(resolve => {
   const image = new Image();
   image.src = src;
+  image.crossOrigin = 'anonymous';
   image.onload = () => {
     const canvas = document.createElement('canvas');
     canvas.width = image.naturalWidth;

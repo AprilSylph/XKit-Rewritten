@@ -19,12 +19,12 @@
       "default": true
     },
     "mainEnable": {
-      "label": "Apply to single post columns",
+      "label": "Widen single post columns",
       "type": "checkbox",
       "default": true
     },
     "patioEnable": {
-      "label": "Apply to Tumblr Patio",
+      "label": "Widen Tumblr Patio columns",
       "type": "checkbox",
       "default": true
     }

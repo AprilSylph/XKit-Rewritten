@@ -2,7 +2,7 @@ import { dom } from '../utils/dom.js';
 import { megaEdit } from '../utils/mega_editor.js';
 import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal } from '../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../utils/sidebar.js';
-import { apiFetch, createEditRequestBody } from '../utils/tumblr_helpers.js';
+import { apiFetch, createEditRequestBody, isNpfCompatible } from '../utils/tumblr_helpers.js';
 import { userBlogs } from '../utils/user.js';
 
 const getPostsFormId = 'xkit-mass-privater-get-posts';
@@ -182,13 +182,27 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const editStatus = dom('span');
 
+  const failedList = dom('ul');
+  const showFailedPost = ({ blogName, id, summary }) =>
+    failedList.append(
+      dom('li', null, null, [
+        dom('a', { href: `/@${blogName}/${id}`, target: '_blank' }, null, [id]),
+        summary ? `: ${summary.replaceAll('\n', ' ')}` : ''
+      ])
+    );
+  const failedStatus = dom('div', { class: 'mass-privater-failed' }, null, [
+    dom('div', null, null, ['Failed/incompatible posts:']),
+    failedList
+  ]);
+
   showModal({
     title: `Making posts ${makePrivate ? 'private' : 'public'}...`,
     message: [
       dom('small', null, null, ['Do not navigate away from this page.']),
       '\n\n',
       gatherStatus,
-      editStatus
+      editStatus,
+      failedStatus
     ]
   });
 
@@ -258,11 +272,14 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
       ]);
     }
   } else {
-    while (filteredPosts.length !== 0) {
-      const postData = filteredPosts.shift();
+    editStatus.textContent = '\nUnprivating posts...';
 
-      if (editStatus.textContent === '') editStatus.textContent = '\nUnprivating posts...';
-
+    const editablePosts = [];
+    filteredPosts.forEach(postData => isNpfCompatible(postData)
+      ? editablePosts.push(postData)
+      : showFailedPost(postData)
+    );
+    for (const postData of editablePosts) {
       await Promise.all([
         apiFetch(`/v2/blog/${uuid}/posts/${postData.id}`, {
           method: 'PUT',
@@ -273,6 +290,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
         }).then(() => {
           successCount++;
         }).catch(() => {
+          showFailedPost(postData);
           failCount++;
         }).finally(() => {
           editStatus.textContent = `\nUnprivated ${successCount} posts... ${failCount ? `(failed: ${failCount})` : ''}`;
@@ -284,17 +302,22 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
 
   await sleep(1000);
 
+  const failedListScrollTop = failedList.scrollTop;
+
   showModal({
     title: 'All done!',
     message: [
       `${makePrivate ? 'Privated' : 'Unprivated'} ${successCount} posts${failCount ? ` (failed: ${failCount})` : ''}.\n`,
-      'Refresh the page to see the result.'
+      'Refresh the page to see the result.',
+      failedStatus
     ],
     buttons: [
       dom('button', null, { click: hideModal }, ['Close']),
       dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh'])
     ]
   });
+
+  failedList.scrollTop = failedListScrollTop;
 };
 
 const sidebarOptions = {

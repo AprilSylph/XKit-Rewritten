@@ -34,11 +34,11 @@ export const unregisterMeatballItem = id => {
  * @param {object} options - Destructured
  * @param {string} options.id - Identifier for this button (must be unique)
  * @param {string|Function} options.label - Button text to display. May be a function accepting the blog data of the post element being actioned on.
- * @param {Function} options.onClick - Button click listener function
+ * @param {Function} options.onclick - Button click listener function
  * @param {Function} [options.blogFilter] - Filter function, called with the blog data of the menu element being actioned on. Must return true for button to be added. Some blog data fields, such as "followed", are not available in blog cards.
  */
-export const registerBlogMeatballItem = function ({ id, label, onClick, blogFilter }) {
-  blogMeatballItems[id] = { label, onClick, blogFilter };
+export const registerBlogMeatballItem = function ({ id, label, onclick, blogFilter }) {
+  blogMeatballItems[id] = { label, onclick, blogFilter };
   pageModifications.trigger(addMeatballItems);
 };
 
@@ -111,14 +111,14 @@ const addBlogMeatballItem = async meatballMenu => {
   $(meatballMenu).children('[data-xkit-blog-meatball-button]').remove();
 
   Object.keys(blogMeatballItems).sort().forEach(id => {
-    const { label, onClick, blogFilter } = blogMeatballItems[id];
+    const { label, onclick, blogFilter } = blogMeatballItems[id];
 
     const meatballItemButton = dom('button', {
       class: 'xkit-meatball-button',
       'data-xkit-blog-meatball-button': id,
       hidden: true
     }, {
-      click: onClick
+      click: onclick
     }, [
       '\u22EF'
     ]);

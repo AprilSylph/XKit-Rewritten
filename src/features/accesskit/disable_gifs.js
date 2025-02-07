@@ -77,6 +77,13 @@ const processGifs = function (gifElements) {
       return;
     }
 
+    const posterElement = gifElement.parentElement.querySelector(keyToCss('poster'));
+    if (posterElement?.currentSrc) {
+      gifElement.style.setProperty(pausedContentVar, `url(${posterElement.currentSrc})`);
+      addLabel(gifElement);
+      return;
+    }
+
     if (gifElement.complete && gifElement.currentSrc) {
       pauseGif(gifElement);
     } else {

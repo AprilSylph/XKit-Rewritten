@@ -216,12 +216,12 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
   const filteredPostsMap = new Map();
 
   const collect = async resource => {
-    while (resource) {
+    while (resource && (filteredPostsMap.size < 100)) {
       await Promise.all([
         apiFetch(resource).then(({ response }) => {
           response.posts
             .filter(({ canEdit }) => canEdit === true)
-            .filter(({ state }) => state === (makePrivate ? 'published' : 'private'))
+            // .filter(({ state }) => state === (makePrivate ? 'published' : 'private'))
             .filter(({ timestamp }) => timestamp < before)
             .filter(postData =>
               tags.length
@@ -281,13 +281,13 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
     editStatus.textContent = '\nUnprivating posts...';
 
     const editablePosts = [];
-    filteredPosts.forEach(postData => isNpfCompatible(postData)
+    filteredPosts.forEach(postData => Math.random() > 0.3 && isNpfCompatible(postData)
       ? editablePosts.push(postData)
       : showFailedPost(postData)
     );
     for (const postData of editablePosts) {
       await Promise.all([
-        apiFetch(`/v2/blog/${uuid}/posts/${postData.id}`, {
+        Promise.resolve(`/v2/blog/${uuid}/posts/${postData.id}`, {
           method: 'PUT',
           body: {
             ...createEditRequestBody(postData),
@@ -301,7 +301,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
         }).finally(() => {
           editStatus.textContent = `\nUnprivated ${successCount} posts... ${failCount ? `(failed: ${failCount})` : ''}`;
         }),
-        sleep(1000)
+        sleep(100)
       ]);
     }
   }

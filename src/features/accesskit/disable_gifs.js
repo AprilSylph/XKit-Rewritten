@@ -67,7 +67,9 @@ const addLabel = (element, inside = false) => {
   }
 };
 
-const pauseGif = function (gifElement) {
+const pauseGif = async function (gifElement) {
+  gifElement.decode();
+
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {

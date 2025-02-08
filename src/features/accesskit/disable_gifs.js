@@ -87,7 +87,7 @@ const isAnimated = memoize(async (sourceUrl) => {
     preferAnimation: true
   });
   try {
-    await decoder.decode();
+    await decoder.tracks.ready;
     return decoder.tracks.selectedTrack.animated;
   } finally {
     decoder.close();

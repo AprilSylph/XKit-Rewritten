@@ -89,13 +89,8 @@ const isAnimated = memoize(async (sourceUrl) => {
     data: response.body,
     preferAnimation: true
   });
-  try {
-    await decoder.tracks.ready;
-    return decoder.tracks.selectedTrack.animated;
-  } finally {
-    decoder.close();
-    controller.abort();
-  }
+  await decoder.tracks.ready;
+  return decoder.tracks.selectedTrack.animated;
 });
 
 const pauseGif = async function (gifElement) {

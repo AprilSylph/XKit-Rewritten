@@ -105,18 +105,18 @@ const sourceUrlRegex = /(?<=url\(["'])[^)]*?\.gifv?(?=["']\))/g;
 const pausedUrlCache = {};
 const createPausedUrl = (sourceUrl) => {
   pausedUrlCache[sourceUrl] ??= new Promise(resolve => {
-    const image = new Image();
-    image.crossOrigin = 'anonymous';
-    image.src = sourceUrl;
-    image.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      canvas.getContext('2d').drawImage(image, 0, 0);
-      canvas.toBlob(blob =>
-        resolve(URL.createObjectURL(blob))
-      );
-    };
+    fetch(sourceUrl, { headers: { Accept: 'image/webp,*/*' } })
+      .then(response => response.blob())
+      .then(blob => createImageBitmap(blob))
+      .then(imageBitmap => {
+        const canvas = document.createElement('canvas');
+        canvas.width = imageBitmap.width;
+        canvas.height = imageBitmap.height;
+        canvas.getContext('2d').drawImage(imageBitmap, 0, 0);
+        canvas.toBlob(blob =>
+          resolve(URL.createObjectURL(blob))
+        );
+      });
   });
   return pausedUrlCache[sourceUrl];
 };

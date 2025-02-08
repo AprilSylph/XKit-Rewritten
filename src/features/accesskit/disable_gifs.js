@@ -6,7 +6,7 @@ import { buildStyle, postSelector } from '../../utils/interface.js';
 const canvasClass = 'xkit-paused-gif-placeholder';
 const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
-const backgroundGifClass = 'xkit-paused-background-gif';
+const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 
 export const styleElement = buildStyle(`
 .${labelClass} {
@@ -47,13 +47,8 @@ export const styleElement = buildStyle(`
   display: none;
 }
 
-.${backgroundGifClass}:not(:hover) {
-  background-image: none !important;
-  background-color: rgb(var(--secondary-accent));
-}
-
-.${backgroundGifClass}:not(:hover) > div {
-  color: rgb(var(--black));
+[style*="${pausedBackgroundImageVar}"]:not(:hover) {
+  background-image: var(${pausedBackgroundImageVar}) !important;
 }
 `);
 
@@ -105,10 +100,39 @@ const processGifs = function (gifElements) {
   });
 };
 
+const sourceUrlRegex = /(?<=url\(["'])[^)]*?\.gifv?(?=["']\))/g;
+
+const pausedUrlCache = {};
+const createPausedUrl = (sourceUrl) => {
+  pausedUrlCache[sourceUrl] ??= new Promise(resolve => {
+    fetch(sourceUrl, { headers: { Accept: 'image/webp,*/*' } })
+      .then(response => response.blob())
+      .then(blob => createImageBitmap(blob))
+      .then(imageBitmap => {
+        const canvas = document.createElement('canvas');
+        canvas.width = imageBitmap.width;
+        canvas.height = imageBitmap.height;
+        canvas.getContext('2d').drawImage(imageBitmap, 0, 0);
+        canvas.toBlob(blob =>
+          resolve(URL.createObjectURL(blob))
+        );
+      });
+  });
+  return pausedUrlCache[sourceUrl];
+};
+
 const processBackgroundGifs = function (gifBackgroundElements) {
-  gifBackgroundElements.forEach(gifBackgroundElement => {
-    gifBackgroundElement.classList.add(backgroundGifClass);
-    addLabel(gifBackgroundElement, true);
+  gifBackgroundElements.forEach(async gifBackgroundElement => {
+    const sourceValue = gifBackgroundElement.style.backgroundImage;
+    const sourceUrl = sourceValue.match(sourceUrlRegex)?.[0];
+
+    if (sourceUrl) {
+      gifBackgroundElement.style.setProperty(
+        pausedBackgroundImageVar,
+        sourceValue.replaceAll(sourceUrlRegex, await createPausedUrl(sourceUrl))
+      );
+      addLabel(gifBackgroundElement, true);
+    }
   });
 };
 
@@ -155,5 +179,6 @@ export const clean = async function () {
   );
 
   $(`.${canvasClass}, .${labelClass}`).remove();
-  $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
+  [...document.querySelectorAll(`img[style*="${pausedBackgroundImageVar}"]`)]
+    .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
 };

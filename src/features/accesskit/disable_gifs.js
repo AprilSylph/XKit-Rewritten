@@ -43,11 +43,12 @@ export const styleElement = buildStyle(`
 *:hover > .${canvasClass},
 *:hover > .${labelClass},
 .${containerClass}:hover .${canvasClass},
-.${containerClass}:hover .${labelClass} {
+.${containerClass}:hover .${labelClass},
+a:hover + div .${labelClass} {
   display: none;
 }
 
-[style*="${pausedBackgroundImageVar}"]:not(:hover) {
+[style*="${pausedBackgroundImageVar}"]:not(:hover):not(a:hover + div > *) {
   background-image: var(${pausedBackgroundImageVar}) !important;
 }
 `);
@@ -159,7 +160,7 @@ export const main = async function () {
   pageModifications.register(gifImage, processGifs);
 
   const gifBackgroundImage = `
-    ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
+    ${keyToCss('communityHeaderImage', 'communityCategoryImage', 'bannerImage')}[style*=".gif"]
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 

@@ -9,8 +9,11 @@ const pausedContentVar = '--xkit-paused-gif-content';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const hoverFixAttribute = 'data-paused-gif-hover-fix';
+const loadingBackgroundImageAttribute = 'data-paused-gif-background-loading';
 const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
+
+let enabledTimestamp;
 
 const hovered = `:is(:hover > *, [${hoverContainerAttribute}]:hover *)`;
 
@@ -62,6 +65,17 @@ img[style*="${pausedContentVar}"]:not(${hovered}) {
 }
 [style*="${pausedBackgroundImageVar}"]:not(${hovered}) {
   background-image: var(${pausedBackgroundImageVar}) !important;
+}
+
+[${loadingBackgroundImageAttribute}]:not(:hover)::before {
+  content: "";
+  backdrop-filter: blur(40px);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+[${loadingBackgroundImageAttribute}]:not(:hover) {
+  contain: paint;
 }
 
 [${hoverFixAttribute}] {
@@ -151,7 +165,10 @@ const processBackgroundGifs = function (gifBackgroundElements) {
     const sourceUrl = sourceValue.match(sourceUrlRegex)?.[0];
     if (!sourceUrl) return;
 
+    Date.now() - enabledTimestamp >= 100 && gifBackgroundElement.setAttribute(loadingBackgroundImageAttribute, '');
     const pausedUrl = await createPausedUrl(sourceUrl);
+    gifBackgroundElement.removeAttribute(loadingBackgroundImageAttribute);
+
     if (!pausedUrl) return;
 
     gifBackgroundElement.style.setProperty(
@@ -200,6 +217,8 @@ const processHoverableElements = elements =>
   elements.forEach(element => element.setAttribute(hoverContainerAttribute, ''));
 
 export const main = async function () {
+  enabledTimestamp = Date.now();
+
   const gifImage = `
     :is(
       figure, /* post image/imageset; recommended blog carousel entry; blog view sidebar "more like this"; post in grid view; blog card modal post entry */
@@ -276,4 +295,5 @@ export const clean = async function () {
     .forEach(element => element.style.removeProperty(pausedContentVar));
   [...document.querySelectorAll(`[style*="${pausedBackgroundImageVar}"]`)]
     .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
+  $(`[${loadingBackgroundImageAttribute}]`).removeAttr(loadingBackgroundImageAttribute);
 };

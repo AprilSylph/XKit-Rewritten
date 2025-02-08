@@ -71,9 +71,6 @@ const addLabel = (element, inside = false) => {
 
 const isAnimatedDefault = true;
 const isAnimated = memoize(async (sourceUrl) => {
-  // treat all GIFs like they're animated
-  if (sourceUrl.includes('.gif')) return true;
-
   if (typeof ImageDecoder !== 'function') return isAnimatedDefault;
   /* globals ImageDecoder */
 
@@ -99,7 +96,7 @@ const isAnimated = memoize(async (sourceUrl) => {
 });
 
 const pauseGif = async function (gifElement) {
-  if (!await isAnimated(gifElement.currentSrc)) return;
+  if (!gifElement.parentElement.querySelector(keyToCss('poster')) && !await isAnimated(gifElement.currentSrc)) return;
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {

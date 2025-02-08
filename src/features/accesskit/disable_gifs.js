@@ -77,8 +77,7 @@ const isAnimated = memoize(async (sourceUrl) => {
   if (typeof ImageDecoder !== 'function') return isAnimatedDefault;
   /* globals ImageDecoder */
 
-  const controller = new AbortController();
-  const response = await fetch(sourceUrl, { signal: controller.signal });
+  const response = await fetch(sourceUrl);
 
   const contentType = response.headers.get('Content-Type');
   const supported = await ImageDecoder.isTypeSupported(contentType);

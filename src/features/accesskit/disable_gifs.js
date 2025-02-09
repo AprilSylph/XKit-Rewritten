@@ -8,6 +8,8 @@ const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
 
+const hovered = `:is(:hover > *, .${containerClass}:hover *)`;
+
 export const styleElement = buildStyle(`
 .${labelClass} {
   position: absolute;
@@ -36,14 +38,11 @@ export const styleElement = buildStyle(`
 .${canvasClass} {
   position: absolute;
   visibility: visible;
-
-  background-color: rgb(var(--white));
 }
 
-*:hover > .${canvasClass},
-*:hover > .${labelClass},
-.${containerClass}:hover .${canvasClass},
-.${containerClass}:hover .${labelClass} {
+.${canvasClass}${hovered},
+.${labelClass}${hovered},
+img:has(~ .${canvasClass}):not(${hovered}) {
   display: none;
 }
 
@@ -68,7 +67,9 @@ const addLabel = (element, inside = false) => {
   }
 };
 
-const pauseGif = function (gifElement) {
+const pauseGif = async function (gifElement) {
+  gifElement.decode();
+
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
@@ -80,7 +81,7 @@ const pauseGif = function (gifElement) {
       canvas.classList.add(canvasClass);
       canvas.getContext('2d').drawImage(image, 0, 0);
       gifElement.parentNode.append(canvas);
-      addLabel(gifElement);
+      addLabel(canvas);
     }
   };
 };

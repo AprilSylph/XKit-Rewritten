@@ -42,7 +42,7 @@ export const styleElement = buildStyle(`
 
 .${canvasClass}${hovered},
 .${labelClass}${hovered},
-.${canvasClass} ~ img:not(${hovered}) {
+img:has(~ .${canvasClass}):not(${hovered}) {
   display: none;
 }
 
@@ -80,7 +80,7 @@ const pauseGif = async function (gifElement) {
       canvas.className = gifElement.className;
       canvas.classList.add(canvasClass);
       canvas.getContext('2d').drawImage(image, 0, 0);
-      gifElement.before(canvas);
+      gifElement.parentNode.append(canvas);
       addLabel(gifElement);
     }
   };
@@ -89,11 +89,12 @@ const pauseGif = async function (gifElement) {
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
     if (gifElement.closest('.block-editor-writing-flow')) return;
-    const existingCanvasElements = gifElement.parentNode.querySelectorAll(`.${canvasClass}`);
-    const existingLabelElements = gifElement.parentNode.querySelectorAll(`.${labelClass}`);
-    if (existingCanvasElements.length || existingLabelElements.length) {
-      gifElement.before(...existingCanvasElements);
-      gifElement.after(...existingLabelElements);
+    const pausedGifElements = [
+      ...gifElement.parentNode.querySelectorAll(`.${canvasClass}`),
+      ...gifElement.parentNode.querySelectorAll(`.${labelClass}`)
+    ];
+    if (pausedGifElements.length) {
+      gifElement.after(...pausedGifElements);
       return;
     }
 

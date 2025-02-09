@@ -81,7 +81,7 @@ const pauseGif = async function (gifElement) {
       canvas.classList.add(canvasClass);
       canvas.getContext('2d').drawImage(image, 0, 0);
       gifElement.parentNode.append(canvas);
-      addLabel(gifElement);
+      addLabel(canvas);
     }
   };
 };

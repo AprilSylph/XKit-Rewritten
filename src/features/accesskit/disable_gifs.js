@@ -76,6 +76,7 @@ img[style*="${pausedContentVar}"]:not(${hovered}) {
 }
 [${loadingBackgroundImageAttribute}]:not(:hover) {
   contain: paint;
+  filter: unset !important;
 }
 
 [${hoverFixAttribute}] {

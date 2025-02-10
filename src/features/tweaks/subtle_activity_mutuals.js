@@ -3,7 +3,7 @@ import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
 import { dom } from '../../utils/dom.js';
 
-const labelSelector = `${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')}:is(${keyToCss('activity', 'activityItem')} *)`;
+const labelSelector = `${keyToCss('activity', 'activityItem')} ${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')}`;
 
 const spanClass = 'xkit-tweaks-subtle-activity-span';
 const iconClass = 'xkit-tweaks-subtle-activity-icon';
@@ -24,8 +24,8 @@ ${keyToCss('tumblelogName', 'activityHeader')}:not(:hover) ${labelSelector} > sv
   margin-left: 0;
 }
 
-/* fixes hover detection when covered by the "activityItemLink" <a> element */
 ${keyToCss('activityHeader')} div:has(> .${spanClass}) {
+  /* fixes hover detection when covered by the "activityItemLink" <a> element */
   isolation: isolate;
 }
 

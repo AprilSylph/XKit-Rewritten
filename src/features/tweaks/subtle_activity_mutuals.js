@@ -20,7 +20,7 @@ ${keyToCss('tumblelogName', 'activityHeader')}:not(:hover) .${spanClass} {
   width: 0;
 }
 
-${keyToCss('tumblelogName', 'activityHeader')}:not(:hover) ${labelSelector} > svg {
+${keyToCss('tumblelogName', 'activityHeader')}:not(:hover) :is(${labelSelector}) > svg {
   margin-left: 0;
 }
 

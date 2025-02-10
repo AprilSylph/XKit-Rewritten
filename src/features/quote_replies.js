@@ -78,8 +78,6 @@ const processNotifications = notifications => notifications.forEach(async notifi
   if (notificationProps.community) return;
   if (notificationProps.actions?.tap?.href && new URL(notificationProps.actions.tap.href).pathname.startsWith('/communities/')) return;
 
-  const quoteReply = notificationProps.type === 'generic' ? quoteGenericReply : quoteLegacyReply;
-
   const activityElement = notification.querySelector(activitySelector);
   if (!activityElement) return;
 
@@ -101,18 +99,29 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
-const quoteGenericReply = async (tumblelogName, notificationProps) => {
-  const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
-
+const processGenericReply = async (notificationProps) => {
   const {
+    subtype: type,
+    timestamp,
     title: { textContent: titleContent },
     body: { content: [bodyDescriptionContent, bodyQuoteContent] },
     actions
   } = notificationProps;
+  const summaryFormatting = bodyDescriptionContent.formatting.find(({ type }) => type === 'semantic_color');
+
+  try {
+    const [, targetTumblelogName, targetPostId] =
+      /^\/@?([a-z0-9-]{1,32})\/([0-9]{1,20})\//.exec(new URL(actions.tap.href).pathname);
+
+    const targetPostSummary = bodyDescriptionContent.text.slice(summaryFormatting.start + 1, summaryFormatting.end - 1);
+
+    return await processReply({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary });
+  } catch (exception) {
+    console.log(exception);
+    console.log('falling back to generic quote content due to fetch/parse failure');
+  }
 
   const replyingBlog = titleContent.formatting.find(({ type }) => type === 'mention').blog;
-
-  const toConvertToLink = bodyDescriptionContent.formatting.find(({ type }) => type === 'semantic_color');
 
   const content = [
     {
@@ -125,7 +134,7 @@ const quoteGenericReply = async (tumblelogName, notificationProps) => {
       type: 'text',
       text: bodyDescriptionContent.text,
       formatting: [
-        { start: toConvertToLink.start, end: toConvertToLink.end, type: 'link', url: actions.tap.href }
+        { start: summaryFormatting.start, end: summaryFormatting.end, type: 'link', url: actions.tap.href }
       ]
     },
     bodyQuoteContent,
@@ -136,15 +145,12 @@ const quoteGenericReply = async (tumblelogName, notificationProps) => {
     ...tagReplyingBlog ? [replyingBlog.name] : []
   ].join(',');
 
-  createDraft({ uuid, content, tags, tumblelogName });
+  return { content, tags };
 };
 
-const quoteLegacyReply = async (tumblelogName, notificationProps) => {
-  const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
-  const { type, targetPostId, targetPostSummary, targetTumblelogName, targetTumblelogUuid, timestamp } = notificationProps;
-
+const processReply = async ({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary }) => {
   const { response } = await apiFetch(
-    `/v2/blog/${targetTumblelogUuid}/post/${targetPostId}/notes/timeline`,
+    `/v2/blog/${targetTumblelogName}/post/${targetPostId}/notes/timeline`,
     { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } }
   );
 
@@ -174,10 +180,16 @@ const quoteLegacyReply = async (tumblelogName, notificationProps) => {
     ...tagReplyingBlog ? [reply.blog.name] : []
   ].join(',');
 
-  createDraft({ uuid, content, tags, tumblelogName });
+  return { content, tags };
 };
 
-const createDraft = async ({ uuid, content, tags, tumblelogName }) => {
+const quoteReply = async (tumblelogName, notificationProps) => {
+  const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
+
+  const { content, tags } = notificationProps.type === 'generic'
+    ? await processGenericReply(notificationProps)
+    : await processReply(notificationProps);
+
   const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
 
   const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;

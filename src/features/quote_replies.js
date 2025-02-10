@@ -76,6 +76,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
 
   if (!['reply', 'reply_to_comment', 'note_mention'].includes(notificationProps.type === 'generic' ? notificationProps.subtype : notificationProps.type)) return;
   if (notificationProps.community) return;
+  if (notificationProps.actions?.tap?.href && new URL(notificationProps.actions.tap.href).pathname.startsWith('/communities/')) return;
 
   const quoteReply = notificationProps.type === 'generic' ? quoteGenericReply : quoteLegacyReply;
 

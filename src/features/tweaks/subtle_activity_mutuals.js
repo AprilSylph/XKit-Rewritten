@@ -50,18 +50,13 @@ const processLabels = labels => labels.forEach(label => {
   const textNode = label.firstChild;
   if (textNode.nodeName !== '#text') return;
 
-  const span = dom('span', null, null, [textNode.textContent]);
-  label.insertBefore(span, textNode);
-  textNode.textContent = '';
+  if (!label.querySelector('svg')) {
+    const iconHref = label.matches(keyToCss('mutualsBadgeContainer'))
+      ? '#managed-icon__profile-double'
+      : '#managed-icon__profile-checkmark';
 
-  span.style.setProperty('--rendered-width', `${span.getBoundingClientRect().width}px`);
-  span.classList.add(spanClass);
+    if (!document.querySelector(iconHref)) return;
 
-  const iconHref = label.matches(keyToCss('mutualsBadgeContainer'))
-    ? '#managed-icon__profile-double'
-    : '#managed-icon__profile-checkmark';
-
-  if (!label.querySelector(`:scope > svg:not(.${iconClass})`) && document.querySelector(iconHref)) {
     label.append(
       dom(
         'svg',
@@ -71,6 +66,13 @@ const processLabels = labels => labels.forEach(label => {
       )
     );
   }
+
+  const span = dom('span', null, null, [textNode.textContent]);
+  label.insertBefore(span, textNode);
+  textNode.textContent = '';
+
+  span.style.setProperty('--rendered-width', `${span.getBoundingClientRect().width}px`);
+  span.classList.add(spanClass);
 });
 
 const waitForRender = () =>

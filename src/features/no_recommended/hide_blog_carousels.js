@@ -18,8 +18,11 @@ const hideBlogCarousels = carousels =>
     const { elements } = await timelineObject(carousel);
     if (elements.some(({ objectType }) => objectType === 'blog')) {
       const timelineItem = getTimelineItemWrapper(carousel);
-      if (timelineItem.previousElementSibling.querySelector(keyToCss('titleObject'))) {
-        timelineItem.setAttribute(hiddenAttribute, '');
+      timelineItem.setAttribute(hiddenAttribute, '');
+      if (
+        timelineItem.previousElementSibling.querySelector(keyToCss('titleObject')) ||
+        timelineItem.previousElementSibling.dataset.cellId?.startsWith('timelineObject:title')
+      ) {
         timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
       }
     }

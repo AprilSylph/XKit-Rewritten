@@ -30,7 +30,7 @@ pageModifications.register(keyToCss('postFormButton'), addPostOptions);
  * @param {string} options.symbolId - RemixIcon symbol to use
  * @param {Function} options.onclick - Click handler function for this button
  */
-export const registerPostOption = async function (id, { symbolId, onclick }) {
+export const registerPostOption = (id, { symbolId, onclick }) => {
   postOptions[id] = dom('label', { class: 'xkit-post-option' }, null, [
     dom('button', null, { click: onclick }, [buildSvg(symbolId)])
   ]);

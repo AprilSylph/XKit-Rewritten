@@ -7,7 +7,7 @@ let newTab;
 let searchInputElement;
 let searchInputParent;
 
-const replaceSearchForm = function ([searchFormElement]) {
+const replaceSearchForm = ([searchFormElement]) => {
   searchFormElement.classList.add('xkit-classic-search-done');
 
   searchInputElement = searchFormElement.querySelector('input');
@@ -31,13 +31,13 @@ const replaceSearchForm = function ([searchFormElement]) {
   searchFormElement.parentNode.prepend(searchFormElementClone);
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ newTab } = await getPreferences('classic_search'));
 
   pageModifications.register('form[role="search"][action="/search"]:not(.classic-search):not(.xkit-classic-search-done)', replaceSearchForm);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(replaceSearchForm);
 
   searchInputParent.appendChild(searchInputElement);

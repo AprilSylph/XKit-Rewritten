@@ -7,14 +7,14 @@ const localRestoreButton = document.getElementById('restore-local');
 
 const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
 
-const updateLocalExportDisplay = async function () {
+const updateLocalExportDisplay = async () => {
   const storageLocal = await browser.storage.local.get();
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
 
   localExportDisplayElement.textContent = stringifiedStorage;
 };
 
-const localCopy = async function () {
+const localCopy = () => {
   if (localCopyButton.classList.contains('copied')) { return; }
 
   navigator.clipboard.writeText(localExportDisplayElement.textContent).then(async () => {
@@ -26,7 +26,7 @@ const localCopy = async function () {
   });
 };
 
-const localExport = async function () {
+const localExport = async () => {
   const storageLocal = await browser.storage.local.get();
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
   const storageBlob = new Blob([stringifiedStorage], { type: 'application/json' });
@@ -50,7 +50,7 @@ const localExport = async function () {
   URL.revokeObjectURL(blobUrl);
 };
 
-const localRestore = async function () {
+const localRestore = async () => {
   const importText = localImportTextarea.value;
 
   try {
@@ -76,7 +76,7 @@ const localRestore = async function () {
   }
 };
 
-const renderLocalBackup = async function () {
+const renderLocalBackup = () => {
   updateLocalExportDisplay();
   browser.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'local') {

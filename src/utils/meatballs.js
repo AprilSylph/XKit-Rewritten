@@ -3,14 +3,15 @@ import { dom } from './dom.js';
 import { postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { inject } from './inject.js';
-import { blogData, timelineObject } from './react_props.js';
+import { blogData, notePropsObjects, timelineObject } from './react_props.js';
 
 const postHeaderSelector = `${postSelector} article > header`;
 const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
 
 const meatballItems = {
   post: {},
-  blog: {}
+  blog: {},
+  reply: {}
 };
 
 /**
@@ -49,6 +50,24 @@ export const unregisterBlogMeatballItem = id => {
   $(`[data-xkit-blog-meatball-button="${id}"]`).remove();
 };
 
+/**
+ * Add a custom button to post replies' meatball menus.
+ * @param {object} options - Destructured
+ * @param {string} options.id - Identifier for this button (must be unique)
+ * @param {string|Function} options.label - Button text to display. May be a function accepting the note component props data of the reply element being actioned on.
+ * @param {Function} options.onClick - Button click listener function
+ * @param {Function} [options.notePropsFilter] - Filter function, called with the note component props data of the reply element being actioned on. Must return true for button to be added.
+ */
+export const registerReplyMeatballItem = function ({ id, label, onClick, notePropsFilter }) {
+  meatballItems.reply[id] = { label, onClick, filter: notePropsFilter };
+  pageModifications.trigger(addMeatballItems);
+};
+
+export const unregisterReplyMeatballItem = id => {
+  delete meatballItems.reply[id];
+  $(`[data-xkit-reply-meatball-button="${id}"]`).remove();
+};
+
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
   const inPostHeader = await inject('/main_world/test_header_element.js', [postHeaderSelector], meatballMenu);
   if (inPostHeader) {
@@ -68,6 +87,20 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
       reactData: await blogData(meatballMenu),
       reactDataKey: '__blogData'
     });
+    return;
+  }
+  const inPostFooter = await inject('/main_world/test_parent_element.js', ['footer *'], meatballMenu);
+  if (inPostFooter) {
+    const __notePropsData = await notePropsObjects(meatballMenu);
+
+    if (__notePropsData[0]?.note?.type === 'reply') {
+      addTypedMeatballItems({
+        meatballMenu,
+        type: 'reply',
+        reactData: __notePropsData,
+        reactDataKey: '__notePropsData'
+      });
+    }
   }
 });
 

@@ -8,10 +8,12 @@ import { notify } from '../utils/notifications.js';
 import { getPreferences } from '../utils/preferences.js';
 import { buildSvg } from '../utils/remixicon.js';
 import { apiFetch, navigate } from '../utils/tumblr_helpers.js';
-import { userBlogs } from '../utils/user.js';
+import { userBlogNames, userBlogs } from '../utils/user.js';
+import { registerReplyMeatballItem, unregisterReplyMeatballItem } from '../utils/meatballs.js';
 
 const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';
+const meatballButtonId = 'quote_replies';
 const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
@@ -107,11 +109,42 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   }
 };
 
+const processNoteProps = ([noteProps, parentNoteProps]) => {
+  if (userBlogNames.includes(noteProps.note.blogName) || noteProps.communityId) {
+    return false;
+  }
+  if (parentNoteProps && userBlogNames.includes(parentNoteProps.note.blogName)) {
+    return 'reply_to_comment';
+  }
+  if (userBlogNames.includes(noteProps.blog.name)) {
+    return 'reply';
+  }
+  if (noteProps.note.content.some(({ formatting }) => formatting?.some(({ type, blog }) => type === 'mention' && userBlogNames.includes(blog.name)))) {
+    return 'note_mention';
+  }
+  return false;
+};
+
+const meatballButtonLabel = notePropsObjects => {
+  const mode = processNoteProps(notePropsObjects);
+
+  return `Quote this reply (mode: ${mode})`;
+};
+
+const onMeatballButtonClicked = () => {};
+
 export const main = async function () {
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
   ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
 
   pageModifications.register(notificationSelector, processNotifications);
+
+  registerReplyMeatballItem({
+    id: meatballButtonId,
+    label: meatballButtonLabel,
+    notePropsFilter: notePropsObjects => console.log('notePropsObjects', notePropsObjects) && Boolean(processNoteProps(notePropsObjects)),
+    onclick: onMeatballButtonClicked
+  });
 
   const { [storageKey]: draftLocation } = await browser.storage.local.get(storageKey);
   browser.storage.local.remove(storageKey);
@@ -123,6 +156,8 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(processNotifications);
+  unregisterReplyMeatballItem(meatballButtonId);
+
   $(`.${buttonClass}`).remove();
 };
 

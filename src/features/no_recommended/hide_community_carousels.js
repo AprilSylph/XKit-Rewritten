@@ -18,11 +18,11 @@ const hideCommunityCarousels = carousels =>
     const { elements } = await timelineObject(carousel);
     if (elements.some(({ objectType }) => objectType === 'community_card')) {
       const timelineItem = getTimelineItemWrapper(carousel);
-      timelineItem.setAttribute(hiddenAttribute, '');
       if (
         timelineItem.previousElementSibling.querySelector(keyToCss('titleObject')) ||
         timelineItem.previousElementSibling.dataset.cellId?.startsWith('timelineObject:title')
       ) {
+        timelineItem.setAttribute(hiddenAttribute, '');
         timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
       }
     }

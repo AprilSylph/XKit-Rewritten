@@ -59,25 +59,25 @@ export const styleElement = buildStyle(`
 
 const addLabel = (element, inside = false) => {
   if (element.parentNode.querySelector(`.${labelClass}`) === null) {
-    const gifLabel = document.createElement('p');
-    gifLabel.className = element.clientWidth && element.clientWidth < 150
-      ? `${labelClass} mini`
-      : labelClass;
+    const gifLabel = dom('p', {
+      class: element.clientWidth && element.clientWidth < 150
+        ? `${labelClass} mini`
+        : labelClass
+    });
 
     inside ? element.append(gifLabel) : element.parentNode.append(gifLabel);
   }
 };
 
 const pauseGif = function (gifElement) {
-  const image = new Image();
-  image.src = gifElement.currentSrc;
+  const image = dom('img', { src: gifElement.currentSrc });
   image.onload = () => {
     if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      canvas.className = gifElement.className;
-      canvas.classList.add(canvasClass);
+      const canvas = dom('canvas', {
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+        class: `${gifElement.className} ${canvasClass}`
+      });
       canvas.getContext('2d').drawImage(image, 0, 0);
       gifElement.parentNode.append(canvas);
       addLabel(gifElement);

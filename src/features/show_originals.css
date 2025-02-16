@@ -1,5 +1,6 @@
-[data-show-originals="on"] ~ div > [data-show-originals-hidden] article {
-  display: none;
+[data-show-originals="on"] ~ div > [data-show-originals-hidden] {
+  content: linear-gradient(transparent, transparent);
+  height: 0;
 }
 
 .xkit-show-originals-lengthened {

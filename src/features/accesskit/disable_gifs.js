@@ -100,7 +100,7 @@ const processGifs = function (gifElements) {
   });
 };
 
-const sourceUrlRegex = /(?<=url\(["'])[^)]*?\.gifv?(?=["']\))/g;
+const sourceUrlRegex = /(?<=url\(["'])[^)]*?\.(?:gif|gifv|webp)(?=["']\))/g;
 
 const pausedUrlCache = {};
 const createPausedUrl = (sourceUrl) => {

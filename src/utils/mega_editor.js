@@ -1,6 +1,15 @@
 import { inject } from './inject.js';
 
-let formKey;
+const formKeyPromise = fetch('https://www.tumblr.com/neue_web/iframe/new/text').then(response => {
+  if (response.ok) {
+    return response.text();
+  } else {
+    throw Object.assign(new Error(response.status), { response });
+  }
+}).then(responseText => {
+  const responseDocument = (new DOMParser()).parseFromString(responseText, 'text/html');
+  return responseDocument.getElementById('tumblr_form_key').getAttribute('content');
+}).catch(console.error);
 
 const pathnames = {
   add: 'add_tags_to_posts',
@@ -23,16 +32,7 @@ const pathnames = {
 export const megaEdit = async function (postIds, options) {
   const pathname = pathnames[options.mode];
 
-  formKey ??= await fetch('https://www.tumblr.com/neue_web/iframe/new/text').then(response => {
-    if (response.ok) {
-      return response.text();
-    } else {
-      throw Object.assign(new Error(response.status), { response });
-    }
-  }).then(responseText => {
-    const responseDocument = (new DOMParser()).parseFromString(responseText, 'text/html');
-    return responseDocument.getElementById('tumblr_form_key').getAttribute('content');
-  }).catch(console.error);
+  const formKey = await formKeyPromise;
 
   const requestBody = {
     post_ids: postIds.join(','),
@@ -47,5 +47,34 @@ export const megaEdit = async function (postIds, options) {
   return inject(
     '/main_world/post_request.js',
     [`https://www.tumblr.com/${pathname}`, $.param(requestBody)]
+  );
+};
+
+/**
+ * Note: for historical reasons, content labels are referred to as "community labels"
+ * in all API fields and API endpoint names.
+ * @param {string} blogName - The name of the blog to edit posts on
+ * @param {string[]} postIds - Array of post IDs to edit (must not exceed 100 items)
+ * @param {object} options - Configuration object
+ * @param {boolean} options.hasCommunityLabel - Whether the posts should have a content label
+ * @param {string[]} options.categories - valid modes are:
+ *                                 1. "drug_use"
+ *                                 2. "violence"
+ *                                 3. "sexual_themes"
+ * @returns {Promise<Response>} Response from constructed request
+ */
+export const bulkCommunityLabel = async function (blogName, postIds, options) {
+  const formKey = await formKeyPromise;
+
+  const requestBody = {
+    form_key: formKey,
+    has_community_label: options.hasCommunityLabel,
+    categories: options.categories,
+    post_keys: postIds.map(id => ({ id }))
+  };
+
+  return inject(
+    '/utils/inject/post_request.js',
+    [`https://www.tumblr.com/svc/blog/${blogName}/bulk_community_label_posts`, $.param(requestBody)]
   );
 };

@@ -168,12 +168,12 @@ const processRows = function (rowsElements) {
 
 export const main = async function () {
   const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 
   const gifBackgroundImage = `
-    ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
+    ${keyToCss('communityHeaderImage', 'bannerImage')}:is([style*=".gif"], [style*=".webp"])
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 

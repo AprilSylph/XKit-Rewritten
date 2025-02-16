@@ -84,20 +84,22 @@ const deleteDrafts = async ({ blogName, before }) => {
     ]
   });
 
+  let fetchedPosts = 0;
   const drafts = [];
-  let resource = `/v2/blog/${blogName}/posts/draft`;
+  let resource = `/v2/blog/${blogName}/posts/draft?limit=50`;
 
   while (resource) {
     await Promise.all([
       apiFetch(resource).then(({ response }) => {
         const posts = response.posts
-          .filter(({ canEdit }) => canEdit === true)
-          .filter(({ timestamp }) => timestamp < before);
+          .filter(({ canEdit }) => canEdit === true);
 
-        drafts.push(...posts);
+        fetchedPosts += response.posts.length;
+        drafts.push(...posts.filter(({ timestamp }) => timestamp < before));
+
         resource = response.links?.next?.href;
 
-        foundPostsElement.textContent = `Found ${drafts.length} drafts${resource ? '...' : '.'}`;
+        foundPostsElement.textContent = `Found ${drafts.length} drafts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
       }),
       sleep(1000)
     ]);

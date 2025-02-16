@@ -3,9 +3,10 @@ import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
 import { dom } from '../../utils/dom.js';
 
-const labelSelector = `${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')}:has(> svg)`;
+const labelSelector = `${keyToCss('activity', 'activityItem')} ${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')}`;
 
 const spanClass = 'xkit-tweaks-subtle-activity-span';
+const iconClass = 'xkit-tweaks-subtle-activity-icon';
 
 export const styleElement = buildStyle(`
 .${spanClass} {
@@ -15,12 +16,24 @@ export const styleElement = buildStyle(`
   width: var(--rendered-width);
 }
 
-a:not(:hover) .${spanClass} {
+${keyToCss('tumblelogName', 'activityHeader')}:not(:hover) .${spanClass} {
   width: 0;
 }
 
-a:not(:hover) ${labelSelector} > svg {
+${keyToCss('tumblelogName', 'activityHeader')}:not(:hover) :is(${labelSelector}) > svg {
   margin-left: 0;
+}
+
+${keyToCss('activityHeader')} div:has(> .${spanClass}) {
+  /* fixes hover detection when covered by the "activityItemLink" <a> element */
+  isolation: isolate;
+}
+
+.${iconClass} {
+  vertical-align: middle;
+  margin-left: 4px;
+  position: relative;
+  bottom: 1px;
 }
 `);
 
@@ -36,6 +49,23 @@ ${labelSelector} > svg {
 const processLabels = labels => labels.forEach(label => {
   const textNode = label.firstChild;
   if (textNode.nodeName !== '#text') return;
+
+  if (!label.querySelector('svg')) {
+    const iconHref = label.matches(keyToCss('mutualsBadgeContainer'))
+      ? '#managed-icon__profile-double'
+      : '#managed-icon__profile-checkmark';
+
+    if (!document.querySelector(iconHref)) return;
+
+    label.append(
+      dom(
+        'svg',
+        { class: iconClass, width: 14, height: 14, xmlns: 'http://www.w3.org/2000/svg' },
+        null,
+        [dom('use', { href: iconHref, xmlns: 'http://www.w3.org/2000/svg' })]
+      )
+    );
+  }
 
   const span = dom('span', null, null, [textNode.textContent]);
   label.insertBefore(span, textNode);
@@ -62,4 +92,5 @@ export const clean = async () => {
     const textNode = document.createTextNode(span.textContent);
     span.parentNode.replaceChild(textNode, span);
   });
+  $(`.${iconClass}`).remove();
 };

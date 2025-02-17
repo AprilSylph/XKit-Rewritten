@@ -15,7 +15,7 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsdoc": "^50.5.0",
     "eslint-plugin-n": "^15.7.0",
-    "eslint-plugin-promise": "^6.6.0",
+    "eslint-plugin-promise": "^7.2.1",
     "web-ext": "^8.3.0"
   },
   "dependencies": {

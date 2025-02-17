@@ -2,11 +2,18 @@ import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
+import { memoize } from '../../utils/memoize.js';
+import { getPreferences } from '../../utils/preferences.js';
 
-const canvasClass = 'xkit-paused-gif-placeholder';
+const posterAttribute = 'data-paused-gif-placeholder';
+const pausedContentVar = '--xkit-paused-gif-content';
+const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
-const backgroundGifClass = 'xkit-paused-background-gif';
+
+let loadingMode;
+
+const hovered = `:is(:hover > *, .${containerClass}:hover *)`;
 
 export const styleElement = buildStyle(`
 .${labelClass} {
@@ -33,81 +40,113 @@ export const styleElement = buildStyle(`
   font-size: 0.6rem;
 }
 
-.${canvasClass} {
-  position: absolute;
-  visibility: visible;
-
-  background-color: rgb(var(--white));
-}
-
-*:hover > .${canvasClass},
-*:hover > .${labelClass},
-.${containerClass}:hover .${canvasClass},
-.${containerClass}:hover .${labelClass} {
+.${labelClass}${hovered},
+img:has(~ [${posterAttribute}]):not(${hovered}),
+${keyToCss('loader')}:has(~ .${labelClass}):not(${hovered}) {
   display: none;
 }
 
-.${backgroundGifClass}:not(:hover) {
-  background-image: none !important;
-  background-color: rgb(var(--secondary-accent));
+[${posterAttribute}]:not(${hovered}) {
+  visibility: visible !important;
 }
 
-.${backgroundGifClass}:not(:hover) > div {
-  color: rgb(var(--black));
+img[style*="${pausedContentVar}"]:not(${hovered}) {
+  content: var(${pausedContentVar});
+}
+[style*="${pausedBackgroundImageVar}"]:not(${hovered}) {
+  background-image: var(${pausedBackgroundImageVar}) !important;
 }
 `);
 
 const addLabel = (element, inside = false) => {
-  if (element.parentNode.querySelector(`.${labelClass}`) === null) {
-    const gifLabel = document.createElement('p');
-    gifLabel.className = element.clientWidth && element.clientWidth < 150
-      ? `${labelClass} mini`
-      : labelClass;
+  const target = inside ? element : element.parentNode;
 
-    inside ? element.append(gifLabel) : element.parentNode.append(gifLabel);
+  if (target && target.querySelector(`.${labelClass}`) === null) {
+    const gifLabel = dom('p', { class: labelClass });
+    element.clientWidth && element.clientWidth < 150 && gifLabel.classList.add('mini');
+
+    target.append(gifLabel);
   }
 };
 
-const pauseGif = function (gifElement) {
-  const image = new Image();
-  image.src = gifElement.currentSrc;
-  image.onload = () => {
-    if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      canvas.className = gifElement.className;
-      canvas.classList.add(canvasClass);
-      canvas.getContext('2d').drawImage(image, 0, 0);
-      gifElement.parentNode.append(canvas);
-      addLabel(gifElement);
+const createPausedUrl = memoize(async sourceUrl => {
+  const response = await fetch(sourceUrl, { headers: { Accept: 'image/webp,*/*' } });
+  const contentType = response.headers.get('Content-Type');
+  const canvas = document.createElement('canvas');
+
+  /* globals ImageDecoder */
+  if (typeof ImageDecoder === 'function' && await ImageDecoder.isTypeSupported(contentType)) {
+    const decoder = new ImageDecoder({
+      type: contentType,
+      data: response.body,
+      preferAnimation: true
+    });
+    const { image: videoFrame } = await decoder.decode();
+    if (!decoder.tracks.selectedTrack.animated) {
+      // source image is not animated; decline to pause it
+      return undefined;
     }
-  };
+    canvas.width = videoFrame.displayWidth;
+    canvas.height = videoFrame.displayHeight;
+    canvas.getContext('2d').drawImage(videoFrame, 0, 0);
+  } else {
+    const imageBitmap = await response.blob().then(window.createImageBitmap);
+    canvas.width = imageBitmap.width;
+    canvas.height = imageBitmap.height;
+    canvas.getContext('2d').drawImage(imageBitmap, 0, 0);
+  }
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', 1));
+  return URL.createObjectURL(blob);
+});
+
+const loaded = gifElement =>
+  (gifElement.complete && gifElement.currentSrc) ||
+  new Promise(resolve => gifElement.addEventListener('load', resolve, { once: true }));
+
+const pauseGifWithPoster = async function (gifElement, posterElement) {
+  addLabel(gifElement);
+  loadingMode === 'immediate' && await loaded(gifElement);
+  posterElement.setAttribute(posterAttribute, '');
+};
+
+const pauseGif = async function (gifElement) {
+  await loaded(gifElement);
+  const pausedUrl = await createPausedUrl(gifElement.currentSrc);
+  if (!pausedUrl) return;
+
+  gifElement.style.setProperty(pausedContentVar, `url(${pausedUrl})`);
+  addLabel(gifElement);
 };
 
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
     if (gifElement.closest('.block-editor-writing-flow')) return;
-    const pausedGifElements = [
-      ...gifElement.parentNode.querySelectorAll(`.${canvasClass}`),
-      ...gifElement.parentNode.querySelectorAll(`.${labelClass}`)
-    ];
-    if (pausedGifElements.length) {
-      gifElement.after(...pausedGifElements);
-      return;
-    }
+    const existingLabelElements = gifElement.parentNode.querySelectorAll(`.${labelClass}`);
+    gifElement.parentNode.append(...existingLabelElements);
 
-    if (gifElement.complete && gifElement.currentSrc) {
-      pauseGif(gifElement);
-    } else {
-      gifElement.onload = () => pauseGif(gifElement);
-    }
+    gifElement.decoding = 'sync';
+
+    const posterElement = gifElement.parentElement.querySelector(keyToCss('poster'));
+    posterElement?.currentSrc
+      ? pauseGifWithPoster(gifElement, posterElement)
+      : pauseGif(gifElement);
   });
 };
 
+const sourceUrlRegex = /(?<=url\(["'])[^)]*?\.(?:gif|gifv|webp)(?=["']\))/g;
 const processBackgroundGifs = function (gifBackgroundElements) {
-  gifBackgroundElements.forEach(gifBackgroundElement => {
-    gifBackgroundElement.classList.add(backgroundGifClass);
+  gifBackgroundElements.forEach(async gifBackgroundElement => {
+    const sourceValue = gifBackgroundElement.style.backgroundImage;
+    const sourceUrl = sourceValue.match(sourceUrlRegex)?.[0];
+    if (!sourceUrl) return;
+
+    const pausedUrl = await createPausedUrl(sourceUrl);
+    if (!pausedUrl) return;
+
+    gifBackgroundElement.style.setProperty(
+      pausedBackgroundImageVar,
+      sourceValue.replaceAll(sourceUrlRegex, pausedUrl)
+    );
     addLabel(gifBackgroundElement, true);
   });
 };
@@ -128,14 +167,25 @@ const processRows = function (rowsElements) {
   });
 };
 
+const onStorageChanged = async function (changes, areaName) {
+  if (areaName !== 'local') return;
+
+  const { 'accesskit.preferences.disable_gifs_loading_mode': modeChanges } = changes;
+  if (modeChanges?.oldValue === undefined) return;
+
+  loadingMode = modeChanges.newValue;
+};
+
 export const main = async function () {
+  ({ disable_gifs_loading_mode: loadingMode } = await getPreferences('accesskit'));
+
   const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 
   const gifBackgroundImage = `
-    ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
+    ${keyToCss('communityHeaderImage', 'bannerImage')}:is([style*=".gif"], [style*=".webp"])
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 
@@ -143,9 +193,13 @@ export const main = async function () {
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
     processRows
   );
+
+  browser.storage.onChanged.addListener(onStorageChanged);
 };
 
 export const clean = async function () {
+  browser.storage.onChanged.removeListener(onStorageChanged);
+
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);
@@ -154,6 +208,9 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children)
   );
 
-  $(`.${canvasClass}, .${labelClass}`).remove();
-  $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
+  $(`.${labelClass}`).remove();
+  [...document.querySelectorAll(`img[style*="${pausedContentVar}"]`)]
+    .forEach(element => element.style.removeProperty(pausedContentVar));
+  [...document.querySelectorAll(`img[style*="${pausedBackgroundImageVar}"]`)]
+    .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
 };

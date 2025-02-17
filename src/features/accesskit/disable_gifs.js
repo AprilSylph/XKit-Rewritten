@@ -10,7 +10,12 @@ const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 
-const hovered = `:is(:hover > *, .${containerClass}:hover *)`;
+const hovered = `:is(
+  :hover > *,
+  .${containerClass}:hover *,
+  ${keyToCss('linkCard')}:hover *,
+  a:hover + div > ${keyToCss('communityCategoryImage')},
+)`;
 
 export const styleElement = buildStyle(`
 .${labelClass} {
@@ -37,7 +42,13 @@ export const styleElement = buildStyle(`
   font-size: 0.6rem;
 }
 
+${keyToCss('blogCard')} ${keyToCss('headerImage')} .${labelClass} {
+  font-size: 0.8rem;
+  top: calc(140px - 1em - 2.2ch);
+}
+
 .${labelClass}${hovered},
+${hovered} > .${labelClass}.inside,
 img:has(~ [${posterAttribute}]):not(${hovered}),
 ${keyToCss('loader')}:has(~ .${labelClass}):not(${hovered}) {
   display: none;
@@ -60,7 +71,8 @@ const addLabel = (element, inside = false) => {
 
   if (target && target.querySelector(`.${labelClass}`) === null) {
     const gifLabel = dom('p', { class: labelClass });
-    element.clientWidth && element.clientWidth < 150 && gifLabel.classList.add('mini');
+    element.clientWidth && element.clientWidth <= 150 && gifLabel.classList.add('mini');
+    inside && gifLabel.classList.add('inside');
 
     target.append(gifLabel);
   }
@@ -117,6 +129,7 @@ const pauseGif = async function (gifElement) {
 
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
+    if (!gifElement.matches('[srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]')) return;
     if (gifElement.closest('.block-editor-writing-flow')) return;
     const existingLabelElements = gifElement.parentNode.querySelectorAll(`.${labelClass}`);
     gifElement.parentNode.append(...existingLabelElements);
@@ -133,6 +146,10 @@ const processGifs = function (gifElements) {
 const sourceUrlRegex = /(?<=url\(["'])[^)]*?\.(?:gif|gifv|webp)(?=["']\))/g;
 const processBackgroundGifs = function (gifBackgroundElements) {
   gifBackgroundElements.forEach(async gifBackgroundElement => {
+    // tumblr tv 'videoHubCardWrapper' video cards may be initially rendered with the wrong background
+    if (!gifBackgroundElement.matches('[style*=".gif"], [style*=".webp"]')) await new Promise(requestAnimationFrame);
+    if (!gifBackgroundElement.matches('[style*=".gif"], [style*=".webp"]')) return;
+
     const sourceValue = gifBackgroundElement.style.backgroundImage;
     const sourceUrl = sourceValue.match(sourceUrlRegex)?.[0];
     if (!sourceUrl) return;
@@ -166,13 +183,30 @@ const processRows = function (rowsElements) {
 
 export const main = async function () {
   const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
+    :is(
+      figure, /* post image/imageset; blog view sidebar "more like this"; post in grid view; blog card modal post entry */
+      main.labs, /* labs settings header: https://www.tumblr.com/settings/labs */
+      ${keyToCss(
+        'linkCard', // post link element
+        'typeaheadRow', // modal search dropdown entry
+        'tagImage', // search page sidebar related tags, recommended tag carousels: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
+        'headerBanner', // blog view header
+        'headerImage', // modal blog card header
+        'topPost', // activity page top post
+        'videoHubsFeatured', // tumblr tv recommended card: https://www.tumblr.com/dashboard/tumblr_tv
+        'takeoverBanner' // advertisement
+      )}
+    ) img:not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 
-  const gifBackgroundImage = `
-    ${keyToCss('communityHeaderImage', 'bannerImage')}:is([style*=".gif"], [style*=".webp"])
-  `;
+  const gifBackgroundImage = keyToCss(
+    'communityHeaderImage', // search page tags section header: https://www.tumblr.com/search/gif?v=tag
+    'bannerImage', // tagged page sidebar header: https://www.tumblr.com/tagged/gif
+    'tagChicletWrapper', // "trending" / "your tags" timeline carousel entry: https://www.tumblr.com/dashboard/trending, https://www.tumblr.com/dashboard/hubs
+    'communityCategoryImage', // tumblr communities browse page entry: https://www.tumblr.com/communities/browse
+    'videoHubCardWrapper' // tumblr tv channels section: https://www.tumblr.com/dashboard/tumblr_tv
+  );
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 
   pageModifications.register(

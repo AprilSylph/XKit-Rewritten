@@ -58,10 +58,7 @@ export const styleElement = buildStyle(`
 }
 `);
 
-const blogCarouselBackgroundSelector = `${keyToCss('background')} > *`;
-
 const addLabel = (element, inside = false) => {
-  if (element.matches(blogCarouselBackgroundSelector)) return;
   if (element.parentNode.querySelector(`.${labelClass}`) === null) {
     const gifLabel = document.createElement('p');
     gifLabel.className = element.clientWidth && element.clientWidth < 150

@@ -60,10 +60,9 @@ export const styleElement = buildStyle(`
 
 const addLabel = (element, inside = false) => {
   if (element.parentNode.querySelector(`.${labelClass}`) === null) {
-    const gifLabel = document.createElement('p');
-    gifLabel.className = element.clientWidth && element.clientWidth < 150
-      ? `${labelClass} mini`
-      : labelClass;
+    const gifLabel = dom('p', { class: labelClass });
+    element.clientWidth && element.clientWidth <= 150 && gifLabel.classList.add('mini');
+    element.clientHeight && element.clientHeight <= 50 && gifLabel.classList.add('mini');
 
     inside ? element.append(gifLabel) : element.parentNode.append(gifLabel);
   }

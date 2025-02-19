@@ -23,6 +23,7 @@ export const styleElement = buildStyle(`
   font-size: 1rem;
   font-weight: bold;
   line-height: 1em;
+  pointer-events: none;
 }
 
 .${labelClass}::before {

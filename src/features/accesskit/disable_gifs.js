@@ -34,6 +34,11 @@ export const styleElement = buildStyle(`
   font-size: 0.6rem;
 }
 
+.${labelClass}.hr {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .${canvasClass} {
   position: absolute;
   visibility: visible;
@@ -63,6 +68,7 @@ const addLabel = (element, inside = false) => {
     const gifLabel = dom('p', { class: labelClass });
     element.clientWidth && element.clientWidth <= 150 && gifLabel.classList.add('mini');
     element.clientHeight && element.clientHeight <= 50 && gifLabel.classList.add('mini');
+    element.clientHeight && element.clientHeight <= 30 && gifLabel.classList.add('hr');
 
     inside ? element.append(gifLabel) : element.parentNode.append(gifLabel);
   }

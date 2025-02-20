@@ -40,6 +40,10 @@ export const styleElement = buildStyle(`
 img:is([${posterAttribute}], [style*="${pausedContentVar}"]):not(${hovered}) ~ div > ${keyToCss('knightRiderLoader')} {
   display: none;
 }
+${keyToCss('background')} > .${labelClass} {
+  /* prevent double labels in recommended post cards */
+  display: none;
+}
 
 [${posterAttribute}]:not(${hovered}) {
   visibility: visible !important;

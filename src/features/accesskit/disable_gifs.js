@@ -120,7 +120,6 @@ const createPausedUrl = memoize(async sourceUrl => {
 
 const processGifs = function (gifElements) {
   gifElements.forEach(async gifElement => {
-    if (!gifElement.matches('[srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]')) return;
     if (gifElement.closest('.block-editor-writing-flow')) return;
 
     const posterElement = gifElement.parentElement.querySelector(keyToCss('poster'));
@@ -148,10 +147,6 @@ const processGifs = function (gifElements) {
 const sourceUrlRegex = /(?<=url\(["'])[^)]*?\.(?:gif|gifv|webp)(?=["']\))/g;
 const processBackgroundGifs = function (gifBackgroundElements) {
   gifBackgroundElements.forEach(async gifBackgroundElement => {
-    // tumblr tv 'videoHubCardWrapper' video cards may be initially rendered with the wrong background
-    if (gifBackgroundElement.matches(keyToCss('videoHubCardWrapper'))) await new Promise(requestAnimationFrame);
-    if (!gifBackgroundElement.matches('[style*=".gif"], [style*=".webp"]')) return;
-
     const sourceValue = gifBackgroundElement.style.backgroundImage;
     const sourceUrl = sourceValue.match(sourceUrlRegex)?.[0];
     if (!sourceUrl) return;
@@ -210,7 +205,7 @@ export const main = async function () {
         'videoHubsFeatured', // tumblr tv recommended card: https://www.tumblr.com/dashboard/tumblr_tv
         'takeoverBanner' // advertisement
       )}
-    ) img:not(${keyToCss('poster')})
+    ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 
@@ -223,7 +218,7 @@ export const main = async function () {
       'tagChicletWrapper', // "trending" / "your tags" timeline carousel entry: https://www.tumblr.com/dashboard/trending, https://www.tumblr.com/dashboard/hubs
       'communityCategoryImage', // tumblr communities browse page entry: https://www.tumblr.com/communities/browse, https://www.tumblr.com/communities/browse/movies
       'videoHubCardWrapper' // tumblr tv channels section: https://www.tumblr.com/dashboard/tumblr_tv
-    )}[style]
+    )}:is([style*=".gif"], [style*=".webp"])
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 

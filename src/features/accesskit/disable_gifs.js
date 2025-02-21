@@ -105,12 +105,16 @@ const createPausedUrl = memoize(async sourceUrl => {
     canvas.getContext('2d').drawImage(imageBitmap, 0, 0);
   }
   const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', 1));
-  return URL.createObjectURL(blob);
+  const url = URL.createObjectURL(blob);
+  await dom('img', { src: url }).decode();
+  return url;
 });
 
 const processGifs = function (gifElements) {
   gifElements.forEach(async gifElement => {
     if (gifElement.closest('.block-editor-writing-flow')) return;
+
+    gifElement.decoding = 'sync';
 
     const posterElement = gifElement.parentElement.querySelector(keyToCss('poster'));
     if (posterElement) {
@@ -125,7 +129,6 @@ const processGifs = function (gifElements) {
       gifElement.style.setProperty(pausedContentVar, `url(${pausedUrl})`);
     }
     addLabel(gifElement);
-    gifElement.decoding = 'sync';
   });
 };
 

@@ -167,6 +167,19 @@ const processBackgroundGifs = function (gifBackgroundElements) {
   });
 };
 
+const reprocessObserver = new MutationObserver(mutations =>
+  mutations.forEach(({ target }) => {
+    if (target.matches('[style*=".gif"], [style*=".webp"]')) {
+      processBackgroundGifs([target]);
+    } else {
+      target.style.removeProperty(pausedBackgroundImageVar);
+      target.querySelector(`.${labelClass}`)?.remove();
+    }
+  })
+);
+const processTumblrTvCards = cards =>
+  cards.forEach(card => reprocessObserver.observe(card, { attributeFilter: ['style'] }));
+
 const processRows = function (rowsElements) {
   rowsElements.forEach(rowsElement => {
     [...rowsElement.children].forEach(row => {
@@ -222,6 +235,11 @@ export const main = async function () {
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 
+  pageModifications.register(
+    keyToCss('videoHubCardWrapper'), // tumblr tv channels section: https://www.tumblr.com/dashboard/tumblr_tv
+    processTumblrTvCards
+  );
+
   const hoverableElement = `
     ${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}, /* recommended blog carousel entry */
     div:has(> a${keyToCss('cover')}):has(${keyToCss('communityCategoryImage')}), /* tumblr communities browse page entry: https://www.tumblr.com/communities/browse */
@@ -242,6 +260,7 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
+  pageModifications.unregister(processTumblrTvCards);
   pageModifications.unregister(processRows);
   pageModifications.unregister(processHoverableElements);
 

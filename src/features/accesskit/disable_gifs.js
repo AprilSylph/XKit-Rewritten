@@ -48,7 +48,7 @@ ${keyToCss('background')} > .${labelClass} {
 [${posterAttribute}]:not(${hovered}) {
   visibility: visible !important;
 }
-img:has(~ [${posterAttribute}]):not(${hovered}) {
+img:has(~ [${posterAttribute}]:not(${hovered})) {
   visibility: hidden !important;
 }
 

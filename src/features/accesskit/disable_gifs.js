@@ -98,6 +98,8 @@ const processGifs = function (gifElements) {
       return;
     }
 
+    gifElement.decoding = 'sync';
+
     if (gifElement.complete && gifElement.currentSrc) {
       pauseGif(gifElement);
     } else {

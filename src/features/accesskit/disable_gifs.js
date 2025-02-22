@@ -46,6 +46,8 @@ export const styleElement = buildStyle(`
 
 .${canvasClass} {
   position: absolute;
+  top: 0;
+  left: 0;
   visibility: visible;
 
   background-color: rgb(var(--white));
@@ -76,7 +78,7 @@ ${keyToCss('background')}[${labelAttribute}]::after {
   background-color: rgb(var(--secondary-accent));
 }
 
-.${backgroundGifClass}:not(:hover) > div {
+.${backgroundGifClass}:not(:hover) > :is(div, span) {
   color: rgb(var(--black));
 }
 `);
@@ -174,17 +176,37 @@ export const main = async function () {
   ({ disable_gifs_loading_mode: loadingMode } = await getPreferences('accesskit'));
 
   const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+    :is(
+      figure, /* post image/imageset; recommended blog carousel entry; blog view sidebar "more like this"; post in grid view; blog card modal post entry */
+      /* main.labs, /* labs settings header: https://www.tumblr.com/settings/labs */
+      ${keyToCss(
+        'linkCard', // post link element
+        // 'albumImage', // post audio element
+        'messageImage', // direct message attached image
+        'messagePost', // direct message linked post
+        'typeaheadRow', // modal search dropdown entry
+        'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
+        // 'headerBanner', // blog view header
+        // 'headerImage', // modal blog card header, activity page "biggest fans" header
+        'topPost', // activity page top post
+        // 'colorfulListItemWrapper', // trending tag: https://www.tumblr.com/explore/trending
+        'takeoverBanner' // advertisement
+      )}
+    ) img:is([srcset*=".gif"], [src*=".gif"]):not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 
   const gifBackgroundImage = `
-    ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
+    ${keyToCss(
+      'communityHeaderImage', // search page tags section header: https://www.tumblr.com/search/gif?v=tag
+      'bannerImage', // tagged page sidebar header: https://www.tumblr.com/tagged/gif
+      'tagChicletWrapper' // "trending" / "your tags" timeline carousel entry: https://www.tumblr.com/dashboard/trending, https://www.tumblr.com/dashboard/hubs
+    )}[style*=".gif"]
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 
   pageModifications.register(
-    `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`,
+    `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`, // recommended blog carousel entry: https://www.tumblr.com/tagged/gif
     processHoverableElements
   );
 

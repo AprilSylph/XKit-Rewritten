@@ -2,6 +2,7 @@ import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
+import { getPreferences } from '../../utils/preferences.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
 const pausedPosterAttribute = 'data-paused-gif-use-poster';
@@ -9,6 +10,8 @@ const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
+
+let loadingMode;
 
 const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
 const parentHovered = `:is(:hover > *, [${hoverContainerAttribute}]:hover *)`;
@@ -54,8 +57,11 @@ ${keyToCss('background')}[${labelAttribute}]::after {
 [${pausedPosterAttribute}]:not(${hovered}) > img${keyToCss('poster')} {
   visibility: visible !important;
 }
-[${pausedPosterAttribute}]:not(${hovered}) > img:not(${keyToCss('poster')}) {
+[${pausedPosterAttribute}="eager"]:not(${hovered}) > img:not(${keyToCss('poster')}) {
   visibility: hidden !important;
+}
+[${pausedPosterAttribute}="lazy"]:not(${hovered}) > img:not(${keyToCss('poster')}) {
+  display: none;
 }
 
 .${backgroundGifClass}:not(:hover) {
@@ -108,7 +114,7 @@ const processGifs = function (gifElements) {
 
     const posterElement = gifElement.parentElement.querySelector(keyToCss('poster'));
     if (posterElement) {
-      gifElement.parentElement.setAttribute(pausedPosterAttribute, '');
+      gifElement.parentElement.setAttribute(pausedPosterAttribute, loadingMode);
       addLabel(posterElement);
       return;
     }
@@ -147,7 +153,18 @@ const processRows = function (rowsElements) {
 const processHoverableElements = elements =>
   elements.forEach(element => element.setAttribute(hoverContainerAttribute, ''));
 
+const onStorageChanged = async function (changes, areaName) {
+  if (areaName !== 'local') return;
+
+  const { 'accesskit.preferences.disable_gifs_loading_mode': modeChanges } = changes;
+  if (modeChanges?.oldValue === undefined) return;
+
+  loadingMode = modeChanges.newValue;
+};
+
 export const main = async function () {
+  ({ disable_gifs_loading_mode: loadingMode } = await getPreferences('accesskit'));
+
   const gifImage = `
     :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
   `;
@@ -167,9 +184,13 @@ export const main = async function () {
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
     processRows
   );
+
+  browser.storage.onChanged.addListener(onStorageChanged);
 };
 
 export const clean = async function () {
+  browser.storage.onChanged.removeListener(onStorageChanged);
+
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);

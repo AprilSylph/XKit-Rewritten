@@ -178,18 +178,13 @@ export const main = async function () {
   const gifImage = `
     :is(
       figure, /* post image/imageset; recommended blog carousel entry; blog view sidebar "more like this"; post in grid view; blog card modal post entry */
-      /* main.labs, /* labs settings header: https://www.tumblr.com/settings/labs */
       ${keyToCss(
         'linkCard', // post link element
-        // 'albumImage', // post audio element
         'messageImage', // direct message attached image
         'messagePost', // direct message linked post
         'typeaheadRow', // modal search dropdown entry
         'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
-        // 'headerBanner', // blog view header
-        // 'headerImage', // modal blog card header, activity page "biggest fans" header
         'topPost', // activity page top post
-        // 'colorfulListItemWrapper', // trending tag: https://www.tumblr.com/explore/trending
         'takeoverBanner' // advertisement
       )}
     ) img:is([srcset*=".gif"], [src*=".gif"]):not(${keyToCss('poster')})

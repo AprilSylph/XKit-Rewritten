@@ -4,10 +4,14 @@ import { dom } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
+const pausedPosterAttribute = 'data-paused-gif-use-poster';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
+
+const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
+const parentHovered = `:is(:hover > *, [${hoverContainerAttribute}]:hover *)`;
 
 export const styleElement = buildStyle(`
 .${labelClass} {
@@ -41,11 +45,21 @@ export const styleElement = buildStyle(`
   background-color: rgb(var(--white));
 }
 
-*:hover > .${canvasClass},
-*:hover > .${labelClass},
-[${hoverContainerAttribute}]:hover .${canvasClass},
-[${hoverContainerAttribute}]:hover .${labelClass} {
+.${canvasClass}${parentHovered},
+.${labelClass}${parentHovered},
+[${pausedPosterAttribute}]:not(${hovered}) > div > ${keyToCss('knightRiderLoader')} {
   display: none;
+}
+${keyToCss('background')} .${labelClass} {
+  /* prevent double labels in recommended post cards */
+  display: none;
+}
+
+[${pausedPosterAttribute}]:not(${hovered}) > img${keyToCss('poster')} {
+  visibility: visible !important;
+}
+[${pausedPosterAttribute}]:not(${hovered}) > img:not(${keyToCss('poster')}) {
+  visibility: hidden !important;
 }
 
 .${backgroundGifClass}:not(:hover) {
@@ -99,6 +113,13 @@ const processGifs = function (gifElements) {
     }
 
     gifElement.decoding = 'sync';
+
+    const posterElement = gifElement.parentElement.querySelector(keyToCss('poster'));
+    if (posterElement) {
+      gifElement.parentElement.setAttribute(pausedPosterAttribute, '');
+      addLabel(posterElement);
+      return;
+    }
 
     if (gifElement.complete && gifElement.currentSrc) {
       pauseGif(gifElement);
@@ -168,5 +189,6 @@ export const clean = async function () {
 
   $(`.${canvasClass}, .${labelClass}`).remove();
   $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
+  $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
   $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
 };

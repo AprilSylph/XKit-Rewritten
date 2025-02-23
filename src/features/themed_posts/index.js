@@ -51,9 +51,24 @@ const processPosts = async function (postElements) {
           linkColor
         } = theme;
 
+        const hexToRGBAdjusted = color => {
+          if (color === backgroundColor) {
+            const cssSign = val => `(sqrt(pow(${val}, 2)) / ${val})`;
+
+            const isDarkThreshold = 0.5;
+            const negativeIfDark = cssSign(`(l - ${isDarkThreshold})`);
+
+            const adjustmentAmount = 0.1;
+            const newColor = `oklch(from ${color} calc(l - ${adjustmentAmount} * ${negativeIfDark}) c h)`;
+            const adjusted = `from ${newColor} r g b`;
+            if (CSS.supports('color', `rgb(${adjusted})`)) return adjusted;
+          }
+          return hexToRGB(color);
+        };
+
         const backgroundColorRGB = hexToRGB(backgroundColor);
-        const titleColorRGB = hexToRGB(titleColor);
-        const linkColorRGB = hexToRGB(linkColor);
+        const titleColorRGB = hexToRGBAdjusted(titleColor);
+        const linkColorRGB = hexToRGBAdjusted(linkColor);
 
         styleElement.textContent += `
           [data-xkit-themed="${name}"] {

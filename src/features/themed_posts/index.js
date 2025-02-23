@@ -53,7 +53,7 @@ const processPosts = async function (postElements) {
 
         const hexToRGBAdjusted = color => {
           if (color === backgroundColor) {
-            const cssSign = val => `(sqrt(pow(${val}, 2)) / ${val})`;
+            const cssSign = val => `clamp(-1, ${val} * 100000, 1)`;
 
             const isDarkThreshold = 0.5;
             const direction = cssSign(`(${isDarkThreshold} - l)`);

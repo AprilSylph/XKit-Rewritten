@@ -56,10 +56,10 @@ const processPosts = async function (postElements) {
             const cssSign = val => `(sqrt(pow(${val}, 2)) / ${val})`;
 
             const isDarkThreshold = 0.5;
-            const negativeIfDark = cssSign(`(l - ${isDarkThreshold})`);
+            const direction = cssSign(`(${isDarkThreshold} - l)`);
 
             const adjustmentAmount = 0.1;
-            const newColor = `oklch(from ${color} calc(l - ${adjustmentAmount} * ${negativeIfDark}) c h)`;
+            const newColor = `oklch(from ${color} calc(l + ${adjustmentAmount} * ${direction}) c h)`;
             const adjusted = `from ${newColor} r g b`;
             if (CSS.supports('color', `rgb(${adjusted})`)) return adjusted;
           }

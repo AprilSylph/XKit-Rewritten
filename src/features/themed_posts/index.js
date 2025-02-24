@@ -19,13 +19,28 @@ let blacklist;
 
 let reblogTrailTheming = true;
 
-const hexToRGB = (hex) => {
+const hexToRGBComponents = (hex) => {
   const { red, green, blue } = hex.match(groupsFromHex).groups;
   return [red, green, blue]
     .map(color => color.padEnd(2, color))
-    .map(color => parseInt(color, 16))
-    .join(', ');
+    .map(color => parseInt(color, 16));
 };
+const hexToRGB = (hex) => hexToRGBComponents(hex).join(', ');
+
+const enableAdvancedCss = CSS.supports('color', 'hsl(from #000000 h s l');
+
+const isLight = hex => hexToRGBComponents(hex).reduce((prev, cur) => prev + cur) > 128 * 3;
+const increaseContrast = (hex, amount) =>
+  `hsl(from ${hex} h s calc(l ${isLight(hex) ? '/' : '*'} ${amount}))`;
+
+const serializeElement = document.createElement('div');
+document.documentElement.append(serializeElement);
+const serializeColor = color => {
+  serializeElement.style.color = `color(from ${color} srgb r g b)`;
+  const result = getComputedStyle(serializeElement).color;
+  return result.startsWith('color(srgb') ? result : undefined;
+};
+const serializeRGB = color => serializeColor(color)?.replace('color(srgb ', '').replace(')', '').split(' ').map(value => Number(value) * 256).join(', ');
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
@@ -51,20 +66,10 @@ const processPosts = async function (postElements) {
           linkColor
         } = theme;
 
-        const hexToRGBAdjusted = color => {
-          if (color === backgroundColor) {
-            const cssSign = val => `clamp(-1, ${val} * 100000, 1)`;
-
-            const isDarkThreshold = 0.4;
-            const direction = cssSign(`(${isDarkThreshold} - l)`);
-
-            const adjustmentAmount = 0.18;
-            const newColor = `oklch(from ${color} calc(l + ${adjustmentAmount} * ${direction}) c h)`;
-            const adjusted = `from ${newColor} r g b`;
-            if (CSS.supports('color', `rgb(${adjusted})`)) return adjusted;
-          }
-          return hexToRGB(color);
-        };
+        const hexToRGBAdjusted = color =>
+          color === backgroundColor && enableAdvancedCss
+            ? serializeRGB(increaseContrast(color, 1.5)) ?? hexToRGB(color)
+            : hexToRGB(color);
 
         const backgroundColorRGB = hexToRGB(backgroundColor);
         const titleColorRGB = hexToRGBAdjusted(titleColor);

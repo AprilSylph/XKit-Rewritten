@@ -27,7 +27,8 @@ const hexToRGBComponents = (hex) => {
 };
 const hexToRGB = (hex) => hexToRGBComponents(hex).join(', ');
 
-const enableAdvancedCss = CSS.supports('color', 'oklch(from #000000 l c h');
+// use round() to enforce chrome 125 instead of 119 to avoid any relative color bugs in prior versions
+const enableAdvancedCss = CSS.supports('color', 'oklch(from #000000 round(l) c h');
 
 const isLight = hex => hexToRGBComponents(hex).reduce((prev, cur) => prev + cur) > 128 * 3;
 const increaseContrast = (hex, amount) =>

@@ -27,11 +27,11 @@ const hexToRGBComponents = (hex) => {
 };
 const hexToRGB = (hex) => hexToRGBComponents(hex).join(', ');
 
-const enableAdvancedCss = CSS.supports('color', 'hsl(from #000000 h s l');
+const enableAdvancedCss = CSS.supports('color', 'oklch(from #000000 l c h');
 
 const isLight = hex => hexToRGBComponents(hex).reduce((prev, cur) => prev + cur) > 128 * 3;
 const increaseContrast = (hex, amount) =>
-  `hsl(from ${hex} h s calc(l ${isLight(hex) ? '/' : '*'} ${amount}))`;
+  `oklch(from ${hex} calc(l ${isLight(hex) ? '-' : '+'} ${amount}) c h)`;
 
 const serializeElement = document.createElement('div');
 document.documentElement.append(serializeElement);
@@ -68,7 +68,7 @@ const processPosts = async function (postElements) {
 
         const hexToRGBAdjusted = color =>
           color === backgroundColor && enableAdvancedCss
-            ? serializeRGB(increaseContrast(color, 1.5)) ?? hexToRGB(color)
+            ? serializeRGB(increaseContrast(color, 0.3)) ?? hexToRGB(color)
             : hexToRGB(color);
 
         const backgroundColorRGB = hexToRGB(backgroundColor);

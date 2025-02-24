@@ -61,6 +61,7 @@ const processPosts = async function (postElements) {
       if (!blogs.has(name)) {
         blogs.add(name);
 
+        /* eslint-disable no-unused-vars */
         const {
           backgroundColor,
           titleColor,
@@ -73,8 +74,8 @@ const processPosts = async function (postElements) {
             : hexToRGB(color);
 
         const backgroundColorRGB = hexToRGB(backgroundColor);
-        const titleColorRGB = hexToRGBAdjusted(titleColor);
-        const linkColorRGB = hexToRGBAdjusted(linkColor);
+        const titleColorRGB = hexToRGBAdjusted(backgroundColor);
+        const linkColorRGB = hexToRGBAdjusted(backgroundColor);
 
         styleElement.textContent += `
           [data-xkit-themed="${name}"] {

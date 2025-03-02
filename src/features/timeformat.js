@@ -23,13 +23,31 @@ export const styleElement = buildStyle(`
   display: inline-block;
 }
 
+${keyToCss('userRow')} [data-formatted-time] {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+${keyToCss('userRow')} [data-formatted-time]::before,
+${keyToCss('userRow')} [data-formatted-relative-time]::after {
+  font-size: .875rem;
+}
+
 [data-formatted-time][title]::before,
 [data-formatted-time][title]::after {
   cursor: help;
 }
 
-${keyToCss('blogLinkWrapper')}:has(+ [data-formatted-time]),
-${keyToCss('info')}:has(+ ${keyToCss('timestamp')} > [data-formatted-time]) {
+${keyToCss('userRow')} ${keyToCss('subheader')}:has([data-formatted-time]) {
+  flex-wrap: wrap;
+}
+
+${keyToCss('userRow')} ${keyToCss('timestamp')}:has([data-formatted-time]) {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+${keyToCss('blogLinkWrapper')}:has(+ [data-formatted-time]) {
   flex: none;
 }
 

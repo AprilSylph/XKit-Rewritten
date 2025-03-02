@@ -115,7 +115,7 @@ const processBackgroundGifs = function (gifBackgroundElements) {
 const processRows = function (rowsElements) {
   rowsElements.forEach(rowsElement => {
     [...rowsElement.children].forEach(row => {
-      if (!row.querySelector('figure')) return;
+      if (!row.querySelector(`figure:not(${keyToCss('unstretched')})`)) return;
 
       if (row.previousElementSibling?.classList?.contains(containerClass)) {
         row.previousElementSibling.append(row);

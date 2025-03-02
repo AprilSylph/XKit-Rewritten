@@ -24,7 +24,7 @@ const addAudioControls = nativePlayers => nativePlayers.forEach(nativePlayer => 
   nativePlayer.parentNode.appendChild(audioClone);
 });
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = (changes, areaName) => {
   const {
     'vanilla_audio.preferences.defaultVolume': defaultVolumeChanges
   } = changes;
@@ -34,12 +34,12 @@ export const onStorageChanged = async function (changes, areaName) {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ defaultVolume } = await getPreferences('vanilla_audio'));
   pageModifications.register(keyToCss('nativePlayer'), addAudioControls);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(addAudioControls);
   $(`.${excludeClass} + audio[controls]`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);

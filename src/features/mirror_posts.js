@@ -15,7 +15,7 @@ const archiveDotOrgForm = dom('form', {
   dom('button', { class: 'blue', type: 'submit' }, null, ['Wayback Machine'])
 ]);
 
-const onButtonClicked = async function ({ currentTarget }) {
+const onButtonClicked = ({ currentTarget }) => {
   const { postUrl } = currentTarget.__timelineObjectData;
   const ampUrl = `${postUrl}/amp`;
 

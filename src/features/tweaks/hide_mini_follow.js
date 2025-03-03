@@ -12,7 +12,7 @@ article ${keyToCss('followButton')}:not(${keyToCss('postMeatballsContainer')} *)
 const processButtons = buttons => buttons.forEach(async button => {
   const postElement = button.closest(postSelector);
   if (!postElement) { return; }
-  
+
   const { headerCta } = await timelineObject(postElement);
   headerCta?.action?.action === 'follow' && button.setAttribute(hiddenAttribute, '');
 });

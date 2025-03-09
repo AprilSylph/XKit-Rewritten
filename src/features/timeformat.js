@@ -23,9 +23,28 @@ export const styleElement = buildStyle(`
   display: inline-block;
 }
 
+${keyToCss('userRow')} [data-formatted-time] {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+${keyToCss('userRow')} [data-formatted-time]::before,
+${keyToCss('userRow')} [data-formatted-relative-time]::after {
+  font-size: .875rem;
+}
+
 [data-formatted-time][title]::before,
 [data-formatted-time][title]::after {
   cursor: help;
+}
+
+${keyToCss('userRow')} ${keyToCss('subheader')}:has([data-formatted-time]) {
+  flex-wrap: wrap;
+}
+
+${keyToCss('userRow')} ${keyToCss('timestamp')}:has([data-formatted-time]) {
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 ${keyToCss('blogLinkWrapper')}:has(+ [data-formatted-time]) {
@@ -77,7 +96,7 @@ const formatTimeElements = timeElements => {
 
 export const main = async () => {
   ({ format, displayRelative } = await getPreferences('timeformat'));
-  pageModifications.register(`${keyToCss('timestamp')}[datetime]`, formatTimeElements);
+  pageModifications.register(`${keyToCss('timestamp')}[datetime], ${keyToCss('timestamp')} > [datetime]`, formatTimeElements);
 };
 
 export const clean = async () => {

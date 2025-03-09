@@ -21,3 +21,20 @@
 
 .mass-privater-tag::before { content: '#'; }
 .mass-privater-blog::before { content: '@'; }
+
+.mass-privater-failed {
+  margin-top: 1em;
+}
+.mass-privater-failed > ul {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.mass-privater-failed > ul > li {
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  list-style-type: none;
+}
+.mass-privater-failed:has(> ul:empty) {
+  display: none;
+}

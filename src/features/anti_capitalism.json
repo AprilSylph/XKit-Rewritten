@@ -7,5 +7,12 @@
     "background_color": "#cd0000"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#anti-capitalism",
-  "relatedTerms": [ "sponsored" ]
+  "relatedTerms": [ "sponsored" ],
+  "preferences": {
+    "includeBlazed": {
+      "type": "checkbox",
+      "label": "Hide blazed posts",
+      "default": true
+    }
+  }
 }

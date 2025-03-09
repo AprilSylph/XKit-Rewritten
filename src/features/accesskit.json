@@ -14,6 +14,15 @@
       "label": "Pause GIFs until they are hovered over",
       "default": false
     },
+    "disable_gifs_loading_mode": {
+      "type": "select",
+      "label": "Download paused GIFs:",
+      "options": [
+        { "value": "eager", "label": "immediately" },
+        { "value": "lazy", "label": "when hovered" }
+      ],
+      "default": "eager"
+    },
     "boring_tag_chiclets": {
       "type": "checkbox",
       "label": "De-animate the Changes/Shop/etc. links carousel",

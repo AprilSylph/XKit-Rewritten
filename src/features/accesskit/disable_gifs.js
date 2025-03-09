@@ -69,7 +69,7 @@ const addLabel = (element, inside = false) => {
   }
 };
 
-const pauseGif = function (gifElement) {
+const pauseGif = gifElement => {
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
@@ -86,7 +86,7 @@ const pauseGif = function (gifElement) {
   };
 };
 
-const processGifs = function (gifElements) {
+const processGifs = gifElements => {
   gifElements.forEach(gifElement => {
     if (gifElement.closest('.block-editor-writing-flow')) return;
     const pausedGifElements = [
@@ -106,14 +106,14 @@ const processGifs = function (gifElements) {
   });
 };
 
-const processBackgroundGifs = function (gifBackgroundElements) {
+const processBackgroundGifs = gifBackgroundElements => {
   gifBackgroundElements.forEach(gifBackgroundElement => {
     gifBackgroundElement.classList.add(backgroundGifClass);
     addLabel(gifBackgroundElement, true);
   });
 };
 
-const processRows = function (rowsElements) {
+const processRows = rowsElements => {
   rowsElements.forEach(rowsElement => {
     [...rowsElement.children].forEach(row => {
       if (!row.querySelector(`figure:not(${keyToCss('unstretched')})`)) return;
@@ -132,7 +132,7 @@ const processRows = function (rowsElements) {
 const processHoverableElements = elements =>
   elements.forEach(element => element.setAttribute(hoverContainerAttribute, ''));
 
-export const main = async function () {
+export const main = async () => {
   const gifImage = `
     :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
   `;
@@ -154,7 +154,7 @@ export const main = async function () {
   );
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);

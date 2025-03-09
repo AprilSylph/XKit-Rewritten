@@ -28,11 +28,11 @@ const hideBlogCarousels = carousels =>
     }
   });
 
-export const main = async function () {
+export const main = async () => {
   pageModifications.register(carouselSelector, hideBlogCarousels);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(hideBlogCarousels);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

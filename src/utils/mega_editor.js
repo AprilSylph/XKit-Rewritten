@@ -20,7 +20,7 @@ const pathnames = {
  * @param {string[]} [options.tags] - Array of tags to add or remove. Required if options.mode is "add" or "remove"
  * @returns {Promise<Response>} Response from constructed request
  */
-export const megaEdit = async function (postIds, options) {
+export const megaEdit = async (postIds, options) => {
   const pathname = pathnames[options.mode];
 
   formKey ??= await fetch('https://www.tumblr.com/neue_web/iframe/new/text').then(response => {

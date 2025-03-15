@@ -9,7 +9,7 @@ export const styleElement = buildStyle(`
 article ${keyToCss('followButton')}:not(${keyToCss('postMeatballsContainer')} *), [${hiddenAttribute}] { display: none; }
 `);
 
-const processButtons = buttons => buttons.forEach(async button => {
+const processHeaderButtons = buttons => buttons.forEach(async button => {
   const postElement = button.closest(postSelector);
   if (!postElement) { return; }
 
@@ -18,10 +18,10 @@ const processButtons = buttons => buttons.forEach(async button => {
 });
 
 export const main = async () => {
-  pageModifications.register(`${postSelector} ${keyToCss('rightContent')} > button`, processButtons);
+  pageModifications.register(`${postSelector} article > header ${keyToCss('rightContent')} > button`, processHeaderButtons);
 };
 
 export const clean = async () => {
-  pageModifications.unregister(processButtons);
+  pageModifications.unregister(processHeaderButtons);
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

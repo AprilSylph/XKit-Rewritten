@@ -39,8 +39,6 @@ export const styleElement = buildStyle(`
 
 .${canvasClass} {
   position: absolute;
-  top: 0;
-  left: 0;
   visibility: visible;
 
   background-color: rgb(var(--white));
@@ -172,14 +170,12 @@ export const main = async function () {
       figure, /* post image/imageset; recommended blog carousel entry; blog view sidebar "more like this"; post in grid view; blog card modal post entry */
       ${keyToCss(
         'linkCard', // post link element
-        'messageImage', // direct message attached image
-        'messagePost', // direct message linked post
         'typeaheadRow', // modal search dropdown entry
         'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
         'topPost', // activity page top post
         'takeoverBanner' // advertisement
       )}
-    ) img:is([srcset*=".gif"], [src*=".gif"]):not(${keyToCss('poster')})
+    ) img[srcset*=".gif"]:not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 

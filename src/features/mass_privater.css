@@ -25,16 +25,15 @@
 .mass-privater-failed {
   margin-top: 1em;
 }
-.mass-privater-failed > ul {
+.mass-privater-failed > div {
   max-height: 300px;
   overflow-y: auto;
 }
-.mass-privater-failed > ul > li {
+.mass-privater-failed td {
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  list-style-type: none;
 }
-.mass-privater-failed:has(> ul:empty) {
+.mass-privater-failed:has(table:empty) {
   display: none;
 }

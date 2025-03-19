@@ -1,7 +1,22 @@
+/* globals Sortable */
 const storageKey = 'quick_tags.preferences.tagBundles';
 
 const bundlesList = document.getElementById('bundles');
 const bundleTemplate = document.getElementById('bundle-template');
+
+Sortable.create(bundlesList, {
+  dataIdAttr: 'id',
+  store: {
+    set: async function (sortable) {
+      const order = sortable.toArray().map(Number);
+
+      const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
+      const newTagBundles = order.map(i => tagBundles[i]);
+
+      browser.storage.local.set({ [storageKey]: newTagBundles });
+    }
+  }
+});
 
 const saveNewBundle = async event => {
   event.preventDefault();

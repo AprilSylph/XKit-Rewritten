@@ -1,4 +1,5 @@
-/* globals Sortable */
+import { Sortable } from '../../../lib/sortable.esm.js';
+
 const storageKey = 'quick_tags.preferences.tagBundles';
 
 const bundlesList = document.getElementById('bundles');

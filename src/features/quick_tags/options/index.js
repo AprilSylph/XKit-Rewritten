@@ -5,20 +5,6 @@ const storageKey = 'quick_tags.preferences.tagBundles';
 const bundlesList = document.getElementById('bundles');
 const bundleTemplate = document.getElementById('bundle-template');
 
-Sortable.create(bundlesList, {
-  dataIdAttr: 'id',
-  store: {
-    set: async function (sortable) {
-      const order = sortable.toArray().map(Number);
-
-      const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-      const newTagBundles = order.map(i => tagBundles[i]);
-
-      browser.storage.local.set({ [storageKey]: newTagBundles });
-    }
-  }
-});
-
 const saveNewBundle = async event => {
   event.preventDefault();
   const { currentTarget } = event;
@@ -47,6 +33,20 @@ const moveBundle = async ({ currentTarget }) => {
 
   browser.storage.local.set({ [storageKey]: tagBundles });
 };
+
+Sortable.create(bundlesList, {
+  dataIdAttr: 'id',
+  store: {
+    set: async sortable => {
+      const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
+
+      const order = sortable.toArray().map(Number);
+      const newTagBundles = order.map(i => tagBundles[i]);
+
+      browser.storage.local.set({ [storageKey]: newTagBundles });
+    }
+  }
+});
 
 const editTagBundle = async ({ currentTarget }) => {
   const { parentNode: { parentNode } } = currentTarget;

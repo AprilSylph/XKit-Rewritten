@@ -111,12 +111,6 @@ const processPosts = async function (postElements) {
       if (!rebloggedRootId) { return; }
       if (showOwnReblogs && myPost) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
-      if (!rebloggedFromFollowing) {
-        postElement.style.borderLeft = '4px solid blue';
-      }
-      if (trail.length && !trail.at(-1).blog.followed) {
-        postElement.style.borderRight = '4px solid green';
-      }
       if (showReblogsOfNotFollowing && !(rebloggedFromFollowing || trail.at(-1)?.blog?.followed)) { return; }
       const visibleBlogName = community ? postAuthor : blogName;
       if (whitelist.includes(visibleBlogName)) { return; }

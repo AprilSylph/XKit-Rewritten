@@ -1,5 +1,5 @@
 [data-show-originals="on"] ~ div > [data-show-originals-hidden] article {
-  display: none;
+  opacity: 0.5;
 }
 
 .xkit-show-originals-lengthened {

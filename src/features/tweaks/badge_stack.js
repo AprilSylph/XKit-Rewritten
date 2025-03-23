@@ -20,6 +20,10 @@ ${wrapper} {
   isolation: isolate;
 }
 
+${keyToCss('headline')} ${keyToCss('badgesContainer')} {
+  overflow: unset;
+}
+
 /* do not apply this on hover or the hover popups break */
 ${wrapper}:not(:hover) ${badgeContainer} {
   position: relative;

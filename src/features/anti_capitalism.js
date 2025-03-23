@@ -16,7 +16,7 @@ const processVideoCTAs = videoCTAs => videoCTAs
 
 export const main = async () => {
   const { includeBlazed } = await getPreferences('anti_capitalism');
-  const blazeFilter = includeBlazed ? '' : ':not(:has(header use[href="#managed-icon__badge-blaze"]))';
+  const blazeFilter = includeBlazed ? '' : ':not(:has(header use[href="#managed-icon__badge-blaze"], header use[href="#managed-icon__ds-blaze-filled-16"]))';
 
   styleElement.textContent = `
     [${hiddenAttribute}] > div,

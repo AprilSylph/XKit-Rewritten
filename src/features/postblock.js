@@ -49,14 +49,14 @@ const blockPost = async rootID => {
   browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = (changes, areaName) => {
   if (Object.keys(changes).includes(storageKey)) {
     ({ newValue: blockedPostRootIDs = [] } = changes[storageKey]);
     pageModifications.trigger(processPosts);
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey));
 
   registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
@@ -64,7 +64,7 @@ export const main = async function () {
   onNewPosts.addListener(processPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   unregisterMeatballItem(meatballButtonId);
   onNewPosts.removeListener(processPosts);
 

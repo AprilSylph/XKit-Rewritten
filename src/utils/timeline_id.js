@@ -17,6 +17,11 @@ export const followingTimelineSelector = createSelector(
   `[data-timeline-id^="${'following-'}"]`
 );
 
+export const forYouTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timeline?.startsWith('/v2/tabs/for_you') ||
+  timelineId === '/dashboard/stuff_for_you' ||
+  timelineId?.startsWith('for-you-');
+
 // includes "channel" user blog view page
 export const anyBlogTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.match(exactly(`/v2/blog/${anyBlog}/posts`)) ||
@@ -58,7 +63,8 @@ export const postPermalinkTimelineFilter = id =>
     timelineId?.match(exactly(`peepr-posts-${anyBlog}-${id}-undefined-undefined-undefined-undefined-undefined`));
 
 export const anyCommunityTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
-  timelineId?.match(exactly(`communities-${anyBlog}-recent`));
+  timelineId?.match(exactly(`communities-${anyBlog}-recent`)) ||
+  timelineId?.match(exactly(`community-${uuidV4}-${anyBlog}`));
 
 export const communitiesTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timelineId === 'communities-for_you';

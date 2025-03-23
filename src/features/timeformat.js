@@ -47,13 +47,19 @@ ${keyToCss('userRow')} ${keyToCss('timestamp')}:has([data-formatted-time]) {
   flex-wrap: nowrap;
 }
 
-${keyToCss('blogLinkWrapper')}:has(+ [data-formatted-time]) {
+${keyToCss('blogLinkWrapper')}:has(+ [data-formatted-time]),
+${keyToCss('blogLinkWrapper')}:has(+ a > [data-formatted-time]) {
   flex: none;
 }
 
-${keyToCss('blogLinkWrapper')} + [data-formatted-time] {
+${keyToCss('blogLinkWrapper')} + [data-formatted-time],
+${keyToCss('blogLinkWrapper')} + a:has(> [data-formatted-time]) {
   white-space: nowrap;
   overflow-x: hidden;
+}
+
+a > [data-formatted-relative-time]::after {
+  display: inline;
 }
 `);
 

@@ -33,21 +33,19 @@
       document.documentElement.append(styleElement);
     }
 
-    restartListeners[name] = async (changes, areaName) => {
-      if (areaName !== 'local') return;
-
+    restartListeners[name] = async (changes) => {
       const { enabledScripts } = changes;
       if (enabledScripts && !enabledScripts.newValue.includes(name)) return;
 
       if (onStorageChanged instanceof Function) {
-        onStorageChanged(changes, areaName);
+        onStorageChanged(changes);
       } else if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
         await clean?.();
         await main?.();
       }
     };
 
-    browser.storage.onChanged.addListener(restartListeners[name]);
+    browser.storage.local.onChanged.addListener(restartListeners[name]);
   };
 
   const destroyScript = async function (name) {
@@ -67,15 +65,11 @@
       styleElement.remove();
     }
 
-    browser.storage.onChanged.removeListener(restartListeners[name]);
+    browser.storage.local.onChanged.removeListener(restartListeners[name]);
     delete restartListeners[name];
   };
 
-  const onStorageChanged = async function (changes, areaName) {
-    if (areaName !== 'local') {
-      return;
-    }
-
+  const onStorageChanged = async function (changes) {
     const { enabledScripts } = changes;
 
     if (enabledScripts) {
@@ -110,7 +104,7 @@
   const init = async function () {
     $('style.xkit, link.xkit').remove();
 
-    browser.storage.onChanged.addListener(onStorageChanged);
+    browser.storage.local.onChanged.addListener(onStorageChanged);
 
     const [
       installedScripts,

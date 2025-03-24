@@ -90,8 +90,8 @@ const renderBundles = async function () {
   }));
 };
 
-browser.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
+browser.storage.local.onChanged.addListener((changes) => {
+  if (Object.keys(changes).includes(storageKey)) {
     bundlesList.textContent = '';
     renderBundles();
   }

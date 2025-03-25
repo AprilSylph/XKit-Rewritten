@@ -38,6 +38,4 @@
       );
     }
   }, { signal: controller.signal });
-
-  document.documentElement.dispatchEvent(new CustomEvent('xkit-injection-ready'));
 }

@@ -93,7 +93,6 @@ input[type="text"] {
   grid-template-columns: auto 1fr auto;
   grid-column-gap: 1ch;
   align-items: center;
-  padding-right: 1ch;
   border-top: 1px solid rgb(var(--light-grey));
 }
 

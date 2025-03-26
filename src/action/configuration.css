@@ -139,14 +139,12 @@ label[for="filter"] {
 }
 
 .script.disabled .title::after {
-  content: "(disabled)";
-  margin-left: 0.5ch;
+  content: " (disabled)";
   font-weight: normal;
 }
 
 .script:not(.disabled)[data-deprecated="true"] .title::after {
-  content: "(deprecated)";
-  margin-left: 0.5ch;
+  content: " (deprecated)";
   font-weight: normal;
 }
 

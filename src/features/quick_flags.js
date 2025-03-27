@@ -52,6 +52,11 @@ const togglePopupDisplay = async function ({ target, currentTarget: controlButto
   if (buttonContainer.contains(popupElement)) {
     buttonContainer.removeChild(popupElement);
   } else {
+    const postElement = target.closest(postSelector);
+    const { id, blog: { uuid } } = await timelineObject(postElement);
+    const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
+    updateCheckboxes(postData.communityLabels);
+
     appendWithoutOverflow(popupElement, buttonContainer);
   }
 };

@@ -74,7 +74,7 @@ export const bulkCommunityLabel = async function (blogName, postIds, options) {
   };
 
   return inject(
-    '/utils/inject/post_request.js',
+    '/main_world/post_request.js',
     [`https://www.tumblr.com/svc/blog/${blogName}/bulk_community_label_posts`, $.param(requestBody)]
   );
 };

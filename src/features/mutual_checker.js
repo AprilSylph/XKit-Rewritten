@@ -35,8 +35,9 @@ const styleElement = buildStyle(`
     margin-right: 0.5ch;
   }
 
-  ${followingTimelineSelector} [${hiddenAttribute}] article {
-    display: none;
+  ${followingTimelineSelector} [${hiddenAttribute}] {
+    content: linear-gradient(transparent, transparent);
+    height: 0;
   }
 
   ${keyToCss('blogCardBlogLink')} {

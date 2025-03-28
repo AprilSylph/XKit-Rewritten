@@ -88,7 +88,7 @@ const pauseGif = function (gifElement) {
 
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
-    if (gifElement.closest('.block-editor-writing-flow')) return;
+    if (gifElement.closest(`${keyToCss('avatarImage')}, .block-editor-writing-flow`)) return;
     const pausedGifElements = [
       ...gifElement.parentNode.querySelectorAll(`.${canvasClass}`),
       ...gifElement.parentNode.querySelectorAll(`.${labelClass}`)

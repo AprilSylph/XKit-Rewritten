@@ -4,7 +4,6 @@
   box-shadow: 0 0 15px 0 rgba(0,0,0,.5);
   padding: 2px;
   border-radius: 3px;
-  overflow: hidden;
   color: rgb(var(--black));
   font-size: .875rem;
   font-weight: normal;
@@ -138,6 +137,11 @@ div:first-child + span + #quick-reblog,
 
   content: "\2713";
   line-height: 1;
+}
+
+#quick-reblog .tags-input-wrapper > input {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #quick-reblog .action-buttons {

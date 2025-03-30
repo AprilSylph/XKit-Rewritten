@@ -1,3 +1,5 @@
+import { Sortable } from '../../../lib/sortable.esm.js';
+
 const storageKey = 'quick_tags.preferences.tagBundles';
 
 const bundlesList = document.getElementById('bundles');
@@ -31,6 +33,21 @@ const moveBundle = async ({ currentTarget }) => {
 
   browser.storage.local.set({ [storageKey]: tagBundles });
 };
+
+Sortable.create(bundlesList, {
+  dataIdAttr: 'id',
+  handle: '.drag-handle',
+  store: {
+    set: async sortable => {
+      const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
+
+      const order = sortable.toArray().map(Number);
+      const newTagBundles = order.map(i => tagBundles[i]);
+
+      browser.storage.local.set({ [storageKey]: newTagBundles });
+    }
+  }
+});
 
 const editTagBundle = async ({ currentTarget }) => {
   const { parentNode: { parentNode } } = currentTarget;

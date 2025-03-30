@@ -93,7 +93,6 @@ input[type="text"] {
   grid-template-columns: auto 1fr auto;
   grid-column-gap: 1ch;
   align-items: center;
-  padding-right: 1ch;
   border-top: 1px solid rgb(var(--light-grey));
 }
 
@@ -122,6 +121,14 @@ input[type="text"] {
 .bundle button i {
   color: rgb(var(--black));
   font-size: 1.5em;
+}
+
+.bundle .drag-handle {
+  cursor: grab;
+}
+
+.bundle .drag-handle:active {
+  cursor: grabbing;
 }
 
 .bundle div {

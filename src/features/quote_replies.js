@@ -157,7 +157,9 @@ const processReply = async ({ type, timestamp, targetPostId, targetTumblelogName
   const reply = response?.timeline?.elements?.[0];
 
   if (!reply) throw new Error('No replies found on target post.');
-  if (Math.floor(reply.timestamp) !== timestamp) throw new Error('Reply not found.');
+  if ([Math.floor(reply.timestamp), Math.round(reply.timestamp)].includes(timestamp) === false) {
+    throw new Error('Reply not found.');
+  }
 
   const verbiage = {
     reply: 'replied to your post',

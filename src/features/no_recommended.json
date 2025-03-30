@@ -15,7 +15,7 @@
     },
     "hide_recommended_community_posts": {
       "type": "checkbox",
-      "label": "Hide posts from non-followed communities in For You",
+      "label": "Hide posts from non-joined communities in For You",
       "default": false
     },
     "hide_answertime": {

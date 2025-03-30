@@ -145,7 +145,7 @@ label[for="filter"] {
 }
 
 .script:not(.disabled)[data-deprecated="true"] .title::after {
-  content: "(deprecated)";
+  content: attr(data-deprecation-reason);
   margin-left: 0.5ch;
   font-weight: normal;
 }

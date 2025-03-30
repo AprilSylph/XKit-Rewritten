@@ -1,7 +1,8 @@
-[data-mute-active] [data-mute-hidden] article,
-[data-muted-blog-controls-mode='original'] ~ div [data-muted-blog-controls-hidden] article,
-[data-muted-blog-controls-mode='reblogged'] ~ div [data-muted-blog-controls-hidden] article {
-  display: none;
+[data-mute-active] [data-mute-hidden],
+[data-muted-blog-controls-mode='original'] ~ div [data-muted-blog-controls-hidden],
+[data-muted-blog-controls-mode='reblogged'] ~ div [data-muted-blog-controls-hidden] {
+  content: linear-gradient(transparent, transparent);
+  height: 0;
 }
 
 /* prevents endless post loading by preserving post height */

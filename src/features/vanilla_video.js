@@ -20,6 +20,7 @@ const cloneVideoElements = videoElements => videoElements.forEach(videoElement =
 
   if (videoElement.width && videoElement.height) {
     newVideoElement.style.setProperty('aspect-ratio', `${videoElement.width} / ${videoElement.height}`);
+    newVideoElement.addEventListener('loadedmetadata', () => newVideoElement.style.removeProperty('aspect-ratio'), { once: true });
   }
 
   const videoSources = [...videoElement.children];

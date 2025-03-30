@@ -13,6 +13,11 @@
       "label": "Hide experimental types of recommended posts",
       "default": true
     },
+    "hide_recommended_community_posts": {
+      "type": "checkbox",
+      "label": "Hide posts from non-joined communities in For You",
+      "default": false
+    },
     "hide_answertime": {
       "type": "checkbox",
       "label": "Hide the answertime banner",

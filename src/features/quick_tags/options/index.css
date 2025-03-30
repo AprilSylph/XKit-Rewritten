@@ -123,6 +123,14 @@ input[type="text"] {
   font-size: 1.5em;
 }
 
+.bundle .drag-handle {
+  cursor: grab;
+}
+
+.bundle .drag-handle:active {
+  cursor: grabbing;
+}
+
 .bundle div {
   display: flex;
   flex-direction: column;

@@ -79,7 +79,7 @@ const onSoftRefresh = loaderElements => {
   dimPosts(refreshedPostElements, true);
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes) {
   const {
     'seen_posts.preferences.hideSeenPosts': hideSeenPostsChanges,
     'seen_posts.preferences.onlyDimAvatars': onlyDimAvatarsChanges,

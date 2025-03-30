@@ -109,16 +109,18 @@ const addBlogCardIcons = blogCardLinks =>
   });
 
 const getIsFollowing = async (blogName, element) => {
-  const blog = await blogData(element) ?? (await timelineObject(element))?.blog;
-
   if (following[blogName] === undefined) {
-    if (blogName === blog?.name) {
-      following[blogName] = Promise.resolve(blog.followed && !blog.isMember);
-    } else {
-      following[blogName] = apiFetch(`/v2/blog/${blogName}/info`)
+    const blog = [
+      await blogData(element),
+      (await timelineObject(element))?.blog,
+      (await timelineObject(element))?.authorBlog
+    ].find((data) => blogName === data?.name);
+
+    following[blogName] = blog
+      ? Promise.resolve(blog.followed && !blog.isMember)
+      : apiFetch(`/v2/blog/${blogName}/info`)
         .then(({ response: { blog: { followed } } }) => followed)
         .catch(() => Promise.resolve(false));
-    }
   }
   return following[blogName];
 };

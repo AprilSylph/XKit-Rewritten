@@ -8,7 +8,10 @@ const hiddenAttribute = 'data-no-recommended-community-posts-hidden';
 const timeline = forYouTimelineFilter;
 const includeFiltered = true;
 
-export const styleElement = buildStyle(`[${hiddenAttribute}] article { display: none; }`);
+export const styleElement = buildStyle(`[${hiddenAttribute}] {
+  content: linear-gradient(transparent, transparent);
+  height: 0;
+}`);
 
 const processPosts = postElements =>
   filterPostElements(postElements, { timeline, includeFiltered }).forEach(async postElement => {

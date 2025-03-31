@@ -1,6 +1,7 @@
-[data-show-originals="on"] ~ div > [data-show-originals-hidden] article,
-[data-show-originals="force-on"] ~ div > :is([data-show-originals-hidden], [data-show-originals-whitelisted]) article {
-  display: none;
+[data-show-originals="on"] ~ div > [data-show-originals-hidden],
+[data-show-originals="force-on"] ~ div > :is([data-show-originals-hidden], [data-show-originals-whitelisted]) {
+  content: linear-gradient(transparent, transparent);
+  height: 0;
 }
 
 .xkit-show-originals-lengthened {

@@ -12,7 +12,7 @@ import { followingTimelineSelector } from '../utils/timeline_id.js';
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenAttribute = 'data-mutual-checker-hidden';
 const mutualsClass = 'from-mutual';
-const postAttributionSelector = `header ${keyToCss('attribution')} a:not(${keyToCss('reblogAttribution', 'rebloggedFromName')} *)`;
+const postAttributionSelector = 'header a[rel="author"]';
 
 const onlyMutualsStyleElement = buildStyle(`${keyToCss('notification')}:not([data-mutuals]) { display: none !important; }`);
 
@@ -35,8 +35,9 @@ const styleElement = buildStyle(`
     margin-right: 0.5ch;
   }
 
-  ${followingTimelineSelector} [${hiddenAttribute}] article {
-    display: none;
+  ${followingTimelineSelector} [${hiddenAttribute}] {
+    content: linear-gradient(transparent, transparent);
+    height: 0;
   }
 
   ${keyToCss('blogCardBlogLink')} {
@@ -109,16 +110,18 @@ const addBlogCardIcons = blogCardLinks =>
   });
 
 const getIsFollowing = async (blogName, element) => {
-  const blog = await blogData(element) ?? (await timelineObject(element))?.blog;
-
   if (following[blogName] === undefined) {
-    if (blogName === blog?.name) {
-      following[blogName] = Promise.resolve(blog.followed && !blog.isMember);
-    } else {
-      following[blogName] = apiFetch(`/v2/blog/${blogName}/info`)
+    const blog = [
+      await blogData(element),
+      (await timelineObject(element))?.blog,
+      (await timelineObject(element))?.authorBlog
+    ].find((data) => blogName === data?.name);
+
+    following[blogName] = blog
+      ? Promise.resolve(blog.followed && !blog.isMember)
+      : apiFetch(`/v2/blog/${blogName}/info`)
         .then(({ response: { blog: { followed } } }) => followed)
         .catch(() => Promise.resolve(false));
-    }
   }
   return following[blogName];
 };

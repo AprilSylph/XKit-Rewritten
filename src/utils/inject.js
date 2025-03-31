@@ -13,8 +13,7 @@ export const inject = (path, args = [], target = document.documentElement) =>
     const requestId = String(Math.random());
     const data = { path: browser.runtime.getURL(path), args, id: requestId };
 
-    const responseHandler = ({ detail }) => {
-      const { id, result, exception } = JSON.parse(detail);
+    const responseHandler = ({ detail: { id, result, exception } }) => {
       if (id !== requestId) return;
 
       target.removeEventListener('xkit-injection-response', responseHandler);

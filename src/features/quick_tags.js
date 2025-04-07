@@ -43,11 +43,15 @@ popupInput.addEventListener('input', doSmartQuotes);
 const checkLength = ({ currentTarget }) => {
   const { value } = currentTarget;
   const tags = value.split(',').map(tag => tag.trim());
-  if (tags.some(tag => tag.length > 140)) {
-    popupInput.setCustomValidity('Tag is longer than 140 characters!');
+
+  const validityMessage = tags.some(tag => tag.length > 140)
+    ? 'Tag is longer than 140 characters!'
+    : '';
+
+  if (currentTarget.dataset.validityMessage !== validityMessage) {
+    currentTarget.dataset.validityMessage = validityMessage;
+    popupInput.setCustomValidity(validityMessage);
     popupInput.reportValidity();
-  } else {
-    popupInput.setCustomValidity('');
   }
 };
 popupInput.addEventListener('input', checkLength);

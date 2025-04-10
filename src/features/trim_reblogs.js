@@ -160,7 +160,17 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   if (existingButton !== null) { return; }
 
   const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"]:has(use[href="#managed-icon__edit"])`);
-  if (!editButton) { return; }
+  if (!editButton) {
+    const { canEdit, trail = [], content = [] } = await timelineObject(postElement);
+    if (canEdit) {
+      const items = trail.length + (content.length ? 1 : 0);
+
+      const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: event => onButtonClicked(event).catch(showErrorModal) }, items < 2);
+      const controls = postElement.querySelector(`footer ${keyToCss('controls')}`);
+      controls.prepend(clonedControlButton);
+    }
+    return;
+  }
 
   const controlIcon = editButton.closest(controlIconSelector);
 

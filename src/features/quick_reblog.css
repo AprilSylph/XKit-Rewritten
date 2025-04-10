@@ -38,6 +38,10 @@
   transform: translate(calc(50% + var(--horizontal-offset, 0%)), calc(0px - var(--icon-spacing)));
 }
 
+span:has(> #quick-reblog) {
+  position: relative;
+}
+
 div:first-child + span + #quick-reblog,
 #quick-reblog:not(:last-child) {
   display: none;
@@ -192,6 +196,10 @@ div:first-child + span + #quick-reblog,
 .published :is(a[role="button"], button[class=""]) svg[style*="--black"] use { --icon-color-primary: rgb(var(--green)); }
 .queue :is(a[role="button"], button[class=""]) svg[style*="--black"] use { --icon-color-primary: rgb(var(--purple)); }
 .draft :is(a[role="button"], button[class=""]) svg[style*="--black"] use { --icon-color-primary: rgb(var(--red)); }
+
+.published svg use { --icon-color-primary: rgb(var(--green)); }
+.queue svg use { --icon-color-primary: rgb(var(--purple)); }
+.draft svg use { --icon-color-primary: rgb(var(--red)); }
 
 :is(.published, .queue, .draft) :is(a[role="button"], button[class=""]) {
   position: relative;

@@ -202,7 +202,7 @@ const processPostOptionBundleClick = function ({ target }) {
   editPostFormTags({ add: bundleTags });
 };
 
-const processPosts = postElements => filterPostElements(postElements).forEach(postElement => {
+const processPosts = postElements => filterPostElements(postElements).forEach(async postElement => {
   const tags = editedTagsMap.get(getTimelineItemWrapper(postElement));
   tags && addFakeTagsToFooter(postElement, tags);
 
@@ -210,7 +210,15 @@ const processPosts = postElements => filterPostElements(postElements).forEach(po
   if (existingButton !== null) { return; }
 
   const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"]:has(use[href="#managed-icon__edit"])`);
-  if (!editButton) { return; }
+  if (!editButton) {
+    const { canEdit } = await timelineObject(postElement);
+    if (canEdit) {
+      const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
+      const controls = postElement.querySelector(`footer ${keyToCss('controls')}`);
+      controls.prepend(clonedControlButton);
+    }
+    return;
+  }
 
   const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
   const controlIcon = editButton.closest(controlIconSelector);

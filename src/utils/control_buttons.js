@@ -60,7 +60,7 @@ export const insertControlButtonEditable = async (postElement, clonedControlButt
       clonedControlButton.classList.add('in-community');
       postElement.querySelector(`${keyToCss('controls')}`).append(clonedControlButton);
     } else if (canEdit) {
-      const controls = postElement.querySelector(`footer ${keyToCss('controls')}`);
+      const controls = [...postElement.querySelectorAll(`footer ${keyToCss('controls')}`)].at(-1);
       controls.prepend(clonedControlButton);
     }
   }

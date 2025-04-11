@@ -52,12 +52,16 @@ export const insertControlButtonEditable = async (postElement, clonedControlButt
 
   const editControlIcon = postElement.querySelector(`footer ${keyToCss('controlIcon')}:has(a[href*="/edit/"] use[href="#managed-icon__edit"])`);
   if (editControlIcon) {
+    clonedControlButton.classList.add('legacy-footer');
     editControlIcon.before(clonedControlButton);
   } else {
     const { community, canEdit } = await timelineObject(postElement);
     if (community && canEdit) {
       clonedControlButton.classList.add('in-community');
       postElement.querySelector(`${keyToCss('controls')}`).append(clonedControlButton);
+    } else if (canEdit) {
+      const controls = postElement.querySelector(`footer ${keyToCss('controls')}`);
+      controls.prepend(clonedControlButton);
     }
   }
 };

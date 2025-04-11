@@ -1,12 +1,17 @@
 .xkit-control-button-container {
   position: relative;
 
-  margin-left: 20px;
+  padding: 8px;
 
   font-family: var(--font-family);
   font-size: 1rem;
   font-weight: 700;
   line-height: 1;
+}
+
+.xkit-control-button-container.legacy-footer {
+  margin-left: 20px;
+  padding: 0;
 }
 
 .xkit-control-button {
@@ -37,11 +42,11 @@
 }
 
 @media (max-width: 990px) {
-  .xkit-control-button-container:not(.in-community) {
+  .xkit-control-button-container.legacy-footer {
     margin-left: 0;
   }
 
-  .xkit-control-button-container:not(.in-community) .xkit-control-button {
+  .xkit-control-button-container.legacy-footer .xkit-control-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,5 +57,7 @@
 
 .xkit-control-button-container.in-community {
   margin: 4px;
+  padding: 0;
+
   align-self: center;
 }

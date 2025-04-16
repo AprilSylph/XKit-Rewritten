@@ -144,3 +144,24 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
     element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.right - 15 - elementRect.right}px`);
   }
 };
+
+export const wait = async ({ ms, msTimes = 1, frames }) => {
+  if (ms !== undefined) {
+    for (let i = 0; i < msTimes; i++) {
+      await new Promise(resolve => setTimeout(resolve, ms));
+    }
+  }
+  for (let i = 0; i < frames; i++) {
+    await new Promise(requestAnimationFrame);
+  }
+};
+
+/**
+ * @returns {Promise<void>} - Attempts to resolve after Tumblr's endless scrolling code has stopped updating
+ */
+export const waitForScroller = () =>
+  wait({
+    ms: 100, // matches the debounce delay on tumblr's `scheduleUpdate` virtual scroller function
+    msTimes: 3, // arbitrary, high-enough-in-practice number
+    frames: 1
+  });

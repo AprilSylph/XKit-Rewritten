@@ -49,6 +49,11 @@ const startScrolling = () => {
   active = true;
   scrollToBottomButton.classList.add(activeClass);
   scrollToBottom();
+
+  const temp = document.querySelector(`${tagChicletCarouselLinkSelector}, [${borderAttribute}]`);
+  if (temp) {
+    onTagChicletCarouselItemsAdded([temp]);
+  }
 };
 
 const stopScrolling = () => {

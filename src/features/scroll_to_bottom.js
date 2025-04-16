@@ -105,16 +105,6 @@ const onTagChicletCarouselItemsAdded = ([carousel]) => {
 export const main = async function () {
   const { stopAtCaughtUp } = await getPreferences('scroll_to_bottom');
 
-  pageModifications.register('[tabindex="-1"][data-id]', (postElements) => {
-    for (const postElement of postElements) {
-      if (Math.random() < 0.05) {
-        console.log('simulating scroll stop', getTimelineItemWrapper(postElement));
-        onTagChicletCarouselItemsAdded([getTimelineItemWrapper(postElement)]);
-        break;
-      }
-    }
-  });
-
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
   pageModifications.register(knightRiderLoaderSelector, onLoadersAdded);
   stopAtCaughtUp && pageModifications.register(`${tagChicletCarouselLinkSelector}, [${borderAttribute}]`, onTagChicletCarouselItemsAdded);

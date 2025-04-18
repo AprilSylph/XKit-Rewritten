@@ -3,7 +3,8 @@ import { buildStyle } from '../../utils/interface.js';
 
 export const styleElement = buildStyle(`
 article footer ${keyToCss('controlIcon')} ${keyToCss('tooltip')},
-article footer ${keyToCss('controlIcon')} ${keyToCss('tooltip')} ~ * {
+article footer ${keyToCss('controlIcon')} ${keyToCss('tooltip')} ~ *,
+article footer ${keyToCss('controls')} ${keyToCss('tooltip')} {
   display: none;
 }
 `);

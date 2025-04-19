@@ -12,7 +12,7 @@ export const styleElement = buildStyle(`
   height: 0;
 }`);
 
-const processPosts = async function (postElements) {
+const processPosts = postElements => {
   filterPostElements(postElements, { timeline }).forEach(async postElement => {
     const { liked } = await timelineObject(postElement);
     const myPost = await isMyPost(postElement);
@@ -21,11 +21,11 @@ const processPosts = async function (postElements) {
   });
 };
 
-export const main = async function () {
+export const main = async () => {
   onNewPosts.addListener(processPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(processPosts);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

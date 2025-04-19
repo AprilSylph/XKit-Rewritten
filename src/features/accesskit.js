@@ -2,7 +2,7 @@ import { getPreferences } from '../utils/preferences.js';
 
 let enabledOptions;
 
-const runOption = async function (name) {
+const runOption = async (name) => {
   const { main: run, styleElement } = await import(`./accesskit/${name}.js`);
   if (run) {
     run().catch(console.error);
@@ -13,7 +13,7 @@ const runOption = async function (name) {
   }
 };
 
-const destroyOption = async function (name) {
+const destroyOption = async (name) => {
   const { clean: destroy, styleElement } = await import(`./accesskit/${name}.js`);
   if (destroy) {
     destroy().catch(console.error);
@@ -23,7 +23,7 @@ const destroyOption = async function (name) {
   }
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async (changes, areaName) => {
   if (Object.keys(changes).some(key => key.startsWith('accesskit') && changes[key].oldValue !== undefined)) {
     const preferences = await getPreferences('accesskit');
 
@@ -39,14 +39,14 @@ export const onStorageChanged = async function (changes, areaName) {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   const preferences = await getPreferences('accesskit');
 
   enabledOptions = Object.keys(preferences).filter(key => preferences[key] === true);
   enabledOptions.forEach(runOption);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   enabledOptions.forEach(destroyOption);
 };
 

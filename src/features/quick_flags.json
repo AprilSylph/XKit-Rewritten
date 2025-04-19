@@ -1,0 +1,10 @@
+{
+  "title": "Quick Flags",
+  "description": "Content label posts easily",
+  "icon": {
+    "class_name": "ri-flag-2-line",
+    "color": "white",
+    "background_color": "#434343"
+  },
+  "relatedTerms": [ "Mature", "NSFW", "NSFT", "Flag", "Community Label" ]
+}

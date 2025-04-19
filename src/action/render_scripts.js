@@ -67,6 +67,11 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
 
     const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
 
+    if (preference.type === 'gap') {
+      preferenceList.appendChild(preferenceTemplateClone);
+      continue;
+    }
+
     const preferenceInput = preferenceTemplateClone.querySelector('input, select, textarea, iframe');
     preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
 

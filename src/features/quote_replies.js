@@ -107,18 +107,20 @@ const processGenericReply = async (notificationProps) => {
     body: { content: [bodyDescriptionContent, bodyQuoteContent] },
     actions
   } = notificationProps;
-  const summaryFormatting = bodyDescriptionContent.formatting.find(({ type }) => type === 'semantic_color');
+  const summaryFormatting = bodyDescriptionContent.formatting?.find(({ type }) => type === 'semantic_color');
 
   try {
     const [, targetTumblelogName, targetPostId] =
-      /^\/@?([a-z0-9-]{1,32})\/([0-9]{1,20})\//.exec(new URL(actions.tap.href).pathname);
+      /^\/@?([a-z0-9-]{1,32})\/([0-9]{1,20})(\/|$)/.exec(new URL(actions.tap.href).pathname);
 
-    const targetPostSummary = bodyDescriptionContent.text.slice(summaryFormatting.start + 1, summaryFormatting.end - 1);
+    const targetPostSummary = summaryFormatting
+      ? bodyDescriptionContent.text.slice(summaryFormatting.start + 1, summaryFormatting.end - 1)
+      : bodyDescriptionContent.text;
 
     return await processReply({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary });
   } catch (exception) {
-    console.log(exception);
-    console.log('falling back to generic quote content due to fetch/parse failure');
+    console.error(exception);
+    console.debug('[XKit] Falling back to generic quote content due to fetch/parse failure');
   }
 
   const replyingBlog = titleContent.formatting.find(({ type }) => type === 'mention').blog;
@@ -133,9 +135,9 @@ const processGenericReply = async (notificationProps) => {
     {
       type: 'text',
       text: bodyDescriptionContent.text,
-      formatting: [
-        { start: summaryFormatting.start, end: summaryFormatting.end, type: 'link', url: actions.tap.href }
-      ]
+      formatting: summaryFormatting
+        ? [{ start: summaryFormatting.start, end: summaryFormatting.end, type: 'link', url: actions.tap.href }]
+        : []
     },
     bodyQuoteContent,
     { type: 'text', text: '\u200B' }

@@ -1,6 +1,6 @@
 import { buildStyle, notificationSelector } from '../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../utils/meatballs.js';
-import { onNewNotifications } from '../utils/mutations.js';
+import { onNewNotifications, pageModifications } from '../utils/mutations.js';
 import { showModal, hideModal, modalCancelButton } from '../utils/modals.js';
 import { dom } from '../utils/dom.js';
 import { userBlogNames } from '../utils/user.js';
@@ -52,6 +52,8 @@ const processNotifications = (notificationElements) => {
 
       if (blockedPostTargetIDs.includes(rootId)) {
         notificationElement.parentElement.setAttribute(hiddenAttribute, '');
+      } else {
+        notificationElement.parentElement.removeAttribute(hiddenAttribute);
       }
     }
   });
@@ -120,6 +122,13 @@ const blockPostFilter = async ({ blogName, rebloggedRootName, rebloggedFromName,
 const unblockPostFilter = async ({ id, rebloggedRootId }) => {
   const rootId = rebloggedRootId || id;
   return blockedPostTargetIDs.includes(rootId);
+};
+
+export const onStorageChanged = (changes, areaName) => {
+  if (Object.keys(changes).includes(storageKey)) {
+    blockedPostTargetIDs = changes[storageKey].newValue ?? [];
+    pageModifications.trigger(processNotifications);
+  }
 };
 
 export const main = async function () {

@@ -89,12 +89,19 @@
     }
   };
 
-  const getInstalledScripts = async function () {
-    const url = browser.runtime.getURL('/features/_index.json');
-    const file = await fetch(url);
-    const installedScripts = await file.json();
+  const getInstalledEnabledScripts = async () => {
+    const { enabledScripts = [] } = await browser.storage.local.get('enabledScripts');
 
-    return installedScripts;
+    return (
+      await Promise.all(
+        enabledScripts.map(scriptName =>
+          fetch(browser.runtime.getURL(`/features/${scriptName}.json`))
+            .then(response => response.json())
+            .then(scriptManifest => scriptManifest.outdated ? false : scriptName)
+            .catch(() => false)
+        )
+      )
+    ).filter(Boolean);
   };
 
   const initMainWorld = () => new Promise(resolve => {
@@ -113,11 +120,9 @@
     browser.storage.onChanged.addListener(onStorageChanged);
 
     const [
-      installedScripts,
-      { enabledScripts = [] }
+      installedEnabledScripts
     ] = await Promise.all([
-      getInstalledScripts(),
-      browser.storage.local.get('enabledScripts'),
+      getInstalledEnabledScripts(),
       initMainWorld()
     ]);
 
@@ -127,9 +132,7 @@
      */
     await Promise.all(['css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
 
-    installedScripts
-      .filter(scriptName => enabledScripts.includes(scriptName))
-      .forEach(runScript);
+    installedEnabledScripts.forEach(runScript);
   };
 
   const waitForReactLoaded = () => new Promise(resolve => {

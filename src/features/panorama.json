@@ -7,5 +7,7 @@
     "color": "white",
     "background_color": "#1a2735"
   },
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#panorama"
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#panorama",
+  "deprecated": true,
+  "deprecationReason": "outdated"
 }

@@ -1,10 +1,61 @@
 import moment from '../lib/moment.js';
 import { keyToCss } from '../utils/css_map.js';
+import { buildStyle } from '../utils/interface.js';
 import { pageModifications } from '../utils/mutations.js';
 import { getPreferences } from '../utils/preferences.js';
 
 let format;
 let displayRelative;
+
+export const styleElement = buildStyle(`
+[data-formatted-time] {
+  font-size: 0px !important;
+}
+
+[data-formatted-time]::before {
+  content: attr(data-formatted-time);
+  font-size: .78125rem;
+}
+
+[data-formatted-relative-time]::after {
+  content: attr(data-formatted-relative-time);
+  font-size: .78125rem;
+  display: inline-block;
+}
+
+${keyToCss('userRow')} [data-formatted-time] {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+${keyToCss('userRow')} [data-formatted-time]::before,
+${keyToCss('userRow')} [data-formatted-relative-time]::after {
+  font-size: .875rem;
+}
+
+[data-formatted-time][title]::before,
+[data-formatted-time][title]::after {
+  cursor: help;
+}
+
+${keyToCss('userRow')} ${keyToCss('subheader')}:has([data-formatted-time]) {
+  flex-wrap: wrap;
+}
+
+${keyToCss('userRow')} ${keyToCss('timestamp')}:has([data-formatted-time]) {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+${keyToCss('blogLinkWrapper')}:has(+ [data-formatted-time]) {
+  flex: none;
+}
+
+${keyToCss('blogLinkWrapper')} + [data-formatted-time] {
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+`);
 
 const relativeTimeFormat = new Intl.RelativeTimeFormat(document.documentElement.lang, { style: 'long' });
 const thresholds = [
@@ -45,7 +96,7 @@ const formatTimeElements = function (timeElements) {
 
 export const main = async function () {
   ({ format, displayRelative } = await getPreferences('timeformat'));
-  pageModifications.register(`${keyToCss('timestamp')}[datetime]`, formatTimeElements);
+  pageModifications.register(`${keyToCss('timestamp')}[datetime], ${keyToCss('timestamp')} > [datetime]`, formatTimeElements);
 };
 
 export const clean = async function () {
@@ -53,5 +104,3 @@ export const clean = async function () {
   $('[data-formatted-time]').removeAttr('data-formatted-time');
   $('[data-formatted-relative-time]').removeAttr('data-formatted-relative-time');
 };
-
-export const stylesheet = true;

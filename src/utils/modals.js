@@ -17,7 +17,10 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
     id: 'xkit-modal',
     tabindex: '-1',
     role: 'dialog',
-    'aria-modal': 'true'
+    'aria-modal': 'true',
+
+    // prevents Tumblr's trapFocusInsideGlass function from stealing focus when opened from mobile drawer
+    'data-skip-glass-focus-trap': ''
   }, null, [
     dom('style', null, null, ['body { overflow: hidden; }']),
     title ? dom('h3', { class: 'title' }, null, [title]) : '',

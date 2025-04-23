@@ -44,7 +44,12 @@ const processNotifications = (notificationElements) => {
     const notification = await notificationObject(notificationElement);
     if (notification !== undefined) {
       const { targetRootPostId, targetPostId } = notification;
-      const rootId = targetRootPostId || targetPostId;
+
+      // available on "replied to your post" notifications, which appear to always target the root post
+      const blockablePostId = notification.actions?.longTap?.meta?.postId;
+
+      const rootId = targetRootPostId || targetPostId || blockablePostId;
+
       if (blockedPostTargetIDs.includes(rootId)) {
         notificationElement.parentElement.setAttribute(hiddenAttribute, '');
       }

@@ -25,7 +25,17 @@
     },
     "maxPostWidth": {
       "label": "Max. post width",
-      "type": "text",
+      "type": "select",
+      "options": [
+        { "value": "640px", "label": "640px" },
+        { "value": "800px", "label": "800px" },
+        { "value": "960px", "label": "960px" },
+        { "value": "1120px", "label": "1120px" },
+        { "value": "1280px", "label": "1280px" },
+        { "value": "1440px", "label": "1440px" },
+        { "value": "1600px", "label": "1600px" },
+        { "value": "100wv", "label": "Unlimited" }
+      ],
       "default": "800px"
     },
     "expandPostMedia": {

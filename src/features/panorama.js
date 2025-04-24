@@ -130,15 +130,14 @@ export const onStorageChanged = async (changes, areaName) =>
 
 export const main = async () => {
   const {
-    maxPostWidth: maxPostWidthString,
+    maxPostWidth,
     expandPostMedia,
     mainEnable,
     communitiesEnable,
     patioEnable
   } = await getPreferences('panorama');
 
-  const maxPostWidth = Number(maxPostWidthString.trim().replace('px', '')) || 0;
-  document.documentElement.style.setProperty(maxPostWidthVar, `${Math.max(maxPostWidth, 540)}px`);
+  document.documentElement.style.setProperty(maxPostWidthVar, maxPostWidth);
   document.documentElement.classList[expandPostMedia ? 'add' : 'remove'](expandMediaClass);
 
   document.documentElement.append(styleElement);

@@ -125,6 +125,14 @@ const processVideoIframes = iframes => iframes.forEach(iframe => {
   }
 });
 
+const modifiedSizesAttr = 'data-panorama-original-sizes';
+const processPostImages = images => images.forEach(image => {
+  if (image.sizes?.includes('max-width: 540px)')) {
+    image.setAttribute(modifiedSizesAttr, image.sizes);
+    image.sizes = 'auto';
+  }
+});
+
 export const onStorageChanged = async (changes, areaName) =>
   Object.keys(changes).some(key => key.startsWith('panorama')) && main();
 
@@ -149,13 +157,19 @@ export const main = async () => {
     `${postSelector} ${keyToCss('videoBlock')} iframe[style*="max-width"][style*="height"]`,
     processVideoIframes
   );
+  pageModifications.register('figure img', processPostImages);
 };
 
 export const clean = async () => {
   pageModifications.unregister(processVideoIframes);
+  pageModifications.unregister(processPostImages);
   [...document.querySelectorAll(`iframe[style*="${aspectRatioVar}"]`)].forEach(el =>
     el.style.removeProperty(aspectRatioVar)
   );
+  [...document.querySelectorAll(`[${modifiedSizesAttr}]`)].forEach(image => {
+    image.sizes = image.getAttribute(modifiedSizesAttr);
+    image.removeAttribute(modifiedSizesAttr);
+  });
 
   document.documentElement.style.removeProperty(maxPostWidthVar);
   document.documentElement.classList.remove(expandMediaClass);

@@ -127,7 +127,7 @@ const processVideoIframes = iframes => iframes.forEach(iframe => {
 
 const modifiedSizesAttr = 'data-panorama-original-sizes';
 const processPostImages = images => images.forEach(image => {
-  if (image.sizes?.includes('max-width: 540px)')) {
+  if (image.sizes?.includes('max-width: 540px)') && image.loading === 'lazy') {
     image.setAttribute(modifiedSizesAttr, image.sizes);
     image.sizes = 'auto';
   }

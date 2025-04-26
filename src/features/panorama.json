@@ -24,7 +24,7 @@
       "default": true
     },
     "maxPostWidth": {
-      "label": "Max. post width",
+      "label": "Maximum post width",
       "type": "select",
       "options": [
         { "value": "640px", "label": "640px" },

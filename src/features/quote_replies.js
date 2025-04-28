@@ -8,13 +8,10 @@ import { notify } from '../utils/notifications.js';
 import { getPreferences } from '../utils/preferences.js';
 import { buildSvg } from '../utils/remixicon.js';
 import { apiFetch, navigate } from '../utils/tumblr_helpers.js';
-import { userBlogNames, userBlogs } from '../utils/user.js';
-import { registerReplyMeatballItem, unregisterReplyMeatballItem } from '../utils/meatballs.js';
-import { timelineObject } from '../utils/react_props.js';
+import { userBlogs } from '../utils/user.js';
 
 const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';
-const meatballButtonId = 'quote-replies';
 const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
@@ -60,7 +57,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
 
 const quoteReply = async (tumblelogName, notificationProps) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
-  const { type, targetPostId, targetPostSummary, postUrl, targetTumblelogUuid, timestamp } = notificationProps;
+  const { type, targetPostId, targetPostSummary, targetTumblelogName, targetTumblelogUuid, timestamp } = notificationProps;
 
   const { response } = await apiFetch(
     `/v2/blog/${targetTumblelogUuid}/post/${targetPostId}/notes/timeline`,
@@ -72,28 +69,15 @@ const quoteReply = async (tumblelogName, notificationProps) => {
   if (!reply) throw new Error('No replies found on target post.');
   if (Math.floor(reply.timestamp) !== timestamp) throw new Error('Reply not found.');
 
-  openQuoteReplyPost({
-    type,
-    replyingBlogName: reply.blog.name,
-    replyingBlogUuid: reply.blog.uuid,
-    reply,
-    postSummary: targetPostSummary,
-    postUrl,
-    targetBlogUuid: uuid,
-    targetBlogName: tumblelogName
-  });
-};
-
-const openQuoteReplyPost = async ({ type, replyingBlogName, replyingBlogUuid, postSummary, postUrl, reply, targetBlogUuid, targetBlogName }) => {
   const verbiage = {
     reply: 'replied to your post',
     reply_to_comment: 'replied to you in a post',
     note_mention: 'mentioned you on a post'
   }[type];
-  const text = `@${replyingBlogName} ${verbiage} \u201C${postSummary.replace(/\n/g, ' ')}\u201D:`;
+  const text = `@${reply.blog.name} ${verbiage} \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`;
   const formatting = [
-    { start: 0, end: replyingBlogName.length + 1, type: 'mention', blog: { uuid: replyingBlogUuid } },
-    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: postUrl }
+    { start: 0, end: reply.blog.name.length + 1, type: 'mention', blog: { uuid: reply.blog.uuid } },
+    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: `https://${targetTumblelogName}.tumblr.com/post/${targetPostId}` }
   ];
 
   const content = [
@@ -103,17 +87,17 @@ const openQuoteReplyPost = async ({ type, replyingBlogName, replyingBlogUuid, po
   ];
   const tags = [
     ...originalPostTag ? [originalPostTag] : [],
-    ...tagReplyingBlog ? [replyingBlogName] : []
+    ...tagReplyingBlog ? [reply.blog.name] : []
   ].join(',');
 
-  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${targetBlogUuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
+  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
 
-  const currentDraftLocation = `/edit/${targetBlogName}/${responseId}`;
+  const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;
 
   if (newTab) {
     await browser.storage.local.set({ [storageKey]: currentDraftLocation });
 
-    const openedTab = window.open(`/blog/${targetBlogName}/drafts`);
+    const openedTab = window.open(`/blog/${tumblelogName}/drafts`);
     if (openedTab === null) {
       browser.storage.local.remove(storageKey);
       notify(displayText);
@@ -123,62 +107,11 @@ const openQuoteReplyPost = async ({ type, replyingBlogName, replyingBlogUuid, po
   }
 };
 
-const processNoteProps = ([noteProps, parentNoteProps]) => {
-  if (userBlogNames.includes(noteProps.note.blogName) || noteProps.communityId) {
-    return false;
-  }
-  if (parentNoteProps && userBlogNames.includes(parentNoteProps.note.blogName)) {
-    return {
-      type: 'reply_to_comment',
-      targetBlogName: parentNoteProps.note.blogName
-    };
-  }
-  if (userBlogNames.includes(noteProps.blog.name)) {
-    return {
-      type: 'reply',
-      targetBlogName: noteProps.blog.name
-    };
-  }
-  for (const { formatting = [] } of noteProps.note.content) {
-    for (const { type, blog } of formatting) {
-      if (type === 'mention' && userBlogNames.includes(blog.name)) {
-        return {
-          type: 'note_mention',
-          targetBlogName: blog.name
-        };
-      }
-    }
-  }
-  return false;
-};
-
-const onMeatballButtonClicked = async ({ currentTarget }) => {
-  const [{ note: reply }] = currentTarget.__notePropsData;
-
-  const { type, targetBlogName } = processNoteProps(currentTarget.__notePropsData);
-  const targetBlogUuid = userBlogs.find(({ name }) => name === targetBlogName).uuid;
-
-  const { summary: postSummary, postUrl } = await timelineObject(currentTarget.closest(keyToCss('meatballMenu')));
-
-  const replyingBlogName = reply.blogName;
-  const replyingBlogUuid = await apiFetch(`/v2/blog/${replyingBlogName}/info?fields[blogs]=uuid`)
-    .then(({ response: { blog: { uuid } } }) => uuid);
-
-  openQuoteReplyPost({ type, replyingBlogName, replyingBlogUuid, reply, postSummary, postUrl, targetBlogUuid, targetBlogName });
-};
-
 export const main = async function () {
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
   ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
 
   pageModifications.register(notificationSelector, processNotifications);
-
-  registerReplyMeatballItem({
-    id: meatballButtonId,
-    label: 'Quote this reply',
-    notePropsFilter: notePropsData => Boolean(processNoteProps(notePropsData)),
-    onclick: event => onMeatballButtonClicked(event).catch(showErrorModal)
-  });
 
   const { [storageKey]: draftLocation } = await browser.storage.local.get(storageKey);
   browser.storage.local.remove(storageKey);
@@ -190,8 +123,6 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(processNotifications);
-  unregisterReplyMeatballItem(meatballButtonId);
-
   $(`.${buttonClass}`).remove();
 };
 

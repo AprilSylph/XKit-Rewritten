@@ -22,7 +22,7 @@ ${imageBlockLinkSelector}, ${imageBlockButtonInnerSelector} {
 }
 `);
 
-const processImages = function (imageElements) {
+const processImages = imageElements => {
   const imageBlocks = new Map();
   imageElements.forEach(imageElement => {
     const { alt } = imageElement;
@@ -49,7 +49,7 @@ const processImages = function (imageElements) {
   }
 };
 
-const onStorageChanged = async function (changes, areaName) {
+const onStorageChanged = (changes, areaName) => {
   if (areaName !== 'local') return;
 
   const { 'accesskit.preferences.visible_alt_text_mode': modeChanges } = changes;
@@ -61,14 +61,14 @@ const onStorageChanged = async function (changes, areaName) {
   pageModifications.trigger(processImages);
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ visible_alt_text_mode: mode } = await getPreferences('accesskit'));
 
   pageModifications.register(`article ${imageBlockSelector} img[alt]`, processImages);
   browser.storage.onChanged.addListener(onStorageChanged);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(processImages);
   browser.storage.onChanged.removeListener(onStorageChanged);
 

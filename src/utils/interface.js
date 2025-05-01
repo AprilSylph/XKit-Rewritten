@@ -48,7 +48,7 @@ export const getPopoverWrapper = element => {
  * @param {PostFilterOptions} [postFilterOptions] - Post filter options
  * @returns {HTMLDivElement[]} Matching post elements
  */
-export const filterPostElements = function (postElements, { excludeClass, timeline, noBlogView = false, includeFiltered = false } = {}) {
+export const filterPostElements = (postElements, { excludeClass, timeline, noBlogView = false, includeFiltered = false } = {}) => {
   postElements = postElements
     .filter(element => element.isConnected)
     .map(element => element.closest(postSelector))

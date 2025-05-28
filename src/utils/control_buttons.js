@@ -76,18 +76,19 @@ export const insertControlButton = async (postElement, clonedControlButton, butt
   if (existingButton !== null) { return; }
 
   const { community } = await timelineObject(postElement);
+  const legacyEditControlIcon = postElement.querySelector(`${keyToCss('controlIcon')}:has(a[href*="/edit/"] use[href="#managed-icon__edit"])`);
+  const newEditControlIcon = postElement.querySelector('a[href*="/edit/"]:has(use[href="#managed-icon__ds-pencil-outline-24"])');
 
   if (community) {
     // not yet implemented
+  } else if (legacyEditControlIcon) {
+    clonedControlButton.classList.add('in-legacy-footer');
+    legacyEditControlIcon.before(clonedControlButton);
+  } else if (newEditControlIcon) {
+    clonedControlButton.classList.add('in-new-footer');
+    newEditControlIcon.before(clonedControlButton);
   } else {
-    const secondaryControlsElement =
-      [...postElement.querySelectorAll(`${keyToCss('footerRow')}:has(+ ${keyToCss('footerRow')}) ${keyToCss('controls')}`)].at(-1) ||
-      addSecondaryFooterRow(postElement);
-
-    const editControlIcon = secondaryControlsElement.querySelector(`${keyToCss('controlIcon')}:has(a[href*="/edit/"] use[href="#managed-icon__edit"])`);
-
-    editControlIcon
-      ? editControlIcon.before(clonedControlButton)
-      : secondaryControlsElement.prepend(clonedControlButton);
+    clonedControlButton.classList.add('in-new-footer');
+    addSecondaryFooterRow(postElement).prepend(clonedControlButton);
   }
 };

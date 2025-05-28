@@ -1,4 +1,5 @@
 .xkit-control-button-container {
+  display: inline-block;
   position: relative;
 
   margin-left: 20px;
@@ -36,22 +37,22 @@
   fill: rgba(var(--black), 0.4);
 }
 
-.xkit-controls-row .xkit-control-button-container {
+.xkit-control-button-container.in-new-footer {
   margin-left: 0;
 }
 
-.xkit-controls-row .xkit-control-button-container .xkit-control-button {
+.xkit-control-button-container.in-new-footer .xkit-control-button {
   border-radius: 9999px;
   width: 40px;
   height: 40px;
 }
 
 @media (max-width: 990px) {
-  :not(.xkit-controls-row) > .xkit-control-button-container {
+  .xkit-control-button-container.in-legacy-footer {
     margin-left: 0;
   }
 
-  :not(.xkit-controls-row) > .xkit-control-button-container .xkit-control-button {
+  .xkit-control-button-container.in-legacy-footer .xkit-control-button {
     display: flex;
     justify-content: center;
     align-items: center;

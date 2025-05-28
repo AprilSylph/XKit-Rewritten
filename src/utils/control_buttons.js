@@ -1,4 +1,7 @@
+import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { buildStyle } from './interface.js';
+import { timelineObject } from './react_props.js';
 import { buildSvg } from './remixicon.js';
 
 // Remove outdated buttons when loading module
@@ -35,4 +38,57 @@ export const cloneControlButton = function (template, events, disabled = false) 
   Object.entries(events).forEach(([type, listener]) => newButton.addEventListener(type, listener));
   newButton.disabled = disabled;
   return newButtonContainer;
+};
+
+/**
+ * Adds a secondary footer row above the footer control buttons, similar to the one in the pre-2025 footer layout on editable posts.
+ * @param {HTMLElement} postElement - The target post element
+ * @returns {HTMLDivElement} The inserted element
+ */
+const addSecondaryFooterRow = postElement => {
+  const secondaryFooterRowClass = 'xkit-controls-row';
+
+  const element =
+    postElement.querySelector(`.${secondaryFooterRowClass}`) ||
+    dom('div', {
+      class: secondaryFooterRowClass,
+      style: `
+        margin: 0 12px;
+        padding: 6px 0;
+        display: flex;
+        justify-content: flex-end;
+        border-bottom: 1px solid rgba(var(--black), .13);
+      `
+    });
+
+  element.isConnected || postElement.querySelector('footer').prepend(element);
+  return element;
+};
+
+/**
+ * Inserts a control button into the post footer.
+ * @param {HTMLElement} postElement - The target post element
+ * @param {HTMLDivElement} clonedControlButton - Control button element to insert
+ * @param {string} buttonClass - Button HTML class
+ * @returns {Promise<void>} Resolves when finished
+ */
+export const insertControlButton = async (postElement, clonedControlButton, buttonClass) => {
+  const existingButton = postElement.querySelector(`.${buttonClass}`);
+  if (existingButton !== null) { return; }
+
+  const { community } = await timelineObject(postElement);
+
+  if (community) {
+    // not yet implemented
+  } else {
+    const secondaryControlsElement =
+      [...postElement.querySelectorAll(`${keyToCss('footerRow')}:has(+ ${keyToCss('footerRow')}) ${keyToCss('controls')}`)].at(-1) ||
+      addSecondaryFooterRow(postElement);
+
+    const editControlIcon = secondaryControlsElement.querySelector(`${keyToCss('controlIcon')}:has(a[href*="/edit/"] use[href="#managed-icon__edit"])`);
+
+    editControlIcon
+      ? editControlIcon.before(clonedControlButton)
+      : secondaryControlsElement.prepend(clonedControlButton);
+  }
 };

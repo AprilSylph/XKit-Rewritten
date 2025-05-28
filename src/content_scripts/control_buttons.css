@@ -36,12 +36,22 @@
   fill: rgba(var(--black), 0.4);
 }
 
+.xkit-controls-row .xkit-control-button-container {
+  margin-left: 0;
+}
+
+.xkit-controls-row .xkit-control-button-container .xkit-control-button {
+  border-radius: 9999px;
+  width: 40px;
+  height: 40px;
+}
+
 @media (max-width: 990px) {
-  .xkit-control-button-container {
+  :not(.xkit-controls-row) > .xkit-control-button-container {
     margin-left: 0;
   }
 
-  .xkit-control-button {
+  :not(.xkit-controls-row) > .xkit-control-button-container .xkit-control-button {
     display: flex;
     justify-content: center;
     align-items: center;

@@ -24,16 +24,6 @@ const saveNewBundle = async event => {
   currentTarget.reset();
 };
 
-const moveBundle = async ({ currentTarget }) => {
-  const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-  const currentIndex = parseInt(currentTarget.closest('[id]').id);
-  const targetIndex = currentIndex + (currentTarget.className === 'down' ? 1 : -1);
-
-  [tagBundles[currentIndex], tagBundles[targetIndex]] = [tagBundles[targetIndex], tagBundles[currentIndex]];
-
-  browser.storage.local.set({ [storageKey]: tagBundles });
-};
-
 Sortable.create(bundlesList, {
   dataIdAttr: 'id',
   handle: '.drag-handle',
@@ -91,11 +81,6 @@ const renderBundles = async function () {
     const bundleTemplateClone = bundleTemplate.content.cloneNode(true);
 
     bundleTemplateClone.querySelector('.bundle').id = index;
-
-    bundleTemplateClone.querySelector('.up').disabled = index === 0;
-    bundleTemplateClone.querySelector('.up').addEventListener('click', moveBundle);
-    bundleTemplateClone.querySelector('.down').disabled = index === (tagBundles.length - 1);
-    bundleTemplateClone.querySelector('.down').addEventListener('click', moveBundle);
 
     bundleTemplateClone.querySelector('.title').value = title;
     bundleTemplateClone.querySelector('.tags').value = tags;

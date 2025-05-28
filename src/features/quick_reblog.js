@@ -71,10 +71,9 @@ const avatarUrls = new Map();
 
 const reblogButtonSelector = `
 ${postSelector} footer a[href*="/reblog/"],
-${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role]),
-${postSelector} footer a[aria-label="${translate('Reblog')}"][href*="/reblog/"]
+${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
 `;
-const buttonDivSelector = `:is(${keyToCss('controls')} > *, ${keyToCss('engagementAction')})`;
+const buttonDivSelector = `${keyToCss('controls')} > *, ${keyToCss('engagementAction')}`;
 
 export const styleElement = buildStyle(`
 ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) {

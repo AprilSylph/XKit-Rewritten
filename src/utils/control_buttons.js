@@ -1,6 +1,5 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
-import { buildStyle } from './interface.js';
 import { timelineObject } from './react_props.js';
 import { buildSvg } from './remixicon.js';
 

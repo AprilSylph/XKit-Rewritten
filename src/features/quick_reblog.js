@@ -1,7 +1,7 @@
 import { sha256 } from '../utils/crypto.js';
 import { timelineObject } from '../utils/react_props.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
-import { postSelector, filterPostElements, postType, appendWithoutOverflow } from '../utils/interface.js';
+import { postSelector, filterPostElements, postType, appendWithoutOverflow, buildStyle } from '../utils/interface.js';
 import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../utils/user.js';
 import { getPreferences } from '../utils/preferences.js';
 import { onNewPosts } from '../utils/mutations.js';
@@ -71,8 +71,19 @@ const avatarUrls = new Map();
 
 const reblogButtonSelector = `
 ${postSelector} footer a[href*="/reblog/"],
-${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
+${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role]),
+${postSelector} footer a[aria-label="${translate('Reblog')}"][href*="/reblog/"]
 `;
+const buttonDivSelector = `:is(${keyToCss('controls')} > *, ${keyToCss('engagementAction')})`;
+
+export const styleElement = buildStyle(`
+${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) {
+  position: relative;
+}
+${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) ${keyToCss('tooltip')} {
+  display: none;
+}
+`);
 
 const onBlogSelectorChange = () => {
   blogAvatar.style.backgroundImage = `url(${avatarUrls.get(blogSelector.value)})`;
@@ -131,7 +142,7 @@ tagsInput.addEventListener('input', checkLength);
 const showPopupOnHover = ({ currentTarget }) => {
   clearTimeout(timeoutID);
 
-  appendWithoutOverflow(popupElement, currentTarget.closest(keyToCss('controlIcon')), popupPosition);
+  appendWithoutOverflow(popupElement, currentTarget.closest(buttonDivSelector), popupPosition);
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
   const thisPost = currentTarget.closest(postSelector);
@@ -247,7 +258,7 @@ const processPosts = async function (postElements) {
 
     if (alreadyRebloggedList.includes(rootID)) {
       const reblogLink = postElement.querySelector(reblogButtonSelector);
-      const buttonDiv = reblogLink?.closest('div');
+      const buttonDiv = reblogLink?.closest(buttonDivSelector);
       if (buttonDiv) makeButtonReblogged({ buttonDiv, state: 'published' });
     }
   });

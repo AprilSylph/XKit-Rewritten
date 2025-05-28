@@ -11,7 +11,7 @@ import { dom } from '../utils/dom.js';
 import { showErrorModal } from '../utils/modals.js';
 import { keyToCss } from '../utils/css_map.js';
 
-const popupElement = dom('div', { id: 'quick-reblog' });
+const popupElement = dom('div', { id: 'quick-reblog' }, { click: event => event.stopPropagation() });
 const blogSelector = dom('select');
 const blogAvatar = dom('div', { class: 'avatar' });
 const blogSelectorContainer = dom('div', { class: 'select-container' }, null, [blogAvatar, blogSelector]);

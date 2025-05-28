@@ -60,3 +60,10 @@
     width: 48px;
   }
 }
+
+.xkit-control-button-container.in-community {
+  margin: 4px;
+  padding: 0;
+
+  align-self: center;
+}

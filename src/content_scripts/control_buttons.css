@@ -60,3 +60,11 @@
     width: 48px;
   }
 }
+
+.xkit-controls-row {
+  margin: 0 12px;
+  padding: 6px 0;
+  display: flex;
+  justify-content: flex-end;
+  border-bottom: 1px solid rgba(var(--black), .13);
+}

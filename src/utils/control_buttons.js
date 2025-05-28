@@ -39,26 +39,17 @@ export const cloneControlButton = function (template, events, disabled = false) 
   return newButtonContainer;
 };
 
+const secondaryFooterRowClass = 'xkit-controls-row';
+
 /**
  * Adds a secondary footer row above the footer control buttons, similar to the one in the pre-2025 footer layout on editable posts.
  * @param {HTMLElement} postElement - The target post element
  * @returns {HTMLDivElement} The inserted element
  */
 const addSecondaryFooterRow = postElement => {
-  const secondaryFooterRowClass = 'xkit-controls-row';
-
   const element =
     postElement.querySelector(`.${secondaryFooterRowClass}`) ||
-    dom('div', {
-      class: secondaryFooterRowClass,
-      style: `
-        margin: 0 12px;
-        padding: 6px 0;
-        display: flex;
-        justify-content: flex-end;
-        border-bottom: 1px solid rgba(var(--black), .13);
-      `
-    });
+    dom('div', { class: secondaryFooterRowClass });
 
   element.isConnected || postElement.querySelector('footer').prepend(element);
   return element;

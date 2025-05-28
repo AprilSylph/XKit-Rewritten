@@ -4,7 +4,7 @@ import { buildStyle } from '../../utils/interface.js';
 export const styleElement = buildStyle(`
 article footer ${keyToCss('controlIcon')} ${keyToCss('tooltip')},
 article footer ${keyToCss('controlIcon')} ${keyToCss('tooltip')} ~ *,
-article footer ${keyToCss('controls', 'engagementControls')} ${keyToCss('tooltip')} {
+article footer ${keyToCss('controls', 'footerControl')} ${keyToCss('tooltip')} {
   display: none;
 }
 `);

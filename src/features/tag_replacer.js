@@ -1,6 +1,6 @@
 import { dom } from '../utils/dom.js';
 import { megaEdit } from '../utils/mega_editor.js';
-import { showModal, modalCancelButton, modalCompleteButton, showErrorModal } from '../utils/modals.js';
+import { showModal, modalCancelButton, modalCompleteButton, showErrorModal, createTagSpan, createBlogSpan } from '../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../utils/sidebar.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
 import { userBlogs } from '../utils/user.js';
@@ -8,8 +8,6 @@ import { userBlogs } from '../utils/user.js';
 const getPostsFormId = 'xkit-tag-replacer-get-posts';
 
 const createBlogOption = ({ name, title, uuid }) => dom('option', { value: uuid, title }, null, [name]);
-const createTagSpan = tag => dom('span', { class: 'tag-replacer-tag' }, null, [tag]);
-const createBlogSpan = name => dom('span', { class: 'tag-replacer-blog' }, null, [name]);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const showInitialPrompt = async () => {
@@ -207,4 +205,3 @@ const sidebarOptions = {
 
 export const main = async () => addSidebarItem(sidebarOptions);
 export const clean = async () => removeSidebarItem(sidebarOptions.id);
-export const stylesheet = true;

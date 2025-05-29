@@ -1,5 +1,4 @@
-import { cloneControlButton, createControlButtonTemplate } from '../utils/control_buttons.js';
-import { keyToCss } from '../utils/css_map.js';
+import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../utils/control_buttons.js';
 import { dom } from '../utils/dom.js';
 import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../utils/interface.js';
 import { megaEdit } from '../utils/mega_editor.js';
@@ -15,7 +14,6 @@ const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
 const excludeClass = 'xkit-quick-tags-done';
 const tagsClass = 'xkit-quick-tags-tags';
-const controlIconSelector = keyToCss('controlIcon');
 
 let originalPostTag;
 let answerTag;
@@ -202,19 +200,15 @@ const processPostOptionBundleClick = function ({ target }) {
   editPostFormTags({ add: bundleTags });
 };
 
-const processPosts = postElements => filterPostElements(postElements).forEach(postElement => {
+const processPosts = postElements => filterPostElements(postElements).forEach(async postElement => {
   const tags = editedTagsMap.get(getTimelineItemWrapper(postElement));
   tags && addFakeTagsToFooter(postElement, tags);
 
-  const existingButton = postElement.querySelector(`.${buttonClass}`);
-  if (existingButton !== null) { return; }
-
-  const editButton = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"]:has(use[href="#managed-icon__edit"])`);
-  if (!editButton) { return; }
-
-  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
-  const controlIcon = editButton.closest(controlIconSelector);
-  controlIcon.before(clonedControlButton);
+  const { state, canEdit } = await timelineObject(postElement);
+  if (canEdit && ['ask', 'submission'].includes(state) === false) {
+    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
+    insertControlButton(postElement, clonedControlButton, buttonClass);
+  }
 });
 
 popupElement.addEventListener('click', processBundleClick);

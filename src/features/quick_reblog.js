@@ -6,7 +6,6 @@ import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from 
 import { getPreferences } from '../utils/preferences.js';
 import { onNewPosts } from '../utils/mutations.js';
 import { notify } from '../utils/notifications.js';
-import { translate } from '../utils/language_data.js';
 import { dom } from '../utils/dom.js';
 import { showErrorModal } from '../utils/modals.js';
 import { keyToCss } from '../utils/css_map.js';
@@ -69,10 +68,7 @@ const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 const blogHashes = new Map();
 const avatarUrls = new Map();
 
-const reblogButtonSelector = `
-${postSelector} footer a[href*="/reblog/"],
-${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
-`;
+const reblogButtonSelector = `${postSelector} footer a[href*="/reblog/"]`;
 const buttonDivSelector = `${keyToCss('controls')} > *, ${keyToCss('engagementAction')}`;
 
 export const styleElement = buildStyle(`
@@ -176,13 +172,13 @@ const removePopupOnLeave = () => {
   }, 500);
 };
 
-const makeButtonReblogged = ({ buttonDiv, state }) => {
-  ['published', 'queue', 'draft'].forEach(className => buttonDiv.classList.remove(className));
-  buttonDiv.classList.add(state);
+const markPostReblogged = ({ footer, state }) => {
+  footer.classList.remove('published', 'queue', 'draft');
+  footer.classList.add(state);
 };
 
 const reblogPost = async function ({ currentTarget }) {
-  const currentReblogButton = popupElement.parentNode;
+  const footer = popupElement.closest('footer');
 
   currentTarget.blur();
   actionButtons.disabled = true;
@@ -213,7 +209,7 @@ const reblogPost = async function ({ currentTarget }) {
   try {
     const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
     if (meta.status === 201) {
-      makeButtonReblogged({ buttonDiv: currentReblogButton, state });
+      markPostReblogged({ footer, state });
 
       if (lastPostID === postID) {
         popupElement.remove();
@@ -257,8 +253,8 @@ const processPosts = async function (postElements) {
 
     if (alreadyRebloggedList.includes(rootID)) {
       const reblogLink = postElement.querySelector(reblogButtonSelector);
-      const buttonDiv = reblogLink?.closest(buttonDivSelector);
-      if (buttonDiv) makeButtonReblogged({ buttonDiv, state: 'published' });
+      const footer = reblogLink?.closest('footer');
+      if (footer) markPostReblogged({ footer, state: 'published' });
     }
   });
 };

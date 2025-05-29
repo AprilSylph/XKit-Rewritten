@@ -190,9 +190,9 @@ div:first-child + span + #quick-reblog,
 
 #quick-reblog .action-buttons.community-selected button:not([data-state="published"]) { display: none; }
 
-.published svg use { --icon-color-primary: rgb(var(--green)); }
-.queue svg use { --icon-color-primary: rgb(var(--purple)); }
-.draft svg use { --icon-color-primary: rgb(var(--red)); }
+footer.published a[href*="/reblog/"] svg use { --icon-color-primary: rgb(var(--green)); }
+footer.queue a[href*="/reblog/"] svg use { --icon-color-primary: rgb(var(--purple)); }
+footer.draft a[href*="/reblog/"] svg use { --icon-color-primary: rgb(var(--red)); }
 
 :is(.published, .queue, .draft) :is(a[role="button"], button[class=""]) {
   position: relative;

@@ -2,15 +2,22 @@ import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
+import { getPreferences } from '../../utils/preferences.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
+const pausedPosterAttribute = 'data-paused-gif-use-poster';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
-const labelClass = 'xkit-paused-gif-label';
+const labelAttribute = 'data-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
 
+let loadingMode;
+
+const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
+const parentHovered = `:is(:hover > *, [${hoverContainerAttribute}]:hover *)`;
+
 export const styleElement = buildStyle(`
-.${labelClass} {
+[${labelAttribute}]::after {
   position: absolute;
   top: 1ch;
   right: 1ch;
@@ -19,18 +26,14 @@ export const styleElement = buildStyle(`
   padding: 0.6ch;
   border-radius: 3px;
 
+  content: "GIF";
   background-color: rgb(var(--black));
   color: rgb(var(--white));
   font-size: 1rem;
   font-weight: bold;
   line-height: 1em;
 }
-
-.${labelClass}::before {
-  content: "GIF";
-}
-
-.${labelClass}.mini {
+[${labelAttribute}="mini"]::after {
   font-size: 0.6rem;
 }
 
@@ -41,10 +44,23 @@ export const styleElement = buildStyle(`
   background-color: rgb(var(--white));
 }
 
-*:hover > .${canvasClass},
-*:hover > .${labelClass},
-[${hoverContainerAttribute}]:hover .${canvasClass},
-[${hoverContainerAttribute}]:hover .${labelClass} {
+.${canvasClass}${parentHovered},
+[${labelAttribute}]${hovered}::after,
+[${pausedPosterAttribute}]:not(${hovered}) > div > ${keyToCss('knightRiderLoader')} {
+  display: none;
+}
+${keyToCss('background')}[${labelAttribute}]::after {
+  /* prevent double labels in recommended post cards */
+  display: none;
+}
+
+[${pausedPosterAttribute}]:not(${hovered}) > img${keyToCss('poster')} {
+  visibility: visible !important;
+}
+[${pausedPosterAttribute}="eager"]:not(${hovered}) > img:not(${keyToCss('poster')}) {
+  visibility: hidden !important;
+}
+[${pausedPosterAttribute}="lazy"]:not(${hovered}) > img:not(${keyToCss('poster')}) {
   display: none;
 }
 
@@ -59,13 +75,12 @@ export const styleElement = buildStyle(`
 `);
 
 const addLabel = (element, inside = false) => {
-  if (element.parentNode.querySelector(`.${labelClass}`) === null) {
-    const gifLabel = document.createElement('p');
-    gifLabel.className = element.clientWidth && element.clientWidth < 150
-      ? `${labelClass} mini`
-      : labelClass;
-
-    inside ? element.append(gifLabel) : element.parentNode.append(gifLabel);
+  const target = inside ? element : element.parentElement;
+  if (getComputedStyle(target, '::after').content === 'none') {
+    target?.setAttribute(
+      labelAttribute,
+      target.clientWidth && target.clientWidth <= 150 ? 'mini' : ''
+    );
   }
 };
 
@@ -89,12 +104,18 @@ const pauseGif = function (gifElement) {
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
     if (gifElement.closest(`${keyToCss('avatarImage')}, .block-editor-writing-flow`)) return;
-    const pausedGifElements = [
-      ...gifElement.parentNode.querySelectorAll(`.${canvasClass}`),
-      ...gifElement.parentNode.querySelectorAll(`.${labelClass}`)
-    ];
+    const pausedGifElements = [...gifElement.parentNode.querySelectorAll(`.${canvasClass}`)];
     if (pausedGifElements.length) {
       gifElement.after(...pausedGifElements);
+      return;
+    }
+
+    gifElement.decoding = 'sync';
+
+    const posterElement = gifElement.parentElement.querySelector(keyToCss('poster'));
+    if (posterElement) {
+      gifElement.parentElement.setAttribute(pausedPosterAttribute, loadingMode);
+      addLabel(posterElement);
       return;
     }
 
@@ -132,7 +153,18 @@ const processRows = function (rowsElements) {
 const processHoverableElements = elements =>
   elements.forEach(element => element.setAttribute(hoverContainerAttribute, ''));
 
+const onStorageChanged = async function (changes, areaName) {
+  if (areaName !== 'local') return;
+
+  const { 'accesskit.preferences.disable_gifs_loading_mode': modeChanges } = changes;
+  if (modeChanges?.oldValue === undefined) return;
+
+  loadingMode = modeChanges.newValue;
+};
+
 export const main = async function () {
+  ({ disable_gifs_loading_mode: loadingMode } = await getPreferences('accesskit'));
+
   const gifImage = `
     :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
   `;
@@ -152,9 +184,13 @@ export const main = async function () {
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
     processRows
   );
+
+  browser.storage.onChanged.addListener(onStorageChanged);
 };
 
 export const clean = async function () {
+  browser.storage.onChanged.removeListener(onStorageChanged);
+
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);
@@ -164,7 +200,9 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children)
   );
 
-  $(`.${canvasClass}, .${labelClass}`).remove();
+  $(`.${canvasClass}`).remove();
   $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
+  $(`[${labelAttribute}]`).removeAttr(labelAttribute);
+  $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
   $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
 };

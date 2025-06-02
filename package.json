@@ -13,10 +13,10 @@
     "eslint-config-semistandard": "^17.0.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsdoc": "^50.6.11",
+    "eslint-plugin-jsdoc": "^50.6.17",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.6.0",
-    "web-ext": "^8.6.0"
+    "web-ext": "^8.7.1"
   },
   "dependencies": {
     "jquery": "^3.7.1",

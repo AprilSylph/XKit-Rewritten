@@ -1,8 +1,7 @@
-import { cloneControlButton, createControlButtonTemplate } from '../utils/control_buttons.js';
+import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../utils/control_buttons.js';
 import { keyToCss } from '../utils/css_map.js';
 import { dom } from '../utils/dom.js';
 import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../utils/interface.js';
-import { translate } from '../utils/language_data.js';
 import { bulkCommunityLabel } from '../utils/mega_editor.js';
 import { showErrorModal } from '../utils/modals.js';
 import { onNewPosts } from '../utils/mutations.js';
@@ -143,17 +142,11 @@ const processPosts = postElements =>
   filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
     updatePostWarningElement(postElement);
 
-    const { canEdit } = await timelineObject(postElement);
-    if (!canEdit) return;
-
-    const editButton = postElement.querySelector(
-      `footer ${keyToCss('controlIcon')} a[href*="/edit/"][aria-label=${translate('Edit')}]`
-    );
-    if (!editButton) return;
-
-    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
-    const controlIcon = editButton.closest(keyToCss('controlIcon'));
-    controlIcon.before(clonedControlButton);
+    const { state, canEdit } = await timelineObject(postElement);
+    if (canEdit && ['ask', 'submission'].includes(state) === false) {
+      const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
+      insertControlButton(postElement, clonedControlButton, buttonClass);
+    }
   });
 
 export const main = async function () {

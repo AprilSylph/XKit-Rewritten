@@ -39,11 +39,6 @@
   transform: translate(calc(50% + var(--horizontal-offset, 0%)), calc(0px - var(--icon-spacing)));
 }
 
-div:first-child + span + #quick-reblog,
-#quick-reblog:not(:last-child) {
-  display: none;
-}
-
 #quick-reblog select,
 #quick-reblog input {
   border: none;

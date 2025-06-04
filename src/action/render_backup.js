@@ -78,11 +78,7 @@ const localRestore = async function () {
 
 const renderLocalBackup = async function () {
   updateLocalExportDisplay();
-  browser.storage.onChanged.addListener((changes, areaName) => {
-    if (areaName === 'local') {
-      updateLocalExportDisplay();
-    }
-  });
+  browser.storage.local.onChanged.addListener(updateLocalExportDisplay);
 
   localCopyButton.addEventListener('click', localCopy);
   localDownloadButton.addEventListener('click', localExport);

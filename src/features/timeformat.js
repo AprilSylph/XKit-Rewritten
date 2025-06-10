@@ -58,6 +58,15 @@ ${keyToCss('blogLinkWrapper')} + a:has(> [data-formatted-time]) {
   overflow-x: hidden;
 }
 
+${keyToCss('timestampLink')} [data-formatted-time]:is(:focus, :hover) {
+  text-decoration: none;
+}
+
+${keyToCss('timestampLink')} [data-formatted-time]:is(:focus, :hover)::before,
+${keyToCss('timestampLink')} [data-formatted-time]:is(:focus, :hover)::after {
+  text-decoration: underline;
+}
+
 ${keyToCss('timestampLink')} [data-formatted-relative-time]::after {
   display: inline;
 }

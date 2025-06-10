@@ -28,8 +28,8 @@ ${keyToCss('userRow')} [data-formatted-time] {
   flex-wrap: wrap;
 }
 
-${keyToCss('userRow')} [data-formatted-time]::before,
-${keyToCss('userRow')} [data-formatted-relative-time]::after {
+${keyToCss('userRow', 'timestampLink')} [data-formatted-time]::before,
+${keyToCss('userRow', 'timestampLink')} [data-formatted-relative-time]::after {
   font-size: .875rem;
 }
 
@@ -58,12 +58,12 @@ ${keyToCss('blogLinkWrapper')} + a:has(> [data-formatted-time]) {
   overflow-x: hidden;
 }
 
-a > [data-formatted-relative-time]::after {
+${keyToCss('timestampLink')} [data-formatted-relative-time]::after {
   display: inline;
 }
 
-a > [data-formatted-time][title]::before,
-a > [data-formatted-time][title]::after {
+${keyToCss('timestampLink')} [data-formatted-time][title]::before,
+${keyToCss('timestampLink')} [data-formatted-time][title]::after {
   cursor: pointer;
 }
 `);

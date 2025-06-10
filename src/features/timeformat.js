@@ -94,7 +94,7 @@ const formatTimeElements = function (timeElements) {
     const momentDate = moment(timeElement.dateTime, moment.ISO_8601);
     timeElement.dataset.formattedTime = momentDate.format(format);
     if (displayRelative) {
-      timeElement.dataset.formattedTime += '\u2002\u00B7\u2002';
+      timeElement.dataset.formattedTime += '\u00A0\u00B7\u00A0';
       timeElement.dataset.formattedRelativeTime = constructRelativeTimeString(momentDate.unix());
     }
   });

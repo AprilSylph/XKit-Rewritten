@@ -61,6 +61,11 @@ ${keyToCss('blogLinkWrapper')} + a:has(> [data-formatted-time]) {
 a > [data-formatted-relative-time]::after {
   display: inline;
 }
+
+a > [data-formatted-time][title]::before,
+a > [data-formatted-time][title]::after {
+  cursor: pointer;
+}
 `);
 
 const relativeTimeFormat = new Intl.RelativeTimeFormat(document.documentElement.lang, { style: 'long' });

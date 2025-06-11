@@ -11,7 +11,7 @@
   "preferences": {
     "includeBlazed": {
       "type": "checkbox",
-      "label": "Hide blazed posts",
+      "label": "Hide Blazed posts",
       "default": true
     }
   }

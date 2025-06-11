@@ -61,6 +61,14 @@
   }
 }
 
+.xkit-control-button-container.in-community {
+  margin: 4px;
+  padding: 0;
+
+  align-self: center;
+}
+
+
 .xkit-controls-row {
   margin: 0 12px;
   padding: 6px 0;

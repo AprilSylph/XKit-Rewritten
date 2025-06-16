@@ -7,7 +7,6 @@
     "jquery": true
   },
   "extends": [
-    "semistandard",
     "plugin:jsdoc/recommended",
     "plugin:import/recommended"
   ],

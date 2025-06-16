@@ -8,7 +8,6 @@
     "build": "web-ext build"
   },
   "devDependencies": {
-    "@eslint/js": "^9.29.0",
     "chrome-webstore-upload-cli": "^3.3.2",
     "eslint": "^9.29.0",
     "eslint-plugin-jsdoc": "^51.0.1",

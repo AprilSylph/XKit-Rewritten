@@ -11,7 +11,7 @@
     "chrome-webstore-upload-cli": "^3.3.2",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsdoc": "^50.6.17",
+    "eslint-plugin-jsdoc": "^51.0.1",
     "web-ext": "^8.7.1"
   },
   "dependencies": {

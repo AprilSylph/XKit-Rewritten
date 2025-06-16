@@ -1,6 +1,5 @@
-import importPlugin from 'eslint-plugin-import';
-import jsdocPlugin from 'eslint-plugin-jsdoc';
-import neostandard from 'neostandard';
+import jsdoc from 'eslint-plugin-jsdoc';
+import neostandard, { plugins } from 'neostandard';
 
 export default [
   ...neostandard({
@@ -8,10 +7,6 @@ export default [
     ignores: ['src/lib/**'],
     semi: true,
   }),
-  {
-    ...importPlugin.flatConfigs.recommended,
-    languageOptions: { sourceType: 'module' },
-    rules: { 'import/no-cycle': 'error' }
-  },
-  jsdocPlugin.configs['flat/recommended'],
+  { plugins, rules: { 'import-x/no-cycle': 'error' } },
+  jsdoc.configs['flat/recommended'],
 ];

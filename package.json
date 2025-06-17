@@ -1,6 +1,7 @@
 {
   "license": "GPL-3.0",
   "repository": "github:AprilSylph/XKit-Rewritten",
+  "type": "module",
   "scripts": {
     "test": "web-ext lint",
     "posttest": "eslint src/",

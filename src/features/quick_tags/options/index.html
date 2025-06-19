@@ -28,10 +28,7 @@
 
     <template id="bundle-template">
       <li class="bundle">
-        <span class="move-buttons">
-          <button class="up"><i class="ri-arrow-up-s-line"></i></button>
-          <button class="down"><i class="ri-arrow-down-s-line"></i></button>
-        </span>
+        <button class="drag-handle" title="Drag to rearrange"><i class="ri-draggable"></i></button>
         <div>
           <input class="title" type="text" disabled required>
           <input class="tags" type="text" disabled required>
@@ -45,6 +42,6 @@
 
     <script src="/action/resize_frames.js" defer></script>
     <script src="/content_scripts/browser_polyfill.js"></script>
-    <script src="index.js"></script>
+    <script src="index.js" type="module"></script>
   </body>
 </html>

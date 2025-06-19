@@ -3,7 +3,7 @@ import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { timelineObject } from '../../utils/react_props.js';
 
-const hiddenAttribute = 'data-no-recommended-blog-carousels-hidden';
+const hiddenAttribute = 'data-no-recommended-community-carousels-hidden';
 
 export const styleElement = buildStyle(`
   [${hiddenAttribute}] { position: relative; }
@@ -13,10 +13,10 @@ export const styleElement = buildStyle(`
 
 const carouselSelector = `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')}`;
 
-const hideBlogCarousels = carousels =>
+const hideCommunityCarousels = carousels =>
   carousels.forEach(async carousel => {
     const { elements } = await timelineObject(carousel);
-    if (elements.some(({ objectType }) => objectType === 'blog')) {
+    if (elements.some(({ objectType }) => objectType === 'community_card')) {
       const timelineItem = getTimelineItemWrapper(carousel);
       if (
         timelineItem.previousElementSibling.querySelector(keyToCss('titleObject')) ||
@@ -29,11 +29,11 @@ const hideBlogCarousels = carousels =>
   });
 
 export const main = async function () {
-  pageModifications.register(carouselSelector, hideBlogCarousels);
+  pageModifications.register(carouselSelector, hideCommunityCarousels);
 };
 
 export const clean = async function () {
-  pageModifications.unregister(hideBlogCarousels);
+  pageModifications.unregister(hideCommunityCarousels);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

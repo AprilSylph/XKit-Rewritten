@@ -25,7 +25,11 @@ const processNotifications = (notificationElements) => {
     const notification = await notificationObject(notificationElement);
     if (notification !== undefined) {
       const { targetRootPostId, targetPostId } = notification;
-      notificationElement.dataset.targetRootPostId = targetRootPostId || targetPostId;
+
+      // available on "replied to your post" notifications, which appear to always target the root post
+      const blockablePostId = notification.actions?.longTap?.meta?.postId;
+
+      notificationElement.dataset.targetRootPostId = targetRootPostId || targetPostId || blockablePostId || '';
     }
   });
 };
@@ -80,11 +84,12 @@ const onButtonClicked = async function ({ currentTarget }) {
   });
 };
 
-const blockPostFilter = async ({ blogName, rebloggedRootName, rebloggedFromName, id, rebloggedRootId }) => {
+const blockPostFilter = async ({ blogName, rebloggedRootName, rebloggedFromName, id, rebloggedRootId, community, postAuthor }) => {
   const rootId = rebloggedRootId || id;
   const canReceiveActivity = userBlogNames.includes(blogName) ||
     userBlogNames.includes(rebloggedFromName) ||
-    userBlogNames.includes(rebloggedRootName);
+    userBlogNames.includes(rebloggedRootName) ||
+    (community && userBlogNames.includes(postAuthor));
 
   return canReceiveActivity && blockedPostTargetIDs.includes(rootId) === false;
 };

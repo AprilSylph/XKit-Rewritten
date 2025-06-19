@@ -1,11 +1,47 @@
 {
   "title": "Panorama",
   "description": "Widescreen dashboard",
-  "note": "This feature is not currently functional.",
   "icon": {
     "class_name": "ri-align-justify",
     "color": "white",
     "background_color": "#1a2735"
   },
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#panorama"
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#panorama",
+  "preferences": {
+    "mainEnable": {
+      "label": "Widen the main post column",
+      "type": "checkbox",
+      "default": true
+    },
+    "communitiesEnable": {
+      "label": "Widen Tumblr Community columns",
+      "type": "checkbox",
+      "default": true
+    },
+    "patioEnable": {
+      "label": "Widen Tumblr Patio columns",
+      "type": "checkbox",
+      "default": true
+    },
+    "maxPostWidth": {
+      "label": "Maximum post width",
+      "type": "select",
+      "options": [
+        { "value": "640px", "label": "640px" },
+        { "value": "800px", "label": "800px" },
+        { "value": "1024px", "label": "1024px" },
+        { "value": "1280px", "label": "1280px" },
+        { "value": "1536px", "label": "1536px" },
+        { "value": "1792px", "label": "1792px" },
+        { "value": "2048px", "label": "2048px" },
+        { "value": "100wv", "label": "Unlimited" }
+      ],
+      "default": "1280px"
+    },
+    "expandPostMedia": {
+      "label": "Expand media content in wide posts",
+      "type": "checkbox",
+      "default": true
+    }
+  }
 }

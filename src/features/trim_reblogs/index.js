@@ -1,12 +1,12 @@
-import { createControlButtonTemplate, cloneControlButton, insertControlButton } from '../utils/control_buttons.js';
-import { keyToCss } from '../utils/css_map.js';
-import { dom } from '../utils/dom.js';
-import { filterPostElements, postSelector } from '../utils/interface.js';
-import { showModal, hideModal, modalCancelButton, showErrorModal } from '../utils/modals.js';
-import { onNewPosts } from '../utils/mutations.js';
-import { notify } from '../utils/notifications.js';
-import { timelineObject } from '../utils/react_props.js';
-import { apiFetch, createEditRequestBody } from '../utils/tumblr_helpers.js';
+import { createControlButtonTemplate, cloneControlButton, insertControlButton } from '../../utils/control_buttons.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { dom } from '../../utils/dom.js';
+import { filterPostElements, postSelector } from '../../utils/interface.js';
+import { showModal, hideModal, modalCancelButton, showErrorModal } from '../../utils/modals.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { notify } from '../../utils/notifications.js';
+import { timelineObject } from '../../utils/react_props.js';
+import { apiFetch, createEditRequestBody } from '../../utils/tumblr_helpers.js';
 
 const symbolId = 'ri-scissors-cut-line';
 const buttonClass = 'xkit-trim-reblogs-button';

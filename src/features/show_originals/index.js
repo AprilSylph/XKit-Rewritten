@@ -1,10 +1,10 @@
-import { filterPostElements, getTimelineItemWrapper } from '../utils/interface.js';
-import { isMyPost, timelineObject } from '../utils/react_props.js';
-import { getPreferences } from '../utils/preferences.js';
-import { onNewPosts } from '../utils/mutations.js';
-import { keyToCss } from '../utils/css_map.js';
-import { translate } from '../utils/language_data.js';
-import { userBlogs } from '../utils/user.js';
+import { filterPostElements, getTimelineItemWrapper } from '../../utils/interface.js';
+import { isMyPost, timelineObject } from '../../utils/react_props.js';
+import { getPreferences } from '../../utils/preferences.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { translate } from '../../utils/language_data.js';
+import { userBlogs } from '../../utils/user.js';
 import {
   followingTimelineFilter,
   anyBlogTimelineFilter,
@@ -13,7 +13,7 @@ import {
   timelineSelector,
   anyCommunityTimelineFilter,
   communitiesTimelineFilter
-} from '../utils/timeline_id.js';
+} from '../../utils/timeline_id.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';

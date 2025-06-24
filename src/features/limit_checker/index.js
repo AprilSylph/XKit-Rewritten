@@ -1,7 +1,7 @@
-import { apiFetch } from '../utils/tumblr_helpers.js';
-import { addSidebarItem, removeSidebarItem } from '../utils/sidebar.js';
-import { modalCompleteButton, showErrorModal, showModal } from '../utils/modals.js';
-import { dom } from '../utils/dom.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
+import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
+import { modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
+import { dom } from '../../utils/dom.js';
 
 const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, { dateStyle: 'short', timeStyle: 'short' });
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));

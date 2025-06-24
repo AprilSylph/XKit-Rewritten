@@ -1,9 +1,9 @@
-import { dom } from '../utils/dom.js';
-import { megaEdit } from '../utils/mega_editor.js';
-import { showModal, modalCancelButton, modalCompleteButton, showErrorModal } from '../utils/modals.js';
-import { addSidebarItem, removeSidebarItem } from '../utils/sidebar.js';
-import { apiFetch } from '../utils/tumblr_helpers.js';
-import { userBlogs } from '../utils/user.js';
+import { dom } from '../../utils/dom.js';
+import { megaEdit } from '../../utils/mega_editor.js';
+import { showModal, modalCancelButton, modalCompleteButton, showErrorModal } from '../../utils/modals.js';
+import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
+import { userBlogs } from '../../utils/user.js';
 
 const getPostsFormId = 'xkit-tag-replacer-get-posts';
 

@@ -1,6 +1,6 @@
-import { getPreferences } from '../utils/preferences.js';
-import { translate } from '../utils/language_data.js';
-import { buildStyle } from '../utils/interface.js';
+import { getPreferences } from '../../utils/preferences.js';
+import { translate } from '../../utils/language_data.js';
+import { buildStyle } from '../../utils/interface.js';
 
 export const styleElement = buildStyle();
 

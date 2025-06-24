@@ -1,4 +1,4 @@
-import { getPreferences } from '../utils/preferences.js';
+import { getPreferences } from '../../utils/preferences.js';
 
 let enabledOptions;
 

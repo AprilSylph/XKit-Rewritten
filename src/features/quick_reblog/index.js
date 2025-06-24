@@ -1,14 +1,14 @@
-import { sha256 } from '../utils/crypto.js';
-import { timelineObject } from '../utils/react_props.js';
-import { apiFetch } from '../utils/tumblr_helpers.js';
-import { postSelector, filterPostElements, postType, appendWithoutOverflow, buildStyle } from '../utils/interface.js';
-import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../utils/user.js';
-import { getPreferences } from '../utils/preferences.js';
-import { onNewPosts } from '../utils/mutations.js';
-import { notify } from '../utils/notifications.js';
-import { dom } from '../utils/dom.js';
-import { showErrorModal } from '../utils/modals.js';
-import { keyToCss } from '../utils/css_map.js';
+import { sha256 } from '../../utils/crypto.js';
+import { timelineObject } from '../../utils/react_props.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
+import { postSelector, filterPostElements, postType, appendWithoutOverflow, buildStyle } from '../../utils/interface.js';
+import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../../utils/user.js';
+import { getPreferences } from '../../utils/preferences.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { notify } from '../../utils/notifications.js';
+import { dom } from '../../utils/dom.js';
+import { showErrorModal } from '../../utils/modals.js';
+import { keyToCss } from '../../utils/css_map.js';
 
 const popupElement = dom('div', { id: 'quick-reblog' }, { click: event => event.stopPropagation() });
 const blogSelector = dom('select');

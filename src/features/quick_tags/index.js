@@ -1,14 +1,14 @@
-import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../utils/control_buttons.js';
-import { dom } from '../utils/dom.js';
-import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../utils/interface.js';
-import { megaEdit } from '../utils/mega_editor.js';
-import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../utils/modals.js';
-import { onNewPosts, pageModifications } from '../utils/mutations.js';
-import { notify } from '../utils/notifications.js';
-import { registerPostOption, unregisterPostOption } from '../utils/post_actions.js';
-import { getPreferences } from '../utils/preferences.js';
-import { timelineObject, editPostFormTags } from '../utils/react_props.js';
-import { apiFetch, createEditRequestBody, isNpfCompatible } from '../utils/tumblr_helpers.js';
+import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
+import { dom } from '../../utils/dom.js';
+import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
+import { megaEdit } from '../../utils/mega_editor.js';
+import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
+import { onNewPosts, pageModifications } from '../../utils/mutations.js';
+import { notify } from '../../utils/notifications.js';
+import { registerPostOption, unregisterPostOption } from '../../utils/post_actions.js';
+import { getPreferences } from '../../utils/preferences.js';
+import { timelineObject, editPostFormTags } from '../../utils/react_props.js';
+import { apiFetch, createEditRequestBody, isNpfCompatible } from '../../utils/tumblr_helpers.js';
 
 const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';

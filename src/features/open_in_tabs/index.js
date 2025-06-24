@@ -1,4 +1,4 @@
-import { keyToCss } from '../utils/css_map.js';
+import { keyToCss } from '../../utils/css_map.js';
 
 const linkSelector = 'a[role="link"][target="_blank"]';
 

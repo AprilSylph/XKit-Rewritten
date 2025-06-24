@@ -1,7 +1,7 @@
-import { keyToCss } from '../utils/css_map.js';
-import { buildStyle, getTimelineItemWrapper } from '../utils/interface.js';
-import { pageModifications } from '../utils/mutations.js';
-import { getPreferences } from '../utils/preferences.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 
 const hiddenAttribute = 'data-anti-capitalism-hidden';
 

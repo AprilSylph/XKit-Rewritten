@@ -1,13 +1,13 @@
-import { buildStyle, getTimelineItemWrapper, filterPostElements, getPopoverWrapper, notificationSelector } from '../utils/interface.js';
-import { blogData, notificationObject, timelineObject } from '../utils/react_props.js';
-import { apiFetch } from '../utils/tumblr_helpers.js';
-import { primaryBlogName } from '../utils/user.js';
-import { keyToCss } from '../utils/css_map.js';
-import { onNewPosts, onNewNotifications, pageModifications } from '../utils/mutations.js';
-import { dom } from '../utils/dom.js';
-import { getPreferences } from '../utils/preferences.js';
-import { translate } from '../utils/language_data.js';
-import { followingTimelineSelector } from '../utils/timeline_id.js';
+import { buildStyle, getTimelineItemWrapper, filterPostElements, getPopoverWrapper, notificationSelector } from '../../utils/interface.js';
+import { blogData, notificationObject, timelineObject } from '../../utils/react_props.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
+import { primaryBlogName } from '../../utils/user.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { onNewPosts, onNewNotifications, pageModifications } from '../../utils/mutations.js';
+import { dom } from '../../utils/dom.js';
+import { getPreferences } from '../../utils/preferences.js';
+import { translate } from '../../utils/language_data.js';
+import { followingTimelineSelector } from '../../utils/timeline_id.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenAttribute = 'data-mutual-checker-hidden';

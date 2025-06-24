@@ -1,6 +1,6 @@
-import { dom } from '../utils/dom.js';
-import { registerMeatballItem, unregisterMeatballItem } from '../utils/meatballs.js';
-import { showModal, modalCancelButton } from '../utils/modals.js';
+import { dom } from '../../utils/dom.js';
+import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
+import { showModal, modalCancelButton } from '../../utils/modals.js';
 
 const meatballButtonId = 'mirror_posts';
 const meatballButtonLabel = 'Mirror this post';

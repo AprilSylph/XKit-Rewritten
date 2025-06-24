@@ -1,14 +1,14 @@
-import { keyToCss } from '../utils/css_map.js';
-import { dom } from '../utils/dom.js';
-import { inject } from '../utils/inject.js';
-import { showErrorModal } from '../utils/modals.js';
-import { buildStyle, notificationSelector } from '../utils/interface.js';
-import { pageModifications } from '../utils/mutations.js';
-import { notify } from '../utils/notifications.js';
-import { getPreferences } from '../utils/preferences.js';
-import { buildSvg } from '../utils/remixicon.js';
-import { apiFetch, navigate } from '../utils/tumblr_helpers.js';
-import { userBlogs } from '../utils/user.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { dom } from '../../utils/dom.js';
+import { inject } from '../../utils/inject.js';
+import { showErrorModal } from '../../utils/modals.js';
+import { buildStyle, notificationSelector } from '../../utils/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
+import { notify } from '../../utils/notifications.js';
+import { getPreferences } from '../../utils/preferences.js';
+import { buildSvg } from '../../utils/remixicon.js';
+import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
+import { userBlogs } from '../../utils/user.js';
 
 const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';

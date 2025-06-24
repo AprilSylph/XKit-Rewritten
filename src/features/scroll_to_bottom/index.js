@@ -1,7 +1,7 @@
-import { keyToClasses, keyToCss } from '../utils/css_map.js';
-import { translate } from '../utils/language_data.js';
-import { pageModifications } from '../utils/mutations.js';
-import { buildStyle } from '../utils/interface.js';
+import { keyToClasses, keyToCss } from '../../utils/css_map.js';
+import { translate } from '../../utils/language_data.js';
+import { pageModifications } from '../../utils/mutations.js';
+import { buildStyle } from '../../utils/interface.js';
 
 const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
 $(`[id="${scrollToBottomButtonId}"]`).remove();

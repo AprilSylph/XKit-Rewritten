@@ -1,4 +1,4 @@
-# Feature manifests
+# Feature metadata
 
 Each feature requires a metadata file in order to be displayed in the configuration panel. Since none of the top-level keys are technically required, you can leave the file as essentially empty (simply `{}`), but it must exist and must be valid JSON.
 

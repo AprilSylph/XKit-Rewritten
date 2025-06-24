@@ -1,5 +1,5 @@
 import jsdoc from 'eslint-plugin-jsdoc';
-import neostandard from 'neostandard';
+import neostandard, { plugins } from 'neostandard';
 
 export default [
   /**
@@ -21,13 +21,14 @@ export default [
   }),
 
   /**
-   * Prevent circular imports. Relies on `import-x` plugin via neostandard.
+   * Use recommended `import-x` lint rules. Additionallly, prevent cyclical imports.
+   * @see https://github.com/un-ts/eslint-plugin-import-x/blob/master/src/config/flat/recommended.ts
    * @see https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/no-cycle.md
    */
-  { rules: { 'import-x/no-cycle': 'error' } },
+  { rules: { ...plugins['import-x'].flatConfigs.recommended.rules, 'import-x/no-cycle': 'error' } },
 
   /**
-   * Import eslint-plugin-jsdoc and use its recommended config.
+   * Import `eslint-plugin-jsdoc` and use its recommended config.
    * @see https://github.com/gajus/eslint-plugin-jsdoc?tab=readme-ov-file#readme
    */
   jsdoc.configs['flat/recommended'],

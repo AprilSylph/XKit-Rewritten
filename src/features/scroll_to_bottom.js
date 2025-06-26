@@ -1,7 +1,9 @@
 import { keyToClasses, keyToCss } from '../utils/css_map.js';
 import { translate } from '../utils/language_data.js';
 import { pageModifications } from '../utils/mutations.js';
-import { buildStyle } from '../utils/interface.js';
+import { buildStyle, getTimelineItemWrapper, waitForScroller } from '../utils/interface.js';
+import { getPreferences } from '../utils/preferences.js';
+import { borderAttribute, tagChicletCarouselLinkSelector } from './tweaks/caught_up_line.js';
 
 const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
 $(`[id="${scrollToBottomButtonId}"]`).remove();
@@ -88,15 +90,32 @@ const addButtonToPage = async function ([scrollToTopButton]) {
   pageModifications.register('*', checkForButtonRemoved);
 };
 
+const onTagChicletCarouselItemsAdded = ([carousel]) => {
+  if (active) {
+    stopScrolling();
+
+    waitForScroller().then(() => {
+      const titleElement = getTimelineItemWrapper(carousel)?.previousElementSibling;
+      const titleElementTop = titleElement?.getBoundingClientRect?.()?.top;
+      titleElementTop && window.scrollBy({ top: titleElementTop });
+    });
+  }
+};
+
 export const main = async function () {
+  const { stopAtCaughtUp } = await getPreferences('scroll_to_bottom');
+
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
   pageModifications.register(knightRiderLoaderSelector, onLoadersAdded);
+  stopAtCaughtUp && pageModifications.register(`${tagChicletCarouselLinkSelector}, [${borderAttribute}]`, onTagChicletCarouselItemsAdded);
 };
 
 export const clean = async function () {
   pageModifications.unregister(addButtonToPage);
   pageModifications.unregister(checkForButtonRemoved);
   pageModifications.unregister(onLoadersAdded);
+  pageModifications.unregister(onTagChicletCarouselItemsAdded);
+
   stopScrolling();
   scrollToBottomButton?.remove();
 };

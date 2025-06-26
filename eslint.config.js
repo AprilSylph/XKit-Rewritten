@@ -21,7 +21,7 @@ export default [
   }),
 
   /**
-   * Use recommended `import-x` lint rules. Additionallly, prevent cyclical imports.
+   * Use recommended `import-x` lint rules. Additionally, prevent cyclical imports.
    * @see https://github.com/un-ts/eslint-plugin-import-x/blob/master/src/config/flat/recommended.ts
    * @see https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/no-cycle.md
    */

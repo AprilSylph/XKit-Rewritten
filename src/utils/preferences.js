@@ -3,12 +3,12 @@
  * @returns {Promise<object>} The script's preference values
  */
 export const getPreferences = async function (scriptName) {
-  const scriptManifestURL = browser.runtime.getURL(`/features/${scriptName}/feature.json`);
-  const scriptManifestFile = await fetch(scriptManifestURL);
-  const scriptManifest = await scriptManifestFile.json();
+  const scriptMetadataURL = browser.runtime.getURL(`/features/${scriptName}/feature.json`);
+  const scriptMetadataFile = await fetch(scriptMetadataURL);
+  const scriptMetadata = await scriptMetadataFile.json();
   const storage = await browser.storage.local.get();
 
-  const { preferences = {} } = scriptManifest;
+  const { preferences = {} } = scriptMetadata;
   const unsetPreferences = {};
   const preferenceValues = {};
 

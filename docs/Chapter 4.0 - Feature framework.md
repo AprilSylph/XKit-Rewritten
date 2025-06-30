@@ -1,17 +1,15 @@
 # Feature framework
 
-Features are comprised of a minimum of two files:
-- `.json` manifest file (required)
-- `.js` module file (required)
-- `.css` stylesheet file (optional)
+Each feature is comprised of a subfolder in `src/features/`, containing:
+- `feature.json` metadata file (required)
+- `index.js` module file (required)
+- `index.css` stylesheet file (optional)
 
-These files all live in the `src/features/` directory. The filenames (minus the file extension) must match for the files to be recognised as belonging to the same feature.
-
-For a feature to be visible to the user, its name must be added to `/src/features/_index.json`.
+For a feature to be visible to the user, its subfolder name must also be added to `/src/features/index.json`.
 
 ---
 
-The manifest file defines information the user needs to decide whether to enable the feature, and may contain preference definitions to allow the user to configure the feature.
+The metadata file defines information the user needs to decide whether to enable the feature, and may contain preference definitions to allow the user to configure the feature.
 
 The module file is a [JavaScript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) which is run in the [content script](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts) context of each Tumblr tab where the extension is installed (assuming the feature is enabled). They are expected to export certain named constants by the main content script, which lives in `src/content_scripts/main.js`.
 
@@ -21,7 +19,7 @@ The stylesheet file is a normal CSS file which, assuming the module file correct
 
 # Example feature
 
-`/src/features/example.json`
+`/src/features/example/feature.json`
 ```json
 {
   "title": "Example Script",
@@ -60,9 +58,9 @@ The stylesheet file is a normal CSS file which, assuming the module file correct
 }
 ```
 
-`/src/features/example.js`
+`/src/features/example/index.js`
 ```js
-import { getPreferences } from '../utils/preferences.js';
+import { getPreferences } from '../../utils/preferences.js';
 
 export const main = async function () {
   const { log, whatToLog, level } = await getPreferences('example');
@@ -79,7 +77,7 @@ export const clean = async function () {
 export const stylesheet = true;
 ```
 
-`/src/features/example.css`
+`/src/features/example/index.css`
 ```css
 :root {
   --navy: 4, 9, 128;

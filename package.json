@@ -1,6 +1,7 @@
 {
   "license": "GPL-3.0",
   "repository": "github:AprilSylph/XKit-Rewritten",
+  "type": "module",
   "scripts": {
     "test": "web-ext lint",
     "posttest": "eslint src/",
@@ -9,20 +10,17 @@
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^3.3.2",
-    "eslint": "^8.57.1",
-    "eslint-config-semistandard": "^17.0.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsdoc": "^50.6.11",
-    "eslint-plugin-n": "^15.7.0",
-    "eslint-plugin-promise": "^6.6.0",
-    "web-ext": "^8.6.0"
+    "eslint": "^9.29.0",
+    "eslint-plugin-jsdoc": "^51.0.1",
+    "neostandard": "^0.12.1",
+    "web-ext": "^8.7.1"
   },
   "dependencies": {
     "jquery": "^3.7.1",
     "moment": "^2.30.1",
     "normalize.css": "^8.0.1",
     "remixicon": "^4.6.0",
+    "sortablejs": "^1.15.6",
     "spectrum-colorpicker": "^1.8.1",
     "webextension-polyfill": "^0.12.0"
   },

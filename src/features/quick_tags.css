@@ -111,8 +111,9 @@
   display: none !important;
 }
 
-.xkit-quick-tags-tags div {
+.xkit-quick-tags-tags > div {
   margin: -2px -6px;
+  padding-top: 4px;
 }
 
 .xkit-quick-tags-tags a {

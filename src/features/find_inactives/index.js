@@ -1,10 +1,10 @@
-import { dom } from '../utils/dom.js';
-import { buildStyle } from '../utils/interface.js';
-import { hideModal, modalCancelButton, showErrorModal, showModal } from '../utils/modals.js';
-import { buildSvg } from '../utils/remixicon.js';
-import { addSidebarItem, removeSidebarItem } from '../utils/sidebar.js';
-import { apiFetch } from '../utils/tumblr_helpers.js';
-import { userInfo } from '../utils/user.js';
+import { dom } from '../../utils/dom.js';
+import { buildStyle } from '../../utils/interface.js';
+import { hideModal, modalCancelButton, showErrorModal, showModal } from '../../utils/modals.js';
+import { buildSvg } from '../../utils/remixicon.js';
+import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
+import { userInfo } from '../../utils/user.js';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 

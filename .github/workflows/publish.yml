@@ -24,11 +24,11 @@ jobs:
         run: npm test --ignore-scripts
 
       - name: Sign WebExtension
-        run: npx web-ext sign --approval-timeout=0
+        run: npx web-ext sign
         env:
           WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
           WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
-          WEB_EXT_API_APPROVAL_TIMEOUT: 0
+          WEB_EXT_APPROVAL_TIMEOUT: 0
           WEB_EXT_CHANNEL: listed
   chrome:
     name: Chrome

@@ -27,8 +27,10 @@ const processImages = function (imageElements) {
   const imageBlocks = new Map();
   imageElements.forEach(imageElement => {
     const { alt } = imageElement;
-    const imageBlock = imageElement.closest(imageBlockSelector);
-    imageBlocks.set(imageBlock, alt);
+    if (alt) {
+      const imageBlock = imageElement.closest(imageBlockSelector);
+      imageBlocks.set(imageBlock, alt);
+    }
   });
 
   for (const [imageBlock, alt] of imageBlocks) {

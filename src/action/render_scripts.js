@@ -3,7 +3,7 @@ const configSectionLink = document.querySelector('a[href="#configuration"]');
 const scriptsDiv = configSection.querySelector('.scripts');
 
 const getInstalledScripts = async function () {
-  const url = browser.runtime.getURL('/features/_index.json');
+  const url = browser.runtime.getURL('/features/index.json');
   const file = await fetch(url);
   const installedScripts = await file.json();
 
@@ -135,7 +135,7 @@ const renderScripts = async function () {
   const disabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName) === false);
 
   for (const scriptName of [...orderedEnabledScripts, ...disabledScripts]) {
-    const url = browser.runtime.getURL(`/features/${scriptName}.json`);
+    const url = browser.runtime.getURL(`/features/${scriptName}/feature.json`);
     const file = await fetch(url);
     const {
       title = scriptName,

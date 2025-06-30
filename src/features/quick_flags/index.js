@@ -1,13 +1,13 @@
-import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../utils/control_buttons.js';
-import { keyToCss } from '../utils/css_map.js';
-import { dom } from '../utils/dom.js';
-import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../utils/interface.js';
-import { bulkCommunityLabel } from '../utils/mega_editor.js';
-import { showErrorModal } from '../utils/modals.js';
-import { onNewPosts } from '../utils/mutations.js';
-import { notify } from '../utils/notifications.js';
-import { timelineObject } from '../utils/react_props.js';
-import { apiFetch } from '../utils/tumblr_helpers.js';
+import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { dom } from '../../utils/dom.js';
+import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
+import { bulkCommunityLabel } from '../../utils/mega_editor.js';
+import { showErrorModal } from '../../utils/modals.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { notify } from '../../utils/notifications.js';
+import { timelineObject } from '../../utils/react_props.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
 
 const data = [
   { text: 'Content Label: Mature', category: undefined },

@@ -1,4 +1,4 @@
-import { createControlButtonTemplate, cloneControlButton } from '../utils/control_buttons.js';
+import { createControlButtonTemplate, cloneControlButton, insertControlButton } from '../utils/control_buttons.js';
 import { keyToCss } from '../utils/css_map.js';
 import { dom } from '../utils/dom.js';
 import { filterPostElements, postSelector } from '../utils/interface.js';
@@ -14,7 +14,6 @@ const reblogPreviewClass = 'xkit-trim-reblogs-preview';
 const avatarPreviewClass = 'xkit-trim-reblogs-avatar-preview';
 const textPreviewClass = 'xkit-trim-reblogs-text-preview';
 
-const controlIconSelector = keyToCss('controlIcon');
 const reblogSelector = keyToCss('reblog');
 
 let controlButtonTemplate;
@@ -156,19 +155,13 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
 };
 
 const processPosts = postElements => filterPostElements(postElements).forEach(async postElement => {
-  const existingButton = postElement.querySelector(`.${buttonClass}`);
-  if (existingButton !== null) { return; }
-
-  const editIcon = postElement.querySelector(`footer ${controlIconSelector} a[href*="/edit/"] use[href="#managed-icon__edit"]`);
-  if (!editIcon) { return; }
-  const editButton = editIcon.closest('a');
-
-  const { trail = [], content = [] } = await timelineObject(postElement);
+  const { state, canEdit, trail = [], content = [] } = await timelineObject(postElement);
   const items = trail.length + (content.length ? 1 : 0);
 
-  const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: event => onButtonClicked(event).catch(showErrorModal) }, items < 2);
-  const controlIcon = editButton.closest(controlIconSelector);
-  controlIcon.before(clonedControlButton);
+  if (canEdit && ['ask', 'submission'].includes(state) === false) {
+    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: event => onButtonClicked(event).catch(showErrorModal) }, items < 2);
+    insertControlButton(postElement, clonedControlButton, buttonClass);
+  }
 });
 
 export const main = async function () {

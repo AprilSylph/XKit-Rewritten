@@ -6,9 +6,16 @@
 
   const restartListeners = {};
 
+  const timestamp = Date.now();
+
   const runScript = async function (name) {
-    const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
-    const { main, clean, stylesheet, styleElement, onStorageChanged } = await import(scriptPath);
+    const {
+      main,
+      clean,
+      stylesheet,
+      styleElement,
+      onStorageChanged
+    } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
 
     if (main) {
       main().catch(console.error);
@@ -16,8 +23,9 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: browser.runtime.getURL(`/features/${name}.css`)
+        href: browser.runtime.getURL(`/features/${name}/index.css?t=${timestamp}`)
       });
+      link.className = 'xkit';
       document.documentElement.appendChild(link);
     }
     if (styleElement) {
@@ -43,14 +51,17 @@
   };
 
   const destroyScript = async function (name) {
-    const scriptPath = browser.runtime.getURL(`/features/${name}.js`);
-    const { clean, stylesheet, styleElement } = await import(scriptPath);
+    const {
+      clean,
+      stylesheet,
+      styleElement
+    } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
 
     if (clean) {
       clean().catch(console.error);
     }
     if (stylesheet) {
-      document.querySelector(`link[href="${browser.runtime.getURL(`/features/${name}.css`)}"]`)?.remove();
+      document.querySelector(`link[href^="${browser.runtime.getURL(`/features/${name}/index.css`)}"]`)?.remove();
     }
     if (styleElement) {
       styleElement.remove();
@@ -79,7 +90,7 @@
   };
 
   const getInstalledScripts = async function () {
-    const url = browser.runtime.getURL('/features/_index.json');
+    const url = browser.runtime.getURL('/features/index.json');
     const file = await fetch(url);
     const installedScripts = await file.json();
 
@@ -97,7 +108,7 @@
   });
 
   const init = async function () {
-    $('style.xkit').remove();
+    $('style.xkit, link.xkit').remove();
 
     browser.storage.onChanged.addListener(onStorageChanged);
 

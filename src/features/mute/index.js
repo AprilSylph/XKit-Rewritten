@@ -1,11 +1,11 @@
-import { filterPostElements, postSelector, getTimelineItemWrapper } from '../utils/interface.js';
-import { registerBlogMeatballItem, registerMeatballItem, unregisterBlogMeatballItem, unregisterMeatballItem } from '../utils/meatballs.js';
-import { showModal, hideModal, modalCancelButton } from '../utils/modals.js';
-import { timelineObject } from '../utils/react_props.js';
-import { onNewPosts, pageModifications } from '../utils/mutations.js';
-import { keyToCss } from '../utils/css_map.js';
-import { dom } from '../utils/dom.js';
-import { getPreferences } from '../utils/preferences.js';
+import { filterPostElements, postSelector, getTimelineItemWrapper } from '../../utils/interface.js';
+import { registerBlogMeatballItem, registerMeatballItem, unregisterBlogMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
+import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
+import { timelineObject } from '../../utils/react_props.js';
+import { onNewPosts, pageModifications } from '../../utils/mutations.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { dom } from '../../utils/dom.js';
+import { getPreferences } from '../../utils/preferences.js';
 import {
   anyBlogPostTimelineFilter,
   anyBlogTimelineFilter,
@@ -19,9 +19,9 @@ import {
   peeprLikesTimelineFilter,
   peeprTimelineFilter,
   timelineSelector
-} from '../utils/timeline_id.js';
-import { controlsClass as showOriginalsControlsClass } from './show_originals.js';
-import { userBlogNames } from '../utils/user.js';
+} from '../../utils/timeline_id.js';
+import { controlsClass as showOriginalsControlsClass } from '../show_originals/index.js';
+import { userBlogNames } from '../../utils/user.js';
 
 const meatballButtonId = 'mute';
 const meatballButtonLabel = data => `Mute options for ${data.name ?? getVisibleBlog(data).name}`;

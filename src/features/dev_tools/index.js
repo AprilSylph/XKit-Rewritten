@@ -1,9 +1,9 @@
-import { getPreferences } from '../utils/preferences.js';
+import { getPreferences } from '../../utils/preferences.js';
 
 let enabledTools;
 
 const runTool = async function (name) {
-  const { main: run, styleElement } = await import(`./dev_tools/${name}.js`);
+  const { main: run, styleElement } = await import(`./${name}.js`);
   if (run) {
     run().catch(console.error);
   }
@@ -14,7 +14,7 @@ const runTool = async function (name) {
 };
 
 const destroyTool = async function (name) {
-  const { clean: destroy, styleElement } = await import(`./dev_tools/${name}.js`);
+  const { clean: destroy, styleElement } = await import(`./${name}.js`);
   if (destroy) {
     destroy().catch(console.error);
   }

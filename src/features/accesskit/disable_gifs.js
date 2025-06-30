@@ -4,6 +4,7 @@ import { dom } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
+const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelClass = 'xkit-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
@@ -48,8 +49,8 @@ export const styleElement = buildStyle(`
 
 *:hover > .${canvasClass},
 *:hover > .${labelClass},
-.${containerClass}:hover .${canvasClass},
-.${containerClass}:hover .${labelClass} {
+[${hoverContainerAttribute}]:hover .${canvasClass},
+[${hoverContainerAttribute}]:hover .${labelClass} {
   display: none;
 }
 
@@ -93,7 +94,7 @@ const pauseGif = function (gifElement) {
 
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
-    if (gifElement.closest('.block-editor-writing-flow')) return;
+    if (gifElement.closest(`${keyToCss('avatarImage')}, .block-editor-writing-flow`)) return;
     const pausedGifElements = [
       ...gifElement.parentNode.querySelectorAll(`.${canvasClass}`),
       ...gifElement.parentNode.querySelectorAll(`.${labelClass}`)
@@ -121,18 +122,21 @@ const processBackgroundGifs = function (gifBackgroundElements) {
 const processRows = function (rowsElements) {
   rowsElements.forEach(rowsElement => {
     [...rowsElement.children].forEach(row => {
-      if (!row.querySelector('figure')) return;
+      if (!row.querySelector(`figure:not(${keyToCss('unstretched')})`)) return;
 
       if (row.previousElementSibling?.classList?.contains(containerClass)) {
         row.previousElementSibling.append(row);
       } else {
-        const wrapper = dom('div', { class: containerClass });
+        const wrapper = dom('div', { class: containerClass, [hoverContainerAttribute]: '' });
         row.replaceWith(wrapper);
         wrapper.append(row);
       }
     });
   });
 };
+
+const processHoverableElements = elements =>
+  elements.forEach(element => element.setAttribute(hoverContainerAttribute, ''));
 
 export const main = async function () {
   const gifImage = `
@@ -146,6 +150,11 @@ export const main = async function () {
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 
   pageModifications.register(
+    `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`,
+    processHoverableElements
+  );
+
+  pageModifications.register(
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
     processRows
   );
@@ -155,6 +164,7 @@ export const clean = async function () {
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);
+  pageModifications.unregister(processHoverableElements);
 
   [...document.querySelectorAll(`.${containerClass}`)].forEach(wrapper =>
     wrapper.replaceWith(...wrapper.children)
@@ -162,4 +172,5 @@ export const clean = async function () {
 
   $(`.${canvasClass}, .${labelClass}`).remove();
   $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
+  $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
 };

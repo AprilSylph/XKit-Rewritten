@@ -1,36 +1,22 @@
 import { inject } from './inject.js';
+import { weakMemoize } from './memoize.js';
 import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
-
-const timelineObjectCache = new WeakMap();
-const notificationObjectCache = new WeakMap();
 
 /**
  * @param {Element} postElement - An on-screen post
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
-export const timelineObject = async function (postElement) {
-  if (!timelineObjectCache.has(postElement)) {
-    timelineObjectCache.set(
-      postElement,
-      inject('/main_world/unbury_timeline_object.js', [], postElement)
-    );
-  }
-  return timelineObjectCache.get(postElement);
-};
+export const timelineObject = weakMemoize(postElement =>
+  inject('/main_world/unbury_timeline_object.js', [], postElement)
+);
 
 /**
  * @param {Element} notificationElement - An on-screen notification
  * @returns {Promise<object>} - The notification's buried notification property
  */
-export const notificationObject = function (notificationElement) {
-  if (!notificationObjectCache.has(notificationElement)) {
-    notificationObjectCache.set(
-      notificationElement,
-      inject('/main_world/unbury_notification.js', [], notificationElement)
-    );
-  }
-  return notificationObjectCache.get(notificationElement);
-};
+export const notificationObject = weakMemoize(notificationElement =>
+  inject('/main_world/unbury_notification.js', [], notificationElement)
+);
 
 /**
  * @param {Element} meatballMenu - An on-screen meatball menu element in a blog modal header or blog card

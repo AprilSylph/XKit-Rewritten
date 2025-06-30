@@ -1,12 +1,11 @@
 import { sha256 } from '../utils/crypto.js';
 import { timelineObject } from '../utils/react_props.js';
 import { apiFetch } from '../utils/tumblr_helpers.js';
-import { postSelector, filterPostElements, postType, appendWithoutOverflow } from '../utils/interface.js';
-import { joinedCommunities, joinedCommunityUuids, userBlogs } from '../utils/user.js';
+import { postSelector, filterPostElements, postType, appendWithoutOverflow, buildStyle } from '../utils/interface.js';
+import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../utils/user.js';
 import { getPreferences } from '../utils/preferences.js';
 import { onNewPosts } from '../utils/mutations.js';
 import { notify } from '../utils/notifications.js';
-import { translate } from '../utils/language_data.js';
 import { dom } from '../utils/dom.js';
 import { showErrorModal } from '../utils/modals.js';
 import { keyToCss } from '../utils/css_map.js';
@@ -67,10 +66,17 @@ const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 const blogHashes = new Map();
 const avatarUrls = new Map();
 
-const reblogButtonSelector = `
-${postSelector} footer a[href*="/reblog/"],
-${postSelector} footer button[aria-label="${translate('Reblog')}"]:not([role])
-`;
+const reblogButtonSelector = `${postSelector} footer a[href*="/reblog/"]`;
+const buttonDivSelector = `${keyToCss('controls')} > *, ${keyToCss('engagementAction')}`;
+
+export const styleElement = buildStyle(`
+${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) {
+  position: relative;
+}
+${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) ${keyToCss('tooltip')} {
+  display: none;
+}
+`);
 
 const onBlogSelectorChange = () => {
   blogAvatar.style.backgroundImage = `url(${avatarUrls.get(blogSelector.value)})`;
@@ -126,7 +132,7 @@ tagsInput.addEventListener('input', checkLength);
 const showPopupOnHover = ({ currentTarget }) => {
   clearTimeout(timeoutID);
 
-  appendWithoutOverflow(popupElement, currentTarget.closest(keyToCss('controlIcon')), popupPosition);
+  appendWithoutOverflow(popupElement, currentTarget.closest(buttonDivSelector), popupPosition);
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
   const thisPost = currentTarget.closest(postSelector);
@@ -161,13 +167,13 @@ const removePopupOnLeave = () => {
   }, 500);
 };
 
-const makeButtonReblogged = ({ buttonDiv, state }) => {
-  ['published', 'queue', 'draft'].forEach(className => buttonDiv.classList.remove(className));
-  buttonDiv.classList.add(state);
+const markPostReblogged = ({ footer, state }) => {
+  footer.classList.remove('published', 'queue', 'draft');
+  footer.classList.add(state);
 };
 
 const reblogPost = async function ({ currentTarget }) {
-  const currentReblogButton = popupElement.parentNode;
+  const footer = popupElement.closest('footer');
 
   currentTarget.blur();
   actionButtons.disabled = true;
@@ -198,7 +204,7 @@ const reblogPost = async function ({ currentTarget }) {
   try {
     const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
     if (meta.status === 201) {
-      makeButtonReblogged({ buttonDiv: currentReblogButton, state });
+      markPostReblogged({ footer, state });
 
       if (lastPostID === postID) {
         popupElement.remove();
@@ -238,8 +244,8 @@ const processPosts = async function (postElements) {
 
     if (alreadyRebloggedList.includes(rootID)) {
       const reblogLink = postElement.querySelector(reblogButtonSelector);
-      const buttonDiv = reblogLink?.closest('div');
-      if (buttonDiv) makeButtonReblogged({ buttonDiv, state: 'published' });
+      const footer = reblogLink?.closest('footer');
+      if (footer) markPostReblogged({ footer, state: 'published' });
     }
   });
 };
@@ -306,6 +312,7 @@ const preventLongPressMenu = ({ originalEvent: event }) => {
 };
 
 export const main = async function () {
+  if (!primaryBlog) return;
   ({
     popupPosition,
     showBlogSelector,
@@ -337,8 +344,7 @@ export const main = async function () {
       blogHashes.set(uuid, await sha256(uuid));
     }
 
-    const { uuid: primaryUuid } = userBlogs.find(({ primary }) => primary === true);
-    accountKey = blogHashes.get(primaryUuid);
+    accountKey = blogHashes.get(primaryBlog.uuid);
 
     const {
       [rememberedBlogStorageKey]: rememberedBlogs = {}

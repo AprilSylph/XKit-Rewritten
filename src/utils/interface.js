@@ -4,7 +4,7 @@ import { timelineSelector } from './timeline_id.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
 export const blogViewSelector = '[style*="--blog-title-color"] *';
-export const notificationSelector = `${keyToCss('notification')}[role="listitem"]`;
+export const notificationSelector = `:is(${keyToCss('notification')}[role="listitem"], ${keyToCss('activityItem')})`;
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
 const cellSelector = keyToCss('cell');

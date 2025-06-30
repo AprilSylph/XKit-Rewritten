@@ -1,0 +1,4 @@
+[data-postblock-hidden] {
+  content: linear-gradient(transparent, transparent);
+  height: 0;
+}

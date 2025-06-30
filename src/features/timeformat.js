@@ -28,8 +28,8 @@ ${keyToCss('userRow')} [data-formatted-time] {
   flex-wrap: wrap;
 }
 
-${keyToCss('userRow')} [data-formatted-time]::before,
-${keyToCss('userRow')} [data-formatted-relative-time]::after {
+${keyToCss('userRow', 'timestampLink')} [data-formatted-time]::before,
+${keyToCss('userRow', 'timestampLink')} [data-formatted-relative-time]::after {
   font-size: .875rem;
 }
 
@@ -47,13 +47,33 @@ ${keyToCss('userRow')} ${keyToCss('timestamp')}:has([data-formatted-time]) {
   flex-wrap: nowrap;
 }
 
-${keyToCss('blogLinkWrapper')}:has(+ [data-formatted-time]) {
+${keyToCss('blogLinkWrapper')}:has(+ [data-formatted-time]),
+${keyToCss('blogLinkWrapper')}:has(+ a > [data-formatted-time]) {
   flex: none;
 }
 
-${keyToCss('blogLinkWrapper')} + [data-formatted-time] {
+${keyToCss('blogLinkWrapper')} + [data-formatted-time],
+${keyToCss('blogLinkWrapper')} + a:has(> [data-formatted-time]) {
   white-space: nowrap;
   overflow-x: hidden;
+}
+
+${keyToCss('timestampLink')} [data-formatted-time]:is(:focus, :hover) {
+  text-decoration: none;
+}
+
+${keyToCss('timestampLink')} [data-formatted-time]:is(:focus, :hover)::before,
+${keyToCss('timestampLink')} [data-formatted-time]:is(:focus, :hover)::after {
+  text-decoration: underline;
+}
+
+${keyToCss('timestampLink')} [data-formatted-relative-time]::after {
+  display: inline;
+}
+
+${keyToCss('timestampLink')} [data-formatted-time][title]::before,
+${keyToCss('timestampLink')} [data-formatted-time][title]::after {
+  cursor: pointer;
 }
 `);
 
@@ -88,7 +108,7 @@ const formatTimeElements = function (timeElements) {
     const momentDate = moment(timeElement.dateTime, moment.ISO_8601);
     timeElement.dataset.formattedTime = momentDate.format(format);
     if (displayRelative) {
-      timeElement.dataset.formattedTime += '\u2002\u00B7\u2002';
+      timeElement.dataset.formattedTime += '\u00A0\u00B7\u00A0';
       timeElement.dataset.formattedRelativeTime = constructRelativeTimeString(momentDate.unix());
     }
   });

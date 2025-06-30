@@ -19,6 +19,6 @@ jobs:
           exempt-issue-labels: "help wanted,wontfix"
           stale-issue-label: "stale"
           stale-issue-message: >
-            This issue is unconfirmed, and has been labelled as `stale` due to inactivity. It will be closed automatically if no further activity occurs.
-
+            This issue is unconfirmed, and has been labelled as `stale` due to inactivity.
+            It will be closed automatically if no further activity occurs.
             A project maintainer can mark an issue as confirmed by adding the `help wanted` label, the `wontfix` label, or an assignee.

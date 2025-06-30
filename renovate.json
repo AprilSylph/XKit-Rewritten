@@ -1,8 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:recommended"],
   "dependencyDashboard": false,
   "packageRules": [
     {
@@ -23,14 +21,10 @@
       "matchUpdateTypes": ["minor", "patch"]
     }
   ],
-  "postUpdateOptions": [
-    "npmDedupe"
-  ],
+  "postUpdateOptions": ["npmDedupe"],
   "rangeStrategy": "bump",
-  "schedule": [
-    "before 6am on the first day of the month"
-  ],
-  "vulnerabilityAlerts": {
-    "enabled": false
-  }
+  "reviewers": ["AprilSylph", "marcustyphoon"],
+  "semanticCommits": "enabled",
+  "schedule": ["before 6am on the first day of the month"],
+  "vulnerabilityAlerts": { "enabled": false }
 }

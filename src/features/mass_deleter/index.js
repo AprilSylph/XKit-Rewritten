@@ -1,6 +1,6 @@
 import { dom } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
-import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
+import { createBlogSpan, modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 
@@ -56,7 +56,7 @@ const confirmDeleteDrafts = event => {
 
   showModal({
     title: 'Delete drafts?',
-    message: ['Every draft on this blog dated before ', beforeElement, ' will be deleted.'],
+    message: ['Every draft on ', createBlogSpan(blogName), ' dated before ', beforeElement, ' will be deleted.'],
     buttons: [
       modalCancelButton,
       dom(
@@ -148,19 +148,23 @@ const showNoDraftsError = () => showModal({
   buttons: [modalCompleteButton]
 });
 
-const showClearQueuePrompt = () => showModal({
-  title: 'Clear your queue?',
-  message: [
-    'All posts in this blog\'s queue will be deleted.\n',
-    'Scheduled posts will not be affected.'
-  ],
-  buttons: [
-    modalCancelButton,
-    dom('button', { class: 'red' }, { click: () => clearQueue().catch(showErrorModal) }, ['Clear it!'])
-  ]
-});
+const showClearQueuePrompt = () => {
+  const blogName = location.pathname.split('/')[2];
 
-const clearQueue = async function () {
+  showModal({
+    title: 'Clear your queue?',
+    message: [
+      'All posts in ', createBlogSpan(blogName), '\'s queue will be deleted.\n',
+      'Scheduled posts will not be affected.'
+    ],
+    buttons: [
+      modalCancelButton,
+      dom('button', { class: 'red' }, { click: () => clearQueue({ blogName }).catch(showErrorModal) }, ['Clear it!'])
+    ]
+  });
+};
+
+const clearQueue = async function ({ blogName }) {
   const foundPostsElement = dom('span', null, null, ['Gathering queued posts...']);
   const deleteCountElement = dom('span');
 
@@ -176,7 +180,6 @@ const clearQueue = async function () {
   });
 
   const queuedPosts = [];
-  const blogName = location.pathname.split('/')[2];
   let resource = `/v2/blog/${blogName}/posts/queue?limit=50`;
 
   while (resource) {

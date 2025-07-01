@@ -1,0 +1,15 @@
+{
+  "rules": {
+    "jsdoc/require-jsdoc": [
+      "warn",
+      {
+        "publicOnly": true,
+        "require": {
+          "FunctionDeclaration": true,
+          "FunctionExpression": true,
+          "ArrowFunctionExpression": true
+        }
+      }
+    ]
+  }
+}

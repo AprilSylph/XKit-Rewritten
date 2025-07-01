@@ -1,0 +1,27 @@
+{
+  "title": "Mute",
+  "description": "Hide users' posts all over Tumblr",
+  "icon": {
+    "class_name": "ri-volume-mute-line",
+    "color": "white",
+    "background_color": "#C20044"
+  },
+  "relatedTerms": [ "Blacklist", "Filter", "Savior" ],
+  "preferences": {
+    "manageBlockedPosts": {
+      "type": "iframe",
+      "label": "Manage muted users",
+      "src": "/features/mute/options/index.html"
+    },
+    "checkTrail": {
+      "type": "checkbox",
+      "label": "Hide posts with a muted user anywhere in the trail",
+      "default": false
+    },
+    "contributedContentOriginal": {
+      "type": "checkbox",
+      "label": "Treat reblogs with contributed content as original",
+      "default": false
+    }
+  }
+}

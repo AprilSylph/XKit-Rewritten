@@ -5,15 +5,12 @@
   --in-content-primary-button-background: #0061e0;
   --in-content-primary-button-background-hover: #0250bb;
   --in-content-primary-button-background-active: #053e94;
-  --in-content-box-info-background: #f0f0f4;
 
   --black: 21, 20, 25;
   --white: 255, 255, 255;
   --accent: 10, 132, 255;
   --passive-grey: 223, 223, 229;
   --active-grey: 207, 207, 216;
-
-  --search-highlight: 255, 233, 0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,15 +21,12 @@
     --in-content-primary-button-background: #00ddff;
     --in-content-primary-button-background-hover: #80ebff;
     --in-content-primary-button-background-active: #aaf2ff;
-    --in-content-box-info-background: #36353e;
 
     --black: 251, 251, 254;
     --white: 66, 65, 77;
     --accent: 54, 213, 255;
     --passive-grey: 83, 83, 94;
     --active-grey: 91, 91, 102;
-
-    --search-highlight: 0, 62, 170;
   }
 }
 
@@ -63,33 +57,22 @@ body {
   user-select: none;
 }
 
-#permissions-banner,
+body.standalone {
+  width: 100%;
+  max-width: 632px;
+  margin: 1ch auto;
+
+  outline: 1px solid rgb(var(--active-grey));
+}
+
 #embedded-banner {
-  box-sizing: border-box;
-  width: 375px;
-  min-width: 100%;
-  max-width: 100%;
-  padding: 8px 4px;
+  padding: 4px 8px;
   border-bottom: 1px solid rgb(var(--active-grey));
 
   text-align: center;
 }
 
-#grant-host-permission {
-  display: block;
-  padding: 0.5ch 1ch;
-  border-radius: 0.5ch;
-  margin: 8px auto 0;
-
-  font-family: 'Courier New', Courier, monospace;
-  line-height: 1;
-}
-
-#grant-host-permission:focus {
-  outline: 2px solid rgb(var(--accent));
-}
-
-#permissions-banner:not([hidden]) + #embedded-banner {
+body:not(.embedded) #embedded-banner {
   display: none;
 }
 
@@ -183,4 +166,17 @@ label:not(:first-child),
 input:not(:first-child),
 select:not(:first-child) {
   margin-left: 1ch;
+}
+
+#non-standalone-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1ch;
+
+  border-top: 1px dotted rgb(var(--active-grey));
+}
+
+body.standalone #non-standalone-footer {
+  display: none;
 }

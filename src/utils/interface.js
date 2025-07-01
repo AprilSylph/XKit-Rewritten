@@ -142,5 +142,7 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
   }
   if (elementRect.right > preventOverflowTargetRect.right - 15) {
     element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.right - 15 - elementRect.right}px`);
+  } else if (elementRect.left < preventOverflowTargetRect.left + 15) {
+    element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.left + 15 - elementRect.left}px`);
   }
 };

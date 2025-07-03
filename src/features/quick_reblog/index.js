@@ -1,7 +1,7 @@
 import { sha256 } from '../../utils/crypto.js';
 import { timelineObject } from '../../utils/react_props.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
-import { postSelector, filterPostElements, postType, appendWithoutOverflow, buildStyle } from '../../utils/interface.js';
+import { postSelector, filterPostElements, postType, appendWithoutOverflow, buildStyle, getPopoverWrapper } from '../../utils/interface.js';
 import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../../utils/user.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { onNewPosts } from '../../utils/mutations.js';
@@ -69,7 +69,7 @@ const blogHashes = new Map();
 const avatarUrls = new Map();
 
 const reblogButtonSelector = `${postSelector} footer a[href*="/reblog/"]`;
-const buttonDivSelector = `${keyToCss('controls')} > *, ${keyToCss('engagementAction')}`;
+const buttonDivSelector = `${keyToCss('controls', 'engagementControls')} > *, ${keyToCss('engagementAction')}`;
 
 export const styleElement = buildStyle(`
 ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) {
@@ -137,7 +137,7 @@ tagsInput.addEventListener('input', checkLength);
 const showPopupOnHover = ({ currentTarget }) => {
   clearTimeout(timeoutID);
 
-  appendWithoutOverflow(popupElement, currentTarget.closest(buttonDivSelector), popupPosition);
+  appendWithoutOverflow(popupElement, getPopoverWrapper(currentTarget), popupPosition);
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
   const thisPost = currentTarget.closest(postSelector);

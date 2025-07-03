@@ -70,7 +70,7 @@ const avatarUrls = new Map();
 
 const buttonSelector = `${postSelector} footer a, ${postSelector} footer button`;
 const reblogButtonSelector = `${postSelector} footer :is(a[href*="/reblog/"], button:has(use[href="#managed-icon__ds-reblog-24"]))`;
-const buttonDivSelector = `${keyToCss('controls')} > *, ${keyToCss('engagementAction')}`;
+const buttonDivSelector = `${keyToCss('controls', 'reblogsControl', 'engagementControls')} > *`;
 
 export const styleElement = buildStyle(`
 ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) {

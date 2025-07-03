@@ -140,7 +140,7 @@ const showPopupOnHover = ({ currentTarget }) => {
 
   clearTimeout(timeoutID);
 
-  appendWithoutOverflow(popupElement, currentTarget.closest(buttonDivSelector), popupPosition);
+  appendWithoutOverflow(popupElement, currentTarget.closest(buttonDivSelector) ?? currentTarget.parentElement, popupPosition);
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
   const thisPost = currentTarget.closest(postSelector);

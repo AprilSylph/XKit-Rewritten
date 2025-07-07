@@ -1,13 +1,13 @@
 const configSection = document.getElementById('configuration');
 const configSectionLink = document.querySelector('a[href="#configuration"]');
-const scriptsDiv = configSection.querySelector('.scripts');
+const featuresDiv = configSection.querySelector('.features');
 
-const getInstalledScripts = async function () {
+const getInstalledFeatures = async function () {
   const url = browser.runtime.getURL('/features/index.json');
   const file = await fetch(url);
-  const installedScripts = await file.json();
+  const installedFeatures = await file.json();
 
-  return installedScripts;
+  return installedFeatures;
 };
 
 const writeEnabled = async function ({ currentTarget }) {
@@ -43,8 +43,8 @@ const debounce = (func, ms) => {
 
 const writePreference = async function ({ target }) {
   const { id } = target;
-  const [scriptName, preferenceType, preferenceName] = id.split('.');
-  const storageKey = `${scriptName}.preferences.${preferenceName}`;
+  const [featureName, preferenceType, preferenceName] = id.split('.');
+  const storageKey = `${featureName}.preferences.${preferenceName}`;
 
   switch (preferenceType) {
     case 'checkbox':
@@ -59,21 +59,21 @@ const writePreference = async function ({ target }) {
   }
 };
 
-const renderPreferences = async function ({ scriptName, preferences, preferenceList }) {
+const renderPreferences = async function ({ featureName, preferences, preferenceList }) {
   for (const [key, preference] of Object.entries(preferences)) {
-    const storageKey = `${scriptName}.preferences.${key}`;
+    const storageKey = `${featureName}.preferences.${key}`;
     const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
     preference.value = savedPreference ?? preference.default;
 
     const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
 
     const preferenceInput = preferenceTemplateClone.querySelector('input, select, textarea, iframe');
-    preferenceInput.id = `${scriptName}.${preference.type}.${key}`;
+    preferenceInput.id = `${featureName}.${preference.type}.${key}`;
 
     const preferenceLabel = preferenceTemplateClone.querySelector('label');
     if (preferenceLabel) {
       preferenceLabel.textContent = preference.label || key;
-      preferenceLabel.setAttribute('for', `${scriptName}.${preference.type}.${key}`);
+      preferenceLabel.setAttribute('for', `${featureName}.${preference.type}.${key}`);
     } else {
       preferenceInput.title = preference.label || key;
     }
@@ -124,21 +124,21 @@ const renderPreferences = async function ({ scriptName, preferences, preferenceL
   }
 };
 
-const renderScripts = async function () {
-  const scriptClones = [];
-  scriptsDiv.textContent = '';
+const renderFeatures = async function () {
+  const featureClones = [];
+  featuresDiv.textContent = '';
 
-  const installedScripts = await getInstalledScripts();
+  const installedFeatures = await getInstalledFeatures();
   const { enabledScripts = [], specialAccess = [] } = await browser.storage.local.get();
 
-  const orderedEnabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName));
-  const disabledScripts = installedScripts.filter(scriptName => enabledScripts.includes(scriptName) === false);
+  const orderedEnabledFeatures = installedFeatures.filter(featureName => enabledScripts.includes(featureName));
+  const disabledFeatures = installedFeatures.filter(featureName => enabledScripts.includes(featureName) === false);
 
-  for (const scriptName of [...orderedEnabledScripts, ...disabledScripts]) {
-    const url = browser.runtime.getURL(`/features/${scriptName}/feature.json`);
+  for (const featureName of [...orderedEnabledFeatures, ...disabledFeatures]) {
+    const url = browser.runtime.getURL(`/features/${featureName}/feature.json`);
     const file = await fetch(url);
     const {
-      title = scriptName,
+      title = featureName,
       description = '',
       note = '',
       icon = {},
@@ -148,22 +148,22 @@ const renderScripts = async function () {
       deprecated = false
     } = await file.json();
 
-    const scriptTemplateClone = document.getElementById('script').content.cloneNode(true);
+    const featureTemplateClone = document.getElementById('feature').content.cloneNode(true);
 
-    const detailsElement = scriptTemplateClone.querySelector('details.script');
+    const detailsElement = featureTemplateClone.querySelector('details.feature');
     detailsElement.dataset.relatedTerms = relatedTerms;
     detailsElement.dataset.deprecated = deprecated;
 
-    if (enabledScripts.includes(scriptName) === false) {
+    if (enabledScripts.includes(featureName) === false) {
       detailsElement.classList.add('disabled');
 
-      if (deprecated && !specialAccess.includes(scriptName)) {
+      if (deprecated && !specialAccess.includes(featureName)) {
         continue;
       }
     }
 
     if (icon.class_name !== undefined) {
-      const iconDiv = scriptTemplateClone.querySelector('div.icon');
+      const iconDiv = featureTemplateClone.querySelector('div.icon');
       iconDiv.style.backgroundColor = icon.background_color || '#ffffff';
 
       const iconInner = iconDiv.querySelector('i');
@@ -171,45 +171,45 @@ const renderScripts = async function () {
       iconInner.style.color = icon.color || '#000000';
     }
 
-    const titleHeading = scriptTemplateClone.querySelector('h4.title');
+    const titleHeading = featureTemplateClone.querySelector('h4.title');
     titleHeading.textContent = title;
 
     if (description !== '') {
-      const descriptionParagraph = scriptTemplateClone.querySelector('p.description');
+      const descriptionParagraph = featureTemplateClone.querySelector('p.description');
       descriptionParagraph.textContent = description;
     }
 
     if (help !== '') {
-      const helpLink = scriptTemplateClone.querySelector('a.help');
+      const helpLink = featureTemplateClone.querySelector('a.help');
       helpLink.href = help;
     }
 
-    const enabledInput = scriptTemplateClone.querySelector('input.toggle-button');
-    enabledInput.id = scriptName;
-    enabledInput.checked = enabledScripts.includes(scriptName);
+    const enabledInput = featureTemplateClone.querySelector('input.toggle-button');
+    enabledInput.id = featureName;
+    enabledInput.checked = enabledScripts.includes(featureName);
     enabledInput.addEventListener('input', writeEnabled);
 
     if (note !== '') {
-      const noteParagraph = scriptTemplateClone.querySelector('.note');
+      const noteParagraph = featureTemplateClone.querySelector('.note');
       noteParagraph.textContent = note;
     }
 
     if (Object.keys(preferences).length !== 0) {
-      const preferenceList = scriptTemplateClone.querySelector('.preferences');
-      renderPreferences({ scriptName, preferences, preferenceList });
+      const preferenceList = featureTemplateClone.querySelector('.preferences');
+      renderPreferences({ featureName, preferences, preferenceList });
     }
 
-    scriptClones.push(scriptTemplateClone);
+    featureClones.push(featureTemplateClone);
   }
 
-  scriptsDiv.append(...scriptClones);
+  featuresDiv.append(...featureClones);
 };
 
-renderScripts();
+renderFeatures();
 
 configSectionLink.addEventListener('click', ({ currentTarget }) => {
   if (currentTarget.classList.contains('outdated')) {
     currentTarget.classList.remove('outdated');
-    renderScripts();
+    renderFeatures();
   }
 });

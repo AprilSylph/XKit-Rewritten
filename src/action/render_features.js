@@ -2,6 +2,9 @@ const configSection = document.getElementById('configuration');
 const configSectionLink = document.querySelector('a[href="#configuration"]');
 const featuresDiv = configSection.querySelector('.features');
 
+const enabledFeaturesKey = 'enabledScripts';
+const specialAccessKey = 'specialAccess';
+
 const getInstalledFeatures = async function () {
   const url = browser.runtime.getURL('/features/index.json');
   const file = await fetch(url);
@@ -13,16 +16,19 @@ const getInstalledFeatures = async function () {
 const writeEnabled = async function ({ currentTarget }) {
   const { checked, id } = currentTarget;
   const detailsElement = currentTarget.closest('details');
-  let { enabledScripts = [], specialAccess = [] } = await browser.storage.local.get();
+  let {
+    [enabledFeaturesKey]: enabledFeatures = [],
+    [specialAccessKey]: specialAccess = []
+  } = await browser.storage.local.get();
 
   const hasPreferences = detailsElement.querySelector('.preferences:not(:empty)');
   if (hasPreferences) detailsElement.open = checked;
 
   if (checked) {
-    enabledScripts.push(id);
+    enabledFeatures.push(id);
     detailsElement.classList.remove('disabled');
   } else {
-    enabledScripts = enabledScripts.filter(x => x !== id);
+    enabledFeatures = enabledFeatures.filter(x => x !== id);
     detailsElement.classList.add('disabled');
 
     if (detailsElement.dataset.deprecated === 'true' && !specialAccess.includes(id)) {
@@ -30,7 +36,7 @@ const writeEnabled = async function ({ currentTarget }) {
     }
   }
 
-  browser.storage.local.set({ enabledScripts, specialAccess });
+  browser.storage.local.set({ [enabledFeaturesKey]: enabledFeatures, [specialAccessKey]: specialAccess });
 };
 
 const debounce = (func, ms) => {
@@ -129,10 +135,13 @@ const renderFeatures = async function () {
   featuresDiv.textContent = '';
 
   const installedFeatures = await getInstalledFeatures();
-  const { enabledScripts = [], specialAccess = [] } = await browser.storage.local.get();
+  const {
+    [enabledFeaturesKey]: enabledFeatures = [],
+    [specialAccessKey]: specialAccess = []
+  } = await browser.storage.local.get();
 
-  const orderedEnabledFeatures = installedFeatures.filter(featureName => enabledScripts.includes(featureName));
-  const disabledFeatures = installedFeatures.filter(featureName => enabledScripts.includes(featureName) === false);
+  const orderedEnabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName));
+  const disabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName) === false);
 
   for (const featureName of [...orderedEnabledFeatures, ...disabledFeatures]) {
     const url = browser.runtime.getURL(`/features/${featureName}/feature.json`);
@@ -154,7 +163,7 @@ const renderFeatures = async function () {
     detailsElement.dataset.relatedTerms = relatedTerms;
     detailsElement.dataset.deprecated = deprecated;
 
-    if (enabledScripts.includes(featureName) === false) {
+    if (enabledFeatures.includes(featureName) === false) {
       detailsElement.classList.add('disabled');
 
       if (deprecated && !specialAccess.includes(featureName)) {
@@ -186,7 +195,7 @@ const renderFeatures = async function () {
 
     const enabledInput = featureTemplateClone.querySelector('input.toggle-button');
     enabledInput.id = featureName;
-    enabledInput.checked = enabledScripts.includes(featureName);
+    enabledInput.checked = enabledFeatures.includes(featureName);
     enabledInput.addEventListener('input', writeEnabled);
 
     if (note !== '') {

@@ -8,7 +8,7 @@ Each feature requires a metadata file in order to be displayed in the configurat
 - Type: String
 - Required: No
 
-Human-readable title for this feature. Defaults to the script's filename if not provided.
+Human-readable title for this feature. Defaults to the feature's subfolder name if not provided.
 
 ### `"description"`
 - Type: String
@@ -50,7 +50,7 @@ URL which points to a usage guide or extended description for the feature.
 - Type: Array
 - Required: No
 
-An optional array of strings related to this script that a user might search for. Case insensitive.
+An optional array of strings related to this feature that a user might search for. Case insensitive.
 
 ### `"preferences"`
 - Type: Object
@@ -58,7 +58,7 @@ An optional array of strings related to this script that a user might search for
 
 Object with 1 or more custom keys; each key is used internally as a preference's name.
 
-It is recommended to use camelCase for each preference name, so that the script can destructure each preference without renaming it.
+It is recommended to use camelCase for each preference name, so that the feature can destructure each preference without renaming it.
 
 #### `"preferences"`: \<preference name\>
 - Type: Object
@@ -85,7 +85,7 @@ For `"select"`-type preferences, an array of objects each with `"value"` and `"l
 - Type: String
 - Required: Yes, if `type` is `"iframe"`
 
-For `"iframe"`-type preferences, a relative address to be embedded in the script's preference list. Unused for other preference types.
+For `"iframe"`-type preferences, a relative address to be embedded in the feature's preference list. Unused for other preference types.
 
 #### `"preferences"`: \<preference name\>: `"default"`
 - Type: Any

@@ -201,8 +201,10 @@ const renderFeatures = async function () {
     featureElement.append(titleElement);
 
     if (description !== '') {
-      const descriptionParagraph = shadowRoot.querySelector('p.description');
-      descriptionParagraph.textContent = description;
+      const descriptionElement = document.createElement('span');
+      descriptionElement.setAttribute('slot', 'description');
+      descriptionElement.textContent = description;
+      featureElement.append(descriptionElement);
     }
 
     if (help !== '') {

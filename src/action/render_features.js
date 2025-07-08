@@ -163,7 +163,6 @@ const renderFeatures = async function () {
     const {
       title = featureName,
       description = '',
-      note = '',
       icon = {},
       help = '',
       relatedTerms = [],
@@ -216,11 +215,6 @@ const renderFeatures = async function () {
     enabledInput.id = featureName;
     enabledInput.checked = enabledFeatures.includes(featureName);
     enabledInput.addEventListener('input', writeEnabled);
-
-    if (note !== '') {
-      const noteParagraph = shadowRoot.querySelector('.note');
-      noteParagraph.textContent = note;
-    }
 
     if (Object.keys(preferences).length !== 0) {
       const preferenceList = shadowRoot.querySelector('.preferences');

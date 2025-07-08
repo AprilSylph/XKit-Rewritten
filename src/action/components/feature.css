@@ -110,19 +110,6 @@ summary:focus {
   font-weight: normal;
 }
 
-.note {
-  padding: 1ch 2ch;
-  margin: 0;
-
-  background-color: var(--in-content-box-info-background);
-  font-size: 0.875rem;
-  text-align: center;
-}
-
-.note:empty {
-  display: none;
-}
-
 ul.preferences {
   padding: 0 0.5ch;
   margin: 1ch 0;

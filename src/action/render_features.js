@@ -16,7 +16,7 @@ const getInstalledFeatures = async function () {
 const writeEnabled = async function ({ currentTarget }) {
   const { checked, id } = currentTarget;
   const detailsElement = currentTarget.closest('details');
-  const {
+  let {
     [enabledFeaturesKey]: enabledFeatures = [],
     [specialAccessKey]: specialAccess = []
   } = await browser.storage.local.get();

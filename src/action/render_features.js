@@ -145,7 +145,7 @@ class XKitFeatureElement extends HTMLElement {
 customElements.define('xkit-feature', XKitFeatureElement);
 
 const renderFeatures = async function () {
-  const featureClones = [];
+  const featureElements = [];
   featuresDiv.textContent = '';
 
   const installedFeatures = await getInstalledFeatures();
@@ -221,10 +221,10 @@ const renderFeatures = async function () {
       renderPreferences({ featureName, preferences, preferenceList });
     }
 
-    featureClones.push(featureElement);
+    featureElements.push(featureElement);
   }
 
-  featuresDiv.append(...featureClones);
+  featuresDiv.append(...featureElements);
 };
 
 renderFeatures();

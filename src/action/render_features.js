@@ -195,8 +195,10 @@ const renderFeatures = async function () {
       featureElement.append(iconElement);
     }
 
-    const titleHeading = shadowRoot.querySelector('h4.title');
-    titleHeading.textContent = title;
+    const titleElement = document.createElement('span');
+    titleElement.setAttribute('slot', 'title');
+    titleElement.textContent = title;
+    featureElement.append(titleElement);
 
     if (description !== '') {
       const descriptionParagraph = shadowRoot.querySelector('p.description');

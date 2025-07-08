@@ -133,6 +133,17 @@ const renderPreferences = async function ({ featureName, preferences, preference
   }
 };
 
+class XKitFeatureElement extends HTMLElement {
+  constructor () {
+    super();
+    const { content } = document.getElementById(this.localName);
+    const shadowRoot = this.attachShadow({ mode: 'open' });
+    shadowRoot.replaceChildren(content.cloneNode(true));
+  }
+}
+
+customElements.define('xkit-feature', XKitFeatureElement);
+
 const renderFeatures = async function () {
   const featureClones = [];
   featuresDiv.textContent = '';
@@ -160,9 +171,10 @@ const renderFeatures = async function () {
       deprecated = false
     } = await file.json();
 
-    const featureTemplateClone = document.getElementById('feature').content.cloneNode(true);
+    const featureElement = document.createElement('xkit-feature');
+    const { shadowRoot } = featureElement;
 
-    const detailsElement = featureTemplateClone.querySelector('details.feature');
+    const detailsElement = shadowRoot.querySelector('details');
     detailsElement.dataset.relatedTerms = relatedTerms;
     detailsElement.dataset.deprecated = deprecated;
 
@@ -175,7 +187,7 @@ const renderFeatures = async function () {
     }
 
     if (icon.class_name !== undefined) {
-      const iconDiv = featureTemplateClone.querySelector('div.icon');
+      const iconDiv = shadowRoot.querySelector('div.icon');
       iconDiv.style.backgroundColor = icon.background_color || '#ffffff';
 
       const iconInner = iconDiv.querySelector('i');
@@ -183,35 +195,35 @@ const renderFeatures = async function () {
       iconInner.style.color = icon.color || '#000000';
     }
 
-    const titleHeading = featureTemplateClone.querySelector('h4.title');
+    const titleHeading = shadowRoot.querySelector('h4.title');
     titleHeading.textContent = title;
 
     if (description !== '') {
-      const descriptionParagraph = featureTemplateClone.querySelector('p.description');
+      const descriptionParagraph = shadowRoot.querySelector('p.description');
       descriptionParagraph.textContent = description;
     }
 
     if (help !== '') {
-      const helpLink = featureTemplateClone.querySelector('a.help');
+      const helpLink = shadowRoot.querySelector('a.help');
       helpLink.href = help;
     }
 
-    const enabledInput = featureTemplateClone.querySelector('input.toggle-button');
+    const enabledInput = shadowRoot.querySelector('input.toggle-button');
     enabledInput.id = featureName;
     enabledInput.checked = enabledFeatures.includes(featureName);
     enabledInput.addEventListener('input', writeEnabled);
 
     if (note !== '') {
-      const noteParagraph = featureTemplateClone.querySelector('.note');
+      const noteParagraph = shadowRoot.querySelector('.note');
       noteParagraph.textContent = note;
     }
 
     if (Object.keys(preferences).length !== 0) {
-      const preferenceList = featureTemplateClone.querySelector('.preferences');
+      const preferenceList = shadowRoot.querySelector('.preferences');
       renderPreferences({ featureName, preferences, preferenceList });
     }
 
-    featureClones.push(featureTemplateClone);
+    featureClones.push(featureElement);
   }
 
   featuresDiv.append(...featureClones);

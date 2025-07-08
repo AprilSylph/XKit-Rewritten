@@ -16,7 +16,7 @@ const getInstalledFeatures = async function () {
 const writeEnabled = async function ({ currentTarget }) {
   const { checked, id } = currentTarget;
   const detailsElement = currentTarget.closest('details');
-  let {
+  const {
     [enabledFeaturesKey]: enabledFeatures = [],
     [specialAccessKey]: specialAccess = []
   } = await browser.storage.local.get();
@@ -36,7 +36,10 @@ const writeEnabled = async function ({ currentTarget }) {
     }
   }
 
-  browser.storage.local.set({ [enabledFeaturesKey]: enabledFeatures, [specialAccessKey]: specialAccess });
+  browser.storage.local.set({
+    [enabledFeaturesKey]: enabledFeatures,
+    [specialAccessKey]: specialAccess
+  });
 };
 
 const debounce = (func, ms) => {

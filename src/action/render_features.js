@@ -187,12 +187,12 @@ const renderFeatures = async function () {
     }
 
     if (icon.class_name !== undefined) {
-      const iconDiv = shadowRoot.querySelector('div.icon');
-      iconDiv.style.backgroundColor = icon.background_color || '#ffffff';
-
-      const iconInner = iconDiv.querySelector('i');
-      iconInner.classList.add(icon.class_name);
-      iconInner.style.color = icon.color || '#000000';
+      const iconElement = document.createElement('i');
+      iconElement.setAttribute('slot', 'icon');
+      iconElement.classList.add('ri-fw', icon.class_name);
+      iconElement.style.backgroundColor = icon.background_color ?? '#ffffff';
+      iconElement.style.color = icon.color ?? '#000000';
+      featureElement.append(iconElement);
     }
 
     const titleHeading = shadowRoot.querySelector('h4.title');

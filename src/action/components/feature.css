@@ -41,10 +41,12 @@ summary:focus {
   width: 32px;
   height: 32px;
   border-radius: 5px;
+  overflow: hidden;
 }
 
-.icon i {
+.icon ::slotted(i) {
   font-size: 26px;
+  line-height: 32px;
 }
 
 .icon,

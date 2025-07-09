@@ -22,15 +22,15 @@ const writeEnabled = async function ({ currentTarget }) {
     [specialAccessKey]: specialAccess = []
   } = await browser.storage.local.get();
 
-  const hasPreferences = shadowRoot.querySelector('.preferences:not(:empty)');
-  if (hasPreferences) shadowRoot.open = checked;
+  const hasPreferences = Object.keys(featureElement.preferences).length !== 0;
+  if (hasPreferences) shadowRoot.querySelector('details').open = checked;
 
   if (checked) {
     enabledFeatures.push(id);
   } else {
     enabledFeatures = enabledFeatures.filter(x => x !== id);
 
-    if (featureElement.metadata.deprecated && !specialAccess.includes(id)) {
+    if (featureElement.deprecated && !specialAccess.includes(id)) {
       specialAccess.push(id);
     }
   }
@@ -135,12 +135,10 @@ const renderPreferences = async function ({ featureName, preferences, preference
 };
 
 class XKitFeatureElement extends HTMLElement {
-  #disabled = false;
-  #metadata = {};
-
   #detailsElement;
   #enabledInput;
   #helpAnchor;
+  #preferencesList;
 
   constructor () {
     super();
@@ -152,6 +150,7 @@ class XKitFeatureElement extends HTMLElement {
     this.#detailsElement = shadowRoot.querySelector('details');
     this.#enabledInput = shadowRoot.querySelector('input[type="checkbox"]');
     this.#helpAnchor = shadowRoot.querySelector('a.help');
+    this.#preferencesList = shadowRoot.querySelector('ul.preferences');
   }
 
   connectedCallback () {
@@ -162,75 +161,140 @@ class XKitFeatureElement extends HTMLElement {
     this.#enabledInput.removeEventListener('input', writeEnabled);
   }
 
-  set disabled (disabled) {
+  /** @type {boolean} Whether to hide the feature on installations on which it was not enabled at the time of deprecation. */
+  #deprecated = false;
+
+  set deprecated (deprecated = false) {
+    this.#detailsElement.dataset.deprecated = deprecated;
+    this.#deprecated = deprecated;
+  }
+
+  get deprecated () { return this.#deprecated; }
+
+  /** @type {string} Human-readable description for this feature. Defaults to an empty string if not provided. */
+  #description = '';
+
+  set description (description) {
+    if (!description) return;
+
+    const descriptionElement = document.createElement('span');
+    descriptionElement.setAttribute('slot', 'description');
+    descriptionElement.textContent = description;
+    this.append(descriptionElement);
+
+    this.#description = description;
+  }
+
+  get description () { return this.#description; }
+
+  /** @type {boolean} True if the feature can be enabled. Defaults to `false`. */
+  #disabled = false;
+
+  set disabled (disabled = false) {
     this.#detailsElement.classList.toggle('disabled', disabled);
     this.#enabledInput.checked = !disabled;
-
     this.#disabled = disabled;
   }
 
-  get disabled () {
-    return this.#disabled;
+  get disabled () { return this.#disabled; }
+
+  /** @type {string} The internal name of the feature. Required; has no default. */
+  #featureName;
+
+  set featureName (featureName) {
+    this.#enabledInput.id = featureName;
+    this.#featureName = featureName;
   }
 
-  set metadata ({
-    deprecated = false,
-    description = '',
-    featureName,
-    help = '',
-    icon = {},
-    preferences = {},
-    relatedTerms = [],
-    title = featureName
-  }) {
-    this.#detailsElement.dataset.deprecated = deprecated;
-    this.#detailsElement.dataset.relatedTerms = relatedTerms;
-    this.#enabledInput.id = featureName;
+  get featureName () {
+    return this.#featureName ?? '';
+  }
 
-    if (icon.class_name !== undefined) {
-      const iconElement = document.createElement('i');
-      iconElement.setAttribute('slot', 'icon');
-      iconElement.classList.add('ri-fw', icon.class_name);
-      iconElement.style.backgroundColor = icon.background_color ?? '#ffffff';
-      iconElement.style.color = icon.color ?? '#000000';
-      this.append(iconElement);
-    }
+  /** @type {string} URL which points to a usage guide or extended description for the feature. */
+  #help;
+
+  set help (help) {
+    if (!help) return;
+    this.#helpAnchor.href = help;
+    this.#help = help;
+  }
+
+  get help () {
+    return this.#help ?? '';
+  }
+
+  /**
+   * @typedef {string} Color https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
+   * @typedef {object} Icon
+   * @property {string} class_name [Remix Icon](https://remixicon.com/) class of the icon for the feature. If not provided, an icon is not generated.
+   * @property {Color} [background_color] The background colour of the feature icon. Defaults to pure white (`#ffffff`) if not provided.
+   * @property {Color} [color] The foreground colour of the feature icon. Defaults to pure black (`#000000`) if not provided.
+   */
+  /** @type {Icon} The icon to be displayed for this feature. Defaults to an empty object if not provided. */
+  #icon = {};
+
+  set icon (icon = {}) {
+    if (!icon.class_name) return;
+
+    const iconElement = document.createElement('i');
+    iconElement.setAttribute('slot', 'icon');
+    iconElement.classList.add('ri-fw', icon.class_name);
+    iconElement.style.backgroundColor = icon.background_color ?? '#ffffff';
+    iconElement.style.color = icon.color ?? '#000000';
+    this.append(iconElement);
+
+    this.#icon = icon;
+  }
+
+  get icon () { return this.#icon; }
+
+  /** @type {Record<string, object>} Keys are preference names; values are preference definitions. */
+  #preferences = {};
+
+  set preferences (preferences = {}) {
+    if (Object.keys(preferences).length === 0) return;
+
+    renderPreferences({
+      featureName: this.#featureName,
+      preferences,
+      preferenceList: this.#preferencesList
+    });
+
+    this.#preferences = preferences;
+  }
+
+  get preferences () {
+    return this.#preferences;
+  }
+
+  /** @type {string[]} An optional array of strings related to this feature that a user might search for. Case insensitive. */
+  #relatedTerms = [];
+
+  set relatedTerms (relatedTerms = []) {
+    this.#detailsElement.dataset.relatedTerms = relatedTerms;
+    this.#relatedTerms = relatedTerms;
+  }
+
+  get relatedTerms () {
+    return this.#relatedTerms;
+  }
+
+  /** @type {string} Human-readable title for this feature. Defaults to the feature's internal name if not provided. */
+  #title;
+
+  set title (title = this.#featureName) {
+    if (!title) return;
 
     const titleElement = document.createElement('span');
     titleElement.setAttribute('slot', 'title');
     titleElement.textContent = title;
     this.append(titleElement);
 
-    if (description !== '') {
-      const descriptionElement = document.createElement('span');
-      descriptionElement.setAttribute('slot', 'description');
-      descriptionElement.textContent = description;
-      this.append(descriptionElement);
-    }
-
-    if (help !== '' && this.#helpAnchor !== null) {
-      this.#helpAnchor.href = help;
-    }
-
-    if (Object.keys(preferences).length !== 0) {
-      const preferenceList = this.shadowRoot.querySelector('.preferences');
-      renderPreferences({ featureName, preferences, preferenceList });
-    }
-
-    this.#metadata = {
-      deprecated,
-      description,
-      featureName,
-      help,
-      icon,
-      preferences,
-      relatedTerms,
-      title
-    };
+    this.#title = title;
   }
 
-  get metadata () {
-    return structuredClone(this.#metadata);
+  get title () {
+    return this.#title ?? this.#featureName;
   }
 }
 
@@ -253,18 +317,14 @@ const renderFeatures = async function () {
     const url = browser.runtime.getURL(`/features/${featureName}/feature.json`);
     const file = await fetch(url);
     const metadata = await file.json();
+    const disabled = enabledFeatures.includes(featureName) === false;
 
-    const featureElement = document.createElement('xkit-feature');
-    featureElement.metadata = { featureName, ...metadata };
-
-    if (enabledFeatures.includes(featureName) === false) {
-      featureElement.disabled = true;
-
-      if (metadata.deprecated && !specialAccess.includes(featureName)) {
-        continue;
-      }
+    if (disabled && metadata.deprecated && !specialAccess.includes(featureName)) {
+      continue;
     }
 
+    const featureElement = document.createElement('xkit-feature');
+    Object.assign(featureElement, { featureName, disabled, ...metadata });
     featureElements.push(featureElement);
   }
 

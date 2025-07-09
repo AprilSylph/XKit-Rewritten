@@ -39,3 +39,8 @@ label[for="filter"] {
   font-size: 1.3125rem;
   font-weight: 700;
 }
+
+xkit-feature.search-hidden,
+xkit-feature.filter-hidden {
+  display: none;
+}

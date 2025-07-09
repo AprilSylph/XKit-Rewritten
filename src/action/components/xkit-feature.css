@@ -2,11 +2,6 @@ details {
   border-bottom: 1px dotted rgb(var(--active-grey));
 }
 
-details.search-hidden,
-details.filter-hidden {
-  display: none;
-}
-
 summary {
   display: flex;
   flex-direction: row;

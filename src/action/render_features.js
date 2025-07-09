@@ -230,7 +230,7 @@ class XKitFeatureElement extends HTMLElement {
   #relatedTerms = [];
 
   set relatedTerms (relatedTerms = []) {
-    this.#detailsElement.dataset.relatedTerms = relatedTerms;
+    this.dataset.relatedTerms = relatedTerms;
     this.#relatedTerms = relatedTerms;
   }
 

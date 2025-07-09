@@ -15,26 +15,27 @@ const getInstalledFeatures = async function () {
 
 const writeEnabled = async function ({ currentTarget }) {
   const { checked, id } = currentTarget;
-  const detailsElement = currentTarget.closest('details');
+  const shadowRoot = currentTarget.getRootNode();
+  const featureElement = shadowRoot.host;
   let {
     [enabledFeaturesKey]: enabledFeatures = [],
     [specialAccessKey]: specialAccess = []
   } = await browser.storage.local.get();
 
-  const hasPreferences = detailsElement.querySelector('.preferences:not(:empty)');
-  if (hasPreferences) detailsElement.open = checked;
+  const hasPreferences = shadowRoot.querySelector('.preferences:not(:empty)');
+  if (hasPreferences) shadowRoot.open = checked;
 
   if (checked) {
     enabledFeatures.push(id);
-    detailsElement.classList.remove('disabled');
   } else {
     enabledFeatures = enabledFeatures.filter(x => x !== id);
-    detailsElement.classList.add('disabled');
 
-    if (detailsElement.dataset.deprecated === 'true' && !specialAccess.includes(id)) {
+    if (featureElement.metadata.deprecated && !specialAccess.includes(id)) {
       specialAccess.push(id);
     }
   }
+
+  featureElement.disabled = !checked;
 
   browser.storage.local.set({
     [enabledFeaturesKey]: enabledFeatures,
@@ -134,11 +135,102 @@ const renderPreferences = async function ({ featureName, preferences, preference
 };
 
 class XKitFeatureElement extends HTMLElement {
+  #disabled = false;
+  #metadata = {};
+
+  #detailsElement;
+  #enabledInput;
+  #helpAnchor;
+
   constructor () {
     super();
+
     const { content } = document.getElementById(this.localName);
     const shadowRoot = this.attachShadow({ mode: 'open' });
     shadowRoot.replaceChildren(content.cloneNode(true));
+
+    this.#detailsElement = shadowRoot.querySelector('details');
+    this.#enabledInput = shadowRoot.querySelector('input[type="checkbox"]');
+    this.#helpAnchor = shadowRoot.querySelector('a.help');
+  }
+
+  connectedCallback () {
+    this.#enabledInput.addEventListener('input', writeEnabled);
+  }
+
+  disconnectedCallback () {
+    this.#enabledInput.removeEventListener('input', writeEnabled);
+  }
+
+  set disabled (disabled) {
+    this.#detailsElement.classList.toggle('disabled', disabled);
+    this.#enabledInput.checked = !disabled;
+
+    this.#disabled = disabled;
+  }
+
+  get disabled () {
+    return this.#disabled;
+  }
+
+  set metadata ({
+    deprecated = false,
+    description = '',
+    featureName,
+    help = '',
+    icon = {},
+    preferences = {},
+    relatedTerms = [],
+    title = featureName
+  }) {
+    this.#detailsElement.dataset.deprecated = deprecated;
+    this.#detailsElement.dataset.relatedTerms = relatedTerms;
+    this.#enabledInput.id = featureName;
+
+    if (icon.class_name !== undefined) {
+      const iconElement = document.createElement('i');
+      iconElement.setAttribute('slot', 'icon');
+      iconElement.classList.add('ri-fw', icon.class_name);
+      iconElement.style.backgroundColor = icon.background_color ?? '#ffffff';
+      iconElement.style.color = icon.color ?? '#000000';
+      this.append(iconElement);
+    }
+
+    const titleElement = document.createElement('span');
+    titleElement.setAttribute('slot', 'title');
+    titleElement.textContent = title;
+    this.append(titleElement);
+
+    if (description !== '') {
+      const descriptionElement = document.createElement('span');
+      descriptionElement.setAttribute('slot', 'description');
+      descriptionElement.textContent = description;
+      this.append(descriptionElement);
+    }
+
+    if (help !== '' && this.#helpAnchor !== null) {
+      this.#helpAnchor.href = help;
+    }
+
+    if (Object.keys(preferences).length !== 0) {
+      const preferenceList = this.shadowRoot.querySelector('.preferences');
+      renderPreferences({ featureName, preferences, preferenceList });
+    }
+
+    this.#metadata = {
+      deprecated,
+      description,
+      featureName,
+      help,
+      icon,
+      preferences,
+      relatedTerms,
+      title
+    };
+  }
+
+  get metadata () {
+    return structuredClone(this.#metadata);
   }
 }
 
@@ -160,65 +252,17 @@ const renderFeatures = async function () {
   for (const featureName of [...orderedEnabledFeatures, ...disabledFeatures]) {
     const url = browser.runtime.getURL(`/features/${featureName}/feature.json`);
     const file = await fetch(url);
-    const {
-      title = featureName,
-      description = '',
-      icon = {},
-      help = '',
-      relatedTerms = [],
-      preferences = {},
-      deprecated = false
-    } = await file.json();
+    const metadata = await file.json();
 
     const featureElement = document.createElement('xkit-feature');
-    const { shadowRoot } = featureElement;
-
-    const detailsElement = shadowRoot.querySelector('details');
-    detailsElement.dataset.relatedTerms = relatedTerms;
-    detailsElement.dataset.deprecated = deprecated;
+    featureElement.metadata = { featureName, ...metadata };
 
     if (enabledFeatures.includes(featureName) === false) {
-      detailsElement.classList.add('disabled');
+      featureElement.disabled = true;
 
-      if (deprecated && !specialAccess.includes(featureName)) {
+      if (metadata.deprecated && !specialAccess.includes(featureName)) {
         continue;
       }
-    }
-
-    if (icon.class_name !== undefined) {
-      const iconElement = document.createElement('i');
-      iconElement.setAttribute('slot', 'icon');
-      iconElement.classList.add('ri-fw', icon.class_name);
-      iconElement.style.backgroundColor = icon.background_color ?? '#ffffff';
-      iconElement.style.color = icon.color ?? '#000000';
-      featureElement.append(iconElement);
-    }
-
-    const titleElement = document.createElement('span');
-    titleElement.setAttribute('slot', 'title');
-    titleElement.textContent = title;
-    featureElement.append(titleElement);
-
-    if (description !== '') {
-      const descriptionElement = document.createElement('span');
-      descriptionElement.setAttribute('slot', 'description');
-      descriptionElement.textContent = description;
-      featureElement.append(descriptionElement);
-    }
-
-    if (help !== '') {
-      const helpLink = shadowRoot.querySelector('a.help');
-      helpLink.href = help;
-    }
-
-    const enabledInput = shadowRoot.querySelector('input.toggle-button');
-    enabledInput.id = featureName;
-    enabledInput.checked = enabledFeatures.includes(featureName);
-    enabledInput.addEventListener('input', writeEnabled);
-
-    if (Object.keys(preferences).length !== 0) {
-      const preferenceList = shadowRoot.querySelector('.preferences');
-      renderPreferences({ featureName, preferences, preferenceList });
     }
 
     featureElements.push(featureElement);

@@ -13,7 +13,7 @@ const getInstalledFeatures = async function () {
   return installedFeatures;
 };
 
-const writeEnabled = async function ({ currentTarget }) {
+const handleEnabledInputClick = async function ({ currentTarget }) {
   const { checked, id } = currentTarget;
   const shadowRoot = currentTarget.getRootNode();
   const featureElement = shadowRoot.host;
@@ -154,11 +154,11 @@ class XKitFeatureElement extends HTMLElement {
   }
 
   connectedCallback () {
-    this.#enabledInput.addEventListener('input', writeEnabled);
+    this.#enabledInput.addEventListener('input', handleEnabledInputClick);
   }
 
   disconnectedCallback () {
-    this.#enabledInput.removeEventListener('input', writeEnabled);
+    this.#enabledInput.removeEventListener('input', handleEnabledInputClick);
   }
 
   /** @type {boolean} Whether to hide the feature on installations on which it was not enabled at the time of deprecation. */

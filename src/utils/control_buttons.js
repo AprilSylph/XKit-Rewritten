@@ -71,7 +71,8 @@ export const insertControlButton = async (postElement, clonedControlButton, butt
   const newEditControlIcon = postElement.querySelector('a[href*="/edit/"]:has(use[href="#managed-icon__ds-pencil-outline-24"])');
 
   if (community) {
-    // not yet implemented
+    clonedControlButton.classList.add('in-community');
+    postElement.querySelector(`${keyToCss('controls')}`).append(clonedControlButton);
   } else if (legacyEditControlIcon) {
     clonedControlButton.classList.add('in-legacy-footer');
     legacyEditControlIcon.before(clonedControlButton);

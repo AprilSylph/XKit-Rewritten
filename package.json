@@ -10,10 +10,10 @@
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^3.3.2",
-    "eslint": "^9.29.0",
-    "eslint-plugin-jsdoc": "^51.0.1",
+    "eslint": "^9.30.0",
+    "eslint-plugin-jsdoc": "^51.3.1",
     "neostandard": "^0.12.1",
-    "web-ext": "^8.7.1"
+    "web-ext": "^8.8.0"
   },
   "dependencies": {
     "jquery": "^3.7.1",

@@ -107,12 +107,12 @@ const processPosts = async function (postElements) {
 
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {
-      const { rebloggedRootId, content, blogName, community, postAuthor, rebloggedFromFollowing } = await timelineObject(postElement);
+      const { rebloggedRootId, content, blogName, community, postAuthor, rebloggedFromFollowing, trail } = await timelineObject(postElement);
       const myPost = await isMyPost(postElement);
 
       if (!rebloggedRootId) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
-      if (showReblogsOfNotFollowing && !rebloggedFromFollowing) { return; }
+      if (showReblogsOfNotFollowing && !(rebloggedFromFollowing || trail.at(-1)?.blog?.followed)) { return; }
 
       const visibleBlogName = community ? postAuthor : blogName;
 

@@ -1,6 +1,9 @@
 .xkit-shorten-posts-shortened {
-  --available-space: calc(100vh - 54px - 20px);
-  --shortened-post-height: calc((var(--available-space) * var(--xkit-shorten-posts-max-height)) - 20px);
+  --max-header-height: 44px;
+  --max-post-margin: 16px;
+
+  --available-space: calc(100vh - var(--max-header-height));
+  --shortened-post-height: calc((var(--available-space) * var(--xkit-shorten-posts-max-height)) - var(--max-post-margin));
   --expand-button-total-height: calc(1rem + (var(--post-header-vertical-padding) * 2));
 
   position: relative;

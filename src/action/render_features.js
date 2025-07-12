@@ -1,3 +1,5 @@
+import { dom } from '../utils/dom.js';
+
 const configSection = document.getElementById('configuration');
 const configSectionLink = document.querySelector('a[href="#configuration"]');
 const featuresDiv = configSection.querySelector('.features');
@@ -243,30 +245,18 @@ class XKitFeatureElement extends HTMLElement {
     icon = {},
     title = this.#featureName
   }) {
-    const children = [];
-
-    if (description) {
-      const descriptionElement = document.createElement('span');
-      descriptionElement.setAttribute('slot', 'description');
-      descriptionElement.textContent = description;
-      children.push(descriptionElement);
-    }
-
-    if (icon.class_name) {
-      const iconElement = document.createElement('i');
-      iconElement.setAttribute('slot', 'icon');
-      iconElement.classList.add('ri-fw', icon.class_name);
-      iconElement.style.backgroundColor = icon.background_color ?? '#ffffff';
-      iconElement.style.color = icon.color ?? '#000000';
-      children.push(iconElement);
-    }
-
-    if (title) {
-      const titleElement = document.createElement('span');
-      titleElement.setAttribute('slot', 'title');
-      titleElement.textContent = title;
-      children.push(titleElement);
-    }
+    const children = [
+      description && dom('span', { slot: 'description' }, null, [description]),
+      icon.class_name && dom(
+        'i',
+        {
+          slot: 'icon',
+          class: `ri-fw ${icon.class_name}`,
+          style: `color: ${icon.color ?? '#000000'}; background-color: ${icon.background_color ?? '#ffffff'}`
+        }
+      ),
+      title && dom('span', { slot: 'title' }, null, [title])
+    ].filter(Boolean);
 
     this.replaceChildren(...children);
   }

@@ -70,10 +70,10 @@ const writePreference = async function ({ target }) {
   }
 };
 
-const renderPreferences = async function ({ featureName, preferences, preferenceList }) {
+const renderPreferences = function ({ featureName, preferences, preferenceList, storageLocal }) {
   for (const [key, preference] of Object.entries(preferences)) {
     const storageKey = `${featureName}.preferences.${key}`;
-    const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
+    const { [storageKey]: savedPreference } = storageLocal;
     preference.value = savedPreference ?? preference.default;
 
     const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
@@ -138,11 +138,13 @@ const renderPreferences = async function ({ featureName, preferences, preference
 const renderFeatures = async function () {
   const featureElements = [];
 
+  const storageLocal = await browser.storage.local.get();
+
   const installedFeatures = await getInstalledFeatures();
   const {
     [enabledFeaturesKey]: enabledFeatures = [],
     [specialAccessKey]: specialAccess = []
-  } = await browser.storage.local.get();
+  } = storageLocal;
 
   const orderedEnabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName));
   const disabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName) === false);
@@ -195,7 +197,7 @@ const renderFeatures = async function () {
         <p class="note">${note}</p>
         <ul
           class="preferences"
-          ref=${preferenceList => renderPreferences({ featureName, preferences, preferenceList })}
+          ref=${preferenceList => renderPreferences({ featureName, preferences, preferenceList, storageLocal })}
         />
       </details>
     `);

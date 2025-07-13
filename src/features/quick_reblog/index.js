@@ -135,15 +135,19 @@ tagsInput.addEventListener('input', updateTagSuggestions);
 tagsInput.addEventListener('input', doSmartQuotes);
 tagsInput.addEventListener('input', checkLength);
 
-const showPopupOnHover = ({ currentTarget }) => {
+const showPopupOnHover = async ({ currentTarget }) => {
   if (!currentTarget.matches(reblogButtonSelector)) return;
+
+  const thisPost = currentTarget.closest(postSelector);
+
+  const { blog, canReblog } = await timelineObject(thisPost);
+  if (canReblog === false || blog?.isPasswordProtected) return;
 
   clearTimeout(timeoutID);
 
   appendWithoutOverflow(popupElement, currentTarget.closest(buttonDivSelector) ?? currentTarget.parentElement, popupPosition);
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
-  const thisPost = currentTarget.closest(postSelector);
   const thisPostID = thisPost.dataset.id;
   if (thisPostID !== lastPostID) {
     if (!rememberLastBlog) {

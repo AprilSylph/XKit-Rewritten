@@ -73,6 +73,10 @@ const reblogButtonSelector = `${postSelector} footer :is(a[href*="/reblog/"], bu
 const buttonDivSelector = `${keyToCss('controls', 'reblogsControl', 'engagementControls')} > *`;
 
 export const styleElement = buildStyle(`
+:has(${keyToCss('bubbles')}) > #quick-reblog {
+  display: none;
+}
+
 ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) {
   position: relative;
 }

@@ -94,14 +94,12 @@ summary:focus {
 }
 
 .disabled .title::after {
-  content: "(disabled)";
-  margin-left: 0.5ch;
+  content: " (disabled)";
   font-weight: normal;
 }
 
 [data-deprecated="true"]:not(.disabled) .title::after {
-  content: "(deprecated)";
-  margin-left: 0.5ch;
+  content: " (deprecated)";
   font-weight: normal;
 }
 

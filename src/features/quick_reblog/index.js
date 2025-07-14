@@ -68,8 +68,9 @@ const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 const blogHashes = new Map();
 const avatarUrls = new Map();
 
-const reblogButtonSelector = `${postSelector} footer a[href*="/reblog/"]`;
-const buttonDivSelector = `${keyToCss('controls')} > *, ${keyToCss('engagementAction')}`;
+const buttonSelector = `${postSelector} footer a, ${postSelector} footer button`;
+const reblogButtonSelector = `${postSelector} footer :is(a[href*="/reblog/"], button:has(use[href="#managed-icon__ds-reblog-24"]))`;
+const buttonDivSelector = `${keyToCss('controls', 'reblogsControl', 'engagementControls')} > *`;
 
 export const styleElement = buildStyle(`
 :has(${keyToCss('bubbles')}) > #quick-reblog {
@@ -138,13 +139,19 @@ tagsInput.addEventListener('input', updateTagSuggestions);
 tagsInput.addEventListener('input', doSmartQuotes);
 tagsInput.addEventListener('input', checkLength);
 
-const showPopupOnHover = ({ currentTarget }) => {
-  clearTimeout(timeoutID);
-
-  appendWithoutOverflow(popupElement, currentTarget.closest(buttonDivSelector), popupPosition);
-  popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
+const showPopupOnHover = async ({ currentTarget }) => {
+  if (!currentTarget.matches(reblogButtonSelector)) return;
 
   const thisPost = currentTarget.closest(postSelector);
+
+  const { blog, canReblog } = await timelineObject(thisPost);
+  if (canReblog === false || blog?.isPasswordProtected) return;
+
+  clearTimeout(timeoutID);
+
+  appendWithoutOverflow(popupElement, currentTarget.closest(buttonDivSelector) ?? currentTarget.parentElement, popupPosition);
+  popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
+
   const thisPostID = thisPost.dataset.id;
   if (thisPostID !== lastPostID) {
     if (!rememberLastBlog) {
@@ -317,6 +324,8 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
 const MOZ_SOURCE_TOUCH = 5;
 
 const preventLongPressMenu = ({ originalEvent: event }) => {
+  if (!event.currentTarget.matches(reblogButtonSelector)) return;
+
   const isTouchEvent = event.pointerType === 'touch';
   const firefoxIsTouchEvent = event.mozInputSource === MOZ_SOURCE_TOUCH;
 
@@ -377,8 +386,8 @@ export const main = async function () {
   quickTagsList.hidden = !quickTagsIntegration;
   tagsInput.hidden = !showTagsInput;
 
-  $(document.body).on('mouseenter', reblogButtonSelector, showPopupOnHover);
-  $(document.body).on('contextmenu', reblogButtonSelector, preventLongPressMenu);
+  $(document.body).on('mouseenter', buttonSelector, showPopupOnHover);
+  $(document.body).on('contextmenu', buttonSelector, preventLongPressMenu);
 
   if (quickTagsIntegration) {
     browser.storage.onChanged.addListener(updateQuickTags);
@@ -391,8 +400,8 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  $(document.body).off('mouseenter', reblogButtonSelector, showPopupOnHover);
-  $(document.body).off('contextmenu', reblogButtonSelector, preventLongPressMenu);
+  $(document.body).off('mouseenter', buttonSelector, showPopupOnHover);
+  $(document.body).off('contextmenu', buttonSelector, preventLongPressMenu);
   popupElement.remove();
 
   blogSelector.removeEventListener('change', updateRememberedBlog);

@@ -1,3 +1,6 @@
+import { html, render } from '../lib/lit-html/lit-html.js';
+import { ref } from '../lib/lit-html/directives/ref.js';
+
 const configSection = document.getElementById('configuration');
 const configSectionLink = document.querySelector('a[href="#configuration"]');
 const featuresDiv = configSection.querySelector('.features');
@@ -68,80 +71,88 @@ const writePreference = async function ({ target }) {
   }
 };
 
-const renderPreferences = async function ({ featureName, preferences, preferenceList }) {
-  for (const [key, preference] of Object.entries(preferences)) {
-    const storageKey = `${featureName}.preferences.${key}`;
-    const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
-    preference.value = savedPreference ?? preference.default;
+const Preference = ({ preferenceKey, preference, featureName }) => {
+  const id = `${featureName}.${preference.type}.${preferenceKey}`;
+  const label = preference.label || preferenceKey;
+  const oninput = ['text', 'textarea'].includes(preference.type)
+    ? debounce(writePreference, 500)
+    : writePreference;
 
-    const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
-
-    const preferenceInput = preferenceTemplateClone.querySelector('input, select, textarea, iframe');
-    preferenceInput.id = `${featureName}.${preference.type}.${key}`;
-
-    const preferenceLabel = preferenceTemplateClone.querySelector('label');
-    if (preferenceLabel) {
-      preferenceLabel.textContent = preference.label || key;
-      preferenceLabel.setAttribute('for', `${featureName}.${preference.type}.${key}`);
-    } else {
-      preferenceInput.title = preference.label || key;
-    }
-
-    switch (preference.type) {
-      case 'text':
-      case 'textarea':
-        preferenceInput.addEventListener('input', debounce(writePreference, 500));
-        break;
-      case 'iframe':
-        break;
-      default:
-        preferenceInput.addEventListener('input', writePreference);
-    }
-
-    switch (preference.type) {
-      case 'checkbox':
-        preferenceInput.checked = preference.value;
-        break;
-      case 'select':
-        for (const { value, label } of preference.options) {
-          const option = document.createElement('option');
-          option.value = value;
-          option.textContent = label;
-          option.selected = value === preference.value;
-          preferenceInput.appendChild(option);
-        }
-        break;
-      case 'color':
-        preferenceInput.value = preference.value;
-        $(preferenceInput)
-          .on('change.spectrum', writePreference)
-          .spectrum({
-            preferredFormat: 'hex',
-            showInput: true,
-            showInitial: true,
-            allowEmpty: true
-          });
-        break;
-      case 'iframe':
-        preferenceInput.src = preference.src;
-        break;
-      default:
-        preferenceInput.value = preference.value;
-    }
-
-    preferenceList.appendChild(preferenceTemplateClone);
+  switch (preference.type) {
+    case 'checkbox':
+      return html`
+        <li>
+          <input id=${id} type="checkbox" ?checked=${preference.value} @input=${oninput} />
+          <label for=${id}>${label}</label>
+        </li>
+      `;
+    case 'text':
+      return html`
+        <li>
+          <label for=${id}>${label}</label>
+          <input id=${id} type="text" spellcheck="false" value=${preference.value} @input=${oninput} />
+        </li>
+      `;
+    case 'select':
+      return html`
+        <li>
+          <label for=${id}>${label}</label>
+          <select id=${id} @input=${oninput}>
+            ${preference.options.map(({ value, label }) => html`
+              <option value=${value} ?selected=${value === preference.value}>${label}</option>
+            `)}
+          </select>
+        </li>
+      `;
+    case 'color':
+      return html`
+        <li>
+          <input
+            value=${preference.value}
+            id=${id}
+            type="text"
+            ${ref(preferenceInput =>
+              $(preferenceInput)
+                .on('change.spectrum', writePreference)
+                .spectrum({
+                  preferredFormat: 'hex',
+                  showInput: true,
+                  showInitial: true,
+                  allowEmpty: true
+                })
+            )}
+          />
+          <label for=${id}>${label}</label>
+        </li>
+      `;
+    case 'textarea':
+      return html`
+        <li>
+          <label for=${id}>${label}</label>
+        </li>
+        <li>
+          <textarea id=${id} rows="5" spellcheck="false" @input=${oninput}>${preference.value}</textarea>
+        </li>
+      `;
+    case 'iframe':
+      return html`
+        <li>
+          <iframe title=${label} id=${id} src=${preference.src}></iframe>
+        </li>
+      `;
   }
 };
 
 const renderFeatures = async function () {
-  const featureClones = [];
-  featuresDiv.textContent = '';
+  const featureElements = [];
+
+  const storageLocal = await browser.storage.local.get();
 
   const installedFeatures = await getInstalledFeatures();
   const {
     [enabledFeaturesKey]: enabledFeatures = [],
     [specialAccessKey]: specialAccess = []
-  } = await browser.storage.local.get();
+  } = storageLocal;
 
   const orderedEnabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName));
   const disabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName) === false);
@@ -160,61 +171,52 @@ const renderFeatures = async function () {
       deprecated = false
     } = await file.json();
 
-    const featureTemplateClone = document.getElementById('feature').content.cloneNode(true);
+    const disabled = enabledFeatures.includes(featureName) === false;
+    if (disabled && deprecated && !specialAccess.includes(featureName)) continue;
 
-    const detailsElement = featureTemplateClone.querySelector('details.feature');
-    detailsElement.dataset.relatedTerms = relatedTerms;
-    detailsElement.dataset.deprecated = deprecated;
+    const preferenceElements = Object.entries(preferences).map(([preferenceKey, preference]) => {
+      const storageKey = `${featureName}.preferences.${preferenceKey}`;
+      const { [storageKey]: savedPreference } = storageLocal;
+      preference.value = savedPreference ?? preference.default;
 
-    if (enabledFeatures.includes(featureName) === false) {
-      detailsElement.classList.add('disabled');
+      return Preference({ preferenceKey, preference, featureName });
+    });
 
-      if (deprecated && !specialAccess.includes(featureName)) {
-        continue;
-      }
-    }
-
-    if (icon.class_name !== undefined) {
-      const iconDiv = featureTemplateClone.querySelector('div.icon');
-      iconDiv.style.backgroundColor = icon.background_color || '#ffffff';
-
-      const iconInner = iconDiv.querySelector('i');
-      iconInner.classList.add(icon.class_name);
-      iconInner.style.color = icon.color || '#000000';
-    }
-
-    const titleHeading = featureTemplateClone.querySelector('h4.title');
-    titleHeading.textContent = title;
-
-    if (description !== '') {
-      const descriptionParagraph = featureTemplateClone.querySelector('p.description');
-      descriptionParagraph.textContent = description;
-    }
-
-    if (help !== '') {
-      const helpLink = featureTemplateClone.querySelector('a.help');
-      helpLink.href = help;
-    }
-
-    const enabledInput = featureTemplateClone.querySelector('input.toggle-button');
-    enabledInput.id = featureName;
-    enabledInput.checked = enabledFeatures.includes(featureName);
-    enabledInput.addEventListener('input', writeEnabled);
-
-    if (note !== '') {
-      const noteParagraph = featureTemplateClone.querySelector('.note');
-      noteParagraph.textContent = note;
-    }
-
-    if (Object.keys(preferences).length !== 0) {
-      const preferenceList = featureTemplateClone.querySelector('.preferences');
-      renderPreferences({ featureName, preferences, preferenceList });
-    }
-
-    featureClones.push(featureTemplateClone);
+    featureElements.push(html`
+      <details
+        class="feature${disabled ? ' disabled' : ''}"
+        data-related-terms=${relatedTerms}
+        data-deprecated=${deprecated}
+      >
+        <summary>
+          <div class="icon" style="background-color: ${icon.background_color || '#ffffff'}">
+            <i class="ri-fw ${icon.class_name}" style="color: ${icon.color || '#000000'}"></i>
+          </div>
+          <div class="meta">
+            <h4 class="title">${title}</h4>
+            <p class="description">${description}</p>
+          </div>
+          <div class="buttons">
+            <a class="help" target="_blank" href=${help}}>
+              <i class="ri-fw ri-question-fill" style="color:rgb(var(--black))"></i>
+            </a>
+            <input
+              id=${featureName}
+              type="checkbox"
+              ?checked=${!disabled}
+              class="toggle-button"
+              aria-label="Enable this feature"
+              @input=${writeEnabled}
+            />
+          </div>
+        </summary>
+        <p class="note">${note}</p>
+        <ul class="preferences">${preferenceElements}</ul>
+      </details>
+    `);
   }
 
-  featuresDiv.append(...featureClones);
+  render(featureElements, featuresDiv);
 };
 
 renderFeatures();

@@ -110,6 +110,28 @@ class XKitFeatureElement extends HTMLElement {
   #helpAnchor;
   #preferencesList;
 
+  deprecated = false;
+  description = '';
+  featureName = '';
+  help = '';
+  icon = {};
+  preferences = {};
+  relatedTerms = [];
+  title = '';
+
+  constructor () {
+    super();
+
+    const { content } = document.getElementById(this.localName);
+    const shadowRoot = this.attachShadow({ mode: 'open' });
+    shadowRoot.replaceChildren(content.cloneNode(true));
+
+    this.#detailsElement = shadowRoot.querySelector('details');
+    this.#enabledToggle = shadowRoot.querySelector('input[type="checkbox"]');
+    this.#helpAnchor = shadowRoot.querySelector('a.help');
+    this.#preferencesList = shadowRoot.querySelector('ul.preferences');
+  }
+
   #handleEnabledToggleInput = async ({ currentTarget }) => {
     const { checked, id } = currentTarget;
     let {
@@ -137,28 +159,6 @@ class XKitFeatureElement extends HTMLElement {
       [specialAccessKey]: specialAccess
     });
   };
-
-  deprecated = false;
-  description = '';
-  featureName = '';
-  help = '';
-  icon = {};
-  preferences = {};
-  relatedTerms = [];
-  title = '';
-
-  constructor () {
-    super();
-
-    const { content } = document.getElementById(this.localName);
-    const shadowRoot = this.attachShadow({ mode: 'open' });
-    shadowRoot.replaceChildren(content.cloneNode(true));
-
-    this.#detailsElement = shadowRoot.querySelector('details');
-    this.#enabledToggle = shadowRoot.querySelector('input[type="checkbox"]');
-    this.#helpAnchor = shadowRoot.querySelector('a.help');
-    this.#preferencesList = shadowRoot.querySelector('ul.preferences');
-  }
 
   connectedCallback () {
     this.#detailsElement.dataset.deprecated = this.deprecated;

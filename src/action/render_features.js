@@ -13,36 +13,6 @@ const getInstalledFeatures = async function () {
   return installedFeatures;
 };
 
-const handleEnabledInputClick = async function ({ currentTarget }) {
-  const { checked, id } = currentTarget;
-  const shadowRoot = currentTarget.getRootNode();
-  const featureElement = shadowRoot.host;
-  let {
-    [enabledFeaturesKey]: enabledFeatures = [],
-    [specialAccessKey]: specialAccess = []
-  } = await browser.storage.local.get();
-
-  const hasPreferences = Object.keys(featureElement.preferences).length !== 0;
-  if (hasPreferences) shadowRoot.querySelector('details').open = checked;
-
-  if (checked) {
-    enabledFeatures.push(id);
-  } else {
-    enabledFeatures = enabledFeatures.filter(x => x !== id);
-
-    if (featureElement.deprecated && !specialAccess.includes(id)) {
-      specialAccess.push(id);
-    }
-  }
-
-  featureElement.disabled = !checked;
-
-  browser.storage.local.set({
-    [enabledFeaturesKey]: enabledFeatures,
-    [specialAccessKey]: specialAccess
-  });
-};
-
 const debounce = (func, ms) => {
   let timeoutID;
   return (...args) => {
@@ -136,9 +106,37 @@ const renderPreferences = async function ({ featureName, preferences, preference
 
 class XKitFeatureElement extends HTMLElement {
   #detailsElement;
-  #enabledInput;
+  #enabledToggle;
   #helpAnchor;
   #preferencesList;
+
+  #handleEnabledToggleInput = async ({ currentTarget }) => {
+    const { checked, id } = currentTarget;
+    let {
+      [enabledFeaturesKey]: enabledFeatures = [],
+      [specialAccessKey]: specialAccess = []
+    } = await browser.storage.local.get();
+
+    const hasPreferences = Object.keys(this.preferences).length !== 0;
+    if (hasPreferences) this.#detailsElement.open = checked;
+
+    if (checked) {
+      enabledFeatures.push(id);
+    } else {
+      enabledFeatures = enabledFeatures.filter(x => x !== id);
+
+      if (this.deprecated && !specialAccess.includes(id)) {
+        specialAccess.push(id);
+      }
+    }
+
+    this.disabled = !checked;
+
+    browser.storage.local.set({
+      [enabledFeaturesKey]: enabledFeatures,
+      [specialAccessKey]: specialAccess
+    });
+  };
 
   deprecated = false;
   description = '';
@@ -157,15 +155,15 @@ class XKitFeatureElement extends HTMLElement {
     shadowRoot.replaceChildren(content.cloneNode(true));
 
     this.#detailsElement = shadowRoot.querySelector('details');
-    this.#enabledInput = shadowRoot.querySelector('input[type="checkbox"]');
+    this.#enabledToggle = shadowRoot.querySelector('input[type="checkbox"]');
     this.#helpAnchor = shadowRoot.querySelector('a.help');
     this.#preferencesList = shadowRoot.querySelector('ul.preferences');
   }
 
   connectedCallback () {
     this.#detailsElement.dataset.deprecated = this.deprecated;
-    this.#enabledInput.id = this.featureName;
-    this.#enabledInput.addEventListener('input', handleEnabledInputClick);
+    this.#enabledToggle.id = this.featureName;
+    this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
     this.#helpAnchor.href = this.help;
     this.dataset.relatedTerms = this.relatedTerms;
 
@@ -206,7 +204,7 @@ class XKitFeatureElement extends HTMLElement {
   }
 
   disconnectedCallback () {
-    this.#enabledInput.removeEventListener('input', handleEnabledInputClick);
+    this.#enabledToggle.removeEventListener('input', this.#handleEnabledToggleInput);
   }
 
   /** @type {boolean} True if the feature can be enabled. Defaults to `false`. */
@@ -214,7 +212,7 @@ class XKitFeatureElement extends HTMLElement {
 
   set disabled (disabled = false) {
     this.#detailsElement.classList.toggle('disabled', disabled);
-    this.#enabledInput.checked = !disabled;
+    this.#enabledToggle.checked = !disabled;
     this.#disabled = disabled;
   }
 

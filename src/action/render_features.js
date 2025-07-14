@@ -140,8 +140,13 @@ class XKitFeatureElement extends HTMLElement {
   #helpAnchor;
   #preferencesList;
 
+  deprecated = false;
   description = '';
+  featureName = '';
+  help = '';
   icon = {};
+  preferences = {};
+  relatedTerms = [];
   title = '';
 
   constructor () {
@@ -158,7 +163,11 @@ class XKitFeatureElement extends HTMLElement {
   }
 
   connectedCallback () {
+    this.#detailsElement.dataset.deprecated = this.deprecated;
+    this.#enabledInput.id = this.featureName;
     this.#enabledInput.addEventListener('input', handleEnabledInputClick);
+    this.#helpAnchor.href = this.help;
+    this.dataset.relatedTerms = this.relatedTerms;
 
     const children = [];
 
@@ -186,21 +195,19 @@ class XKitFeatureElement extends HTMLElement {
     }
 
     this.replaceChildren(...children);
+
+    if (Object.keys(this.preferences).length !== 0) {
+      renderPreferences({
+        featureName: this.featureName,
+        preferences: this.preferences,
+        preferenceList: this.#preferencesList
+      });
+    }
   }
 
   disconnectedCallback () {
     this.#enabledInput.removeEventListener('input', handleEnabledInputClick);
   }
-
-  /** @type {boolean} Whether to hide the feature on installations on which it was not enabled at the time of deprecation. */
-  #deprecated = false;
-
-  set deprecated (deprecated = false) {
-    this.#detailsElement.dataset.deprecated = deprecated;
-    this.#deprecated = deprecated;
-  }
-
-  get deprecated () { return this.#deprecated; }
 
   /** @type {boolean} True if the feature can be enabled. Defaults to `false`. */
   #disabled = false;
@@ -212,62 +219,6 @@ class XKitFeatureElement extends HTMLElement {
   }
 
   get disabled () { return this.#disabled; }
-
-  /** @type {string} The internal name of the feature. Required; has no default. */
-  #featureName;
-
-  set featureName (featureName) {
-    this.#enabledInput.id = featureName;
-    this.#featureName = featureName;
-  }
-
-  get featureName () {
-    return this.#featureName ?? '';
-  }
-
-  /** @type {string} URL which points to a usage guide or extended description for the feature. */
-  #help;
-
-  set help (help) {
-    if (!help) return;
-    this.#helpAnchor.href = help;
-    this.#help = help;
-  }
-
-  get help () {
-    return this.#help ?? '';
-  }
-
-  /** @type {Record<string, object>} Keys are preference names; values are preference definitions. */
-  #preferences = {};
-
-  set preferences (preferences = {}) {
-    if (Object.keys(preferences).length === 0) return;
-
-    renderPreferences({
-      featureName: this.#featureName,
-      preferences,
-      preferenceList: this.#preferencesList
-    });
-
-    this.#preferences = preferences;
-  }
-
-  get preferences () {
-    return this.#preferences;
-  }
-
-  /** @type {string[]} An optional array of strings related to this feature that a user might search for. Case insensitive. */
-  #relatedTerms = [];
-
-  set relatedTerms (relatedTerms = []) {
-    this.dataset.relatedTerms = relatedTerms;
-    this.#relatedTerms = relatedTerms;
-  }
-
-  get relatedTerms () {
-    return this.#relatedTerms;
-  }
 }
 
 customElements.define('xkit-feature', XKitFeatureElement);

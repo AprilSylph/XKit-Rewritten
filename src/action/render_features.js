@@ -140,6 +140,10 @@ class XKitFeatureElement extends HTMLElement {
   #helpAnchor;
   #preferencesList;
 
+  description = '';
+  icon = {};
+  title = '';
+
   constructor () {
     super();
 
@@ -155,6 +159,33 @@ class XKitFeatureElement extends HTMLElement {
 
   connectedCallback () {
     this.#enabledInput.addEventListener('input', handleEnabledInputClick);
+
+    const children = [];
+
+    if (this.description) {
+      const descriptionElement = document.createElement('span');
+      descriptionElement.setAttribute('slot', 'description');
+      descriptionElement.textContent = this.description;
+      children.push(descriptionElement);
+    }
+
+    if (this.icon.class_name) {
+      const iconElement = document.createElement('i');
+      iconElement.setAttribute('slot', 'icon');
+      iconElement.classList.add('ri-fw', this.icon.class_name);
+      iconElement.style.backgroundColor = this.icon.background_color ?? '#ffffff';
+      iconElement.style.color = this.icon.color ?? '#000000';
+      children.push(iconElement);
+    }
+
+    if (this.title) {
+      const titleElement = document.createElement('span');
+      titleElement.setAttribute('slot', 'title');
+      titleElement.textContent = this.title;
+      children.push(titleElement);
+    }
+
+    this.replaceChildren(...children);
   }
 
   disconnectedCallback () {
@@ -237,39 +268,6 @@ class XKitFeatureElement extends HTMLElement {
   get relatedTerms () {
     return this.#relatedTerms;
   }
-
-  render ({
-    description = '',
-    icon = {},
-    title = this.#featureName
-  }) {
-    const children = [];
-
-    if (description) {
-      const descriptionElement = document.createElement('span');
-      descriptionElement.setAttribute('slot', 'description');
-      descriptionElement.textContent = description;
-      children.push(descriptionElement);
-    }
-
-    if (icon.class_name) {
-      const iconElement = document.createElement('i');
-      iconElement.setAttribute('slot', 'icon');
-      iconElement.classList.add('ri-fw', icon.class_name);
-      iconElement.style.backgroundColor = icon.background_color ?? '#ffffff';
-      iconElement.style.color = icon.color ?? '#000000';
-      children.push(iconElement);
-    }
-
-    if (title) {
-      const titleElement = document.createElement('span');
-      titleElement.setAttribute('slot', 'title');
-      titleElement.textContent = title;
-      children.push(titleElement);
-    }
-
-    this.replaceChildren(...children);
-  }
 }
 
 customElements.define('xkit-feature', XKitFeatureElement);
@@ -289,25 +287,15 @@ const renderFeatures = async function () {
   for (const featureName of [...orderedEnabledFeatures, ...disabledFeatures]) {
     const url = browser.runtime.getURL(`/features/${featureName}/feature.json`);
     const file = await fetch(url);
-    const {
-      deprecated,
-      description,
-      help,
-      icon,
-      preferences,
-      relatedTerms,
-      title
-    } = await file.json();
+    const metadata = await file.json();
 
     const disabled = enabledFeatures.includes(featureName) === false;
-    if (disabled && deprecated && !specialAccess.includes(featureName)) {
+    if (disabled && metadata.deprecated && !specialAccess.includes(featureName)) {
       continue;
     }
 
     const featureElement = document.createElement('xkit-feature');
-    Object.assign(featureElement, { deprecated, disabled, featureName, help, preferences, relatedTerms });
-    featureElement.render({ description, icon, title });
-
+    Object.assign(featureElement, { disabled, featureName, ...metadata });
     featureElements.push(featureElement);
   }
 

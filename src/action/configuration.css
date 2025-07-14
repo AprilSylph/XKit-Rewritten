@@ -22,6 +22,10 @@ label[for="filter"] {
   margin-left: 2ch;
 }
 
+#filter {
+  margin-left: 1ch;
+}
+
 .no-results {
   display: none;
   justify-content: center;

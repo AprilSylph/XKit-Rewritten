@@ -1,3 +1,5 @@
+import { html, render } from '../lib/htm-preact-standalone.module.js';
+
 const configSection = document.getElementById('configuration');
 const configSectionLink = document.querySelector('a[href="#configuration"]');
 const featuresDiv = configSection.querySelector('.features');
@@ -68,10 +70,10 @@ const writePreference = async function ({ target }) {
   }
 };
 
-const renderPreferences = async function ({ featureName, preferences, preferenceList }) {
+const renderPreferences = function ({ featureName, preferences, preferenceList, storageLocal }) {
   for (const [key, preference] of Object.entries(preferences)) {
     const storageKey = `${featureName}.preferences.${key}`;
-    const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
+    const { [storageKey]: savedPreference } = storageLocal;
     preference.value = savedPreference ?? preference.default;
 
     const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
@@ -134,14 +136,15 @@ const renderPreferences = async function ({ featureName, preferences, preference
 };
 
 const renderFeatures = async function () {
-  const featureClones = [];
-  featuresDiv.textContent = '';
+  const featureElements = [];
+
+  const storageLocal = await browser.storage.local.get();
 
   const installedFeatures = await getInstalledFeatures();
   const {
     [enabledFeaturesKey]: enabledFeatures = [],
     [specialAccessKey]: specialAccess = []
-  } = await browser.storage.local.get();
+  } = storageLocal;
 
   const orderedEnabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName));
   const disabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName) === false);
@@ -160,61 +163,47 @@ const renderFeatures = async function () {
       deprecated = false
     } = await file.json();
 
-    const featureTemplateClone = document.getElementById('feature').content.cloneNode(true);
+    const disabled = enabledFeatures.includes(featureName) === false;
+    if (disabled && deprecated && !specialAccess.includes(featureName)) continue;
 
-    const detailsElement = featureTemplateClone.querySelector('details.feature');
-    detailsElement.dataset.relatedTerms = relatedTerms;
-    detailsElement.dataset.deprecated = deprecated;
-
-    if (enabledFeatures.includes(featureName) === false) {
-      detailsElement.classList.add('disabled');
-
-      if (deprecated && !specialAccess.includes(featureName)) {
-        continue;
-      }
-    }
-
-    if (icon.class_name !== undefined) {
-      const iconDiv = featureTemplateClone.querySelector('div.icon');
-      iconDiv.style.backgroundColor = icon.background_color || '#ffffff';
-
-      const iconInner = iconDiv.querySelector('i');
-      iconInner.classList.add(icon.class_name);
-      iconInner.style.color = icon.color || '#000000';
-    }
-
-    const titleHeading = featureTemplateClone.querySelector('h4.title');
-    titleHeading.textContent = title;
-
-    if (description !== '') {
-      const descriptionParagraph = featureTemplateClone.querySelector('p.description');
-      descriptionParagraph.textContent = description;
-    }
-
-    if (help !== '') {
-      const helpLink = featureTemplateClone.querySelector('a.help');
-      helpLink.href = help;
-    }
-
-    const enabledInput = featureTemplateClone.querySelector('input.toggle-button');
-    enabledInput.id = featureName;
-    enabledInput.checked = enabledFeatures.includes(featureName);
-    enabledInput.addEventListener('input', writeEnabled);
-
-    if (note !== '') {
-      const noteParagraph = featureTemplateClone.querySelector('.note');
-      noteParagraph.textContent = note;
-    }
-
-    if (Object.keys(preferences).length !== 0) {
-      const preferenceList = featureTemplateClone.querySelector('.preferences');
-      renderPreferences({ featureName, preferences, preferenceList });
-    }
-
-    featureClones.push(featureTemplateClone);
+    featureElements.push(html`
+      <details
+        class="feature${disabled ? ' disabled' : ''}"
+        data-related-terms=${relatedTerms}
+        data-deprecated=${deprecated}
+      >
+        <summary>
+          <div class="icon" style="background-color: ${icon.background_color || '#ffffff'}">
+            <i class="ri-fw ${icon.class_name}" style="color: ${icon.color || '#000000'}" />
+          </div>
+          <div class="meta">
+            <h4 class="title">${title}</h4>
+            <p class="description">${description}</p>
+          </div>
+          <div class="buttons">
+            <a class="help" target="_blank" ...${help ? { href: help } : {}}>
+              <i class="ri-fw ri-question-fill" style="color:rgb(var(--black))" />
+            </a>
+            <input
+              id=${featureName}
+              type="checkbox"
+              checked=${!disabled}
+              class="toggle-button"
+              aria-label="Enable this feature"
+              oninput=${writeEnabled}
+            />
+          </div>
+        </summary>
+        <p class="note">${note}</p>
+        <ul
+          class="preferences"
+          ref=${preferenceList => renderPreferences({ featureName, preferences, preferenceList, storageLocal })}
+        />
+      </details>
+    `);
   }
 
-  featuresDiv.append(...featureClones);
+  render(featureElements, featuresDiv);
 };
 
 renderFeatures();

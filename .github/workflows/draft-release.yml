@@ -7,6 +7,9 @@ on:
     paths:
       - src/manifest.json
 
+concurrency:
+  group: ${{ github.workflow }}
+
 jobs:
   get-version-if-new:
     name: Get Version (if new)

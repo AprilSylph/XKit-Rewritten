@@ -185,10 +185,6 @@
 
 #quick-reblog .action-buttons.community-selected button:not([data-state="published"]) { display: none; }
 
-footer.published svg use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]) { --icon-color-primary: rgb(var(--green)); }
-footer.queue svg use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]) { --icon-color-primary: rgb(var(--purple)); }
-footer.draft svg use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]) { --icon-color-primary: rgb(var(--red)); }
-
 :is(.published, .queue, .draft) :is(a[role="button"], button[class=""]) {
   position: relative;
 }

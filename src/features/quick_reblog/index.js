@@ -324,6 +324,7 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
 const MOZ_SOURCE_TOUCH = 5;
 
 const preventLongPressMenu = ({ currentTarget, originalEvent: event }) => {
+  console.log(currentTarget, currentTarget.matches(reblogButtonSelector));
   if (!currentTarget.matches(reblogButtonSelector)) return;
 
   const isTouchEvent = event.pointerType === 'touch';

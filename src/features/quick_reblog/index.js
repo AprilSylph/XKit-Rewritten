@@ -323,7 +323,7 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
  */
 const MOZ_SOURCE_TOUCH = 5;
 
-const preventLongPressMenu = ({ currentTarget, originalEvent: event }) => {
+const onLongPressMenu = ({ currentTarget, originalEvent: event }) => {
   if (!currentTarget.matches(reblogButtonSelector)) return;
 
   const isTouchEvent = event.pointerType === 'touch';
@@ -331,6 +331,7 @@ const preventLongPressMenu = ({ currentTarget, originalEvent: event }) => {
 
   if (isTouchEvent || firefoxIsTouchEvent) {
     event.preventDefault();
+    showPopupOnHover({ currentTarget });
   }
 };
 
@@ -387,7 +388,7 @@ export const main = async function () {
   tagsInput.hidden = !showTagsInput;
 
   $(document.body).on('mouseenter', buttonSelector, showPopupOnHover);
-  $(document.body).on('contextmenu', buttonSelector, preventLongPressMenu);
+  $(document.body).on('contextmenu', buttonSelector, onLongPressMenu);
 
   if (quickTagsIntegration) {
     browser.storage.onChanged.addListener(updateQuickTags);
@@ -401,7 +402,7 @@ export const main = async function () {
 
 export const clean = async function () {
   $(document.body).off('mouseenter', buttonSelector, showPopupOnHover);
-  $(document.body).off('contextmenu', buttonSelector, preventLongPressMenu);
+  $(document.body).off('contextmenu', buttonSelector, onLongPressMenu);
   popupElement.remove();
 
   blogSelector.removeEventListener('change', updateRememberedBlog);

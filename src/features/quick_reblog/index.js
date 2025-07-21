@@ -142,14 +142,17 @@ tagsInput.addEventListener('input', checkLength);
 const showPopupOnHover = async ({ currentTarget }) => {
   if (!currentTarget.matches(reblogButtonSelector)) return;
 
-  const thisPost = currentTarget.closest(postSelector);
+  const buttonDiv = currentTarget.closest(buttonDivSelector) ?? currentTarget.parentElement;
+  if (buttonDiv.matches(':has([aria-expanded="true"])')) return;
 
+  const thisPost = currentTarget.closest(postSelector);
   const { blog, canReblog } = await timelineObject(thisPost);
   if (canReblog === false || blog?.isPasswordProtected) return;
 
   clearTimeout(timeoutID);
 
-  appendWithoutOverflow(popupElement, currentTarget.closest(buttonDivSelector) ?? currentTarget.parentElement, popupPosition);
+  appendWithoutOverflow(popupElement, buttonDiv, popupPosition);
+  popupElement.parentNode.addEventListener('click', removePopupOnClick, { once: true });
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
 
   const thisPostID = thisPost.dataset.id;
@@ -173,11 +176,17 @@ const showPopupOnHover = async ({ currentTarget }) => {
   lastPostID = thisPostID;
 };
 
+const removePopupOnClick = () => {
+  clearTimeout(timeoutID);
+  popupElement.parentNode?.removeEventListener('mouseleave', removePopupOnLeave);
+  popupElement.remove();
+};
+
 const removePopupOnLeave = () => {
   timeoutID = setTimeout(() => {
-    const { parentNode } = popupElement;
-    if (parentNode?.matches(':hover, :active, :focus-within') === false) {
-      parentNode?.removeEventListener('mouseleave', removePopupOnLeave);
+    if (!popupElement.matches(':focus-within') && !popupElement.parentNode?.matches(':hover')) {
+      popupElement.parentNode?.removeEventListener('click', removePopupOnClick);
+      popupElement.parentNode?.removeEventListener('mouseleave', removePopupOnLeave);
       popupElement.remove();
     }
   }, 500);

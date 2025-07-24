@@ -19,13 +19,29 @@ let blacklist;
 
 let reblogTrailTheming = true;
 
-const hexToRGB = (hex) => {
+const hexToRGBComponents = (hex) => {
   const { red, green, blue } = hex.match(groupsFromHex).groups;
   return [red, green, blue]
     .map(color => color.padEnd(2, color))
-    .map(color => parseInt(color, 16))
-    .join(', ');
+    .map(color => parseInt(color, 16));
 };
+const hexToRGB = (hex) => hexToRGBComponents(hex).join(', ');
+
+// use round() to enforce chrome 125 instead of 119 to avoid any relative color bugs in prior versions
+const enableAdvancedCss = CSS.supports('color', 'oklch(from #000000 round(l) c h');
+
+const isLight = hex => hexToRGBComponents(hex).reduce((prev, cur) => prev + cur) > 128 * 3;
+const increaseContrast = (hex, amount) =>
+  `oklch(from ${hex} calc(l ${isLight(hex) ? '-' : '+'} ${amount}) c h)`;
+
+const serializeElement = document.createElement('div');
+document.documentElement.append(serializeElement);
+const serializeColor = color => {
+  serializeElement.style.color = `color(from ${color} srgb r g b)`;
+  const result = getComputedStyle(serializeElement).color;
+  return result.startsWith('color(srgb') ? result : undefined;
+};
+const serializeRGB = color => serializeColor(color)?.replace('color(srgb ', '').replace(')', '').split(' ').map(value => Number(value) * 256).join(', ');
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
@@ -45,15 +61,21 @@ const processPosts = async function (postElements) {
       if (!blogs.has(name)) {
         blogs.add(name);
 
+        /* eslint-disable no-unused-vars */
         const {
           backgroundColor,
           titleColor,
           linkColor
         } = theme;
 
+        const hexToRGBAdjusted = color =>
+          color === backgroundColor && enableAdvancedCss
+            ? serializeRGB(increaseContrast(color, 0.3)) ?? hexToRGB(color)
+            : hexToRGB(color);
+
         const backgroundColorRGB = hexToRGB(backgroundColor);
-        const titleColorRGB = hexToRGB(titleColor);
-        const linkColorRGB = hexToRGB(linkColor);
+        const titleColorRGB = hexToRGBAdjusted(backgroundColor);
+        const linkColorRGB = hexToRGBAdjusted(backgroundColor);
 
         styleElement.textContent += `
           [data-xkit-themed="${name}"] {

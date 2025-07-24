@@ -8,6 +8,7 @@
 
   const restartListeners = {};
 
+  // prevent referencing outdated resources after firefox extension update/restart
   const timestamp = Date.now();
 
   const runFeature = async function (name) {

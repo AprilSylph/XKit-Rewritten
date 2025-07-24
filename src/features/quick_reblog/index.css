@@ -195,7 +195,25 @@ footer:is(.published, .queue, .draft) :is(button:not([role]), a[href^="/reblog/"
   position: relative;
 }
 
-/* Common styles for tick pseudo-element */
+/* Cut-out for tick in 2025 post footer, "split notes count" variant */
+footer:is(.published, .queue, .draft) a[href^="/reblog/"] svg:has(use[href="#managed-icon__ds-reblog-24"]) {
+  mask-image: radial-gradient(
+    calc(14.7px / 2) calc(18px / 2) at bottom 5px right 4px,
+    transparent 99%,
+    white 100%
+  );
+}
+
+/* Cut-out for tick in 2025 post footer, "single action" variant */
+footer:is(.published, .queue, .draft) button svg:has(use[href="#managed-icon__ds-reblog-24"]) {
+  mask-image: radial-gradient(
+    calc(14.7px / 2) calc(18px / 2) at bottom 4px left 21px,
+    transparent 99%,
+    white 100%
+  );
+}
+
+/* Styles for tick pseudo-element */
 footer:is(.published, .queue, .draft) :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after {
   position: absolute;
 
@@ -203,7 +221,6 @@ footer:is(.published, .queue, .draft) :is(button:not([role]), a[href^="/reblog/"
   padding: 2px;
   border-radius: 100%;
 
-  background-color: var(--content-panel);
   content: "\2713";
   font-family: "Favorit", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
   font-size: 14px;
@@ -214,6 +231,7 @@ footer:is(.published, .queue, .draft) :is(button:not([role]), a[href^="/reblog/"
 
 /* Pre-2025 post footer */
 footer:is(.published, .queue, .draft) a[href^="/reblog/"]:has(use[href="#managed-icon__reblog"])::after {
+  background-color: var(--content-panel);
   bottom: -5px;
   right: -5px;
 }

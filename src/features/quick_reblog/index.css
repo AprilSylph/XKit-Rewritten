@@ -248,13 +248,6 @@ footer:is(.published, .queue, .draft) button:has(use[href="#managed-icon__ds-reb
   left: 21px;
 }
 
-@media (max-width: 989px) {
-  footer:is(.published, .queue, .draft) :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after {
-    bottom: calc((27px / 2) - 2px);
-    right: calc((27px / 2) - 4px);
-  }
-}
-
 footer.published :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after { color: rgb(var(--green)); }
 footer.queue :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after { color: rgb(var(--purple)); }
 footer.draft :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after { color: rgb(var(--red)); }

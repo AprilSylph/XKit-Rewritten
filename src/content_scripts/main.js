@@ -104,8 +104,9 @@
 
     const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
     const script = document.createElement('script');
+    script.type = 'module';
     script.nonce = nonce;
-    script.src = browser.runtime.getURL('/main_world/index.js');
+    script.src = browser.runtime.getURL(`/main_world/index.js?t=${timestamp}`);
     document.documentElement.append(script);
   });
 

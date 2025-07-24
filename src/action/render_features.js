@@ -13,35 +13,6 @@ const getInstalledFeatures = async function () {
   return installedFeatures;
 };
 
-const writeEnabled = async function ({ currentTarget }) {
-  const { checked, id } = currentTarget;
-  const detailsElement = currentTarget.closest('details');
-  let {
-    [enabledFeaturesKey]: enabledFeatures = [],
-    [specialAccessKey]: specialAccess = []
-  } = await browser.storage.local.get();
-
-  const hasPreferences = detailsElement.querySelector('.preferences:not(:empty)');
-  if (hasPreferences) detailsElement.open = checked;
-
-  if (checked) {
-    enabledFeatures.push(id);
-    detailsElement.classList.remove('disabled');
-  } else {
-    enabledFeatures = enabledFeatures.filter(x => x !== id);
-    detailsElement.classList.add('disabled');
-
-    if (detailsElement.dataset.deprecated === 'true' && !specialAccess.includes(id)) {
-      specialAccess.push(id);
-    }
-  }
-
-  browser.storage.local.set({
-    [enabledFeaturesKey]: enabledFeatures,
-    [specialAccessKey]: specialAccess
-  });
-};
-
 const debounce = (func, ms) => {
   let timeoutID;
   return (...args) => {
@@ -133,9 +104,125 @@ const renderPreferences = async function ({ featureName, preferences, preference
   }
 };
 
+class XKitFeatureElement extends HTMLElement {
+  #detailsElement;
+  #enabledToggle;
+  #helpAnchor;
+  #preferencesList;
+
+  deprecated = false;
+  description = '';
+  featureName = '';
+  help = '';
+  icon = {};
+  preferences = {};
+  relatedTerms = [];
+  title = '';
+
+  constructor () {
+    super();
+
+    const { content } = document.getElementById(this.localName);
+    const shadowRoot = this.attachShadow({ mode: 'open' });
+    shadowRoot.replaceChildren(content.cloneNode(true));
+
+    this.#detailsElement = shadowRoot.querySelector('details');
+    this.#enabledToggle = shadowRoot.querySelector('input[type="checkbox"]');
+    this.#helpAnchor = shadowRoot.querySelector('a.help');
+    this.#preferencesList = shadowRoot.querySelector('ul.preferences');
+  }
+
+  #handleEnabledToggleInput = async ({ currentTarget }) => {
+    const { checked, id } = currentTarget;
+    let {
+      [enabledFeaturesKey]: enabledFeatures = [],
+      [specialAccessKey]: specialAccess = []
+    } = await browser.storage.local.get();
+
+    const hasPreferences = Object.keys(this.preferences).length !== 0;
+    if (hasPreferences) this.#detailsElement.open = checked;
+
+    if (checked) {
+      enabledFeatures.push(id);
+    } else {
+      enabledFeatures = enabledFeatures.filter(x => x !== id);
+
+      if (this.deprecated && !specialAccess.includes(id)) {
+        specialAccess.push(id);
+      }
+    }
+
+    this.disabled = !checked;
+
+    browser.storage.local.set({
+      [enabledFeaturesKey]: enabledFeatures,
+      [specialAccessKey]: specialAccess
+    });
+  };
+
+  connectedCallback () {
+    this.#detailsElement.dataset.deprecated = this.deprecated;
+    this.#enabledToggle.id = this.featureName;
+    this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
+    this.#helpAnchor.href = this.help;
+    this.dataset.relatedTerms = this.relatedTerms;
+
+    const children = [];
+
+    if (this.description) {
+      const descriptionElement = document.createElement('span');
+      descriptionElement.setAttribute('slot', 'description');
+      descriptionElement.textContent = this.description;
+      children.push(descriptionElement);
+    }
+
+    if (this.icon.class_name) {
+      const iconElement = document.createElement('i');
+      iconElement.setAttribute('slot', 'icon');
+      iconElement.classList.add('ri-fw', this.icon.class_name);
+      iconElement.style.backgroundColor = this.icon.background_color ?? '#ffffff';
+      iconElement.style.color = this.icon.color ?? '#000000';
+      children.push(iconElement);
+    }
+
+    if (this.title) {
+      const titleElement = document.createElement('span');
+      titleElement.setAttribute('slot', 'title');
+      titleElement.textContent = this.title;
+      children.push(titleElement);
+    }
+
+    this.replaceChildren(...children);
+
+    if (Object.keys(this.preferences).length !== 0) {
+      renderPreferences({
+        featureName: this.featureName,
+        preferences: this.preferences,
+        preferenceList: this.#preferencesList
+      });
+    }
+  }
+
+  disconnectedCallback () {
+    this.#enabledToggle.removeEventListener('input', this.#handleEnabledToggleInput);
+  }
+
+  /** @type {boolean} True if the feature can be enabled. Defaults to `false`. */
+  #disabled = false;
+
+  set disabled (disabled = false) {
+    this.#detailsElement.classList.toggle('disabled', disabled);
+    this.#enabledToggle.checked = !disabled;
+    this.#disabled = disabled;
+  }
+
+  get disabled () { return this.#disabled; }
+}
+
+customElements.define('xkit-feature', XKitFeatureElement);
+
 const renderFeatures = async function () {
-  const featureClones = [];
-  featuresDiv.textContent = '';
+  const featureElements = [];
 
   const installedFeatures = await getInstalledFeatures();
   const {
@@ -149,72 +236,19 @@ const renderFeatures = async function () {
   for (const featureName of [...orderedEnabledFeatures, ...disabledFeatures]) {
     const url = browser.runtime.getURL(`/features/${featureName}/feature.json`);
     const file = await fetch(url);
-    const {
-      title = featureName,
-      description = '',
-      note = '',
-      icon = {},
-      help = '',
-      relatedTerms = [],
-      preferences = {},
-      deprecated = false
-    } = await file.json();
+    const metadata = await file.json();
 
-    const featureTemplateClone = document.getElementById('feature').content.cloneNode(true);
-
-    const detailsElement = featureTemplateClone.querySelector('details.feature');
-    detailsElement.dataset.relatedTerms = relatedTerms;
-    detailsElement.dataset.deprecated = deprecated;
-
-    if (enabledFeatures.includes(featureName) === false) {
-      detailsElement.classList.add('disabled');
-
-      if (deprecated && !specialAccess.includes(featureName)) {
-        continue;
-      }
+    const disabled = enabledFeatures.includes(featureName) === false;
+    if (disabled && metadata.deprecated && !specialAccess.includes(featureName)) {
+      continue;
     }
 
-    if (icon.class_name !== undefined) {
-      const iconDiv = featureTemplateClone.querySelector('div.icon');
-      iconDiv.style.backgroundColor = icon.background_color || '#ffffff';
-
-      const iconInner = iconDiv.querySelector('i');
-      iconInner.classList.add(icon.class_name);
-      iconInner.style.color = icon.color || '#000000';
-    }
-
-    const titleHeading = featureTemplateClone.querySelector('h4.title');
-    titleHeading.textContent = title;
-
-    if (description !== '') {
-      const descriptionParagraph = featureTemplateClone.querySelector('p.description');
-      descriptionParagraph.textContent = description;
-    }
-
-    if (help !== '') {
-      const helpLink = featureTemplateClone.querySelector('a.help');
-      helpLink.href = help;
-    }
-
-    const enabledInput = featureTemplateClone.querySelector('input.toggle-button');
-    enabledInput.id = featureName;
-    enabledInput.checked = enabledFeatures.includes(featureName);
-    enabledInput.addEventListener('input', writeEnabled);
-
-    if (note !== '') {
-      const noteParagraph = featureTemplateClone.querySelector('.note');
-      noteParagraph.textContent = note;
-    }
-
-    if (Object.keys(preferences).length !== 0) {
-      const preferenceList = featureTemplateClone.querySelector('.preferences');
-      renderPreferences({ featureName, preferences, preferenceList });
-    }
-
-    featureClones.push(featureTemplateClone);
+    const featureElement = document.createElement('xkit-feature');
+    Object.assign(featureElement, { disabled, featureName, ...metadata });
+    featureElements.push(featureElement);
   }
 
-  featuresDiv.append(...featureClones);
+  featuresDiv.replaceChildren(...featureElements);
 };
 
 renderFeatures();

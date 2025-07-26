@@ -24,6 +24,7 @@ export const styleElement = buildStyle(`
   font-size: 1rem;
   font-weight: bold;
   line-height: 1em;
+  pointer-events: none;
 }
 
 .${labelClass}::before {
@@ -32,6 +33,11 @@ export const styleElement = buildStyle(`
 
 .${labelClass}.mini {
   font-size: 0.6rem;
+}
+
+.${labelClass}.hr {
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .${canvasClass} {
@@ -60,11 +66,10 @@ export const styleElement = buildStyle(`
 
 const addLabel = (element, inside = false) => {
   if (element.parentNode.querySelector(`.${labelClass}`) === null) {
-    const gifLabel = dom('p', {
-      class: element.clientWidth && element.clientWidth < 150
-        ? `${labelClass} mini`
-        : labelClass
-    });
+    const gifLabel = dom('p', { class: labelClass });
+    element.clientWidth && element.clientWidth <= 150 && gifLabel.classList.add('mini');
+    element.clientHeight && element.clientHeight <= 50 && gifLabel.classList.add('mini');
+    element.clientHeight && element.clientHeight <= 30 && gifLabel.classList.add('hr');
 
     inside ? element.append(gifLabel) : element.parentNode.append(gifLabel);
   }

@@ -197,6 +197,11 @@ footer:is(.published, .queue, .draft) :is(button:not([role]), a[href^="/reblog/"
 
 /* Cut-out for tick in 2025 post footer, "split notes count" variant */
 footer:is(.published, .queue, .draft) a[href^="/reblog/"] svg:has(use[href="#managed-icon__ds-reblog-24"]) {
+  -webkit-mask-image: radial-gradient(
+    calc(14.7px / 2) calc(18px / 2) at bottom 5px right 4px,
+    transparent 99%,
+    white 100%
+  );
   mask-image: radial-gradient(
     calc(14.7px / 2) calc(18px / 2) at bottom 5px right 4px,
     transparent 99%,
@@ -206,6 +211,11 @@ footer:is(.published, .queue, .draft) a[href^="/reblog/"] svg:has(use[href="#man
 
 /* Cut-out for tick in 2025 post footer, "single action" variant */
 footer:is(.published, .queue, .draft) button svg:has(use[href="#managed-icon__ds-reblog-24"]) {
+  -webkit-mask-image: radial-gradient(
+    calc(14.7px / 2) calc(18px / 2) at bottom 4px left 21px,
+    transparent 99%,
+    white 100%
+  );
   mask-image: radial-gradient(
     calc(14.7px / 2) calc(18px / 2) at bottom 4px left 21px,
     transparent 99%,

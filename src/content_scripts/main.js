@@ -1,14 +1,17 @@
 'use strict';
 
 {
+  const enabledFeaturesKey = 'enabledScripts';
+
   const redpop = [...document.scripts].some(({ src }) => src.includes('/pop/'));
   const isReactLoaded = () => document.querySelector('[data-rh]') === null;
 
   const restartListeners = {};
 
+  // prevent referencing outdated resources after firefox extension update/restart
   const timestamp = Date.now();
 
-  const runScript = async function (name) {
+  const runFeature = async function (name) {
     const {
       main,
       clean,
@@ -36,8 +39,8 @@
     restartListeners[name] = async (changes, areaName) => {
       if (areaName !== 'local') return;
 
-      const { enabledScripts } = changes;
-      if (enabledScripts && !enabledScripts.newValue.includes(name)) return;
+      const { [enabledFeaturesKey]: enabledFeatures } = changes;
+      if (enabledFeatures && !enabledFeatures.newValue.includes(name)) return;
 
       if (onStorageChanged instanceof Function) {
         onStorageChanged(changes, areaName);
@@ -50,7 +53,7 @@
     browser.storage.onChanged.addListener(restartListeners[name]);
   };
 
-  const destroyScript = async function (name) {
+  const destroyFeature = async function (name) {
     const {
       clean,
       stylesheet,
@@ -76,25 +79,25 @@
       return;
     }
 
-    const { enabledScripts } = changes;
+    const { [enabledFeaturesKey]: enabledFeatures } = changes;
 
-    if (enabledScripts) {
-      const { oldValue = [], newValue = [] } = enabledScripts;
+    if (enabledFeatures) {
+      const { oldValue = [], newValue = [] } = enabledFeatures;
 
       const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
       const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
 
-      newlyEnabled.forEach(runScript);
-      newlyDisabled.forEach(destroyScript);
+      newlyEnabled.forEach(runFeature);
+      newlyDisabled.forEach(destroyFeature);
     }
   };
 
-  const getInstalledScripts = async function () {
+  const getInstalledFeatures = async function () {
     const url = browser.runtime.getURL('/features/index.json');
     const file = await fetch(url);
-    const installedScripts = await file.json();
+    const installedFeatures = await file.json();
 
-    return installedScripts;
+    return installedFeatures;
   };
 
   const initMainWorld = () => new Promise(resolve => {
@@ -102,8 +105,9 @@
 
     const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
     const script = document.createElement('script');
+    script.type = 'module';
     script.nonce = nonce;
-    script.src = browser.runtime.getURL('/main_world/index.js');
+    script.src = browser.runtime.getURL(`/main_world/index.js?t=${timestamp}`);
     document.documentElement.append(script);
   });
 
@@ -113,11 +117,11 @@
     browser.storage.onChanged.addListener(onStorageChanged);
 
     const [
-      installedScripts,
-      { enabledScripts = [] }
+      installedFeatures,
+      { [enabledFeaturesKey]: enabledFeatures = [] }
     ] = await Promise.all([
-      getInstalledScripts(),
-      browser.storage.local.get('enabledScripts'),
+      getInstalledFeatures(),
+      browser.storage.local.get(enabledFeaturesKey),
       initMainWorld()
     ]);
 
@@ -127,9 +131,9 @@
      */
     await Promise.all(['css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
 
-    installedScripts
-      .filter(scriptName => enabledScripts.includes(scriptName))
-      .forEach(runScript);
+    installedFeatures
+      .filter(featureName => enabledFeatures.includes(featureName))
+      .forEach(runFeature);
   };
 
   const waitForReactLoaded = () => new Promise(resolve => {

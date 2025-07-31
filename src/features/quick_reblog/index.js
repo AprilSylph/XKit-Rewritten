@@ -308,8 +308,8 @@ const renderQuickTags = async function () {
   });
 };
 
-const updateQuickTags = (changes, areaName) => {
-  if (areaName === 'local' && Object.keys(changes).includes(quickTagsStorageKey)) {
+const updateQuickTags = (changes) => {
+  if (Object.keys(changes).includes(quickTagsStorageKey)) {
     renderQuickTags();
   }
 };
@@ -399,7 +399,7 @@ export const main = async function () {
   $(document.body).on('contextmenu', buttonSelector, preventLongPressMenu);
 
   if (quickTagsIntegration) {
-    browser.storage.onChanged.addListener(updateQuickTags);
+    browser.storage.local.onChanged.addListener(updateQuickTags);
     renderQuickTags();
   }
 
@@ -415,7 +415,7 @@ export const clean = async function () {
 
   blogSelector.removeEventListener('change', updateRememberedBlog);
 
-  browser.storage.onChanged.removeListener(updateQuickTags);
+  browser.storage.local.onChanged.removeListener(updateQuickTags);
   onNewPosts.removeListener(processPosts);
 };
 

@@ -40,7 +40,7 @@ const addWarningElement = (postElement, rootID) => {
     ' / ',
     unblockButton
   ]);
-  postElement.before(warningElement);
+  postElement.closest(timelineSelector).before(warningElement);
 };
 
 let blockedPostRootIDs = [];

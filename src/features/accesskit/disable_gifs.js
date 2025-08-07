@@ -175,7 +175,9 @@ export const main = async function () {
 
   const gifImage = `
     :is(
-      figure, /* post image/imageset; recommended blog carousel entry; blog view sidebar "more like this"; post in grid view; blog card modal post entry */
+      ${
+        'figure' // post image/imageset; recommended blog carousel entry; blog view sidebar "more like this"; post in grid view; blog card modal post entry
+      }
       ${keyToCss(
         'linkCard', // post link element
         'typeaheadRow', // modal search dropdown entry

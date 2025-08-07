@@ -6,7 +6,7 @@ Modules may export any of the following:
 - Type: Async Function
 - Required: No
 
-The main function of the feature. Will be called whenever the user enables the feature, even if the tab(s) XKit is running in is/are not focused. Will also be called upon pageload if the script is enabled.
+The main function of the feature. Will be called whenever the user enables the feature, even if the tab(s) XKit is running in is/are not focused. Will also be called upon pageload if the feature is enabled.
 
 ## `clean()`
 - Type: Async Function

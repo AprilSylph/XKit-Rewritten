@@ -1,6 +1,6 @@
 const checkForNoResults = function () {
   const nothingFound =
-    [...document.querySelectorAll('details.script')]
+    [...document.querySelectorAll('details.feature')]
       .every(detailsElement => detailsElement.classList.contains('search-hidden') || detailsElement.classList.contains('filter-hidden'));
 
   document.querySelector('.no-results').style.display = nothingFound ? 'flex' : 'none';
@@ -17,7 +17,7 @@ $('nav a').on('click', event => {
 document.getElementById('search').addEventListener('input', event => {
   const query = event.currentTarget.value.toLowerCase();
 
-  [...document.querySelectorAll('details.script')]
+  [...document.querySelectorAll('details.feature')]
     .forEach(detailsElement => {
       if (
         detailsElement.textContent.toLowerCase().includes(query) ||
@@ -29,7 +29,7 @@ document.getElementById('search').addEventListener('input', event => {
       }
     });
 
-  [...document.querySelectorAll('details.script li')]
+  [...document.querySelectorAll('details.feature li')]
     .forEach(preferenceElement => {
       if (
         query.length >= 3 && preferenceElement.textContent.toLowerCase().includes(query)
@@ -46,19 +46,19 @@ document.getElementById('search').addEventListener('input', event => {
 document.getElementById('filter').addEventListener('input', event => {
   switch (event.currentTarget.value) {
     case 'all':
-      $('.script.filter-hidden').removeClass('filter-hidden');
+      $('.feature.filter-hidden').removeClass('filter-hidden');
       break;
     case 'enabled':
-      $('.script.disabled').addClass('filter-hidden');
-      $('.script:not(.disabled)').removeClass('filter-hidden');
+      $('.feature.disabled').addClass('filter-hidden');
+      $('.feature:not(.disabled)').removeClass('filter-hidden');
       break;
     case 'disabled':
-      $('.script:not(.disabled)').addClass('filter-hidden');
-      $('.script.disabled').removeClass('filter-hidden');
+      $('.feature:not(.disabled)').addClass('filter-hidden');
+      $('.feature.disabled').removeClass('filter-hidden');
       break;
   }
 
-  $('.script[open].filter-hidden').removeAttr('open');
+  $('.feature[open].filter-hidden').removeAttr('open');
 
   checkForNoResults();
 });

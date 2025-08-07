@@ -9,7 +9,7 @@
   "preferences": {
     "hiddenAvatars": {
       "type": "textarea",
-      "label": "Usernames (comma-separated)",
+      "label": "Blognames (comma-separated)",
       "default": ""
     }
   }

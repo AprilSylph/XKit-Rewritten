@@ -3,7 +3,7 @@ import { dom } from './dom.js';
 import { postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { inject } from './inject.js';
-import { blogData, notePropsObjects, timelineObject } from './react_props.js';
+import { blogData, noteObject, timelineObject } from './react_props.js';
 
 const postHeaderSelector = `${postSelector} article > header`;
 const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
@@ -91,14 +91,14 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
   }
   const inPostFooter = await inject('/main_world/test_parent_element.js', ['footer *'], meatballMenu);
   if (inPostFooter) {
-    const __notePropsData = await notePropsObjects(meatballMenu);
+    const __noteObjectData = await noteObject(meatballMenu);
 
-    if (__notePropsData[0]?.note?.type === 'reply') {
+    if (__noteObjectData?.type === 'reply') {
       addTypedMeatballItems({
         meatballMenu,
         type: 'reply',
-        reactData: __notePropsData,
-        reactDataKey: '__notePropsData'
+        reactData: __noteObjectData,
+        reactDataKey: '__noteObjectData'
       });
     }
   }

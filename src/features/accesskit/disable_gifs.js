@@ -102,6 +102,7 @@ const pauseGif = function (gifElement) {
       canvas.height = image.naturalHeight;
       canvas.className = gifElement.className;
       canvas.classList.add(canvasClass);
+      canvas.setAttribute('style', gifElement.getAttribute('style'));
       canvas.getContext('2d').drawImage(image, 0, 0);
       gifElement.parentNode.append(canvas);
       addLabel(gifElement);

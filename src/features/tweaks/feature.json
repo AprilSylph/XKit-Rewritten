@@ -22,6 +22,11 @@
       "label": "Use a slim layout for filtered posts",
       "default": false
     },
+    "filtered_screen_tags": {
+      "type": "checkbox",
+      "label": "Show tags on filtered posts",
+      "default": false
+    },
     "highlight_contributed_content": {
       "type": "checkbox",
       "label": "Highlight contributed content on reblogs",

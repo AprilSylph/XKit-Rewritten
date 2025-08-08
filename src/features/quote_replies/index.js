@@ -102,7 +102,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
-const processGenericReply = async (notificationProps) => {
+const createGenericActivityReplyPost = async (notificationProps) => {
   const {
     subtype: type,
     timestamp,
@@ -120,7 +120,7 @@ const processGenericReply = async (notificationProps) => {
       ? bodyDescriptionContent.text.slice(summaryFormatting.start + 1, summaryFormatting.end - 1)
       : bodyDescriptionContent.text;
 
-    return await processReply({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary });
+    return await createActivityReplyPost({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary });
   } catch (exception) {
     console.error(exception);
     console.debug('[XKit] Falling back to generic quote content due to fetch/parse failure');
@@ -153,7 +153,7 @@ const processGenericReply = async (notificationProps) => {
   return { content, tags };
 };
 
-const processReply = async ({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary }) => {
+const createActivityReplyPost = async ({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary }) => {
   const { response } = await apiFetch(
     `/v2/blog/${targetTumblelogName}/post/${targetPostId}/notes/timeline`,
     { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } }
@@ -199,16 +199,16 @@ const createReplyPost = ({ type, replyingBlogName, replyingBlogUuid, targetPostS
 
 const quoteActivityReply = async (tumblelogName, notificationProps) => {
   const { content, tags } = notificationProps.type === 'generic'
-    ? await processGenericReply(notificationProps)
-    : await processReply(notificationProps);
+    ? await createGenericActivityReplyPost(notificationProps)
+    : await createActivityReplyPost(notificationProps);
 
   openQuoteReplyDraft(tumblelogName, content, tags);
 };
 
-const processNotePropsData = ({ noteProps, parentNoteProps }) => {
-  if (userBlogNames.includes(noteProps.note.blogName) || noteProps.communityId) {
-    return false;
-  }
+const determineNoteReplyType = ({ noteProps, parentNoteProps }) => {
+  if (userBlogNames.includes(noteProps.note.blogName)) return false;
+  if (noteProps.communityId) return false;
+
   if (parentNoteProps && userBlogNames.includes(parentNoteProps.note.blogName)) {
     return {
       type: 'reply_to_comment',
@@ -241,7 +241,7 @@ const quoteNoteReply = async ({ currentTarget }) => {
     }
   } = currentTarget.__notePropsData;
 
-  const { type, targetBlogName } = processNotePropsData(currentTarget.__notePropsData);
+  const { type, targetBlogName } = determineNoteReplyType(currentTarget.__notePropsData);
 
   const { summary: targetPostSummary, postUrl: targetPostUrl } = await timelineObject(currentTarget.closest(keyToCss('meatballMenu')));
   const replyingBlogUuid = await apiFetch(`/v2/blog/${replyingBlogName}/info?fields[blogs]=uuid`)
@@ -280,7 +280,7 @@ export const main = async function () {
   registerReplyMeatballItem({
     id: meatballButtonId,
     label: 'Quote this reply',
-    notePropsFilter: notePropsData => Boolean(processNotePropsData(notePropsData)),
+    notePropsFilter: notePropsData => Boolean(determineNoteReplyType(notePropsData)),
     onclick: event => quoteNoteReply(event).catch(showErrorModal)
   });
 

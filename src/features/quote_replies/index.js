@@ -166,25 +166,32 @@ const processReply = async ({ type, timestamp, targetPostId, targetTumblelogName
     throw new Error('Reply not found.');
   }
 
+  const { content: replyContent, blog: { name: replyingBlogName, uuid: replyingBlogUuid } } = reply;
+  const targetPostUrl = `https://${targetTumblelogName}.tumblr.com/post/${targetPostId}`;
+
+  return createReplyPost({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent });
+};
+
+const createReplyPost = ({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent }) => {
   const verbiage = {
     reply: 'replied to your post',
     reply_to_comment: 'replied to you in a post',
     note_mention: 'mentioned you on a post'
   }[type];
-  const text = `@${reply.blog.name} ${verbiage} \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`;
+  const text = `@${replyingBlogName} ${verbiage} \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`;
   const formatting = [
-    { start: 0, end: reply.blog.name.length + 1, type: 'mention', blog: { uuid: reply.blog.uuid } },
-    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: `https://${targetTumblelogName}.tumblr.com/post/${targetPostId}` }
+    { start: 0, end: replyingBlogName.length + 1, type: 'mention', blog: { uuid: replyingBlogUuid } },
+    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: targetPostUrl }
   ];
 
   const content = [
     { type: 'text', text, formatting },
-    Object.assign(reply.content[0], { subtype: 'indented' }),
+    Object.assign(replyContent[0], { subtype: 'indented' }),
     { type: 'text', text: '\u200B' }
   ];
   const tags = [
     ...originalPostTag ? [originalPostTag] : [],
-    ...tagReplyingBlog ? [reply.blog.name] : []
+    ...tagReplyingBlog ? [replyingBlogName] : []
   ].join(',');
 
   return { content, tags };
@@ -228,37 +235,19 @@ const processNotePropsData = ({ noteProps, parentNoteProps }) => {
 };
 
 const quoteNoteReply = async ({ currentTarget }) => {
-  const [{ note: reply }] = currentTarget.__notePropsData;
+  const {
+    noteProps: {
+      note: { blogName: replyingBlogName, content: replyContent }
+    }
+  } = currentTarget.__notePropsData;
 
   const { type, targetBlogName } = processNotePropsData(currentTarget.__notePropsData);
 
-  const { summary: postSummary, postUrl } = await timelineObject(currentTarget.closest(keyToCss('meatballMenu')));
-
-  const replyingBlogName = reply.blogName;
+  const { summary: targetPostSummary, postUrl: targetPostUrl } = await timelineObject(currentTarget.closest(keyToCss('meatballMenu')));
   const replyingBlogUuid = await apiFetch(`/v2/blog/${replyingBlogName}/info?fields[blogs]=uuid`)
     .then(({ response: { blog: { uuid } } }) => uuid);
 
-  const verbiage = {
-    reply: 'replied to your post',
-    reply_to_comment: 'replied to you in a post',
-    note_mention: 'mentioned you on a post'
-  }[type];
-  const text = `@${replyingBlogName} ${verbiage} \u201C${postSummary.replace(/\n/g, ' ')}\u201D:`;
-  const formatting = [
-    { start: 0, end: replyingBlogName.length + 1, type: 'mention', blog: { uuid: replyingBlogUuid } },
-    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: postUrl }
-  ];
-
-  const content = [
-    { type: 'text', text, formatting },
-    Object.assign(reply.content[0], { subtype: 'indented' }),
-    { type: 'text', text: '\u200B' }
-  ];
-  const tags = [
-    ...originalPostTag ? [originalPostTag] : [],
-    ...tagReplyingBlog ? [replyingBlogName] : []
-  ].join(',');
-
+  const { content, tags } = createReplyPost({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent });
   openQuoteReplyDraft(targetBlogName, content, tags);
 };
 

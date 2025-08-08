@@ -23,7 +23,7 @@ const destroyTweak = async function (name) {
   }
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes) {
   if (Object.keys(changes).some(key => key.startsWith('tweaks') && changes[key].oldValue !== undefined)) {
     const preferences = await getPreferences('tweaks');
 

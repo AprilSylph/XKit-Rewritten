@@ -93,16 +93,15 @@ const addLabel = (element, inside = false) => {
 };
 
 const pauseGif = function (gifElement) {
-  const image = new Image();
-  image.src = gifElement.currentSrc;
+  const image = dom('img', { src: gifElement.currentSrc });
   image.onload = () => {
     if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      canvas.className = gifElement.className;
-      canvas.classList.add(canvasClass);
-      canvas.setAttribute('style', gifElement.getAttribute('style'));
+      const canvas = dom('canvas', {
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+        class: `${gifElement.className} ${canvasClass}`,
+        style: gifElement.getAttribute('style')
+      });
       canvas.getContext('2d').drawImage(image, 0, 0);
       gifElement.after(canvas);
       addLabel(gifElement);

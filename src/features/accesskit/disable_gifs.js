@@ -102,7 +102,6 @@ const createPausedUrl = memoize(async sourceUrl => {
   const contentType = response.headers.get('Content-Type');
   const canvas = document.createElement('canvas');
 
-  /* globals ImageDecoder */
   if (typeof ImageDecoder === 'function' && await ImageDecoder.isTypeSupported(contentType)) {
     const decoder = new ImageDecoder({
       type: contentType,

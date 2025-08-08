@@ -162,9 +162,7 @@ const processRows = function (rowsElements) {
 const processHoverableElements = elements =>
   elements.forEach(element => element.setAttribute(hoverContainerAttribute, ''));
 
-const onStorageChanged = async function (changes, areaName) {
-  if (areaName !== 'local') return;
-
+const onStorageChanged = async function (changes) {
   const { 'accesskit.preferences.disable_gifs_loading_mode': modeChanges } = changes;
   if (modeChanges?.oldValue === undefined) return;
 
@@ -209,11 +207,11 @@ export const main = async function () {
     processRows
   );
 
-  browser.storage.onChanged.addListener(onStorageChanged);
+  browser.storage.local.onChanged.addListener(onStorageChanged);
 };
 
 export const clean = async function () {
-  browser.storage.onChanged.removeListener(onStorageChanged);
+  browser.storage.local.onChanged.removeListener(onStorageChanged);
 
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);

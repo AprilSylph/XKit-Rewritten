@@ -13,5 +13,6 @@ export default function unburyNoteProps () {
     }
     fiber = fiber.return;
   }
-  return Object.values(resultsByReplyId);
+  const [noteProps, parentNoteProps] = Object.values(resultsByReplyId);
+  return { noteProps, parentNoteProps };
 }

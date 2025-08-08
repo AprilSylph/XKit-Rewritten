@@ -93,7 +93,7 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
   if (inPostFooter) {
     const __notePropsData = await notePropsObjects(meatballMenu);
 
-    if (__notePropsData[0]?.note?.type === 'reply') {
+    if (__notePropsData?.noteProps?.note?.type === 'reply') {
       addTypedMeatballItems({
         meatballMenu,
         type: 'reply',

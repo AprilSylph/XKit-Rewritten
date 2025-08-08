@@ -19,8 +19,14 @@ export const notificationObject = weakMemoize(notificationElement =>
 );
 
 /**
+ * @typedef NotePropsData
+ * @property {object} noteProps - A note element's buried note component props
+ * @property {object} [parentNoteProps] - A note element's parent reply's buried note component props, if it is a threaded reply
+ */
+
+/**
  * @param {Element} noteElement - An on-screen post note element
- * @returns {Promise<object[]>} - An array containing the element's buried note component props and, if it is a
+ * @returns {Promise<NotePropsData>} - An object containing the element's buried note component props and, if it is a
  *                                threaded reply, its parents' buried note component props values
  */
 export const notePropsObjects = weakMemoize(noteElement =>

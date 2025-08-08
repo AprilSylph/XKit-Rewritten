@@ -198,7 +198,7 @@ const quoteActivityReply = async (tumblelogName, notificationProps) => {
   openQuoteReplyDraft(tumblelogName, content, tags);
 };
 
-const processNoteProps = ([noteProps, parentNoteProps]) => {
+const processNotePropsData = ({ noteProps, parentNoteProps }) => {
   if (userBlogNames.includes(noteProps.note.blogName) || noteProps.communityId) {
     return false;
   }
@@ -230,7 +230,7 @@ const processNoteProps = ([noteProps, parentNoteProps]) => {
 const quoteNoteReply = async ({ currentTarget }) => {
   const [{ note: reply }] = currentTarget.__notePropsData;
 
-  const { type, targetBlogName } = processNoteProps(currentTarget.__notePropsData);
+  const { type, targetBlogName } = processNotePropsData(currentTarget.__notePropsData);
 
   const { summary: postSummary, postUrl } = await timelineObject(currentTarget.closest(keyToCss('meatballMenu')));
 
@@ -291,7 +291,7 @@ export const main = async function () {
   registerReplyMeatballItem({
     id: meatballButtonId,
     label: 'Quote this reply',
-    notePropsFilter: notePropsData => Boolean(processNoteProps(notePropsData)),
+    notePropsFilter: notePropsData => Boolean(processNotePropsData(notePropsData)),
     onclick: event => quoteNoteReply(event).catch(showErrorModal)
   });
 

@@ -76,7 +76,7 @@ ${keyToCss('background')}[${labelAttribute}]::after {
   background-color: rgb(var(--secondary-accent));
 }
 
-.${backgroundGifClass}:not(:hover) > div {
+.${backgroundGifClass}:not(:hover) > :is(div, span) {
   color: rgb(var(--black));
 }
 `);
@@ -102,8 +102,9 @@ const pauseGif = function (gifElement) {
       canvas.height = image.naturalHeight;
       canvas.className = gifElement.className;
       canvas.classList.add(canvasClass);
+      canvas.setAttribute('style', gifElement.getAttribute('style'));
       canvas.getContext('2d').drawImage(image, 0, 0);
-      gifElement.parentNode.append(canvas);
+      gifElement.after(canvas);
       addLabel(gifElement);
     }
   };
@@ -174,17 +175,32 @@ export const main = async function () {
   ({ disable_gifs_loading_mode: loadingMode } = await getPreferences('accesskit'));
 
   const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+    :is(
+      ${
+        'figure' // post image/imageset; recommended blog carousel entry; blog view sidebar "more like this"; post in grid view; blog card modal post entry
+      },
+      ${keyToCss(
+        'linkCard', // post link element
+        'typeaheadRow', // modal search dropdown entry
+        'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
+        'topPost', // activity page top post
+        'takeoverBanner' // advertisement
+      )}
+    ) img[srcset*=".gif"]:not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 
   const gifBackgroundImage = `
-    ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
+    ${keyToCss(
+      'communityHeaderImage', // search page tags section header: https://www.tumblr.com/search/gif?v=tag
+      'bannerImage', // tagged page sidebar header: https://www.tumblr.com/tagged/gif
+      'tagChicletWrapper' // "trending" / "your tags" timeline carousel entry: https://www.tumblr.com/dashboard/trending, https://www.tumblr.com/dashboard/hubs
+    )}[style*=".gif"]
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 
   pageModifications.register(
-    `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`,
+    `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`, // recommended blog carousel entry: https://www.tumblr.com/tagged/gif
     processHoverableElements
   );
 

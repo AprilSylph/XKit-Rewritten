@@ -4,6 +4,10 @@
   "dependencyDashboard": false,
   "packageRules": [
     {
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "3 days"
+    },
+    {
       "groupName": "vendored dependencies",
       "matchManagers": ["npm"],
       "matchDepTypes": ["dependencies"],

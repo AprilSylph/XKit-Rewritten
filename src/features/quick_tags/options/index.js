@@ -27,6 +27,7 @@ const saveNewBundle = async event => {
 Sortable.create(bundlesList, {
   dataIdAttr: 'id',
   handle: '.drag-handle',
+  forceFallback: true,
   store: {
     set: async sortable => {
       const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);

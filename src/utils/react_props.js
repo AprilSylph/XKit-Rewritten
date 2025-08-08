@@ -20,10 +20,11 @@ export const notificationObject = weakMemoize(notificationElement =>
 
 /**
  * @param {Element} noteElement - An on-screen post note element
- * @returns {Promise<object[]>} - The element's buried note property
+ * @returns {Promise<object[]>} - An array containing the element's buried note component props and, if it is a
+ *                                threaded reply, its parents' buried note component props values
  */
-export const noteObject = weakMemoize(noteElement =>
-  inject('/main_world/unbury_note_object.js', [], noteElement)
+export const notePropsObjects = weakMemoize(noteElement =>
+  inject('/main_world/unbury_note_props.js', [], noteElement)
 );
 
 /**

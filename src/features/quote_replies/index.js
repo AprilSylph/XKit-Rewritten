@@ -198,54 +198,39 @@ const quoteActivityReply = async (tumblelogName, notificationProps) => {
   openQuoteReplyDraft(tumblelogName, content, tags);
 };
 
-const processNoteProps = async ({ replyUrl }) => {
-  try {
-    const [, blogName, postId, /* 'replies' */ , replyId] = new URL(replyUrl).pathname.split('/');
-    let { response: { timeline } } = await apiFetch(`/v2/blog/${blogName}/post/${postId}/replies/${replyId}/permalink`);
-    const notes = [];
-    while (timeline) {
-      const note = timeline.elements[0];
-      notes.unshift(note);
-      timeline = note.children;
-    }
-    const [note, parentNote] = notes;
-
-    if (userBlogNames.includes(note.blogName) || noteProps.communityId) {
-      return false;
-    }
-    if (parentNote && userBlogNames.includes(parentNote.blogName)) {
-      return {
-        type: 'reply_to_comment',
-        targetBlogName: parentNote.blogName
-      };
-    }
-    if (userBlogNames.includes(note.blog.name)) {
-      return {
-        type: 'reply',
-        targetBlogName: note.blog.name
-      };
-    }
-    for (const { formatting = [] } of note.content) {
-      for (const { type, blog } of formatting) {
-        if (type === 'mention' && userBlogNames.includes(blog.name)) {
-          return {
-            type: 'note_mention',
-            targetBlogName: blog.name
-          };
-        }
+const processNoteProps = ([noteProps, parentNoteProps]) => {
+  if (userBlogNames.includes(noteProps.note.blogName) || noteProps.communityId) {
+    return false;
+  }
+  if (parentNoteProps && userBlogNames.includes(parentNoteProps.note.blogName)) {
+    return {
+      type: 'reply_to_comment',
+      targetBlogName: parentNoteProps.note.blogName
+    };
+  }
+  if (userBlogNames.includes(noteProps.blog.name)) {
+    return {
+      type: 'reply',
+      targetBlogName: noteProps.blog.name
+    };
+  }
+  for (const { formatting = [] } of noteProps.note.content) {
+    for (const { type, blog } of formatting) {
+      if (type === 'mention' && userBlogNames.includes(blog.name)) {
+        return {
+          type: 'note_mention',
+          targetBlogName: blog.name
+        };
       }
     }
-  } catch (e) {
-    console.error('could not process note with reply url', replyUrl);
-    console.error(e);
   }
   return false;
 };
 
 const quoteNoteReply = async ({ currentTarget }) => {
-  const [{ note: reply }] = currentTarget.__noteObjectData;
+  const [{ note: reply }] = currentTarget.__notePropsData;
 
-  const { type, targetBlogName } = await processNoteProps(currentTarget.__noteObjectData);
+  const { type, targetBlogName } = processNoteProps(currentTarget.__notePropsData);
 
   const { summary: postSummary, postUrl } = await timelineObject(currentTarget.closest(keyToCss('meatballMenu')));
 
@@ -306,7 +291,7 @@ export const main = async function () {
   registerReplyMeatballItem({
     id: meatballButtonId,
     label: 'Quote this reply',
-    notePropsFilter: async notePropsData => Boolean(await processNoteProps(notePropsData)),
+    notePropsFilter: notePropsData => Boolean(processNoteProps(notePropsData)),
     onclick: event => quoteNoteReply(event).catch(showErrorModal)
   });
 

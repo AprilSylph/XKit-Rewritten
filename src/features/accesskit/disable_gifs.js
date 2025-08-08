@@ -2,15 +2,22 @@ import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
+import { getPreferences } from '../../utils/preferences.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
+const pausedPosterAttribute = 'data-paused-gif-use-poster';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
-const labelClass = 'xkit-paused-gif-label';
+const labelAttribute = 'data-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
 
+let loadingMode;
+
+const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
+const parentHovered = `:is(:hover > *, [${hoverContainerAttribute}]:hover *)`;
+
 export const styleElement = buildStyle(`
-.${labelClass} {
+[${labelAttribute}]::after {
   position: absolute;
   top: 1ch;
   right: 1ch;
@@ -19,6 +26,7 @@ export const styleElement = buildStyle(`
   padding: 0.6ch;
   border-radius: 3px;
 
+  content: "GIF";
   background-color: rgb(var(--black));
   color: rgb(var(--white));
   font-size: 1rem;
@@ -26,16 +34,12 @@ export const styleElement = buildStyle(`
   line-height: 1em;
   pointer-events: none;
 }
-
-.${labelClass}::before {
-  content: "GIF";
-}
-
-.${labelClass}.mini {
+[${labelAttribute}="mini"]::after {
   font-size: 0.6rem;
 }
 
-.${labelClass}.hr {
+[${labelAttribute}="hr"]::after {
+  font-size: 0.6rem;
   top: 50%;
   transform: translateY(-50%);
 }
@@ -47,10 +51,23 @@ export const styleElement = buildStyle(`
   background-color: rgb(var(--white));
 }
 
-*:hover > .${canvasClass},
-*:hover > .${labelClass},
-[${hoverContainerAttribute}]:hover .${canvasClass},
-[${hoverContainerAttribute}]:hover .${labelClass} {
+.${canvasClass}${parentHovered},
+[${labelAttribute}]${hovered}::after,
+[${pausedPosterAttribute}]:not(${hovered}) > div > ${keyToCss('knightRiderLoader')} {
+  display: none;
+}
+${keyToCss('background')}[${labelAttribute}]::after {
+  /* prevent double labels in recommended post cards */
+  display: none;
+}
+
+[${pausedPosterAttribute}]:not(${hovered}) > img${keyToCss('poster')} {
+  visibility: visible !important;
+}
+[${pausedPosterAttribute}="eager"]:not(${hovered}) > img:not(${keyToCss('poster')}) {
+  visibility: hidden !important;
+}
+[${pausedPosterAttribute}="lazy"]:not(${hovered}) > img:not(${keyToCss('poster')}) {
   display: none;
 }
 
@@ -59,19 +76,19 @@ export const styleElement = buildStyle(`
   background-color: rgb(var(--secondary-accent));
 }
 
-.${backgroundGifClass}:not(:hover) > div {
+.${backgroundGifClass}:not(:hover) > :is(div, span) {
   color: rgb(var(--black));
 }
 `);
 
 const addLabel = (element, inside = false) => {
-  if (element.parentNode.querySelector(`.${labelClass}`) === null) {
-    const gifLabel = dom('p', { class: labelClass });
-    element.clientWidth && element.clientWidth <= 150 && gifLabel.classList.add('mini');
-    element.clientHeight && element.clientHeight <= 50 && gifLabel.classList.add('mini');
-    element.clientHeight && element.clientHeight <= 30 && gifLabel.classList.add('hr');
+  const target = inside ? element : element.parentElement;
+  if (target && getComputedStyle(target, '::after').content === 'none') {
+    target.setAttribute(labelAttribute, '');
 
-    inside ? element.append(gifLabel) : element.parentNode.append(gifLabel);
+    target.clientWidth && target.clientWidth <= 150 && target.setAttribute(labelAttribute, 'mini');
+    target.clientHeight && target.clientHeight <= 50 && target.setAttribute(labelAttribute, 'mini');
+    target.clientHeight && target.clientHeight <= 30 && target.setAttribute(labelAttribute, 'hr');
   }
 };
 
@@ -82,10 +99,11 @@ const pauseGif = function (gifElement) {
       const canvas = dom('canvas', {
         width: image.naturalWidth,
         height: image.naturalHeight,
-        class: `${gifElement.className} ${canvasClass}`
+        class: `${gifElement.className} ${canvasClass}`,
+        style: gifElement.getAttribute('style')
       });
       canvas.getContext('2d').drawImage(image, 0, 0);
-      gifElement.parentNode.append(canvas);
+      gifElement.after(canvas);
       addLabel(gifElement);
     }
   };
@@ -93,13 +111,19 @@ const pauseGif = function (gifElement) {
 
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
-    if (gifElement.closest(`${keyToCss('avatarImage')}, .block-editor-writing-flow`)) return;
-    const pausedGifElements = [
-      ...gifElement.parentNode.querySelectorAll(`.${canvasClass}`),
-      ...gifElement.parentNode.querySelectorAll(`.${labelClass}`)
-    ];
+    if (gifElement.closest(`${keyToCss('avatarImage', 'subAvatarImage')}, .block-editor-writing-flow`)) return;
+    const pausedGifElements = [...gifElement.parentNode.querySelectorAll(`.${canvasClass}`)];
     if (pausedGifElements.length) {
       gifElement.after(...pausedGifElements);
+      return;
+    }
+
+    gifElement.decoding = 'sync';
+
+    const posterElement = gifElement.parentElement.querySelector(keyToCss('poster'));
+    if (posterElement) {
+      gifElement.parentElement.setAttribute(pausedPosterAttribute, loadingMode);
+      addLabel(posterElement);
       return;
     }
 
@@ -137,19 +161,45 @@ const processRows = function (rowsElements) {
 const processHoverableElements = elements =>
   elements.forEach(element => element.setAttribute(hoverContainerAttribute, ''));
 
+const onStorageChanged = async function (changes, areaName) {
+  if (areaName !== 'local') return;
+
+  const { 'accesskit.preferences.disable_gifs_loading_mode': modeChanges } = changes;
+  if (modeChanges?.oldValue === undefined) return;
+
+  loadingMode = modeChanges.newValue;
+};
+
 export const main = async function () {
+  ({ disable_gifs_loading_mode: loadingMode } = await getPreferences('accesskit'));
+
   const gifImage = `
-    :is(figure, ${keyToCss('tagImage', 'takeoverBanner')}) img[srcset*=".gif"]:not(${keyToCss('poster')})
+    :is(
+      ${
+        'figure' // post image/imageset; recommended blog carousel entry; blog view sidebar "more like this"; post in grid view; blog card modal post entry
+      },
+      ${keyToCss(
+        'linkCard', // post link element
+        'typeaheadRow', // modal search dropdown entry
+        'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
+        'topPost', // activity page top post
+        'takeoverBanner' // advertisement
+      )}
+    ) img[srcset*=".gif"]:not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 
   const gifBackgroundImage = `
-    ${keyToCss('communityHeaderImage', 'bannerImage')}[style*=".gif"]
+    ${keyToCss(
+      'communityHeaderImage', // search page tags section header: https://www.tumblr.com/search/gif?v=tag
+      'bannerImage', // tagged page sidebar header: https://www.tumblr.com/tagged/gif
+      'tagChicletWrapper' // "trending" / "your tags" timeline carousel entry: https://www.tumblr.com/dashboard/trending, https://www.tumblr.com/dashboard/hubs
+    )}[style*=".gif"]
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 
   pageModifications.register(
-    `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`,
+    `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`, // recommended blog carousel entry: https://www.tumblr.com/tagged/gif
     processHoverableElements
   );
 
@@ -157,9 +207,13 @@ export const main = async function () {
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
     processRows
   );
+
+  browser.storage.onChanged.addListener(onStorageChanged);
 };
 
 export const clean = async function () {
+  browser.storage.onChanged.removeListener(onStorageChanged);
+
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);
@@ -169,7 +223,9 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children)
   );
 
-  $(`.${canvasClass}, .${labelClass}`).remove();
+  $(`.${canvasClass}`).remove();
   $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
+  $(`[${labelAttribute}]`).removeAttr(labelAttribute);
+  $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
   $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
 };

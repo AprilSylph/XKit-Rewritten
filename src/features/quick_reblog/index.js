@@ -83,10 +83,6 @@ ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) {
 ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) ${keyToCss('tooltip')} {
   display: none;
 }
-
-footer.published ${keyToCss('footerRow', 'footerContent')} svg use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]) { --icon-color-primary: rgb(var(--green)); }
-footer.queue ${keyToCss('footerRow', 'footerContent')} svg use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]) { --icon-color-primary: rgb(var(--purple)); }
-footer.draft ${keyToCss('footerRow', 'footerContent')} svg use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]) { --icon-color-primary: rgb(var(--red)); }
 `);
 
 const onBlogSelectorChange = () => {
@@ -336,8 +332,8 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
  */
 const MOZ_SOURCE_TOUCH = 5;
 
-const preventLongPressMenu = ({ originalEvent: event }) => {
-  if (!event.currentTarget.matches(reblogButtonSelector)) return;
+const preventLongPressMenu = ({ currentTarget, originalEvent: event }) => {
+  if (!currentTarget.matches(reblogButtonSelector)) return;
 
   const isTouchEvent = event.pointerType === 'touch';
   const firefoxIsTouchEvent = event.mozInputSource === MOZ_SOURCE_TOUCH;

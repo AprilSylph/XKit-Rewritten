@@ -1,6 +1,8 @@
 .xkit-timestamp {
   margin-right: auto;
+  flex: 0 5000 auto;
 
+  line-height: 1;
   font-weight: normal;
   text-decoration: none;
 }

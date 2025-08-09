@@ -198,11 +198,11 @@ const createReplyPost = ({ type, replyingBlogName, replyingBlogUuid, targetPostS
 };
 
 const quoteActivityReply = async (tumblelogName, notificationProps) => {
-  const { content, tags } = notificationProps.type === 'generic'
+  const replyPost = notificationProps.type === 'generic'
     ? await createGenericActivityReplyPost(notificationProps)
     : await createActivityReplyPost(notificationProps);
 
-  openQuoteReplyDraft(tumblelogName, content, tags);
+  openQuoteReplyDraft(tumblelogName, replyPost);
 };
 
 const determineNoteReplyType = ({ noteProps, parentNoteProps }) => {
@@ -247,14 +247,14 @@ const quoteNoteReply = async ({ currentTarget }) => {
   const replyingBlogUuid = await apiFetch(`/v2/blog/${replyingBlogName}/info?fields[blogs]=uuid`)
     .then(({ response: { blog: { uuid } } }) => uuid);
 
-  const { content, tags } = createReplyPost({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent });
-  openQuoteReplyDraft(targetBlogName, content, tags);
+  const replyPost = createReplyPost({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent });
+  openQuoteReplyDraft(targetBlogName, replyPost);
 };
 
-const openQuoteReplyDraft = async (tumblelogName, content, tags) => {
+const openQuoteReplyDraft = async (tumblelogName, replyPost) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
 
-  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
+  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { state: 'draft', ...replyPost } });
 
   const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;
 

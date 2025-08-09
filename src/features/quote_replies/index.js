@@ -3,7 +3,7 @@ import { dom } from '../../utils/dom.js';
 import { inject } from '../../utils/inject.js';
 import { buildStyle, displayInlineFlexUnlessDisabledAttr, notificationSelector } from '../../utils/interface.js';
 import { registerReplyMeatballItem, unregisterReplyMeatballItem } from '../../utils/meatballs.js';
-import { showErrorModal } from '../../utils/modals.js';
+import { hideModal, modalCancelButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { getPreferences } from '../../utils/preferences.js';
@@ -14,7 +14,8 @@ import { userBlogNames, userBlogs } from '../../utils/user.js';
 
 const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';
-const meatballButtonId = 'quote-replies';
+const newPostMeatballButtonId = 'quote-replies-new-post';
+const reblogMeatballButtonId = 'quote-replies-reblog';
 const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
 // Remove outdated elements when loading module
@@ -69,6 +70,7 @@ const activitySelector = `:is(${keyToCss('notification')} > ${keyToCss('activity
 
 const dropdownSelector = '[role="tabpanel"] *';
 
+let defaultMode;
 let originalPostTag;
 let tagReplyingBlog;
 let newTab;
@@ -153,6 +155,7 @@ const createGenericActivityReplyPost = async (notificationProps) => {
     ...tagReplyingBlog ? [replyingBlog.name] : [],
   ].join(',');
 
+  // never a reblog (always a new post)
   return { content, tags };
 };
 
@@ -172,10 +175,62 @@ const createActivityReplyPost = async ({ type, timestamp, targetPostId, targetTu
   const { content: replyContent, blog: { name: replyingBlogName, uuid: replyingBlogUuid } } = reply;
   const targetPostUrl = `https://${targetTumblelogName}.tumblr.com/post/${targetPostId}`;
 
-  return createReplyPost({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent });
+  const tryToReblog = defaultMode === 'reblog';
+  return createReplyPost({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent, targetTumblelogName, targetPostId, tryToReblog });
 };
 
-const createReplyPost = ({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent }) => {
+const getReblogData = async ({ targetTumblelogName, targetPostId }) => {
+  try {
+    const { blog, canReblog, id: parentPostId, blog: { uuid: parentTumblelogUUID }, reblogKey } = await apiFetch(`/v2/blog/${targetTumblelogName}/posts/${targetPostId}`).then(({ response }) => response);
+    if (canReblog !== false && !blog?.isPasswordProtected) {
+      return { parentPostId, parentTumblelogUUID, reblogKey };
+    }
+  } catch {}
+  return new Promise(resolve =>
+    showModal({
+      title: 'Cannot reblog',
+      message: ['The target post cannot be reblogged!'],
+      buttons: [
+        modalCancelButton,
+        dom('button', { class: 'blue' }, {
+          click () {
+            hideModal();
+            resolve(false);
+          },
+        }, ['Reply in a new post']),
+      ],
+    }),
+  );
+};
+
+const createReplyPost = async ({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent, targetTumblelogName, targetPostId, tryToReblog }) => {
+  const reblogData = tryToReblog && await getReblogData({ targetTumblelogName, targetPostId });
+  if (reblogData) {
+    const { parentPostId, parentTumblelogUUID, reblogKey } = reblogData;
+
+    const text = `@${replyingBlogName} replied:`;
+    const formatting = [
+      { start: 0, end: replyingBlogName.length + 1, type: 'mention', blog: { uuid: replyingBlogUuid } },
+    ];
+
+    const content = [
+      { type: 'text', text, formatting },
+      Object.assign(replyContent[0], { subtype: 'indented' }),
+      { type: 'text', text: '\u200B' },
+    ];
+    const tags = [
+      ...tagReplyingBlog ? [replyingBlogName] : [],
+    ].join(',');
+
+    return {
+      content,
+      tags,
+      parent_post_id: parentPostId,
+      parent_tumblelog_uuid: parentTumblelogUUID,
+      reblog_key: reblogKey,
+    };
+  }
+
   const verbiage = {
     reply: 'replied to your post',
     reply_to_comment: 'replied to you in a post',
@@ -237,7 +292,7 @@ const determineNoteReplyType = ({ noteProps, parentNoteProps }) => {
   return false;
 };
 
-const quoteNoteReply = async ({ currentTarget }) => {
+const quoteNoteReply = async ({ currentTarget }, tryToReblog) => {
   const {
     noteProps: {
       note: { blogName: replyingBlogName, content: replyContent },
@@ -246,11 +301,16 @@ const quoteNoteReply = async ({ currentTarget }) => {
 
   const { type, targetBlogName } = determineNoteReplyType(currentTarget.__notePropsData);
 
-  const { summary: targetPostSummary, postUrl: targetPostUrl } = await timelineObject(currentTarget.closest(keyToCss('meatballMenu')));
+  const {
+    summary: targetPostSummary,
+    postUrl: targetPostUrl,
+    blogName: targetTumblelogName,
+    id: targetPostId,
+  } = await timelineObject(currentTarget.closest(keyToCss('meatballMenu')));
   const replyingBlogUuid = await apiFetch(`/v2/blog/${replyingBlogName}/info?fields[blogs]=uuid`)
     .then(({ response: { blog: { uuid } } }) => uuid);
 
-  const replyPost = createReplyPost({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent });
+  const replyPost = await createReplyPost({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent, targetTumblelogName, targetPostId, tryToReblog });
   openQuoteReplyDraft(targetBlogName, replyPost);
 };
 
@@ -276,15 +336,22 @@ const openQuoteReplyDraft = async (tumblelogName, replyPost) => {
 
 export const main = async function () {
   ({ [originalPostTagStorageKey]: originalPostTag } = await browser.storage.local.get(originalPostTagStorageKey));
-  ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
+  ({ defaultMode, tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
 
   pageModifications.register(notificationSelector, processNotifications);
 
   registerReplyMeatballItem({
-    id: meatballButtonId,
-    label: 'Quote this reply',
+    id: defaultMode === 'reblog' ? reblogMeatballButtonId : newPostMeatballButtonId,
+    label: `Quote this reply (${defaultMode === 'reblog' ? 'as reblog' : 'as new post'})`,
     notePropsFilter: notePropsData => Boolean(determineNoteReplyType(notePropsData)),
-    onclick: event => quoteNoteReply(event).catch(showErrorModal),
+    onclick: event => quoteNoteReply(event, defaultMode === 'reblog').catch(showErrorModal),
+  });
+
+  registerReplyMeatballItem({
+    id: defaultMode !== 'reblog' ? reblogMeatballButtonId : newPostMeatballButtonId,
+    label: `Quote this reply (${defaultMode !== 'reblog' ? 'as reblog' : 'as new post'})`,
+    notePropsFilter: notePropsData => Boolean(determineNoteReplyType(notePropsData)),
+    onclick: event => quoteNoteReply(event, defaultMode !== 'reblog').catch(showErrorModal),
   });
 
   const { [storageKey]: draftLocation } = await browser.storage.local.get(storageKey);
@@ -297,7 +364,8 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(processNotifications);
-  unregisterReplyMeatballItem(meatballButtonId);
+  unregisterReplyMeatballItem(newPostMeatballButtonId);
+  unregisterReplyMeatballItem(reblogMeatballButtonId);
 
   $(`.${buttonClass}`).remove();
 };
@@ -308,6 +376,6 @@ export const onStorageChanged = async function (changes) {
   }
 
   if (Object.keys(changes).some(key => key.startsWith('quote_replies.preferences'))) {
-    ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
+    clean().then(main);
   }
 };

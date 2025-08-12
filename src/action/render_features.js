@@ -1,3 +1,5 @@
+import { XKitFeature } from './components/xkit-feature/index.js';
+
 const configSection = document.getElementById('configuration');
 const configSectionLink = document.querySelector('a[href="#configuration"]');
 const featuresDiv = configSection.querySelector('.features');
@@ -21,8 +23,6 @@ const renderFeatures = async function () {
     [enabledFeaturesKey]: enabledFeatures = [],
     [specialAccessKey]: specialAccess = []
   } = await browser.storage.local.get();
-
-  const { XKitFeature } = await import('./components/xkit-feature/index.js');
 
   const orderedEnabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName));
   const disabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName) === false);

@@ -39,11 +39,6 @@
   transform: translate(calc(50% + var(--horizontal-offset, 0%)), calc(0px - var(--icon-spacing)));
 }
 
-div:first-child + span + #quick-reblog,
-#quick-reblog:not(:last-child) {
-  display: none;
-}
-
 #quick-reblog select,
 #quick-reblog input {
   border: none;
@@ -190,24 +185,52 @@ div:first-child + span + #quick-reblog,
 
 #quick-reblog .action-buttons.community-selected button:not([data-state="published"]) { display: none; }
 
-footer.published a[href*="/reblog/"] svg use { --icon-color-primary: rgb(var(--green)); }
-footer.queue a[href*="/reblog/"] svg use { --icon-color-primary: rgb(var(--purple)); }
-footer.draft a[href*="/reblog/"] svg use { --icon-color-primary: rgb(var(--red)); }
+/* === AlreadyReblogged === */
 
-:is(.published, .queue, .draft) :is(a[role="button"], button[class=""]) {
+footer.published :is(button:not([role]), a[href^="/reblog/"]) use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]) { --icon-color-primary: rgb(var(--green)); }
+footer.queue :is(button:not([role]), a[href^="/reblog/"]) use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]) { --icon-color-primary: rgb(var(--purple)); }
+footer.draft :is(button:not([role]), a[href^="/reblog/"]) use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]) { --icon-color-primary: rgb(var(--red)); }
+
+footer:is(.published, .queue, .draft) :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"])) {
   position: relative;
 }
 
-:is(.published, .queue, .draft) :is(a[role="button"], button[class=""])::after {
+/* Cut-out for tick in 2025 post footer, "split notes count" variant */
+footer:is(.published, .queue, .draft) a[href^="/reblog/"] svg:has(use[href="#managed-icon__ds-reblog-24"]) {
+  -webkit-mask-image: radial-gradient(
+    calc(14.7px / 2) calc(18px / 2) at bottom 5px right 4px,
+    transparent 99%,
+    white 100%
+  );
+  mask-image: radial-gradient(
+    calc(14.7px / 2) calc(18px / 2) at bottom 5px right 4px,
+    transparent 99%,
+    white 100%
+  );
+}
+
+/* Cut-out for tick in 2025 post footer, "single action" variant */
+footer:is(.published, .queue, .draft) button svg:has(use[href="#managed-icon__ds-reblog-24"]) {
+  -webkit-mask-image: radial-gradient(
+    calc(14.7px / 2) calc(18px / 2) at bottom 4px left 21px,
+    transparent 99%,
+    white 100%
+  );
+  mask-image: radial-gradient(
+    calc(14.7px / 2) calc(18px / 2) at bottom 4px left 21px,
+    transparent 99%,
+    white 100%
+  );
+}
+
+/* Styles for tick pseudo-element */
+footer:is(.published, .queue, .draft) :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after {
   position: absolute;
-  bottom: -2px;
-  right: -4px;
 
   display: inline-block;
   padding: 2px;
   border-radius: 100%;
 
-  background-color: rgb(var(--white));
   content: "\2713";
   font-family: "Favorit", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
   font-size: 14px;
@@ -216,18 +239,30 @@ footer.draft a[href*="/reblog/"] svg use { --icon-color-primary: rgb(var(--red))
   line-height: 1;
 }
 
-@media (max-width: 989px) {
-  :is(.published, .queue, .draft) :is(a[role="button"], button[class=""])::after {
-    bottom: calc((27px / 2) - 2px);
-    right: calc((27px / 2) - 4px);
-  }
+/* Pre-2025 post footer */
+footer:is(.published, .queue, .draft) a[href^="/reblog/"]:has(use[href="#managed-icon__reblog"])::after {
+  background-color: var(--content-panel);
+  bottom: -5px;
+  right: -5px;
 }
 
-.published :is(a[role="button"], button[class=""])::after { color: rgb(var(--green)); }
-.queue :is(a[role="button"], button[class=""])::after { color: rgb(var(--purple)); }
-.draft :is(a[role="button"], button[class=""])::after { color: rgb(var(--red)); }
+/* 2025 post footer, "split notes count" variant */
+footer:is(.published, .queue, .draft) a[href^="/reblog/"]:has(use[href="#managed-icon__ds-reblog-24"])::after {
+  bottom: 4px;
+  right: 5px;
+}
 
-/* XKit 7 override */
+/* 2025 post footer, "single action" variant */
+footer:is(.published, .queue, .draft) button:has(use[href="#managed-icon__ds-reblog-24"])::after {
+  bottom: 4px;
+  left: 21px;
+}
+
+footer.published :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after { color: rgb(var(--green)); }
+footer.queue :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after { color: rgb(var(--purple)); }
+footer.draft :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after { color: rgb(var(--red)); }
+
+/* === XKit 7 override === */
 
 #x1cpostage_box {
   display: none !important;

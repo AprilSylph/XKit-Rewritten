@@ -13,14 +13,6 @@ const getInstalledFeatures = async function () {
   return installedFeatures;
 };
 
-const debounce = (func, ms) => {
-  let timeoutID;
-  return (...args) => {
-    clearTimeout(timeoutID);
-    timeoutID = setTimeout(() => func(...args), ms);
-  };
-};
-
 const writePreference = async function ({ target }) {
   const { id } = target;
   const [featureName, preferenceType, preferenceName] = id.split('.');
@@ -59,14 +51,10 @@ const renderPreferences = async function ({ featureName, preferences, preference
     }
 
     switch (preference.type) {
-      case 'text':
-      case 'textarea':
-        preferenceInput.addEventListener('input', debounce(writePreference, 500));
-        break;
       case 'iframe':
         break;
       default:
-        preferenceInput.addEventListener('input', writePreference);
+        preferenceInput.addEventListener('change', writePreference);
     }
 
     switch (preference.type) {

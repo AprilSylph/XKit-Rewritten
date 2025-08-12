@@ -1,6 +1,8 @@
 import { inject } from './inject.js';
 
-const formKeyPromise = fetch('https://www.tumblr.com/neue_web/iframe/new/text').then(response => {
+let formKey;
+
+const getFormKey = () => fetch('https://www.tumblr.com/neue_web/iframe/new/text').then(response => {
   if (response.ok) {
     return response.text();
   } else {
@@ -32,7 +34,7 @@ const pathnames = {
 export const megaEdit = async function (postIds, options) {
   const pathname = pathnames[options.mode];
 
-  const formKey = await formKeyPromise;
+  formKey ??= await getFormKey();
 
   const requestBody = {
     post_ids: postIds.join(','),
@@ -64,7 +66,7 @@ export const megaEdit = async function (postIds, options) {
  * @returns {Promise<Response>} Response from constructed request
  */
 export const bulkCommunityLabel = async function (blogName, postIds, options) {
-  const formKey = await formKeyPromise;
+  formKey ??= await getFormKey();
 
   const requestBody = {
     form_key: formKey,

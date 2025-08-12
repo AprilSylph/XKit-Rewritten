@@ -1,6 +1,6 @@
 import { dom } from '../../utils/dom.js';
 import { bulkCommunityLabel } from '../../utils/mega_editor.js';
-import { hideModal, modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
+import { createBlogSpan, createTagSpan, hideModal, modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { userBlogs } from '../../utils/user.js';
@@ -29,8 +29,6 @@ const elementsAsList = (array, andOr) =>
 const getPostsFormId = 'xkit-mass-labeler-get-posts';
 
 const createBlogOption = ({ name, title, uuid }) => dom('option', { value: uuid, title }, null, [name]);
-const createTagSpan = tag => dom('span', { class: 'mass-labeler-tag' }, null, [tag]);
-const createBlogSpan = name => dom('span', { class: 'mass-labeler-blog' }, null, [name]);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
@@ -322,5 +320,3 @@ export const main = async function () {
 export const clean = async function () {
   removeSidebarItem(sidebarOptions.id);
 };
-
-export const stylesheet = true;

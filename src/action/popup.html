@@ -84,26 +84,6 @@
       </section>
     </main>
 
-    <template id="feature">
-      <details class="feature">
-        <summary>
-          <div class="icon">
-            <i class="ri-fw"></i>
-          </div>
-          <div class="meta">
-            <h4 class="title"></h4>
-            <p class="description"></p>
-          </div>
-          <div class="buttons">
-            <a class="help" target="_blank"><i class="ri-fw ri-question-fill" style="color:rgb(var(--black))"></i></a>
-            <input type="checkbox" class="toggle-button" aria-label="Enable this feature">
-          </div>
-        </summary>
-        <p class="note"></p>
-        <ul class="preferences"></ul>
-      </details>
-    </template>
-
     <template id="checkbox-preference">
       <li>
         <input type="checkbox">
@@ -152,6 +132,6 @@
     <script src="/lib/spectrum.js"></script>
     <script src="popup.js"></script>
     <script src="render_backup.js"></script>
-    <script src="render_features.js"></script>
+    <script type="module" src="render_features.js"></script>
   </body>
 </html>

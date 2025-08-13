@@ -74,11 +74,11 @@ const onBeforeRepaint = () => {
 
   if (addedNodes.length === 0) return;
 
-  for (const [modifierFunction, selector] of pageModifications.listeners) {
+  pageModifications.listeners.forEach(async (selector, modifierFunction) => {
     if (modifierFunction.length === 0) {
       const shouldRun = addedNodes.some(addedNode => addedNode.matches(selector) || addedNode.querySelector(selector) !== null);
       if (shouldRun) modifierFunction();
-      continue;
+      return;
     }
 
     const matchingElements = [
@@ -89,7 +89,7 @@ const onBeforeRepaint = () => {
     if (matchingElements.length !== 0) {
       modifierFunction(matchingElements);
     }
-  }
+  });
 };
 
 const cellSelector = keyToCss('cell');

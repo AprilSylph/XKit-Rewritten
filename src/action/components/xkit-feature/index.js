@@ -1,29 +1,26 @@
 import { CustomElement, fetchStyleSheets } from '../index.js';
 
+const localName = 'xkit-feature';
+
 const templateDocument = new DOMParser().parseFromString(`
-  <!DOCTYPE html>
-  <html>
-    <body>
-      <template id="xkit-feature">
-        <details>
-          <summary>
-            <div class="icon">
-              <slot name="icon"></slot>
-            </div>
-            <div class="meta">
-              <h4 class="title"><slot name="title"></slot></h4>
-              <p class="description"><slot name="description"></slot></p>
-            </div>
-            <div class="buttons">
-              <a class="help" target="_blank"><i class="ri-fw ri-question-fill" style="color:rgb(var(--black))"></i></a>
-              <input type="checkbox" checked class="toggle-button" aria-label="Enable this feature">
-            </div>
-          </summary>
-          <ul class="preferences"></ul>
-        </details>
-      </template>
-    </body>
-  </html>
+  <template id="${localName}">
+    <details>
+      <summary>
+        <div class="icon">
+          <slot name="icon"></slot>
+        </div>
+        <div class="meta">
+          <h4 class="title"><slot name="title"></slot></h4>
+          <p class="description"><slot name="description"></slot></p>
+        </div>
+        <div class="buttons">
+          <a class="help" target="_blank"><i class="ri-fw ri-question-fill" style="color:rgb(var(--black))"></i></a>
+          <input type="checkbox" checked class="toggle-button" aria-label="Enable this feature">
+        </div>
+      </summary>
+      <ul class="preferences"></ul>
+    </details>
+  </template>
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
@@ -227,7 +224,6 @@ class XKitFeatureElement extends CustomElement {
   get disabled () { return this.#disabled; }
 }
 
-const localName = 'xkit-feature';
 customElements.define(localName, XKitFeatureElement);
 
 export const XKitFeature = () => document.createElement(localName);

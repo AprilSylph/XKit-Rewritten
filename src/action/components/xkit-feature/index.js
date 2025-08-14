@@ -76,6 +76,14 @@ class XKitFeatureElement extends CustomElement {
     }
   };
 
+  #getDebouncedWritePreference = () => {
+    let timeoutID;
+    return ({ currentTarget }) => {
+      clearTimeout(timeoutID);
+      timeoutID = setTimeout(() => this.#writePreference({ currentTarget }), 500);
+    };
+  };
+
   #renderPreferences = async ({ featureName, preferences, preferenceList }) => {
     for (const [key, preference] of Object.entries(preferences)) {
       const storageKey = `${featureName}.preferences.${key}`;
@@ -96,6 +104,10 @@ class XKitFeatureElement extends CustomElement {
       }
 
       switch (preference.type) {
+        case 'text':
+        case 'textarea':
+          preferenceInput.addEventListener('input', this.#getDebouncedWritePreference());
+          break;
         case 'iframe':
           break;
         default:

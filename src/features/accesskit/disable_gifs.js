@@ -10,6 +10,7 @@ const pausedPosterAttribute = 'data-paused-gif-use-poster';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
+const hoverFixAttribute = 'data-paused-gif-hover-fix';
 const containerClass = 'xkit-paused-gif-container';
 
 let loadingMode;
@@ -74,6 +75,11 @@ ${keyToCss('background')}[${labelAttribute}]::after {
 
 [style*="${pausedBackgroundImageVar}"]:not(${hovered}) {
   background-image: var(${pausedBackgroundImageVar}) !important;
+}
+
+[${hoverFixAttribute}] {
+  position: relative;
+  pointer-events: auto !important;
 }
 `);
 
@@ -164,6 +170,10 @@ const pauseGif = async function (gifElement) {
       canvas.getContext('2d').drawImage(image, 0, 0);
       gifElement.after(canvas);
       addLabel(gifElement);
+
+      gifElement.closest(keyToCss(
+        'imgLink' // trending tag: https://www.tumblr.com/explore/trending
+      ))?.setAttribute(hoverFixAttribute, '');
     }
   };
 };
@@ -218,6 +228,11 @@ const processBackgroundGifs = function (gifBackgroundElements) {
       sourceValue.replace(sourceUrlRegex, `url("${pausedUrl}")`)
     );
     addLabel(gifBackgroundElement, true);
+
+    gifBackgroundElement.closest(keyToCss(
+      'media', // old activity item: "liked your post", "reblogged your post", "mentioned you in a post"
+      'activityMedia' // new activity item: "replied to your post", "replied to you in a post"
+    ))?.setAttribute(hoverFixAttribute, '');
   });
 };
 
@@ -262,6 +277,7 @@ export const main = async function () {
         'typeaheadRow', // modal search dropdown entry
         'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
         'topPost', // activity page top post
+        'colorfulListItemWrapper', // trending tag: https://www.tumblr.com/explore/trending
         'takeoverBanner' // advertisement
       )}
     ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
@@ -270,6 +286,8 @@ export const main = async function () {
 
   const gifBackgroundImage = `
     ${keyToCss(
+      'media', // old activity item: "liked your post", "reblogged your post", "mentioned you in a post"
+      'activityMedia', // new activity item: "replied to your post", "replied to you in a post"
       'communityHeaderImage', // search page tags section header: https://www.tumblr.com/search/gif?v=tag
       'bannerImage', // tagged page sidebar header: https://www.tumblr.com/tagged/gif
       'tagChicletWrapper', // "trending" / "your tags" timeline carousel entry: https://www.tumblr.com/dashboard/trending, https://www.tumblr.com/dashboard/hubs
@@ -281,6 +299,7 @@ export const main = async function () {
   const hoverableElement = [
     `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`, // recommended blog carousel entry
     `div:has(> a${keyToCss('cover')}):has(${keyToCss('communityCategoryImage')})`, // tumblr communities browse page entry: https://www.tumblr.com/communities/browse
+    `${keyToCss('gridTimelineObject')}` // likes page or patio grid view post: https://www.tumblr.com/likes
   ].join(', ');
   pageModifications.register(hoverableElement, processHoverableElements);
 
@@ -308,6 +327,7 @@ export const clean = async function () {
   $(`[${labelAttribute}]`).removeAttr(labelAttribute);
   $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
   $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
+  $(`[${hoverFixAttribute}]`).removeAttr(hoverFixAttribute);
   [...document.querySelectorAll(`[style*="${pausedBackgroundImageVar}"]`)]
     .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
 };

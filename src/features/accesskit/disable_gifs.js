@@ -206,7 +206,7 @@ const processBackgroundGifs = function (gifBackgroundElements) {
 
     gifBackgroundElement.style.setProperty(
       pausedBackgroundImageVar,
-      sourceValue.replaceAll(sourceUrlRegex, pausedUrl)
+      sourceValue.replace(sourceUrlRegex, pausedUrl)
     );
     addLabel(gifBackgroundElement, true);
   });

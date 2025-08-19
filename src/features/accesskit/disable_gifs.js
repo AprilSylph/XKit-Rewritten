@@ -3,6 +3,7 @@ import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
 import { getPreferences } from '../../utils/preferences.js';
+import { memoize } from '../../utils/memoize.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
 const pausedPosterAttribute = 'data-paused-gif-use-poster';
@@ -92,7 +93,30 @@ const addLabel = (element, inside = false) => {
   }
 };
 
-const pauseGif = function (gifElement) {
+/**
+ * Fetches the selected image and tests if it is animated. On older browsers without ImageDecoder
+ * support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
+ */
+const isAnimated = memoize(async sourceUrl => {
+  const response = await fetch(sourceUrl, { headers: { Accept: 'image/webp,*/*' } });
+  const contentType = response.headers.get('Content-Type');
+
+  if (typeof ImageDecoder === 'function' && await ImageDecoder.isTypeSupported(contentType)) {
+    const decoder = new ImageDecoder({
+      type: contentType,
+      data: response.body,
+      preferAnimation: true
+    });
+    await decoder.decode();
+    return decoder.tracks.selectedTrack.animated;
+  } else {
+    return !sourceUrl.endsWith('.webp');
+  }
+});
+
+const pauseGif = async function (gifElement) {
+  if (gifElement.currentSrc.endsWith('.webp') && !(await isAnimated(gifElement.currentSrc))) return;
+
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
@@ -186,7 +210,7 @@ export const main = async function () {
         'topPost', // activity page top post
         'takeoverBanner' // advertisement
       )}
-    ) img[srcset*=".gif"]:not(${keyToCss('poster')})
+    ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 

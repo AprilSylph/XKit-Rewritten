@@ -1,7 +1,7 @@
 export default function unburyCellItem () {
-  const postElement = this;
-  const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
-  let fiber = postElement[reactKey];
+  const cellElement = this;
+  const reactKey = Object.keys(cellElement).find(key => key.startsWith('__reactFiber'));
+  let fiber = cellElement[reactKey];
 
   while (fiber !== null) {
     const { item } = fiber.memoizedProps || {};

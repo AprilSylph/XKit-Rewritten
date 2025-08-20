@@ -110,7 +110,7 @@ const unblockPost = async rootID => {
   browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes) {
   const { [storageKey]: blockedPostChanges, [uuidsStorageKey]: uuidsChanges } = changes;
 
   if (uuidsChanges) {

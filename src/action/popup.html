@@ -46,17 +46,21 @@
       <section id="backup">
         <details id="export" open>
           <summary><h4>Export</h4></summary>
-          <pre id="local-storage-export"></pre>
-          <div class="buttons-container">
-            <button id="copy-local">Copy All</button>
-            <button id="download-local">Download</button>
+          <div class="content">
+            <pre id="local-storage-export"></pre>
+            <div class="buttons-container">
+              <button id="copy-local">Copy All</button>
+              <button id="download-local">Download</button>
+            </div>
           </div>
         </details>
         <details id="import">
           <summary><h4>Import</h4></summary>
-          <label for="local-storage-import">Paste the contents of your saved backup here.</label>
-          <textarea id="local-storage-import" rows="10" spellcheck="false"></textarea>
-          <button id="restore-local"></button>
+          <div class="content">
+            <label for="local-storage-import">Paste the contents of your saved backup here.</label>
+            <textarea id="local-storage-import" rows="10" spellcheck="false"></textarea>
+            <button id="restore-local"></button>
+          </div>
         </details>
       </section>
       <section id="links">

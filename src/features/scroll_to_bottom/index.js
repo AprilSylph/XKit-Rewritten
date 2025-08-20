@@ -97,10 +97,10 @@ const addButtonToPage = async function ([scrollToTopButton]) {
 const reliablyScrollToTarget = target => {
   const callback = () => {
     window.scrollBy({ top: target?.getBoundingClientRect?.()?.top });
-    debouncedCancel();
+    debouncedDisconnect();
   };
   const observer = new ResizeObserver(callback);
-  const debouncedCancel = debounce(() => observer.disconnect(), 500);
+  const debouncedDisconnect = debounce(() => observer.disconnect(), 500);
   observer.observe(document.documentElement);
   callback();
 };

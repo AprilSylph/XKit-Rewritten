@@ -100,10 +100,7 @@ const reliablyScrollToTarget = target => {
     debouncedCancel();
   };
   const observer = new ResizeObserver(callback);
-  const debouncedCancel = debounce(() => {
-    console.log('disconnected reliablyScrollToTarget observer');
-    observer.disconnect();
-  }, 500);
+  const debouncedCancel = debounce(() => observer.disconnect(), 500);
   observer.observe(document.documentElement);
   callback();
 };
@@ -126,12 +123,6 @@ const scrollToCaughtUp = async (addedCells) => {
       }
 
       reliablyScrollToTarget(titleElement);
-      console.log(
-        addedCells
-          ? 'Scroll to Bottom scrolled to newly added carousel:'
-          : 'Scroll to Bottom scrolled down to existing carousel:',
-        titleElement
-      );
       return true;
     }
   }

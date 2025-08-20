@@ -1,7 +1,7 @@
 import { keyToClasses, keyToCss } from '../../utils/css_map.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
-import { buildStyle, waitForScroller } from '../../utils/interface.js';
+import { buildStyle } from '../../utils/interface.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { cellItem } from '../../utils/react_props.js';
 
@@ -93,28 +93,50 @@ const addButtonToPage = async function ([scrollToTopButton]) {
   pageModifications.register('*', checkForButtonRemoved);
 };
 
+const debounce = (func, ms) => {
+  let timeoutID;
+  return (...args) => {
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(() => func(...args), ms);
+  };
+};
+
+const reliablyScrollToTarget = target => {
+  const callback = () => {
+    window.scrollBy({ top: target?.getBoundingClientRect?.()?.top });
+    debouncedCancel();
+  };
+  const observer = new ResizeObserver(callback);
+  const debouncedCancel = debounce(() => {
+    console.log('disconnected reliablyScrollToTarget observer');
+    observer.disconnect();
+  }, 500);
+  observer.observe(document.documentElement);
+  callback();
+};
+
 const caughtUpCarouselObjectType = 'followed_tag_carousel_card';
 
 const scrollToCaughtUp = async (addedCells) => {
-  const isStarting = !active;
-  for (const cell of isStarting ? [...document.querySelectorAll(keyToCss('cell'))] : addedCells) {
+  for (const cell of addedCells || [...document.querySelectorAll(keyToCss('cell'))]) {
     const item = await cellItem(cell);
     if (item.elements?.some(({ objectType }) => objectType === caughtUpCarouselObjectType)) {
-      if (!isStarting) stopScrolling();
-      if (!isStarting) await waitForScroller();
-
       const titleElement = cell?.previousElementSibling;
-      const titleElementTop = titleElement?.getBoundingClientRect?.()?.top;
-      if (!titleElementTop) continue;
+      if (!titleElement) continue;
 
-      const isAboveViewportBottom = titleElementTop < window.innerHeight;
-      if (isStarting && isAboveViewportBottom) continue;
+      if (active) {
+        stopScrolling();
+      } else {
+        const titleElementTop = titleElement?.getBoundingClientRect?.()?.top;
+        const isAboveViewportBottom = titleElementTop !== undefined && titleElementTop < window.innerHeight;
+        if (isAboveViewportBottom) continue;
+      }
 
-      window.scrollBy({ top: titleElementTop });
+      reliablyScrollToTarget(titleElement);
       console.log(
-        isStarting
-          ? 'Scroll to Bottom scrolled down to existing carousel:'
-          : 'Scroll to Bottom scrolled to newly added carousel:',
+        addedCells
+          ? 'Scroll to Bottom scrolled to newly added carousel:'
+          : 'Scroll to Bottom scrolled down to existing carousel:',
         titleElement
       );
       return true;

@@ -36,21 +36,19 @@
       document.documentElement.append(styleElement);
     }
 
-    restartListeners[name] = async (changes, areaName) => {
-      if (areaName !== 'local') return;
-
+    restartListeners[name] = async (changes) => {
       const { [enabledFeaturesKey]: enabledFeatures } = changes;
       if (enabledFeatures && !enabledFeatures.newValue.includes(name)) return;
 
       if (onStorageChanged instanceof Function) {
-        onStorageChanged(changes, areaName);
+        onStorageChanged(changes);
       } else if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
         await clean?.();
         await main?.();
       }
     };
 
-    browser.storage.onChanged.addListener(restartListeners[name]);
+    browser.storage.local.onChanged.addListener(restartListeners[name]);
   };
 
   const destroyFeature = async function (name) {
@@ -70,15 +68,11 @@
       styleElement.remove();
     }
 
-    browser.storage.onChanged.removeListener(restartListeners[name]);
+    browser.storage.local.onChanged.removeListener(restartListeners[name]);
     delete restartListeners[name];
   };
 
-  const onStorageChanged = async function (changes, areaName) {
-    if (areaName !== 'local') {
-      return;
-    }
-
+  const onStorageChanged = async function (changes) {
     const { [enabledFeaturesKey]: enabledFeatures } = changes;
 
     if (enabledFeatures) {
@@ -115,7 +109,7 @@
   const init = async function () {
     $('style.xkit, link.xkit').remove();
 
-    browser.storage.onChanged.addListener(onStorageChanged);
+    browser.storage.local.onChanged.addListener(onStorageChanged);
 
     const [
       installedFeatures,

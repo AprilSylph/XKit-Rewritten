@@ -93,7 +93,7 @@ const renderBundles = async () => {
   }));
 };
 
-browser.storage.local.onChanged.addListener((changes) => {
+browser.storage.local.onChanged.addListener(changes => {
   if (Object.keys(changes).includes(storageKey)) {
     bundlesList.textContent = '';
     renderBundles();

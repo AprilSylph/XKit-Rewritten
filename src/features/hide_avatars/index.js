@@ -4,7 +4,7 @@ import { buildStyle } from '../../utils/interface.js';
 
 export const styleElement = buildStyle();
 
-export const main = async function () {
+export const main = async () => {
   const { hiddenAvatars } = await getPreferences('hide_avatars');
 
   styleElement.textContent = hiddenAvatars

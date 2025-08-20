@@ -2,7 +2,7 @@ import { getPreferences } from '../../utils/preferences.js';
 
 let enabledOptions;
 
-const runOption = async function name => {
+const runOption = async name => {
   const { main: run, styleElement } = await import(`./${name}.js`);
   if (run) {
     run().catch(console.error);

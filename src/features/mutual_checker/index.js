@@ -112,7 +112,7 @@ const getIsFollowing = async (blogName, element) => {
       await blogData(element),
       (await timelineObject(element))?.blog,
       (await timelineObject(element))?.authorBlog
-    ].find((data) => blogName === data?.name);
+    ].find(data => blogName === data?.name);
 
     following[blogName] = blog
       ? Promise.resolve(blog.followed && !blog.isMember)

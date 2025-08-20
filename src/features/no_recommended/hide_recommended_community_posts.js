@@ -21,11 +21,11 @@ const processPosts = postElements =>
     }
   });
 
-export const main = async function () {
+export const main = async () => {
   onNewPosts.addListener(processPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(processPosts);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

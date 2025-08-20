@@ -133,7 +133,7 @@ const processPostImages = images => images.forEach(image => {
   }
 });
 
-export const onStorageChanged = async (changes) =>
+export const onStorageChanged = async changes =>
   Object.keys(changes).some(key => key.startsWith('panorama')) && main();
 
 export const main = async () => {

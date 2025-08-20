@@ -36,7 +36,7 @@
       document.documentElement.append(styleElement);
     }
 
-    restartListeners[name] = async (changes) => {
+    restartListeners[name] = async changes => {
       const { [enabledFeaturesKey]: enabledFeatures } = changes;
       if (enabledFeatures && !enabledFeatures.newValue.includes(name)) return;
 

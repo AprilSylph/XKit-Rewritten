@@ -308,7 +308,7 @@ const renderQuickTags = async () => {
   });
 };
 
-const updateQuickTags = (changes) => {
+const updateQuickTags = changes => {
   if (Object.keys(changes).includes(quickTagsStorageKey)) {
     renderQuickTags();
   }
@@ -365,7 +365,7 @@ export const main = async () => {
     ...joinedCommunities.map(({ title, uuid, blog: { name } }) => dom('option', { value: uuid }, null, [`${title} (${name})`]))
   );
 
-  [...userBlogs, ...joinedCommunities].forEach((data) => {
+  [...userBlogs, ...joinedCommunities].forEach(data => {
     const avatar = data.avatarImage ?? data.avatar;
     const { url } = avatar.at(-1);
     avatarUrls.set(data.uuid, url);

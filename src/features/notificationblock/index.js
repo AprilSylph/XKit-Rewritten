@@ -99,7 +99,7 @@ const unblockPostFilter = ({ id, rebloggedRootId }) => {
   return blockedPostTargetIDs.includes(rootId);
 };
 
-export const onStorageChanged = (changes) => {
+export const onStorageChanged = changes => {
   if (Object.keys(changes).includes(storageKey)) {
     blockedPostTargetIDs = changes[storageKey].newValue;
     styleElement.textContent = buildCss();

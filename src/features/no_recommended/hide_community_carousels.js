@@ -28,11 +28,11 @@ const hideCommunityCarousels = carousels =>
     }
   });
 
-export const main = async function () {
+export const main = async () => {
   pageModifications.register(carouselSelector, hideCommunityCarousels);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(hideCommunityCarousels);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

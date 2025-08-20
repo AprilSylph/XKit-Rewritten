@@ -1,4 +1,5 @@
 import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
+import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
 import { megaEdit } from '../../utils/mega_editor.js';
@@ -135,17 +136,20 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
   }
 };
 
-const addTagsToPost = async function ({ postElement, inputTags = [] }) {
+const editPostTags = async function ({ postElement, inputTagsAdd = [], inputTagsRemove = [] }) {
   const postId = postElement.dataset.id;
   const { blog: { uuid }, blogName } = await timelineObject(postElement);
 
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
-  const { tags = [] } = postData;
+  let { tags = [] } = postData;
 
-  const tagsToAdd = inputTags.filter(inputTag => tags.includes(inputTag) === false);
-  if (tagsToAdd.length === 0) { return; }
+  const tagsToAdd = inputTagsAdd.filter(inputTag => tags.includes(inputTag) === false);
+  const tagsToRemove = inputTagsRemove.filter(inputTag => tags.includes(inputTag));
+
+  if (tagsToAdd.length === 0 && tagsToRemove.length === 0) { return; }
 
   tags.push(...tagsToAdd);
+  tags = tags.filter(tag => !tagsToRemove.includes(tag));
 
   if (isNpfCompatible(postData)) {
     const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
@@ -158,7 +162,8 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 
     notify(displayText);
   } else {
-    await megaEdit([postId], { mode: 'add', tags: tagsToAdd });
+    tagsToAdd.length && await megaEdit([postId], { mode: 'add', tags: tagsToAdd });
+    tagsToRemove.length && await megaEdit([postId], { mode: 'remove', tags: tagsToRemove });
     notify(`Edited legacy post on ${blogName}`);
   }
 
@@ -170,6 +175,7 @@ const addFakeTagsToFooter = (postElement, tags) => {
   const fakeTags = tags.map(tag =>
     dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`])
   );
+  fakeTags.forEach(tagElement => addRemoveTagButton({ tagElement, postElement }));
   const tagsElement = dom('div', { class: tagsClass }, null, [dom('div', null, null, fakeTags)]);
 
   postElement.querySelector('footer').parentNode.prepend(tagsElement);
@@ -179,7 +185,7 @@ const processFormSubmit = function ({ currentTarget }) {
   const postElement = currentTarget.closest(postSelector);
   const inputTags = popupInput.value.split(',').map(inputTag => inputTag.trim());
 
-  addTagsToPost({ postElement, inputTags }).catch(showErrorModal);
+  editPostTags({ postElement, inputTagsAdd: inputTags }).catch(showErrorModal);
   currentTarget.reset();
 };
 
@@ -189,7 +195,7 @@ const processBundleClick = function ({ target }) {
   const postElement = target.closest(postSelector);
   const inputTags = target.dataset.tags.split(',').map(inputTag => inputTag.trim());
 
-  addTagsToPost({ postElement, inputTags }).catch(showErrorModal);
+  editPostTags({ postElement, inputTagsAdd: inputTags }).catch(showErrorModal);
   popupElement.remove();
 };
 
@@ -208,8 +214,38 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   if (canEdit && ['ask', 'submission'].includes(state) === false) {
     const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
     insertControlButton(postElement, clonedControlButton, buttonClass);
+
+    [...postElement.querySelectorAll(`${keyToCss('footerWrapper')} ${keyToCss('tag')}:not(.xkit-removable-tag)`)]
+      .forEach(tagElement => addRemoveTagButton({ tagElement, postElement }));
   }
 });
+
+const addRemoveTagButton = ({ tagElement, postElement }) => {
+  const tag = tagElement.getAttribute('href').replace(/^\/tagged\//, '');
+
+  // if (!preferenceNameGoesHere) return;
+  // if (!['Youtube'].includes(tag)) return;
+
+  const onClickRemove = async event => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    removeButton.disabled = true;
+    editPostTags({ postElement, inputTagsRemove: [tag] })
+      .catch(showErrorModal)
+      .finally(() => { removeButton.disabled = false; });
+  };
+
+  const removeButton =
+    dom('button', null, { click: onClickRemove }, [
+      dom('svg', { height: 10, width: 10, style: '--icon-color-primary: RGB(var(--black));', role: 'presentation', xmlns: 'http://www.w3.org/2000/svg' }, null, [
+        dom('use', { href: '#managed-icon__close-thin', xmlns: 'http://www.w3.org/2000/svg' })
+      ])
+    ]);
+
+  tagElement.append(removeButton);
+  tagElement.classList.add('xkit-removable-tag');
+};
 
 popupElement.addEventListener('click', processBundleClick);
 popupForm.addEventListener('submit', processFormSubmit);
@@ -295,6 +331,8 @@ export const clean = async function () {
   $(`.${buttonClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${tagsClass}`).remove();
+  $('.xkit-removable-tag > button').remove();
+  $('.xkit-removable-tag').removeClass('xkit-removable-tag');
 
   editedTagsMap = new WeakMap();
 

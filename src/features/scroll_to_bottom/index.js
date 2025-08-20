@@ -15,6 +15,7 @@ ${keyToCss('notifications')} + div
 `;
 const knightRiderLoaderSelector = `:is(${loaderSelector}) > ${keyToCss('knightRiderLoader')}`;
 
+let stopAtCaughtUp;
 let scrollToBottomButton;
 let active = false;
 
@@ -44,7 +45,9 @@ const scrollToBottom = () => {
 };
 const observer = new ResizeObserver(scrollToBottom);
 
-const startScrolling = () => {
+const startScrolling = async () => {
+  if (stopAtCaughtUp && await scrollToCaughtUp()) return;
+
   observer.observe(document.documentElement);
   active = true;
   scrollToBottomButton.classList.add(activeClass);
@@ -92,26 +95,37 @@ const addButtonToPage = async function ([scrollToTopButton]) {
 
 const caughtUpCarouselObjectType = 'followed_tag_carousel_card';
 
-const onCellsAdded = async cells => {
-  if (active) {
-    for (const cell of cells) {
-      const item = await cellItem(cell);
-      if (item.elements?.some(({ objectType }) => objectType === caughtUpCarouselObjectType)) {
-        stopScrolling();
+const scrollToCaughtUp = async (addedCells) => {
+  const isStarting = !active;
+  for (const cell of isStarting ? [...document.querySelectorAll(keyToCss('cell'))] : addedCells) {
+    const item = await cellItem(cell);
+    if (item.elements?.some(({ objectType }) => objectType === caughtUpCarouselObjectType)) {
+      if (!isStarting) stopScrolling();
+      if (!isStarting) await waitForScroller();
 
-        waitForScroller().then(() => {
-          const titleElement = cell?.previousElementSibling;
-          const titleElementTop = titleElement?.getBoundingClientRect?.()?.top;
-          titleElementTop && window.scrollBy({ top: titleElementTop });
-        });
-        return;
-      }
+      const titleElement = cell?.previousElementSibling;
+      const titleElementTop = titleElement?.getBoundingClientRect?.()?.top;
+      if (!titleElementTop) continue;
+
+      const isAboveViewportBottom = titleElementTop < window.innerHeight;
+      if (isStarting && isAboveViewportBottom) continue;
+
+      window.scrollBy({ top: titleElementTop });
+      console.log(
+        isStarting
+          ? 'Scroll to Bottom scrolled down to existing carousel:'
+          : 'Scroll to Bottom scrolled to newly added carousel:',
+        titleElement
+      );
+      return true;
     }
   }
 };
 
+const onCellsAdded = addedCells => active && scrollToCaughtUp(addedCells);
+
 export const main = async function () {
-  const { stopAtCaughtUp } = await getPreferences('scroll_to_bottom');
+  ({ stopAtCaughtUp } = await getPreferences('scroll_to_bottom'));
 
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
   pageModifications.register(knightRiderLoaderSelector, onLoadersAdded);

@@ -5,7 +5,7 @@ const featuresDiv = configSection.querySelector('.features');
 const enabledFeaturesKey = 'enabledScripts';
 const specialAccessKey = 'specialAccess';
 
-const getInstalledFeatures = async function () {
+const getInstalledFeatures = async () => {
   const url = browser.runtime.getURL('/features/index.json');
   const file = await fetch(url);
   const installedFeatures = await file.json();
@@ -13,7 +13,7 @@ const getInstalledFeatures = async function () {
   return installedFeatures;
 };
 
-const writeEnabled = async function ({ currentTarget }) {
+const writeEnabled = async ({ currentTarget }) => {
   const { checked, id } = currentTarget;
   const detailsElement = currentTarget.closest('details');
   let {
@@ -50,7 +50,7 @@ const debounce = (func, ms) => {
   };
 };
 
-const writePreference = async function ({ target }) {
+const writePreference = ({ target }) => {
   const { id } = target;
   const [featureName, preferenceType, preferenceName] = id.split('.');
   const storageKey = `${featureName}.preferences.${preferenceName}`;
@@ -68,7 +68,7 @@ const writePreference = async function ({ target }) {
   }
 };
 
-const renderPreferences = async function ({ featureName, preferences, preferenceList }) {
+const renderPreferences = async ({ featureName, preferences, preferenceList }) => {
   for (const [key, preference] of Object.entries(preferences)) {
     const storageKey = `${featureName}.preferences.${key}`;
     const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
@@ -133,7 +133,7 @@ const renderPreferences = async function ({ featureName, preferences, preference
   }
 };
 
-const renderFeatures = async function () {
+const renderFeatures = async () => {
   const featureClones = [];
   featuresDiv.textContent = '';
 

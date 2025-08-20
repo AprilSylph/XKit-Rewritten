@@ -13,12 +13,12 @@ const hideFilteredPosts = filteredScreens => filteredScreens
   .map(getTimelineItemWrapper)
   .forEach(timelineItem => timelineItem.setAttribute(hiddenAttribute, ''));
 
-export const main = async function () {
+export const main = async () => {
   const filteredScreenSelector = `article ${keyToCss('filteredScreen')}`;
   pageModifications.register(filteredScreenSelector, hideFilteredPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(hideFilteredPosts);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

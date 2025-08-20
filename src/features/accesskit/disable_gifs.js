@@ -114,7 +114,7 @@ const isAnimated = memoize(async sourceUrl => {
   }
 });
 
-const pauseGif = async function (gifElement) {
+const pauseGif = async gifElement => {
   if (gifElement.currentSrc.endsWith('.webp') && !(await isAnimated(gifElement.currentSrc))) return;
 
   const image = new Image();
@@ -134,7 +134,7 @@ const pauseGif = async function (gifElement) {
   };
 };
 
-const processGifs = function (gifElements) {
+const processGifs = gifElements => {
   gifElements.forEach(gifElement => {
     if (gifElement.closest(`${keyToCss('avatarImage', 'subAvatarImage')}, .block-editor-writing-flow`)) return;
     const pausedGifElements = [...gifElement.parentNode.querySelectorAll(`.${canvasClass}`)];
@@ -160,14 +160,14 @@ const processGifs = function (gifElements) {
   });
 };
 
-const processBackgroundGifs = function (gifBackgroundElements) {
+const processBackgroundGifs = gifBackgroundElements => {
   gifBackgroundElements.forEach(gifBackgroundElement => {
     gifBackgroundElement.classList.add(backgroundGifClass);
     addLabel(gifBackgroundElement, true);
   });
 };
 
-const processRows = function (rowsElements) {
+const processRows = rowsElements => {
   rowsElements.forEach(rowsElement => {
     [...rowsElement.children].forEach(row => {
       if (!row.querySelector(`figure:not(${keyToCss('unstretched')})`)) return;
@@ -186,14 +186,14 @@ const processRows = function (rowsElements) {
 const processHoverableElements = elements =>
   elements.forEach(element => element.setAttribute(hoverContainerAttribute, ''));
 
-const onStorageChanged = async function (changes) {
+const onStorageChanged = async changes => {
   const { 'accesskit.preferences.disable_gifs_loading_mode': modeChanges } = changes;
   if (modeChanges?.oldValue === undefined) return;
 
   loadingMode = modeChanges.newValue;
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ disable_gifs_loading_mode: loadingMode } = await getPreferences('accesskit'));
 
   const gifImage = `
@@ -234,7 +234,7 @@ export const main = async function () {
   browser.storage.local.onChanged.addListener(onStorageChanged);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   browser.storage.local.onChanged.removeListener(onStorageChanged);
 
   pageModifications.unregister(processGifs);

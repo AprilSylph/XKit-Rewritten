@@ -10,7 +10,7 @@ const getPostsFormId = 'xkit-tag-replacer-get-posts';
 const createBlogOption = ({ name, title, uuid }) => dom('option', { value: uuid, title }, null, [name]);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const showInitialPrompt = async () => {
+const showInitialPrompt = () => {
   const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmReplaceTag(event).catch(showErrorModal) }, [
     dom('label', null, null, [
       'Replace tags on:',

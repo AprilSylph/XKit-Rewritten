@@ -22,9 +22,9 @@ export const notificationObject = weakMemoize(notificationElement =>
  * @param {Element} meatballMenu - An on-screen meatball menu element in a blog modal header or blog card
  * @returns {Promise<object>} - The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
  */
-export const blogData = async (meatballMenu) => inject('/main_world/unbury_blog.js', [], meatballMenu);
+export const blogData = meatballMenu => inject('/main_world/unbury_blog.js', [], meatballMenu);
 
-export const isMyPost = async (postElement) => {
+export const isMyPost = async postElement => {
   const { blog, isSubmission, postAuthor, community } = await timelineObject(postElement);
   const userIsMember = userBlogNames.includes(blog.name);
   const userIsAdmin = adminBlogNames.includes(blog.name);
@@ -54,5 +54,5 @@ export const isMyPost = async (postElement) => {
  * @param {string[]} [options.remove] - Tags to remove
  * @returns {Promise<void>} Resolves when finished
  */
-export const editPostFormTags = async ({ add = [], remove = [] }) =>
+export const editPostFormTags = ({ add = [], remove = [] }) =>
   inject('/main_world/control_tags_input.js', [{ add, remove }]);

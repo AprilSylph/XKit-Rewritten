@@ -4,7 +4,7 @@ import { timelineSelector } from './timeline_id.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
 export const blogViewSelector = '[style*="--blog-title-color"] *';
-export const notificationSelector = `${keyToCss('notification')}[role="listitem"]`;
+export const notificationSelector = `:is(${keyToCss('notification')}[role="listitem"], ${keyToCss('activityItem')})`;
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
 const cellSelector = keyToCss('cell');
@@ -142,5 +142,7 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
   }
   if (elementRect.right > preventOverflowTargetRect.right - 15) {
     element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.right - 15 - elementRect.right}px`);
+  } else if (elementRect.left < preventOverflowTargetRect.left + 15) {
+    element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.left + 15 - elementRect.left}px`);
   }
 };

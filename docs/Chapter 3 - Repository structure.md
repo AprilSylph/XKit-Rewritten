@@ -37,11 +37,11 @@ User-facing features directory.
 
 ```
 features/
-├── _index.json           Index of feature names
-├── *.css                 Feature stylesheets
-├── *.js                  Feature scripts
-├── *.json                Feature manifests
-├── */                    Additional feature files, e.g.:
-│   ├── options/          Custom preferences interface files
-│   └── script.js         Child scripts
+├── index.json            Index of feature names
+├── <feature_name>/       Feature folders
+│   ├── feature.json      The feature's metadata
+│   ├── index.css         The feature's stylesheet
+│   ├── index.js          The feature's module script
+│   ├── options/          Files for rendering the feature's preferences
+│   └── <option_name>.js  Child scripts
 ```

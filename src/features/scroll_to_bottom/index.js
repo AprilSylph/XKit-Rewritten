@@ -1,9 +1,9 @@
 import { keyToClasses, keyToCss } from '../../utils/css_map.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
-import { buildStyle, getTimelineItemWrapper, waitForScroller } from '../../utils/interface.js';
+import { buildStyle, waitForScroller } from '../../utils/interface.js';
 import { getPreferences } from '../../utils/preferences.js';
-import { borderAttribute, tagChicletCarouselLinkSelector } from './../tweaks/caught_up_line.js';
+import { cellItem } from '../../utils/react_props.js';
 
 const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
 $(`[id="${scrollToBottomButtonId}"]`).remove();
@@ -90,15 +90,23 @@ const addButtonToPage = async function ([scrollToTopButton]) {
   pageModifications.register('*', checkForButtonRemoved);
 };
 
-const onTagChicletCarouselItemsAdded = ([carousel]) => {
-  if (active) {
-    stopScrolling();
+const caughtUpCarouselObjectType = 'followed_tag_carousel_card';
 
-    waitForScroller().then(() => {
-      const titleElement = getTimelineItemWrapper(carousel)?.previousElementSibling;
-      const titleElementTop = titleElement?.getBoundingClientRect?.()?.top;
-      titleElementTop && window.scrollBy({ top: titleElementTop });
-    });
+const onCellsAdded = async cells => {
+  if (active) {
+    for (const cell of cells) {
+      const item = await cellItem(cell);
+      if (item.elements?.some(({ objectType }) => objectType === caughtUpCarouselObjectType)) {
+        stopScrolling();
+
+        waitForScroller().then(() => {
+          const titleElement = cell?.previousElementSibling;
+          const titleElementTop = titleElement?.getBoundingClientRect?.()?.top;
+          titleElementTop && window.scrollBy({ top: titleElementTop });
+        });
+        return;
+      }
+    }
   }
 };
 
@@ -107,14 +115,14 @@ export const main = async function () {
 
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
   pageModifications.register(knightRiderLoaderSelector, onLoadersAdded);
-  stopAtCaughtUp && pageModifications.register(`${tagChicletCarouselLinkSelector}, [${borderAttribute}]`, onTagChicletCarouselItemsAdded);
+  stopAtCaughtUp && pageModifications.register(keyToCss(('cell')), onCellsAdded);
 };
 
 export const clean = async function () {
   pageModifications.unregister(addButtonToPage);
   pageModifications.unregister(checkForButtonRemoved);
   pageModifications.unregister(onLoadersAdded);
-  pageModifications.unregister(onTagChicletCarouselItemsAdded);
+  pageModifications.unregister(onCellsAdded);
 
   stopScrolling();
   scrollToBottomButton?.remove();

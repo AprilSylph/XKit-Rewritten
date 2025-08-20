@@ -4,7 +4,7 @@ import { pageModifications } from '../../utils/mutations.js';
 import { followingTimelineSelector } from '../../utils/timeline_id.js';
 
 const hiddenAttribute = 'data-tweaks-caught-up-line-title';
-export const borderAttribute = 'data-tweaks-caught-up-line-border';
+const borderAttribute = 'data-tweaks-caught-up-line-border';
 
 export const styleElement = buildStyle(`
   [${hiddenAttribute}] > div { display: none; }
@@ -24,7 +24,7 @@ export const styleElement = buildStyle(`
 `);
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
-export const tagChicletCarouselLinkSelector = `${followingTimelineSelector} ${listTimelineObjectSelector} ${keyToCss('tagChicletLink')}`;
+const tagChicletCarouselLinkSelector = `${followingTimelineSelector} ${listTimelineObjectSelector} ${keyToCss('tagChicletLink')}`;
 
 const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
   .map(getTimelineItemWrapper)

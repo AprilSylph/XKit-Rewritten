@@ -11,6 +11,14 @@ export const timelineObject = weakMemoize(postElement =>
 );
 
 /**
+ * @param {Element} cellElement - An on-screen timeline cell
+ * @returns {Promise<object>} - The post's buried item property
+ */
+export const cellItem = weakMemoize(cellElement =>
+  inject('/main_world/unbury_cell_item.js', [], cellElement)
+);
+
+/**
  * @param {Element} notificationElement - An on-screen notification
  * @returns {Promise<object>} - The notification's buried notification property
  */

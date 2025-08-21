@@ -22,6 +22,7 @@ ${wrapper} {
 
 ${keyToCss('headline')} ${keyToCss('badgesContainer')} {
   overflow: unset;
+  row-gap: 100%;
 }
 
 /* do not apply this on hover or the hover popups break */

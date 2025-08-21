@@ -1,0 +1,24 @@
+name: Stale
+
+on:
+  schedule:
+    - cron: 0 6 * * 1-5
+
+jobs:
+  stale:
+    permissions:
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close Stale Issues
+        uses: actions/stale@v9.1.0
+        with:
+          days-before-stale: 30
+          days-before-close: 7
+          exempt-all-issue-assignees: true
+          exempt-issue-labels: "help wanted,wontfix"
+          stale-issue-label: "stale"
+          stale-issue-message: >
+            This issue is unconfirmed, and has been labelled as `stale` due to inactivity.
+            It will be closed automatically if no further activity occurs.
+            A project maintainer can mark an issue as confirmed by adding the `help wanted` label, the `wontfix` label, or an assignee.

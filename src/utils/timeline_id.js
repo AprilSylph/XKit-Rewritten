@@ -45,6 +45,10 @@ export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId 
   which === 'blog_subscriptions' ||
   timelineId === '/dashboard/blog_subs';
 
+export const blogpackTimelineFilter = ({ dataset: { timeline, which } }) =>
+  timeline.includes('blogpack') ||
+  which === 'blogpack';
+
 export const anyDraftsTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.match(exactly(`/v2/blog/${anyBlog}/posts/draft`)) ||
   timelineId?.match(exactly(`drafts-${anyBlog}`)) ||

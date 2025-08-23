@@ -152,7 +152,7 @@ export const main = async function () {
   }
 };
 
-const createIcon = (content, color, tooltip) => dom('svg', {
+const createIcon = ({ content, color, tooltip }) => dom('svg', {
   xmlns: 'http://www.w3.org/2000/svg',
   class: mutualIconClass,
   viewBox: '0 0 1000 1000',
@@ -163,18 +163,18 @@ const createIcon = (content, color, tooltip) => dom('svg', {
 ]);
 
 const createMutualIcon = (blogName, color = 'rgb(var(--black))') =>
-  createIcon(
-    dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path }),
+  createIcon({
+    content: dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path }),
     color,
-    translate('Mutuals')
-  );
+    tooltip: translate('Mutuals')
+  });
 
 const createFollowingIcon = (blogName, color = 'rgb(var(--black))') =>
-  createIcon(
-    dom('use', { xmlns: 'http://www.w3.org/2000/svg', href: '#ri-user-shared-line' }),
+  createIcon({
+    content: dom('use', { xmlns: 'http://www.w3.org/2000/svg', href: '#ri-user-shared-line' }),
     color,
-    translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
-  );
+    tooltip: translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
+  });
 
 export const clean = async function () {
   onNewPosts.removeListener(addIcons);

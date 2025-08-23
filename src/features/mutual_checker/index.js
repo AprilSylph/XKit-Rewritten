@@ -157,8 +157,8 @@ const createIcon = (isMutual, blogName, color = 'rgb(var(--black))') =>
   }, null, isMutual
     ? [
         dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
-          translate('Mutuals')]
-        ),
+          translate('Mutuals')
+        ]),
         dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path })
       ]
     : [

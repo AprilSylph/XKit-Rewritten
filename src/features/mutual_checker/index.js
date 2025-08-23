@@ -85,7 +85,7 @@ const addIcons = function (postElements) {
     if (isMutual) {
       postElement.classList.add(mutualsClass);
       const iconTarget = getPopoverWrapper(postAttribution) ?? postAttribution;
-      iconTarget?.before(createMutualIcon(blogName));
+      iconTarget?.before(createIcon(isMutual, blogName));
     } else if (showOnlyMutuals) {
       getTimelineItemWrapper(postElement)?.setAttribute(hiddenAttribute, '');
     }
@@ -102,11 +102,7 @@ const addBlogCardIcons = blogCardLinks =>
     const isMutual = followingBlog && isFollowingYou;
 
     if (isFollowingYou) {
-      blogCardLink.before(
-        isMutual
-          ? createMutualIcon(blogName, getComputedStyle(blogCardLink).color)
-          : createFollowingIcon(blogName, getComputedStyle(blogCardLink).color)
-      );
+      blogCardLink.before(createIcon(isMutual, blogName, getComputedStyle(blogCardLink).color));
     }
   });
 
@@ -152,29 +148,26 @@ export const main = async function () {
   }
 };
 
-const createIcon = ({ content, color, tooltip }) => dom('svg', {
-  xmlns: 'http://www.w3.org/2000/svg',
-  class: mutualIconClass,
-  viewBox: '0 0 1000 1000',
-  fill: color
-}, null, [
-  dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [tooltip]),
-  content
-]);
-
-const createMutualIcon = (blogName, color = 'rgb(var(--black))') =>
-  createIcon({
-    content: dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path }),
-    color,
-    tooltip: translate('Mutuals')
-  });
-
-const createFollowingIcon = (blogName, color = 'rgb(var(--black))') =>
-  createIcon({
-    content: dom('use', { xmlns: 'http://www.w3.org/2000/svg', href: '#ri-user-shared-line' }),
-    color,
-    tooltip: translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
-  });
+const createIcon = (isMutual, blogName, color = 'rgb(var(--black))') =>
+  dom('svg', {
+    xmlns: 'http://www.w3.org/2000/svg',
+    class: mutualIconClass,
+    viewBox: '0 0 1000 1000',
+    fill: color
+  }, null, isMutual
+    ? [
+        dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
+          translate('Mutuals')]
+        ),
+        dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path })
+      ]
+    : [
+        dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
+          translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
+        ]),
+        dom('use', { xmlns: 'http://www.w3.org/2000/svg', href: '#ri-user-shared-line' })
+      ]
+  );
 
 export const clean = async function () {
   onNewPosts.removeListener(addIcons);

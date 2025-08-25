@@ -30,16 +30,39 @@ const renderFeatures = async function () {
   for (const featureName of [...orderedEnabledFeatures, ...disabledFeatures]) {
     const url = browser.runtime.getURL(`/features/${featureName}/feature.json`);
     const file = await fetch(url);
-    const metadata = await file.json();
+    const { title, description, icon, ...metadata } = await file.json();
 
     const disabled = enabledFeatures.includes(featureName) === false;
     if (disabled && metadata.deprecated && !specialAccess.includes(featureName)) {
       continue;
     }
 
-    featureElements.push(
-      XKitFeature({ disabled, featureName, ...metadata })
-    );
+    const featureElement = XKitFeature({ disabled, featureName, ...metadata });
+
+    if (title) {
+      const titleElement = document.createElement('span');
+      titleElement.setAttribute('slot', 'title');
+      titleElement.textContent = title;
+      featureElement.append(titleElement);
+    }
+
+    if (description) {
+      const descriptionElement = document.createElement('span');
+      descriptionElement.setAttribute('slot', 'description');
+      descriptionElement.textContent = description;
+      featureElement.append(descriptionElement);
+    }
+
+    if (icon.class_name) {
+      const iconElement = document.createElement('i');
+      iconElement.setAttribute('slot', 'icon');
+      iconElement.classList.add('ri-fw', icon.class_name);
+      iconElement.style.backgroundColor = icon.background_color ?? '#ffffff';
+      iconElement.style.color = icon.color ?? '#000000';
+      featureElement.append(iconElement);
+    }
+
+    featureElements.push(featureElement);
   }
 
   featuresDiv.replaceChildren(...featureElements);

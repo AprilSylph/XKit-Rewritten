@@ -41,13 +41,10 @@ class XKitFeatureElement extends CustomElement {
   #preferencesList;
 
   deprecated = false;
-  description = '';
   featureName = '';
   help = '';
-  icon = {};
   preferences = {};
   relatedTerms = [];
-  title = '';
 
   constructor () {
     super(templateDocument, adoptedStyleSheets);
@@ -183,33 +180,6 @@ class XKitFeatureElement extends CustomElement {
     this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
     this.#helpAnchor.href = this.help;
     this.dataset.relatedTerms = this.relatedTerms;
-
-    const children = [];
-
-    if (this.description) {
-      const descriptionElement = document.createElement('span');
-      descriptionElement.setAttribute('slot', 'description');
-      descriptionElement.textContent = this.description;
-      children.push(descriptionElement);
-    }
-
-    if (this.icon.class_name) {
-      const iconElement = document.createElement('i');
-      iconElement.setAttribute('slot', 'icon');
-      iconElement.classList.add('ri-fw', this.icon.class_name);
-      iconElement.style.backgroundColor = this.icon.background_color ?? '#ffffff';
-      iconElement.style.color = this.icon.color ?? '#000000';
-      children.push(iconElement);
-    }
-
-    if (this.title) {
-      const titleElement = document.createElement('span');
-      titleElement.setAttribute('slot', 'title');
-      titleElement.textContent = this.title;
-      children.push(titleElement);
-    }
-
-    this.replaceChildren(...children);
 
     if (Object.keys(this.preferences).length !== 0) {
       this.#renderPreferences({

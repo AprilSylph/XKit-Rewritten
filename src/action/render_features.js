@@ -37,9 +37,9 @@ const renderFeatures = async function () {
       continue;
     }
 
-    const featureElement = XKitFeature();
-    Object.assign(featureElement, { disabled, featureName, ...metadata });
-    featureElements.push(featureElement);
+    featureElements.push(
+      XKitFeature({ disabled, featureName, ...metadata })
+    );
   }
 
   featuresDiv.replaceChildren(...featureElements);

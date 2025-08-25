@@ -238,4 +238,4 @@ class XKitFeatureElement extends CustomElement {
 
 customElements.define(localName, XKitFeatureElement);
 
-export const XKitFeature = () => document.createElement(localName);
+export const XKitFeature = (props = {}) => Object.assign(document.createElement(localName), props);

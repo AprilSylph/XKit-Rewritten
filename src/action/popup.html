@@ -4,15 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XKit Control Panel</title>
-    <link rel="icon" href="/icons/128.png" type="image/png">
-    <link rel="stylesheet" href="/lib/normalize.min.css">
-    <link rel="stylesheet" href="/lib/toggle-button.css">
-    <link rel="stylesheet" href="/lib/remixicon/remixicon.css">
-    <link rel="stylesheet" href="/lib/spectrum.css">
-    <link rel="stylesheet" href="popup.css">
-    <link rel="stylesheet" href="configuration.css">
-    <link rel="stylesheet" href="backup.css">
-    <link rel="stylesheet" href="links.css">
+    <link rel="icon" href="../icons/128.png" type="image/png">
+    <link rel="stylesheet" href="../lib/normalize.min.css">
+    <link rel="stylesheet" href="../lib/remixicon/remixicon.css">
+    <link rel="stylesheet" href="../lib/spectrum.css">
+    <link rel="stylesheet" href="./backup.css">
+    <link rel="stylesheet" href="./configuration.css">
+    <link rel="stylesheet" href="./links.css">
+    <link rel="stylesheet" href="./popup.css">
+    <script defer src="../lib/browser-polyfill.min.js"></script>
+    <script defer src="../lib/jquery.min.js"></script>
+    <script defer src="../lib/spectrum.js"></script>
+    <script defer src="./popup.js"></script>
+    <script defer src="./render_backup.js"></script>
+    <script type="module" src="./render_features.js"></script>
   </head>
   <body>
     <header id="permissions-banner" hidden>
@@ -84,26 +89,6 @@
       </section>
     </main>
 
-    <template id="feature">
-      <details class="feature">
-        <summary>
-          <div class="icon">
-            <i class="ri-fw"></i>
-          </div>
-          <div class="meta">
-            <h4 class="title"></h4>
-            <p class="description"></p>
-          </div>
-          <div class="buttons">
-            <a class="help" target="_blank"><i class="ri-fw ri-question-fill" style="color:rgb(var(--black))"></i></a>
-            <input type="checkbox" class="toggle-button" aria-label="Enable this feature">
-          </div>
-        </summary>
-        <p class="note"></p>
-        <ul class="preferences"></ul>
-      </details>
-    </template>
-
     <template id="checkbox-preference">
       <li>
         <input type="checkbox">
@@ -146,12 +131,5 @@
         <iframe></iframe>
       </li>
     </template>
-
-    <script src="/lib/browser-polyfill.min.js"></script>
-    <script src="/lib/jquery.min.js"></script>
-    <script src="/lib/spectrum.js"></script>
-    <script src="popup.js"></script>
-    <script src="render_backup.js"></script>
-    <script src="render_features.js"></script>
   </body>
 </html>

@@ -12,7 +12,8 @@ import {
   blogSubsTimelineFilter,
   timelineSelector,
   anyCommunityTimelineFilter,
-  communitiesTimelineFilter
+  communitiesTimelineFilter,
+  blogpackTimelineFilter
 } from '../../utils/timeline_id.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
@@ -81,7 +82,8 @@ const getLocation = timelineElement => {
     disabled: isBlog && disabledBlogs.some(name => blogTimelineFilter(name)(timelineElement)),
     peepr: isBlog,
     blogSubscriptions: blogSubsTimelineFilter(timelineElement),
-    community: anyCommunityTimelineFilter(timelineElement) || communitiesTimelineFilter(timelineElement)
+    community: anyCommunityTimelineFilter(timelineElement) || communitiesTimelineFilter(timelineElement),
+    blogpack: blogpackTimelineFilter(timelineElement)
   };
   return Object.keys(on).find(location => on[location]);
 };

@@ -57,6 +57,8 @@ const localRestore = async function () {
     localRestoreButton.disabled = true;
 
     const parsedStorage = JSON.parse(importText);
+
+    await browser.storage.local.clear();
     await browser.storage.local.set(parsedStorage);
 
     localRestoreButton.classList.add('success');

@@ -13,7 +13,7 @@ const onStorageChanged = async function () {
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
 
   localExportDisplayElement.textContent = stringifiedStorage;
-  localOverwriteWarning.hidden = stringifiedStorage === '{}';
+  localOverwriteWarning.hidden = Object.keys(storageLocal).length === 0;
 };
 
 const localCopy = async function () {

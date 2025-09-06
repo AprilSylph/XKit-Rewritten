@@ -6,6 +6,7 @@ import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } fro
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../../utils/post_actions.js';
+import { postPopoverClass } from '../../utils/post_popovers.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject, editPostFormTags } from '../../utils/react_props.js';
 import { apiFetch, createEditRequestBody, isNpfCompatible } from '../../utils/tumblr_helpers.js';
@@ -21,7 +22,7 @@ let autoTagAsker;
 
 let controlButtonTemplate;
 
-const popupElement = dom('div', { id: 'quick-tags' });
+const popupElement = dom('div', { id: 'quick-tags', class: postPopoverClass });
 const popupInput = dom(
   'input',
   {

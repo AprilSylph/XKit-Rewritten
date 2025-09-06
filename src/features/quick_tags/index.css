@@ -1,7 +1,6 @@
 #quick-tags,
 #quick-tags-post-option {
   position: absolute;
-  z-index: 97;
 
   display: flex;
   flex-direction: column;

@@ -22,9 +22,16 @@ const onTitleChanged = () => {
   const newTitle = rawTitle.replace(/^\(\d{1,2}\) /, '');
   customTitleElement.textContent = newTitle;
 
+  clearAppBadge();
   observer.observe(titleElement, { characterData: true, subtree: true });
 };
 const observer = new MutationObserver(onTitleChanged);
+
+const clearAppBadge = () => {
+  try {
+    navigator.clearAppBadge?.();
+  } catch {}
+};
 
 export const main = async () => {
   pageModifications.register('head title:not([data-xkit])', onTitleChanged);
@@ -32,5 +39,6 @@ export const main = async () => {
 };
 
 export const clean = async () => {
+  observer.disconnect();
   customTitleElement.remove();
 };

@@ -10,7 +10,12 @@ document.documentElement.append(
     }
 
     footer${keyToCss('postFooter')}:has(.${postPopoverClass}) {
-      /* applies layering when stacking context is created here in older browsers; see https://github.com/AprilSylph/XKit-Rewritten/issues/1876 */
+      /**
+       * Applies z-index layering even when a stacking context is created here in older browsers.
+       *
+       * @see https://github.com/w3c/csswg-drafts/issues/10544
+       * @see https://github.com/AprilSylph/XKit-Rewritten/issues/1876
+       */
       position: relative;
       z-index: 97;
     }

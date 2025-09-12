@@ -53,7 +53,7 @@ export const styleElement = buildStyle(`
   background-color: rgb(var(--white));
 }
 
-img[style*="${loadingContentVar}"]:not(${hovered}) {
+img[style*="${loadingContentVar}"] {
   content: var(${loadingContentVar});
 }
 

@@ -11,6 +11,7 @@ const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
+const loadingContentVar = '--xkit-paused-gif-loading-content';
 
 let loadingMode;
 
@@ -50,6 +51,10 @@ export const styleElement = buildStyle(`
   visibility: visible;
 
   background-color: rgb(var(--white));
+}
+
+img[style*="${loadingContentVar}"]:not(${hovered}) {
+  content: var(${loadingContentVar});
 }
 
 .${canvasClass}${parentHovered},
@@ -115,7 +120,10 @@ const isAnimated = memoize(async sourceUrl => {
 });
 
 const pauseGif = async function (gifElement) {
-  if (gifElement.currentSrc.endsWith('.webp') && !(await isAnimated(gifElement.currentSrc))) return;
+  if (gifElement.currentSrc.endsWith('.webp') && !(await isAnimated(gifElement.currentSrc))) {
+    gifElement.style.removeProperty(loadingContentVar);
+    return;
+  }
 
   const image = new Image();
   image.src = gifElement.currentSrc;
@@ -130,6 +138,7 @@ const pauseGif = async function (gifElement) {
       canvas.getContext('2d').drawImage(image, 0, 0);
       gifElement.after(canvas);
       addLabel(gifElement);
+      gifElement.style.removeProperty(loadingContentVar);
     }
   };
 };
@@ -150,6 +159,11 @@ const processGifs = function (gifElements) {
       gifElement.parentElement.setAttribute(pausedPosterAttribute, loadingMode);
       addLabel(posterElement);
       return;
+    }
+
+    if (gifElement.parentElement.matches(`${keyToCss('placeholder')}${keyToCss('hasGradient')}[style]`)) {
+      gifElement.style.setProperty(loadingContentVar, gifElement.parentElement.style.background);
+      setTimeout(() => gifElement.style.removeProperty(loadingContentVar), 10000);
     }
 
     if (gifElement.complete && gifElement.currentSrc) {

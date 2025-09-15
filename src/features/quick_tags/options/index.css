@@ -93,17 +93,11 @@ input[type="text"] {
   grid-template-columns: auto 1fr auto;
   grid-column-gap: 1ch;
   align-items: center;
-  padding-right: 1ch;
   border-top: 1px solid rgb(var(--light-grey));
 }
 
 .bundle:last-child {
   border-bottom: 1px solid rgb(var(--light-grey));
-}
-
-.bundle .move-buttons {
-  display: flex;
-  flex-direction: column;
 }
 
 .bundle button {
@@ -114,14 +108,17 @@ input[type="text"] {
   background: none;
 }
 
-.bundle button:disabled {
-  cursor: not-allowed;
-  opacity: 0.4;
-}
-
 .bundle button i {
   color: rgb(var(--black));
   font-size: 1.5em;
+}
+
+.bundle .drag-handle {
+  cursor: grab;
+}
+
+.bundle .drag-handle:active {
+  cursor: grabbing;
 }
 
 .bundle div {

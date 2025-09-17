@@ -83,6 +83,17 @@ ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) {
 ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) ${keyToCss('tooltip')} {
   display: none;
 }
+
+footer${keyToCss('postFooter')} {
+  /**
+   * Prevents a stacking context being created here and breaking layering in older browsers.
+   * This unfortunately breaks Tumblr's breakpoint-specific styling (smaller text in footer buttons in masonry view in peepr).
+   *
+   * @see https://github.com/w3c/csswg-drafts/issues/10544
+   * @see https://github.com/AprilSylph/XKit-Rewritten/issues/1876
+   */
+  container-type: unset;
+}
 `);
 
 const onBlogSelectorChange = () => {

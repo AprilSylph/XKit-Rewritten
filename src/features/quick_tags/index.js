@@ -1,6 +1,7 @@
 import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
+import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
-import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
+import { appendWithoutOverflow, buildStyle, filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
 import { megaEdit } from '../../utils/mega_editor.js';
 import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
@@ -20,6 +21,19 @@ let answerTag;
 let autoTagAsker;
 
 let controlButtonTemplate;
+
+export const styleElement = buildStyle(`
+footer${keyToCss('postFooter')} {
+  /**
+   * Prevents a stacking context being created here and breaking layering in older browsers.
+   * This unfortunately breaks Tumblr's breakpoint-specific styling (smaller text in footer buttons in masonry view in peepr).
+   *
+   * @see https://github.com/w3c/csswg-drafts/issues/10544
+   * @see https://github.com/AprilSylph/XKit-Rewritten/issues/1876
+   */
+  container-type: unset;
+}
+`);
 
 const popupElement = dom('div', { id: 'quick-tags' });
 const popupInput = dom(

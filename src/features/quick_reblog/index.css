@@ -1,6 +1,5 @@
 #quick-reblog {
   position: absolute;
-  z-index: 97;
   box-shadow: 0 0 15px 0 rgba(0,0,0,.5);
   padding: 2px;
   border-radius: 3px;
@@ -30,11 +29,11 @@
   }
 }
 
-#quick-reblog.below {
+#quick-reblog[data-position="below"] {
   inset: 100% 50% auto auto;
   transform: translate(calc(50% + var(--horizontal-offset, 0%)), var(--icon-spacing));
 }
-#quick-reblog.above {
+#quick-reblog[data-position="above"] {
   inset: auto 50% 100% auto;
   transform: translate(calc(50% + var(--horizontal-offset, 0%)), calc(0px - var(--icon-spacing)));
 }

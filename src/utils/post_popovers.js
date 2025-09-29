@@ -4,9 +4,8 @@ import { keyToCss } from './css_map.js';
 export const postPopoverClass = 'xkit-control-button-popover';
 
 /**
- * Detects Chromium <130, Firefox <130, Safari <26, or another old or non-compliant browser.
- *
- * This is missing Firefox 130-133 (which were not ESR) compared to the ideal set.
+ * Detects Chromium <130, Firefox <130, Safari <26, or another old or non-compliant browser. Note
+ * that ideally this would also include Firefox 130-133 (which were not ESR).
  */
 const oldBrowser = !CSS.supports('text-wrap-style', 'balance') || typeof ImageDecoder !== 'function';
 
@@ -17,7 +16,7 @@ const oldBrowser = !CSS.supports('text-wrap-style', 'balance') || typeof ImageDe
  * @see https://github.com/w3c/csswg-drafts/issues/10544
  * @see https://github.com/AprilSylph/XKit-Rewritten/issues/1876
  */
-const containerQueryFix = oldBrowser
+const stackingContextFix = oldBrowser
   ? `
     footer${keyToCss('postFooter')}:has(.${postPopoverClass}) {
       position: relative;
@@ -32,6 +31,6 @@ document.documentElement.append(
       z-index: 97;
     }
 
-    ${containerQueryFix}
+    ${stackingContextFix}
   `)
 );

@@ -9,6 +9,7 @@ import { notify } from '../../utils/notifications.js';
 import { dom } from '../../utils/dom.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { keyToCss } from '../../utils/css_map.js';
+import { popoverStackingContextFix } from '../../utils/post_popovers.js';
 
 const popupElement = dom('div', { id: 'quick-reblog' }, { click: event => event.stopPropagation() });
 const blogSelector = dom('select');
@@ -84,16 +85,7 @@ ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) ${keyT
   display: none;
 }
 
-footer${keyToCss('postFooter')} {
-  /**
-   * Prevents a stacking context being created here and breaking layering in older browsers.
-   * This unfortunately breaks Tumblr's breakpoint-specific styling (smaller text in footer buttons in masonry view in peepr).
-   *
-   * @see https://github.com/w3c/csswg-drafts/issues/10544
-   * @see https://github.com/AprilSylph/XKit-Rewritten/issues/1876
-   */
-  container-type: unset;
-}
+${popoverStackingContextFix}
 `);
 
 const onBlogSelectorChange = () => {

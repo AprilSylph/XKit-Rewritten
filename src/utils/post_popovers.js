@@ -10,7 +10,7 @@ export const postPopoverClass = 'xkit-control-button-popover';
 const oldBrowser = !CSS.supports('text-wrap-style', 'balance') || typeof ImageDecoder !== 'function';
 
 /**
- * In older browsers (Chromium 105-129, Firefox 110-133, Safari 16-18.5), `container-type` creates a
+ * In older browsers (Chromium <129, Firefox <133, Safari <18.5), `container-type` creates a
  * stacking context, so the popup z-index does not apply outside of the footer. Applying z-index
  * layering to the footer causes the popup to float even when this stacking context is created.
  * @see https://github.com/w3c/csswg-drafts/issues/10544

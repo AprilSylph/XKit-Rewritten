@@ -1,10 +1,12 @@
 import { keyToCss } from './css_map.js';
 
 /**
- * Detects Chromium <130, Firefox <130, Safari <26, or another old or non-compliant browser. Note
- * that ideally this would also include Firefox 130-132 (which were not ESR).
+ * Detects Chromium <130, Firefox <140, Safari <26, or another old or non-compliant browser.
  */
-const oldBrowser = CSS.supports('text-wrap-style', 'balance') === false || typeof ImageDecoder === 'undefined';
+const oldBrowser =
+  CSS.supports('text-wrap-style', 'balance') === false ||
+  typeof CookieStore === 'undefined' ||
+  typeof ImageDecoder === 'undefined';
 
 /**
  * In older browsers (Chromium <129, Firefox <133, Safari <18.5), `container-type` creates a

@@ -5,7 +5,7 @@ export const postPopoverClass = 'xkit-control-button-popover';
 
 /**
  * Detects Chromium <130, Firefox <130, Safari <26, or another old or non-compliant browser. Note
- * that ideally this would also include Firefox 130-133 (which were not ESR).
+ * that ideally this would also include Firefox 130-132 (which were not ESR).
  */
 const oldBrowser = !CSS.supports('text-wrap-style', 'balance') || typeof ImageDecoder !== 'function';
 

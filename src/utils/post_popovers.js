@@ -9,7 +9,7 @@ const oldBrowser =
   typeof ImageDecoder === 'undefined';
 
 /**
- * In older browsers (Chromium <129, Firefox <133, Safari <18.5), `container-type` creates a
+ * In older browsers (Chromium <129, Firefox <133, Safari <18.4), `container-type` creates a
  * stacking context, so the popup z-index does not apply outside of the footer.
  *
  * Removing the container fixes this, but causes a minor regression: disabling Tumblr's

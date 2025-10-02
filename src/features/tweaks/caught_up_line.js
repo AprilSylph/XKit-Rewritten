@@ -9,16 +9,20 @@ const borderAttribute = 'data-tweaks-caught-up-line-border';
 export const styleElement = buildStyle(`
   [${hiddenAttribute}] > div { display: none; }
   [${borderAttribute}] > div {
-    box-sizing: content-box;
     height: 0px;
     overflow-y: hidden;
-    border-top: 4px solid rgb(var(--white-on-dark));
+  }
+  [${borderAttribute}]::before {
+    display: block;
+    height: 4px;
+
+    background-color: rgb(var(--white-on-dark));
+    content: "";
   }
 
   @media (max-width: 540px) {
-    [${borderAttribute}] > div {
-      margin-top: 2px;
-      border-bottom: 2px solid transparent;
+    [${borderAttribute}]::before {
+      margin: 2px 0;
     }
   }
 `);

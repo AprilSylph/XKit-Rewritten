@@ -133,13 +133,17 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
 
   target.appendChild(element);
 
+  if (element.dataset.position === 'below' && element.getBoundingClientRect().bottom > document.documentElement.clientHeight) {
+    element.dataset.position = 'above';
+  }
+  if (element.dataset.position === 'above' && element.getBoundingClientRect().top < 0) {
+    element.dataset.position = 'below';
+  }
+
   const preventOverflowTarget = getClosestWithOverflow(target);
   const preventOverflowTargetRect = preventOverflowTarget.getBoundingClientRect();
   const elementRect = element.getBoundingClientRect();
 
-  if (elementRect.bottom > document.documentElement.clientHeight) {
-    element.dataset.position = 'above';
-  }
   if (elementRect.right > preventOverflowTargetRect.right - 15) {
     element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.right - 15 - elementRect.right}px`);
   } else if (elementRect.left < preventOverflowTargetRect.left + 15) {

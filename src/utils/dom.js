@@ -31,7 +31,7 @@ export function dom (tagName, attributes = {}, events = {}, children = []) {
  * @returns {Element} Element created to specification
  * @example element('a', { href: '/' }) => <a href="/">
  */
-function element (tagName, properties = {}, children = []) {
+export function element (tagName, properties = {}, children = []) {
   const element = properties?.xmlns
     ? document.createElementNS(properties.xmlns, tagName)
     : document.createElement(tagName);

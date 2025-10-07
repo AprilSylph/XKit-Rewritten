@@ -61,6 +61,14 @@ const processPosts = async function (postElements) {
             --black: ${titleColorRGB};
             --deprecated-accent: ${linkColorRGB};
             --color-primary-link: rgb(var(--deprecated-accent));
+            --content-panel: rgb(var(--white));
+            --content-tint: rgba(var(--black), 0.07);
+            --content-tint-strong: rgba(var(--black), 0.13);
+            --content-tint-heavy: rgba(var(--black), 0.25);
+            --content-fg: rgb(var(--black));
+            --content-fg-secondary: rgba(var(--black), 0.65);
+            --content-fg-tertiary: rgba(var(--black), 0.4);
+            --modal: rgb(var(--white));
           }
         `;
       }

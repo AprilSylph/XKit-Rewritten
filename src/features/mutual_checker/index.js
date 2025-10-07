@@ -54,7 +54,7 @@ const styleElement = buildStyle(`
   }
 `);
 
-const processNotifications = (notificationElements) => {
+const processNotifications = notificationElements => {
   notificationElements.forEach(async notificationElement => {
     const notification = await notificationObject(notificationElement);
 
@@ -68,7 +68,7 @@ const alreadyProcessed = postElement =>
   postElement.classList.contains(mutualsClass) &&
   postElement.querySelector(`.${mutualIconClass}`);
 
-const addIcons = function (postElements) {
+const addIcons = postElements => {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (alreadyProcessed(postElement)) return;
 
@@ -112,7 +112,7 @@ const getIsFollowing = async (blogName, element) => {
       await blogData(element),
       (await timelineObject(element))?.blog,
       (await timelineObject(element))?.authorBlog
-    ].find((data) => blogName === data?.name);
+    ].find(data => blogName === data?.name);
 
     following[blogName] = blog
       ? Promise.resolve(blog.followed && !blog.isMember)
@@ -123,7 +123,7 @@ const getIsFollowing = async (blogName, element) => {
   return following[blogName];
 };
 
-const getIsFollowingYou = (blogName) => {
+const getIsFollowingYou = blogName => {
   if (followingYou[blogName] === undefined) {
     followingYou[blogName] = apiFetch(`/v2/blog/${primaryBlogName}/followed_by`, { queryParams: { query: blogName } })
       .then(({ response: { followedBy } }) => followedBy)
@@ -132,7 +132,7 @@ const getIsFollowingYou = (blogName) => {
   return followingYou[blogName];
 };
 
-export const main = async function () {
+export const main = async () => {
   if (primaryBlogName === undefined) return;
   document.documentElement.append(styleElement);
 
@@ -161,7 +161,7 @@ const createIcon = (blogName, color = 'rgb(var(--black))') =>
     dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path })
   ]);
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(addIcons);
   pageModifications.unregister(addBlogCardIcons);
   if (showOnlyMutualNotifications) {

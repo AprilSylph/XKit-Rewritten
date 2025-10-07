@@ -22,11 +22,11 @@ const hideTagCarousels = carouselWrappers => carouselWrappers
     timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
   });
 
-export const main = async function () {
+export const main = async () => {
   pageModifications.register(carouselWrapperSelector, hideTagCarousels);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(hideTagCarousels);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

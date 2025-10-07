@@ -7,7 +7,7 @@ const featuresDiv = configSection.querySelector('.features');
 const enabledFeaturesKey = 'enabledScripts';
 const specialAccessKey = 'specialAccess';
 
-const getInstalledFeatures = async function () {
+const getInstalledFeatures = async () => {
   const url = browser.runtime.getURL('/features/index.json');
   const file = await fetch(url);
   const installedFeatures = await file.json();
@@ -15,7 +15,7 @@ const getInstalledFeatures = async function () {
   return installedFeatures;
 };
 
-const renderFeatures = async function () {
+const renderFeatures = async () => {
   const featureElements = [];
 
   const installedFeatures = await getInstalledFeatures();

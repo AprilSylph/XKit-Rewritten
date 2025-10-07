@@ -30,7 +30,7 @@ let showReblogsOfNotFollowing;
 let whitelist;
 let disabledBlogs;
 
-const lengthenTimeline = async (timeline) => {
+const lengthenTimeline = timeline => {
   if (!timeline.querySelector(keyToCss('manualPaginatorButtons'))) {
     timeline.classList.add(lengthenedClass);
   }
@@ -86,8 +86,8 @@ const getLocation = timelineElement => {
   return Object.keys(on).find(location => on[location]);
 };
 
-const processTimelines = async () => {
-  [...document.querySelectorAll(timelineSelector)].forEach(async timelineElement => {
+const processTimelines = () => {
+  [...document.querySelectorAll(timelineSelector)].forEach(timelineElement => {
     const location = getLocation(timelineElement);
 
     const currentControls = [...timelineElement.children]
@@ -100,7 +100,7 @@ const processTimelines = async () => {
   });
 };
 
-const processPosts = async function (postElements) {
+const processPosts = postElements => {
   processTimelines();
 
   filterPostElements(postElements, { includeFiltered })
@@ -119,7 +119,7 @@ const processPosts = async function (postElements) {
     });
 };
 
-export const main = async function () {
+export const main = async () => {
   let whitelistedUsernames;
   ({
     showOwnReblogs,
@@ -137,7 +137,7 @@ export const main = async function () {
   onNewPosts.addListener(processPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   onNewPosts.removeListener(processPosts);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

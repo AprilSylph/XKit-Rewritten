@@ -1,21 +1,20 @@
 /**
- * @param {string} scriptName - Filename (without file extension) of script
- * @returns {Promise<object>} The script's preference values
+ * @param {string} featureName - Internal name of feature
+ * @returns {Promise<object>} The feature's preference values
  */
-export const getPreferences = async function (scriptName) {
-  const scriptMetadataURL = browser.runtime.getURL(`/features/${scriptName}/feature.json`);
-  const scriptMetadataFile = await fetch(scriptMetadataURL);
-  const scriptMetadata = await scriptMetadataFile.json();
+export const getPreferences = async function (featureName) {
+  const featureMetadataURL = browser.runtime.getURL(`/features/${featureName}/feature.json`);
+  const featureMetadataFile = await fetch(featureMetadataURL);
+  const { preferences = {} } = await featureMetadataFile.json();
   const storage = await browser.storage.local.get();
 
-  const { preferences = {} } = scriptMetadata;
   const unsetPreferences = {};
   const preferenceValues = {};
 
   for (const [key, preference] of Object.entries(preferences)) {
     if (preference.type === 'iframe') { continue; }
 
-    const storageKey = `${scriptName}.preferences.${key}`;
+    const storageKey = `${featureName}.preferences.${key}`;
     const savedPreference = storage[storageKey];
 
     if (savedPreference === undefined) {

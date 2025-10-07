@@ -47,16 +47,32 @@ function element (tagName, properties = {}, children = []) {
   return element;
 }
 
+export const a = (props = {}, children = []) => element('a', props, children);
 export const button = (props = {}, children = []) => element('button', props, children);
+export const datalist = (props = {}, children = []) => element('datalist', props, children);
 export const div = (props = {}, children = []) => element('div', props, children);
+export const fieldset = (props = {}, children = []) => element('fieldset', props, children);
+export const form = (props = {}, children = []) => element('form', props, children);
+export const h1 = (props = {}, children = []) => element('h1', props, children);
 export const h3 = (props = {}, children = []) => element('h3', props, children);
+export const hr = (props = {}, children = []) => element('hr', props, children);
 export const img = (props = {}, children = []) => element('img', props, children);
 export const input = (props = {}, children = []) => element('input', props, children);
 export const label = (props = {}, children = []) => element('label', props, children);
+export const li = (props = {}, children = []) => element('li', props, children);
+export const option = (props = {}, children = []) => element('option', props, children);
 export const p = (props = {}, children = []) => element('p', props, children);
+export const select = (props = {}, children = []) => element('select', props, children);
+export const small = (props = {}, children = []) => element('small', props, children);
 export const span = (props = {}, children = []) => element('span', props, children);
 export const strong = (props = {}, children = []) => element('strong', props, children);
 export const style = (props = {}, children = []) => element('style', props, children);
+export const table = (props = {}, children = []) => element('table', props, children);
+export const td = (props = {}, children = []) => element('td', props, children);
+export const th = (props = {}, children = []) => element('th', props, children);
+export const tr = (props = {}, children = []) => element('tr', props, children);
+export const ul = (props = {}, children = []) => element('ul', props, children);
 
+export const path = (props = {}, children = []) => element('path', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);
 export const svg = (props = {}, children = []) => element('svg', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);
 export const use = (props = {}, children = []) => element('use', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);

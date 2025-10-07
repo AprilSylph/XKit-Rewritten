@@ -48,6 +48,11 @@
       "label": "Remove user-set fonts from text in posts",
       "default": false
     },
+    "remove_unusual_spacing": {
+      "type": "checkbox",
+      "label": "Remove unusual spacing from text in posts",
+      "default": false
+    },
     "normal_width_scrollbar": {
       "type": "checkbox",
       "label": "Use regular-width scrollbars",

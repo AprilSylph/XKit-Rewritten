@@ -7,6 +7,9 @@ import { timelineObject } from '../../utils/react_props.js';
 const noteCountClass = 'xkit-classic-footer-note-count';
 const footerContentSelector = `${postSelector} article footer ${keyToCss('footerContent')}`;
 
+const locale = document.documentElement.lang;
+const noteCountFormat = new Intl.NumberFormat(locale);
+
 export const styleElement = buildStyle(`
   ${postSelector} article footer {
     flex-direction: row;
@@ -47,7 +50,9 @@ const processPosts = (postElements) => filterPostElements(postElements).forEach(
   postElement.querySelector(`.${noteCountClass}`)?.remove();
 
   const { noteCount } = await timelineObject(postElement);
-  const noteCountButton = dom('span', { class: noteCountClass }, undefined, [`${noteCount} ${noteCount === 1 ? 'note' : 'notes'}`]);
+  const noteCountButton = dom('span', { class: noteCountClass }, undefined, [
+    `${noteCountFormat.format(noteCount)} ${noteCount === 1 ? 'note' : 'notes'}`
+  ]);
 
   const footerContent = postElement.querySelector(footerContentSelector);
   footerContent?.before(noteCountButton);

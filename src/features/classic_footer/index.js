@@ -6,6 +6,7 @@ import { timelineObject } from '../../utils/react_props.js';
 
 const noteCountClass = 'xkit-classic-footer-note-count';
 const footerContentSelector = `${postSelector} article footer ${keyToCss('footerContent')}`;
+const replyButtonSelector = `${footerContentSelector} button${keyToCss('engagementAction')}:has(svg use[href="#managed-icon__ds-reply-outline-24"])`;
 
 const locale = document.documentElement.lang;
 const noteCountFormat = new Intl.NumberFormat(locale);
@@ -28,7 +29,7 @@ export const styleElement = buildStyle(`
     order: -1;
   }
 
-  ${footerContentSelector} ${keyToCss('targetWrapperFlex')}:has(use[href="#managed-icon__ds-reblog-24"]) {
+  ${footerContentSelector} ${keyToCss('targetWrapperFlex')}:has(svg use[href="#managed-icon__ds-reblog-24"]) {
     flex: 0;
   }
   ${footerContentSelector} ${keyToCss('engagementCount')} {
@@ -46,11 +47,16 @@ export const styleElement = buildStyle(`
   }
 `);
 
+const onNoteCountClick = ({ currentTarget }) => {
+  const postElement = currentTarget.closest(postSelector);
+  postElement?.querySelector(replyButtonSelector)?.click();
+};
+
 const processPosts = (postElements) => filterPostElements(postElements).forEach(async postElement => {
   postElement.querySelector(`.${noteCountClass}`)?.remove();
 
   const { noteCount } = await timelineObject(postElement);
-  const noteCountButton = dom('span', { class: noteCountClass }, undefined, [
+  const noteCountButton = dom('button', { class: noteCountClass }, { click: onNoteCountClick }, [
     `${noteCountFormat.format(noteCount)} ${noteCount === 1 ? 'note' : 'notes'}`
   ]);
 

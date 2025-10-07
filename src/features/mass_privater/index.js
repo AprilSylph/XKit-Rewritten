@@ -344,3 +344,4 @@ const sidebarOptions = {
 
 export const main = async () => addSidebarItem(sidebarOptions);
 export const clean = async () => removeSidebarItem(sidebarOptions.id);
+export const stylesheet = true;

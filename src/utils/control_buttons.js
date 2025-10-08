@@ -51,7 +51,7 @@ const addSecondaryFooterRow = postElement => {
     postElement.querySelector(`.${secondaryFooterRowClass}`) ||
     dom('div', { class: secondaryFooterRowClass });
 
-  element.isConnected || postElement.querySelector('footer').prepend(element);
+  element.isConnected || postElement.querySelector('footer').before(element);
   return element;
 };
 

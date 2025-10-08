@@ -5,14 +5,16 @@ import { onNewPosts } from '../../utils/mutations.js';
 import { timelineObject } from '../../utils/react_props.js';
 
 const noteCountClass = 'xkit-classic-footer-note-count';
+
 const footerContentSelector = `${postSelector} article footer ${keyToCss('footerContent')}`;
+const footerSelector = `${postSelector} article footer:has(> ${keyToCss('footerContent')})`;
 const replyButtonSelector = `${footerContentSelector} button${keyToCss('engagementAction')}:has(svg use[href="#managed-icon__ds-reply-outline-24"])`;
 
 const locale = document.documentElement.lang;
 const noteCountFormat = new Intl.NumberFormat(locale);
 
 export const styleElement = buildStyle(`
-  ${postSelector} article footer {
+  ${footerSelector} {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;

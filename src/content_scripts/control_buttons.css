@@ -47,6 +47,10 @@
   height: 40px;
 }
 
+.xkit-control-button-container.in-new-footer .xkit-control-button:not([disabled]):hover {
+  background-color: rgba(var(--black), 0.07);
+}
+
 @media (max-width: 990px) {
   .xkit-control-button-container.in-legacy-footer {
     margin-left: 0;

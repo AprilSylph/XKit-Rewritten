@@ -79,3 +79,9 @@
   border-bottom: 1px solid rgba(var(--black), .13);
   content: '';
 }
+
+@media (max-width: 540px) {
+  .xkit-controls-row {
+    column-gap: 0;
+  }
+}

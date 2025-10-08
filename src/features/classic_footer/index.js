@@ -14,6 +14,10 @@ const locale = document.documentElement.lang;
 const noteCountFormat = new Intl.NumberFormat(locale);
 
 export const styleElement = buildStyle(`
+  .xkit-controls-row {
+    column-gap: 0 !important;
+  }
+
   ${footerSelector} {
     flex-direction: row;
     justify-content: space-between;

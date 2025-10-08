@@ -1,5 +1,7 @@
+import { keyToCss } from './css_map.js';
 import { inject } from './inject.js';
 import { weakMemoize } from './memoize.js';
+import { apiFetch } from './tumblr_helpers.js';
 import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
 /**
@@ -56,3 +58,15 @@ export const isMyPost = async (postElement) => {
  */
 export const editPostFormTags = async ({ add = [], remove = [] }) =>
   inject('/main_world/control_tags_input.js', [{ add, remove }]);
+
+export const updatePostOnPage = async (postElement) => {
+  const currentTimelineObject = await timelineObject(postElement);
+  const { response: newTimelineObject } = await apiFetch(`/v2/blog/${currentTimelineObject.blog.uuid}/posts/${currentTimelineObject.id}?reblog_info=true`);
+  delete newTimelineObject.blog;
+
+  await inject(
+    '/main_world/edit_timeline_object.js',
+    [currentTimelineObject, newTimelineObject],
+    postElement.closest(keyToCss('timeline'))
+  );
+};

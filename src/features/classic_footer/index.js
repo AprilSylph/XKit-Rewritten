@@ -17,6 +17,10 @@ export const styleElement = buildStyle(`
   .xkit-controls-row {
     column-gap: 0 !important;
   }
+  .xkit-controls-row::after {
+    left: 16px !important;
+    right: 16px !important;
+  }
 
   ${footerSelector} {
     flex-direction: row;

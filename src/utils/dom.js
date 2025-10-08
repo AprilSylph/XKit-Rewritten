@@ -5,8 +5,8 @@
 /**
  * Create elements with simple syntax
  * @param {string} tagName - Type of element to create
- * @param {Record<string, string>} [attributes] - Property-value pairs to set as HTML/XML attributes (e.g. { href: '/' })
- * @param {Record<string, () => void>} [events] - Property-value pairs to set as event listeners (e.g. { click: () => {} })
+ * @param {Attributes} [attributes] - Property-value pairs to set as HTML/XML attributes (e.g. { href: '/' })
+ * @param {Events} [events] - Property-value pairs to set as event listeners (e.g. { click: () => {} })
  * @param {Children} [children] - Zero or more valid children
  * @returns {Element} Element created to specification
  */

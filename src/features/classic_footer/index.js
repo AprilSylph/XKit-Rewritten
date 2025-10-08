@@ -37,13 +37,17 @@ export const styleElement = buildStyle(`
   }
   .${noteCountClass} {
     padding: 8px;
+    border-radius: 20px;
     margin-inline: 8px;
+    overflow: hidden;
 
     color: var(--content-fg-secondary);
     font-family: var(--font-family-modern);
     font-size: 1rem;
     font-weight: 500;
     line-height: 1.5rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `);
 

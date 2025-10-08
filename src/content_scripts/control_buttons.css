@@ -65,6 +65,7 @@
   display: flex;
   justify-content: flex-end;
   column-gap: 4px;
-  padding: 12px 8px;
+  padding-block: 12px;
   border-bottom: 1px solid rgba(var(--black), .13);
+  margin-inline: 8px;
 }

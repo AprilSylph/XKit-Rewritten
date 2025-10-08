@@ -62,10 +62,20 @@
 }
 
 .xkit-controls-row {
+  position: relative;
+
   display: flex;
   justify-content: flex-end;
   column-gap: 4px;
-  padding-block: 12px;
+  padding: 12px 8px;
+}
+
+.xkit-controls-row::after {
+  position: absolute;
+  bottom: 0;
+  left: 12px;
+  right: 12px;
+
   border-bottom: 1px solid rgba(var(--black), .13);
-  margin-inline: 8px;
+  content: '';
 }

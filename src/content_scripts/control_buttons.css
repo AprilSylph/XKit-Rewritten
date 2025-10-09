@@ -43,8 +43,11 @@
 
 .xkit-control-button-container.in-new-footer .xkit-control-button {
   border-radius: 9999px;
-  width: 40px;
-  height: 40px;
+}
+
+.xkit-control-button-container.in-new-footer .xkit-control-button-inner {
+  display: flex;
+  padding: 8px;
 }
 
 @media (max-width: 990px) {
@@ -62,9 +65,26 @@
 }
 
 .xkit-controls-row {
-  margin: 0 12px;
-  padding: 6px 0;
+  position: relative;
+
   display: flex;
   justify-content: flex-end;
+  column-gap: 4px;
+  padding: 12px 8px;
+}
+
+.xkit-controls-row::after {
+  position: absolute;
+  bottom: 0;
+  left: 12px;
+  right: 12px;
+
   border-bottom: 1px solid rgba(var(--black), .13);
+  content: '';
+}
+
+@media (max-width: 540px) {
+  .xkit-controls-row {
+    column-gap: 0;
+  }
 }

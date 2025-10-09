@@ -69,8 +69,9 @@ export const styleElement = buildStyle(`
   }
 `);
 
-const onNoteCountClick = ({ currentTarget }) => {
-  const postElement = currentTarget.closest(postSelector);
+const onNoteCountClick = (event) => {
+  event.stopPropagation();
+  const postElement = event.currentTarget.closest(postSelector);
   const closeNotesButton = postElement?.querySelector(closeNotesButtonSelector);
 
   closeNotesButton

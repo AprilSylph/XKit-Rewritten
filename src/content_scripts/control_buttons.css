@@ -43,8 +43,11 @@
 
 .xkit-control-button-container.in-new-footer .xkit-control-button {
   border-radius: 9999px;
-  width: 40px;
-  height: 40px;
+}
+
+.xkit-control-button-container.in-new-footer .xkit-control-button-inner {
+  display: flex;
+  padding: 8px;
 }
 
 @media (max-width: 990px) {

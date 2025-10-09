@@ -8,7 +8,8 @@ const noteCountClass = 'xkit-classic-footer-note-count';
 
 const footerContentSelector = `${postSelector} article footer ${keyToCss('footerContent')}`;
 const engagementControlsSelector = `${footerContentSelector} ${keyToCss('engagementControls')}`;
-const replyButtonSelector = `${engagementControlsSelector} button${keyToCss('engagementAction')}:has(svg use[href="#managed-icon__ds-reply-outline-24"])`;
+const replyButtonSelector = `${engagementControlsSelector} button:has(svg use[href="#managed-icon__ds-reply-outline-24"])`;
+const closeNotesButtonSelector = `${postSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
 
 const locale = document.documentElement.lang;
 const noteCountFormat = new Intl.NumberFormat(locale);
@@ -58,7 +59,8 @@ export const styleElement = buildStyle(`
 
 const onNoteCountClick = ({ currentTarget }) => {
   const postElement = currentTarget.closest(postSelector);
-  postElement?.querySelector(replyButtonSelector)?.click();
+  const closeNotesButton = postElement?.querySelector(closeNotesButtonSelector);
+  closeNotesButton?.click() ?? postElement?.querySelector(replyButtonSelector)?.click();
 };
 
 const processPosts = (postElements) => filterPostElements(postElements).forEach(async postElement => {

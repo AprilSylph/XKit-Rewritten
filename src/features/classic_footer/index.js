@@ -7,28 +7,18 @@ import { timelineObject } from '../../utils/react_props.js';
 const noteCountClass = 'xkit-classic-footer-note-count';
 
 const footerContentSelector = `${postSelector} article footer ${keyToCss('footerContent')}`;
-const footerSelector = `${postSelector} article footer:has(> ${keyToCss('footerContent')})`;
-const replyButtonSelector = `${footerContentSelector} button${keyToCss('engagementAction')}:has(svg use[href="#managed-icon__ds-reply-outline-24"])`;
+const engagementControlsSelector = `${footerContentSelector} ${keyToCss('engagementControls')}`;
+const replyButtonSelector = `${engagementControlsSelector} button${keyToCss('engagementAction')}:has(svg use[href="#managed-icon__ds-reply-outline-24"])`;
 
 const locale = document.documentElement.lang;
 const noteCountFormat = new Intl.NumberFormat(locale);
 
 export const styleElement = buildStyle(`
-  .xkit-controls-row {
-    column-gap: 0 !important;
-  }
-  .xkit-controls-row::after {
-    left: 16px !important;
-    right: 16px !important;
+  ${postSelector} ${keyToCss('postOwnerControls')} {
+    gap: 0;
   }
 
-  ${footerSelector} {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
   ${footerContentSelector} {
-    justify-content: flex-end;
     gap: 0;
   }
   ${footerContentSelector} > div {
@@ -39,16 +29,21 @@ export const styleElement = buildStyle(`
     order: -1;
   }
 
-  ${footerContentSelector} ${keyToCss('targetWrapperFlex')}:has(svg use[href="#managed-icon__ds-reblog-24"]) {
+  ${engagementControlsSelector} > ${keyToCss('targetWrapperFlex')} {
     flex: 0;
   }
-  ${footerContentSelector} ${keyToCss('engagementCount')} {
+  ${engagementControlsSelector} > ${keyToCss('likesControl')} {
+    width: auto;
+  }
+  ${engagementControlsSelector} ${keyToCss('engagementCount')} {
     display: none;
   }
+
   .${noteCountClass} {
+    order: -2;
     padding: 8px;
     border-radius: 20px;
-    margin-inline: 8px;
+    margin-right: auto;
     overflow: hidden;
 
     color: var(--content-fg-secondary);
@@ -74,8 +69,8 @@ const processPosts = (postElements) => filterPostElements(postElements).forEach(
     `${noteCountFormat.format(noteCount)} ${noteCount === 1 ? 'note' : 'notes'}`
   ]);
 
-  const footerContent = postElement.querySelector(footerContentSelector);
-  footerContent?.before(noteCountButton);
+  const engagementControls = postElement.querySelector(engagementControlsSelector);
+  engagementControls?.before(noteCountButton);
 });
 
 export const main = async function () {

@@ -6,6 +6,7 @@ import { timelineObject } from '../../utils/react_props.js';
 
 const noteCountClass = 'xkit-classic-footer-note-count';
 
+const postOwnerControlsSelector = `${postSelector} ${keyToCss('postOwnerControls')}`;
 const footerContentSelector = `${postSelector} article footer ${keyToCss('footerContent')}`;
 const engagementControlsSelector = `${footerContentSelector} ${keyToCss('engagementControls')}`;
 const replyButtonSelector = `${engagementControlsSelector} button:has(svg use[href="#managed-icon__ds-reply-outline-24"])`;
@@ -15,8 +16,19 @@ const locale = document.documentElement.lang;
 const noteCountFormat = new Intl.NumberFormat(locale);
 
 export const styleElement = buildStyle(`
-  ${postSelector} ${keyToCss('postOwnerControls')} {
+  ${postOwnerControlsSelector} {
+    position: relative;
     gap: 0;
+    border-bottom-color: transparent;
+  }
+  ${postOwnerControlsSelector}::after {
+    position: absolute;
+    bottom: 0;
+    left: 16px;
+    right: 16px;
+
+    border-bottom: 1px solid var(--content-tint-strong);
+    content: '';
   }
 
   ${footerContentSelector} {

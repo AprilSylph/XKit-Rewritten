@@ -23,7 +23,7 @@ export const styleElement = buildStyle(`
   }
   ${postOwnerControlsSelector}::after {
     position: absolute;
-    bottom: 0;
+    bottom: -1px;
     left: 16px;
     right: 16px;
 

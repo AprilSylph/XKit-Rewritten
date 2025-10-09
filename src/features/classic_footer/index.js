@@ -72,7 +72,10 @@ export const styleElement = buildStyle(`
 const onNoteCountClick = ({ currentTarget }) => {
   const postElement = currentTarget.closest(postSelector);
   const closeNotesButton = postElement?.querySelector(closeNotesButtonSelector);
-  closeNotesButton?.click() ?? postElement?.querySelector(replyButtonSelector)?.click();
+
+  closeNotesButton
+    ? closeNotesButton.click()
+    : postElement?.querySelector(replyButtonSelector)?.click();
 };
 
 const processPosts = (postElements) => filterPostElements(postElements).forEach(async postElement => {

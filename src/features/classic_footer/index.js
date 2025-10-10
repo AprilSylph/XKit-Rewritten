@@ -22,12 +22,12 @@ const locale = document.documentElement.lang;
 const noteCountFormat = new Intl.NumberFormat(locale);
 
 export const styleElement = buildStyle(`
-  ${postOwnerControlsSelector} {
+  ${postOwnerControlsSelector}, .xkit-controls-row.xkit-controls-row {
     position: relative;
     gap: 0;
     border-bottom-color: transparent;
   }
-  ${postOwnerControlsSelector}::after {
+  ${postOwnerControlsSelector}::after, .xkit-controls-row.xkit-controls-row::after {
     position: absolute;
     bottom: -1px;
     left: 16px;

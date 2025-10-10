@@ -53,7 +53,7 @@ export const styleElement = buildStyle(`
   }
 
   .${noteCountClass} {
-    order: -2;
+    order: -3;
     padding: 8px;
     border-radius: 20px;
     margin-right: auto;

@@ -9,6 +9,22 @@
   margin-left: var(--post-padding);
 }
 
+.xkit-timestamp.in-new-footer {
+  display: none;
+}
+
+:has(> .xkit-classic-footer-note-count) > .xkit-timestamp.in-new-footer {
+  display: unset;
+  order: -2;
+
+  color: var(--content-fg-secondary);
+  font-size: 0.875rem;
+}
+
+:has(> .xkit-timestamp.in-new-footer) > .xkit-classic-footer-note-count {
+  margin-right: 0;
+}
+
 .xkit-long-timestamp {
   height: 1em;
   padding: 0 var(--post-padding);

@@ -26,6 +26,10 @@
   width: 24px;
   height: 24px;
 
+  fill: var(--content-fg-secondary);
+}
+
+.xkit-control-button-container.in-legacy-footer .xkit-control-button-inner svg {
   fill: rgba(var(--black), 0.65);
 }
 
@@ -34,6 +38,11 @@
 }
 
 .xkit-control-button:disabled svg {
+  opacity: 0.5;
+}
+
+.xkit-control-button-container.in-legacy-footer .xkit-control-button:disabled svg {
+  opacity: unset;
   fill: rgba(var(--black), 0.4);
 }
 

@@ -9,8 +9,9 @@ import { notify } from '../../utils/notifications.js';
 import { dom } from '../../utils/dom.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { keyToCss } from '../../utils/css_map.js';
+import { postPopoverClass } from '../../utils/post_popovers.js';
 
-const popupElement = dom('div', { id: 'quick-reblog' }, { click: event => event.stopPropagation() });
+const popupElement = dom('div', { id: 'quick-reblog', class: postPopoverClass }, { click: event => event.stopPropagation() });
 const blogSelector = dom('select');
 const blogAvatar = dom('div', { class: 'avatar' });
 const blogSelectorContainer = dom('div', { class: 'select-container' }, null, [blogAvatar, blogSelector]);

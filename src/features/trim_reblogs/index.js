@@ -156,10 +156,10 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
 };
 
 const processPosts = postElements => filterPostElements(postElements).forEach(async postElement => {
-  const { state, trail = [], content = [] } = await timelineObject(postElement);
+  const { state, canEdit, trail = [], content = [] } = await timelineObject(postElement);
   const items = trail.length + (content.length ? 1 : 0);
 
-  if (['ask', 'submission'].includes(state) === false) {
+  if (canEdit && ['ask', 'submission'].includes(state) === false) {
     const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: event => onButtonClicked(event).catch(showErrorModal) }, items < 2);
     insertControlButton(postElement, clonedControlButton, buttonClass);
   }

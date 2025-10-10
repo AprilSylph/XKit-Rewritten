@@ -207,8 +207,8 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const tags = editedTagsMap.get(getTimelineItemWrapper(postElement));
   tags && addFakeTagsToFooter(postElement, tags);
 
-  const { state } = await timelineObject(postElement);
-  if (['ask', 'submission'].includes(state) === false) {
+  const { state, canEdit } = await timelineObject(postElement);
+  if (canEdit && ['ask', 'submission'].includes(state) === false) {
     const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
     insertControlButton(postElement, clonedControlButton, buttonClass);
   }

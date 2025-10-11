@@ -58,15 +58,11 @@ const processPosts = async function (postElements) {
       if (!blogs.has(name)) {
         blogs.add(name);
 
-        // const {
-        //   backgroundColor,
-        //   titleColor,
-        //   linkColor
-        // } = theme;
-
-        const backgroundColor = theme.backgroundColor;
-        const titleColor = theme.backgroundColor;
-        const linkColor = theme.backgroundColor;
+        const {
+          backgroundColor,
+          titleColor,
+          linkColor
+        } = theme;
 
         const backgroundColorRGB = hexToRGB(backgroundColor);
         const titleColorRGB = titleColor === backgroundColor ? createContrastingColor(titleColor) : hexToRGB(titleColor);

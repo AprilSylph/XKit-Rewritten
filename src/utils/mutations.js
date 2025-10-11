@@ -14,11 +14,12 @@ export const pageModifications = Object.freeze({
    * Register a page modification
    * @param {string} selector - CSS selector for elements to target
    * @param {Function} modifierFunction - Function to handle matching elements (accepts one Element[] argument)
+   * @param {boolean} [existing] - Whether to run the function on existing elements as part of this call (default: true)
    */
-  register (selector, modifierFunction) {
+  register (selector, modifierFunction, existing = true) {
     if (this.listeners.has(modifierFunction) === false) {
       this.listeners.set(modifierFunction, selector);
-      this.trigger(modifierFunction);
+      existing && this.trigger(modifierFunction);
     }
   },
 

@@ -84,7 +84,8 @@ const processPosts = (postElements) => filterPostElements(postElements).forEach(
 
   const { noteCount } = await timelineObject(postElement);
   const noteCountButton = dom('button', { class: noteCountClass }, { click: onNoteCountClick }, [
-    `${noteCountFormat.format(noteCount)} ${noteCount === 1 ? 'note' : 'notes'}`
+    dom('span', null, null, [noteCountFormat.format(noteCount)]),
+    ` ${noteCount === 1 ? 'note' : 'notes'}`
   ]);
 
   const engagementControls = postElement.querySelector(engagementControlsSelector);

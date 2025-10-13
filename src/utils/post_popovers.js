@@ -1,4 +1,5 @@
 import { keyToCss } from './css_map.js';
+import { postSelector } from './interface.js';
 
 /**
  * Detects Chromium <130, Firefox <140, Safari <26, or another old or non-compliant browser.
@@ -19,7 +20,7 @@ const oldBrowser =
  */
 export const popoverStackingContextFix = oldBrowser
   ? `
-    footer${keyToCss('postFooter')} {
+    ${postSelector} footer${keyToCss('postFooter')} {
       container-type: unset;
     }
   `

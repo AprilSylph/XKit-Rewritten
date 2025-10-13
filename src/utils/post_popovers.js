@@ -4,7 +4,7 @@ import { postSelector } from './interface.js';
 /**
  * Detects Chromium <130, Firefox <140, Safari <26, or another old or non-compliant browser.
  */
-const oldBrowser =
+const browserIsOld =
   CSS.supports('text-wrap-style', 'balance') === false ||
   typeof CookieStore === 'undefined' ||
   typeof ImageDecoder === 'undefined';
@@ -18,7 +18,7 @@ const oldBrowser =
  * @see https://github.com/w3c/csswg-drafts/issues/10544
  * @see https://github.com/AprilSylph/XKit-Rewritten/issues/1876
  */
-export const popoverStackingContextFix = oldBrowser
+export const popoverStackingContextFix = browserIsOld
   ? `
     ${postSelector} footer${keyToCss('postFooter')} {
       container-type: unset;

@@ -127,17 +127,22 @@ const getClosestWithOverflow = element => {
   }
 };
 
+const isVerticallyOverflowing = element => {
+  const elementRect = element.getBoundingClientRect();
+  return elementRect.bottom > document.documentElement.clientHeight || elementRect.top < 0;
+};
+
 export const appendWithoutOverflow = (element, target, defaultPosition = 'below') => {
   element.dataset.position = defaultPosition;
   element.style.removeProperty('--horizontal-offset');
 
   target.appendChild(element);
 
-  if (element.dataset.position === 'below' && element.getBoundingClientRect().bottom > document.documentElement.clientHeight) {
-    element.dataset.position = 'above';
+  if (isVerticallyOverflowing(element)) {
+    element.dataset.position = defaultPosition === 'below' ? 'above' : 'below';
   }
-  if (element.dataset.position === 'above' && element.getBoundingClientRect().top < 0) {
-    element.dataset.position = 'below';
+  if (isVerticallyOverflowing(element)) {
+    element.dataset.position = defaultPosition;
   }
 
   const preventOverflowTarget = getClosestWithOverflow(target);

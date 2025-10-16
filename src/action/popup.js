@@ -1,64 +1,60 @@
 const checkForNoResults = function () {
-  const nothingFound =
-    [...document.querySelectorAll('details.feature')]
-      .every(detailsElement => detailsElement.classList.contains('search-hidden') || detailsElement.classList.contains('filter-hidden'));
+  const nothingFound = [...document.querySelectorAll('xkit-feature')].every(featureElement =>
+    featureElement.classList.contains('search-hidden') || featureElement.classList.contains('filter-hidden')
+  );
 
   document.querySelector('.no-results').style.display = nothingFound ? 'flex' : 'none';
 };
 
 $('nav a').on('click', event => {
   event.preventDefault();
+
   $('nav .selected').removeClass('selected');
   $(event.currentTarget).addClass('selected');
+
   $('section.open').removeClass('open');
   $(`section${event.currentTarget.getAttribute('href')}`).addClass('open');
 });
 
-document.getElementById('search').addEventListener('input', event => {
-  const query = event.currentTarget.value.toLowerCase();
+document.getElementById('search').addEventListener('input', ({ currentTarget }) => {
+  const query = currentTarget.value.toLowerCase();
+  const featureElements = [...document.querySelectorAll('xkit-feature')];
+  const preferenceElements = featureElements.flatMap(({ shadowRoot }) => [...shadowRoot.querySelectorAll('li')]);
 
-  [...document.querySelectorAll('details.feature')]
-    .forEach(detailsElement => {
-      if (
-        detailsElement.textContent.toLowerCase().includes(query) ||
-        detailsElement.dataset.relatedTerms.toLowerCase().includes(query)
-      ) {
-        detailsElement.classList.remove('search-hidden');
-      } else {
-        detailsElement.classList.add('search-hidden');
-      }
-    });
+  featureElements.forEach(featureElement => {
+    const textContent = featureElement.textContent.toLowerCase();
+    const relatedTerms = featureElement.dataset.relatedTerms.toLowerCase();
+    const shadowContent = featureElement.shadowRoot.textContent.toLowerCase();
 
-  [...document.querySelectorAll('details.feature li')]
-    .forEach(preferenceElement => {
-      if (
-        query.length >= 3 && preferenceElement.textContent.toLowerCase().includes(query)
-      ) {
-        preferenceElement.classList.add('search-highlighted');
-      } else {
-        preferenceElement.classList.remove('search-highlighted');
-      }
-    });
+    const hasMatch = textContent.includes(query) || relatedTerms.includes(query) || shadowContent.includes(query);
+    featureElement.classList.toggle('search-hidden', !hasMatch);
+  });
+
+  preferenceElements.forEach(preferenceElement => {
+    const hasMatch = query.length >= 3 && preferenceElement.textContent.toLowerCase().includes(query);
+    preferenceElement.classList.toggle('search-highlighted', hasMatch);
+  });
 
   checkForNoResults();
 });
 
 document.getElementById('filter').addEventListener('input', event => {
+  const featureElements = [...document.querySelectorAll('xkit-feature')];
+
   switch (event.currentTarget.value) {
     case 'all':
-      $('.feature.filter-hidden').removeClass('filter-hidden');
+      $('.filter-hidden').removeClass('filter-hidden');
       break;
     case 'enabled':
-      $('.feature.disabled').addClass('filter-hidden');
-      $('.feature:not(.disabled)').removeClass('filter-hidden');
+      featureElements.forEach(featureElement => featureElement.classList.toggle('filter-hidden', featureElement.disabled));
       break;
     case 'disabled':
-      $('.feature:not(.disabled)').addClass('filter-hidden');
-      $('.feature.disabled').removeClass('filter-hidden');
+      featureElements.forEach(featureElement => featureElement.classList.toggle('filter-hidden', !featureElement.disabled));
       break;
   }
 
-  $('.feature[open].filter-hidden').removeAttr('open');
+  const hiddenFeatures = [...document.querySelectorAll('xkit-feature.filter-hidden')];
+  hiddenFeatures.forEach(({ shadowRoot }) => { shadowRoot.querySelector('details').open = false; });
 
   checkForNoResults();
 });

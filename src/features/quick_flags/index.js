@@ -122,11 +122,10 @@ const updatePostWarningElement = async (postElement) => {
   postElement.querySelector(`.${warningClass}`)?.remove();
 
   if (renderedPostStateIncorrect) {
-    const footerRow = postElement.querySelector(keyToCss('footerRow'));
     const warningElement = div({ class: warningClass }, [
       'note: navigate away and back or refresh to see edited content labels!'
     ]);
-    footerRow.after(warningElement);
+    postElement.querySelector(keyToCss('footerRow', 'postOwnerControls'))?.after(warningElement);
   }
 };
 

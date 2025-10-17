@@ -77,10 +77,40 @@
 
 
 .xkit-control-button-container.in-community {
-  margin: 4px;
-  padding: 0;
-
   align-self: center;
+  margin: 0;
+}
+
+.xkit-control-button-container.in-community .xkit-control-button {
+  border-radius: 9999px;
+  outline: 1px solid var(--content-tint-strong);
+  outline-offset: -1px;
+}
+
+.xkit-control-button-container.in-community .xkit-control-button:is(:active, :hover) {
+  outline: 1px solid var(--content-tint-heavy);
+}
+
+.xkit-control-button-container.in-community .xkit-control-button:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.xkit-control-button-container.in-community .xkit-control-button:disabled {
+  outline: 1px solid var(--content-tint);
+}
+
+.xkit-control-button-container.in-community .xkit-control-button-inner {
+  display: flex;
+  padding: 8px;
+}
+
+.xkit-control-button-container.in-community .xkit-control-button svg {
+  scale: calc(20 / 24);
+}
+
+.xkit-control-button-container.in-community .xkit-control-button:disabled svg {
+  fill: var(--content-fg-tertiary);
 }
 
 

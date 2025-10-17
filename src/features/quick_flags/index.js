@@ -1,6 +1,6 @@
 import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { div, input, label } from '../../utils/dom.js';
 import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
 import { bulkCommunityLabel } from '../../utils/mega_editor.js';
 import { showErrorModal } from '../../utils/modals.js';
@@ -26,7 +26,7 @@ let controlButtonTemplate;
 
 let editedPostStates = new WeakMap();
 
-const popupData = data.map(entry => ({ ...entry, checkbox: dom('input', { type: 'checkbox' }) }));
+const popupData = data.map(entry => ({ ...entry, checkbox: input({ type: 'checkbox' }) }));
 
 const updateCheckboxes = ({ hasCommunityLabel, categories }) => {
   popupData.forEach(({ category, checkbox }) => {
@@ -37,11 +37,11 @@ const updateCheckboxes = ({ hasCommunityLabel, categories }) => {
 };
 
 const buttons = popupData.map(({ text, category, checkbox }) => {
-  const button = dom('label', !category ? { class: 'no-category' } : null, null, [checkbox, text]);
+  const button = label(!category ? { class: 'no-category' } : {}, [checkbox, text]);
   if (category) checkbox.value = category;
   return button;
 });
-const popupElement = dom('div', { id: 'quick-flags' }, null, buttons);
+const popupElement = div({ id: 'quick-flags' }, buttons);
 
 const togglePopupDisplay = async function ({ target, currentTarget: controlButton }) {
   if (target === popupElement || popupElement.contains(target)) { return; }
@@ -123,7 +123,7 @@ const updatePostWarningElement = async (postElement) => {
 
   if (renderedPostStateIncorrect) {
     const footerRow = postElement.querySelector(keyToCss('footerRow'));
-    const warningElement = dom('div', { class: warningClass }, null, [
+    const warningElement = div({ class: warningClass }, [
       'note: navigate away and back or refresh to see edited content labels!'
     ]);
     footerRow.after(warningElement);

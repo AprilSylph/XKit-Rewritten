@@ -60,6 +60,11 @@ export const tagTimelineFilter = tag =>
     timelineId?.startsWith(`hubsTimeline-${tag}-recent-`) ||
     timelineId?.match(exactly(`tag-${uuidV4}-${tag}-recent`));
 
+export const postPermalinkTimelineFilter = postId =>
+  ({ dataset: { timeline, timelineId } }) =>
+    timeline === `posts/${postId}/permalink` ||
+    timelineId?.match(exactly(peeprPostsTimelineId({ blog: anyBlog, postId })));
+
 export const anyCommunityTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timelineId?.match(exactly(`communities-${anyBlog}-recent`)) ||
   timelineId?.match(exactly(`community-${uuidV4}-${anyBlog}`));

@@ -39,7 +39,7 @@ export function element (tagName, properties = {}, children = []) {
   const attributes = Object.entries(properties).filter(([key, value]) => typeof value === 'string');
   const events = Object.entries(properties).filter(([key, value]) => typeof value === 'function');
 
-  element.replaceChildren(children);
+  element.replaceChildren(...children);
   attributes.forEach(([name, value]) => element.setAttribute(name, value));
   events.forEach(([type, listener]) => element.addEventListener(type, listener));
 

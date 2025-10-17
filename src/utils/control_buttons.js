@@ -1,5 +1,5 @@
 import { keyToCss } from './css_map.js';
-import { dom } from './dom.js';
+import { button, div, span } from './dom.js';
 import { timelineObject } from './react_props.js';
 import { buildSvg } from './remixicon.js';
 
@@ -14,9 +14,9 @@ $('.xkit-control-button-container').remove();
  * @returns {HTMLDivElement} A button that can be cloned with cloneControlButton()
  */
 export const createControlButtonTemplate = function (symbolId, buttonClass, label = '') {
-  return dom('span', { class: `xkit-control-button-container ${buttonClass}` }, null, [
-    dom('button', { class: 'xkit-control-button', 'aria-label': label, title: label }, null, [
-      dom('span', { class: 'xkit-control-button-inner', tabindex: '-1' }, null, [
+  return span({ class: `xkit-control-button-container ${buttonClass}` }, [
+    button({ class: 'xkit-control-button', 'aria-label': label, title: label }, [
+      span({ class: 'xkit-control-button-inner', tabindex: '-1' }, [
         buildSvg(symbolId)
       ])
     ])
@@ -49,7 +49,7 @@ const secondaryFooterRowClass = 'xkit-controls-row';
 const addSecondaryFooterRow = postElement => {
   const element =
     postElement.querySelector(`.${secondaryFooterRowClass}`) ||
-    dom('div', { class: secondaryFooterRowClass });
+    div({ class: secondaryFooterRowClass });
 
   element.isConnected || postElement.querySelector('footer').before(element);
   return element;

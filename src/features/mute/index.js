@@ -4,7 +4,7 @@ import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
 import { timelineObject } from '../../utils/react_props.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { button, div, form, input, label, dom } from '../../utils/dom.js';
 import { getPreferences } from '../../utils/preferences.js';
 import {
   anyBlogPostTimelineFilter,
@@ -71,10 +71,10 @@ const processBlogTimelineElement = async timelineElement => {
   if (mutedBlogMode) {
     timelineElement.dataset.muteBlogUuid = uuid;
 
-    const mutedBlogControls = dom('div', { class: mutedBlogControlsClass, 'data-muted-blog-controls-mode': mutedBlogMode }, null, [
+    const mutedBlogControls = div({ class: mutedBlogControlsClass, 'data-muted-blog-controls-mode': mutedBlogMode }, [
       `You have muted ${mutedBlogMode} posts from ${name}!`,
       dom('br'),
-      dom('button', null, { click: () => mutedBlogControls.remove() }, ['show posts anyway'])
+      button({ click: () => mutedBlogControls.remove() }, ['show posts anyway'])
     ]);
     timelineElement.prepend(mutedBlogControls);
     timelineElement.querySelector(`.${showOriginalsControlsClass}`)?.after(mutedBlogControls);
@@ -188,15 +188,13 @@ const onMeatballButtonClicked = function ({ currentTarget }) {
   const currentMode = mutedBlogs[uuid];
 
   const createRadioElement = value =>
-    dom('label', null, null, [
+    label({}, [
       `Hide ${value} posts`,
-      dom('input', { type: 'radio', name: 'muteOption', value })
+      input({ type: 'radio', name: 'muteOption', value })
     ]);
 
-  const form = dom(
-    'form',
-    { id: 'xkit-mute-form', 'data-name': name, 'data-uuid': uuid },
-    { submit: muteUser },
+  const formElement = form(
+    { id: 'xkit-mute-form', 'data-name': name, 'data-uuid': uuid, submit: muteUser },
     [
       createRadioElement('all'),
       createRadioElement('original'),
@@ -204,24 +202,24 @@ const onMeatballButtonClicked = function ({ currentTarget }) {
     ]
   );
 
-  form.elements.muteOption.value = currentMode;
+  formElement.elements.muteOption.value = currentMode;
 
   currentMode
     ? showModal({
       title: `Mute options for ${name}:`,
-      message: [form],
+      message: [formElement],
       buttons: [
         modalCancelButton,
-        dom('button', { class: 'blue' }, { click: () => unmuteUser(uuid) }, ['Unmute']),
-        dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Update Mode' })
+        button({ class: 'blue', click: () => unmuteUser(uuid) }, ['Unmute']),
+        input({ type: 'submit', form: formElement.id, class: 'red', value: 'Update Mode' })
       ]
     })
     : showModal({
       title: `Mute ${name}?`,
-      message: [form],
+      message: [formElement],
       buttons: [
         modalCancelButton,
-        dom('input', { type: 'submit', form: form.id, class: 'red', value: 'Mute' })
+        input({ type: 'submit', form: formElement.id, class: 'red', value: 'Mute' })
       ]
     });
 };

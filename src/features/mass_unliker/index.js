@@ -1,12 +1,12 @@
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { showModal, modalCancelButton, modalCompleteButton, showErrorModal } from '../../utils/modals.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
-import { dom } from '../../utils/dom.js';
+import { button, small, span } from '../../utils/dom.js';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const gatherStatusElement = dom('span');
-const unlikeStatusElement = dom('span');
+const gatherStatusElement = span();
+const unlikeStatusElement = span();
 
 const gatherLikes = async function () {
   const likes = [];
@@ -49,7 +49,7 @@ const unlikePosts = async function () {
     message: [
       `Unliked ${unlikedCount} posts.\n`,
       `Failed to unlike ${failureCount} posts.\n\n`,
-      dom('small', null, null, ['You may still have some likes due to quirks with the Tumblr API.'])
+      small({}, ['You may still have some likes due to quirks with the Tumblr API.'])
     ],
     buttons: [
       modalCompleteButton
@@ -60,17 +60,16 @@ const unlikePosts = async function () {
 const modalWorkingOptions = {
   title: 'Clearing your likes...',
   message: [
-    dom('small', null, null, ['Do not navigate away from this page, or the process will be interrupted.\n\n']),
+    small({}, ['Do not navigate away from this page, or the process will be interrupted.\n\n']),
     gatherStatusElement,
     '\n',
     unlikeStatusElement
   ]
 };
 
-const modalConfirmButton = dom(
-  'button',
-  { class: 'red' },
+const modalConfirmButton = button(
   {
+    class: 'red',
     click () {
       gatherStatusElement.textContent = '';
       unlikeStatusElement.textContent = '';

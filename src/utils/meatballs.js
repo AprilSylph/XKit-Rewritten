@@ -1,5 +1,5 @@
 import { keyToCss } from './css_map.js';
-import { dom } from './dom.js';
+import { button } from './dom.js';
 import { postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { inject } from './inject.js';
@@ -77,11 +77,10 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
   Object.keys(meatballItems[type]).sort().forEach(id => {
     const { label, onclick, filter } = meatballItems[type][id];
 
-    const meatballItemButton = dom('button', {
+    const meatballItemButton = button({
       class: 'xkit-meatball-button',
       [`data-xkit-${type}-meatball-button`]: id,
-      hidden: true
-    }, {
+      hidden: true,
       click: onclick
     }, [
       '\u22EF'

@@ -72,7 +72,7 @@ export const insertControlButton = async (postElement, clonedControlButton, butt
 
   if (community) {
     clonedControlButton.classList.add('in-community');
-    postElement.querySelector(`${keyToCss('controls')}`).append(clonedControlButton);
+    postElement.querySelector(keyToCss('controls')).append(clonedControlButton);
   } else if (legacyEditControlIcon) {
     clonedControlButton.classList.add('in-legacy-footer');
     legacyEditControlIcon.before(clonedControlButton);

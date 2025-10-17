@@ -1,6 +1,6 @@
 import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { div } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { memoize } from '../../utils/memoize.js';
@@ -175,7 +175,7 @@ const processRows = function (rowsElements) {
       if (row.previousElementSibling?.classList?.contains(containerClass)) {
         row.previousElementSibling.append(row);
       } else {
-        const wrapper = dom('div', { class: containerClass, [hoverContainerAttribute]: '' });
+        const wrapper = div({ class: containerClass, [hoverContainerAttribute]: '' });
         row.replaceWith(wrapper);
         wrapper.append(row);
       }

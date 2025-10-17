@@ -1,6 +1,6 @@
 import { createControlButtonTemplate, cloneControlButton, insertControlButton } from '../../utils/control_buttons.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { button, div, img, input, label, p, strong } from '../../utils/dom.js';
 import { filterPostElements, postSelector } from '../../utils/interface.js';
 import { showModal, hideModal, modalCancelButton, showErrorModal } from '../../utils/modals.js';
 import { onNewPosts } from '../../utils/mutations.js';
@@ -41,14 +41,14 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
         title: 'Note: Legacy post',
         message: [
           'This thread was originally created, or at some point was edited, using the ',
-          dom('strong', null, null, ['legacy post editor']),
+          strong({}, ['legacy post editor']),
           ' or a previous XKit version.',
           '\n\n',
           'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
         ],
         buttons: [
           modalCancelButton,
-          dom('button', { class: 'blue' }, { click: resolve }, ['Continue'])
+          button({ class: 'blue', click: resolve }, ['Continue'])
         ]
       });
     });
@@ -65,7 +65,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
         ],
         buttons: [
           modalCancelButton,
-          dom('button', { class: 'blue' }, { click: resolve }, ['Continue'])
+          button({ class: 'blue', click: resolve }, ['Continue'])
         ]
       });
     });
@@ -76,18 +76,18 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     const { url: src } = avatar.at(-1);
     const textContent = content.map(({ text }) => text).find(Boolean) ?? '\u22EF';
 
-    const checkbox = dom('input', { type: 'checkbox' });
+    const checkbox = input({ type: 'checkbox' });
     if (disableCheckbox) {
       checkbox.disabled = true;
       checkbox.style = 'visibility: hidden';
     }
 
-    const wrapper = dom('label', null, null, [
+    const wrapper = label({}, [
       checkbox,
-      dom('img', { class: avatarPreviewClass, src }),
-      dom('div', { class: textPreviewClass }, null, [
-        dom('strong', null, null, [name]),
-        dom('p', null, null, [textContent])
+      img({ class: avatarPreviewClass, src }),
+      div({ class: textPreviewClass }, [
+        strong({}, [name]),
+        p({}, [textContent])
       ])
     ]);
 
@@ -101,10 +101,8 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     ? [createPreviewItem({ blog: visibleBlog, content, disableCheckbox: true })]
     : [];
 
-  const previewElement = dom(
-    'div',
+  const previewElement = div(
     { class: reblogPreviewClass },
-    null,
     [...trailData, ...contentData].map(({ wrapper }) => wrapper)
   );
 
@@ -135,7 +133,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     }
   };
 
-  const trimButton = dom('button', { class: 'blue' }, { click: onClickTrim }, ['Trim!']);
+  const trimButton = button({ class: 'blue', click: onClickTrim }, ['Trim!']);
 
   trailData.forEach(({ checkbox }) => {
     checkbox.addEventListener('input', () => {

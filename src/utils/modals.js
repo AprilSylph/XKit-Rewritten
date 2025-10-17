@@ -1,4 +1,4 @@
-import { dom } from './dom.js';
+import { button, div, h3, span, style } from './dom.js';
 
 // Remove any outdated modal when loading module
 document.getElementById('xkit-modal')?.remove();
@@ -13,7 +13,7 @@ let lastFocusedElement;
  * @param {(HTMLElement)[]} [options.buttons] - Array of buttons to be displayed in the modal
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {
-  const modalElement = dom('div', {
+  const modalElement = div({
     id: 'xkit-modal',
     tabindex: '-1',
     role: 'dialog',
@@ -21,11 +21,11 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
 
     // prevents Tumblr's trapFocusInsideGlass function from stealing focus when opened from mobile drawer
     'data-skip-glass-focus-trap': ''
-  }, null, [
-    dom('style', null, null, ['body { overflow: hidden; }']),
-    title ? dom('h3', { class: 'title' }, null, [title]) : '',
-    dom('div', { class: 'message' }, null, message),
-    dom('div', { class: 'buttons' }, null, buttons)
+  }, [
+    style({}, ['body { overflow: hidden; }']),
+    title ? h3({ class: 'title' }, [title]) : '',
+    div({ class: 'message' }, message),
+    div({ class: 'buttons' }, buttons)
   ]);
 
   hideModal();
@@ -41,8 +41,8 @@ export const hideModal = () => {
   lastFocusedElement = null;
 };
 
-export const modalCancelButton = dom('button', null, { click: hideModal }, ['Cancel']);
-export const modalCompleteButton = dom('button', { class: 'blue' }, { click: hideModal }, ['OK']);
+export const modalCancelButton = button({ click: hideModal }, ['Cancel']);
+export const modalCompleteButton = button({ class: 'blue', click: hideModal }, ['OK']);
 
 export const showErrorModal = exception => {
   console.error('XKit Rewritten error:', exception);
@@ -63,5 +63,5 @@ export const showErrorModal = exception => {
   });
 };
 
-export const createTagSpan = tag => dom('span', { class: 'xkit-modal-tag' }, null, [tag]);
-export const createBlogSpan = name => dom('span', { class: 'xkit-modal-blog' }, null, [name]);
+export const createTagSpan = tag => span({ class: 'xkit-modal-tag' }, [tag]);
+export const createBlogSpan = name => span({ class: 'xkit-modal-blog' }, [name]);

@@ -1,16 +1,17 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
-import { buildStyle, filterPostElements, postSelector } from '../../utils/interface.js';
-import { onNewPosts } from '../../utils/mutations.js';
+import { buildStyle, postSelector } from '../../utils/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
 import { timelineObject } from '../../utils/react_props.js';
 
 const noteCountClass = 'xkit-classic-footer-note-count';
 
-const postOwnerControlsSelector = `${postSelector} ${keyToCss('postOwnerControls')}`;
-const footerContentSelector = `${postSelector} article footer ${keyToCss('footerContent')}`;
+const postOrRadarSelector = `:is(${postSelector}, aside ${keyToCss('radar')})`;
+const postOwnerControlsSelector = `${postOrRadarSelector} ${keyToCss('postOwnerControls')}`;
+const footerContentSelector = `${postOrRadarSelector} article footer ${keyToCss('footerContent')}`;
 const engagementControlsSelector = `${footerContentSelector} ${keyToCss('engagementControls')}`;
 const replyButtonSelector = `${engagementControlsSelector} button:has(svg use[href="#managed-icon__ds-reply-outline-24"])`;
-const closeNotesButtonSelector = `${postSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
+const closeNotesButtonSelector = `${postOrRadarSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
 
 const locale = document.documentElement.lang;
 const noteCountFormat = new Intl.NumberFormat(locale);
@@ -71,7 +72,7 @@ export const styleElement = buildStyle(`
 
 const onNoteCountClick = (event) => {
   event.stopPropagation();
-  const postElement = event.currentTarget.closest(postSelector);
+  const postElement = event.currentTarget.closest(postOrRadarSelector);
   const closeNotesButton = postElement?.querySelector(closeNotesButtonSelector);
 
   closeNotesButton
@@ -79,7 +80,7 @@ const onNoteCountClick = (event) => {
     : postElement?.querySelector(replyButtonSelector)?.click();
 };
 
-const processPosts = (postElements) => filterPostElements(postElements).forEach(async postElement => {
+const processPosts = (postElements) => postElements.forEach(async postElement => {
   postElement.querySelector(`.${noteCountClass}`)?.remove();
 
   const { noteCount } = await timelineObject(postElement);
@@ -93,10 +94,10 @@ const processPosts = (postElements) => filterPostElements(postElements).forEach(
 });
 
 export const main = async function () {
-  onNewPosts.addListener(processPosts);
+  pageModifications.register(`${postOrRadarSelector} article`, processPosts);
 };
 
 export const clean = async function () {
-  onNewPosts.removeListener(processPosts);
+  pageModifications.unregister(processPosts);
   $(`.${noteCountClass}`).remove();
 };

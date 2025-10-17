@@ -1,4 +1,4 @@
-import { dom } from '../../utils/dom.js';
+import { button, form, input, label, option, select, small, span, strong } from '../../utils/dom.js';
 import { bulkCommunityLabel } from '../../utils/mega_editor.js';
 import { createBlogSpan, createTagSpan, hideModal, modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
@@ -28,7 +28,7 @@ const elementsAsList = (array, andOr) =>
 
 const getPostsFormId = 'xkit-mass-labeler-get-posts';
 
-const createBlogOption = ({ name, title, uuid }) => dom('option', { value: uuid, title }, null, [name]);
+const createBlogOption = ({ name, title, uuid }) => option({ value: uuid, title }, [name]);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
@@ -43,32 +43,32 @@ const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
 const timezoneOffsetMs = new Date().getTimezoneOffset() * 60000;
 
 const showInitialPrompt = async () => {
-  const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event).catch(showErrorModal) }, [
+  const initialForm = form({ id: getPostsFormId, submit: event => confirmInitialPrompt(event).catch(showErrorModal) }, [
     'Content labels to apply:',
     ...data.map(({ text, category }) =>
-      dom('label', null, null, [text, dom('input', {
+      label({}, [text, input({
         type: 'checkbox',
         name: category,
         ...(!category ? { checked: true, disabled: true } : {})
       })])
     ),
     'Posts to label:',
-    dom('label', null, null, [
+    label({}, [
       'Posts on blog:',
-      dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption))
+      select({ name: 'blog', required: true }, userBlogs.map(createBlogOption))
     ]),
-    dom('label', null, null, [
-      dom('small', null, null, ['Posts with any of these tags (optional):']),
-      dom('input', {
+    label({}, [
+      small({}, ['Posts with any of these tags (optional):']),
+      input({
         type: 'text',
         name: 'tags',
         placeholder: 'Comma-separated',
         autocomplete: 'off'
       })
     ]),
-    dom('label', null, null, [
+    label({}, [
       'Posts from after:',
-      dom('input', { type: 'datetime-local', name: 'after', value: '2006-09-29T00:00' })
+      input({ type: 'datetime-local', name: 'after', value: '2006-09-29T00:00' })
     ])
   ]);
 
@@ -83,7 +83,7 @@ const showInitialPrompt = async () => {
     message: [initialForm],
     buttons: [
       modalCancelButton,
-      dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' })
+      input({ class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' })
     ]
   });
 };
@@ -132,7 +132,7 @@ const confirmInitialPrompt = async event => {
   const afterMs = elements.after.valueAsNumber + timezoneOffsetMs;
 
   const afterString = dateTimeFormat.format(new Date(afterMs));
-  const afterElement = dom('span', { style: 'white-space: nowrap; font-weight: bold;' }, null, [afterString]);
+  const afterElement = span({ style: 'white-space: nowrap; font-weight: bold;' }, [afterString]);
 
   const after = afterMs / 1000;
 
@@ -148,7 +148,7 @@ const confirmInitialPrompt = async event => {
     ' from after ',
     afterElement,
     ' will be labelled as ',
-    dom('strong', null, null, [
+    strong({}, [
       'Mature Content',
       ...addedCategoryText.flatMap(text => [' + ', text])
     ]),
@@ -160,10 +160,11 @@ const confirmInitialPrompt = async event => {
     message,
     buttons: [
       modalCancelButton,
-      dom(
-        'button',
-        { class: 'red' },
-        { click: () => setLabelsBulk({ uuid, name, tags, after, addedCategories }).catch(showErrorModal) },
+      button(
+        {
+          class: 'red',
+          click: () => setLabelsBulk({ uuid, name, tags, after, addedCategories }).catch(showErrorModal)
+        },
         ['Go!']
       )
     ]
@@ -195,13 +196,13 @@ const showPostsNotFound = ({ name }) =>
   });
 
 const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
-  const gatherStatus = dom('span', null, null, ['Gathering posts...']);
-  const labelStatus = dom('span');
+  const gatherStatus = span({}, ['Gathering posts...']);
+  const labelStatus = span();
 
   showModal({
     title: 'Setting content labels on posts...',
     message: [
-      dom('small', null, null, ['Do not navigate away from this page.']),
+      small({}, ['Do not navigate away from this page.']),
       '\n\n',
       gatherStatus,
       '\n',
@@ -296,8 +297,8 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
       'Refresh the page to see the result.'
     ],
     buttons: [
-      dom('button', null, { click: hideModal }, ['Close']),
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh'])
+      button({ click: hideModal }, ['Close']),
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh'])
     ]
   });
 };

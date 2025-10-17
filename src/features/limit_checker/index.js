@@ -1,23 +1,23 @@
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
-import { dom } from '../../utils/dom.js';
+import { table, td, th, tr } from '../../utils/dom.js';
 
 const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, { dateStyle: 'short', timeStyle: 'short' });
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const tableHeadingsRow = dom('tr', null, null, [
-  dom('th', { scope: 'col' }, null, ['Type']),
-  dom('th', { scope: 'col' }, null, ['Remaining']),
-  dom('th', { scope: 'col' }, null, ['Limit']),
-  dom('th', { scope: 'col' }, null, ['Next reset'])
+const tableHeadingsRow = tr({}, [
+  th({ scope: 'col' }, ['Type']),
+  th({ scope: 'col' }, ['Remaining']),
+  th({ scope: 'col' }, ['Limit']),
+  th({ scope: 'col' }, ['Next reset'])
 ]);
 
-const buildLimitRow = ([type, { description, limit, remaining, resetAt }]) => dom('tr', null, null, [
-  dom('td', { title: description, style: 'text-transform:capitalize' }, null, [type.replace(/[A-Z]/g, match => ` ${match}`)]),
-  dom('td', { style: remaining === 0 ? 'color:rgb(var(--red))' : '' }, null, [remaining]),
-  dom('td', null, null, [`/ ${limit}`]),
-  dom('td', null, null, [dateTimeFormat.format(new Date(resetAt * 1000))])
+const buildLimitRow = ([type, { description, limit, remaining, resetAt }]) => tr({}, [
+  td({ title: description, style: 'text-transform:capitalize' }, [type.replace(/[A-Z]/g, match => ` ${match}`)]),
+  td({ style: remaining === 0 ? 'color:rgb(var(--red))' : '' }, [remaining]),
+  td({}, [`/ ${limit}`]),
+  td({}, [dateTimeFormat.format(new Date(resetAt * 1000))])
 ]);
 
 const checkUserLimits = () => {
@@ -31,7 +31,7 @@ const checkUserLimits = () => {
 
 const showUserLimits = ([{ response: { user } }]) => showModal({
   title: 'Here is your data!',
-  message: [dom('table', null, null, [tableHeadingsRow, ...Object.entries(user).map(buildLimitRow)])],
+  message: [table({}, [tableHeadingsRow, ...Object.entries(user).map(buildLimitRow)])],
   buttons: [modalCompleteButton]
 });
 

@@ -1,4 +1,4 @@
-import { dom } from '../../utils/dom.js';
+import { button, form, input, label, option, select, small, span } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
 import { showModal, modalCancelButton, modalCompleteButton, showErrorModal, createTagSpan, createBlogSpan } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
@@ -7,22 +7,22 @@ import { userBlogs } from '../../utils/user.js';
 
 const getPostsFormId = 'xkit-tag-replacer-get-posts';
 
-const createBlogOption = ({ name, title, uuid }) => dom('option', { value: uuid, title }, null, [name]);
+const createBlogOption = ({ name, title, uuid }) => option({ value: uuid, title }, [name]);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const showInitialPrompt = async () => {
-  const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmReplaceTag(event).catch(showErrorModal) }, [
-    dom('label', null, null, [
+  const initialForm = form({ id: getPostsFormId, submit: event => confirmReplaceTag(event).catch(showErrorModal) }, [
+    label({}, [
       'Replace tags on:',
-      dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption))
+      select({ name: 'blog', required: true }, userBlogs.map(createBlogOption))
     ]),
-    dom('label', null, null, [
+    label({}, [
       'Remove this tag:',
-      dom('input', { type: 'text', name: 'oldTag', required: true, placeholder: 'Required', autocomplete: 'off' })
+      input({ type: 'text', name: 'oldTag', required: true, placeholder: 'Required', autocomplete: 'off' })
     ]),
-    dom('label', null, null, [
+    label({}, [
       'Add this new tag:',
-      dom('input', { type: 'text', name: 'newTag', placeholder: 'Optional, comma-separated', autocomplete: 'off' })
+      input({ type: 'text', name: 'newTag', placeholder: 'Optional, comma-separated', autocomplete: 'off' })
     ])
   ]);
 
@@ -36,14 +36,14 @@ const showInitialPrompt = async () => {
     title: 'Replace what tag?',
     message: [
       initialForm,
-      dom('small', null, null, [
+      small({}, [
         'This tool uses the Mass Post Editor API to process posts in bulk.\n',
         'Any new tags will be added to the end of each post\'s tags.'
       ])
     ],
     buttons: [
       modalCancelButton,
-      dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' })
+      input({ class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' })
     ]
   });
 };
@@ -91,10 +91,11 @@ const confirmReplaceTag = async event => {
     ],
     buttons: [
       modalCancelButton,
-      dom(
-        'button',
-        { class: remove ? 'red' : 'blue' },
-        { click: () => replaceTag({ uuid, oldTag, newTag, appendOnly }).catch(showErrorModal) },
+      button(
+        {
+          class: remove ? 'red' : 'blue',
+          click: () => replaceTag({ uuid, oldTag, newTag, appendOnly }).catch(showErrorModal)
+        },
         [remove ? 'Remove it!' : 'Replace it!']
       )
     ]
@@ -108,14 +109,14 @@ const showTagNotFound = ({ tag, name }) => showModal({
 });
 
 const replaceTag = async ({ uuid, oldTag, newTag, appendOnly }) => {
-  const gatherStatus = dom('span', null, null, ['Gathering posts...']);
-  const removeStatus = dom('span');
-  const appendStatus = dom('span');
+  const gatherStatus = span({}, ['Gathering posts...']);
+  const removeStatus = span();
+  const appendStatus = span();
 
   showModal({
     title: 'This shouldn\'t take too long...',
     message: [
-      dom('small', null, null, ['Do not navigate away from this page.']),
+      small({}, ['Do not navigate away from this page.']),
       '\n\n',
       gatherStatus,
       appendStatus,

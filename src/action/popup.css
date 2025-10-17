@@ -178,9 +178,3 @@ pre {
   scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
   scrollbar-width: thin;
 }
-
-label:not(:first-child),
-input:not(:first-child),
-select:not(:first-child) {
-  margin-left: 1ch;
-}

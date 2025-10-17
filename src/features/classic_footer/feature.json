@@ -1,0 +1,9 @@
+{
+  "title": "Classic Footer",
+  "description": "See the total note count on posts",
+  "icon": {
+    "class_name": "ri-layout-bottom-line",
+    "color": "white",
+    "background_color": "#395875"
+  }
+}

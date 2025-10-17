@@ -1,4 +1,4 @@
-import { dom } from '../../utils/dom.js';
+import { button, form, input, label, option, select, small, span } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
 import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal, createTagSpan, createBlogSpan } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
@@ -7,7 +7,7 @@ import { userBlogs } from '../../utils/user.js';
 
 const getPostsFormId = 'xkit-mass-privater-get-posts';
 
-const createBlogOption = ({ name, title, uuid }) => dom('option', { value: uuid, title }, null, [name]);
+const createBlogOption = ({ name, title, uuid }) => option({ value: uuid, title }, [name]);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
@@ -48,18 +48,18 @@ const createNowString = () => {
 };
 
 const showInitialPrompt = async () => {
-  const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event).catch(showErrorModal) }, [
-    dom('label', null, null, [
+  const initialForm = form({ id: getPostsFormId, submit: event => confirmInitialPrompt(event).catch(showErrorModal) }, [
+    label({}, [
       'Posts on blog:',
-      dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption))
+      select({ name: 'blog', required: true }, userBlogs.map(createBlogOption))
     ]),
-    dom('label', null, null, [
+    label({}, [
       'Posts from before:',
-      dom('input', { type: 'datetime-local', name: 'before', value: createNowString(), required: true })
+      input({ type: 'datetime-local', name: 'before', value: createNowString(), required: true })
     ]),
-    dom('label', null, null, [
-      dom('small', null, null, ['Posts with any of these tags (optional):']),
-      dom('input', { type: 'text', name: 'tags', placeholder: 'Comma-separated', autocomplete: 'off' })
+    label({}, [
+      small({}, ['Posts with any of these tags (optional):']),
+      input({ type: 'text', name: 'tags', placeholder: 'Comma-separated', autocomplete: 'off' })
     ])
   ]);
 
@@ -74,7 +74,7 @@ const showInitialPrompt = async () => {
     message: [initialForm],
     buttons: [
       modalCancelButton,
-      dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' })
+      input({ class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' })
     ]
   });
 };
@@ -115,7 +115,7 @@ const confirmInitialPrompt = async event => {
   const beforeMs = elements.before.valueAsNumber + timezoneOffsetMs;
 
   const beforeString = dateTimeFormat.format(new Date(beforeMs));
-  const beforeElement = dom('span', { style: 'white-space: nowrap; font-weight: bold;' }, null, [beforeString]);
+  const beforeElement = span({ style: 'white-space: nowrap; font-weight: bold;' }, [beforeString]);
 
   const before = beforeMs / 1000;
 
@@ -142,10 +142,11 @@ const confirmInitialPrompt = async event => {
     message,
     buttons: [
       modalCancelButton,
-      dom(
-        'button',
-        { class: 'red' },
-        { click: () => privatePosts({ uuid, name, tags, before }).catch(showErrorModal) },
+      button(
+        {
+          class: 'red',
+          click: () => privatePosts({ uuid, name, tags, before }).catch(showErrorModal)
+        },
         ['Private them!']
       )
     ]
@@ -177,13 +178,13 @@ const showPostsNotFound = ({ name }) =>
   });
 
 const privatePosts = async ({ uuid, name, tags, before }) => {
-  const gatherStatus = dom('span', null, null, ['Gathering posts...']);
-  const privateStatus = dom('span');
+  const gatherStatus = span({}, ['Gathering posts...']);
+  const privateStatus = span();
 
   showModal({
     title: 'Making posts private...',
     message: [
-      dom('small', null, null, ['Do not navigate away from this page.']),
+      small({}, ['Do not navigate away from this page.']),
       '\n\n',
       gatherStatus,
       privateStatus
@@ -257,8 +258,8 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
       'Refresh the page to see the result.'
     ],
     buttons: [
-      dom('button', null, { click: hideModal }, ['Close']),
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh'])
+      button({ click: hideModal }, ['Close']),
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh'])
     ]
   });
 };

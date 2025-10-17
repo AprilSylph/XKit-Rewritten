@@ -6,7 +6,7 @@ Modules may export any of the following:
 - Type: Async Function
 - Required: No
 
-The main function of the feature. Will be called whenever the user enables the feature, even if the tab(s) XKit is running in is/are not focused. Will also be called upon pageload if the script is enabled.
+The main function of the feature. Will be called whenever the user enables the feature, even if the tab(s) XKit is running in is/are not focused. Will also be called upon pageload if the feature is enabled.
 
 ## `clean()`
 - Type: Async Function
@@ -18,7 +18,7 @@ The cleanup function of the feature. Called whenever the user disables the featu
 - Type: Async Function
 - Required: No
 
-The preference-handling code of the feature. Added as a `browser.storage.onChanged` listener when the feature is enabled, and removed when the feature is disabled. If the module does not export this function, the feature will be automatically restarted when its preferences are changed.
+The preference-handling code of the feature. Added as a `browser.storage.local.onChanged` listener when the feature is enabled, and removed when the feature is disabled. If the module does not export this function, the feature will be automatically restarted when its preferences are changed.
 
 ## `stylesheet`
 - Type: Boolean

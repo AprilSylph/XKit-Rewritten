@@ -6,43 +6,37 @@ import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from 
 import { getPreferences } from '../../utils/preferences.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
-import { dom } from '../../utils/dom.js';
+import { button, datalist, div, fieldset, hr, input, option, select } from '../../utils/dom.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { popoverStackingContextFix } from '../../utils/post_popovers.js';
 
-const popupElement = dom('div', { id: 'quick-reblog' }, { click: event => event.stopPropagation() });
-const blogSelector = dom('select');
-const blogAvatar = dom('div', { class: 'avatar' });
-const blogSelectorContainer = dom('div', { class: 'select-container' }, null, [blogAvatar, blogSelector]);
-const commentInput = dom(
-  'input',
-  {
-    placeholder: 'Comment',
-    autocomplete: 'off'
-  },
-  { keydown: event => event.stopPropagation() }
-);
-const quickTagsList = dom('div', {
+const popupElement = div({ id: 'quick-reblog', click: event => event.stopPropagation() });
+const blogSelector = select();
+const blogAvatar = div({ class: 'avatar' });
+const blogSelectorContainer = div({ class: 'select-container' }, [blogAvatar, blogSelector]);
+const commentInput = input({
+  placeholder: 'Comment',
+  autocomplete: 'off',
+  keydown: event => event.stopPropagation()
+});
+const quickTagsList = div({
   class: 'quick-tags',
   tabIndex: -1
 });
-const tagsInput = dom(
-  'input',
-  {
-    placeholder: 'Tags (comma separated)',
-    autocomplete: 'off',
-    list: 'quick-reblog-tag-suggestions'
-  },
-  { keydown: event => event.stopPropagation() }
-);
-const tagSuggestions = dom('datalist', { id: 'quick-reblog-tag-suggestions' });
-const actionButtons = dom('fieldset', { class: 'action-buttons' });
-const reblogButton = dom('button', null, null, ['Reblog']);
+const tagsInput = input({
+  placeholder: 'Tags (comma separated)',
+  autocomplete: 'off',
+  list: 'quick-reblog-tag-suggestions',
+  keydown: event => event.stopPropagation()
+});
+const tagSuggestions = datalist({ id: 'quick-reblog-tag-suggestions' });
+const actionButtons = fieldset({ class: 'action-buttons' });
+const reblogButton = button({}, ['Reblog']);
 reblogButton.dataset.state = 'published';
-const queueButton = dom('button', null, null, ['Queue']);
+const queueButton = button({}, ['Queue']);
 queueButton.dataset.state = 'queue';
-const draftButton = dom('button', null, null, ['Draft']);
+const draftButton = button({}, ['Draft']);
 draftButton.dataset.state = 'draft';
 [blogSelectorContainer, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons].forEach(element => popupElement.appendChild(element));
 
@@ -110,7 +104,7 @@ const renderTagSuggestions = () => {
     .filter((tag, index, array) => array.indexOf(tag) === index)
     .map(tag => `${tagsInput.value}${includeSpace ? ' ' : ''}${tag}`);
 
-  tagSuggestions.append(...tagsToSuggest.map(value => dom('option', { value })));
+  tagSuggestions.append(...tagsToSuggest.map(value => option({ value })));
 };
 
 const updateTagSuggestions = () => {
@@ -288,7 +282,7 @@ const renderQuickTags = async function () {
   const { [quickTagsStorageKey]: tagBundles = [] } = await browser.storage.local.get(quickTagsStorageKey);
   tagBundles.forEach(tagBundle => {
     const bundleTags = tagBundle.tags.split(',').map(tag => tag.trim().toLowerCase());
-    const bundleButton = dom('button', null, null, [tagBundle.title]);
+    const bundleButton = button({}, [tagBundle.title]);
     bundleButton.addEventListener('click', ({ currentTarget: { dataset } }) => {
       const checked = dataset.checked === 'true';
 
@@ -363,9 +357,9 @@ export const main = async function () {
   } = await getPreferences('quick_reblog'));
 
   blogSelector.replaceChildren(
-    ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name])),
-    ...joinedCommunities.length ? [dom('hr')] : [],
-    ...joinedCommunities.map(({ title, uuid, blog: { name } }) => dom('option', { value: uuid }, null, [`${title} (${name})`]))
+    ...userBlogs.map(({ name, uuid }) => option({ value: uuid }, [name])),
+    ...joinedCommunities.length ? [hr()] : [],
+    ...joinedCommunities.map(({ title, uuid, blog: { name } }) => option({ value: uuid }, [`${title} (${name})`]))
   );
 
   [...userBlogs, ...joinedCommunities].forEach((data) => {

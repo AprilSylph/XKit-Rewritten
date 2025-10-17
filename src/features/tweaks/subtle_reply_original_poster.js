@@ -1,7 +1,7 @@
 import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
-import { dom } from '../../utils/dom.js';
+import { span } from '../../utils/dom.js';
 
 const labelSelector = `footer ${keyToCss('blogLinkWrapper')} ~ ${keyToCss('isOriginalPoster')}`;
 
@@ -37,12 +37,12 @@ const processLabels = labels => labels.forEach(label => {
   const textNode = label.firstChild;
   if (textNode.nodeName !== '#text') return;
 
-  const span = dom('span', null, null, [textNode.textContent]);
-  label.insertBefore(span, textNode);
+  const spanElement = span({}, [textNode.textContent]);
+  label.insertBefore(spanElement, textNode);
   textNode.textContent = '';
 
-  span.style.setProperty('--rendered-width', `${span.getBoundingClientRect().width}px`);
-  span.classList.add(spanClass);
+  spanElement.style.setProperty('--rendered-width', `${spanElement.getBoundingClientRect().width}px`);
+  spanElement.classList.add(spanClass);
 });
 
 const waitForRender = () =>

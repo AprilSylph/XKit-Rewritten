@@ -2,7 +2,7 @@ import { buildStyle } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { onNewNotifications } from '../../utils/mutations.js';
 import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
-import { dom } from '../../utils/dom.js';
+import { button } from '../../utils/dom.js';
 import { userBlogNames } from '../../utils/user.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { notificationObject } from '../../utils/react_props.js';
@@ -74,12 +74,16 @@ const onButtonClicked = async function ({ currentTarget }) {
     message,
     buttons: [
       modalCancelButton,
-      dom('button', { class: className }, {
-        click () {
-          hideModal();
-          saveNotificationPreference();
-        }
-      }, [textContent])
+      button(
+        {
+          class: className,
+          click () {
+            hideModal();
+            saveNotificationPreference();
+          }
+        },
+        [textContent]
+      )
     ]
   });
 };

@@ -1,5 +1,5 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { a, dom } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { onClickNavigate } from '../../utils/tumblr_helpers.js';
@@ -76,10 +76,13 @@ const processNavigationLinks = ([navigationLinks]) =>
 export const main = async function () {
   narrowSidebarAvatars.replaceChildren(
     ...userBlogs.map(({ name, avatar }) =>
-      dom(
-        'a',
-        { href: `/blog/${name}`, title: name, class: 'narrow-sidebar-avatar' },
-        { click: onClickNavigate },
+      a(
+        {
+          href: `/blog/${name}`,
+          title: name,
+          class: 'narrow-sidebar-avatar',
+          click: onClickNavigate
+        },
         [dom('img', { src: avatar.at(-1)?.url })]
       )
     )

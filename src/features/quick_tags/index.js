@@ -1,5 +1,5 @@
 import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
-import { dom } from '../../utils/dom.js';
+import { a, button, div, form, input, li, ul } from '../../utils/dom.js';
 import { appendWithoutOverflow, buildStyle, filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
 import { megaEdit } from '../../utils/mega_editor.js';
 import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
@@ -24,15 +24,12 @@ let controlButtonTemplate;
 
 export const styleElement = buildStyle(popoverStackingContextFix);
 
-const popupElement = dom('div', { id: 'quick-tags' });
-const popupInput = dom(
-  'input',
-  {
-    placeholder: 'Tags (comma separated)',
-    autocomplete: 'off'
-  },
-  { keydown: event => event.stopPropagation() }
-);
+const popupElement = div({ id: 'quick-tags' });
+const popupInput = input({
+  placeholder: 'Tags (comma separated)',
+  autocomplete: 'off',
+  keydown: event => event.stopPropagation()
+});
 const doSmartQuotes = ({ currentTarget }) => {
   const { value } = currentTarget;
   currentTarget.value = value
@@ -52,16 +49,16 @@ const checkLength = ({ currentTarget }) => {
   }
 };
 popupInput.addEventListener('input', checkLength);
-const popupForm = dom('form', null, { submit: event => event.preventDefault() }, [popupInput]);
+const popupForm = form({ submit: event => event.preventDefault() }, [popupInput]);
 
-const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option' });
+const postOptionPopupElement = div({ id: 'quick-tags-post-option' });
 
 const storageKey = 'quick_tags.preferences.tagBundles';
 
 let editedTagsMap = new WeakMap();
 
 const createBundleButton = tagBundle => {
-  const bundleButton = dom('button', null, null, [tagBundle.title]);
+  const bundleButton = button({}, [tagBundle.title]);
   bundleButton.dataset.tags = tagBundle.tags;
   return bundleButton;
 };
@@ -171,9 +168,9 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 
 const addFakeTagsToFooter = (postElement, tags) => {
   const fakeTags = tags.map(tag =>
-    dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`])
+    a({ href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, [`#${tag}`])
   );
-  const tagsElement = dom('div', { class: tagsClass }, null, [dom('div', null, null, fakeTags)]);
+  const tagsElement = div({ class: tagsClass }, [div({}, fakeTags)]);
 
   postElement.querySelector('footer').parentNode.prepend(tagsElement);
 };
@@ -245,11 +242,11 @@ const migrateTags = async ({ detail }) => {
               toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'tag bundle'
             } from New XKit to XKit Rewritten?`,
             '\n\n',
-            dom('ul', null, null, toAdd.map(({ title }) => dom('li', null, null, [title])))
+            ul({}, toAdd.map(({ title }) => li({}, [title])))
           ],
           buttons: [
             modalCancelButton,
-            dom('button', { class: 'blue' }, { click: resolve }, ['Confirm'])
+            button({ class: 'blue', click: resolve }, ['Confirm'])
           ]
         });
       });

@@ -4,7 +4,7 @@ import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { primaryBlogName } from '../../utils/user.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { onNewPosts, onNewNotifications, pageModifications } from '../../utils/mutations.js';
-import { dom } from '../../utils/dom.js';
+import { element, path, svg } from '../../utils/dom.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { translate } from '../../utils/language_data.js';
 import { followingTimelineSelector } from '../../utils/timeline_id.js';
@@ -16,7 +16,7 @@ const postAttributionSelector = 'header a[rel="author"]';
 
 const onlyMutualsStyleElement = buildStyle(`${notificationSelector}:not([data-mutuals]) { display: none !important; }`);
 
-const path = 'M593 500q0-45-22.5-64.5T500 416t-66.5 19-18.5 65 18.5 64.5T500 583t70.5-19 22.5-64zm-90 167q-44 0-83.5 18.5t-63 51T333 808v25h334v-25q0-39-22-71.5t-59.5-51T503 667zM166 168l14-90h558l12-78H180q-8 0-51 63l-42 63v209q-19 3-52 3t-33-3q-1 1 0 27 3 53 0 53l32-2q35-1 53 2v258H2l-3 40q-2 41 3 41 42 0 64-1 7-1 21 1v246h756q25 0 42-13 14-10 22-27 5-13 8-28l1-13V275q0-47-3-63-5-24-22.5-34T832 168H166zm667 752H167V754q17 0 38.5-6.5T241 730q16-12 16-26 0-21-33-28-19-4-57-4-3 0-1-51 2-37 1-36V421q88 0 90-48 1-20-33-30-24-6-57-6-4 0-2-44l2-43h635q14 0 22.5 11t8.5 26v543q0 5 4 26 5 30 5 42 1 22-9 22z';
+const mutualIconPath = 'M593 500q0-45-22.5-64.5T500 416t-66.5 19-18.5 65 18.5 64.5T500 583t70.5-19 22.5-64zm-90 167q-44 0-83.5 18.5t-63 51T333 808v25h334v-25q0-39-22-71.5t-59.5-51T503 667zM166 168l14-90h558l12-78H180q-8 0-51 63l-42 63v209q-19 3-52 3t-33-3q-1 1 0 27 3 53 0 53l32-2q35-1 53 2v258H2l-3 40q-2 41 3 41 42 0 64-1 7-1 21 1v246h756q25 0 42-13 14-10 22-27 5-13 8-28l1-13V275q0-47-3-63-5-24-22.5-34T832 168H166zm667 752H167V754q17 0 38.5-6.5T241 730q16-12 16-26 0-21-33-28-19-4-57-4-3 0-1-51 2-37 1-36V421q88 0 90-48 1-20-33-30-24-6-57-6-4 0-2-44l2-43h635q14 0 22.5 11t8.5 26v543q0 5 4 26 5 30 5 42 1 22-9 22z';
 
 const following = {};
 const followingYou = {};
@@ -152,16 +152,15 @@ export const main = async function () {
 };
 
 const createIcon = (blogName, color = 'rgb(var(--black))') =>
-  dom('svg', {
-    xmlns: 'http://www.w3.org/2000/svg',
+  svg({
     class: mutualIconClass,
     viewBox: '0 0 1000 1000',
     fill: color
-  }, null, [
-    dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
+  }, [
+    element('title', { xmlns: 'http://www.w3.org/2000/svg' }, [
       translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
     ]),
-    dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path })
+    path({ d: mutualIconPath })
   ]);
 
 export const clean = async function () {

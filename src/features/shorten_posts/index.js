@@ -2,7 +2,7 @@ import { buildStyle, filterPostElements, postSelector } from '../../utils/interf
 import { onNewPosts } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { button } from '../../utils/dom.js';
 
 let showTags;
 let maxHeight;
@@ -18,7 +18,7 @@ const buttonClass = 'xkit-shorten-posts-expand';
 
 export const styleElement = buildStyle();
 
-const expandButton = dom('button', { class: buttonClass }, null, ['Expand']);
+const expandButton = button({ class: buttonClass }, ['Expand']);
 
 const unshortenOnClick = ({ currentTarget }) => {
   const postElement = currentTarget.closest(postSelector);

@@ -1,11 +1,12 @@
 import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
 import { dom } from '../../utils/dom.js';
-import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
+import { appendWithoutOverflow, buildStyle, filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
 import { megaEdit } from '../../utils/mega_editor.js';
 import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../../utils/post_actions.js';
+import { popoverStackingContextFix } from '../../utils/post_popovers.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject, editPostFormTags } from '../../utils/react_props.js';
 import { apiFetch, createEditRequestBody, isNpfCompatible } from '../../utils/tumblr_helpers.js';
@@ -20,6 +21,8 @@ let answerTag;
 let autoTagAsker;
 
 let controlButtonTemplate;
+
+export const styleElement = buildStyle(popoverStackingContextFix);
 
 const popupElement = dom('div', { id: 'quick-tags' });
 const popupInput = dom(
@@ -100,7 +103,7 @@ const processPostForm = async function ([selectedTagsElement]) {
   }
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes) {
   if (Object.keys(changes).some(key => key.startsWith('quick_tags'))) {
     if (Object.keys(changes).includes(storageKey)) populatePopups();
 

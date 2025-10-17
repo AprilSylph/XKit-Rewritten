@@ -23,7 +23,7 @@ const destroyOption = async function (name) {
   }
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes) {
   if (Object.keys(changes).some(key => key.startsWith('no_recommended') && changes[key].oldValue !== undefined)) {
     const preferences = await getPreferences('no_recommended');
 

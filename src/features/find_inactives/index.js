@@ -1,4 +1,4 @@
-import { dom } from '../../utils/dom.js';
+import { a, button, div, dom, img, input, small, span, table, td, tr } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
 import { hideModal, modalCancelButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { buildSvg } from '../../utils/remixicon.js';
@@ -108,11 +108,11 @@ export const styleElement = buildStyle(`
 `);
 
 const showFetchBlogs = async () => {
-  const foundBlogsElement = dom('span', null, null, ['Found 0 blogs...']);
+  const foundBlogsElement = span({}, ['Found 0 blogs...']);
   showModal({
     title: 'Gathering followed blogs...',
     message: [
-      dom('small', null, null, ['Please wait.']),
+      small({}, ['Please wait.']),
       dom('br'),
       dom('br'),
       foundBlogsElement
@@ -159,34 +159,32 @@ const showSelectBlogs = blogs => {
     const followingIcon = buildSvg('managed-icon__following');
     followingIcon.style = `visibility: ${blog.isFollowingYou ? 'shown' : 'hidden'};`;
 
-    const avatar = dom('img', {
+    const avatar = img({
       src: blog.avatar.at(-1)?.url,
       class: avatarClass
     });
-    blog.checkbox = dom('input', { type: 'checkbox' });
-    const link = dom(
-      'a',
+    blog.checkbox = input({ type: 'checkbox' });
+    const link = a(
       { href: blog.blogViewUrl, target: '_blank' },
-      null,
       [blog.name]
     );
     const relativeUpdated = blog.updated ? constructRelativeTimeString(blog.updated) : 'never';
 
-    blog.selectTableRow = dom('tr', null, null, [
-      dom('td', null, null, [followingIcon]),
-      dom('td', null, null, [avatar]),
-      dom('td', null, null, [link]),
-      dom('td', null, null, [relativeUpdated]),
-      dom('td', null, null, [blog.checkbox])
+    blog.selectTableRow = tr({}, [
+      td({}, [followingIcon]),
+      td({}, [avatar]),
+      td({}, [link]),
+      td({}, [relativeUpdated]),
+      td({}, [blog.checkbox])
     ]);
 
-    blog.confirmElement = dom('div', null, null, [avatar.cloneNode(true), ` ${blog.name}`]);
+    blog.confirmElement = div({}, [avatar.cloneNode(true), ` ${blog.name}`]);
   });
 
   let visibleBlogs = [];
 
-  const selectionInfo = dom('div', { style: 'margin-bottom: 1em' });
-  const table = dom('table', null, null, blogs.map(({ selectTableRow }) => selectTableRow));
+  const selectionInfo = div({ style: 'margin-bottom: 1em' });
+  const tableElement = table({}, blogs.map(({ selectTableRow }) => selectTableRow));
 
   const canvasScale = 2;
   const canvasElement = dom('canvas', {
@@ -255,7 +253,7 @@ const showSelectBlogs = blogs => {
   );
 
   const createButton = (text, onClick) =>
-    dom('button', { class: buttonClass }, { click: onClick }, [text]);
+    button({ class: buttonClass, click: onClick }, [text]);
 
   const selectNoneButton = createButton('none', () =>
     visibleBlogs.forEach(({ checkbox }) => {
@@ -281,7 +279,7 @@ const showSelectBlogs = blogs => {
       showModal({
         title: 'Nothing selected!',
         message: ['Select the checkboxes next to blogs you want to unfollow and try again.'],
-        buttons: [dom('button', null, { click: showSelectBlogsModal }, ['Back'])]
+        buttons: [button({ click: showSelectBlogsModal }, ['Back'])]
       });
     }
   };
@@ -290,13 +288,13 @@ const showSelectBlogs = blogs => {
     showModal({
       title: 'Select Inactive Blogs',
       message: [
-        dom('small', null, null, [
+        small({}, [
           'Use the slider to display blogs with no posts after the selected date.'
         ]),
         canvasElement,
         slider,
         selectionInfo,
-        dom('div', null, null, [
+        div({}, [
           'select: ',
           selectNoneButton,
           ' / ',
@@ -304,11 +302,11 @@ const showSelectBlogs = blogs => {
           ' / ',
           selectAllButton
         ]),
-        dom('div', { class: tableContainerClass }, null, [table])
+        div({ class: tableContainerClass }, [tableElement])
       ],
       buttons: [
         modalCancelButton,
-        dom('button', { class: 'blue' }, { click: onClickContinue }, ['Unfollow Selected'])
+        button({ class: 'blue', click: onClickContinue }, ['Unfollow Selected'])
       ]
     });
 
@@ -322,27 +320,25 @@ const showConfirmBlogs = (blogs, goBack) => {
       `Do you want to unfollow ${blogs.length} blogs?`,
       dom('br'),
       dom('br'),
-      dom(
-        'div',
+      div(
         { class: confirmContainerClass },
-        null,
         blogs.map(({ confirmElement }) => confirmElement)
       )
     ],
     buttons: [
-      dom('button', null, { click: goBack }, ['Go back']),
-      dom('button', { class: 'red' }, { click: () => unfollowBlogs(blogs) }, ['Unfollow'])
+      button({ click: goBack }, ['Go back']),
+      button({ class: 'red', click: () => unfollowBlogs(blogs) }, ['Unfollow'])
     ]
   });
 };
 
 const unfollowBlogs = async blogs => {
   const blogNames = blogs.map(({ name }) => name);
-  const unfollowStatus = dom('span', null, null, ['Unfollowed 0 blogs...']);
+  const unfollowStatus = span({}, ['Unfollowed 0 blogs...']);
   showModal({
     title: 'Unfollowing blogs...',
     message: [
-      dom('small', null, null, ['Do not navigate away from this page.']),
+      small({}, ['Do not navigate away from this page.']),
       dom('br'),
       dom('br'),
       unfollowStatus
@@ -374,8 +370,8 @@ const unfollowBlogs = async blogs => {
       'Refresh the page to see the result.'
     ],
     buttons: [
-      dom('button', null, { click: hideModal }, ['Close']),
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh'])
+      button({ click: hideModal }, ['Close']),
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh'])
     ]
   });
 };

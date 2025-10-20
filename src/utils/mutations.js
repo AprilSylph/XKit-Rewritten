@@ -7,9 +7,9 @@ const addedNodesPool = [];
 let repaintQueued = false;
 let timerId;
 
-const isolateErrors = func => {
+const isolateErrors = callback => {
   try {
-    func();
+    callback();
   } catch (exception) {
     console.error(exception);
   }

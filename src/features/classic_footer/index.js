@@ -79,23 +79,28 @@ export const styleElement = buildStyle(`
 
     color: var(--content-fg-secondary);
   }
-
+  @container (width: 260px) {
+    .${reblogLinkClass} {
+      padding: 6px;
+    }
+  }
   .${reblogLinkClass}:hover {
     background-color: var(--brand-green-tint);
     color: var(--brand-green);
   }
-
   .${reblogLinkClass}:focus-visible {
     outline: 2px solid var(--brand-green);
     outline-offset: -2px;
   }
-
   .${reblogLinkClass}:active {
     background-color: var(--brand-green-tint-strong);
     color: var(--brand-green);
   }
-
   .${reblogLinkClass} + :is(${reblogButtonSelector}) {
+    display: none;
+  }
+
+  body:has(.${reblogLinkClass}) > div[id^="portal/"]:has(div[role="menu"] a[role="menuitem"][href^="/reblog/"]) {
     display: none;
   }
 `);

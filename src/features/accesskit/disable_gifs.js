@@ -201,8 +201,15 @@ const processBackgroundGifs = function (gifBackgroundElements) {
     const sourceUrl = sourceValue.match(sourceUrlRegex)?.[0];
     if (!sourceUrl) return;
 
+    gifBackgroundElement.style.setProperty(
+      pausedBackgroundImageVar,
+      sourceValue.replace(sourceUrlRegex, 'linear-gradient(transparent, transparent)')
+    );
     const pausedUrl = await createPausedUrlIfAnimated(sourceUrl);
-    if (!pausedUrl) return;
+    if (!pausedUrl) {
+      gifBackgroundElement.style.removeProperty(pausedBackgroundImageVar);
+      return;
+    }
 
     gifBackgroundElement.style.setProperty(
       pausedBackgroundImageVar,

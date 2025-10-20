@@ -4,7 +4,6 @@ import { buildStyle, filterPostElements, postSelector } from '../../utils/interf
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject } from '../../utils/react_props.js';
-import { onClickNavigate } from '../../utils/tumblr_helpers.js';
 
 const noteCountClass = 'xkit-classic-footer-note-count';
 const reblogLinkClass = 'xkit-classic-footer-reblog-link';
@@ -15,6 +14,7 @@ const engagementControlsSelector = `${footerContentSelector} ${keyToCss('engagem
 const replyButtonSelector = `${engagementControlsSelector} button:has(svg use[href="#managed-icon__ds-reply-outline-24"])`;
 const reblogButtonSelector = `${engagementControlsSelector} button:has(svg use[href="#managed-icon__ds-reblog-24"])`;
 const closeNotesButtonSelector = `${postSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
+const reblogMenuPortalSelector = 'div[id^="portal/"]:has(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';
 
 const locale = document.documentElement.lang;
 const noteCountFormat = new Intl.NumberFormat(locale);
@@ -96,11 +96,11 @@ export const styleElement = buildStyle(`
     background-color: var(--brand-green-tint-strong);
     color: var(--brand-green);
   }
-  .${reblogLinkClass} + :is(${reblogButtonSelector}) {
+  .${reblogLinkClass} ~ :is(${reblogButtonSelector}) {
     display: none;
   }
 
-  body:has(.${reblogLinkClass}) > div[id^="portal/"]:has(div[role="menu"] a[role="menuitem"][href^="/reblog/"]) {
+  body:has(.${reblogLinkClass}) > ${reblogMenuPortalSelector} {
     display: none;
   }
 `);
@@ -127,11 +127,52 @@ const processPosts = (postElements) => filterPostElements(postElements).forEach(
   engagementControls?.before(noteCountButton);
 });
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+const onReblogLinkClick = (event) => {
+  if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+
+  event.preventDefault();
+
+  const reblogButton = event.currentTarget.parentElement.querySelector(reblogButtonSelector);
+  const href = event.currentTarget.getAttribute('href');
+
+  const reblogMenuItemSelector = `${reblogMenuPortalSelector} a[href="${href}"]`;
+  if (document.querySelector(reblogMenuItemSelector)) {
+    // Reblog menu was already open! No need to open it again.
+    document.querySelector(reblogMenuItemSelector).click();
+    return;
+  }
+
+  // Start looking for the reblog menu on the document body; as soon as we find it, click it and stop looking.
+  const mutationObserver = new MutationObserver((mutations, observer) => {
+    const addedNodes = mutations
+      .flatMap(({ addedNodes }) => [...addedNodes])
+      .filter(addedNode => addedNode instanceof Element && addedNode.matches(reblogMenuPortalSelector));
+
+    for (const addedNode of addedNodes) {
+      const reblogMenuItem = addedNode.querySelector(reblogMenuItemSelector);
+      if (reblogMenuItem) {
+        observer.disconnect();
+        reblogMenuItem.click();
+        break;
+      }
+    }
+  });
+  mutationObserver.observe(document.body, { childList: true });
+
+  // Open the reblog menu for the observer to find.
+  reblogButton.click();
+
+  // If the reblog menu doesn't appear within 1 second, give up and do nothing.
+  sleep(1000).then(mutationObserver.disconnect);
+};
+
 const processReblogButtons = (reblogButtons) => reblogButtons.forEach(async reblogButton => {
   const { blogName, canReblog, idString, reblogKey } = await timelineObject(reblogButton);
 
-  if (reblogButton.previousElementSibling?.classList.contains(reblogLinkClass)) {
-    reblogButton.previousElementSibling.remove();
+  if (reblogButton.matches(`.${reblogLinkClass} ~ :scope`)) {
+    $(reblogButton).siblings(`.${reblogLinkClass}`).remove();
   }
 
   if (!canReblog) return;
@@ -139,7 +180,7 @@ const processReblogButtons = (reblogButtons) => reblogButtons.forEach(async rebl
   const reblogLink = a({
     'aria-label': reblogButton.getAttribute('aria-label'),
     class: reblogLinkClass,
-    click: onClickNavigate,
+    click: onReblogLinkClick,
     href: `/reblog/${blogName}/${idString}/${reblogKey}`
   }, [reblogButton.firstElementChild.cloneNode(true)]);
 

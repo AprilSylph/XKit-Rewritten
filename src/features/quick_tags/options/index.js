@@ -27,6 +27,7 @@ const saveNewBundle = async event => {
 Sortable.create(bundlesList, {
   dataIdAttr: 'id',
   handle: '.drag-handle',
+  forceFallback: true,
   store: {
     set: async sortable => {
       const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
@@ -92,8 +93,8 @@ const renderBundles = async function () {
   }));
 };
 
-browser.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
+browser.storage.local.onChanged.addListener((changes) => {
+  if (Object.keys(changes).includes(storageKey)) {
     bundlesList.textContent = '';
     renderBundles();
   }

@@ -246,11 +246,13 @@ const showSelectBlogs = blogs => {
 
   updateDisplay(0);
 
-  const slider = dom(
-    'input',
-    { type: 'range', value: 0, max: lastBucket, class: sliderClass },
-    { input: event => updateDisplay(event.target.value) }
-  );
+  const slider = input({
+    type: 'range',
+    value: 0,
+    max: lastBucket,
+    class: sliderClass,
+    input: event => updateDisplay(event.target.value)
+  });
 
   const createButton = (text, onClick) =>
     button({ class: buttonClass, click: onClick }, [text]);

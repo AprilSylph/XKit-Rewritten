@@ -1,5 +1,5 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { button, span } from '../../utils/dom.js';
 import { buildStyle, filterPostElements, postSelector } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { timelineObject } from '../../utils/react_props.js';
@@ -83,10 +83,9 @@ const processPosts = (postElements) => filterPostElements(postElements).forEach(
   postElement.querySelector(`.${noteCountClass}`)?.remove();
 
   const { noteCount } = await timelineObject(postElement);
-  const noteCountButton = dom('button', { class: noteCountClass }, { click: onNoteCountClick }, [
-    dom('span', null, null, [noteCountFormat.format(noteCount)]),
-    ` ${noteCount === 1 ? 'note' : 'notes'}`
-  ]);
+  const noteCountButton = button({ class: noteCountClass, click: onNoteCountClick }, [
+    span({}, [noteCountFormat.format(noteCount)]), ` ${noteCount === 1 ? 'note' : 'notes'}`]
+  );
 
   const engagementControls = postElement.querySelector(engagementControlsSelector);
   engagementControls?.before(noteCountButton);

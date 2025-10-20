@@ -96,10 +96,13 @@ export const styleElement = buildStyle(`
     background-color: var(--brand-green-tint-strong);
     color: var(--brand-green);
   }
+  footer:has(svg[style="--icon-color-primary: var(--brand-green);"] use[href="#managed-icon__ds-reblog-24"]) .${reblogLinkClass} {
+    color: var(--brand-green);
+  }
+
   .${reblogLinkClass} ~ :is(${reblogButtonSelector}) {
     display: none;
   }
-
   body:has(.${reblogLinkClass}) > ${reblogMenuPortalSelector} {
     display: none;
   }

@@ -1,15 +1,19 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { button, span } from '../../utils/dom.js';
+import { a, button, span } from '../../utils/dom.js';
 import { buildStyle, filterPostElements, postSelector } from '../../utils/interface.js';
-import { onNewPosts } from '../../utils/mutations.js';
+import { onNewPosts, pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject } from '../../utils/react_props.js';
+import { onClickNavigate } from '../../utils/tumblr_helpers.js';
 
 const noteCountClass = 'xkit-classic-footer-note-count';
+const reblogLinkClass = 'xkit-classic-footer-reblog-link';
 
 const postOwnerControlsSelector = `${postSelector} ${keyToCss('postOwnerControls')}`;
 const footerContentSelector = `${postSelector} article footer ${keyToCss('footerContent')}`;
 const engagementControlsSelector = `${footerContentSelector} ${keyToCss('engagementControls')}`;
 const replyButtonSelector = `${engagementControlsSelector} button:has(svg use[href="#managed-icon__ds-reply-outline-24"])`;
+const reblogButtonSelector = `${engagementControlsSelector} button:has(svg use[href="#managed-icon__ds-reblog-24"])`;
 const closeNotesButtonSelector = `${postSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
 
 const locale = document.documentElement.lang;
@@ -67,6 +71,33 @@ export const styleElement = buildStyle(`
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  .${reblogLinkClass} {
+    display: flex;
+    padding: 8px;
+    border-radius: 9999px;
+
+    color: var(--content-fg-secondary);
+  }
+
+  .${reblogLinkClass}:hover {
+    background-color: var(--brand-green-tint);
+    color: var(--brand-green);
+  }
+
+  .${reblogLinkClass}:focus-visible {
+    outline: 2px solid var(--brand-green);
+    outline-offset: -2px;
+  }
+
+  .${reblogLinkClass}:active {
+    background-color: var(--brand-green-tint-strong);
+    color: var(--brand-green);
+  }
+
+  .${reblogLinkClass} + :is(${reblogButtonSelector}) {
+    display: none;
+  }
 `);
 
 const onNoteCountClick = (event) => {
@@ -91,11 +122,50 @@ const processPosts = (postElements) => filterPostElements(postElements).forEach(
   engagementControls?.before(noteCountButton);
 });
 
+const processReblogButtons = (reblogButtons) => reblogButtons.forEach(async reblogButton => {
+  const { blogName, canReblog, idString, reblogKey } = await timelineObject(reblogButton);
+
+  if (reblogButton.previousElementSibling?.classList.contains(reblogLinkClass)) {
+    reblogButton.previousElementSibling.remove();
+  }
+
+  if (!canReblog) return;
+
+  const reblogLink = a({
+    'aria-label': reblogButton.getAttribute('aria-label'),
+    class: reblogLinkClass,
+    click: onClickNavigate,
+    href: `/reblog/${blogName}/${idString}/${reblogKey}`
+  }, [reblogButton.firstElementChild.cloneNode(true)]);
+
+  reblogButton.before(reblogLink);
+});
+
+const restoreReblogButtons = () => {
+  pageModifications.unregister(processReblogButtons);
+  $(`.${reblogLinkClass}`).remove();
+};
+
+export const onStorageChanged = async function (changes) {
+  const { 'classic_footer.preferences.noReblogMenu': noReblogMenuChanges } = changes;
+  if (noReblogMenuChanges && noReblogMenuChanges.oldValue === undefined) return;
+
+  const { newValue: noReblogMenu } = noReblogMenuChanges;
+  noReblogMenu
+    ? pageModifications.register(reblogButtonSelector, processReblogButtons)
+    : restoreReblogButtons();
+};
+
 export const main = async function () {
   onNewPosts.addListener(processPosts);
+
+  const { noReblogMenu } = await getPreferences('classic_footer');
+  if (noReblogMenu) pageModifications.register(reblogButtonSelector, processReblogButtons);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
   $(`.${noteCountClass}`).remove();
+
+  restoreReblogButtons();
 };

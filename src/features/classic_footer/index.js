@@ -135,8 +135,6 @@ const processPosts = (postElements) => filterPostElements(postElements).forEach(
   engagementControls?.before(noteCountButton);
 });
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
 const onReblogLinkClick = (event) => {
   if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
 
@@ -173,7 +171,7 @@ const onReblogLinkClick = (event) => {
   reblogButton.click();
 
   // If the reblog menu doesn't appear within 1 second, give up and do nothing.
-  sleep(1000).then(mutationObserver.disconnect);
+  setTimeout(mutationObserver.disconnect, 1000);
 };
 
 const processReblogButtons = (reblogButtons) => reblogButtons.forEach(async reblogButton => {

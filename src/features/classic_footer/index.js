@@ -135,6 +135,32 @@ const processPosts = (postElements) => filterPostElements(postElements).forEach(
   engagementControls?.before(noteCountButton);
 });
 
+const getReblogMenuItem = async (reblogButton, href) => {
+  const reblogMenuItemSelector = `${reblogMenuPortalSelector} a[href="${href}"]`;
+
+  return document.querySelector(reblogMenuItemSelector) ?? new Promise(resolve => {
+    // Start observing the document body for the relevant reblog menu.
+    const mutationObserver = new MutationObserver(mutations => {
+      const addedNodes = mutations.flatMap(({ addedNodes }) => [...addedNodes]);
+      const addedElements = addedNodes.filter(addedNode => addedNode instanceof Element);
+
+      for (const addedElement of addedElements) {
+        const reblogMenuItem = addedElement.querySelector(reblogMenuItemSelector);
+        if (reblogMenuItem) resolve(reblogMenuItem);
+      }
+    });
+    mutationObserver.observe(document.body, { childList: true });
+
+    // Open the reblog menu for the observer to find.
+    reblogButton.click();
+
+    // Disconnect the observer after 5 seconds. If we've gone this long without
+    // finding the menu item, anything we do cannot be considered to have been
+    // triggered by user input, so we should give up and do nothing at all.
+    setTimeout(() => mutationObserver.disconnect(), 5000);
+  });
+};
+
 const onReblogLinkClick = (event) => {
   if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
 
@@ -143,35 +169,7 @@ const onReblogLinkClick = (event) => {
   const reblogButton = event.currentTarget.parentElement.querySelector(reblogButtonSelector);
   const href = event.currentTarget.getAttribute('href');
 
-  const reblogMenuItemSelector = `${reblogMenuPortalSelector} a[href="${href}"]`;
-  if (document.querySelector(reblogMenuItemSelector)) {
-    // Reblog menu was already open! No need to open it again.
-    document.querySelector(reblogMenuItemSelector).click();
-    return;
-  }
-
-  // Start looking for the reblog menu on the document body; as soon as we find it, click it and stop looking.
-  const mutationObserver = new MutationObserver((mutations, observer) => {
-    const addedNodes = mutations
-      .flatMap(({ addedNodes }) => [...addedNodes])
-      .filter(addedNode => addedNode instanceof Element && addedNode.matches(reblogMenuPortalSelector));
-
-    for (const addedNode of addedNodes) {
-      const reblogMenuItem = addedNode.querySelector(reblogMenuItemSelector);
-      if (reblogMenuItem) {
-        observer.disconnect();
-        reblogMenuItem.click();
-        break;
-      }
-    }
-  });
-  mutationObserver.observe(document.body, { childList: true });
-
-  // Open the reblog menu for the observer to find.
-  reblogButton.click();
-
-  // If the reblog menu doesn't appear within 1 second, give up and do nothing.
-  setTimeout(mutationObserver.disconnect, 1000);
+  getReblogMenuItem(reblogButton, href).then(reblogMenuItem => reblogMenuItem.click());
 };
 
 const processReblogButtons = (reblogButtons) => reblogButtons.forEach(async reblogButton => {

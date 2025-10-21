@@ -53,10 +53,13 @@ export function element (tagName, properties = {}, children = []) {
 /** @typedef {(props?: Properties, children?: Children) => SVGElement} SVGShorthand */
 
 /** @type {HTMLShorthand} */ export const a = (props = {}, children = []) => element('a', props, children);
+/** @type {HTMLShorthand} */ export const br = (props = {}, children = []) => element('br', props, children);
 /** @type {HTMLShorthand} */ export const button = (props = {}, children = []) => element('button', props, children);
+/** @type {HTMLShorthand} */ export const canvas = (props = {}, children = []) => element('canvas', props, children);
 /** @type {HTMLShorthand} */ export const datalist = (props = {}, children = []) => element('datalist', props, children);
 /** @type {HTMLShorthand} */ export const div = (props = {}, children = []) => element('div', props, children);
 /** @type {HTMLShorthand} */ export const fieldset = (props = {}, children = []) => element('fieldset', props, children);
+/** @type {HTMLShorthand} */ export const figcaption = (props = {}, children = []) => element('figcaption', props, children);
 /** @type {HTMLShorthand} */ export const form = (props = {}, children = []) => element('form', props, children);
 /** @type {HTMLShorthand} */ export const h1 = (props = {}, children = []) => element('h1', props, children);
 /** @type {HTMLShorthand} */ export const h3 = (props = {}, children = []) => element('h3', props, children);

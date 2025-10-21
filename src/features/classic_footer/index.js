@@ -12,7 +12,8 @@ const postOwnerControlsSelector = `${postSelector} ${keyToCss('postOwnerControls
 const footerContentSelector = `${postSelector} article footer ${keyToCss('footerContent')}`;
 const engagementControlsSelector = `${footerContentSelector} ${keyToCss('engagementControls')}`;
 const replyButtonSelector = `${engagementControlsSelector} button:has(svg use[href="#managed-icon__ds-reply-outline-24"])`;
-const reblogButtonSelector = `${engagementControlsSelector} button:has(svg use[href="#managed-icon__ds-reblog-24"])`;
+const reblogButtonSelector = `${engagementControlsSelector} button:has(svg use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__ds-queue-add-24"]))`;
+const quickActionsSelector = 'svg[style="--icon-color-primary: var(--brand-blue);"], svg[style="--icon-color-primary: var(--brand-purple);"]';
 const closeNotesButtonSelector = `${postSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
 const reblogMenuPortalSelector = 'div[id^="portal/"]:has(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';
 
@@ -96,11 +97,15 @@ export const styleElement = buildStyle(`
     background-color: var(--brand-green-tint-strong);
     color: var(--brand-green);
   }
+
   span:has(svg[style="--icon-color-primary: var(--brand-green);"]) > .${reblogLinkClass} {
     color: var(--brand-green);
   }
+  span:has(${quickActionsSelector}) > .${reblogLinkClass} {
+    display: none;
+  }
 
-  .${reblogLinkClass} ~ :is(${reblogButtonSelector}) {
+  .${reblogLinkClass} ~ :is(${reblogButtonSelector}):not(:has(${quickActionsSelector})) {
     display: none;
   }
   body:has(.${reblogLinkClass}) > ${reblogMenuPortalSelector} {

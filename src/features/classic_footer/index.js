@@ -96,7 +96,7 @@ export const styleElement = buildStyle(`
     background-color: var(--brand-green-tint-strong);
     color: var(--brand-green);
   }
-  footer:has(svg[style="--icon-color-primary: var(--brand-green);"] use[href="#managed-icon__ds-reblog-24"]) .${reblogLinkClass} {
+  span:has(svg[style="--icon-color-primary: var(--brand-green);"]) > .${reblogLinkClass} {
     color: var(--brand-green);
   }
 

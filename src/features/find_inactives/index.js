@@ -1,4 +1,4 @@
-import { a, button, div, dom, img, input, small, span, table, td, tr } from '../../utils/dom.js';
+import { a, br, button, canvas, div, img, input, small, span, table, td, tr } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
 import { hideModal, modalCancelButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { buildSvg } from '../../utils/remixicon.js';
@@ -113,8 +113,8 @@ const showFetchBlogs = async () => {
     title: 'Gathering followed blogs...',
     message: [
       small({}, ['Please wait.']),
-      dom('br'),
-      dom('br'),
+      br(),
+      br(),
       foundBlogsElement
     ]
   });
@@ -187,7 +187,7 @@ const showSelectBlogs = blogs => {
   const tableElement = table({}, blogs.map(({ selectTableRow }) => selectTableRow));
 
   const canvasScale = 2;
-  const canvasElement = dom('canvas', {
+  const canvasElement = canvas({
     width: canvasOuterWidth * canvasScale,
     height: canvasOuterHeight * canvasScale,
     class: canvasClass
@@ -320,8 +320,8 @@ const showConfirmBlogs = (blogs, goBack) => {
     title: 'Are you sure?',
     message: [
       `Do you want to unfollow ${blogs.length} blogs?`,
-      dom('br'),
-      dom('br'),
+      br(),
+      br(),
       div(
         { class: confirmContainerClass },
         blogs.map(({ confirmElement }) => confirmElement)
@@ -341,8 +341,8 @@ const unfollowBlogs = async blogs => {
     title: 'Unfollowing blogs...',
     message: [
       small({}, ['Do not navigate away from this page.']),
-      dom('br'),
-      dom('br'),
+      br(),
+      br(),
       unfollowStatus
     ]
   });

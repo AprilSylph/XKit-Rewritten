@@ -22,7 +22,7 @@ const processPosts = async function (postElements) {
     wrapper.append(container);
 
     headerElement.after(wrapper);
-    while (wrapper.nextElementSibling !== footerElement) {
+    while (wrapper.nextElementSibling && wrapper.nextElementSibling !== footerElement) {
       container.append(wrapper.nextElementSibling);
     }
   });

@@ -50,19 +50,19 @@ export function element (tagName, properties = {}, children = []) {
 }
 
 /** @typedef {(props?: Properties, children?: Children) => HTMLElement} HTMLShorthand */
+/** @typedef {(props?: Properties) => HTMLElement} VoidHTMLShorthand */
 /** @typedef {(props?: Properties, children?: Children) => SVGElement} SVGShorthand */
 
 /** @type {HTMLShorthand} */ export const a = (props = {}, children = []) => element('a', props, children);
 /** @type {HTMLShorthand} */ export const button = (props = {}, children = []) => element('button', props, children);
+/** @type {HTMLShorthand} */ export const canvas = (props = {}, children = []) => element('canvas', props, children);
 /** @type {HTMLShorthand} */ export const datalist = (props = {}, children = []) => element('datalist', props, children);
 /** @type {HTMLShorthand} */ export const div = (props = {}, children = []) => element('div', props, children);
 /** @type {HTMLShorthand} */ export const fieldset = (props = {}, children = []) => element('fieldset', props, children);
+/** @type {HTMLShorthand} */ export const figcaption = (props = {}, children = []) => element('figcaption', props, children);
 /** @type {HTMLShorthand} */ export const form = (props = {}, children = []) => element('form', props, children);
 /** @type {HTMLShorthand} */ export const h1 = (props = {}, children = []) => element('h1', props, children);
 /** @type {HTMLShorthand} */ export const h3 = (props = {}, children = []) => element('h3', props, children);
-/** @type {HTMLShorthand} */ export const hr = (props = {}, children = []) => element('hr', props, children);
-/** @type {HTMLShorthand} */ export const img = (props = {}, children = []) => element('img', props, children);
-/** @type {HTMLShorthand} */ export const input = (props = {}, children = []) => element('input', props, children);
 /** @type {HTMLShorthand} */ export const label = (props = {}, children = []) => element('label', props, children);
 /** @type {HTMLShorthand} */ export const li = (props = {}, children = []) => element('li', props, children);
 /** @type {HTMLShorthand} */ export const option = (props = {}, children = []) => element('option', props, children);
@@ -77,6 +77,11 @@ export function element (tagName, properties = {}, children = []) {
 /** @type {HTMLShorthand} */ export const th = (props = {}, children = []) => element('th', props, children);
 /** @type {HTMLShorthand} */ export const tr = (props = {}, children = []) => element('tr', props, children);
 /** @type {HTMLShorthand} */ export const ul = (props = {}, children = []) => element('ul', props, children);
+
+/** @type {VoidHTMLShorthand} */ export const br = (props = {}) => element('br', props);
+/** @type {VoidHTMLShorthand} */ export const hr = (props = {}) => element('hr', props);
+/** @type {VoidHTMLShorthand} */ export const img = (props = {}) => element('img', props);
+/** @type {VoidHTMLShorthand} */ export const input = (props = {}) => element('input', props);
 
 /** @type {SVGShorthand} */ export const path = (props = {}, children = []) => element('path', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);
 /** @type {SVGShorthand} */ export const svg = (props = {}, children = []) => element('svg', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);

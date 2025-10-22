@@ -136,7 +136,7 @@ const processPosts = (postElements) => filterPostElements(postElements).forEach(
 });
 
 const getReblogMenuItem = async (reblogButton, href) => {
-  const reblogMenuItemSelector = `${reblogMenuPortalSelector} a[href="${href}"]`;
+  const reblogMenuItemSelector = `${reblogMenuPortalSelector} a[href^="${href}"]`;
 
   return document.querySelector(reblogMenuItemSelector) ?? new Promise(resolve => {
     // Start observing the document body for the relevant reblog menu.

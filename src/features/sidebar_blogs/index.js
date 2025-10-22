@@ -1,5 +1,5 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { a, dom } from '../../utils/dom.js';
+import { a, div, img } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { onClickNavigate } from '../../utils/tumblr_helpers.js';
@@ -68,7 +68,7 @@ export const styleElement = buildStyle(`
 }
 `);
 
-const narrowSidebarAvatars = dom('div', { id: 'narrow-sidebar-avatars' });
+const narrowSidebarAvatars = div({ id: 'narrow-sidebar-avatars' });
 
 const processNavigationLinks = ([navigationLinks]) =>
   navigationLinks.append(narrowSidebarAvatars);
@@ -83,7 +83,7 @@ export const main = async function () {
           class: 'narrow-sidebar-avatar',
           click: onClickNavigate
         },
-        [dom('img', { src: avatar.at(-1)?.url })]
+        [img({ src: avatar.at(-1)?.url })]
       )
     )
   );

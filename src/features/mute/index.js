@@ -4,7 +4,7 @@ import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
 import { timelineObject } from '../../utils/react_props.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { button, div, form, input, label, dom } from '../../utils/dom.js';
+import { br, button, div, form, input, label } from '../../utils/dom.js';
 import { getPreferences } from '../../utils/preferences.js';
 import {
   anyBlogPostTimelineFilter,
@@ -73,7 +73,7 @@ const processBlogTimelineElement = async timelineElement => {
 
     const mutedBlogControls = div({ class: mutedBlogControlsClass, 'data-muted-blog-controls-mode': mutedBlogMode }, [
       `You have muted ${mutedBlogMode} posts from ${name}!`,
-      dom('br'),
+      br(),
       button({ click: () => mutedBlogControls.remove() }, ['show posts anyway'])
     ]);
     timelineElement.prepend(mutedBlogControls);

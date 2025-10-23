@@ -188,7 +188,10 @@ const processReblogButtons = (reblogButtons) => reblogButtons.forEach(async rebl
     class: reblogLinkClass,
     click: onReblogLinkClick,
     href: `/reblog/${blogName}/${idString}/${reblogKey}`
-  }, [reblogButton.firstElementChild.cloneNode(true)]);
+  }, [
+    buildStyle(`${reblogMenuPortalSelector}:has([aria-labelledby="${reblogButton.id}"]) { display: none; }`),
+    reblogButton.firstElementChild.cloneNode(true)]
+  );
 
   reblogButton.before(reblogLink);
 });

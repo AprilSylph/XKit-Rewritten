@@ -108,7 +108,7 @@ export const styleElement = buildStyle(`
   .${reblogLinkClass} ~ :is(${reblogButtonSelector}):not(:has(${quickActionsSelector})) {
     display: none;
   }
-  body:has(.${reblogLinkClass}) > ${reblogMenuPortalSelector} {
+  body:has(.${reblogLinkClass}) > ${reblogMenuPortalSelector}:not(:has([role="menu"][aria-labelledby])) {
     display: none;
   }
 `);

@@ -1,20 +1,21 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { a, button, span } from '../../utils/dom.js';
-import { buildStyle, filterPostElements, postSelector } from '../../utils/interface.js';
-import { onNewPosts, pageModifications } from '../../utils/mutations.js';
+import { buildStyle, postSelector } from '../../utils/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject } from '../../utils/react_props.js';
 
 const noteCountClass = 'xkit-classic-footer-note-count';
 const reblogLinkClass = 'xkit-classic-footer-reblog-link';
 
-const postOwnerControlsSelector = `${postSelector} ${keyToCss('postOwnerControls')}`;
-const footerContentSelector = `${postSelector} article footer ${keyToCss('footerContent')}`;
+const postOrRadarSelector = `:is(${postSelector}, aside ${keyToCss('radar')})`;
+const postOwnerControlsSelector = `${postOrRadarSelector} ${keyToCss('postOwnerControls')}`;
+const footerContentSelector = `${postOrRadarSelector} article footer ${keyToCss('footerContent')}`;
 const engagementControlsSelector = `${footerContentSelector} ${keyToCss('engagementControls')}`;
 const replyButtonSelector = `${engagementControlsSelector} button:has(svg use[href="#managed-icon__ds-reply-outline-24"])`;
 const reblogButtonSelector = `${engagementControlsSelector} button:has(svg use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__ds-queue-add-24"]))`;
 const quickActionsSelector = 'svg[style="--icon-color-primary: var(--brand-blue);"], svg[style="--icon-color-primary: var(--brand-purple);"]';
-const closeNotesButtonSelector = `${postSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
+const closeNotesButtonSelector = `${postOrRadarSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
 const reblogMenuPortalSelector = 'div[id^="portal/"]:has(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';
 
 const locale = document.documentElement.lang;
@@ -115,7 +116,7 @@ export const styleElement = buildStyle(`
 
 const onNoteCountClick = (event) => {
   event.stopPropagation();
-  const postElement = event.currentTarget.closest(postSelector);
+  const postElement = event.currentTarget.closest(postOrRadarSelector);
   const closeNotesButton = postElement?.querySelector(closeNotesButtonSelector);
 
   closeNotesButton
@@ -123,7 +124,7 @@ const onNoteCountClick = (event) => {
     : postElement?.querySelector(replyButtonSelector)?.click();
 };
 
-const processPosts = (postElements) => filterPostElements(postElements).forEach(async postElement => {
+const processPosts = (postElements) => postElements.forEach(async postElement => {
   postElement.querySelector(`.${noteCountClass}`)?.remove();
 
   const { noteCount } = await timelineObject(postElement);
@@ -207,14 +208,14 @@ export const onStorageChanged = async function (changes) {
 };
 
 export const main = async function () {
-  onNewPosts.addListener(processPosts);
+  pageModifications.register(`${postOrRadarSelector} article`, processPosts);
 
   const { noReblogMenu } = await getPreferences('classic_footer');
   if (noReblogMenu) pageModifications.register(reblogButtonSelector, processReblogButtons);
 };
 
 export const clean = async function () {
-  onNewPosts.removeListener(processPosts);
+  pageModifications.unregister(processPosts);
   $(`.${noteCountClass}`).remove();
 
   restoreReblogButtons();

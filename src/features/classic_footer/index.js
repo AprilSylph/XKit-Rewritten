@@ -81,11 +81,6 @@ export const styleElement = buildStyle(`
 
     color: var(--content-fg-secondary);
   }
-  @container (width: 260px) {
-    .${reblogLinkClass} {
-      padding: 6px;
-    }
-  }
   .${reblogLinkClass}:hover {
     background-color: var(--brand-green-tint);
     color: var(--brand-green);
@@ -97,6 +92,12 @@ export const styleElement = buildStyle(`
   .${reblogLinkClass}:active {
     background-color: var(--brand-green-tint-strong);
     color: var(--brand-green);
+  }
+
+  @container (width: 260px) {
+    .${noteCountClass}, .${reblogLinkClass} {
+      padding: 6px;
+    }
   }
 
   span:has(svg[style="--icon-color-primary: var(--brand-green);"]) > .${reblogLinkClass} {

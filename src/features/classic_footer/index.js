@@ -1,5 +1,5 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { a, button, span } from '../../utils/dom.js';
+import { a, button, span, link } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
@@ -183,13 +183,15 @@ const processReblogButtons = (reblogButtons) => reblogButtons.forEach(async rebl
 
   if (!canReblog) return;
 
+  const styleContent = `${reblogMenuPortalSelector}:has([aria-labelledby="${reblogButton.id}"]) { display: none; }`;
+
   const reblogLink = a({
     'aria-label': reblogButton.getAttribute('aria-label'),
     class: reblogLinkClass,
     click: onReblogLinkClick,
     href: `/reblog/${blogName}/${idString}/${reblogKey}`
   }, [
-    buildStyle(`${reblogMenuPortalSelector}:has([aria-labelledby="${reblogButton.id}"]) { display: none; }`),
+    link({ rel: 'stylesheet', class: 'xkit', href: `data:text/css,${encodeURIComponent(styleContent)}` }),
     reblogButton.firstElementChild.cloneNode(true)]
   );
 

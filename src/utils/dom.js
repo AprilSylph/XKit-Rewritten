@@ -82,6 +82,7 @@ export function element (tagName, properties = {}, children = []) {
 /** @type {VoidHTMLShorthand} */ export const hr = (props = {}) => element('hr', props);
 /** @type {VoidHTMLShorthand} */ export const img = (props = {}) => element('img', props);
 /** @type {VoidHTMLShorthand} */ export const input = (props = {}) => element('input', props);
+/** @type {VoidHTMLShorthand} */ export const link = (props = {}) => element('link', props);
 
 /** @type {SVGShorthand} */ export const path = (props = {}, children = []) => element('path', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);
 /** @type {SVGShorthand} */ export const svg = (props = {}, children = []) => element('svg', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);

@@ -10,6 +10,9 @@ let displayRelative;
 export const styleElement = buildStyle(`
 [data-formatted-time] {
   font-size: 0px !important;
+
+  /* fixes hover when covered by the "permalink" <a> element */
+  isolation: isolate;
 }
 
 [data-formatted-time]::before {

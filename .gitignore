@@ -6,3 +6,4 @@ node_modules/
 release-notes.md
 src/lib/remixicon/remixicon.glyph.json
 web-ext-artifacts/
+.eslintcache

@@ -4,14 +4,17 @@
   "type": "module",
   "scripts": {
     "test": "web-ext lint",
-    "posttest": "eslint src/",
+    "posttest": "eslint src/ --cache",
     "start": "web-ext run",
-    "build": "web-ext build"
+    "build": "web-ext build",
+    "enable-hooks": "husky",
+    "disable-hooks": "git config --unset core.hooksPath"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^3.4.0",
     "eslint": "^9.36.0",
     "eslint-plugin-jsdoc": "^52.0.4",
+    "husky": "^9.1.7",
     "neostandard": "^0.12.2",
     "web-ext": "^8.10.0"
   },

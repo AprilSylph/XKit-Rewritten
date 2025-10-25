@@ -15,6 +15,14 @@
   font: inherit;
 }
 
+.xkit-control-button:disabled {
+  cursor: not-allowed;
+}
+
+.xkit-control-button:disabled svg {
+  opacity: 0.5;
+}
+
 .xkit-control-button-inner {
   display: block;
 
@@ -26,28 +34,17 @@
   width: 24px;
   height: 24px;
 
+  fill: var(--content-fg-secondary);
+}
+
+
+.xkit-control-button-container.in-legacy-footer .xkit-control-button-inner svg {
   fill: rgba(var(--black), 0.65);
 }
 
-.xkit-control-button:disabled {
-  cursor: not-allowed;
-}
-
-.xkit-control-button:disabled svg {
+.xkit-control-button-container.in-legacy-footer .xkit-control-button:disabled svg {
+  opacity: unset;
   fill: rgba(var(--black), 0.4);
-}
-
-.xkit-control-button-container.in-new-footer {
-  margin-left: 0;
-}
-
-.xkit-control-button-container.in-new-footer .xkit-control-button {
-  border-radius: 9999px;
-}
-
-.xkit-control-button-container.in-new-footer .xkit-control-button-inner {
-  display: flex;
-  padding: 8px;
 }
 
 @media (max-width: 990px) {
@@ -63,6 +60,52 @@
     width: 48px;
   }
 }
+
+
+.xkit-control-button-container:is(.in-new-footer, .in-community) {
+  margin-left: 0;
+}
+
+.xkit-control-button-container:is(.in-new-footer, .in-community) .xkit-control-button {
+  border-radius: 9999px;
+}
+
+.xkit-control-button-container:is(.in-new-footer, .in-community) .xkit-control-button-inner {
+  display: flex;
+  padding: 8px;
+}
+
+
+.xkit-control-button-container.in-community {
+  align-self: center;
+}
+
+.xkit-control-button-container.in-community .xkit-control-button {
+  outline: 1px solid var(--content-tint-strong);
+  outline-offset: -1px;
+}
+
+.xkit-control-button-container.in-community .xkit-control-button:is(:active, :hover) {
+  outline: 1px solid var(--content-tint-heavy);
+}
+
+.xkit-control-button-container.in-community .xkit-control-button:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.xkit-control-button-container.in-community .xkit-control-button:disabled {
+  outline: 1px solid var(--content-tint);
+}
+
+.xkit-control-button-container.in-community .xkit-control-button svg {
+  scale: calc(20 / 24);
+}
+
+.xkit-control-button-container.in-community .xkit-control-button:disabled svg {
+  fill: var(--content-fg-tertiary);
+}
+
 
 .xkit-controls-row {
   position: relative;

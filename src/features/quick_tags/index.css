@@ -21,13 +21,13 @@
   font-weight: normal;
 }
 
-#quick-tags-post-option.below {
+#quick-tags-post-option[data-position="below"] {
   top: 100%;
   right: 50%;
   transform: translate(50%, 12px);
 }
 
-#quick-tags-post-option.above {
+#quick-tags-post-option[data-position="above"] {
   bottom: 100%;
   right: 50%;
   transform: translate(50%, -12px);
@@ -42,11 +42,11 @@
   }
 }
 
-#quick-tags.below {
+#quick-tags[data-position="below"] {
   inset: 100% 50% auto auto;
   transform: translate(calc(50% + var(--horizontal-offset, 0%)), var(--icon-spacing));
 }
-#quick-tags.above {
+#quick-tags[data-position="above"] {
   inset: auto 50% 100% auto;
   transform: translate(calc(50% + var(--horizontal-offset, 0%)), calc(0px - var(--icon-spacing)));
 }

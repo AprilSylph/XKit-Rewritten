@@ -32,6 +32,9 @@ const styleElement = buildStyle(`
     margin-top: 0;
     margin-left: 0;
     margin-right: 0.5ch;
+
+    /* fixes hover when covered by the "permalink" <a> element */
+    isolation: isolate;
   }
 
   ${followingTimelineSelector} [${hiddenAttribute}] {

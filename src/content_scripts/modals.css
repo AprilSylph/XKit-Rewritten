@@ -142,3 +142,27 @@
 #xkit-modal .buttons :is(a, button, input).blue {
   background-color: rgb(var(--blue));
 }
+
+.xkit-modal-tag,
+.xkit-modal-blog {
+  display: inline-block;
+
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.xkit-modal-tag {
+  padding: 0 0.5em;
+  border-radius: 1em;
+  margin: 0.25rem 0;
+
+  background-color: rgb(var(--deprecated-accent));
+  color: rgb(var(--navy));
+}
+
+.xkit-modal-blog {
+  font-weight: 700;
+}
+
+.xkit-modal-tag::before { content: '#'; }
+.xkit-modal-blog::before { content: '@'; }

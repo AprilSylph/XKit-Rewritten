@@ -19,11 +19,24 @@ let blacklist;
 
 let reblogTrailTheming = true;
 
-const hexToRGB = (hex) => {
+const clamp = (number, lower, upper) => Math.min(Math.max(number, lower), upper);
+const average = array => array.reduce((prev, cur) => prev + cur, 0) / array.length;
+
+const hexToRGBComponents = hex => {
   const { red, green, blue } = hex.match(groupsFromHex).groups;
   return [red, green, blue]
     .map(color => color.padEnd(2, color))
-    .map(color => parseInt(color, 16))
+    .map(color => parseInt(color, 16));
+};
+const hexToRGB = hex => hexToRGBComponents(hex).join(', ');
+
+const createContrastingColor = hex => {
+  const components = hexToRGBComponents(hex);
+  const isLight = average(components) > 128;
+  const adjustment = isLight ? -100 : 100;
+
+  return components
+    .map(component => clamp(component + adjustment, 0, 255))
     .join(', ');
 };
 
@@ -52,8 +65,8 @@ const processPosts = async function (postElements) {
         } = theme;
 
         const backgroundColorRGB = hexToRGB(backgroundColor);
-        const titleColorRGB = hexToRGB(titleColor);
-        const linkColorRGB = hexToRGB(linkColor);
+        const titleColorRGB = titleColor === backgroundColor ? createContrastingColor(titleColor) : hexToRGB(titleColor);
+        const linkColorRGB = linkColor === backgroundColor ? createContrastingColor(linkColor) : hexToRGB(linkColor);
 
         styleElement.textContent += `
           [data-xkit-themed="${name}"] {

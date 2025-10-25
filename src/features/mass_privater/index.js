@@ -1,6 +1,6 @@
 import { dom } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
-import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal } from '../../utils/modals.js';
+import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal, createTagSpan, createBlogSpan } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { dateTimeFormat, elementsAsList } from '../../utils/text_format.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
@@ -9,8 +9,6 @@ import { userBlogs } from '../../utils/user.js';
 const getPostsFormId = 'xkit-mass-privater-get-posts';
 
 const createBlogOption = ({ name, title, uuid }) => dom('option', { value: uuid, title }, null, [name]);
-const createTagSpan = tag => dom('span', { class: 'mass-privater-tag' }, null, [tag]);
-const createBlogSpan = name => dom('span', { class: 'mass-privater-blog' }, null, [name]);
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const timezoneOffsetMs = new Date().getTimezoneOffset() * 60000;
@@ -256,4 +254,3 @@ const sidebarOptions = {
 
 export const main = async () => addSidebarItem(sidebarOptions);
 export const clean = async () => removeSidebarItem(sidebarOptions.id);
-export const stylesheet = true;

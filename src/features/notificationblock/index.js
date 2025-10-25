@@ -124,7 +124,7 @@ const unblockPostFilter = async ({ id, rebloggedRootId }) => {
   return blockedPostTargetIDs.includes(rootId);
 };
 
-export const onStorageChanged = (changes, areaName) => {
+export const onStorageChanged = (changes) => {
   if (Object.keys(changes).includes(storageKey)) {
     blockedPostTargetIDs = changes[storageKey].newValue ?? [];
     pageModifications.trigger(processNotifications);

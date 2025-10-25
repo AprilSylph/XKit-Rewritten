@@ -1,6 +1,6 @@
 {
   "title": "Show Originals",
-  "description": "Hide reblogged posts by default",
+  "description": "Add a no-reblogs tab to your timeline",
   "icon": {
     "class_name": "ri-focus-line",
     "color": "white",

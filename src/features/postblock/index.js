@@ -49,7 +49,7 @@ const blockPost = async rootID => {
   browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes) {
   if (Object.keys(changes).includes(storageKey)) {
     ({ newValue: blockedPostRootIDs = [] } = changes[storageKey]);
     pageModifications.trigger(processPosts);

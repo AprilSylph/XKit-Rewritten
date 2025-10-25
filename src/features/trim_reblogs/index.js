@@ -32,7 +32,8 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   } = await timelineObject(postElement);
 
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
-  const { blog, content = [], trail = [], isBlocksPostFormat } = postData;
+  const { blog, authorBlog, community, content = [], trail = [], isBlocksPostFormat } = postData;
+  const visibleBlog = community ? authorBlog : blog;
 
   if (isBlocksPostFormat === false) {
     await new Promise(resolve => {
@@ -97,7 +98,7 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   trailData.slice(0, -1).forEach(({ checkbox }) => { checkbox.checked = true; });
 
   const contentData = content.length
-    ? [createPreviewItem({ blog, content, disableCheckbox: true })]
+    ? [createPreviewItem({ blog: visibleBlog, content, disableCheckbox: true })]
     : [];
 
   const previewElement = dom(

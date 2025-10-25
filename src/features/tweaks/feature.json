@@ -105,7 +105,7 @@
     },
     "no_where_were_we": {
       "type": "checkbox",
-      "label": "Hide the \"Now, where were we?\" button",
+      "label": "Hide the floating \"new posts\" indicator button",
       "default": false
     }
   }

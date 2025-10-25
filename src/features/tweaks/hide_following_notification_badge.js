@@ -4,29 +4,33 @@ import { buildStyle } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
 
-const followingHomeButton = `:is(li[title="${translate('Home')}"], button[aria-label="${translate('Home')}"], a[href="/dashboard/following"])`;
+const followingHomeButton = `:is(li[title="${translate('Home')}"], button[aria-label="${translate('Home')}"], a[href="/dashboard/following"], a[href="/dashboard"])`;
 const mobileMenuButton = `button[aria-label="${translate('Menu')}"]`;
 
 const customTitleElement = dom('title', { 'data-xkit': true });
-const styleElement = buildStyle(`
+
+export const styleElement = buildStyle(`
 :is(${followingHomeButton}, ${mobileMenuButton}) ${keyToCss('notificationBadge')} {
   display: none;
 }
 `);
 
-const onTitleChanged = ([titleElement]) => {
+const onTitleChanged = () => {
+  const titleElement = document.querySelector('head title:not([data-xkit])');
+
   const rawTitle = titleElement.textContent;
   const newTitle = rawTitle.replace(/^\(\d{1,2}\) /, '');
   customTitleElement.textContent = newTitle;
+
+  observer.observe(titleElement, { characterData: true, subtree: true });
 };
+const observer = new MutationObserver(onTitleChanged);
 
 export const main = async () => {
   pageModifications.register('head title:not([data-xkit])', onTitleChanged);
   document.head.prepend(customTitleElement);
-  document.documentElement.append(styleElement);
 };
 
 export const clean = async () => {
   customTitleElement.remove();
-  styleElement.remove();
 };

@@ -1,3 +1,5 @@
+import { Sortable } from '../../../lib/sortable.esm.js';
+
 const storageKey = 'quick_tags.preferences.tagBundles';
 
 const bundlesList = document.getElementById('bundles');
@@ -22,15 +24,21 @@ const saveNewBundle = async event => {
   currentTarget.reset();
 };
 
-const moveBundle = async ({ currentTarget }) => {
-  const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-  const currentIndex = parseInt(currentTarget.closest('[id]').id);
-  const targetIndex = currentIndex + (currentTarget.className === 'down' ? 1 : -1);
+Sortable.create(bundlesList, {
+  dataIdAttr: 'id',
+  handle: '.drag-handle',
+  forceFallback: true,
+  store: {
+    set: async sortable => {
+      const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
 
-  [tagBundles[currentIndex], tagBundles[targetIndex]] = [tagBundles[targetIndex], tagBundles[currentIndex]];
+      const order = sortable.toArray().map(Number);
+      const newTagBundles = order.map(i => tagBundles[i]);
 
-  browser.storage.local.set({ [storageKey]: tagBundles });
-};
+      browser.storage.local.set({ [storageKey]: newTagBundles });
+    }
+  }
+});
 
 const editTagBundle = async ({ currentTarget }) => {
   const { parentNode: { parentNode } } = currentTarget;
@@ -75,11 +83,6 @@ const renderBundles = async function () {
 
     bundleTemplateClone.querySelector('.bundle').id = index;
 
-    bundleTemplateClone.querySelector('.up').disabled = index === 0;
-    bundleTemplateClone.querySelector('.up').addEventListener('click', moveBundle);
-    bundleTemplateClone.querySelector('.down').disabled = index === (tagBundles.length - 1);
-    bundleTemplateClone.querySelector('.down').addEventListener('click', moveBundle);
-
     bundleTemplateClone.querySelector('.title').value = title;
     bundleTemplateClone.querySelector('.tags').value = tags;
 
@@ -90,8 +93,8 @@ const renderBundles = async function () {
   }));
 };
 
-browser.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
+browser.storage.local.onChanged.addListener((changes) => {
+  if (Object.keys(changes).includes(storageKey)) {
     bundlesList.textContent = '';
     renderBundles();
   }

@@ -6,7 +6,7 @@ import { followingTimelineSelector } from '../../utils/timeline_id.js';
 const hiddenAttribute = 'data-tweaks-caught-up-line-title';
 const borderAttribute = 'data-tweaks-caught-up-line-border';
 
-const styleElement = buildStyle(`
+export const styleElement = buildStyle(`
   [${hiddenAttribute}] > div { display: none; }
   [${borderAttribute}] > div {
     box-sizing: content-box;
@@ -35,13 +35,12 @@ const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
   });
 
 export const main = async function () {
-  document.documentElement.append(styleElement);
   pageModifications.register(tagChicletCarouselLinkSelector, createCaughtUpLine);
 };
 
 export const clean = async function () {
   pageModifications.unregister(createCaughtUpLine);
-  styleElement.remove();
+
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`[${borderAttribute}]`).removeAttr(borderAttribute);
 };

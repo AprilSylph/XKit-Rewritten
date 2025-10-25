@@ -1,21 +1,24 @@
 'use strict';
 
 {
+  const enabledFeaturesKey = 'enabledScripts';
+
   const redpop = [...document.scripts].some(({ src }) => src.includes('/pop/'));
   const isReactLoaded = () => document.querySelector('[data-rh]') === null;
 
   const restartListeners = {};
 
+  // prevent referencing outdated resources after firefox extension update/restart
   const timestamp = Date.now();
 
-  const runScript = async function (name) {
+  const runFeature = async function (name) {
     const {
       main,
       clean,
       stylesheet,
       styleElement,
       onStorageChanged
-    } = await import(browser.runtime.getURL(`/features/${name}.js`));
+    } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
 
     if (main) {
       main().catch(console.error);
@@ -23,7 +26,7 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: browser.runtime.getURL(`/features/${name}.css?t=${timestamp}`)
+        href: browser.runtime.getURL(`/features/${name}/index.css?t=${timestamp}`)
       });
       link.className = 'xkit';
       document.documentElement.appendChild(link);
@@ -33,68 +36,62 @@
       document.documentElement.append(styleElement);
     }
 
-    restartListeners[name] = async (changes, areaName) => {
-      if (areaName !== 'local') return;
-
-      const { enabledScripts } = changes;
-      if (enabledScripts && !enabledScripts.newValue.includes(name)) return;
+    restartListeners[name] = async (changes) => {
+      const { [enabledFeaturesKey]: enabledFeatures } = changes;
+      if (enabledFeatures && !enabledFeatures.newValue.includes(name)) return;
 
       if (onStorageChanged instanceof Function) {
-        onStorageChanged(changes, areaName);
+        onStorageChanged(changes);
       } else if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
         await clean?.();
         await main?.();
       }
     };
 
-    browser.storage.onChanged.addListener(restartListeners[name]);
+    browser.storage.local.onChanged.addListener(restartListeners[name]);
   };
 
-  const destroyScript = async function (name) {
+  const destroyFeature = async function (name) {
     const {
       clean,
       stylesheet,
       styleElement
-    } = await import(browser.runtime.getURL(`/features/${name}.js`));
+    } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
 
     if (clean) {
       clean().catch(console.error);
     }
     if (stylesheet) {
-      document.querySelector(`link[href^="${browser.runtime.getURL(`/features/${name}.css`)}"]`)?.remove();
+      document.querySelector(`link[href^="${browser.runtime.getURL(`/features/${name}/index.css`)}"]`)?.remove();
     }
     if (styleElement) {
       styleElement.remove();
     }
 
-    browser.storage.onChanged.removeListener(restartListeners[name]);
+    browser.storage.local.onChanged.removeListener(restartListeners[name]);
     delete restartListeners[name];
   };
 
-  const onStorageChanged = async function (changes, areaName) {
-    if (areaName !== 'local') {
-      return;
-    }
+  const onStorageChanged = async function (changes) {
+    const { [enabledFeaturesKey]: enabledFeatures } = changes;
 
-    const { enabledScripts } = changes;
-
-    if (enabledScripts) {
-      const { oldValue = [], newValue = [] } = enabledScripts;
+    if (enabledFeatures) {
+      const { oldValue = [], newValue = [] } = enabledFeatures;
 
       const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
       const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
 
-      newlyEnabled.forEach(runScript);
-      newlyDisabled.forEach(destroyScript);
+      newlyEnabled.forEach(runFeature);
+      newlyDisabled.forEach(destroyFeature);
     }
   };
 
-  const getInstalledScripts = async function () {
-    const url = browser.runtime.getURL('/features/_index.json');
+  const getInstalledFeatures = async function () {
+    const url = browser.runtime.getURL('/features/index.json');
     const file = await fetch(url);
-    const installedScripts = await file.json();
+    const installedFeatures = await file.json();
 
-    return installedScripts;
+    return installedFeatures;
   };
 
   const initMainWorld = () => new Promise(resolve => {
@@ -102,22 +99,23 @@
 
     const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
     const script = document.createElement('script');
+    script.type = 'module';
     script.nonce = nonce;
-    script.src = browser.runtime.getURL('/main_world/index.js');
+    script.src = browser.runtime.getURL(`/main_world/index.js?t=${timestamp}`);
     document.documentElement.append(script);
   });
 
   const init = async function () {
     $('style.xkit, link.xkit').remove();
 
-    browser.storage.onChanged.addListener(onStorageChanged);
+    browser.storage.local.onChanged.addListener(onStorageChanged);
 
     const [
-      installedScripts,
-      { enabledScripts = [] }
+      installedFeatures,
+      { [enabledFeaturesKey]: enabledFeatures = [] }
     ] = await Promise.all([
-      getInstalledScripts(),
-      browser.storage.local.get('enabledScripts'),
+      getInstalledFeatures(),
+      browser.storage.local.get(enabledFeaturesKey),
       initMainWorld()
     ]);
 
@@ -127,9 +125,9 @@
      */
     await Promise.all(['css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
 
-    installedScripts
-      .filter(scriptName => enabledScripts.includes(scriptName))
-      .forEach(runScript);
+    installedFeatures
+      .filter(featureName => enabledFeatures.includes(featureName))
+      .forEach(runFeature);
   };
 
   const waitForReactLoaded = () => new Promise(resolve => {

@@ -130,7 +130,7 @@ const processPosts = async function (postElements) {
   }
 };
 
-export const onStorageChanged = async (changes, areaName) => {
+export const onStorageChanged = async (changes) => {
   const {
     [storageKey]: timestampsChanges,
     'tag_tracking_plus.preferences.onlyShowNew': onlyShowNewChanges

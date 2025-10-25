@@ -24,7 +24,7 @@ const addAudioControls = nativePlayers => nativePlayers.forEach(nativePlayer => 
   nativePlayer.parentNode.appendChild(audioClone);
 });
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes) {
   const {
     'vanilla_audio.preferences.defaultVolume': defaultVolumeChanges
   } = changes;

@@ -5,5 +5,12 @@
     "class_name": "ri-layout-bottom-line",
     "color": "white",
     "background_color": "#395875"
+  },
+  "preferences": {
+    "noReblogMenu": {
+      "type": "checkbox",
+      "label": "Turn reblog buttons back into links",
+      "default": true
+    }
   }
 }

@@ -1,7 +1,13 @@
 #backup details {
+  padding: 1ch;
+}
+
+#backup details > .content {
+  margin-top: 0.5em;
+
   display: flex;
   flex-direction: column;
-  padding: 1ch;
+  gap: 0.5em;
 }
 
 #backup details[open] ~ details summary ~ * {
@@ -14,7 +20,7 @@
 }
 
 #backup label {
-  margin: 1em 0;
+  margin: 0;
 }
 
 #backup pre {
@@ -33,7 +39,7 @@
   overflow-wrap: break-word;
   padding: 1ch;
   border: none;
-  margin: 1em 0;
+  margin: 0;
 
   background-color: rgb(var(--passive-grey));
   color: rgb(var(--black));

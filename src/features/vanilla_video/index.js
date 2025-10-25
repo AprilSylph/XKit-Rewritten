@@ -32,7 +32,7 @@ const cloneVideoElements = videoElements => videoElements.forEach(videoElement =
   videoElement.before(newVideoElement);
 });
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes) {
   const {
     'vanilla_video.preferences.tumblrTvEnable': tumblrTvEnableChanges,
     'vanilla_video.preferences.defaultVolume': defaultVolumeChanges

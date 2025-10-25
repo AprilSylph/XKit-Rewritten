@@ -30,11 +30,11 @@
   }
 }
 
-#quick-reblog.below {
+#quick-reblog[data-position="below"] {
   inset: 100% 50% auto auto;
   transform: translate(calc(50% + var(--horizontal-offset, 0%)), var(--icon-spacing));
 }
-#quick-reblog.above {
+#quick-reblog[data-position="above"] {
   inset: auto 50% 100% auto;
   transform: translate(calc(50% + var(--horizontal-offset, 0%)), calc(0px - var(--icon-spacing)));
 }
@@ -195,22 +195,8 @@ footer:is(.published, .queue, .draft) :is(button:not([role]), a[href^="/reblog/"
   position: relative;
 }
 
-/* Cut-out for tick in 2025 post footer, "split notes count" variant */
-footer:is(.published, .queue, .draft) a[href^="/reblog/"] svg:has(use[href="#managed-icon__ds-reblog-24"]) {
-  -webkit-mask-image: radial-gradient(
-    calc(14.7px / 2) calc(18px / 2) at bottom 5px right 4px,
-    transparent 99%,
-    white 100%
-  );
-  mask-image: radial-gradient(
-    calc(14.7px / 2) calc(18px / 2) at bottom 5px right 4px,
-    transparent 99%,
-    white 100%
-  );
-}
-
-/* Cut-out for tick in 2025 post footer, "single action" variant */
-footer:is(.published, .queue, .draft) button svg:has(use[href="#managed-icon__ds-reblog-24"]) {
+/* Cut-out for tick in 2025 post footer */
+footer:is(.published, .queue, .draft) :is(a[href^="/reblog/"], button) svg:has(use[href="#managed-icon__ds-reblog-24"]) {
   -webkit-mask-image: radial-gradient(
     calc(14.7px / 2) calc(18px / 2) at bottom 4px left 21px,
     transparent 99%,
@@ -246,14 +232,8 @@ footer:is(.published, .queue, .draft) a[href^="/reblog/"]:has(use[href="#managed
   right: -5px;
 }
 
-/* 2025 post footer, "split notes count" variant */
-footer:is(.published, .queue, .draft) a[href^="/reblog/"]:has(use[href="#managed-icon__ds-reblog-24"])::after {
-  bottom: 4px;
-  right: 5px;
-}
-
-/* 2025 post footer, "single action" variant */
-footer:is(.published, .queue, .draft) button:has(use[href="#managed-icon__ds-reblog-24"])::after {
+/* 2025 post footer */
+footer:is(.published, .queue, .draft) :is(a[href^="/reblog/"], button):has(use[href="#managed-icon__ds-reblog-24"])::after {
   bottom: 4px;
   left: 21px;
 }

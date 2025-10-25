@@ -5,7 +5,7 @@ import { pageModifications } from './mutations.js';
 import { inject } from './inject.js';
 import { blogData, notePropsObjects, timelineObject } from './react_props.js';
 
-const postHeaderSelector = `${postSelector} article > header`;
+const postHeaderSelector = `${postSelector} :is(article > header, article > div > header)`;
 const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
 
 const meatballItems = {

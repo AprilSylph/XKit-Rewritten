@@ -26,5 +26,6 @@
       ],
       "default": "1"
     }
-  }
+  },
+  "deprecated": true
 }

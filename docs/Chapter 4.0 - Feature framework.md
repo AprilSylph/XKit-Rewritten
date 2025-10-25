@@ -22,7 +22,7 @@ The stylesheet file is a normal CSS file which, assuming the module file correct
 `/src/features/example/feature.json`
 ```json
 {
-  "title": "Example Script",
+  "title": "Example Feature",
   "description": "This doesn't do anything useful.",
   "icon": {
     "class_name": "ri-terminal-line",

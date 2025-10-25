@@ -179,8 +179,11 @@ class XKitFeatureElement extends CustomElement {
     this.#detailsElement.dataset.deprecated = this.deprecated;
     this.#enabledToggle.id = this.featureName;
     this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
-    this.#helpAnchor.href = this.help;
     this.dataset.relatedTerms = this.relatedTerms;
+
+    if (this.help) {
+      this.#helpAnchor.href = this.help;
+    }
 
     if (Object.keys(this.preferences).length !== 0) {
       this.#renderPreferences({

@@ -22,9 +22,9 @@ const processPosts = async function (postElements) {
     const container = dom('div', { class: containerClass });
     wrapper.append(container);
 
-    headerElement.after(wrapper);
-    while (wrapper.nextElementSibling !== footerElement) {
-      container.append(wrapper.nextElementSibling);
+    footerElement.before(wrapper);
+    while (wrapper.previousElementSibling && wrapper.previousElementSibling !== headerElement) {
+      container.prepend(wrapper.previousElementSibling);
     }
   });
 };

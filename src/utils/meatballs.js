@@ -89,8 +89,8 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
     });
     return;
   }
-  const inPostFooter = await inject('/main_world/test_parent_element.js', ['footer *'], meatballMenu);
-  if (inPostFooter) {
+  const inPostActivity = await inject('/main_world/test_parent_element.js', [`${keyToCss('postActivity')} *`], meatballMenu);
+  if (inPostActivity) {
     const __notePropsData = await notePropsObjects(meatballMenu);
 
     if (__notePropsData?.noteProps?.note?.type === 'reply') {

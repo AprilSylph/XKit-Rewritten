@@ -1,6 +1,6 @@
 {
   "title": "Show Originals",
-  "description": "Add a no-reblogs tab to your timeline",
+  "description": "Add an “Original Posts” tab to your timelines",
   "icon": {
     "class_name": "ri-focus-line",
     "color": "white",

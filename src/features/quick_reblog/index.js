@@ -9,6 +9,7 @@ import { notify } from '../../utils/notifications.js';
 import { dom } from '../../utils/dom.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { keyToCss } from '../../utils/css_map.js';
+import { popoverStackingContextFix } from '../../utils/post_popovers.js';
 
 const blogSelector = dom('select');
 const blogAvatar = dom('div', { class: 'avatar' });
@@ -81,6 +82,8 @@ ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) {
 ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) ${keyToCss('tooltip')} {
   display: none;
 }
+
+${popoverStackingContextFix}
 `);
 
 const onBlogSelectorChange = () => {

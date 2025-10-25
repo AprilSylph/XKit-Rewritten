@@ -34,11 +34,11 @@ const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
     timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
   });
 
-export const main = async function () {
+export const main = async () => {
   pageModifications.register(tagChicletCarouselLinkSelector, createCaughtUpLine);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(createCaughtUpLine);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

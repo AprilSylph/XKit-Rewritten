@@ -11,7 +11,7 @@
   // prevent referencing outdated resources after firefox extension update/restart
   const timestamp = Date.now();
 
-  const runFeature = async function (name) {
+  const runFeature = async name => {
     const {
       main,
       clean,
@@ -36,7 +36,7 @@
       document.documentElement.append(styleElement);
     }
 
-    restartListeners[name] = async (changes) => {
+    restartListeners[name] = async changes => {
       const { [enabledFeaturesKey]: enabledFeatures } = changes;
       if (enabledFeatures && !enabledFeatures.newValue.includes(name)) return;
 
@@ -51,7 +51,7 @@
     browser.storage.local.onChanged.addListener(restartListeners[name]);
   };
 
-  const destroyFeature = async function (name) {
+  const destroyFeature = async name => {
     const {
       clean,
       stylesheet,
@@ -72,7 +72,7 @@
     delete restartListeners[name];
   };
 
-  const onStorageChanged = async function (changes) {
+  const onStorageChanged = async changes => {
     const { [enabledFeaturesKey]: enabledFeatures } = changes;
 
     if (enabledFeatures) {
@@ -86,7 +86,7 @@
     }
   };
 
-  const getInstalledFeatures = async function () {
+  const getInstalledFeatures = async () => {
     const url = browser.runtime.getURL('/features/index.json');
     const file = await fetch(url);
     const installedFeatures = await file.json();
@@ -105,7 +105,7 @@
     document.documentElement.append(script);
   });
 
-  const init = async function () {
+  const init = async () => {
     $('style.xkit, link.xkit').remove();
 
     browser.storage.local.onChanged.addListener(onStorageChanged);

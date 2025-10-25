@@ -10,7 +10,7 @@
  * @param {Children} [children] - Zero or more valid children
  * @returns {HTMLElement | SVGElement | MathMLElement} Element created to specification
  */
-export function dom (tagName, attributes = {}, events = {}, children = []) {
+export const dom = (tagName, attributes = {}, events = {}, children = []) => {
   const element = attributes?.xmlns
     ? document.createElementNS(attributes.xmlns, tagName)
     : document.createElement(tagName);
@@ -21,7 +21,7 @@ export function dom (tagName, attributes = {}, events = {}, children = []) {
 
   element.normalize();
   return element;
-}
+};
 
 /** @typedef {Attributes & Events} Properties */
 
@@ -33,7 +33,7 @@ export function dom (tagName, attributes = {}, events = {}, children = []) {
  * @returns {HTMLElement | SVGElement | MathMLElement} Element created to specification
  * @example element('a', { href: '/' }) => <a href="/">
  */
-export function element (tagName, properties = {}, children = []) {
+export const element = (tagName, properties = {}, children = []) => {
   const element = properties?.xmlns
     ? document.createElementNS(properties.xmlns, tagName)
     : document.createElement(tagName);
@@ -47,7 +47,7 @@ export function element (tagName, properties = {}, children = []) {
 
   element.normalize();
   return element;
-}
+};
 
 /** @typedef {(props?: Properties, children?: Children) => HTMLElement} HTMLShorthand */
 /** @typedef {(props?: Properties) => HTMLElement} VoidHTMLShorthand */

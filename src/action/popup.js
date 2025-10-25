@@ -1,4 +1,4 @@
-const checkForNoResults = function () {
+const checkForNoResults = () => {
   const nothingFound = [...document.querySelectorAll('xkit-feature')].every(featureElement =>
     featureElement.classList.contains('search-hidden') || featureElement.classList.contains('filter-hidden')
   );

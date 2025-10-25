@@ -9,8 +9,6 @@ on:
       - package*.json
       - .eslintrc.json
   pull_request:
-    branches:
-      - master
 
 jobs:
   test:

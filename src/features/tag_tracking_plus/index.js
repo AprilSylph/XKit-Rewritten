@@ -18,6 +18,7 @@ const unreadCounts = new Map();
 let sidebarItem;
 
 const maxUnreadCount = 10;
+const maxFetchesPerTag = 5;
 
 const getUnreadCount = async function (tag) {
   const savedTimestamp = timestamps[tag] ?? 0;
@@ -26,7 +27,7 @@ const getUnreadCount = async function (tag) {
   const posts = [];
 
   let resource = `/v2/hubs/${encodeURIComponent(tag)}/timeline?${$.param({ limit: 20, sort: 'recent' })}`;
-  while (posts.length < maxUnreadCount) {
+  for (let i = 0; i < maxFetchesPerTag; i++) {
     const {
       response: {
         timeline: {
@@ -45,6 +46,10 @@ const getUnreadCount = async function (tag) {
 
     if (!resource || posts.every(isUnread) === false) {
       return posts.filter(isUnread).length;
+    }
+
+    if (posts.length >= maxUnreadCount) {
+      return Infinity;
     }
   }
   return Infinity;

@@ -105,7 +105,7 @@
     },
     "no_where_were_we": {
       "type": "checkbox",
-      "label": "Hide the floating \"new posts\" indicator button on the dashboard",
+      "label": "Hide the floating “New posts” indicator button on the dashboard",
       "default": false
     }
   }

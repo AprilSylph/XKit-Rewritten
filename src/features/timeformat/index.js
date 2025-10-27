@@ -7,8 +7,6 @@ import { getPreferences } from '../../utils/preferences.js';
 let format;
 let displayRelative;
 
-let intervalId;
-
 export const styleElement = buildStyle(`
 [data-formatted-time] {
   font-size: 0px !important;
@@ -122,15 +120,9 @@ const formatTimeElements = function (timeElements) {
 export const main = async function () {
   ({ format, displayRelative } = await getPreferences('timeformat'));
   pageModifications.register(`${keyToCss('timestamp')}[datetime], ${keyToCss('timestamp')} > [datetime]`, formatTimeElements);
-
-  intervalId = setInterval(
-    () => displayRelative && document.visibilityState === 'visible' && pageModifications.trigger(formatTimeElements),
-    60 * 1000
-  );
 };
 
 export const clean = async function () {
-  clearInterval(intervalId);
   pageModifications.unregister(formatTimeElements);
   $('[data-formatted-time]').removeAttr('data-formatted-time');
   $('[data-formatted-relative-time]').removeAttr('data-formatted-relative-time');

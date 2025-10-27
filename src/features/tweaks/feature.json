@@ -103,10 +103,11 @@
       "label": "Hide the Activity notification badge",
       "default": false
     },
-    "no_where_were_we": {
+    "hide_new_posts_indicator": {
       "type": "checkbox",
       "label": "Hide the floating “New posts” indicator button on the dashboard",
-      "default": false
+      "default": false,
+      "inherit": "tweaks.preferences.no_where_were_we"
     }
   }
 }

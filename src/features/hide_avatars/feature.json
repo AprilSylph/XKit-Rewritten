@@ -1,6 +1,6 @@
 {
   "title": "Hide Avatars",
-  "description": "Disappear avatars from specific blogs",
+  "description": "Disappear avatars of specific blogs",
   "icon": {
     "class_name": "ri-user-unfollow-line",
     "color": "white",

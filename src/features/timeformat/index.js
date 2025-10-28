@@ -106,23 +106,24 @@ const constructRelativeTimeString = function (unixTime) {
   return relativeTimeFormat.format(-0, 'second');
 };
 
-const formatTimeElement = timeElement => {
-  const momentDate = moment(timeElement.dateTime, moment.ISO_8601);
-  timeElement.dataset.formattedTime = momentDate.format(format);
-  if (displayRelative) {
-    timeElement.dataset.formattedTime += '\u00A0\u00B7\u00A0';
-    timeElement.dataset.formattedRelativeTime = constructRelativeTimeString(momentDate.unix());
-  }
+const updateRelativeTime = timeElement => {
+  timeElement.dataset.formattedRelativeTime = constructRelativeTimeString(timeElement.unixTime);
 };
 
 const observer = new MutationObserver(mutations =>
-  mutations.forEach(({ target }) => target.parentElement?.dateTime && formatTimeElement(target.parentElement))
+  mutations.forEach(({ target: { parentElement: timeElement } }) => timeElement?.unixTime && updateRelativeTime(timeElement))
 );
 
 const formatTimeElements = function (timeElements) {
   timeElements.forEach(timeElement => {
-    formatTimeElement(timeElement);
-    displayRelative && observer.observe(timeElement, { characterData: true, subtree: true });
+    const momentDate = moment(timeElement.dateTime, moment.ISO_8601);
+    timeElement.dataset.formattedTime = momentDate.format(format);
+    if (displayRelative) {
+      timeElement.dataset.formattedTime += '\u00A0\u00B7\u00A0';
+      timeElement.unixTime = momentDate.unix();
+      updateRelativeTime(timeElement);
+      observer.observe(timeElement, { characterData: true, subtree: true });
+    }
   });
 };
 

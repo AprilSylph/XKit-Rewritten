@@ -122,7 +122,7 @@ const observer = new MutationObserver(mutations =>
 const formatTimeElements = function (timeElements) {
   timeElements.forEach(timeElement => {
     formatTimeElement(timeElement);
-    observer.observe(timeElement, { characterData: true, subtree: true });
+    displayRelative && observer.observe(timeElement, { characterData: true, subtree: true });
   });
 };
 

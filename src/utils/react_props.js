@@ -1,22 +1,23 @@
 import { inject } from './inject.js';
-import { weakMemoize } from './memoize.js';
 import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
 /**
  * @param {Element} postElement - An on-screen post
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
-export const timelineObject = weakMemoize(postElement =>
-  inject('/main_world/unbury_timeline_object.js', [], postElement)
-);
+export const timelineObject = async postElement => {
+  postElement.timelineObject ??= await inject('/main_world/unbury_timeline_object.js', [], postElement);
+  return postElement.timelineObject;
+};
 
 /**
  * @param {Element} notificationElement - An on-screen notification
  * @returns {Promise<object>} - The notification's buried notification property
  */
-export const notificationObject = weakMemoize(notificationElement =>
-  inject('/main_world/unbury_notification.js', [], notificationElement)
-);
+export const notificationObject = async notificationElement => {
+  notificationElement.notificationObject ??= await inject('/main_world/unbury_notification.js', [], notificationElement);
+  return notificationElement.notificationObject;
+};
 
 /**
  * @param {Element} meatballMenu - An on-screen meatball menu element in a blog modal header or blog card

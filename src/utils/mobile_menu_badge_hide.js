@@ -62,4 +62,4 @@ export const mobileMenuBadgeHide = Object.freeze({
 });
 
 pageModifications.register(mobileBadgeSelector, () => mobileMenuBadgeHide.trigger());
-setInterval(() => mobileMenuBadgeHide.trigger(), 10 * 1000);
+setInterval(() => mobileMenuBadgeHide.trigger(), 10_000);

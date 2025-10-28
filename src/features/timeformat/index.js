@@ -132,6 +132,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
+  observer.disconnect();
   pageModifications.unregister(formatTimeElements);
   $('[data-formatted-time]').removeAttr('data-formatted-time');
   $('[data-formatted-relative-time]').removeAttr('data-formatted-relative-time');

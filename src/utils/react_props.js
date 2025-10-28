@@ -5,8 +5,8 @@ import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
  * @param {Element} postElement - An on-screen post
  * @returns {Promise<object>} - The post's buried timelineObject property
  */
-export const timelineObject = async postElement => {
-  postElement.timelineObject ??= await inject('/main_world/unbury_timeline_object.js', [], postElement);
+export const timelineObject = postElement => {
+  postElement.timelineObject ??= inject('/main_world/unbury_timeline_object.js', [], postElement);
   return postElement.timelineObject;
 };
 
@@ -14,8 +14,8 @@ export const timelineObject = async postElement => {
  * @param {Element} notificationElement - An on-screen notification
  * @returns {Promise<object>} - The notification's buried notification property
  */
-export const notificationObject = async notificationElement => {
-  notificationElement.notificationObject ??= await inject('/main_world/unbury_notification.js', [], notificationElement);
+export const notificationObject = notificationElement => {
+  notificationElement.notificationObject ??= inject('/main_world/unbury_notification.js', [], notificationElement);
   return notificationElement.notificationObject;
 };
 

@@ -49,11 +49,8 @@ export const mobileMenuBadgeHide = Object.freeze({
 
         this.excludedTypes.forEach(type => { delete countsByType[type]; });
 
-        const total = Object.values(countsByType).reduce((a, b) => a + b, 0);
-
-        console.log({ excludedTypes: this.excludedTypes, badgeData, countsByType, total });
-
-        mobileBadge.classList[total === 0 ? 'add' : 'remove'](hideBadgeClass);
+        const shouldHideBadge = Object.values(countsByType).every(value => value === 0);
+        mobileBadge.classList.toggle(hideBadgeClass, shouldHideBadge);
       }
     } else {
       mobileBadge.classList.remove(hideBadgeClass);

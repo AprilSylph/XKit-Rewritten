@@ -22,15 +22,15 @@ const carrotSvg = dom('svg', {
 
 /**
  * @typedef {object} sidebarRowOptions
- * @property {string} label - Human-readable link text
- * @property {Function} onclick - Click event handler for this row
- * @property {string} [href] - Optional link URL for this row
- * @property {string} [count] - Human-readable additional link text
- * @property {boolean} [carrot] - Whether to include a right-facing arrow on the link (ignored if count is specified)
+ * @property {string} label Human-readable link text
+ * @property {Function} onclick Click event handler for this row
+ * @property {string} [href] Optional link URL for this row
+ * @property {string} [count] Human-readable additional link text
+ * @property {boolean} [carrot] Whether to include a right-facing arrow on the link (ignored if count is specified)
  */
 
 /**
- * @param {sidebarRowOptions} options - Sidebar row options
+ * @param {sidebarRowOptions} options Sidebar row options
  * @returns {HTMLLIElement} The constructed sidebar row
  */
 const buildSidebarRow = ({ label, onclick, href, count, carrot }) =>
@@ -46,11 +46,11 @@ const buildSidebarRow = ({ label, onclick, href, count, carrot }) =>
   ]);
 
 /**
- * @param {object} options - Sidebar item options
- * @param {string} options.id - Unique ID for the sidebar item
- * @param {string} options.title - Human-readable sidebar item heading
- * @param {sidebarRowOptions[]} options.rows - Row options objects to construct clickable links in the sidebar item
- * @param {Function} [options.visibility] - Visibility condition function (called each time sidebar is added)
+ * @param {object} options Sidebar item options
+ * @param {string} options.id Unique ID for the sidebar item
+ * @param {string} options.title Human-readable sidebar item heading
+ * @param {sidebarRowOptions[]} options.rows Row options objects to construct clickable links in the sidebar item
+ * @param {Function} [options.visibility] Visibility condition function (called each time sidebar is added)
  * @returns {HTMLDivElement} The constructed sidebar item, for future referencing
  */
 export const addSidebarItem = ({ id, title, rows, visibility }) => {

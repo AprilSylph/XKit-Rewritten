@@ -88,14 +88,12 @@ export const onStorageChanged = async changes => {
 
   if (hideSeenPostsChanges && hideSeenPostsChanges.oldValue !== undefined) {
     const { newValue: hideSeenPosts } = hideSeenPostsChanges;
-    const addOrRemoveHide = hideSeenPosts ? 'add' : 'remove';
-    document.body.classList[addOrRemoveHide](hideClass);
+    document.body.classList.toggle(hideClass, hideSeenPosts);
   }
 
   if (onlyDimAvatarsChanges && onlyDimAvatarsChanges.oldValue !== undefined) {
     const { newValue: onlyDimAvatars } = onlyDimAvatarsChanges;
-    const addOrRemove = onlyDimAvatars ? 'add' : 'remove';
-    document.body.classList[addOrRemove](onlyDimAvatarsClass);
+    document.body.classList.toggle(onlyDimAvatarsClass, onlyDimAvatars);
   }
 
   if (seenPostsChanges) {

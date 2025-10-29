@@ -79,7 +79,7 @@ const addButtonToPage = ([scrollToTopButton]) => {
     scrollToBottomButton.addEventListener('click', onclick);
     scrollToBottomButton.id = scrollToBottomButtonId;
 
-    scrollToBottomButton.classList[active ? 'add' : 'remove'](activeClass);
+    scrollToBottomButton.classList.toggle(activeClass, active);
   }
 
   scrollToTopButton.after(scrollToBottomButton);

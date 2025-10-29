@@ -7,7 +7,7 @@ export default function controlTagsInput ({ add, remove }) {
   const reactKey = Object.keys(selectedTagsElement).find(key => key.startsWith('__reactFiber'));
   let fiber = selectedTagsElement[reactKey];
 
-  while (fiber !== null) {
+  while (fiber) {
     let tags = fiber.stateNode?.state?.tags;
     if (Array.isArray(tags)) {
       tags.push(...add.filter(tag => tags.includes(tag) === false));

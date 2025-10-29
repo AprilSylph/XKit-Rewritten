@@ -3,7 +3,7 @@ export default function getTumblelogNameProp () {
   const reactKey = Object.keys(notificationElement).find(key => key.startsWith('__reactFiber'));
   let fiber = notificationElement[reactKey];
 
-  while (fiber !== null) {
+  while (fiber) {
     const props = fiber.memoizedProps || {};
     if (props?.tumblelogName !== undefined) {
       return props.tumblelogName;

@@ -21,14 +21,14 @@ const pathnames = {
 };
 
 /**
- * @param {string[]} postIds - Array of post IDs to edit (must not exceed 100 items)
- * @param {object} options - Configuration object
- * @param {string} options.mode - Post editing method; valid modes are:
+ * @param {string[]} postIds Array of post IDs to edit (must not exceed 100 items)
+ * @param {object} options Configuration object
+ * @param {string} options.mode Post editing method; valid modes are:
  *                                 1. "add" (add tags to posts)
  *                                 2. "remove" (remove tags from posts)
  *                                 3. "delete" (delete posts)
  *                                 4. "private" (make posts private)
- * @param {string[]} [options.tags] - Array of tags to add or remove. Required if options.mode is "add" or "remove"
+ * @param {string[]} [options.tags] Array of tags to add or remove. Required if options.mode is "add" or "remove"
  * @returns {Promise<Response>} Response from constructed request
  */
 export const megaEdit = async function (postIds, options) {

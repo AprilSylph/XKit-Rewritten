@@ -20,9 +20,9 @@ export const pageModifications = Object.freeze({
 
   /**
    * Register a page modification
-   * @param {string} selector - CSS selector for elements to target
-   * @param {Function} modifierFunction - Function to handle matching elements (accepts one Element[] argument)
-   * @param {boolean} [existing] - Whether to run the function on existing elements as part of this call (default: true)
+   * @param {string} selector CSS selector for elements to target
+   * @param {Function} modifierFunction Function to handle matching elements (accepts one Element[] argument)
+   * @param {boolean} [existing] Whether to run the function on existing elements as part of this call (default: true)
    */
   register (selector, modifierFunction, existing = true) {
     if (this.listeners.has(modifierFunction) === false) {
@@ -33,7 +33,7 @@ export const pageModifications = Object.freeze({
 
   /**
    * Unregister a page modification
-   * @param {Function} modifierFunction - Previously-registered function to remove
+   * @param {Function} modifierFunction Previously-registered function to remove
    */
   unregister (modifierFunction) {
     this.listeners.delete(modifierFunction);
@@ -41,7 +41,7 @@ export const pageModifications = Object.freeze({
 
   /**
    * Run a page modification on all existing matching elements
-   * @param {Function} modifierFunction - Previously-registered function to run
+   * @param {Function} modifierFunction Previously-registered function to run
    */
   trigger (modifierFunction) {
     const selector = this.listeners.get(modifierFunction);

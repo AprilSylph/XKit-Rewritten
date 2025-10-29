@@ -106,13 +106,23 @@ const constructRelativeTimeString = function (unixTime) {
   return relativeTimeFormat.format(-0, 'second');
 };
 
+const updateRelativeTime = timeElement => {
+  timeElement.dataset.formattedRelativeTime = constructRelativeTimeString(timeElement.unixTime);
+};
+
+const observer = new MutationObserver(mutations =>
+  mutations.forEach(({ target: { parentElement: timeElement } }) => timeElement?.unixTime && updateRelativeTime(timeElement))
+);
+
 const formatTimeElements = function (timeElements) {
   timeElements.forEach(timeElement => {
     const momentDate = moment(timeElement.dateTime, moment.ISO_8601);
     timeElement.dataset.formattedTime = momentDate.format(format);
     if (displayRelative) {
       timeElement.dataset.formattedTime += '\u00A0\u00B7\u00A0';
-      timeElement.dataset.formattedRelativeTime = constructRelativeTimeString(momentDate.unix());
+      timeElement.unixTime = momentDate.unix();
+      updateRelativeTime(timeElement);
+      observer.observe(timeElement, { characterData: true, subtree: true });
     }
   });
 };
@@ -123,6 +133,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
+  observer.disconnect();
   pageModifications.unregister(formatTimeElements);
   $('[data-formatted-time]').removeAttr('data-formatted-time');
   $('[data-formatted-relative-time]').removeAttr('data-formatted-relative-time');

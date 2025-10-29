@@ -55,11 +55,11 @@ export const megaEdit = async function (postIds, options) {
 /**
  * Note: for historical reasons, content labels are referred to as "community labels"
  * in all API fields and API endpoint names.
- * @param {string} blogName - The name of the blog to edit posts on
- * @param {string[]} postIds - Array of post IDs to edit (must not exceed 100 items)
- * @param {object} options - Configuration object
- * @param {boolean} options.hasCommunityLabel - Whether the posts should have a content label
- * @param {string[]} options.categories - valid modes are:
+ * @param {string} blogName The name of the blog to edit posts on
+ * @param {string[]} postIds Array of post IDs to edit (must not exceed 100 items)
+ * @param {object} options Configuration object
+ * @param {boolean} options.hasCommunityLabel Whether the posts should have a content label
+ * @param {string[]} options.categories valid modes are:
  *                                 1. "drug_use"
  *                                 2. "violence"
  *                                 3. "sexual_themes"

@@ -59,10 +59,7 @@ export const megaEdit = async function (postIds, options) {
  * @param {string[]} postIds Array of post IDs to edit (must not exceed 100 items)
  * @param {object} options Configuration object
  * @param {boolean} options.hasCommunityLabel Whether the posts should have a content label
- * @param {string[]} options.categories valid modes are:
- *                                 1. "drug_use"
- *                                 2. "violence"
- *                                 3. "sexual_themes"
+ * @param {('drug_use' | 'violence' | 'sexual_themes')[]} options.categories Specific label categories to set
  * @returns {Promise<Response>} Response from constructed request
  */
 export const bulkCommunityLabel = async function (blogName, postIds, options) {

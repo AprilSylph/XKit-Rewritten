@@ -2,8 +2,8 @@ import { inject } from './inject.js';
 import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
 /**
- * @param {Element} postElement - An on-screen post
- * @returns {Promise<object>} - The post's buried timelineObject property
+ * @param {Element} postElement An on-screen post
+ * @returns {Promise<object>} The post's buried timelineObject property
  */
 export const timelineObject = postElement => {
   postElement.timelineObjectPromise ??= inject('/main_world/unbury_timeline_object.js', [], postElement);
@@ -11,8 +11,8 @@ export const timelineObject = postElement => {
 };
 
 /**
- * @param {Element} notificationElement - An on-screen notification
- * @returns {Promise<object>} - The notification's buried notification property
+ * @param {Element} notificationElement An on-screen notification
+ * @returns {Promise<object>} The notification's buried notification property
  */
 export const notificationObject = notificationElement => {
   notificationElement.notificationObjectPromise ??= inject('/main_world/unbury_notification.js', [], notificationElement);
@@ -20,8 +20,8 @@ export const notificationObject = notificationElement => {
 };
 
 /**
- * @param {Element} meatballMenu - An on-screen meatball menu element in a blog modal header or blog card
- * @returns {Promise<object>} - The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
+ * @param {Element} meatballMenu An on-screen meatball menu element in a blog modal header or blog card
+ * @returns {Promise<object>} The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
  */
 export const blogData = async (meatballMenu) => inject('/main_world/unbury_blog.js', [], meatballMenu);
 
@@ -50,9 +50,9 @@ export const isMyPost = async (postElement) => {
 
 /**
  * Manipulate post form tags
- * @param {object} options - Tags to add/remove to/from the current post form
- * @param {string[]} [options.add] - Tags to insert
- * @param {string[]} [options.remove] - Tags to remove
+ * @param {object} options Tags to add/remove to/from the current post form
+ * @param {string[]} [options.add] Tags to insert
+ * @param {string[]} [options.remove] Tags to remove
  * @returns {Promise<void>} Resolves when finished
  */
 export const editPostFormTags = async ({ add = [], remove = [] }) =>

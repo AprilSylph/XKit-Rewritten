@@ -16,7 +16,7 @@ export const mobileMenuBadgeHide = Object.freeze({
   excludedTypes: new Set(),
 
   /**
-   * @param {NotificationType} type - Type of notification to exclude from mobile menu badge visibility
+   * @param {NotificationType} type Type of notification to exclude from mobile menu badge visibility
    */
   register (type) {
     this.excludedTypes.add(type);
@@ -24,7 +24,7 @@ export const mobileMenuBadgeHide = Object.freeze({
   },
 
   /**
-   * @param {NotificationType} type - Type of notification to stop excluding from mobile menu badge visibility
+   * @param {NotificationType} type Type of notification to stop excluding from mobile menu badge visibility
    */
   unregister (type) {
     this.excludedTypes.delete(type);

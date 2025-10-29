@@ -29,8 +29,8 @@ const getAdvancedLanguageData = () => {
 let advancedLanguageData;
 
 /**
- * @param {string} rootString - The English string to translate
- * @returns {string[]} - Array of translated strings in the current Tumblr locale
+ * @param {string} rootString The English string to translate
+ * @returns {string[]} Array of translated strings in the current Tumblr locale
  */
 export const advancedTranslate = rootString => {
   advancedLanguageData ??= getAdvancedLanguageData();

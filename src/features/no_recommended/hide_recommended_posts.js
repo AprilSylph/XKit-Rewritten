@@ -16,7 +16,7 @@ export const styleElement = buildStyle(`
 }
 
 :not([${unHiddenAttribute}]) + [${unHiddenAttribute}]::before {
-  content: 'Too many recommended posts to hide!';
+  content: "Too many recommended posts to hide!";
 
   display: block;
   padding: 25px 20px;

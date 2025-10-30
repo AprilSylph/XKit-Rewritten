@@ -115,7 +115,7 @@ export const styleElement = buildStyle(`
   }
 `);
 
-const onNoteCountClick = (event) => {
+const onNoteCountClick = event => {
   event.stopPropagation();
   const postElement = event.currentTarget.closest(postOrRadarSelector);
   const closeNotesButton = postElement?.querySelector(closeNotesButtonSelector);
@@ -125,7 +125,7 @@ const onNoteCountClick = (event) => {
     : postElement?.querySelector(replyButtonSelector)?.click();
 };
 
-const processPosts = (postElements) => postElements.forEach(async postElement => {
+const processPosts = postElements => postElements.forEach(async postElement => {
   postElement.querySelector(`.${noteCountClass}`)?.remove();
 
   const { noteCount } = await timelineObject(postElement);
@@ -163,7 +163,7 @@ const getReblogMenuItem = async (reblogButton, href) => {
   });
 };
 
-const onReblogLinkClick = (event) => {
+const onReblogLinkClick = event => {
   if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
 
   event.preventDefault();
@@ -174,7 +174,7 @@ const onReblogLinkClick = (event) => {
   getReblogMenuItem(reblogButton, href).then(reblogMenuItem => reblogMenuItem.click());
 };
 
-const processReblogButtons = (reblogButtons) => reblogButtons.forEach(async reblogButton => {
+const processReblogButtons = reblogButtons => reblogButtons.forEach(async reblogButton => {
   const { blogName, canReblog, idString, reblogKey } = await timelineObject(reblogButton);
 
   if (reblogButton.matches(`.${reblogLinkClass} ~ :scope`)) {
@@ -203,7 +203,7 @@ const restoreReblogButtons = () => {
   $(`.${reblogLinkClass}`).remove();
 };
 
-export const onStorageChanged = async function (changes) {
+export const onStorageChanged = async changes => {
   const { 'classic_footer.preferences.noReblogMenu': noReblogMenuChanges } = changes;
   if (noReblogMenuChanges && noReblogMenuChanges.oldValue === undefined) return;
 
@@ -213,14 +213,14 @@ export const onStorageChanged = async function (changes) {
     : restoreReblogButtons();
 };
 
-export const main = async function () {
+export const main = async () => {
   pageModifications.register(`${postOrRadarSelector} article`, processPosts);
 
   const { noReblogMenu } = await getPreferences('classic_footer');
   if (noReblogMenu) pageModifications.register(reblogButtonSelector, processReblogButtons);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(processPosts);
   $(`.${noteCountClass}`).remove();
 

@@ -55,7 +55,7 @@ class XKitFeatureElement extends CustomElement {
     this.#preferencesList = this.shadowRoot.querySelector('ul.preferences');
   }
 
-  #writePreference = async ({ currentTarget }) => {
+  #writePreference = ({ currentTarget }) => {
     const { id } = currentTarget;
     const [featureName, preferenceType, preferenceName] = id.split('.');
     const storageKey = `${featureName}.preferences.${preferenceName}`;

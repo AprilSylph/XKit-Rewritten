@@ -11,7 +11,7 @@ const footerSelector = keyToCss('footerWrapper');
 let timeline;
 
 const processPosts = postElements => {
-  filterPostElements(postElements, { timeline }).forEach(async postElement => {
+  filterPostElements(postElements, { timeline }).forEach(postElement => {
     if (postElement.querySelector(`.${wrapperClass}`)) return;
 
     const headerElement = postElement.querySelector('header');

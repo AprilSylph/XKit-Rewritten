@@ -4,7 +4,7 @@ import { buildStyle } from './interface.js';
 import { pageModifications } from './mutations.js';
 
 const mobileBadgeSelector = `header ${keyToCss('hamburger')} + ${keyToCss('notificationBadge')}`;
-const hideBadgeClass = 'xkit-mobile-menu-badge-hidden';
+const hideBadgeClass = 'xkit-hide-mobile-menu-badge';
 
 document.documentElement.append(
   buildStyle(`.${hideBadgeClass} ${mobileBadgeSelector} { transform: scale(0); }`)

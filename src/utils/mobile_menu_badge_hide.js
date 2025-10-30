@@ -7,7 +7,7 @@ const mobileBadgeSelector = `header ${keyToCss('hamburger')} + ${keyToCss('notif
 const hideBadgeClass = 'xkit-mobile-menu-badge-hidden';
 
 document.documentElement.append(
-  buildStyle(`.${hideBadgeClass} { transform: scale(0); }`)
+  buildStyle(`.${hideBadgeClass} ${mobileBadgeSelector} { transform: scale(0); }`)
 );
 
 /** @typedef {'home' | 'communities' | 'activity' | 'messages' | 'inbox' | 'account'} NotificationType */
@@ -50,10 +50,10 @@ export const mobileMenuBadgeHide = Object.freeze({
         this.excludedTypes.forEach(type => { delete countsByType[type]; });
 
         const shouldHideBadge = Object.values(countsByType).every(value => value === 0);
-        mobileBadge.classList.toggle(hideBadgeClass, shouldHideBadge);
+        document.documentElement.classList.toggle(hideBadgeClass, shouldHideBadge);
       }
     } else {
-      mobileBadge.classList.remove(hideBadgeClass);
+      document.documentElement.classList.remove(hideBadgeClass);
     }
   }
 });

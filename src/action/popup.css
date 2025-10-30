@@ -46,7 +46,8 @@ html {
   scrollbar-color: rgb(var(--active-grey)) rgb(var(--white));
 }
 
-html, main {
+html,
+main {
   width: 375px;
   min-width: 100%;
   max-width: 100%;
@@ -81,7 +82,7 @@ body {
   border-radius: 0.5ch;
   margin: 8px auto 0;
 
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   line-height: 1;
 }
 
@@ -119,7 +120,8 @@ nav a:hover {
   background-color: rgb(var(--passive-grey));
 }
 
-nav a:active, nav a.selected {
+nav a:active,
+nav a.selected {
   background-color: rgb(var(--active-grey));
 }
 
@@ -155,7 +157,7 @@ textarea {
 
 ::placeholder {
   color: inherit;
-  opacity: .55;
+  opacity: 0.55;
 }
 
 input[type="text"] {

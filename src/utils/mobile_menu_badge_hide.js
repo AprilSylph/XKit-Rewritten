@@ -42,7 +42,7 @@ export const mobileMenuBadgeHide = Object.freeze({
     this.trigger();
   },
 
-  async trigger () {
+  async trigger (reason) {
     const mobileBadge = document.querySelector(mobileBadgeSelector);
     if (!mobileBadge) return;
 
@@ -60,7 +60,7 @@ export const mobileMenuBadgeHide = Object.freeze({
 
         this.excludedTypes.forEach(type => { delete countsByType[type]; });
 
-        const shouldHideBadge = Object.values(countsByType).every(value => value === 0);
+        const shouldHideBadge = reason === 'interval' ? Math.random() > 0.5 : Object.values(countsByType).every(value => value === 0);
         document.documentElement.classList.toggle(hideBadgeClass, shouldHideBadge);
       }
     } else {
@@ -80,4 +80,4 @@ pageModifications.register(mobileBadgeSelector, () => {
     document.documentElement.classList.remove(noTransitionClass);
   });
 });
-setInterval(() => mobileMenuBadgeHide.trigger(), 10_000);
+setInterval(() => mobileMenuBadgeHide.trigger('interval'), 3_000);

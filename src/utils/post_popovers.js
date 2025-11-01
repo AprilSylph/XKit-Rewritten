@@ -7,7 +7,7 @@ import { postSelector } from './interface.js';
 const browserIsOld =
   CSS.supports('text-wrap-style', 'balance') === false ||
   typeof CookieStore === 'undefined' ||
-  typeof ImageDecoder === 'undefined';
+  typeof AudioDecoder === 'undefined';
 
 /**
  * In older browsers (Chromium <129, Firefox <133, Safari <18.4), `container-type` creates a

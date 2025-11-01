@@ -3,6 +3,9 @@ import { postSelector } from './interface.js';
 
 /**
  * Detects Chromium <130, Firefox <140, Safari <26, or another old or non-compliant browser.
+ * @see https://caniuse.com/css-text-wrap-balance
+ * @see https://caniuse.com/cookie-store-api
+ * @see https://caniuse.com/mdn-api_audiodecoder
  */
 const browserIsOld =
   CSS.supports('text-wrap-style', 'balance') === false ||

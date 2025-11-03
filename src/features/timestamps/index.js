@@ -151,7 +151,7 @@ const addReblogTimestamps = async function () {
         timestampElement.textContent = constructTimeString(result);
         timestampElement.title = constructRelativeTimeString(result);
       }).catch(exception => {
-        timestampElement.textContent = (exception.body && exception.body.meta) ? exception.body.meta.msg : '';
+        timestampElement.textContent = exception.body?.meta?.msg ?? '';
       });
     });
   });

@@ -1,5 +1,5 @@
 /**
- * @param {string} featureName - Internal name of feature
+ * @param {string} featureName Internal name of feature
  * @returns {Promise<object>} The feature's preference values
  */
 export const getPreferences = async function (featureName) {

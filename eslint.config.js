@@ -34,6 +34,11 @@ export default [
   jsdoc.configs['flat/recommended'],
 
   /**
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-hyphen-before-param-description.md
+   */
+  { rules: { 'jsdoc/require-hyphen-before-param-description': ['error', 'never', { tags: { '*': 'never' } }] } },
+
+  /**
    * Do not require JSDoc on "main world" injected scripts, which have definitions
    * which make them look reusable but are only used by the `inject()` util.
    * @see https://github.com/AprilSylph/XKit-Rewritten/blob/master/src/utils/inject.js

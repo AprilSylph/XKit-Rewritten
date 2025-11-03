@@ -1,6 +1,6 @@
 {
   "title": "Show Originals",
-  "description": "Hide reblogged posts by default",
+  "description": "Add an “Original Posts” tab to your timelines",
   "icon": {
     "class_name": "ri-focus-line",
     "color": "white",

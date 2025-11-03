@@ -146,7 +146,7 @@ export const main = async () => {
   } = await getPreferences('panorama');
 
   document.documentElement.style.setProperty(maxPostWidthVar, maxPostWidth);
-  document.documentElement.classList[expandPostMedia ? 'add' : 'remove'](expandMediaClass);
+  document.documentElement.classList.toggle(expandMediaClass, expandPostMedia);
 
   document.documentElement.append(styleElement);
   mainEnable ? document.documentElement.append(mainStyleElement) : mainStyleElement.remove();

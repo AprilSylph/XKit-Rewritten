@@ -4,10 +4,10 @@
 
 /**
  * Create elements with simple syntax
- * @param {string} tagName - Type of element to create
- * @param {Attributes} [attributes] - Property-value pairs to set as HTML/XML attributes (e.g. { href: '/' })
- * @param {Events} [events] - Property-value pairs to set as event listeners (e.g. { click: () => {} })
- * @param {Children} [children] - Zero or more valid children
+ * @param {string} tagName Type of element to create
+ * @param {Attributes} [attributes] Property-value pairs to set as HTML/XML attributes (e.g. { href: '/' })
+ * @param {Events} [events] Property-value pairs to set as event listeners (e.g. { click: () => {} })
+ * @param {Children} [children] Zero or more valid children
  * @returns {HTMLElement | SVGElement | MathMLElement} Element created to specification
  */
 export function dom (tagName, attributes = {}, events = {}, children = []) {

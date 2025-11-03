@@ -54,7 +54,7 @@ const editTagBundle = async ({ currentTarget }) => {
     currentTarget.firstElementChild.className = 'ri-pencil-line';
 
     const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-    const index = parseInt(parentNode.id);
+    const index = parseInt(parentNode.id, 10);
     const tagBundle = tagBundles[index];
 
     for (const input of inputs) {
@@ -70,7 +70,7 @@ const deleteBundle = async ({ currentTarget }) => {
   const { parentNode: { parentNode } } = currentTarget;
 
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-  const index = parseInt(parentNode.id);
+  const index = parseInt(parentNode.id, 10);
   tagBundles.splice(index, 1);
   browser.storage.local.set({ [storageKey]: tagBundles });
 };

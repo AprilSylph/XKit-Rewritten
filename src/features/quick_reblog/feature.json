@@ -1,5 +1,6 @@
 {
   "title": "Quick Reblog",
+  "description": "Reblog posts with a single click",
   "icon": {
     "class_name": "ri-repeat-line",
     "color": "white",

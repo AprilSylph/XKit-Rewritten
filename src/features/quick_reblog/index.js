@@ -90,7 +90,7 @@ ${popoverStackingContextFix}
 
 const onBlogSelectorChange = () => {
   blogAvatar.style.backgroundImage = `url(${avatarUrls.get(blogSelector.value)})`;
-  actionButtons.classList[joinedCommunityUuids.includes(blogSelector.value) ? 'add' : 'remove']('community-selected');
+  actionButtons.classList.toggle('community-selected', joinedCommunityUuids.includes(blogSelector.value));
 };
 blogSelector.addEventListener('change', onBlogSelectorChange);
 

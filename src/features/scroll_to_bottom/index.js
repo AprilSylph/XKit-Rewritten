@@ -28,7 +28,7 @@ export const styleElement = buildStyle(`
 
 let timeoutID;
 
-const onLoadersAdded = loaders => {
+const onLoadersAdded = () => {
   if (active) {
     clearTimeout(timeoutID);
   }
@@ -85,7 +85,7 @@ const addButtonToPage = async function ([scrollToTopButton]) {
     scrollToBottomButton.addEventListener('click', onclick);
     scrollToBottomButton.id = scrollToBottomButtonId;
 
-    scrollToBottomButton.classList[active ? 'add' : 'remove'](activeClass);
+    scrollToBottomButton.classList.toggle(activeClass, active);
   }
 
   scrollToTopButton.after(scrollToBottomButton);

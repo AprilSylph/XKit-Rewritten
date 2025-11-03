@@ -52,11 +52,11 @@ export const unregisterBlogMeatballItem = id => {
 
 /**
  * Add a custom button to post replies' meatball menus.
- * @param {object} options - Destructured
- * @param {string} options.id - Identifier for this button (must be unique)
- * @param {string|Function} options.label - Button text to display. May be a function accepting the note component props data of the reply element being actioned on.
- * @param {Function} options.onclick - Button click listener function
- * @param {Function} [options.notePropsFilter] - Filter function, called with the note component props data of the reply element being actioned on. Must return true for button to be added.
+ * @param {object} options Destructured
+ * @param {string} options.id Identifier for this button (must be unique)
+ * @param {string|Function} options.label Button text to display. May be a function accepting the note component props data of the reply element being actioned on.
+ * @param {Function} options.onclick Button click listener function
+ * @param {Function} [options.notePropsFilter] Filter function, called with the note component props data of the reply element being actioned on. Must return true for button to be added.
  */
 export const registerReplyMeatballItem = function ({ id, label, onclick, notePropsFilter }) {
   meatballItems.reply[id] = { label, onclick, filter: notePropsFilter };

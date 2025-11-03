@@ -102,7 +102,7 @@ const cloneButton = (target, mode) => {
   clonedButton.addEventListener('click', onclick);
   clonedButton.classList.add(buttonClass, mode);
 
-  clonedButton.classList[activeElement ? 'add' : 'remove'](activeClass);
+  clonedButton.classList.toggle(activeClass, activeElement);
   return clonedButton;
 };
 

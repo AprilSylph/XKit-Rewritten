@@ -92,7 +92,7 @@ const constructISOString = unixTime => {
 };
 
 const constructRelativeTimeString = unixTime => {
-  const now = Math.trunc(new Date().getTime() / 1000);
+  const now = Math.trunc(Date.now() / 1000);
   const unixDiff = unixTime - now;
   const unixDiffAbsolute = Math.abs(unixDiff);
 
@@ -175,7 +175,7 @@ const addReblogTimestamps = () => {
         timestampElement.textContent = constructTimeString(result);
         timestampElement.title = constructRelativeTimeString(result);
       }).catch(exception => {
-        timestampElement.textContent = (exception.body && exception.body.meta) ? exception.body.meta.msg : '';
+        timestampElement.textContent = exception.body?.meta?.msg ?? '';
       });
     });
   });

@@ -24,7 +24,7 @@ export const styleElement = buildStyle(`
 
 let timeoutID;
 
-const onLoadersAdded = loaders => {
+const onLoadersAdded = () => {
   if (active) {
     clearTimeout(timeoutID);
   }

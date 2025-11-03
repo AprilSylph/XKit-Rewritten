@@ -1,0 +1,50 @@
+.finder {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 1ch;
+  border-bottom: 1px solid rgb(var(--active-grey));
+
+  background-color: rgb(var(--white));
+}
+
+#search {
+  width: 0;
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
+label[for="filter"] {
+  margin-left: 2ch;
+}
+
+#filter {
+  margin-left: 1ch;
+}
+
+.no-results {
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.features:empty::before {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+
+  color: rgb(var(--active-grey));
+  content: "Loading...";
+  font-size: 1.3125rem;
+  font-weight: 700;
+}
+
+xkit-feature.search-hidden,
+xkit-feature.filter-hidden {
+  display: none;
+}

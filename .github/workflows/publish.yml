@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: lts/*
 
@@ -25,20 +25,20 @@ jobs:
 
       - name: Sign WebExtension
         run: npx web-ext sign
-        continue-on-error: true
         env:
           WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
           WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
-          WEB_EXT_ID: ${{ secrets.WEB_EXT_ID }}
+          WEB_EXT_APPROVAL_TIMEOUT: 0
+          WEB_EXT_CHANNEL: listed
   chrome:
     name: Chrome
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: lts/*
 

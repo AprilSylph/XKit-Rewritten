@@ -1,33 +1,34 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:recommended"],
   "dependencyDashboard": false,
   "packageRules": [
+    {
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "3 days"
+    },
     {
       "groupName": "vendored dependencies",
       "matchManagers": ["npm"],
       "matchDepTypes": ["dependencies"],
-      "matchPackagePatterns": ["*"]
+      "matchUpdateTypes": ["minor", "patch"]
     },
     {
       "groupName": "dev dependencies",
       "matchManagers": ["npm"],
       "matchDepTypes": ["devDependencies"],
-      "matchPackagePatterns": ["*"]
+      "matchUpdateTypes": ["minor", "patch"]
     },
     {
       "groupName": "automation dependencies",
       "matchManagers": ["github-actions"],
-      "matchPackagePatterns": ["*"]
+      "matchUpdateTypes": ["minor", "patch"]
     }
   ],
+  "postUpdateOptions": ["npmDedupe"],
   "rangeStrategy": "bump",
-  "schedule": [
-    "before 6am on the first day of the month"
-  ],
-  "vulnerabilityAlerts": {
-    "enabled": false
-  }
+  "reviewers": ["AprilSylph", "marcustyphoon"],
+  "semanticCommits": "enabled",
+  "schedule": ["before 6am on the first day of the month"],
+  "vulnerabilityAlerts": { "enabled": false }
 }

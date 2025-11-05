@@ -19,7 +19,7 @@ const onTitleChanged = () => {
   const titleElement = document.querySelector('head title:not([data-xkit])');
 
   const rawTitle = titleElement.textContent;
-  const newTitle = rawTitle.replace(/^\(\d{1,2}\) /, '');
+  const newTitle = rawTitle.replace(/^\(\d{1,2}\+?\) /, '');
   customTitleElement.textContent = newTitle;
 
   clearAppBadge();

@@ -140,7 +140,7 @@ const processPosts = (postElements) => postElements.forEach(async postElement =>
   engagementControls?.before(noteCountButton);
 
   if (noReblogMenu) {
-    processReblogButton(engagementControls.querySelector(reblogButtonSelector));
+    processReblogButton(engagementControls?.querySelector(reblogButtonSelector));
   }
 });
 

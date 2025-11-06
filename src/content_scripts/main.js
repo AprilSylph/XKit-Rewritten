@@ -135,6 +135,8 @@
   });
 
   if (redpop) {
-    isReactLoaded() ? init() : waitForReactLoaded().then(init);
+    const initPromise = isReactLoaded() ? init() : waitForReactLoaded().then(init);
+
+    import(browser.runtime.getURL('/utils/xkit_init_warning.js')).then(module => module.default(initPromise));
   }
 }

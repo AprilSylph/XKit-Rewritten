@@ -21,6 +21,8 @@ const reblogMenuPortalSelector = 'div[id^="portal/"]:has(div[role="menu"] a[role
 const locale = document.documentElement.lang;
 const noteCountFormat = new Intl.NumberFormat(locale);
 
+let noReblogMenu;
+
 export const styleElement = buildStyle(`
   ${postOwnerControlsSelector} {
     position: relative;
@@ -127,6 +129,7 @@ const onNoteCountClick = (event) => {
 
 const processPosts = (postElements) => postElements.forEach(async postElement => {
   postElement.querySelector(`.${noteCountClass}`)?.remove();
+  postElement.querySelector(`.${reblogLinkClass}`)?.remove();
 
   const { noteCount } = await timelineObject(postElement);
   const noteCountButton = button({ class: noteCountClass, click: onNoteCountClick }, [
@@ -135,6 +138,10 @@ const processPosts = (postElements) => postElements.forEach(async postElement =>
 
   const engagementControls = postElement.querySelector(engagementControlsSelector);
   engagementControls?.before(noteCountButton);
+
+  if (noReblogMenu) {
+    processReblogButton(engagementControls.querySelector(reblogButtonSelector));
+  }
 });
 
 const getReblogMenuItem = async (reblogButton, href) => {
@@ -174,13 +181,10 @@ const onReblogLinkClick = (event) => {
   getReblogMenuItem(reblogButton, href).then(reblogMenuItem => reblogMenuItem.click());
 };
 
-const processReblogButtons = (reblogButtons) => reblogButtons.forEach(async reblogButton => {
+const processReblogButton = async reblogButton => {
+  if (!reblogButton) return;
+
   const { blogName, canReblog, idString, reblogKey } = await timelineObject(reblogButton);
-
-  if (reblogButton.matches(`.${reblogLinkClass} ~ :scope`)) {
-    $(reblogButton).siblings(`.${reblogLinkClass}`).remove();
-  }
-
   if (!canReblog) return;
 
   const styleContent = `${reblogMenuPortalSelector}:has([aria-labelledby="${reblogButton.id}"]) { display: none; }`;
@@ -196,33 +200,27 @@ const processReblogButtons = (reblogButtons) => reblogButtons.forEach(async rebl
   );
 
   reblogButton.before(reblogLink);
-});
-
-const restoreReblogButtons = () => {
-  pageModifications.unregister(processReblogButtons);
-  $(`.${reblogLinkClass}`).remove();
 };
 
 export const onStorageChanged = async function (changes) {
-  const { 'classic_footer.preferences.noReblogMenu': noReblogMenuChanges } = changes;
-  if (noReblogMenuChanges && noReblogMenuChanges.oldValue === undefined) return;
+  const {
+    'classic_footer.preferences.noReblogMenu': noReblogMenuChanges
+  } = changes;
 
-  const { newValue: noReblogMenu } = noReblogMenuChanges;
-  noReblogMenu
-    ? pageModifications.register(reblogButtonSelector, processReblogButtons)
-    : restoreReblogButtons();
+  if (noReblogMenuChanges && noReblogMenuChanges.oldValue !== undefined) {
+    ({ newValue: noReblogMenu } = noReblogMenuChanges);
+    pageModifications.trigger(processPosts);
+  }
 };
 
 export const main = async function () {
-  pageModifications.register(`${postOrRadarSelector} article`, processPosts);
+  ({ noReblogMenu } = await getPreferences('classic_footer'));
 
-  const { noReblogMenu } = await getPreferences('classic_footer');
-  if (noReblogMenu) pageModifications.register(reblogButtonSelector, processReblogButtons);
+  pageModifications.register(`${postOrRadarSelector} article`, processPosts);
 };
 
 export const clean = async function () {
   pageModifications.unregister(processPosts);
   $(`.${noteCountClass}`).remove();
-
-  restoreReblogButtons();
+  $(`.${reblogLinkClass}`).remove();
 };

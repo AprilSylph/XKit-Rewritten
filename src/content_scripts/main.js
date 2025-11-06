@@ -119,9 +119,6 @@
       initMainWorld()
     ]);
 
-    // temp
-    await new Promise((resolve, reject) => setTimeout(resolve, 15_000));
-
     /**
      * fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
      * @see https://github.com/sveltejs/kit/issues/7805#issuecomment-1330078207

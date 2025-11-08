@@ -108,6 +108,11 @@
       "label": "Hide the floating “New posts” indicator button on the dashboard",
       "default": false,
       "inherit": "tweaks.preferences.no_where_were_we"
+    },
+    "full_width_media": {
+      "type": "checkbox",
+      "label": "Make media full-width in posts",
+      "default": false
     }
   }
 }

@@ -24,7 +24,7 @@
 #quick-reblog {
   --icon-spacing: 12px;
 }
-@media (max-width: 990px) {
+@media not (min-width: 990px) {
   #quick-reblog {
     --icon-spacing: 0px;
   }

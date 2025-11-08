@@ -18,17 +18,6 @@ ${rowWithImages} ${keyToCss('imageBlockButton')}:after {
   border: none !important;
 }
 
-${rowWithImages} :is(
-  ${keyToCss('imageBlock')}${keyToCss('unstretched')},
-  ${keyToCss('imageBlock')}${keyToCss('unstretched')} img,
-  ${keyToCss('imageBlock')}${keyToCss('unstretched')} > div
-) {
-  border-radius: unset !important;
-}
-${rowWithImages} ${keyToCss('imageBlock')}${keyToCss('unstretched')} > div:after {
-  border: none !important;
-}
-
 ${videoBlock} {
   margin-inline: unset;
   width: 100%;

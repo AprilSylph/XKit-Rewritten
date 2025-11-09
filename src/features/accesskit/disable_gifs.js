@@ -9,6 +9,7 @@ const canvasClass = 'xkit-paused-gif-placeholder';
 const pausedPosterAttribute = 'data-paused-gif-use-poster';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
+const labelSizeAttribute = 'data-paused-gif-label-size';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
 
@@ -18,7 +19,8 @@ const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
 const parentHovered = `:is(:hover > *, [${hoverContainerAttribute}]:hover *)`;
 
 export const styleElement = buildStyle(`
-[${labelAttribute}]::after {
+[${labelAttribute}="after"]::after,
+[${labelAttribute}="before"]::before {
   position: absolute;
   top: 1ch;
   right: 1ch;
@@ -35,11 +37,16 @@ export const styleElement = buildStyle(`
   line-height: 1em;
   pointer-events: none;
 }
-[${labelAttribute}="mini"]::after {
+[${labelAttribute}="before"]::before {
+  z-index: 1;
+}
+[${labelSizeAttribute}="mini"][${labelAttribute}="after"]::after,
+[${labelSizeAttribute}="mini"][${labelAttribute}="before"]::before {
   font-size: 0.6rem;
 }
+[${labelSizeAttribute}="hr"][${labelAttribute}="after"]::after,
+[${labelSizeAttribute}="hr"][${labelAttribute}="before"]::before {
 
-[${labelAttribute}="hr"]::after {
   font-size: 0.6rem;
   top: 50%;
   transform: translateY(-50%);
@@ -53,11 +60,13 @@ export const styleElement = buildStyle(`
 }
 
 .${canvasClass}${parentHovered},
-[${labelAttribute}]${hovered}::after,
+[${labelAttribute}="after"]${hovered}::after,
+[${labelAttribute}="before"]${hovered}::before,
 [${pausedPosterAttribute}]:not(${hovered}) > div > ${keyToCss('knightRiderLoader')} {
   display: none;
 }
-${keyToCss('background')}[${labelAttribute}]::after {
+${keyToCss('background')}[${labelAttribute}="after"]::after,
+${keyToCss('background')}[${labelAttribute}="before"]::before {
   /* prevent double labels in recommended post cards */
   display: none;
 }
@@ -84,12 +93,19 @@ ${keyToCss('background')}[${labelAttribute}]::after {
 
 const addLabel = (element, inside = false) => {
   const target = inside ? element : element.parentElement;
-  if (target && getComputedStyle(target, '::after').content === 'none') {
-    target.setAttribute(labelAttribute, '');
+  if (target) {
+    const mode =
+      getComputedStyle(target, '::after').content === 'none'
+        ? 'after'
+        : getComputedStyle(target, '::before').content === 'none'
+          ? 'before'
+          : 'invalid';
 
-    target.clientWidth && target.clientWidth <= 150 && target.setAttribute(labelAttribute, 'mini');
-    target.clientHeight && target.clientHeight <= 50 && target.setAttribute(labelAttribute, 'mini');
-    target.clientHeight && target.clientHeight <= 30 && target.setAttribute(labelAttribute, 'hr');
+    target.setAttribute(labelAttribute, mode);
+
+    target.clientWidth && target.clientWidth <= 150 && target.setAttribute(labelSizeAttribute, 'mini');
+    target.clientHeight && target.clientHeight <= 50 && target.setAttribute(labelSizeAttribute, 'mini');
+    target.clientHeight && target.clientHeight <= 30 && target.setAttribute(labelSizeAttribute, 'hr');
   }
 };
 
@@ -249,6 +265,7 @@ export const clean = async function () {
   $(`.${canvasClass}`).remove();
   $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
   $(`[${labelAttribute}]`).removeAttr(labelAttribute);
+  $(`[${labelSizeAttribute}]`).removeAttr(labelSizeAttribute);
   $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
   $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
 };

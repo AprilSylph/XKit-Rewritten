@@ -2,6 +2,7 @@ import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
 
 const rowWithImages = `${keyToCss('rows')}${keyToCss('rows')} ${keyToCss('rowWithImages')}`;
+const imageWithoutRows = `${keyToCss('imageBlock')}${keyToCss('notInRowBasedLayoutNavigationEventsRedesign')}`;
 const videoBlock = `${keyToCss('rows')}${keyToCss('rows')} ${keyToCss('videoBlock')}`;
 
 export const styleElement = buildStyle(`
@@ -15,6 +16,16 @@ ${rowWithImages} :is(${keyToCss('imageBlockButton')}, ${keyToCss('imageBlockButt
   border-radius: unset !important;
 }
 ${rowWithImages} ${keyToCss('imageBlockButton')}:after {
+  border: none !important;
+}
+
+${imageWithoutRows} {
+  padding-inline: unset;
+}
+${imageWithoutRows} img {
+  border-radius: unset !important;
+}
+${imageWithoutRows} > div:after {
   border: none !important;
 }
 

@@ -9,7 +9,6 @@ const canvasClass = 'xkit-paused-gif-placeholder';
 const pausedPosterAttribute = 'data-paused-gif-use-poster';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
-const fallbackLabelAttribute = 'data-paused-gif-label-fallback';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
 
@@ -19,7 +18,7 @@ const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
 const parentHovered = `:is(:hover > *, [${hoverContainerAttribute}]:hover *)`;
 
 export const styleElement = buildStyle(`
-[${labelAttribute}]::after, [${fallbackLabelAttribute}]::before {
+[${labelAttribute}]::after {
   position: absolute;
   top: 1ch;
   right: 1ch;
@@ -36,14 +35,11 @@ export const styleElement = buildStyle(`
   line-height: 1em;
   pointer-events: none;
 }
-[${fallbackLabelAttribute}]::before {
-  z-index: 1;
-}
-[${labelAttribute}="mini"]::after, [${fallbackLabelAttribute}="mini"]::before {
+[${labelAttribute}="mini"]::after {
   font-size: 0.6rem;
 }
 
-[${labelAttribute}="hr"]::after, [${fallbackLabelAttribute}="hr"]::before {
+[${labelAttribute}="hr"]::after {
   font-size: 0.6rem;
   top: 50%;
   transform: translateY(-50%);
@@ -58,12 +54,10 @@ export const styleElement = buildStyle(`
 
 .${canvasClass}${parentHovered},
 [${labelAttribute}]${hovered}::after,
-[${fallbackLabelAttribute}]${hovered}::before,
 [${pausedPosterAttribute}]:not(${hovered}) > div > ${keyToCss('knightRiderLoader')} {
   display: none;
 }
-${keyToCss('background')}[${labelAttribute}]::after,
-${keyToCss('background')}[${fallbackLabelAttribute}]::before {
+${keyToCss('background')}[${labelAttribute}]::after {
   /* prevent double labels in recommended post cards */
   display: none;
 }
@@ -90,20 +84,12 @@ ${keyToCss('background')}[${fallbackLabelAttribute}]::before {
 
 const addLabel = (element, inside = false) => {
   const target = inside ? element : element.parentElement;
-  if (target) {
-    let attribute = labelAttribute;
-    if (getComputedStyle(target, '::after').content !== 'none') {
-      attribute = fallbackLabelAttribute;
-    }
-    if (getComputedStyle(target, '::before').content !== 'none') {
-      return;
-    }
+  if (target && getComputedStyle(target, '::after').content === 'none') {
+    target.setAttribute(labelAttribute, '');
 
-    target.setAttribute(attribute, '');
-
-    target.clientWidth && target.clientWidth <= 150 && target.setAttribute(attribute, 'mini');
-    target.clientHeight && target.clientHeight <= 50 && target.setAttribute(attribute, 'mini');
-    target.clientHeight && target.clientHeight <= 30 && target.setAttribute(attribute, 'hr');
+    target.clientWidth && target.clientWidth <= 150 && target.setAttribute(labelAttribute, 'mini');
+    target.clientHeight && target.clientHeight <= 50 && target.setAttribute(labelAttribute, 'mini');
+    target.clientHeight && target.clientHeight <= 30 && target.setAttribute(labelAttribute, 'hr');
   }
 };
 
@@ -263,7 +249,6 @@ export const clean = async function () {
   $(`.${canvasClass}`).remove();
   $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
   $(`[${labelAttribute}]`).removeAttr(labelAttribute);
-  $(`[${fallbackLabelAttribute}]`).removeAttr(fallbackLabelAttribute);
   $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
   $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
 };

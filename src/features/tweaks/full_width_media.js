@@ -5,7 +5,7 @@ const rowWithImages = `${keyToCss('rows')}${keyToCss('rows')} ${keyToCss('rowWit
 const videoBlock = `${keyToCss('rows')}${keyToCss('rows')} ${keyToCss('videoBlock')}`;
 
 export const styleElement = buildStyle(`
-${rowWithImages}  {
+${rowWithImages} {
   padding-inline: unset;
 }
 ${rowWithImages} ${keyToCss('imageBlock')}${keyToCss('unstretched')} {

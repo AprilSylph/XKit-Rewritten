@@ -1,13 +1,16 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
 
-const rowWithImages = `${keyToCss('rows')}${keyToCss('rows')} ${keyToCss('rowWithImages')}:not(${keyToCss('unstretched')})`;
+const rowWithImages = `${keyToCss('rows')}${keyToCss('rows')} ${keyToCss('rowWithImages')}`;
 const imageWithoutRows = `${keyToCss('imageBlock')}${keyToCss('notInRowBasedLayoutNavigationEventsRedesign')}`;
 const videoBlock = `${keyToCss('rows')}${keyToCss('rows')} ${keyToCss('videoBlock')}`;
 
 export const styleElement = buildStyle(`
 ${rowWithImages} {
   padding-inline: unset;
+}
+${rowWithImages} ${keyToCss('imageBlock')}${keyToCss('unstretched')} {
+  padding-inline: 12px;
 }
 ${rowWithImages} :is(${keyToCss('imageBlockButton')}, ${keyToCss('imageBlockButton')} img) {
   border-radius: unset !important;

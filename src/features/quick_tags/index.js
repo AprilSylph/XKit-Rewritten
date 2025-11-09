@@ -175,7 +175,7 @@ const addFakeTagsToFooter = (postElement, tags) => {
   );
   const tagsElement = dom('div', { class: tagsClass }, null, [dom('div', null, null, fakeTags)]);
 
-  postElement.querySelector('footer').parentNode.prepend(tagsElement);
+  [...postElement.querySelectorAll('footer')].at(-1)?.parentNode.prepend(tagsElement);
 };
 
 const processFormSubmit = function ({ currentTarget }) {

@@ -36,7 +36,7 @@ export const styleElement = buildStyle(`
     right: 16px;
 
     border-bottom: 1px solid var(--content-tint-strong);
-    content: '';
+    content: "";
   }
 
   [${activeAttribute}] ${keyToCss('footerContent')} {

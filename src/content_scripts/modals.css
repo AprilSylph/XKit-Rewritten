@@ -62,7 +62,7 @@
   border-radius: 8px;
 
   background-color: rgb(var(--navy));
-  box-shadow: 0 0 1px rgba(var(--white-on-dark), .13);
+  box-shadow: 0 0 1px rgba(var(--white-on-dark), 0.13);
   font-size: 1rem;
   line-height: 1.5;
 }
@@ -88,7 +88,7 @@
   box-sizing: border-box;
   width: 220px;
 
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
 
 #xkit-modal .message table {
@@ -123,10 +123,10 @@
   background-color: rgba(var(--white-on-dark), 0.65);
   color: rgb(var(--navy));
   cursor: pointer;
-	font-family: var(--font-family);
-	font-size: 1rem;
-	font-weight: 700;
-	line-height: 1.5;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
   text-decoration: none;
 }
 
@@ -164,5 +164,9 @@
   font-weight: 700;
 }
 
-.xkit-modal-tag::before { content: '#'; }
-.xkit-modal-blog::before { content: '@'; }
+.xkit-modal-tag::before {
+  content: "#";
+}
+.xkit-modal-blog::before {
+  content: "@";
+}

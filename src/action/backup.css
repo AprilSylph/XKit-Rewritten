@@ -43,7 +43,7 @@
 
   background-color: rgb(var(--passive-grey));
   color: rgb(var(--black));
-  font-family: monospace, monospace;
+  font-family: monospace;
   font-size: smaller;
   white-space: pre;
 }

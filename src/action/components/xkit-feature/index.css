@@ -25,7 +25,7 @@ summary:focus {
 }
 
 .disabled summary {
-  color: rgba(var(--black), .8);
+  color: rgba(var(--black), 0.8);
 }
 
 .icon {
@@ -80,7 +80,7 @@ summary:focus {
 
   background-color: orange;
   color: rgb(var(--white));
-  content: 'New!';
+  content: "New!";
   line-height: 1.5;
 }
 

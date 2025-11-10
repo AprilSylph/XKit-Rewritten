@@ -1,1 +1,3 @@
-.xkit-vanilla-video-player ~ * { display: none !important; }
+.xkit-vanilla-video-player ~ * {
+  display: none !important;
+}

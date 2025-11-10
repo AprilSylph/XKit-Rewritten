@@ -4,6 +4,7 @@ import { buildStyle } from '../../utils/interface.js';
 const rowWithImages = `${keyToCss('rows')}${keyToCss('rows')} ${keyToCss('rowWithImages')}`;
 const imageWithoutRows = `${keyToCss('imageBlock')}${keyToCss('notInRowBasedLayoutNavigationEventsRedesign')}`;
 const videoBlock = `${keyToCss('rows')}${keyToCss('rows')} ${keyToCss('videoBlock')}`;
+const audioBlock = `${keyToCss('rows')}${keyToCss('rows')} ${keyToCss('audioBlock')}`;
 
 export const styleElement = buildStyle(`
 ${rowWithImages} {
@@ -34,6 +35,14 @@ ${videoBlock} {
   width: 100%;
 }
 ${videoBlock} ${keyToCss('videoPlayer', 'embeddedPlayer')} {
+  border-radius: 0;
+}
+
+${audioBlock} {
+  padding-inline: unset;
+  width: 100%;
+}
+${audioBlock} ${keyToCss('nativePlayer', 'embedWrapper', 'embedIframe')}{
   border-radius: 0;
 }
 `);

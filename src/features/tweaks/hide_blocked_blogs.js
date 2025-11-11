@@ -1,4 +1,4 @@
-import { blogTimelineFilter, timelineSelector } from '../../utils/timeline_id.js';
+import { blogPostsTimelineFilter, timelineSelector } from '../../utils/timeline_id.js';
 import { buildStyle, getTimelineItemWrapper, filterPostElements } from '../../utils/interface.js';
 import { isMyPost, timelineObject } from '../../utils/react_props.js';
 import { onNewPosts } from '../../utils/mutations.js';
@@ -24,7 +24,7 @@ const processPosts = (postElements) => {
     );
 
     for (const blogName of blockedBlogNames) {
-      const isTimelineExempt = blogTimelineFilter(blogName);
+      const isTimelineExempt = blogPostsTimelineFilter(blogName);
       const timelineElement = postElement.closest(timelineSelector);
       if (isTimelineExempt(timelineElement)) {
         // This blog is blocked, but we're on that blog's timeline.

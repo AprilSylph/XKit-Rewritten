@@ -8,7 +8,7 @@ import { userBlogs } from '../../utils/user.js';
 import {
   followingTimelineFilter,
   anyBlogPostsTimelineFilter,
-  blogTimelineFilter,
+  blogPostsTimelineFilter,
   blogSubsTimelineFilter,
   timelineSelector,
   anyCommunityTimelineFilter,
@@ -78,7 +78,7 @@ const getLocation = timelineElement => {
 
   const on = {
     dashboard: followingTimelineFilter(timelineElement),
-    disabled: isBlog && disabledBlogs.some(name => blogTimelineFilter(name)(timelineElement)),
+    disabled: isBlog && disabledBlogs.some(name => blogPostsTimelineFilter(name)(timelineElement)),
     peepr: isBlog,
     blogSubscriptions: blogSubsTimelineFilter(timelineElement),
     community: anyCommunityTimelineFilter(timelineElement) || communitiesTimelineFilter(timelineElement)

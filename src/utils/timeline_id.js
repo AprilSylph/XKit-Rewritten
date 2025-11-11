@@ -33,7 +33,7 @@ export const anyBlogPostsTimelineFilter = ({ dataset: { timeline, timelineId } }
   timelineId?.match(exactly(`blog-${uuidV4}-${anyBlogName}`));
 
 // includes "channel" user blog view page
-export const blogTimelineFilter = blogName =>
+export const blogPostsTimelineFilter = blogName =>
   ({ dataset: { timeline, timelineId } }) =>
     timeline?.match(exactly(`/v2/blog/${blogName}/posts`)) ||
     timelineId?.match(exactly(peeprPostsTimelineId({ blogName }))) ||

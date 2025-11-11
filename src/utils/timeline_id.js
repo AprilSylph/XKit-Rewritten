@@ -3,11 +3,11 @@ const createSelector = (...components) => `:is(${components.filter(Boolean).join
 export const timelineSelector = ':is([data-timeline], [data-timeline-id])';
 
 const exactly = string => `^${string}$`;
-const anyBlog = '[a-z0-9-]{1,32}';
+const anyBlogName = '[a-z0-9-]{1,32}';
 const uuidV4 = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}';
 
-const peeprPostsTimelineId = ({ blog, postId, maybeOriginal, maybeTop, search, postType, tag }) =>
-  `peepr-posts-${blog}-${postId}-${maybeOriginal}-${maybeTop}-${search}-${postType}-${tag}`;
+const peeprPostsTimelineId = ({ blogName, postId, maybeOriginal, maybeTop, search, postType, tag }) =>
+  `peepr-posts-${blogName}-${postId}-${maybeOriginal}-${maybeTop}-${search}-${postType}-${tag}`;
 
 export const followingTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline === '/v2/timeline/dashboard' ||
@@ -27,18 +27,18 @@ export const forYouTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
 
 // includes "channel" user blog view page
 export const anyBlogTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
-  timeline?.match(exactly(`/v2/blog/${anyBlog}/posts`)) ||
-  timelineId?.match(exactly(peeprPostsTimelineId({ blog: anyBlog }))) ||
-  timelineId?.match(exactly(`blog-view-${anyBlog}`)) ||
-  timelineId?.match(exactly(`blog-${uuidV4}-${anyBlog}`));
+  timeline?.match(exactly(`/v2/blog/${anyBlogName}/posts`)) ||
+  timelineId?.match(exactly(peeprPostsTimelineId({ blogName: anyBlogName }))) ||
+  timelineId?.match(exactly(`blog-view-${anyBlogName}`)) ||
+  timelineId?.match(exactly(`blog-${uuidV4}-${anyBlogName}`));
 
 // includes "channel" user blog view page
-export const blogTimelineFilter = blog =>
+export const blogTimelineFilter = blogName =>
   ({ dataset: { timeline, timelineId } }) =>
-    timeline === `/v2/blog/${blog}/posts` ||
-    timelineId === peeprPostsTimelineId({ blog }) ||
-    timelineId === `blog-view-${blog}` ||
-    timelineId?.match(exactly(`blog-${uuidV4}-${blog}`));
+    timeline === `/v2/blog/${blogName}/posts` ||
+    timelineId === peeprPostsTimelineId({ blogName }) ||
+    timelineId === `blog-view-${blogName}` ||
+    timelineId?.match(exactly(`blog-${uuidV4}-${blogName}`));
 
 export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId } }) =>
   timeline === '/v2/timeline?which=blog_subscriptions' ||
@@ -46,13 +46,13 @@ export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId 
   timelineId === '/dashboard/blog_subs';
 
 export const anyDraftsTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
-  timeline?.match(exactly(`/v2/blog/${anyBlog}/posts/draft`)) ||
-  timelineId?.match(exactly(`drafts-${anyBlog}`)) ||
-  timelineId?.match(exactly(`drafts-${uuidV4}-${anyBlog}`));
+  timeline?.match(exactly(`/v2/blog/${anyBlogName}/posts/draft`)) ||
+  timelineId?.match(exactly(`drafts-${anyBlogName}`)) ||
+  timelineId?.match(exactly(`drafts-${uuidV4}-${anyBlogName}`));
 
 export const anyQueueTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
-  timeline?.match(exactly(`/v2/blog/${anyBlog}/posts/queue`)) ||
-  timelineId?.match(exactly(`queue-${uuidV4}-${anyBlog}`));
+  timeline?.match(exactly(`/v2/blog/${anyBlogName}/posts/queue`)) ||
+  timelineId?.match(exactly(`queue-${uuidV4}-${anyBlogName}`));
 
 export const tagTimelineFilter = tag =>
   ({ dataset: { timeline, timelineId } }) =>
@@ -61,8 +61,8 @@ export const tagTimelineFilter = tag =>
     timelineId?.match(exactly(`tag-${uuidV4}-${tag}-recent`));
 
 export const anyCommunityTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
-  timelineId?.match(exactly(`communities-${anyBlog}-recent`)) ||
-  timelineId?.match(exactly(`community-${uuidV4}-${anyBlog}`));
+  timelineId?.match(exactly(`communities-${anyBlogName}-recent`)) ||
+  timelineId?.match(exactly(`community-${uuidV4}-${anyBlogName}`));
 
 export const communitiesTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timelineId === 'communities-for_you';

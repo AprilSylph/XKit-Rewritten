@@ -35,9 +35,9 @@ export const anyBlogTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
 // includes "channel" user blog view page
 export const blogTimelineFilter = blogName =>
   ({ dataset: { timeline, timelineId } }) =>
-    timeline === `/v2/blog/${blogName}/posts` ||
-    timelineId === peeprPostsTimelineId({ blogName }) ||
-    timelineId === `blog-view-${blogName}` ||
+    timeline?.match(exactly(`/v2/blog/${blogName}/posts`)) ||
+    timelineId?.match(exactly(peeprPostsTimelineId({ blogName }))) ||
+    timelineId?.match(exactly(`blog-view-${blogName}`)) ||
     timelineId?.match(exactly(`blog-${uuidV4}-${blogName}`));
 
 export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId } }) =>

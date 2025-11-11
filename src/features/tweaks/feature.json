@@ -17,6 +17,11 @@
       "label": "Restore links to individual posts in the post header",
       "default": false
     },
+    "create_button_no_bubbles": {
+      "type": "checkbox",
+      "label": "Make the “Create” button start a new text post",
+      "default": false
+    },
     "slim_filtered_screens": {
       "type": "checkbox",
       "label": "Use a slim layout for filtered posts",

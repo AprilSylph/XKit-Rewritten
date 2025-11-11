@@ -6,8 +6,8 @@ const exactly = string => `^${string}$`;
 const anyBlogName = '[a-z0-9-]{1,32}';
 const uuidV4 = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}';
 
-const peeprPostsTimelineId = ({ blogName, postId, maybeOriginal, maybeTop, search, postType, tag }) =>
-  `peepr-posts-${blogName}-${postId}-${maybeOriginal}-${maybeTop}-${search}-${postType}-${tag}`;
+const peeprPostsTimelineId = ({ blogName, postId, postRole, searchMode, searchTerm, postType, tag }) =>
+  `peepr-posts-${blogName}-${postId}-${postRole}-${searchMode}-${searchTerm}-${postType}-${tag}`;
 
 export const followingTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline === '/v2/timeline/dashboard' ||

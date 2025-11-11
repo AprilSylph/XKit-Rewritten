@@ -26,7 +26,7 @@ export const forYouTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timelineId?.startsWith('for-you-');
 
 // includes "channel" user blog view page
-export const anyBlogTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+export const anyBlogPostsTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.match(exactly(`/v2/blog/${anyBlogName}/posts`)) ||
   timelineId?.match(exactly(peeprPostsTimelineId({ blogName: anyBlogName }))) ||
   timelineId?.match(exactly(`blog-view-${anyBlogName}`)) ||

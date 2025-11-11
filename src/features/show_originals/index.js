@@ -7,7 +7,7 @@ import { translate } from '../../utils/language_data.js';
 import { userBlogs } from '../../utils/user.js';
 import {
   followingTimelineFilter,
-  anyBlogTimelineFilter,
+  anyBlogPostsTimelineFilter,
   blogTimelineFilter,
   blogSubsTimelineFilter,
   timelineSelector,
@@ -74,7 +74,7 @@ const addControls = async (timelineElement, location) => {
 
 const getLocation = timelineElement => {
   const isBlog =
-    anyBlogTimelineFilter(timelineElement) && !timelineElement.matches(channelSelector);
+    anyBlogPostsTimelineFilter(timelineElement) && !timelineElement.matches(channelSelector);
 
   const on = {
     dashboard: followingTimelineFilter(timelineElement),

@@ -30,17 +30,23 @@ export const forYouTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
 // Matches any blog's timelines, including subpages such as drafts or in-blog searches.
 export const anyBlogTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.match(startsWith(`/v2/blog/${anyBlogName}/posts`)) ||
+  timeline?.match(startsWith(`/v2/user/inbox/${anyBlogName}`)) ||
   timelineId?.match(startsWith(`peepr-posts-${anyBlogName}-`)) ||
   timelineId?.match(startsWith(`blog-view-${anyBlogName}`)) ||
-  timelineId?.match(startsWith(`blog-${uuidV4}-${anyBlogName}`));
+  timelineId?.match(startsWith(`blog-${uuidV4}-${anyBlogName}`)) ||
+  timelineId?.match(startsWith(`drafts-${anyBlogName}`)) ||
+  timelineId?.match(startsWith(`drafts-${uuidV4}-${anyBlogName}`));
 
 // Matches the given blog's timelines, including subpages such as drafts or in-blog searches.
 export const blogTimelineFilter = blogName =>
   ({ dataset: { timeline, timelineId } }) =>
     timeline?.match(startsWith(`/v2/blog/${blogName}/posts`)) ||
+    timeline?.match(startsWith(`/v2/user/inbox/${blogName}`)) ||
     timelineId?.match(startsWith(`peepr-posts-${blogName}-`)) ||
     timelineId?.match(startsWith(`blog-view-${blogName}`)) ||
-    timelineId?.match(startsWith(`blog-${uuidV4}-${blogName}`));
+    timelineId?.match(startsWith(`blog-${uuidV4}-${blogName}`)) ||
+    timelineId?.match(startsWith(`drafts-${blogName}`)) ||
+    timelineId?.match(startsWith(`drafts-${uuidV4}-${blogName}`));
 
 // Matches any blog's main posts timeline, not including subpages such as drafts or in-blog searches.
 export const anyBlogPostsTimelineFilter = ({ dataset: { timeline, timelineId } }) =>

@@ -10,7 +10,7 @@ const processCreateButtons = (createButtons) => {
   }
 
   createButtons.forEach(createButton => {
-    createButton.dataset.href = createButton.getAttribute('href');
+    createButton.dataset.href ??= createButton.getAttribute('href');
 
     createButton.setAttribute(modifiedAttribute, '');
     createButton.setAttribute('href', '/new/text');

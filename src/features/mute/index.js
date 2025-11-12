@@ -7,9 +7,9 @@ import { keyToCss } from '../../utils/css_map.js';
 import { br, button, div, form, input, label } from '../../utils/dom.js';
 import { getPreferences } from '../../utils/preferences.js';
 import {
-  anyBlogPostTimelineFilter,
   anyBlogTimelineFilter,
   anyFlaggedReviewTimelineFilter,
+  anyPostPermalinkTimelineFilter,
   blogTimelineFilter,
   inboxTimelineFilter,
   likesTimelineFilter,
@@ -81,7 +81,7 @@ const shouldDisable = timelineElement => Boolean(
   likesTimelineFilter(timelineElement) ||
   userBlogNames.some(name => peeprLikesTimelineFilter(name)(timelineElement)) ||
   inboxTimelineFilter(timelineElement) ||
-  anyBlogPostTimelineFilter(timelineElement)
+  anyPostPermalinkTimelineFilter(timelineElement)
 );
 
 const processTimelines = async timelineElements => {

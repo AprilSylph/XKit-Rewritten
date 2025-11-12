@@ -3,6 +3,7 @@ const createSelector = (...components) => `:is(${components.filter(Boolean).join
 export const timelineSelector = ':is([data-timeline], [data-timeline-id])';
 
 const startsWith = string => `^${string}`;
+const endsWith = string => `${string}$`;
 const exactly = string => `^${string}$`;
 const anyBlogName = '[a-z0-9-]{1,32}';
 const anyPostId = '[0-9]{1,20}';
@@ -53,9 +54,12 @@ export const blogPostsTimelineFilter = blogName =>
 // Matches any blog's main posts timeline, not including subpages such as drafts or in-blog searches.
 export const anyBlogPostsTimelineFilter = blogPostsTimelineFilter(anyBlogName);
 
-export const anyBlogPostTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
-  timeline?.match(exactly(`/v2/blog/${anyBlogName}/posts/${anyPostId}/permalink`)) ||
-  timelineId?.match(exactly(`peepr-posts-${anyBlogName}-${anyPostId}-undefined-undefined-undefined-undefined-undefined`));
+export const postPermalinkTimelineFilter = postId =>
+  ({ dataset: { timeline, timelineId } }) =>
+    timeline?.match(endsWith(`posts/${postId}/permalink`)) ||
+    timelineId?.match(exactly(peeprPostsTimelineId({ blog: anyBlogName, postId })));
+
+export const anyPostPermalinkTimelineFilter = postPermalinkTimelineFilter(anyPostId);
 
 export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId } }) =>
   timeline === '/v2/timeline?which=blog_subscriptions' ||

@@ -12,6 +12,11 @@
       "type": "checkbox",
       "label": "Turn reblog buttons back into links",
       "default": true
+    },
+    "noZeroNotes": {
+      "type": "checkbox",
+      "label": "Hide the note count on posts with no notes",
+      "default": false
     }
   }
 }

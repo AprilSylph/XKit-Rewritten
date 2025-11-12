@@ -76,7 +76,7 @@ export const tagTimelineFilter = tag =>
 export const postPermalinkTimelineFilter = postId =>
   ({ dataset: { timeline, timelineId } }) =>
     timeline === `posts/${postId}/permalink` ||
-    timelineId?.match(exactly(peeprPostsTimelineId({ blog: anyBlog, postId })));
+    timelineId?.match(exactly(peeprPostsTimelineId({ blog: anyBlogName, postId })));
 
 export const anyCommunityTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timelineId?.match(exactly(`communities-${anyBlogName}-recent`)) ||

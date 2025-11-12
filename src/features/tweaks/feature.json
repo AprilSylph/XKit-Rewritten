@@ -88,6 +88,11 @@
       "label": "Hide posts that I've liked on the dashboard",
       "default": false
     },
+    "hide_blocked_blogs": {
+      "type": "checkbox",
+      "label": "Hide all posts from blogs I've blocked",
+      "default": false
+    },
     "hide_follower_counts": {
       "type": "checkbox",
       "label": "Hide my follower count where possible",

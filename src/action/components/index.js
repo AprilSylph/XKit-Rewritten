@@ -15,7 +15,7 @@ export class CustomElement extends HTMLElement {
 
 const cachedStyleSheets = new Map();
 
-const fetchStyleSheet = (url) => fetch(url)
+const fetchStyleSheet = url => fetch(url)
   .then(response => response.text())
   .then(text => new CSSStyleSheet().replace(text));
 

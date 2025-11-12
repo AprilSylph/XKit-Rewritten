@@ -2,7 +2,7 @@
  * @param {string} featureName Internal name of feature
  * @returns {Promise<object>} The feature's preference values
  */
-export const getPreferences = async function (featureName) {
+export const getPreferences = async featureName => {
   const featureMetadataURL = browser.runtime.getURL(`/features/${featureName}/feature.json`);
   const featureMetadataFile = await fetch(featureMetadataURL);
   const { preferences = {} } = await featureMetadataFile.json();

@@ -117,7 +117,7 @@ export const styleElement = buildStyle(`
   }
 `);
 
-const onNoteCountClick = (event) => {
+const onNoteCountClick = event => {
   event.stopPropagation();
   const postElement = event.currentTarget.closest(postOrRadarSelector);
   const closeNotesButton = postElement?.querySelector(closeNotesButtonSelector);
@@ -127,7 +127,7 @@ const onNoteCountClick = (event) => {
     : postElement?.querySelector(`[${activeAttribute}] ${replyButtonSelector}`)?.click();
 };
 
-const processPosts = (postElements) => postElements.forEach(async postElement => {
+const processPosts = postElements => postElements.forEach(async postElement => {
   postElement.querySelector(`.${noteCountClass}`)?.remove();
   postElement.querySelector(`.${reblogLinkClass}`)?.remove();
 
@@ -171,7 +171,7 @@ const getReblogMenuItem = async (reblogButton, href) => {
   });
 };
 
-const onReblogLinkClick = (event) => {
+const onReblogLinkClick = event => {
   if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
 
   event.preventDefault();
@@ -203,7 +203,7 @@ const processReblogButton = async reblogButton => {
   reblogButton.before(reblogLink);
 };
 
-export const onStorageChanged = async function (changes) {
+export const onStorageChanged = async changes => {
   const {
     'classic_footer.preferences.noReblogMenu': noReblogMenuChanges
   } = changes;
@@ -214,13 +214,13 @@ export const onStorageChanged = async function (changes) {
   }
 };
 
-export const main = async function () {
+export const main = async () => {
   ({ noReblogMenu } = await getPreferences('classic_footer'));
 
   pageModifications.register(`${postOrRadarSelector} article`, processPosts);
 };
 
-export const clean = async function () {
+export const clean = async () => {
   pageModifications.unregister(processPosts);
   $(`[${activeAttribute}]`).removeAttr(activeAttribute);
   $(`.${noteCountClass}`).remove();

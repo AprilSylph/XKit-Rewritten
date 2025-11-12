@@ -75,7 +75,7 @@ const deleteBundle = async ({ currentTarget }) => {
   browser.storage.local.set({ [storageKey]: tagBundles });
 };
 
-const renderBundles = async function () {
+const renderBundles = async () => {
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
 
   bundlesList.append(...tagBundles.map(({ title, tags }, index) => {
@@ -93,7 +93,7 @@ const renderBundles = async function () {
   }));
 };
 
-browser.storage.local.onChanged.addListener((changes) => {
+browser.storage.local.onChanged.addListener(changes => {
   if (Object.keys(changes).includes(storageKey)) {
     bundlesList.textContent = '';
     renderBundles();

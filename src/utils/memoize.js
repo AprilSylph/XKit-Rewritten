@@ -1,6 +1,6 @@
-export const memoize = (func) => {
+export const memoize = func => {
   const cache = new Map();
-  return (arg) => {
+  return arg => {
     if (!cache.has(arg)) {
       cache.set(arg, func(arg));
     }
@@ -8,9 +8,9 @@ export const memoize = (func) => {
   };
 };
 
-export const weakMemoize = (func) => {
+export const weakMemoize = func => {
   const cache = new WeakMap();
-  return (arg) => {
+  return arg => {
     if (!cache.has(arg)) {
       cache.set(arg, func(arg));
     }

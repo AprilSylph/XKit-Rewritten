@@ -9,15 +9,11 @@ import { getPreferences } from '../../utils/preferences.js';
 import {
   anyBlogPostTimelineFilter,
   anyBlogTimelineFilter,
-  anyDraftsTimelineFilter,
   anyFlaggedReviewTimelineFilter,
-  anyPeeprTimelineFilter,
-  anyQueueTimelineFilter,
   blogTimelineFilter,
   inboxTimelineFilter,
   likesTimelineFilter,
   peeprLikesTimelineFilter,
-  peeprTimelineFilter,
   timelineSelector
 } from '../../utils/timeline_id.js';
 import { controlsClass as showOriginalsControlsClass } from '../show_originals/index.js';
@@ -54,9 +50,7 @@ const getNameAndUuid = async timelineElement => {
     const { blog: { name, uuid } } = await timelineObject(post);
     if (
       blogTimelineFilter(name)(timelineElement) ||
-      peeprTimelineFilter(name)(timelineElement) ||
-      blogTimelineFilter(uuid)(timelineElement) ||
-      peeprTimelineFilter(uuid)(timelineElement)
+      blogTimelineFilter(uuid)(timelineElement)
     ) {
       return { name, uuid };
     }
@@ -83,9 +77,6 @@ const processBlogTimelineElement = async timelineElement => {
 
 const shouldDisable = timelineElement => Boolean(
   userBlogNames.some(name => blogTimelineFilter(name)(timelineElement)) ||
-  userBlogNames.some(name => peeprTimelineFilter(name)(timelineElement)) ||
-  anyDraftsTimelineFilter(timelineElement) ||
-  anyQueueTimelineFilter(timelineElement) ||
   anyFlaggedReviewTimelineFilter(timelineElement) ||
   likesTimelineFilter(timelineElement) ||
   userBlogNames.some(name => peeprLikesTimelineFilter(name)(timelineElement)) ||
@@ -113,7 +104,7 @@ const processTimelines = async timelineElements => {
       timelineElement.setAttribute(activeAttribute, '');
       lengthenTimeline(timelineElement);
 
-      if (anyBlogTimelineFilter(timelineElement) || anyPeeprTimelineFilter(timelineElement)) {
+      if (anyBlogTimelineFilter(timelineElement)) {
         await processBlogTimelineElement(timelineElement).catch(console.log);
       }
     }

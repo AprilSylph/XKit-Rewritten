@@ -57,15 +57,6 @@ export const anyBlogPostTimelineFilter = ({ dataset: { timeline, timelineId } })
   timeline?.match(exactly(`/v2/blog/${anyBlogName}/posts/${anyPostId}/permalink`)) ||
   timelineId?.match(exactly(`peepr-posts-${anyBlogName}-${anyPostId}-undefined-undefined-undefined-undefined-undefined`));
 
-// includes viewing a blog on and searching/tag searching a blog on peepr
-export const anyPeeprTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
-  timelineId?.startsWith('peepr-posts-');
-
-// includes viewing a blog on and searching/tag searching a blog on peepr
-export const peeprTimelineFilter = blogName =>
-  ({ dataset: { timeline, timelineId } }) =>
-    timelineId?.startsWith(`peepr-posts-${blogName}-`);
-
 export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId } }) =>
   timeline === '/v2/timeline?which=blog_subscriptions' ||
   which === 'blog_subscriptions' ||
@@ -91,9 +82,6 @@ export const likesTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
 export const peeprLikesTimelineFilter = blogName =>
   ({ dataset: { timeline, timelineId } }) =>
     timelineId === `peepr-likes-${blogName}`;
-
-export const anyPeeprLikesTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
-  timelineId?.match(exactly(`peepr-likes-${anyBlogName}`));
 
 export const inboxTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.startsWith('/v2/user/inbox');

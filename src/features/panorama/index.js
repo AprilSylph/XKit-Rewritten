@@ -68,7 +68,7 @@ ${patioPostColumn} {
 
 const styleElement = buildStyle(`
 /* Widen posts */
-${keyToCss('cell')}${keyToCss('cell')}, ${postSelector}
+${keyToCss('cell')}, ${postSelector}
   :is(
     article,
     article > header,

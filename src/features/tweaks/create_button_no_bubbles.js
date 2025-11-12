@@ -13,7 +13,7 @@ const processCreateButtons = (createButtons) => {
     createButton.dataset.href ??= createButton.getAttribute('href');
 
     createButton.setAttribute(modifiedAttribute, '');
-    createButton.setAttribute('href', createButton.dataset.href.replace('/new', '/new/text'));
+    createButton.setAttribute('href', createButton.dataset.href.replace(/\/new$/, '/new/text'));
     createButton.addEventListener('click', onClickNavigate);
   });
 };

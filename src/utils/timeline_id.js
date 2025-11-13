@@ -3,20 +3,11 @@ const createSelector = (...components) => `:is(${components.filter(Boolean).join
 export const timelineSelector = ':is([data-timeline], [data-timeline-id])';
 
 const exactly = string => `^${string}$`;
-const anyOf = (...strings) => `(?:${strings.join('|')})`;
-
 const anyBlog = '[a-z0-9-]{1,32}';
 const uuidV4 = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}';
 
 const peeprPostsTimelineId = ({ blog, postId, maybeOriginal, maybeTop, search, postType, tag }) =>
   `peepr-posts-${blog}-${postId}-${maybeOriginal}-${maybeTop}-${search}-${postType}-${tag}`;
-
-const peeprPostsFilteredTimelineId = options => peeprPostsTimelineId({
-  postType: anyOf('undefined', 'text', 'photo', 'quote', 'link', 'chat', 'audio', 'video', 'ask'),
-  maybeOriginal: anyOf('undefined', 'original'),
-  maybeTop: anyOf('undefined', 'top'),
-  ...options
-});
 
 export const followingTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline === '/v2/timeline/dashboard' ||
@@ -48,18 +39,6 @@ export const blogTimelineFilter = blog =>
     timelineId === peeprPostsTimelineId({ blog }) ||
     timelineId === `blog-view-${blog}` ||
     timelineId?.match(exactly(`blog-${uuidV4}-${blog}`));
-
-// includes searching a blog, filtering a blog by tag, and filtering a blog by a post type;
-// also includes unfiltered blog view page (it cannot be distinguished from "undefined"/"#undefined")
-export const anyBlogFilteredTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
-  timelineId?.match(exactly(peeprPostsFilteredTimelineId({ blog: anyBlog, search: '.+' }))) ||
-  timelineId?.match(exactly(peeprPostsFilteredTimelineId({ blog: anyBlog, tag: '.+' })));
-
-// includes searching a blog, filtering a blog by tag, and filtering a blog by a post type;
-// also includes unfiltered blog view page (it cannot be distinguished from "undefined"/"#undefined")
-export const blogFilteredTimelineFilter = blog => ({ dataset: { timeline, timelineId } }) =>
-  timelineId?.match(exactly(peeprPostsFilteredTimelineId({ blog, search: '.+' }))) ||
-  timelineId?.match(exactly(peeprPostsFilteredTimelineId({ blog, tag: '.+' })));
 
 export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId } }) =>
   timeline === '/v2/timeline?which=blog_subscriptions' ||

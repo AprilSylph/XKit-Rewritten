@@ -12,9 +12,7 @@ import {
   blogSubsTimelineFilter,
   timelineSelector,
   anyCommunityTimelineFilter,
-  communitiesTimelineFilter,
-  anyBlogFilteredTimelineFilter,
-  blogFilteredTimelineFilter,
+  communitiesTimelineFilter
 } from '../../utils/timeline_id.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
@@ -31,10 +29,6 @@ let showReblogsWithContributedContent;
 let showReblogsOfNotFollowing;
 let whitelist;
 let disabledBlogs;
-
-const hardcodedModes = {
-  peeprFiltered: 'off'
-};
 
 const lengthenTimeline = async (timeline) => {
   if (!timeline.querySelector(keyToCss('manualPaginatorButtons'))) {
@@ -57,8 +51,6 @@ const addControls = async (timelineElement, location) => {
   const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
     controls.dataset.showOriginals = mode;
 
-    if (hardcodedModes[location]) return;
-
     const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
     savedModes[location] = mode;
     browser.storage.local.set({ [storageKey]: savedModes });
@@ -75,7 +67,7 @@ const addControls = async (timelineElement, location) => {
 
     lengthenTimeline(timelineElement);
     const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
-    const mode = hardcodedModes[location] ?? savedModes[location] ?? 'on';
+    const mode = savedModes[location] ?? 'on';
     controls.dataset.showOriginals = mode;
   }
 };
@@ -84,15 +76,10 @@ const getLocation = timelineElement => {
   const isBlog =
     anyBlogTimelineFilter(timelineElement) && !timelineElement.matches(channelSelector);
 
-  const isBlogFiltered = anyBlogFilteredTimelineFilter(timelineElement);
-
   const on = {
     dashboard: followingTimelineFilter(timelineElement),
-    disabled:
-      (isBlog && disabledBlogs.some(name => blogTimelineFilter(name)(timelineElement))) ||
-      (isBlogFiltered && disabledBlogs.some(name => blogFilteredTimelineFilter(name)(timelineElement))),
+    disabled: isBlog && disabledBlogs.some(name => blogTimelineFilter(name)(timelineElement)),
     peepr: isBlog,
-    peeprFiltered: isBlogFiltered,
     blogSubscriptions: blogSubsTimelineFilter(timelineElement),
     community: anyCommunityTimelineFilter(timelineElement) || communitiesTimelineFilter(timelineElement)
   };

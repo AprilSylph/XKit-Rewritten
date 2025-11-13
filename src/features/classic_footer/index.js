@@ -22,6 +22,7 @@ const locale = document.documentElement.lang;
 const noteCountFormat = new Intl.NumberFormat(locale);
 
 let noReblogMenu;
+let noZeroNotes;
 
 export const styleElement = buildStyle(`
   [${activeAttribute}] ${keyToCss('postOwnerControls')} {
@@ -74,6 +75,9 @@ export const styleElement = buildStyle(`
     line-height: 1.5rem;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .${noteCountClass}[aria-hidden="true"] {
+    visibility: hidden;
   }
 
   .${reblogLinkClass} {
@@ -132,8 +136,15 @@ const processPosts = (postElements) => postElements.forEach(async postElement =>
   postElement.querySelector(`.${reblogLinkClass}`)?.remove();
 
   const { noteCount } = await timelineObject(postElement);
-  const noteCountButton = button({ class: noteCountClass, click: onNoteCountClick }, [
-    span({}, [noteCountFormat.format(noteCount)]), ` ${noteCount === 1 ? 'note' : 'notes'}`
+  const noteCountButton = button({
+    'aria-hidden': noteCount === 0 && noZeroNotes,
+    class: noteCountClass,
+    click: onNoteCountClick,
+  }, [
+    span({}, [
+      noteCountFormat.format(noteCount)
+    ]),
+    ` ${noteCount === 1 ? 'note' : 'notes'}`
   ]);
 
   const engagementControls = [...postElement.querySelectorAll(engagementControlsSelector)].at(-1);
@@ -204,19 +215,14 @@ const processReblogButton = async reblogButton => {
 };
 
 export const onStorageChanged = async function (changes) {
-  const {
-    'classic_footer.preferences.noReblogMenu': noReblogMenuChanges
-  } = changes;
-
-  if (noReblogMenuChanges && noReblogMenuChanges.oldValue !== undefined) {
-    ({ newValue: noReblogMenu } = noReblogMenuChanges);
+  if (Object.keys(changes).some(key => key.startsWith('classic_footer'))) {
+    ({ noReblogMenu, noZeroNotes } = await getPreferences('classic_footer'));
     pageModifications.trigger(processPosts);
   }
 };
 
 export const main = async function () {
-  ({ noReblogMenu } = await getPreferences('classic_footer'));
-
+  ({ noReblogMenu, noZeroNotes } = await getPreferences('classic_footer'));
   pageModifications.register(`${postOrRadarSelector} article`, processPosts);
 };
 

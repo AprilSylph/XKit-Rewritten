@@ -109,6 +109,16 @@ export const styleElement = buildStyle(`
     visibility: hidden;
   }
 
+  :root[style*="--font-family-modern"] .${noteCountClass} {
+    font-weight: bold;
+  }
+  :root[style*="--font-family-modern"] .${noteCountClass}.${modernStyleClass} {
+    font-weight: normal;
+  }
+  :root[style*="--font-family-modern"] .${noteCountClass}.${modernStyleClass} > span {
+    font-weight: bold;
+  }
+
   .${reblogLinkClass} {
     display: flex;
     padding: 8px;

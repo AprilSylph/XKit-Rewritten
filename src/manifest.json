@@ -72,10 +72,10 @@
     "gecko": {
       "id": "{6e710c58-36cc-49d6-b772-bfc3030fa56e}",
       "data_collection_permissions": { "required": ["none"] },
-      "strict_min_version": "121.0"
+      "strict_min_version": "128.0"
     },
     "gecko_android": {
-      "strict_min_version": "121.0"
+      "strict_min_version": "128.0"
     }
   }
 }

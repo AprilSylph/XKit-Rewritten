@@ -142,6 +142,9 @@ export const styleElement = buildStyle(`
     .${noteCountClass}, .${reblogLinkClass} {
       padding: 6px;
     }
+    .${noteCountClass}.${modernStyleClass} {
+      margin-left: 6px;
+    }
   }
 
   span:has(svg[style="--icon-color-primary: var(--brand-green);"]) > .${reblogLinkClass} {

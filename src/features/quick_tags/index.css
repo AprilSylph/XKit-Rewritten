@@ -8,7 +8,6 @@
   align-items: stretch;
   width: 250px;
   max-height: 250px;
-  overflow-y: auto;
   padding: 2px;
   border-radius: 3px;
 
@@ -19,6 +18,15 @@
   font-family: var(--font-family);
   font-size: .875rem;
   font-weight: normal;
+}
+
+.quick-tags-popup .bundle-buttons {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  color: inherit;
+  font: inherit;
 }
 
 #quick-tags-post-option[data-position="below"] {
@@ -63,7 +71,7 @@
   margin: 2px 0;
 }
 
-#quick-tags input {
+.quick-tags-popup input {
   box-sizing: border-box;
   width: 0;
   min-width: 100%;
@@ -81,7 +89,7 @@
 #quick-tags-post-option button {
   padding: 1ch;
 
-  background-color: inherit;
+  background-color: rgb(var(--white));
   color: inherit;
   font: inherit;
   text-align: initial;
@@ -90,6 +98,20 @@
 #quick-tags button:not(:last-child),
 #quick-tags-post-option button:not(:last-child) {
   margin-bottom: 2px;
+}
+
+.quick-tags-popup button.search-hidden {
+  display: none;
+}
+
+.quick-tags-popup .no-results {
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.quick-tags-popup .bundle-buttons:has(> button):not(:has(> button:not(.search-hidden))) + .no-results {
+  display: flex;
 }
 
 .xkit-quick-tags-tags {

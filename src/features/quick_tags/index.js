@@ -24,10 +24,11 @@ let controlButtonTemplate;
 
 export const styleElement = buildStyle(popoverStackingContextFix);
 
-const popupElement = dom('div', { id: 'quick-tags' });
+const popupElement = dom('div', { id: 'quick-tags', class: 'quick-tags-popup' });
 const popupInput = dom(
   'input',
   {
+    class: 'input',
     placeholder: 'Tags (comma separated)',
     autocomplete: 'off'
   },
@@ -54,23 +55,57 @@ const checkLength = ({ currentTarget }) => {
 popupInput.addEventListener('input', checkLength);
 const popupForm = dom('form', null, { submit: event => event.preventDefault() }, [popupInput]);
 
-const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option' });
+const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option', class: 'quick-tags-popup' });
 
 const storageKey = 'quick_tags.preferences.tagBundles';
 
 let editedTagsMap = new WeakMap();
 
-const createBundleButton = tagBundle => {
+const createBundleButtons = tagBundles => dom('div', { class: 'bundle-buttons' }, null, tagBundles.map(tagBundle => {
   const bundleButton = dom('button', null, null, [tagBundle.title]);
   bundleButton.dataset.tags = tagBundle.tags;
   return bundleButton;
-};
+}));
+
+const searchElements = bundleCount =>
+  bundleCount > 4
+    ? [
+        dom('div', { class: 'no-results' }, null, [
+          dom('p', null, null, ['No results found.'])
+        ]),
+        dom(
+          'input',
+          {
+            class: 'search',
+            type: 'text',
+            placeholder: 'Search',
+            autocomplete: 'off',
+            spellcheck: 'false'
+          },
+          {
+            input: event => {
+              const query = event.currentTarget.value.toLowerCase();
+              [...event.currentTarget.closest('.quick-tags-popup').querySelectorAll('button')].forEach(bundleButton => {
+                if (
+                  bundleButton.textContent.toLowerCase().includes(query) ||
+                  bundleButton.dataset.tags.toLowerCase().includes(query)
+                ) {
+                  bundleButton.classList.remove('search-hidden');
+                } else {
+                  bundleButton.classList.add('search-hidden');
+                }
+              });
+            }
+          }
+        )
+      ]
+    : [];
 
 const populatePopups = async function () {
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
 
-  popupElement.replaceChildren(popupForm, ...tagBundles.map(createBundleButton));
-  postOptionPopupElement.replaceChildren(...tagBundles.map(createBundleButton));
+  popupElement.replaceChildren(popupForm, createBundleButtons(tagBundles), ...searchElements(tagBundles.length));
+  postOptionPopupElement.replaceChildren(createBundleButtons(tagBundles), ...searchElements(tagBundles.length));
 };
 
 const processPostForm = async function ([selectedTagsElement]) {

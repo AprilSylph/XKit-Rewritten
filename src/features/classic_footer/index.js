@@ -109,6 +109,8 @@ export const styleElement = buildStyle(`
     visibility: hidden;
   }
 
+  /* If fonts other than Favorit Modern are allowed to use a weight of 350, it looks really bad. */
+  /* Use heavier weights to preserve the overall look when another addon is overriding the font. */
   :root[style*="--font-family-modern"] .${noteCountClass} {
     font-weight: bold;
   }

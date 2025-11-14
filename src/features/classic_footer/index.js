@@ -1,6 +1,7 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { a, button, span, link } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
+import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject } from '../../utils/react_props.js';
@@ -19,8 +20,30 @@ const quickActionsSelector = 'svg[style="--icon-color-primary: var(--brand-blue)
 const closeNotesButtonSelector = `${postOrRadarSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
 const reblogMenuPortalSelector = 'div[id^="portal/"]:has(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';
 
-const locale = document.documentElement.lang;
-const noteCountFormat = new Intl.NumberFormat(locale);
+const { lang } = document.documentElement;
+const noteCountFormat = new Intl.NumberFormat(lang);
+
+const singularTranslation = translate('%2$s note');
+const pluralTranslation = new Map([
+  ['en-US', '%2$s notes'],
+  ['de-DE', '%2$s Anmerkungen'],
+  ['fr-FR', '%2$s notes'],
+  ['it-IT', '%2$s note'],
+  ['ja-JP', 'リアクション%2$s件'],
+  ['tr-TR', '%2$s not'],
+  ['es-ES', '%2$s notas'],
+  ['ru-RU', '%2$s заметок'],
+  ['pl-PL', '%2$s notek'],
+  ['pt-PT', '%2$s notas'],
+  ['pt-BR', '%2$s notas'],
+  ['nl-NL', '%2$s notities'],
+  ['ko-KR', '반응 %2$s개'],
+  ['zh-CN', '%2$s 热度'],
+  ['zh-TW', '%2$s 則迴響'],
+  ['zh-HK', '%2$s 個迴響'],
+  ['id-ID', '%2$s nota'],
+  ['hi-IN', '%2$s नोट'],
+]).get(lang) ?? '%2$s notes';
 
 let noReblogMenu;
 let modernButtonStyle;
@@ -162,6 +185,18 @@ export const styleElement = buildStyle(`
   }
 `);
 
+const getButtonChildren = (noteCount) => {
+  const translationTemplate = noteCount === 1 ? singularTranslation : pluralTranslation;
+  const formattedNoteCount = span({}, [noteCountFormat.format(noteCount)]);
+
+  try {
+    const { prefix, suffix } = translationTemplate.match(/^(?<prefix>.*)(%2\$s)(?<suffix>.*)$/).groups;
+    return [prefix, formattedNoteCount, suffix];
+  } catch {
+    return [formattedNoteCount, ` ${noteCount === 1 ? 'note' : 'notes'}`];
+  }
+};
+
 const onNoteCountClick = (event) => {
   event.stopPropagation();
   const postElement = event.currentTarget.closest(postOrRadarSelector);
@@ -181,12 +216,7 @@ const processPosts = (postElements) => postElements.forEach(async postElement =>
     'aria-hidden': noteCount === 0 && noZeroNotes,
     class: `${noteCountClass} ${modernButtonStyle ? modernStyleClass : ''}`,
     click: onNoteCountClick,
-  }, [
-    span({}, [
-      noteCountFormat.format(noteCount)
-    ]),
-    ` ${noteCount === 1 ? 'note' : 'notes'}`
-  ]);
+  }, getButtonChildren(noteCount));
 
   const engagementControls = [...postElement.querySelectorAll(engagementControlsSelector)].at(-1);
   engagementControls?.closest('footer').setAttribute(activeAttribute, '');

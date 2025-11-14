@@ -32,7 +32,7 @@ const onLoadersAdded = () => {
 
 const scrollToBottom = () => {
   clearTimeout(timeoutID);
-  window.scrollTo({ top: document.documentElement.scrollHeight });
+  requestAnimationFrame(() => window.scrollTo({ top: document.documentElement.scrollHeight }));
 
   timeoutID = setTimeout(() => {
     if (!document.querySelector(knightRiderLoaderSelector)) {

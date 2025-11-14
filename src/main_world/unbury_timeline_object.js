@@ -3,7 +3,7 @@ export default function unburyTimelineObject () {
   const reactKey = Object.keys(postElement).find(key => key.startsWith('__reactFiber'));
   let fiber = postElement[reactKey];
 
-  while (fiber !== null) {
+  while (fiber) {
     const { timelineObject } = fiber.memoizedProps || {};
     if (timelineObject !== undefined) {
       return timelineObject;

@@ -7,6 +7,7 @@ import { timelineObject } from '../../utils/react_props.js';
 
 const activeAttribute = 'data-classic-footer';
 const noteCountClass = 'xkit-classic-footer-note-count';
+const modernStyleClass = 'xkit-classic-footer-ds-look';
 const reblogLinkClass = 'xkit-classic-footer-reblog-link';
 
 const postOrRadarSelector = `:is(${postSelector}, aside ${keyToCss('radar')})`;
@@ -22,6 +23,7 @@ const locale = document.documentElement.lang;
 const noteCountFormat = new Intl.NumberFormat(locale);
 
 let noReblogMenu;
+let modernButtonStyle;
 let noZeroNotes;
 
 export const styleElement = buildStyle(`
@@ -76,8 +78,44 @@ export const styleElement = buildStyle(`
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .${noteCountClass}:focus-visible {
+    outline: none;
+    text-decoration: 2px solid var(--accent) underline;
+  }
+  .${noteCountClass}.${modernStyleClass} {
+    padding-block: 10px;
+    padding-inline: 14px;
+    outline: 1px solid var(--content-tint-strong);
+    outline-offset: -1px;
+    margin-left: 8px;
+
+    font-size: .875rem;
+    font-weight: 350;
+    line-height: 1.25rem;
+  }
+  .${noteCountClass}.${modernStyleClass} > span {
+    color: var(--content-fg);
+    font-weight: 500;
+  }
+  .${noteCountClass}.${modernStyleClass}:is(:hover, :active) {
+    outline-color: var(--content-tint-heavy);
+  }
+  .${noteCountClass}.${modernStyleClass}:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+    text-decoration: none;
+  }
   .${noteCountClass}[aria-hidden="true"] {
     visibility: hidden;
+  }
+
+  /* If fonts other than Favorit Modern are allowed to use a weight of 350, it looks really bad. */
+  /* Use heavier weights to preserve the overall look when another addon is overriding the font. */
+  :root[style*="--font-family-modern"] .${noteCountClass}.${modernStyleClass} {
+    font-weight: normal;
+  }
+  :root[style*="--font-family-modern"] .${noteCountClass}.${modernStyleClass} > span {
+    font-weight: bold;
   }
 
   .${reblogLinkClass} {
@@ -103,6 +141,9 @@ export const styleElement = buildStyle(`
   @container (width: 260px) {
     .${noteCountClass}, .${reblogLinkClass} {
       padding: 6px;
+    }
+    .${noteCountClass}.${modernStyleClass} {
+      margin-left: 6px;
     }
   }
 
@@ -138,7 +179,7 @@ const processPosts = (postElements) => postElements.forEach(async postElement =>
   const { noteCount } = await timelineObject(postElement);
   const noteCountButton = button({
     'aria-hidden': noteCount === 0 && noZeroNotes,
-    class: noteCountClass,
+    class: `${noteCountClass} ${modernButtonStyle ? modernStyleClass : ''}`,
     click: onNoteCountClick,
   }, [
     span({}, [
@@ -216,13 +257,13 @@ const processReblogButton = async reblogButton => {
 
 export const onStorageChanged = async function (changes) {
   if (Object.keys(changes).some(key => key.startsWith('classic_footer'))) {
-    ({ noReblogMenu, noZeroNotes } = await getPreferences('classic_footer'));
+    ({ noReblogMenu, modernButtonStyle, noZeroNotes } = await getPreferences('classic_footer'));
     pageModifications.trigger(processPosts);
   }
 };
 
 export const main = async function () {
-  ({ noReblogMenu, noZeroNotes } = await getPreferences('classic_footer'));
+  ({ noReblogMenu, modernButtonStyle, noZeroNotes } = await getPreferences('classic_footer'));
   pageModifications.register(`${postOrRadarSelector} article`, processPosts);
 };
 

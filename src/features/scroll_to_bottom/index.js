@@ -32,7 +32,6 @@ const onLoadersAdded = () => {
 
 const scrollToBottom = () => {
   clearTimeout(timeoutID);
-  // window.scrollTo({ top: document.documentElement.scrollHeight });
   requestAnimationFrame(() => window.scrollTo({ top: document.documentElement.scrollHeight }));
 
   timeoutID = setTimeout(() => {
@@ -43,10 +42,7 @@ const scrollToBottom = () => {
 };
 const observer = new ResizeObserver(scrollToBottom);
 
-let timer;
-
 const startScrolling = () => {
-  timer = Date.now();
   observer.observe(document.documentElement);
   active = true;
   scrollToBottomButton.classList.add(activeClass);
@@ -54,7 +50,6 @@ const startScrolling = () => {
 };
 
 const stopScrolling = () => {
-  timer && console.log('scrolled to bottom in', Date.now() - timer, 'ms');
   clearTimeout(timeoutID);
   observer.disconnect();
   active = false;

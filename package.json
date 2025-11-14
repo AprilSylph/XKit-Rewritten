@@ -5,6 +5,7 @@
   "scripts": {
     "test": "web-ext lint",
     "posttest": "eslint src/",
+    "autofix": "eslint src/ --fix",
     "start": "web-ext run",
     "build": "web-ext build"
   },

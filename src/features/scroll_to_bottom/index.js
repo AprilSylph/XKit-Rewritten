@@ -58,7 +58,7 @@ const onLoadersAdded = loaders => {
 
 const scrollToBottom = () => {
   clearTimeout(timeoutID);
-  activeElement.scrollTo({ top: activeElement.scrollHeight });
+  requestAnimationFrame(() => activeElement.scrollTo({ top: activeElement.scrollHeight }));
 
   const buttonConnected = scrollToBottomButton?.isConnected || modalScrollToBottomButton?.isConnected;
 

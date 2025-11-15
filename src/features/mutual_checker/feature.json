@@ -10,7 +10,7 @@
   "preferences": {
     "showOnlyMutuals": {
       "type": "checkbox",
-      "label": "Only show posts from mutuals on the dashboard",
+      "label": "Add a mutuals-only tab to your timelines",
       "default": false
     },
     "showOnlyMutualNotifications": {

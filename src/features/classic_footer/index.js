@@ -186,6 +186,10 @@ export const styleElement = buildStyle(`
 `);
 
 const getTranslationTemplate = (noteCount) => {
+  if (lang === 'fr-FR') {
+    return noteCount > 1 ? pluralTranslation : singularTranslation;
+  }
+
   if (lang === 'ru-RU') {
     if (noteCount % 10 === 1 && noteCount % 100 !== 11) {
       // Numbers ending in 1 (but not 11): Singular

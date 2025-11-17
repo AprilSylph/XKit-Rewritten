@@ -185,12 +185,45 @@ export const styleElement = buildStyle(`
   }
 `);
 
+const getTranslationTemplate = (noteCount) => {
+  if (lang === 'ru-RU') {
+    if (noteCount % 10 === 1 && noteCount % 100 !== 11) {
+      // Numbers ending in 1 (but not 11): Singular
+      return singularTranslation;
+    } else if (
+      (noteCount % 10 >= 2 && noteCount % 10 <= 4) &&
+      (noteCount % 100 < 12 || noteCount % 100 > 14)
+    ) {
+      // Numbers ending in 2-4 (but not 12-14): Genitive singular
+      return '%2$s заметки';
+    } else {
+      // Numbers ending in 0, 5-9 or 11-14: Genitive plural
+      return pluralTranslation;
+    }
+  }
+
+  if (lang === 'pl-PL') {
+    if (noteCount === 1) {
+      // Polish only uses the singular case for exactly 1.
+      return singularTranslation;
+    } else if (
+      (noteCount % 10 >= 2 && noteCount % 10 <= 4) &&
+      (noteCount % 100 < 12 || noteCount % 100 > 14)
+    ) {
+      return '%2$s notki';
+    } else {
+      return pluralTranslation;
+    }
+  }
+
+  return noteCount === 1 ? singularTranslation : pluralTranslation;
+};
+
 const getButtonChildren = (noteCount) => {
-  const translationTemplate = noteCount === 1 ? singularTranslation : pluralTranslation;
   const formattedNoteCount = span({}, [noteCountFormat.format(noteCount)]);
 
   try {
-    const { prefix, suffix } = translationTemplate.match(/^(?<prefix>.*)(%2\$s)(?<suffix>.*)$/).groups;
+    const { prefix, suffix } = getTranslationTemplate(noteCount).match(/^(?<prefix>.*)(%2\$s)(?<suffix>.*)$/).groups;
     return [prefix, formattedNoteCount, suffix];
   } catch {
     return [formattedNoteCount, ` ${noteCount === 1 ? 'note' : 'notes'}`];

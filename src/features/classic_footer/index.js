@@ -201,7 +201,7 @@ const getTranslationTemplate = (noteCount) => {
       // Numbers ending in 2-4 (but not 12-14): Genitive singular
       return '%2$s заметки';
     } else {
-      // Numbers ending in 0, 5-9 or 11-14: Genitive plural
+      // 11-14, and numbers ending in 0 or 5-9: Genitive plural
       return pluralTranslation;
     }
   }

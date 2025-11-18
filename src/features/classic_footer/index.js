@@ -29,7 +29,6 @@ const pluralTranslation = new Map([
   ['de-DE', '%2$s Anmerkungen'],
   ['fr-FR', '%2$s notes'],
   ['it-IT', '%2$s note'],
-  ['ja-JP', 'リアクション%2$s件'],
   ['tr-TR', '%2$s not'],
   ['es-ES', '%2$s notas'],
   ['ru-RU', '%2$s заметок'],
@@ -37,13 +36,7 @@ const pluralTranslation = new Map([
   ['pt-PT', '%2$s notas'],
   ['pt-BR', '%2$s notas'],
   ['nl-NL', '%2$s notities'],
-  ['ko-KR', '반응 %2$s개'],
-  ['zh-CN', '%2$s 热度'],
-  ['zh-TW', '%2$s 則迴響'],
-  ['zh-HK', '%2$s 個迴響'],
-  ['id-ID', '%2$s nota'],
-  ['hi-IN', '%2$s नोट'],
-]).get(lang) ?? '%2$s notes';
+]).get(lang) ?? singularTranslation;
 
 let noReblogMenu;
 let modernButtonStyle;

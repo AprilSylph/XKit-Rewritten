@@ -125,6 +125,8 @@
      */
     await Promise.all(['css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
 
+    Promise.all(['disabled_info_modal'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
+
     installedFeatures
       .filter(featureName => enabledFeatures.includes(featureName))
       .forEach(runFeature);

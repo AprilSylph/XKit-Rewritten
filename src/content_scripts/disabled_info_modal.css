@@ -1,0 +1,4 @@
+/* show disbled info modal only when this content script css is invalidated */
+#xkit-disabled-info-modal {
+  display: none;
+}

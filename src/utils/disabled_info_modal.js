@@ -1,7 +1,7 @@
 import { br, div, h3, input, label, style } from './dom.js';
 
 const modalId = 'xkit-disabled-info-modal';
-const hiddenCheckboxId = 'xkit-disabled-info-dismiss-checkbox';
+const dismissCheckboxId = 'xkit-disabled-info-dismiss-checkbox';
 
 fetch(browser.runtime.getURL('/content_scripts/modals.css'))
   .then(result => result.text())
@@ -22,7 +22,7 @@ fetch(browser.runtime.getURL('/content_scripts/modals.css'))
         [
           style({}, [
             `
-              #${hiddenCheckboxId}, #${modalId}:has(> #${hiddenCheckboxId}:checked) {
+              #${dismissCheckboxId}, #${modalId}:has(> #${dismissCheckboxId}:checked) {
                 display: none;
               }
 
@@ -31,7 +31,7 @@ fetch(browser.runtime.getURL('/content_scripts/modals.css'))
                 .replaceAll(':is(a, button, input)', ':is(a, button, input, label)')}
             `
           ]),
-          input({ type: 'checkbox', id: hiddenCheckboxId }),
+          input({ type: 'checkbox', id: dismissCheckboxId }),
 
           h3({ class: 'title' }, [
             'XKit Rewritten has been disabled.'
@@ -42,7 +42,7 @@ fetch(browser.runtime.getURL('/content_scripts/modals.css'))
             'For best results, refresh this browser tab.'
           ]),
           div({ class: 'buttons' }, [
-            label({ for: hiddenCheckboxId, class: 'blue' }, ['OK'])
+            label({ for: dismissCheckboxId, class: 'blue' }, ['OK'])
           ])
         ]
       )

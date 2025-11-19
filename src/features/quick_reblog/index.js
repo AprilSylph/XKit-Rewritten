@@ -13,7 +13,7 @@ import { popoverStackingContextFix } from '../../utils/post_popovers.js';
 
 const stopEventPropagation = event => event.stopPropagation();
 
-const blogSelector = select();
+const blogSelector = select({ change: onBlogSelectorChange });
 const blogAvatar = div({ class: 'avatar' });
 const blogSelectorContainer = div({ class: 'select-container' }, [blogAvatar, blogSelector]);
 const commentInput = input({ autocomplete: 'off', placeholder: 'Comment', keydown: stopEventPropagation });
@@ -77,11 +77,11 @@ ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) ${keyT
 ${popoverStackingContextFix}
 `);
 
-const onBlogSelectorChange = () => {
+/** blogSelector change event handler */
+function onBlogSelectorChange () {
   blogAvatar.style.backgroundImage = `url(${avatarUrls.get(blogSelector.value)})`;
   actionButtons.classList.toggle('community-selected', joinedCommunityUuids.includes(blogSelector.value));
-};
-blogSelector.addEventListener('change', onBlogSelectorChange);
+}
 
 const renderTagSuggestions = () => {
   tagSuggestions.textContent = '';

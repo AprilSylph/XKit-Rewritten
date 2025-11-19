@@ -7,7 +7,7 @@ on:
     paths:
       - src/**
       - package*.json
-      - .eslintrc.json
+      - eslint.config.js
   pull_request:
 
 jobs:

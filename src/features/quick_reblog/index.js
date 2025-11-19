@@ -262,34 +262,36 @@ const processPosts = async function (postElements) {
   });
 };
 
-const renderQuickTags = async function () {
-  quickTagsList.textContent = '';
+const renderQuickTags = () => browser.storage.local.get(quickTagsStorageKey)
+  .then(({ [quickTagsStorageKey]: tagBundles = [] }) => {
+    const bundleButtons = tagBundles.map(tagBundle => button({
+      'data-checked': 'false',
+      'data-tags': tagBundle.tags,
+      click: onQuickTagsBundleClick
+    }, [tagBundle.title]));
 
-  const { [quickTagsStorageKey]: tagBundles = [] } = await browser.storage.local.get(quickTagsStorageKey);
-  tagBundles.forEach(tagBundle => {
-    const bundleTags = tagBundle.tags.split(',').map(tag => tag.trim().toLowerCase());
-    const bundleButton = button({}, [tagBundle.title]);
-    bundleButton.addEventListener('click', ({ currentTarget: { dataset } }) => {
-      const checked = dataset.checked === 'true';
-
-      if (checked) {
-        tagsInput.value = tagsInput.value
-          .split(',')
-          .map(tag => tag.trim())
-          .filter(tag => bundleTags.includes(tag.toLowerCase()) === false)
-          .join(', ');
-      } else {
-        tagsInput.value.trim() === ''
-          ? tagsInput.value = tagBundle.tags
-          : tagsInput.value += `, ${tagBundle.tags}`;
-      }
-
-      dataset.checked = !checked;
-    });
-
-    quickTagsList.appendChild(bundleButton);
+    quickTagsList.replaceChildren(...bundleButtons);
   });
-};
+
+/** @param {PointerEvent} event quickTagsList.children[*] click event object */
+function onQuickTagsBundleClick ({ currentTarget: { dataset } }) {
+  const bundleTags = dataset.tags.split(',').map(tag => tag.trim().toLowerCase());
+  const checked = dataset.checked === 'true';
+
+  if (checked) {
+    tagsInput.value = tagsInput.value
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => bundleTags.includes(tag.toLowerCase()) === false)
+      .join(', ');
+  } else {
+    tagsInput.value.trim() === ''
+      ? tagsInput.value = dataset.tags
+      : tagsInput.value += `, ${dataset.tags}`;
+  }
+
+  dataset.checked = !checked;
+}
 
 const updateQuickTags = (changes) => {
   if (Object.keys(changes).includes(quickTagsStorageKey)) {

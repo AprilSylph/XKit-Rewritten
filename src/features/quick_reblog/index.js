@@ -25,10 +25,11 @@ const tagsInput = input({
   keydown: stopEventPropagation,
 });
 const tagSuggestions = datalist({ id: 'quick-reblog-tag-suggestions' });
-const actionButtons = fieldset({ class: 'action-buttons' });
-const reblogButton = button({ 'data-state': 'published' }, ['Reblog']);
-const queueButton = button({ 'data-state': 'queue' }, ['Queue']);
-const draftButton = button({ 'data-state': 'draft' }, ['Draft']);
+const actionButtons = fieldset({ class: 'action-buttons' }, [
+  button({ 'data-state': 'published', click: reblogPost }, ['Reblog']),
+  button({ 'data-state': 'queue', click: reblogPost }, ['Queue']),
+  button({ 'data-state': 'draft', click: reblogPost }, ['Draft']),
+]);
 const popupElement = div(
   { id: 'quick-reblog', click: stopEventPropagation },
   [blogSelectorContainer, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons]
@@ -188,7 +189,8 @@ const markPostReblogged = ({ footer, state }) => {
   footer.classList.add(state);
 };
 
-const reblogPost = async function ({ currentTarget }) {
+/** @param {PointerEvent} event actionButtons.children[*] click event object */
+async function reblogPost ({ currentTarget }) {
   const footer = popupElement.closest('footer');
 
   currentTarget.blur();
@@ -247,12 +249,7 @@ const reblogPost = async function ({ currentTarget }) {
   } finally {
     actionButtons.disabled = false;
   }
-};
-
-[reblogButton, queueButton, draftButton].forEach(button => {
-  button.addEventListener('click', reblogPost);
-  actionButtons.appendChild(button);
-});
+}
 
 const processPosts = async function (postElements) {
   const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(alreadyRebloggedStorageKey);

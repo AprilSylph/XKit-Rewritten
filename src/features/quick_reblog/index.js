@@ -22,6 +22,7 @@ const tagsInput = input({
   autocomplete: 'off',
   list: 'quick-reblog-tag-suggestions',
   placeholder: 'Tags (comma separated)',
+  input: onTagsInput,
   keydown: stopEventPropagation,
 });
 const tagSuggestions = datalist({ id: 'quick-reblog-tag-suggestions' });
@@ -102,34 +103,28 @@ const renderTagSuggestions = () => {
   tagSuggestions.append(...tagsToSuggest.map(value => option({ value })));
 };
 
-const updateTagSuggestions = () => {
-  if (tagsInput.value.trim().endsWith(',') || tagsInput.value.trim() === '') {
-    renderTagSuggestions();
-  }
-};
-
-const doSmartQuotes = ({ currentTarget }) => {
-  const { value } = currentTarget;
-  currentTarget.value = value
+/** @param {InputEvent} event tagsInput input event object */
+function onTagsInput ({ currentTarget }) {
+  // Do smart quotes
+  currentTarget.value = currentTarget.value
     .replace(/^"/, '\u201C')
     .replace(/ "/g, ' \u201C')
     .replace(/"/g, '\u201D');
-};
 
-const checkLength = ({ currentTarget }) => {
-  const { value } = currentTarget;
-  const tags = value.split(',').map(tag => tag.trim());
+  // Update tag suggestions
+  if (currentTarget.value.trim().endsWith(',') || currentTarget.value.trim() === '') {
+    renderTagSuggestions();
+  }
+
+  // Check length
+  const tags = currentTarget.value.split(',').map(tag => tag.trim());
   if (tags.some(tag => tag.length > 140)) {
     tagsInput.setCustomValidity('Tag is longer than 140 characters!');
     tagsInput.reportValidity();
   } else {
     tagsInput.setCustomValidity('');
   }
-};
-
-tagsInput.addEventListener('input', updateTagSuggestions);
-tagsInput.addEventListener('input', doSmartQuotes);
-tagsInput.addEventListener('input', checkLength);
+}
 
 const showPopupOnHover = async ({ currentTarget }) => {
   if (!currentTarget.matches(reblogButtonSelector)) return;

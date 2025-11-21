@@ -17,21 +17,11 @@ document.documentElement.addEventListener('xkit-injection-request', async event 
 
     const result = await func.apply(target, args);
     target.dispatchEvent(
-      new CustomEvent('xkit-injection-response', { detail: JSON.stringify({ id, result }) })
+      new CustomEvent('xkit-injection-response', { detail: { id, result } })
     );
   } catch (exception) {
     target.dispatchEvent(
-      new CustomEvent('xkit-injection-response', {
-        detail: JSON.stringify({
-          id,
-          exception: {
-            message: exception.message,
-            name: exception.name,
-            stack: exception.stack,
-            ...exception
-          }
-        })
-      })
+      new CustomEvent('xkit-injection-response', { detail: { id, exception } })
     );
   }
 }, { signal: controller.signal });

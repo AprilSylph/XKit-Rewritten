@@ -6,7 +6,7 @@ import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from 
 import { getPreferences } from '../../utils/preferences.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
-import { div, select, input, datalist, fieldset, button, option, hr } from '../../utils/dom.js';
+import { div, select, input, datalist, fieldset, button, option, hr, span } from '../../utils/dom.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { popoverStackingContextFix } from '../../utils/post_popovers.js';
@@ -268,7 +268,7 @@ const renderQuickTags = () => browser.storage.local.get(quickTagsStorageKey)
       'data-checked': 'false',
       'data-tags': tagBundle.tags,
       click: onQuickTagsBundleClick
-    }, [tagBundle.title]));
+    }, [span({}, [tagBundle.title])]));
 
     quickTagsList.replaceChildren(...bundleButtons);
   });

@@ -63,6 +63,14 @@ body {
   user-select: none;
 }
 
+body.standalone {
+  width: 100%;
+  max-width: 632px;
+  margin: 1ch auto;
+
+  outline: 1px solid rgb(var(--active-grey));
+}
+
 #permissions-banner,
 #embedded-banner {
   box-sizing: border-box;
@@ -90,6 +98,10 @@ body {
 }
 
 #permissions-banner:not([hidden]) + #embedded-banner {
+  display: none;
+}
+
+body:not(.embedded) #embedded-banner {
   display: none;
 }
 
@@ -177,4 +189,17 @@ textarea,
 pre {
   scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
   scrollbar-width: thin;
+}
+
+#non-standalone-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1ch;
+
+  border-top: 1px dotted rgb(var(--active-grey));
+}
+
+body.standalone #non-standalone-footer {
+  display: none;
 }

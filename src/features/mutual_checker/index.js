@@ -4,13 +4,15 @@ import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { primaryBlogName } from '../../utils/user.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { onNewPosts, onNewNotifications, pageModifications } from '../../utils/mutations.js';
-import { dom } from '../../utils/dom.js';
+import { div, dom } from '../../utils/dom.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { translate } from '../../utils/language_data.js';
 import { followingTimelineSelector } from '../../utils/timeline_id.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenAttribute = 'data-mutual-checker-hidden';
+const lengthenedClass = 'xkit-mutual-checker-lengthened';
+const controlsClass = 'xkit-mutual-checker-controls';
 const mutualsClass = 'from-mutual';
 const postAttributionSelector = 'header a[rel="author"]';
 
@@ -37,9 +39,38 @@ const styleElement = buildStyle(`
     isolation: isolate;
   }
 
-  ${followingTimelineSelector} [${hiddenAttribute}] {
+  [data-show-only-mutuals="on"] ~ div > [${hiddenAttribute}] {
     content: linear-gradient(transparent, transparent);
     height: 0;
+  }
+
+  .${lengthenedClass} {
+    min-height: 100vh;
+  }
+
+  .${controlsClass} {
+    color: var(--blog-title-color, rgb(var(--white-on-dark)));
+    display: flex;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .${controlsClass} > a {
+    flex: 1;
+    padding: 14px 16px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: capitalize;
+  }
+
+  .${controlsClass} > a {
+    cursor: pointer;
+  }
+
+  [data-show-only-mutuals="on"].${controlsClass} > a[data-mode="on"],
+  [data-show-only-mutuals="off"].${controlsClass} > a[data-mode="off"] {
+    box-shadow: inset 0 -3px 0 var(--blog-link-color, rgb(var(--deprecated-accent)));
+    color: var(--blog-link-color, rgb(var(--deprecated-accent)));
   }
 
   ${keyToCss('blogCardBlogLink')} {
@@ -57,6 +88,39 @@ const styleElement = buildStyle(`
   }
 `);
 
+const storageKey = 'mutual_checker.mode';
+
+const lengthenTimeline = async (timeline) => {
+  if (!timeline.querySelector(keyToCss('manualPaginatorButtons'))) {
+    timeline.classList.add(lengthenedClass);
+  }
+};
+
+const createButton = (textContent, onclick, mode) => {
+  const button = Object.assign(document.createElement('a'), { textContent, onclick });
+  button.dataset.mode = mode;
+  return button;
+};
+
+const addControls = async (timelineElement) => {
+  const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
+    controls.dataset.showOnlyMutuals = mode;
+
+    browser.storage.local.set({ [storageKey]: mode });
+  };
+
+  const controls = div({ class: controlsClass }, [
+    createButton(translate('From Mutuals'), handleClick, 'on'),
+    createButton(translate('From Everyone'), handleClick, 'off')
+  ]);
+
+  timelineElement.prepend(controls);
+
+  lengthenTimeline(timelineElement);
+  const { [storageKey]: mode = 'on' } = await browser.storage.local.get(storageKey);
+  controls.dataset.showOnlyMutuals = mode;
+};
+
 const processNotifications = (notificationElements) => {
   notificationElements.forEach(async notificationElement => {
     const notification = await notificationObject(notificationElement);
@@ -72,6 +136,10 @@ const alreadyProcessed = postElement =>
   postElement.querySelector(`.${mutualIconClass}`);
 
 const addIcons = function (postElements) {
+  if (showOnlyMutuals) {
+    [...document.querySelectorAll(`${followingTimelineSelector}:not(:has(.${controlsClass}))`)].forEach(addControls);
+  }
+
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (alreadyProcessed(postElement)) return;
 
@@ -176,4 +244,6 @@ export const clean = async function () {
   $(`.${mutualsClass}`).removeClass(mutualsClass);
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`.${mutualIconClass}`).remove();
+  $(`.${lengthenedClass}`).removeClass(lengthenedClass);
+  $(`.${controlsClass}`).remove();
 };

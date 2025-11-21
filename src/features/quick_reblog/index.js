@@ -149,7 +149,7 @@ const showPopupOnHover = async ({ currentTarget }) => {
       onBlogSelectorChange();
     }
     commentInput.value = '';
-    [...quickTagsList.children].forEach(({ dataset }) => delete dataset.checked);
+    [...quickTagsList.children].forEach(bundleButton => { bundleButton.ariaPressed = 'false'; });
     tagsInput.value = '';
     timelineObject(thisPost).then(({ tags, trail, content, layout, blogName, postAuthor, rebloggedRootName }) => {
       suggestableTags = tags;
@@ -265,7 +265,7 @@ const processPosts = async function (postElements) {
 const renderQuickTags = () => browser.storage.local.get(quickTagsStorageKey)
   .then(({ [quickTagsStorageKey]: tagBundles = [] }) => {
     const bundleButtons = tagBundles.map(tagBundle => button({
-      'data-checked': 'false',
+      'aria-pressed': 'false',
       'data-tags': tagBundle.tags,
       click: onQuickTagsBundleClick
     }, [span({}, [tagBundle.title])]));
@@ -274,11 +274,11 @@ const renderQuickTags = () => browser.storage.local.get(quickTagsStorageKey)
   });
 
 /** @param {PointerEvent} event quickTagsList.children[*] click event object */
-function onQuickTagsBundleClick ({ currentTarget: { dataset } }) {
+function onQuickTagsBundleClick ({ currentTarget }) {
+  const { ariaPressed, dataset } = currentTarget;
   const bundleTags = dataset.tags.split(',').map(tag => tag.trim().toLowerCase());
-  const checked = dataset.checked === 'true';
 
-  if (checked) {
+  if (ariaPressed === 'true') {
     tagsInput.value = tagsInput.value
       .split(',')
       .map(tag => tag.trim())
@@ -290,7 +290,7 @@ function onQuickTagsBundleClick ({ currentTarget: { dataset } }) {
       : tagsInput.value += `, ${dataset.tags}`;
   }
 
-  dataset.checked = !checked;
+  currentTarget.ariaPressed = ariaPressed === 'false' ? 'true' : 'false';
 }
 
 const updateQuickTags = (changes) => {

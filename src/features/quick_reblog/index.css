@@ -137,7 +137,7 @@
   visibility: hidden;
 }
 
-#quick-reblog .quick-tags button[data-checked="true"]::after {
+#quick-reblog .quick-tags button[aria-pressed="true"]::after {
   visibility: visible;
 }
 

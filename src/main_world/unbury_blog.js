@@ -3,7 +3,7 @@ export default function unburyBlog () {
   const reactKey = Object.keys(element).find(key => key.startsWith('__reactFiber'));
   let fiber = element[reactKey];
 
-  while (fiber !== null) {
+  while (fiber) {
     const { blog, blogSettings } = fiber.memoizedProps || {};
     if (blog ?? blogSettings) {
       return blog ?? blogSettings;

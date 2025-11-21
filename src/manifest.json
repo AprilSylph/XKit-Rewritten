@@ -52,7 +52,7 @@
       ],
       "run_at": "document_end",
       "js": [
-        "lib/browser-polyfill.min.js",
+        "content_scripts/browser_polyfill.js",
         "lib/jquery.min.js",
         "content_scripts/main.js"
       ],

@@ -64,7 +64,8 @@
 
 #quick-reblog .select-container {
   display: flex;
-  padding: 4px;
+  gap: 2px;
+  padding: 6px;
   margin-bottom: 2px;
 
   background-color: inherit;
@@ -74,7 +75,6 @@
   flex: none;
   height: 26px;
   width: 26px;
-  margin-right: 2px;
 
   background-size: cover;
   border-radius: 2px;

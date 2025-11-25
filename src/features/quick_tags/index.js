@@ -162,7 +162,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
     notify(`Edited legacy post on ${blogName}`);
   }
 
-  await updatePostOnPage(postElement);
+  await updatePostOnPage(postElement, ['tags', 'tagsV2']);
 };
 
 const processFormSubmit = function ({ currentTarget }) {

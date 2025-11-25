@@ -59,14 +59,15 @@ export const isMyPost = async (postElement) => {
 export const editPostFormTags = async ({ add = [], remove = [] }) =>
   inject('/main_world/control_tags_input.js', [{ add, remove }]);
 
-export const updatePostOnPage = async (postElement) => {
+export const updatePostOnPage = async (postElement, keys) => {
   const currentTimelineObject = await timelineObject(postElement);
   const { response: newTimelineObject } = await apiFetch(`/v2/blog/${currentTimelineObject.blog.uuid}/posts/${currentTimelineObject.id}?reblog_info=true`);
-  delete newTimelineObject.blog;
+
+  const changeEntries = Object.entries(newTimelineObject).filter(([key]) => keys.includes(key));
 
   await inject(
     '/main_world/edit_timeline_object.js',
-    [currentTimelineObject, newTimelineObject],
+    [currentTimelineObject, changeEntries],
     postElement.closest(keyToCss('timeline'))
   );
 };

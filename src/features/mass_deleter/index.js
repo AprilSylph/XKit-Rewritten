@@ -1,4 +1,4 @@
-import { dom } from '../../utils/dom.js';
+import { button, form, input, label, small, span } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
 import { createBlogSpan, modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
@@ -28,17 +28,17 @@ const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
 });
 
 const showDeleteDraftsPrompt = () => {
-  const form = dom('form', { id: 'xkit-mass-deleter-delete-drafts' }, { submit: confirmDeleteDrafts }, [
-    dom('label', null, null, [
+  const formElement = form({ id: 'xkit-mass-deleter-delete-drafts', submit: confirmDeleteDrafts }, [
+    label({}, [
       'Delete drafts before:',
-      dom('input', { type: 'datetime-local', name: 'before', value: createNowString(), required: true })
+      input({ type: 'datetime-local', name: 'before', value: createNowString(), required: true })
     ])
   ]);
 
   showModal({
     title: 'Mass Deleter',
-    message: [form],
-    buttons: [modalCancelButton, dom('input', { type: 'submit', form: form.id, class: 'blue', value: 'Next' })]
+    message: [formElement],
+    buttons: [modalCancelButton, input({ type: 'submit', form: formElement.id, class: 'blue', value: 'Next' })]
   });
 };
 
@@ -50,7 +50,7 @@ const confirmDeleteDrafts = event => {
   const beforeMs = elements.before.valueAsNumber + timezoneOffsetMs;
 
   const beforeString = dateTimeFormat.format(new Date(beforeMs));
-  const beforeElement = dom('span', { style: 'white-space: nowrap; font-weight: bold;' }, null, [beforeString]);
+  const beforeElement = span({ style: 'white-space: nowrap; font-weight: bold;' }, [beforeString]);
 
   const before = beforeMs / 1000;
 
@@ -59,10 +59,11 @@ const confirmDeleteDrafts = event => {
     message: ['Every draft on ', createBlogSpan(blogName), ' dated before ', beforeElement, ' will be deleted.'],
     buttons: [
       modalCancelButton,
-      dom(
-        'button',
-        { class: 'red' },
-        { click: () => deleteDrafts({ blogName, before }).catch(showErrorModal) },
+      button(
+        {
+          class: 'red',
+          click: () => deleteDrafts({ blogName, before }).catch(showErrorModal)
+        },
         ['Delete them!']
       )
     ]
@@ -70,13 +71,13 @@ const confirmDeleteDrafts = event => {
 };
 
 const deleteDrafts = async function ({ blogName, before }) {
-  const foundPostsElement = dom('span', null, null, ['Gathering drafts...']);
-  const deleteCountElement = dom('span');
+  const foundPostsElement = span({}, ['Gathering drafts...']);
+  const deleteCountElement = span();
 
   showModal({
     title: 'Deleting drafts...',
     message: [
-      dom('small', null, null, ['Do not navigate away from this page.']),
+      small({}, ['Do not navigate away from this page.']),
       '\n\n',
       foundPostsElement,
       '\n',
@@ -137,7 +138,7 @@ const deleteDrafts = async function ({ blogName, before }) {
       'Refresh the page to see the result.'
     ],
     buttons: [
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh'])
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh'])
     ]
   });
 };
@@ -159,19 +160,19 @@ const showClearQueuePrompt = () => {
     ],
     buttons: [
       modalCancelButton,
-      dom('button', { class: 'red' }, { click: () => clearQueue({ blogName }).catch(showErrorModal) }, ['Clear it!'])
+      button({ class: 'red', click: () => clearQueue({ blogName }).catch(showErrorModal) }, ['Clear it!'])
     ]
   });
 };
 
 const clearQueue = async function ({ blogName }) {
-  const foundPostsElement = dom('span', null, null, ['Gathering queued posts...']);
-  const deleteCountElement = dom('span');
+  const foundPostsElement = span({}, ['Gathering queued posts...']);
+  const deleteCountElement = span();
 
   showModal({
     title: 'Clearing your queue...',
     message: [
-      dom('small', null, null, ['Do not navigate away from this page.']),
+      small({}, ['Do not navigate away from this page.']),
       '\n\n',
       foundPostsElement,
       '\n',
@@ -231,7 +232,7 @@ const clearQueue = async function ({ blogName }) {
       'Refresh the page to see the result.'
     ],
     buttons: [
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh'])
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh'])
     ]
   });
 };

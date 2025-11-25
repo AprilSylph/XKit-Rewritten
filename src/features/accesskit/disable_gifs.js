@@ -55,6 +55,8 @@ export const styleElement = buildStyle(`
 .${canvasClass} {
   position: absolute;
   visibility: visible;
+  top: 0;
+  left: 0;
 
   background-color: rgb(var(--white));
 }
@@ -63,7 +65,7 @@ export const styleElement = buildStyle(`
 [${labelAttribute}="after"]${hovered}::after,
 [${labelAttribute}="before"]${hovered}::before,
 [${pausedPosterAttribute}]:not(${hovered}) > div > ${keyToCss('knightRiderLoader')} {
-  display: none;
+  display: none !important;
 }
 ${keyToCss('background')}[${labelAttribute}="after"]::after,
 ${keyToCss('background')}[${labelAttribute}="before"]::before {
@@ -219,10 +221,13 @@ export const main = async function () {
       },
       ${keyToCss(
         'linkCard', // post link element
+        'messageImage', // direct message attached image
+        'messagePost', // direct message linked post
         'typeaheadRow', // modal search dropdown entry
         'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
         'topPost', // activity page top post
-        'takeoverBanner' // advertisement
+        'takeoverBanner', // advertisement
+        'mrecContainer' // advertisement
       )}
     ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
   `;

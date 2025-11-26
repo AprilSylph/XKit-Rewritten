@@ -44,7 +44,7 @@
 #quick-tags {
   --icon-spacing: 12px;
 }
-@media (max-width: 990px) {
+@media not (min-width: 990px) {
   #quick-tags {
     --icon-spacing: 0px;
   }

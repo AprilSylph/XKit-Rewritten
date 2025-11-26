@@ -1,12 +1,14 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { a, button, span, link } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
+import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject } from '../../utils/react_props.js';
 
 const activeAttribute = 'data-classic-footer';
 const noteCountClass = 'xkit-classic-footer-note-count';
+const modernStyleClass = 'xkit-classic-footer-ds-look';
 const reblogLinkClass = 'xkit-classic-footer-reblog-link';
 
 const postOrRadarSelector = `:is(${postSelector}, aside ${keyToCss('radar')})`;
@@ -18,10 +20,27 @@ const quickActionsSelector = 'svg[style="--icon-color-primary: var(--brand-blue)
 const closeNotesButtonSelector = `${postOrRadarSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
 const reblogMenuPortalSelector = 'div[id^="portal/"]:has(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';
 
-const locale = document.documentElement.lang;
-const noteCountFormat = new Intl.NumberFormat(locale);
+const { lang } = document.documentElement;
+const noteCountFormat = new Intl.NumberFormat(lang);
+
+const singularTranslation = translate('%2$s note');
+const pluralTranslation = new Map([
+  ['en-US', '%2$s notes'],
+  ['de-DE', '%2$s Anmerkungen'],
+  ['fr-FR', '%2$s notes'],
+  ['it-IT', '%2$s note'],
+  ['tr-TR', '%2$s not'],
+  ['es-ES', '%2$s notas'],
+  ['ru-RU', '%2$s заметок'],
+  ['pl-PL', '%2$s notek'],
+  ['pt-PT', '%2$s notas'],
+  ['pt-BR', '%2$s notas'],
+  ['nl-NL', '%2$s notities'],
+]).get(lang) ?? singularTranslation;
 
 let noReblogMenu;
+let modernButtonStyle;
+let noZeroNotes;
 
 export const styleElement = buildStyle(`
   [${activeAttribute}] ${keyToCss('postOwnerControls')} {
@@ -75,6 +94,45 @@ export const styleElement = buildStyle(`
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .${noteCountClass}:focus-visible {
+    outline: none;
+    text-decoration: 2px solid var(--accent) underline;
+  }
+  .${noteCountClass}.${modernStyleClass} {
+    padding-block: 10px;
+    padding-inline: 14px;
+    outline: 1px solid var(--content-tint-strong);
+    outline-offset: -1px;
+    margin-left: 8px;
+
+    font-size: .875rem;
+    font-weight: 350;
+    line-height: 1.25rem;
+  }
+  .${noteCountClass}.${modernStyleClass} > span {
+    color: var(--content-fg);
+    font-weight: 500;
+  }
+  .${noteCountClass}.${modernStyleClass}:is(:hover, :active) {
+    outline-color: var(--content-tint-heavy);
+  }
+  .${noteCountClass}.${modernStyleClass}:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+    text-decoration: none;
+  }
+  .${noteCountClass}[aria-hidden="true"] {
+    visibility: hidden;
+  }
+
+  /* If fonts other than Favorit Modern are allowed to use a weight of 350, it looks really bad. */
+  /* Use heavier weights to preserve the overall look when another addon is overriding the font. */
+  :root[style*="--font-family-modern"] .${noteCountClass}.${modernStyleClass} {
+    font-weight: normal;
+  }
+  :root[style*="--font-family-modern"] .${noteCountClass}.${modernStyleClass} > span {
+    font-weight: bold;
+  }
 
   .${reblogLinkClass} {
     display: flex;
@@ -100,6 +158,9 @@ export const styleElement = buildStyle(`
     .${noteCountClass}, .${reblogLinkClass} {
       padding: 6px;
     }
+    .${noteCountClass}.${modernStyleClass} {
+      margin-left: 6px;
+    }
   }
 
   span:has(svg[style="--icon-color-primary: var(--brand-green);"]) > .${reblogLinkClass} {
@@ -117,6 +178,55 @@ export const styleElement = buildStyle(`
   }
 `);
 
+const getTranslationTemplate = (noteCount) => {
+  if (lang === 'fr-FR') {
+    return noteCount > 1 ? pluralTranslation : singularTranslation;
+  }
+
+  if (lang === 'ru-RU') {
+    if (noteCount % 10 === 1 && noteCount % 100 !== 11) {
+      // Numbers ending in 1 (but not 11): Singular
+      return singularTranslation;
+    } else if (
+      (noteCount % 10 >= 2 && noteCount % 10 <= 4) &&
+      (noteCount % 100 < 12 || noteCount % 100 > 14)
+    ) {
+      // Numbers ending in 2-4 (but not 12-14): Genitive singular
+      return '%2$s заметки';
+    } else {
+      // 11-14, and numbers ending in 0 or 5-9: Genitive plural
+      return pluralTranslation;
+    }
+  }
+
+  if (lang === 'pl-PL') {
+    if (noteCount === 1) {
+      // Polish only uses the singular case for exactly 1.
+      return singularTranslation;
+    } else if (
+      (noteCount % 10 >= 2 && noteCount % 10 <= 4) &&
+      (noteCount % 100 < 12 || noteCount % 100 > 14)
+    ) {
+      return '%2$s notki';
+    } else {
+      return pluralTranslation;
+    }
+  }
+
+  return noteCount === 1 ? singularTranslation : pluralTranslation;
+};
+
+const getButtonChildren = (noteCount) => {
+  const formattedNoteCount = span({}, [noteCountFormat.format(noteCount)]);
+
+  try {
+    const { prefix, suffix } = getTranslationTemplate(noteCount).match(/^(?<prefix>.*)(%2\$s)(?<suffix>.*)$/).groups;
+    return [prefix, formattedNoteCount, suffix];
+  } catch {
+    return [formattedNoteCount, ` ${noteCount === 1 ? 'note' : 'notes'}`];
+  }
+};
+
 const onNoteCountClick = (event) => {
   event.stopPropagation();
   const postElement = event.currentTarget.closest(postOrRadarSelector);
@@ -132,9 +242,11 @@ const processPosts = (postElements) => postElements.forEach(async postElement =>
   postElement.querySelector(`.${reblogLinkClass}`)?.remove();
 
   const { noteCount } = await timelineObject(postElement);
-  const noteCountButton = button({ class: noteCountClass, click: onNoteCountClick }, [
-    span({}, [noteCountFormat.format(noteCount)]), ` ${noteCount === 1 ? 'note' : 'notes'}`
-  ]);
+  const noteCountButton = button({
+    'aria-hidden': noteCount === 0 && noZeroNotes,
+    class: `${noteCountClass} ${modernButtonStyle ? modernStyleClass : ''}`,
+    click: onNoteCountClick,
+  }, getButtonChildren(noteCount));
 
   const engagementControls = [...postElement.querySelectorAll(engagementControlsSelector)].at(-1);
   engagementControls?.closest('footer').setAttribute(activeAttribute, '');
@@ -204,19 +316,14 @@ const processReblogButton = async reblogButton => {
 };
 
 export const onStorageChanged = async function (changes) {
-  const {
-    'classic_footer.preferences.noReblogMenu': noReblogMenuChanges
-  } = changes;
-
-  if (noReblogMenuChanges && noReblogMenuChanges.oldValue !== undefined) {
-    ({ newValue: noReblogMenu } = noReblogMenuChanges);
+  if (Object.keys(changes).some(key => key.startsWith('classic_footer'))) {
+    ({ noReblogMenu, modernButtonStyle, noZeroNotes } = await getPreferences('classic_footer'));
     pageModifications.trigger(processPosts);
   }
 };
 
 export const main = async function () {
-  ({ noReblogMenu } = await getPreferences('classic_footer'));
-
+  ({ noReblogMenu, modernButtonStyle, noZeroNotes } = await getPreferences('classic_footer'));
   pageModifications.register(`${postOrRadarSelector} article`, processPosts);
 };
 

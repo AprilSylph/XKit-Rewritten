@@ -6,45 +6,35 @@ import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from 
 import { getPreferences } from '../../utils/preferences.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
-import { dom } from '../../utils/dom.js';
+import { div, select, input, datalist, fieldset, button, option, hr, span } from '../../utils/dom.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { popoverStackingContextFix } from '../../utils/post_popovers.js';
 
-const popupElement = dom('div', { id: 'quick-reblog' }, { click: event => event.stopPropagation() });
-const blogSelector = dom('select');
-const blogAvatar = dom('div', { class: 'avatar' });
-const blogSelectorContainer = dom('div', { class: 'select-container' }, null, [blogAvatar, blogSelector]);
-const commentInput = dom(
-  'input',
-  {
-    placeholder: 'Comment',
-    autocomplete: 'off'
-  },
-  { keydown: event => event.stopPropagation() }
-);
-const quickTagsList = dom('div', {
-  class: 'quick-tags',
-  tabIndex: -1
+const stopEventPropagation = event => event.stopPropagation();
+
+const blogSelector = select({ change: onBlogSelectorChange });
+const blogAvatar = div({ class: 'avatar' });
+const blogSelectorContainer = div({ class: 'select-container' }, [blogAvatar, blogSelector]);
+const commentInput = input({ autocomplete: 'off', placeholder: 'Comment', keydown: stopEventPropagation });
+const quickTagsList = div({ class: 'quick-tags', tabIndex: -1 });
+const tagsInput = input({
+  autocomplete: 'off',
+  list: 'quick-reblog-tag-suggestions',
+  placeholder: 'Tags (comma separated)',
+  input: onTagsInput,
+  keydown: stopEventPropagation,
 });
-const tagsInput = dom(
-  'input',
-  {
-    placeholder: 'Tags (comma separated)',
-    autocomplete: 'off',
-    list: 'quick-reblog-tag-suggestions'
-  },
-  { keydown: event => event.stopPropagation() }
+const tagSuggestions = datalist({ id: 'quick-reblog-tag-suggestions' });
+const actionButtons = fieldset({ class: 'action-buttons' }, [
+  button({ 'data-state': 'published', click: reblogPost }, ['Reblog']),
+  button({ 'data-state': 'queue', click: reblogPost }, ['Queue']),
+  button({ 'data-state': 'draft', click: reblogPost }, ['Draft']),
+]);
+const popupElement = div(
+  { id: 'quick-reblog', click: stopEventPropagation },
+  [blogSelectorContainer, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons]
 );
-const tagSuggestions = dom('datalist', { id: 'quick-reblog-tag-suggestions' });
-const actionButtons = dom('fieldset', { class: 'action-buttons' });
-const reblogButton = dom('button', null, null, ['Reblog']);
-reblogButton.dataset.state = 'published';
-const queueButton = dom('button', null, null, ['Queue']);
-queueButton.dataset.state = 'queue';
-const draftButton = dom('button', null, null, ['Draft']);
-draftButton.dataset.state = 'draft';
-[blogSelectorContainer, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons].forEach(element => popupElement.appendChild(element));
 
 let lastPostID;
 let timeoutID;
@@ -88,11 +78,11 @@ ${keyToCss('engagementAction', 'targetWrapperFlex')}:has(> #quick-reblog) ${keyT
 ${popoverStackingContextFix}
 `);
 
-const onBlogSelectorChange = () => {
+/** blogSelector change event handler */
+function onBlogSelectorChange () {
   blogAvatar.style.backgroundImage = `url(${avatarUrls.get(blogSelector.value)})`;
-  actionButtons.classList[joinedCommunityUuids.includes(blogSelector.value) ? 'add' : 'remove']('community-selected');
-};
-blogSelector.addEventListener('change', onBlogSelectorChange);
+  actionButtons.classList.toggle('community-selected', joinedCommunityUuids.includes(blogSelector.value));
+}
 
 const renderTagSuggestions = () => {
   tagSuggestions.textContent = '';
@@ -110,37 +100,31 @@ const renderTagSuggestions = () => {
     .filter((tag, index, array) => array.indexOf(tag) === index)
     .map(tag => `${tagsInput.value}${includeSpace ? ' ' : ''}${tag}`);
 
-  tagSuggestions.append(...tagsToSuggest.map(value => dom('option', { value })));
+  tagSuggestions.append(...tagsToSuggest.map(value => option({ value })));
 };
 
-const updateTagSuggestions = () => {
-  if (tagsInput.value.trim().endsWith(',') || tagsInput.value.trim() === '') {
-    renderTagSuggestions();
-  }
-};
-
-const doSmartQuotes = ({ currentTarget }) => {
-  const { value } = currentTarget;
-  currentTarget.value = value
+/** @param {InputEvent} event tagsInput input event object */
+function onTagsInput ({ currentTarget }) {
+  // Do smart quotes
+  currentTarget.value = currentTarget.value
     .replace(/^"/, '\u201C')
     .replace(/ "/g, ' \u201C')
     .replace(/"/g, '\u201D');
-};
 
-const checkLength = ({ currentTarget }) => {
-  const { value } = currentTarget;
-  const tags = value.split(',').map(tag => tag.trim());
+  // Update tag suggestions
+  if (currentTarget.value.trim().endsWith(',') || currentTarget.value.trim() === '') {
+    renderTagSuggestions();
+  }
+
+  // Check length
+  const tags = currentTarget.value.split(',').map(tag => tag.trim());
   if (tags.some(tag => tag.length > 140)) {
     tagsInput.setCustomValidity('Tag is longer than 140 characters!');
     tagsInput.reportValidity();
   } else {
     tagsInput.setCustomValidity('');
   }
-};
-
-tagsInput.addEventListener('input', updateTagSuggestions);
-tagsInput.addEventListener('input', doSmartQuotes);
-tagsInput.addEventListener('input', checkLength);
+}
 
 const showPopupOnHover = async ({ currentTarget }) => {
   if (!currentTarget.matches(reblogButtonSelector)) return;
@@ -165,7 +149,7 @@ const showPopupOnHover = async ({ currentTarget }) => {
       onBlogSelectorChange();
     }
     commentInput.value = '';
-    [...quickTagsList.children].forEach(({ dataset }) => delete dataset.checked);
+    [...quickTagsList.children].forEach(bundleButton => { bundleButton.ariaPressed = 'false'; });
     tagsInput.value = '';
     timelineObject(thisPost).then(({ tags, trail, content, layout, blogName, postAuthor, rebloggedRootName }) => {
       suggestableTags = tags;
@@ -200,7 +184,8 @@ const markPostReblogged = ({ footer, state }) => {
   footer.classList.add(state);
 };
 
-const reblogPost = async function ({ currentTarget }) {
+/** @param {PointerEvent} event actionButtons.children[*] click event object */
+async function reblogPost ({ currentTarget }) {
   const footer = popupElement.closest('footer');
 
   currentTarget.blur();
@@ -259,12 +244,7 @@ const reblogPost = async function ({ currentTarget }) {
   } finally {
     actionButtons.disabled = false;
   }
-};
-
-[reblogButton, queueButton, draftButton].forEach(button => {
-  button.addEventListener('click', reblogPost);
-  actionButtons.appendChild(button);
-});
+}
 
 const processPosts = async function (postElements) {
   const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(alreadyRebloggedStorageKey);
@@ -282,34 +262,36 @@ const processPosts = async function (postElements) {
   });
 };
 
-const renderQuickTags = async function () {
-  const { [quickTagsStorageKey]: tagBundles = [] } = await browser.storage.local.get(quickTagsStorageKey);
+const renderQuickTags = () => browser.storage.local.get(quickTagsStorageKey)
+  .then(({ [quickTagsStorageKey]: tagBundles = [] }) => {
+    const bundleButtons = tagBundles.map(tagBundle => button({
+      'aria-pressed': 'false',
+      'data-tags': tagBundle.tags,
+      click: onQuickTagsBundleClick
+    }, [span({}, [tagBundle.title])]));
 
-  quickTagsList.replaceChildren(...tagBundles.map(tagBundle => {
-    const bundleTags = tagBundle.tags.split(',').map(tag => tag.trim().toLowerCase());
-    const bundleButton = dom('button', null, null, [tagBundle.title]);
+    quickTagsList.replaceChildren(...bundleButtons);
+  });
 
-    bundleButton.addEventListener('click', ({ currentTarget: { dataset } }) => {
-      const checked = dataset.checked === 'true';
+/** @param {PointerEvent} event quickTagsList.children[*] click event object */
+function onQuickTagsBundleClick ({ currentTarget }) {
+  const { ariaPressed, dataset } = currentTarget;
+  const bundleTags = dataset.tags.split(',').map(tag => tag.trim().toLowerCase());
 
-      if (checked) {
-        tagsInput.value = tagsInput.value
-          .split(',')
-          .map(tag => tag.trim())
-          .filter(tag => bundleTags.includes(tag.toLowerCase()) === false)
-          .join(', ');
-      } else {
-        tagsInput.value.trim() === ''
-          ? tagsInput.value = tagBundle.tags
-          : tagsInput.value += `, ${tagBundle.tags}`;
-      }
+  if (ariaPressed === 'true') {
+    tagsInput.value = tagsInput.value
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => bundleTags.includes(tag.toLowerCase()) === false)
+      .join(', ');
+  } else {
+    tagsInput.value.trim() === ''
+      ? tagsInput.value = dataset.tags
+      : tagsInput.value += `, ${dataset.tags}`;
+  }
 
-      dataset.checked = !checked;
-    });
-
-    return bundleButton;
-  }));
-};
+  currentTarget.ariaPressed = ariaPressed === 'false' ? 'true' : 'false';
+}
 
 const updateQuickTags = (changes) => {
   if (Object.keys(changes).includes(quickTagsStorageKey)) {
@@ -363,9 +345,9 @@ export const main = async function () {
   } = await getPreferences('quick_reblog'));
 
   blogSelector.replaceChildren(
-    ...userBlogs.map(({ name, uuid }) => dom('option', { value: uuid }, null, [name])),
-    ...joinedCommunities.length ? [dom('hr')] : [],
-    ...joinedCommunities.map(({ title, uuid, blog: { name } }) => dom('option', { value: uuid }, null, [`${title} (${name})`]))
+    ...userBlogs.map(({ name, uuid }) => option({ value: uuid }, [name])),
+    ...joinedCommunities.length ? [hr()] : [],
+    ...joinedCommunities.map(({ title, uuid, blog: { name } }) => option({ value: uuid }, [`${title} (${name})`]))
   );
 
   [...userBlogs, ...joinedCommunities].forEach((data) => {

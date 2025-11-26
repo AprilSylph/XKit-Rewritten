@@ -24,7 +24,7 @@
     "tumblrTvEnable": {
       "type": "checkbox",
       "label": "Enable on Tumblr TV",
-      "default": true
+      "default": false
     }
   }
 }

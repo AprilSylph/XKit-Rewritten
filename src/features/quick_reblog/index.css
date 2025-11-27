@@ -84,19 +84,12 @@
   --line-height: 1rem;
   --vertical-padding: .4375rem;
   --vertical-margin: 2px;
-
   --button-height: calc(
     var(--vertical-padding) +
     var(--line-height) +
     var(--vertical-padding) +
     var(--vertical-margin)
   );
-
-  font-size: .875rem;
-  line-height: var(--line-height);
-}
-
-#quick-reblog [role="tabpanel"]:not([hidden]) {
   --maximum-buttons: 4;
 
   display: flex;
@@ -104,6 +97,13 @@
   align-items: stretch;
   max-height: calc(var(--button-height) * var(--maximum-buttons));
   overflow-y: auto;
+
+  font-size: .875rem;
+  line-height: var(--line-height);
+}
+
+#quick-reblog [role="tabpanel"][hidden] {
+  display: none;
 }
 
 #quick-reblog [role="tabpanel"] button {

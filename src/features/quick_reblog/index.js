@@ -37,7 +37,7 @@ const tagsTabList = div({ role: 'tablist' }, [
     click: onTabClick,
     id: suggestedTagsTabId,
     role: 'tab',
-  }, ['This post']),
+  }, ['Suggestions']),
 ]);
 const quickTagsPanel = div({ 'aria-labelledby': quickTagsTabId, id: quickTagsPanelId, role: 'tabpanel' });
 const suggestedTagsPanel = div({ 'aria-labelledby': suggestedTagsTabId, id: suggestedTagsPanelId, role: 'tabpanel' });

@@ -6,7 +6,7 @@ import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from 
 import { getPreferences } from '../../utils/preferences.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
-import { div, select, input, datalist, fieldset, button, option, hr, span } from '../../utils/dom.js';
+import { div, select, input, fieldset, button, option, hr, span } from '../../utils/dom.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { popoverStackingContextFix } from '../../utils/post_popovers.js';
@@ -28,14 +28,12 @@ const commentInput = input({ autocomplete: 'off', placeholder: 'Comment', keydow
 const tagsTabList = div({ role: 'tablist' }, [
   button({
     'aria-controls': quickTagsPanelId,
-    'aria-selected': 'true',
     click: onTabClick,
     id: quickTagsTabId,
     role: 'tab',
   }, ['Tag bundles']),
   button({
     'aria-controls': suggestedTagsPanelId,
-    'aria-selected': 'false',
     click: onTabClick,
     id: suggestedTagsTabId,
     role: 'tab',
@@ -50,7 +48,6 @@ const tagsInput = input({
   input: onTagsInput,
   keydown: stopEventPropagation,
 });
-const tagSuggestions = datalist({ id: 'quick-reblog-tag-suggestions' });
 const actionButtons = fieldset({ class: 'action-buttons' }, [
   button({ 'data-state': 'published', click: reblogPost }, ['Reblog']),
   button({ 'data-state': 'queue', click: reblogPost }, ['Queue']),
@@ -63,13 +60,11 @@ const popupElement = div({ id: 'quick-reblog', click: stopEventPropagation }, [
   quickTagsPanel,
   suggestedTagsPanel,
   tagsInput,
-  tagSuggestions,
   actionButtons,
 ]);
 
 let lastPostID;
 let timeoutID;
-let suggestableTags;
 let accountKey;
 
 let popupPosition;
@@ -127,25 +122,6 @@ function onTabClick ({ currentTarget }) {
   currentTarget.ariaControlsElements.forEach(tabPanel => tabPanel.removeAttribute('hidden'));
 }
 
-const renderTagSuggestions = () => {
-  tagSuggestions.textContent = '';
-  if (!showTagSuggestions) return;
-
-  const currentTags = tagsInput.value
-    .split(',')
-    .map(tag => tag.trim().toLowerCase())
-    .filter(tag => tag !== '');
-
-  const includeSpace = !tagsInput.value.endsWith(' ') && tagsInput.value.trim() !== '';
-
-  const tagsToSuggest = suggestableTags
-    .filter(tag => !currentTags.includes(tag.toLowerCase()))
-    .filter((tag, index, array) => array.indexOf(tag) === index)
-    .map(tag => `${tagsInput.value}${includeSpace ? ' ' : ''}${tag}`);
-
-  tagSuggestions.append(...tagsToSuggest.map(value => option({ value })));
-};
-
 /** @param {InputEvent} event tagsInput input event object */
 function onTagsInput ({ currentTarget }) {
   // Do smart quotes
@@ -153,11 +129,6 @@ function onTagsInput ({ currentTarget }) {
     .replace(/^"/, '\u201C')
     .replace(/ "/g, ' \u201C')
     .replace(/"/g, '\u201D');
-
-  // Update tag suggestions
-  if (currentTarget.value.trim().endsWith(',') || currentTarget.value.trim() === '') {
-    renderTagSuggestions();
-  }
 
   // Check length
   const tags = currentTarget.value.split(',').map(tag => tag.trim());
@@ -194,14 +165,7 @@ const showPopupOnHover = async ({ currentTarget }) => {
     commentInput.value = '';
     [...quickTagsPanel.children].forEach(bundleButton => { bundleButton.ariaPressed = 'false'; });
     tagsInput.value = '';
-    timelineObject(thisPost).then(({ tags, trail, content, layout, blogName, postAuthor, rebloggedRootName }) => {
-      suggestableTags = tags;
-      if (blogName) suggestableTags.push(blogName);
-      if (postAuthor) suggestableTags.push(postAuthor);
-      if (rebloggedRootName) suggestableTags.push(rebloggedRootName);
-      suggestableTags.push(postType({ trail, content, layout }));
-      renderTagSuggestions();
-    });
+    timelineObject(thisPost).then(renderTagSuggestions);
   }
   lastPostID = thisPostID;
 };
@@ -306,18 +270,40 @@ const processPosts = async function (postElements) {
 };
 
 const renderQuickTags = () => browser.storage.local.get(quickTagsStorageKey)
-  .then(({ [quickTagsStorageKey]: tagBundles = [] }) => {
-    const bundleButtons = tagBundles.map(tagBundle => button({
-      'aria-pressed': 'false',
-      'data-tags': tagBundle.tags,
-      click: onQuickTagsBundleClick
-    }, [span({}, [tagBundle.title])]));
+  .then(({ [quickTagsStorageKey]: tagBundles = [] }) =>
+    quickTagsPanel.replaceChildren(
+      ...tagBundles.map(tagBundle => button({
+        'aria-pressed': 'false',
+        'data-tags': tagBundle.tags,
+        click: onTagsButtonClick,
+      }, [
+        span({}, [tagBundle.title])
+      ]))
+    )
+  );
 
-    quickTagsPanel.replaceChildren(...bundleButtons);
-  });
+const renderTagSuggestions = ({ blogName, content, layout, postAuthor, rebloggedRootName, tags, trail }) => {
+  const suggestedTags = new Set(tags);
+  if (blogName) suggestedTags.add(blogName);
+  if (postAuthor) suggestedTags.add(postAuthor);
+  if (rebloggedRootName) suggestedTags.add(rebloggedRootName);
+  suggestedTags.add(postType({ trail, content, layout }));
 
-/** @param {PointerEvent} event quickTagsPanel.children[*] click event object */
-function onQuickTagsBundleClick ({ currentTarget }) {
+  suggestedTagsPanel.replaceChildren(
+    ...[...suggestedTags].map(
+      tag => button({
+        'aria-pressed': 'false',
+        'data-tags': tag,
+        click: onTagsButtonClick,
+      }, [
+        span({}, [`#${tag}`])
+      ])
+    )
+  );
+};
+
+/** @param {PointerEvent} event (quickTagsPanel|suggestedTagsPanel).children[*] click event object */
+function onTagsButtonClick ({ currentTarget }) {
   const { ariaPressed, dataset } = currentTarget;
   const bundleTags = dataset.tags.split(',').map(tag => tag.trim().toLowerCase());
 
@@ -418,9 +404,15 @@ export const main = async function () {
   }
   onBlogSelectorChange();
 
+  [...tagsTabList.children].forEach(tabButton => {
+    tabButton.ariaSelected = tabButton.id === quickTagsTabId ? 'true' : 'false';
+  });
+
   blogSelectorContainer.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;
+  tagsTabList.hidden = !(quickTagsIntegration && showTagSuggestions);
   quickTagsPanel.hidden = !quickTagsIntegration;
+  suggestedTagsPanel.hidden = quickTagsIntegration || !showTagSuggestions;
   tagsInput.hidden = !showTagsInput;
 
   $(document.body).on('mouseenter', buttonSelector, showPopupOnHover);

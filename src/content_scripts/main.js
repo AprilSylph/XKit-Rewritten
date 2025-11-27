@@ -101,7 +101,7 @@
     const script = Object.assign(document.createElement('script'), {
       type: 'module',
       nonce,
-      src: browser.runtime.getURL('/main_world/index.js')
+      src: browser.runtime.getURL(`/main_world/index.js?t=${timestamp}`),
     });
     document.documentElement.append(script);
   });

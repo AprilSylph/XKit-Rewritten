@@ -140,6 +140,21 @@ function onTagsInput ({ currentTarget }) {
   }
 }
 
+const resetPopupState = () => {
+  commentInput.value = '';
+  tagsInput.value = '';
+
+  [...tagsTabList.children].forEach(tabButton => {
+    tabButton.ariaSelected = tabButton.id === quickTagsTabId ? 'true' : 'false';
+  });
+  [...quickTagsPanel.children, ...suggestedTagsPanel.children].forEach(tagsButton => {
+    tagsButton.ariaPressed = 'false';
+  });
+
+  quickTagsPanel.hidden = !quickTagsIntegration;
+  suggestedTagsPanel.hidden = quickTagsIntegration || !showTagSuggestions;
+};
+
 const showPopupOnHover = async ({ currentTarget }) => {
   if (!currentTarget.matches(reblogButtonSelector)) return;
 
@@ -162,9 +177,7 @@ const showPopupOnHover = async ({ currentTarget }) => {
       blogSelector.value = blogSelector.options[0].value;
       onBlogSelectorChange();
     }
-    commentInput.value = '';
-    [...quickTagsPanel.children].forEach(bundleButton => { bundleButton.ariaPressed = 'false'; });
-    tagsInput.value = '';
+    resetPopupState();
     timelineObject(thisPost).then(renderTagSuggestions);
   }
   lastPostID = thisPostID;
@@ -402,18 +415,14 @@ export const main = async function () {
 
     blogSelector.addEventListener('change', updateRememberedBlog);
   }
-  onBlogSelectorChange();
-
-  [...tagsTabList.children].forEach(tabButton => {
-    tabButton.ariaSelected = tabButton.id === quickTagsTabId ? 'true' : 'false';
-  });
 
   blogSelectorContainer.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;
   tagsTabList.hidden = !(quickTagsIntegration && showTagSuggestions);
-  quickTagsPanel.hidden = !quickTagsIntegration;
-  suggestedTagsPanel.hidden = quickTagsIntegration || !showTagSuggestions;
   tagsInput.hidden = !showTagsInput;
+
+  onBlogSelectorChange();
+  resetPopupState();
 
   $(document.body).on('mouseenter', buttonSelector, showPopupOnHover);
   $(document.body).on('contextmenu', buttonSelector, preventLongPressMenu);

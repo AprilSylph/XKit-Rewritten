@@ -80,6 +80,34 @@
   border-radius: 2px;
 }
 
+#quick-reblog [role="tablist"] {
+  display: flex;
+  flex-direction: row;
+  column-gap: 2px;
+  margin-bottom: 2px;
+}
+
+#quick-reblog [role="tablist"] [role="tab"] {
+  box-sizing: border-box;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 6px 10px;
+
+  background-color: rgb(var(--white));
+  font-size: .75rem;
+  font-weight: bold;
+}
+
+#quick-reblog [role="tablist"] [role="tab"][aria-selected="true"] {
+  background-color: transparent;
+  cursor: default;
+}
+
+#quick-reblog [role="tablist"] [role="tab"][aria-selected="false"]:hover {
+  background-color: rgba(var(--white), 0.65);
+}
+
 #quick-reblog [role="tabpanel"] {
   --line-height: 1rem;
   --vertical-padding: .4375rem;
@@ -95,14 +123,20 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  max-height: calc(var(--button-height) * var(--maximum-buttons));
+  max-height: calc(
+    (var(--button-height) * var(--maximum-buttons)) -
+    var(--vertical-margin)
+  );
+  margin-bottom: var(--vertical-margin);
   overflow-y: auto;
 
   font-size: .875rem;
   line-height: var(--line-height);
 }
 
-#quick-reblog [role="tabpanel"][hidden] {
+#quick-reblog [role="tablist"][hidden],
+#quick-reblog [role="tabpanel"][hidden],
+#quick-reblog [role="tabpanel"]:empty {
   display: none;
 }
 
@@ -121,6 +155,10 @@
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+#quick-reblog [role="tabpanel"] button:last-child {
+  margin-bottom: 0;
 }
 
 #quick-reblog [role="tabpanel"] button:hover {
@@ -154,10 +192,12 @@
 }
 
 #quick-reblog .action-buttons button {
-  flex-basis: calc(100% / 3);
-  flex-grow: 1;
   display: flex;
   justify-content: center;
+  box-sizing: border-box;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
   padding: 10px;
 
   background-color: rgb(var(--white));

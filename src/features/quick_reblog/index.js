@@ -11,13 +11,38 @@ import { showErrorModal } from '../../utils/modals.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { popoverStackingContextFix } from '../../utils/post_popovers.js';
 
+// Clean up previous instance after addon reload
+document.getElementById('quick-reblog')?.remove();
+
+const quickTagsTabId = 'xkit-quick-reblog-quick-tags-tab';
+const quickTagsPanelId = 'xkit-quick-reblog-quick-tags-panel';
+const suggestedTagsTabId = 'xkit-quick-reblog-suggested-tags-tab';
+const suggestedTagsPanelId = 'xkit-quick-reblog-suggested-tags-panel';
+
 const stopEventPropagation = event => event.stopPropagation();
 
 const blogSelector = select({ change: onBlogSelectorChange });
 const blogAvatar = div({ class: 'avatar' });
 const blogSelectorContainer = div({ class: 'select-container' }, [blogAvatar, blogSelector]);
 const commentInput = input({ autocomplete: 'off', placeholder: 'Comment', keydown: stopEventPropagation });
-const quickTagsPanel = div({ role: 'tabpanel' });
+const tagsTabList = div({ role: 'tablist' }, [
+  button({
+    'aria-controls': quickTagsPanelId,
+    'aria-selected': 'true',
+    click: onTabClick,
+    id: quickTagsTabId,
+    role: 'tab',
+  }, ['Tag bundles']),
+  button({
+    'aria-controls': suggestedTagsPanelId,
+    'aria-selected': 'false',
+    click: onTabClick,
+    id: suggestedTagsTabId,
+    role: 'tab',
+  }, ['This post']),
+]);
+const quickTagsPanel = div({ 'aria-labelledby': quickTagsTabId, id: quickTagsPanelId, role: 'tabpanel' });
+const suggestedTagsPanel = div({ 'aria-labelledby': suggestedTagsTabId, id: suggestedTagsPanelId, role: 'tabpanel' });
 const tagsInput = input({
   autocomplete: 'off',
   list: 'quick-reblog-tag-suggestions',
@@ -31,10 +56,16 @@ const actionButtons = fieldset({ class: 'action-buttons' }, [
   button({ 'data-state': 'queue', click: reblogPost }, ['Queue']),
   button({ 'data-state': 'draft', click: reblogPost }, ['Draft']),
 ]);
-const popupElement = div(
-  { id: 'quick-reblog', click: stopEventPropagation },
-  [blogSelectorContainer, commentInput, quickTagsPanel, tagsInput, tagSuggestions, actionButtons]
-);
+const popupElement = div({ id: 'quick-reblog', click: stopEventPropagation }, [
+  blogSelectorContainer,
+  commentInput,
+  tagsTabList,
+  quickTagsPanel,
+  suggestedTagsPanel,
+  tagsInput,
+  tagSuggestions,
+  actionButtons,
+]);
 
 let lastPostID;
 let timeoutID;
@@ -82,6 +113,18 @@ ${popoverStackingContextFix}
 function onBlogSelectorChange () {
   blogAvatar.style.backgroundImage = `url(${avatarUrls.get(blogSelector.value)})`;
   actionButtons.classList.toggle('community-selected', joinedCommunityUuids.includes(blogSelector.value));
+}
+
+/** @param {PointerEvent} event tagsTabList.children[*] click event object */
+function onTabClick ({ currentTarget }) {
+  const previousSelectedTab = [...tagsTabList.children].find(tabButton => tabButton.ariaSelected === 'true');
+  if (previousSelectedTab) {
+    previousSelectedTab.ariaSelected = 'false';
+    previousSelectedTab.ariaControlsElements.forEach(tabPanel => tabPanel.setAttribute('hidden', ''));
+  }
+
+  currentTarget.ariaSelected = 'true';
+  currentTarget.ariaControlsElements.forEach(tabPanel => tabPanel.removeAttribute('hidden'));
 }
 
 const renderTagSuggestions = () => {

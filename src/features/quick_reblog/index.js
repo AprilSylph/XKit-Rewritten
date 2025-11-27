@@ -17,7 +17,7 @@ const blogSelector = select({ change: onBlogSelectorChange });
 const blogAvatar = div({ class: 'avatar' });
 const blogSelectorContainer = div({ class: 'select-container' }, [blogAvatar, blogSelector]);
 const commentInput = input({ autocomplete: 'off', placeholder: 'Comment', keydown: stopEventPropagation });
-const quickTagsList = div({ class: 'quick-tags', tabIndex: -1 });
+const quickTagsPanel = div({ role: 'tabpanel' });
 const tagsInput = input({
   autocomplete: 'off',
   list: 'quick-reblog-tag-suggestions',
@@ -33,7 +33,7 @@ const actionButtons = fieldset({ class: 'action-buttons' }, [
 ]);
 const popupElement = div(
   { id: 'quick-reblog', click: stopEventPropagation },
-  [blogSelectorContainer, commentInput, quickTagsList, tagsInput, tagSuggestions, actionButtons]
+  [blogSelectorContainer, commentInput, quickTagsPanel, tagsInput, tagSuggestions, actionButtons]
 );
 
 let lastPostID;
@@ -149,7 +149,7 @@ const showPopupOnHover = async ({ currentTarget }) => {
       onBlogSelectorChange();
     }
     commentInput.value = '';
-    [...quickTagsList.children].forEach(bundleButton => { bundleButton.ariaPressed = 'false'; });
+    [...quickTagsPanel.children].forEach(bundleButton => { bundleButton.ariaPressed = 'false'; });
     tagsInput.value = '';
     timelineObject(thisPost).then(({ tags, trail, content, layout, blogName, postAuthor, rebloggedRootName }) => {
       suggestableTags = tags;
@@ -270,10 +270,10 @@ const renderQuickTags = () => browser.storage.local.get(quickTagsStorageKey)
       click: onQuickTagsBundleClick
     }, [span({}, [tagBundle.title])]));
 
-    quickTagsList.replaceChildren(...bundleButtons);
+    quickTagsPanel.replaceChildren(...bundleButtons);
   });
 
-/** @param {PointerEvent} event quickTagsList.children[*] click event object */
+/** @param {PointerEvent} event quickTagsPanel.children[*] click event object */
 function onQuickTagsBundleClick ({ currentTarget }) {
   const { ariaPressed, dataset } = currentTarget;
   const bundleTags = dataset.tags.split(',').map(tag => tag.trim().toLowerCase());
@@ -377,7 +377,7 @@ export const main = async function () {
 
   blogSelectorContainer.hidden = !showBlogSelector;
   commentInput.hidden = !showCommentInput;
-  quickTagsList.hidden = !quickTagsIntegration;
+  quickTagsPanel.hidden = !quickTagsIntegration;
   tagsInput.hidden = !showTagsInput;
 
   $(document.body).on('mouseenter', buttonSelector, showPopupOnHover);

@@ -80,7 +80,7 @@
   border-radius: 2px;
 }
 
-#quick-reblog .quick-tags {
+#quick-reblog [role="tabpanel"] {
   --line-height: 1rem;
   --vertical-padding: .4375rem;
   --vertical-margin: 2px;
@@ -96,7 +96,7 @@
   line-height: var(--line-height);
 }
 
-#quick-reblog .quick-tags:not([hidden]) {
+#quick-reblog [role="tabpanel"]:not([hidden]) {
   --maximum-buttons: 4;
 
   display: flex;
@@ -106,7 +106,7 @@
   overflow-y: auto;
 }
 
-#quick-reblog .quick-tags button {
+#quick-reblog [role="tabpanel"] button {
   display: flex;
   justify-content: space-between;
   gap: 4px;
@@ -123,25 +123,25 @@
   white-space: nowrap;
 }
 
-#quick-reblog .quick-tags button:hover {
+#quick-reblog [role="tabpanel"] button:hover {
   background-color: rgb(var(--secondary-accent));
   color: rgb(var(--black));
 }
 
-#quick-reblog .quick-tags button:focus-visible {
+#quick-reblog [role="tabpanel"] button:focus-visible {
   outline-offset: -2px;
 }
 
-#quick-reblog .quick-tags button::after {
+#quick-reblog [role="tabpanel"] button::after {
   content: "\2713";
   visibility: hidden;
 }
 
-#quick-reblog .quick-tags button[aria-pressed="true"]::after {
+#quick-reblog [role="tabpanel"] button[aria-pressed="true"]::after {
   visibility: visible;
 }
 
-#quick-reblog .quick-tags button > span {
+#quick-reblog [role="tabpanel"] button > span {
   overflow: hidden;
   text-overflow: ellipsis;
 }

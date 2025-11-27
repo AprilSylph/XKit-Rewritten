@@ -72,8 +72,8 @@ let showBlogSelector;
 let rememberLastBlog;
 let showCommentInput;
 let quickTagsIntegration;
-let showTagsInput;
 let showTagSuggestions;
+let showTagsInput;
 let reblogTag;
 let queueTag;
 let alreadyRebloggedEnabled;
@@ -365,8 +365,8 @@ export const main = async function () {
     rememberLastBlog,
     showCommentInput,
     quickTagsIntegration,
-    showTagsInput,
     showTagSuggestions,
+    showTagsInput,
     reblogTag,
     queueTag,
     alreadyRebloggedEnabled,

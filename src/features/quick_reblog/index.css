@@ -100,7 +100,7 @@
 }
 
 #quick-reblog [role="tablist"] [role="tab"][aria-selected="true"] {
-  background-color: transparent;
+  background-color: rgb(var(--white), 0.4);
   cursor: default;
 }
 

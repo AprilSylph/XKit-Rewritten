@@ -80,33 +80,67 @@
   border-radius: 2px;
 }
 
-#quick-reblog .quick-tags {
+#quick-reblog [role="tablist"] {
+  display: flex;
+  flex-direction: row;
+  column-gap: 2px;
+  margin-bottom: 2px;
+}
+
+#quick-reblog [role="tablist"] [role="tab"] {
+  box-sizing: border-box;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 6px 10px;
+
+  background-color: rgb(var(--white));
+  font-size: .75rem;
+  font-weight: bold;
+}
+
+#quick-reblog [role="tablist"] [role="tab"][aria-selected="true"] {
+  background-color: rgb(var(--white), 0.4);
+  cursor: default;
+}
+
+#quick-reblog [role="tablist"] [role="tab"][aria-selected="false"]:hover {
+  background-color: rgba(var(--white), 0.65);
+}
+
+#quick-reblog [role="tabpanel"] {
   --line-height: 1rem;
   --vertical-padding: .4375rem;
   --vertical-margin: 2px;
-
   --button-height: calc(
     var(--vertical-padding) +
     var(--line-height) +
     var(--vertical-padding) +
     var(--vertical-margin)
   );
-
-  font-size: .875rem;
-  line-height: var(--line-height);
-}
-
-#quick-reblog .quick-tags:not([hidden]) {
   --maximum-buttons: 4;
 
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  max-height: calc(var(--button-height) * var(--maximum-buttons));
+  max-height: calc(
+    (var(--button-height) * var(--maximum-buttons)) -
+    var(--vertical-margin)
+  );
+  margin-bottom: var(--vertical-margin);
   overflow-y: auto;
+
+  font-size: .875rem;
+  line-height: var(--line-height);
 }
 
-#quick-reblog .quick-tags button {
+#quick-reblog [role="tablist"][hidden],
+#quick-reblog [role="tabpanel"][hidden],
+#quick-reblog [role="tabpanel"]:empty {
+  display: none;
+}
+
+#quick-reblog [role="tabpanel"] button {
   display: flex;
   justify-content: space-between;
   gap: 4px;
@@ -123,25 +157,29 @@
   white-space: nowrap;
 }
 
-#quick-reblog .quick-tags button:hover {
+#quick-reblog [role="tabpanel"] button:last-child {
+  margin-bottom: 0;
+}
+
+#quick-reblog [role="tabpanel"] button:hover {
   background-color: rgb(var(--secondary-accent));
   color: rgb(var(--black));
 }
 
-#quick-reblog .quick-tags button:focus-visible {
+#quick-reblog [role="tabpanel"] button:focus-visible {
   outline-offset: -2px;
 }
 
-#quick-reblog .quick-tags button::after {
+#quick-reblog [role="tabpanel"] button::after {
   content: "\2713";
   visibility: hidden;
 }
 
-#quick-reblog .quick-tags button[aria-pressed="true"]::after {
+#quick-reblog [role="tabpanel"] button[aria-pressed="true"]::after {
   visibility: visible;
 }
 
-#quick-reblog .quick-tags button > span {
+#quick-reblog [role="tabpanel"] button > span {
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -154,10 +192,12 @@
 }
 
 #quick-reblog .action-buttons button {
-  flex-basis: calc(100% / 3);
-  flex-grow: 1;
   display: flex;
   justify-content: center;
+  box-sizing: border-box;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
   padding: 10px;
 
   background-color: rgb(var(--white));

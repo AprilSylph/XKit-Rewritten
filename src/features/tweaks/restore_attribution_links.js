@@ -36,7 +36,7 @@ const processPosts = async function (postElements) {
     const reblogAttributionLink = postElement.querySelector(reblogAttributionLinkSelector);
 
     if (postAttributionLink && postAttributionLink.textContent === blogName) {
-      postAttributionLink.dataset.href ??= postAttributionLink.getAttribute('href');
+      postAttributionLink.dataset.originalHref ??= postAttributionLink.getAttribute('href');
       postAttributionLink.href = postUrl;
       postAttributionLink.dataset.blogName = blogName;
       postAttributionLink.dataset.postId = id;
@@ -44,7 +44,7 @@ const processPosts = async function (postElements) {
     }
 
     if (reblogAttributionLink && reblogAttributionLink.textContent === rebloggedFromName) {
-      reblogAttributionLink.dataset.href ??= reblogAttributionLink.getAttribute('href');
+      reblogAttributionLink.dataset.originalHref ??= reblogAttributionLink.getAttribute('href');
       reblogAttributionLink.href = rebloggedFromUrl;
       reblogAttributionLink.dataset.blogName = rebloggedFromName;
       reblogAttributionLink.dataset.postId = rebloggedFromId;
@@ -61,10 +61,10 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
   [...document.querySelectorAll(
-    `[data-href]:is(${postAttributionLinkSelector}, ${reblogAttributionLinkSelector})`
+    `[data-original-href]:is(${postAttributionLinkSelector}, ${reblogAttributionLinkSelector})`
   )].forEach(anchorElement => {
-    anchorElement.setAttribute('href', anchorElement.dataset.href);
+    anchorElement.setAttribute('href', anchorElement.dataset.originalHref);
     anchorElement.removeEventListener('click', onLinkClick, listenerOptions);
-    delete anchorElement.dataset.href;
+    delete anchorElement.dataset.originalHref;
   });
 };

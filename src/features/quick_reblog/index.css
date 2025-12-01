@@ -189,6 +189,10 @@
   color: rgb(var(--black));
 }
 
+#quick-reblog [role="tabpanel"] button:active {
+  background-image: linear-gradient(rgba(var(--black), 0.25), rgba(var(--black), 0.25));
+}
+
 #quick-reblog [role="tabpanel"] button:focus-visible {
   outline-offset: -2px;
 }
@@ -229,6 +233,10 @@
 
 #quick-reblog .action-buttons:enabled button:hover {
   background-image: linear-gradient(rgba(var(--black), 0.07), rgba(var(--black), 0.07));
+}
+
+#quick-reblog .action-buttons:enabled button:active {
+  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
 }
 
 #quick-reblog .action-buttons button:not(:first-child) {

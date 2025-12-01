@@ -20,6 +20,8 @@ const onLinkClick = event => {
   }
 };
 
+const listenerOptions = { capture: true };
+
 const processPosts = async function (postElements) {
   postElements.forEach(async postElement => {
     const {
@@ -31,20 +33,22 @@ const processPosts = async function (postElements) {
       rebloggedFromUrl
     } = await timelineObject(postElement);
     const postAttributionLink = postElement.querySelector(postAttributionLinkSelector);
+    const reblogAttributionLink = postElement.querySelector(reblogAttributionLinkSelector);
 
     if (postAttributionLink && postAttributionLink.textContent === blogName) {
+      postAttributionLink.dataset.originalHref ??= postAttributionLink.getAttribute('href');
       postAttributionLink.href = postUrl;
       postAttributionLink.dataset.blogName = blogName;
       postAttributionLink.dataset.postId = id;
-      postAttributionLink.addEventListener('click', onLinkClick, { capture: true });
+      postAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
     }
 
-    const reblogAttributionLink = postElement.querySelector(reblogAttributionLinkSelector);
     if (reblogAttributionLink && reblogAttributionLink.textContent === rebloggedFromName) {
+      reblogAttributionLink.dataset.originalHref ??= reblogAttributionLink.getAttribute('href');
       reblogAttributionLink.href = rebloggedFromUrl;
       reblogAttributionLink.dataset.blogName = rebloggedFromName;
       reblogAttributionLink.dataset.postId = rebloggedFromId;
-      reblogAttributionLink.addEventListener('click', onLinkClick, { capture: true });
+      reblogAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
     }
   });
 };
@@ -55,4 +59,12 @@ export const main = async function () {
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
+
+  [...document.querySelectorAll(
+    `[data-original-href]:is(${postAttributionLinkSelector}, ${reblogAttributionLinkSelector})`
+  )].forEach(anchorElement => {
+    anchorElement.setAttribute('href', anchorElement.dataset.originalHref);
+    anchorElement.removeEventListener('click', onLinkClick, listenerOptions);
+    delete anchorElement.dataset.originalHref;
+  });
 };

@@ -115,11 +115,15 @@ function onTabClick ({ currentTarget }) {
   const previousSelectedTab = [...tagsTabList.children].find(tabButton => tabButton.ariaSelected === 'true');
   if (previousSelectedTab) {
     previousSelectedTab.ariaSelected = 'false';
-    previousSelectedTab.ariaControlsElements.forEach(tabPanel => tabPanel.setAttribute('hidden', ''));
+    previousSelectedTab.getAttribute('aria-controls').split(',')
+      .map(elementId => document.getElementById(elementId))
+      .forEach(tabPanel => tabPanel.setAttribute('hidden', ''));
   }
 
   currentTarget.ariaSelected = 'true';
-  currentTarget.ariaControlsElements.forEach(tabPanel => tabPanel.removeAttribute('hidden'));
+  currentTarget.getAttribute('aria-controls').split(',')
+    .map(elementId => document.getElementById(elementId))
+    .forEach(tabPanel => tabPanel.removeAttribute('hidden'));
 }
 
 /** @param {InputEvent} event tagsInput input event object */

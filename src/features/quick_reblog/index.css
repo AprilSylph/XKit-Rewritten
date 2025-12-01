@@ -140,20 +140,23 @@
   margin-bottom: var(--vertical-margin);
   overflow-y: auto;
 
-  background-color: rgb(var(--white));
-  border: 4px solid rgb(var(--white));
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
   font-size: .875rem;
   line-height: var(--line-height);
 }
 
-#quick-reblog [role="tabpanel"]:focus-visible {
-  outline-offset: -2px;
-}
-
 #quick-reblog [role="tabpanel"]:empty {
   display: none;
+}
+
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *) {
+  background-color: rgb(var(--white));
+  border: 4px solid rgb(var(--white));
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *):focus-visible {
+  outline-offset: -2px;
 }
 
 #quick-reblog [role="tabpanel"] button {
@@ -164,7 +167,7 @@
   padding: var(--vertical-padding) 10px;
   margin-bottom: var(--vertical-margin);
 
-  background-color: rgba(var(--black), 0.07);
+  background-color: rgba(var(--white), 0.65);
   color: rgba(var(--black), 0.65);
   font-size: inherit;
   line-height: inherit;
@@ -173,13 +176,21 @@
   white-space: nowrap;
 }
 
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *) button {
+  background-color: rgba(var(--black), 0.07);
+}
+
 #quick-reblog [role="tabpanel"] button:last-child {
   margin-bottom: 0;
 }
 
 #quick-reblog [role="tabpanel"] button:hover {
-  background-color: rgba(var(--black), 0.13);
+  background-color: rgba(var(--black), 0.07);
   color: rgb(var(--black));
+}
+
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *) button:hover {
+  background-color: rgba(var(--black), 0.13);
 }
 
 #quick-reblog [role="tabpanel"] button:focus-visible {

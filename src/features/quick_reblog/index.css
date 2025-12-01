@@ -144,10 +144,6 @@
   line-height: var(--line-height);
 }
 
-#quick-reblog [role="tabpanel"]:empty {
-  display: none;
-}
-
 #quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *) {
   background-color: rgb(var(--white));
   border: 4px solid rgb(var(--white));
@@ -157,6 +153,19 @@
 
 #quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *):focus-visible {
   outline-offset: -2px;
+}
+
+
+#quick-reblog [role="tabpanel"]:is([role="tablist"][hidden] ~ *):empty {
+  display: none;
+}
+
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *):empty::before {
+  padding: var(--vertical-padding) 0;
+
+  color: rgba(var(--black), 0.65);
+  content: "There’s nothing here.";
+  text-align: center;
 }
 
 #quick-reblog [role="tabpanel"] button {

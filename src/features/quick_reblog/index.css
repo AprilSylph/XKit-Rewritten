@@ -185,12 +185,8 @@
 }
 
 #quick-reblog [role="tabpanel"] button:hover {
-  background-color: rgba(var(--black), 0.07);
+  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
   color: rgb(var(--black));
-}
-
-#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *) button:hover {
-  background-color: rgba(var(--black), 0.13);
 }
 
 #quick-reblog [role="tabpanel"] button:focus-visible {
@@ -232,7 +228,7 @@
 }
 
 #quick-reblog .action-buttons:enabled button:hover {
-  background-color: rgb(var(--secondary-accent));
+  background-image: linear-gradient(rgba(var(--black), 0.07), rgba(var(--black), 0.07));
 }
 
 #quick-reblog .action-buttons button:not(:first-child) {

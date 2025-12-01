@@ -20,7 +20,7 @@ const onLinkClick = event => {
   }
 };
 
-const useCapture = { capture: true };
+const listenerOptions = { capture: true };
 
 const processPosts = async function (postElements) {
   postElements.forEach(async postElement => {
@@ -40,7 +40,7 @@ const processPosts = async function (postElements) {
       postAttributionLink.href = postUrl;
       postAttributionLink.dataset.blogName = blogName;
       postAttributionLink.dataset.postId = id;
-      postAttributionLink.addEventListener('click', onLinkClick, useCapture);
+      postAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
     }
 
     if (reblogAttributionLink && reblogAttributionLink.textContent === rebloggedFromName) {
@@ -48,7 +48,7 @@ const processPosts = async function (postElements) {
       reblogAttributionLink.href = rebloggedFromUrl;
       reblogAttributionLink.dataset.blogName = rebloggedFromName;
       reblogAttributionLink.dataset.postId = rebloggedFromId;
-      reblogAttributionLink.addEventListener('click', onLinkClick, useCapture);
+      reblogAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
     }
   });
 };
@@ -64,7 +64,7 @@ export const clean = async function () {
     `[data-href]:is(${postAttributionLinkSelector}, ${reblogAttributionLinkSelector})`
   )].forEach(anchorElement => {
     anchorElement.setAttribute('href', anchorElement.dataset.href);
-    anchorElement.removeEventListener('click', onLinkClick, useCapture);
+    anchorElement.removeEventListener('click', onLinkClick, listenerOptions);
     delete anchorElement.dataset.href;
   });
 };

@@ -18,12 +18,11 @@ export const styleElement = buildStyle(`
 }
 
 .narrow-sidebar-avatar {
-  padding: var(--sidebar-blogs-padding) 0;
-
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  padding-block: var(--sidebar-blogs-padding);
 }
 .narrow-sidebar-avatar:hover {
   background-color: rgba(var(--white-on-dark), .07);
@@ -36,7 +35,7 @@ export const styleElement = buildStyle(`
 }
 @media (min-width: 1018px) {
   .narrow-sidebar-avatar {
-    padding: calc(var(--sidebar-blogs-padding) + 1px) 0;
+    padding-block: calc(var(--sidebar-blogs-padding) + 1px);
   }
   .narrow-sidebar-avatar > img {
     width: calc(var(--sidebar-blogs-size) + 4px);

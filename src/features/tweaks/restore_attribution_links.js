@@ -12,8 +12,12 @@ const onLinkClick = event => {
   event.stopPropagation();
   if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
 
-  const { blogName, postId } = event.currentTarget.dataset;
-  if (blogName && postId) {
+  const { blogName, communityName, postId } = event.currentTarget.dataset;
+
+  if (communityName && postId) {
+    event.preventDefault();
+    navigate(`/communities/${communityName}/post/${postId}`);
+  } else if (blogName && postId) {
     event.preventDefault();
     navigate(`/@${blogName}/${postId}`);
   }
@@ -24,42 +28,55 @@ const listenerOptions = { capture: true };
 const processPosts = async function (postElements) {
   postElements.forEach(async postElement => {
     const {
+      authorBlog,
       blogName,
+      community,
       id,
       postUrl,
       rebloggedFromId,
       rebloggedFromName,
       rebloggedFromUrl,
     } = await timelineObject(postElement);
+    const postAttributionName = (!!community && authorBlog?.name) || blogName;
+    const communityName = community?.name ?? '';
+
     const postAttributionLink = postElement.querySelector(postAttributionLinkSelector);
     const reblogAttributionLink = postElement.querySelector(reblogAttributionLinkSelector);
     const trailItemElements = [...postElement.querySelectorAll(trailItemSelector)];
 
-    if (postAttributionLink && postAttributionLink.textContent === blogName) {
+    if (postAttributionLink && postAttributionLink.textContent === postAttributionName) {
       postAttributionLink.dataset.originalHref ??= postAttributionLink.getAttribute('href');
-      postAttributionLink.href = postUrl;
       postAttributionLink.dataset.blogName = blogName;
+      postAttributionLink.dataset.communityName = communityName;
       postAttributionLink.dataset.postId = id;
+      postAttributionLink.href = postUrl;
       postAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
     }
 
     if (reblogAttributionLink && reblogAttributionLink.textContent === rebloggedFromName) {
       reblogAttributionLink.dataset.originalHref ??= reblogAttributionLink.getAttribute('href');
-      reblogAttributionLink.href = rebloggedFromUrl;
       reblogAttributionLink.dataset.blogName = rebloggedFromName;
       reblogAttributionLink.dataset.postId = rebloggedFromId;
+      reblogAttributionLink.href = rebloggedFromUrl;
       reblogAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
     }
 
     trailItemElements.forEach(async trailItemElement => {
-      const { blog, post } = await trailItem(trailItemElement);
+      const { blog, post, isContributedContent } = await trailItem(trailItemElement);
       const trailAttributionLink = trailItemElement.querySelector(trailAttributionLinkSelector);
 
       if (trailAttributionLink && trailAttributionLink.textContent === blog?.name && post?.id) {
         trailAttributionLink.dataset.originalHref ??= trailAttributionLink.getAttribute('href');
-        trailAttributionLink.href = `https://${blog.name}.tumblr.com/post/${post.id}`;
         trailAttributionLink.dataset.blogName = blog.name;
         trailAttributionLink.dataset.postId = post.id;
+
+        if (isContributedContent) {
+          trailAttributionLink.dataset.communityName = communityName;
+          trailAttributionLink.href = postUrl;
+        } else {
+          trailAttributionLink.href = `https://${blog.name}.tumblr.com/post/${post.id}`;
+        }
+
         trailAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
       }
     });

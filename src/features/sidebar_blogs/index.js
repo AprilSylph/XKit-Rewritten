@@ -67,25 +67,25 @@ export const styleElement = buildStyle(`
 }
 `);
 
-const narrowSidebarAvatars = div({ id: 'narrow-sidebar-avatars' });
+const narrowSidebarAvatars = div(
+  { id: 'narrow-sidebar-avatars' },
+  userBlogs.map(({ name, avatar }) =>
+    a(
+      {
+        href: `/blog/${name}`,
+        title: name,
+        class: 'narrow-sidebar-avatar',
+        click: onClickNavigate
+      },
+      [img({ src: avatar.at(-1)?.url })]
+    )
+  )
+);
 
 const processNavigationLinks = ([navigationLinks]) =>
   navigationLinks.append(narrowSidebarAvatars);
 
 export const main = async function () {
-  narrowSidebarAvatars.replaceChildren(
-    ...userBlogs.map(({ name, avatar }) =>
-      a(
-        {
-          href: `/blog/${name}`,
-          title: name,
-          class: 'narrow-sidebar-avatar',
-          click: onClickNavigate
-        },
-        [img({ src: avatar.at(-1)?.url })]
-      )
-    )
-  );
   pageModifications.register(`[role="banner"] ${keyToCss('navigationLinks')}`, processNavigationLinks);
 };
 

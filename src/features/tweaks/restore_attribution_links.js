@@ -17,7 +17,7 @@ const onLinkClick = event => {
 
   if (href.startsWith('https://www.tumblr.com/')) {
     event.preventDefault();
-    navigate(href.replace(/^https:\/\/www\.tumblr\.com\//, '/'));
+    navigate(new URL(href).pathname);
   } else if (blogName && postId) {
     event.preventDefault();
     navigate(`/@${blogName}/${postId}`);
@@ -71,10 +71,11 @@ const processPosts = async function (postElements) {
 
         if (isContributedContent) {
           trailAttributionLink.href = postUrl;
-        } else if (blog.url.startsWith('https://www.tumblr.com/')) {
-          trailAttributionLink.href = `${blog.url.replace(/\/$/, '')}/${post.id}`;
         } else {
-          trailAttributionLink.href = `${blog.url.replace(/\/$/, '')}/post/${post.id}`;
+          trailAttributionLink.href = new URL(
+            new URL(blog.url).hostname === 'www.tumblr.com' ? `/${post.id}` : `/post/${post.id}`,
+            blog.url
+          );
         }
 
         trailAttributionLink.addEventListener('click', onLinkClick, listenerOptions);

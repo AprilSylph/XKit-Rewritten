@@ -12,11 +12,12 @@ const onLinkClick = event => {
   event.stopPropagation();
   if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
 
-  const { blogName, communityName, postId } = event.currentTarget.dataset;
+  const { href } = event.currentTarget;
+  const { blogName, postId } = event.currentTarget.dataset;
 
-  if (communityName && postId) {
+  if (href.startsWith('https://www.tumblr.com')) {
     event.preventDefault();
-    navigate(`/communities/${communityName}/post/${postId}`);
+    navigate(href.replace(/^https:\/\/www.tumblr.com/, ''));
   } else if (blogName && postId) {
     event.preventDefault();
     navigate(`/@${blogName}/${postId}`);
@@ -38,7 +39,6 @@ const processPosts = async function (postElements) {
       rebloggedFromUrl,
     } = await timelineObject(postElement);
     const postAttributionName = (!!community && authorBlog?.name) || blogName;
-    const communityName = community?.name ?? '';
 
     const postAttributionLink = postElement.querySelector(postAttributionLinkSelector);
     const reblogAttributionLink = postElement.querySelector(reblogAttributionLinkSelector);
@@ -47,7 +47,6 @@ const processPosts = async function (postElements) {
     if (postAttributionLink && postAttributionLink.textContent === postAttributionName) {
       postAttributionLink.dataset.originalHref ??= postAttributionLink.getAttribute('href');
       postAttributionLink.dataset.blogName = blogName;
-      postAttributionLink.dataset.communityName = communityName;
       postAttributionLink.dataset.postId = id;
       postAttributionLink.href = postUrl;
       postAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
@@ -71,10 +70,11 @@ const processPosts = async function (postElements) {
         trailAttributionLink.dataset.postId = post.id;
 
         if (isContributedContent) {
-          trailAttributionLink.dataset.communityName = communityName;
           trailAttributionLink.href = postUrl;
+        } else if (blog.url.startsWith('https://www.tumblr.com')) {
+          trailAttributionLink.href = `${blog.url.replace(/\/$/, '')}/${post.id}`;
         } else {
-          trailAttributionLink.href = `https://${blog.name}.tumblr.com/post/${post.id}`;
+          trailAttributionLink.href = `${blog.url.replace(/\/$/, '')}/post/${post.id}`;
         }
 
         trailAttributionLink.addEventListener('click', onLinkClick, listenerOptions);

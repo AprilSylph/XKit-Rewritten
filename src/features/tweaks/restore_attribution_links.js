@@ -57,7 +57,7 @@ const processPosts = async function (postElements) {
 
       if (trailAttributionLink && trailAttributionLink.textContent === blog?.name && post?.id) {
         trailAttributionLink.dataset.originalHref ??= trailAttributionLink.getAttribute('href');
-        trailAttributionLink.href = `/@${blog.name}/${post.id}`;
+        trailAttributionLink.href = `https://${blog.name}.tumblr.com/post/${post.id}`;
         trailAttributionLink.dataset.blogName = blog.name;
         trailAttributionLink.dataset.postId = post.id;
         trailAttributionLink.addEventListener('click', onLinkClick, listenerOptions);

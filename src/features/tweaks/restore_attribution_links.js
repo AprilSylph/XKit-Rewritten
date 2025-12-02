@@ -72,10 +72,8 @@ const processPosts = async function (postElements) {
         if (isContributedContent) {
           trailAttributionLink.href = postUrl;
         } else {
-          trailAttributionLink.href = new URL(
-            new URL(blog.url).hostname === 'www.tumblr.com' ? `/${post.id}` : `/post/${post.id}`,
-            blog.url
-          );
+          const pathname = new URL(blog.url).hostname === 'www.tumblr.com' ? `/${post.id}` : `/post/${post.id}`;
+          trailAttributionLink.href = new URL(pathname, blog.url);
         }
 
         trailAttributionLink.addEventListener('click', onLinkClick, listenerOptions);

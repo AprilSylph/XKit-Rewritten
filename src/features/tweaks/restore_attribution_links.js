@@ -38,7 +38,7 @@ const processPosts = async function (postElements) {
       slug,
     } = await timelineObject(postElement);
     const postAttributionName = (!!community && authorBlog?.name) || blogName;
-    const routerPostUrl = new URL(postUrl).hostname === 'www.tumblr.com'
+    const postRouterUrl = new URL(postUrl).hostname === 'www.tumblr.com'
       ? postUrl
       : `${blog.blogViewUrl.replace(/\/$/, '')}/${id}${slug ? `/${slug}` : ''}`;
 
@@ -48,7 +48,7 @@ const processPosts = async function (postElements) {
 
     if (postAttributionLink && postAttributionLink.textContent === postAttributionName) {
       postAttributionLink.dataset.originalHref ??= postAttributionLink.getAttribute('href');
-      postAttributionLink.dataset.routerUrl = routerPostUrl;
+      postAttributionLink.dataset.routerUrl = postRouterUrl;
       postAttributionLink.href = postUrl;
       postAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
     }
@@ -68,7 +68,7 @@ const processPosts = async function (postElements) {
         trailAttributionLink.dataset.originalHref ??= trailAttributionLink.getAttribute('href');
 
         if (isContributedContent) {
-          trailAttributionLink.dataset.routerUrl = routerPostUrl;
+          trailAttributionLink.dataset.routerUrl = postRouterUrl;
           trailAttributionLink.href = postUrl;
         } else {
           const hasCustomTheme = new URL(blog.url).hostname !== 'www.tumblr.com';

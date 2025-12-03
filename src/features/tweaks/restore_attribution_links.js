@@ -16,6 +16,8 @@ const onLinkClick = event => {
   if (!routerUrl.startsWith('https://www.tumblr.com/')) return;
 
   event.preventDefault();
+  if (routerUrl === location.href) return;
+
   navigate(new URL(routerUrl).pathname);
 };
 

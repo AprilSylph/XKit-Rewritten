@@ -12,16 +12,11 @@ const onLinkClick = event => {
   event.stopPropagation();
   if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
 
-  const { href } = event.currentTarget;
-  const { blogName, postId } = event.currentTarget.dataset;
+  const { routerUrl } = event.currentTarget.dataset;
+  if (!routerUrl.startsWith('https://www.tumblr.com/')) return;
 
-  if (href.startsWith('https://www.tumblr.com/')) {
-    event.preventDefault();
-    navigate(new URL(href).pathname);
-  } else if (blogName && postId) {
-    event.preventDefault();
-    navigate(`/@${blogName}/${postId}`);
-  }
+  event.preventDefault();
+  navigate(new URL(routerUrl).pathname);
 };
 
 const listenerOptions = { capture: true };
@@ -30,15 +25,20 @@ const processPosts = async function (postElements) {
   postElements.forEach(async postElement => {
     const {
       authorBlog,
+      blog: { blogViewUrl },
       blogName,
       community,
       id,
+      parentPostUrl,
       postUrl,
-      rebloggedFromId,
       rebloggedFromName,
       rebloggedFromUrl,
+      slug,
     } = await timelineObject(postElement);
     const postAttributionName = (!!community && authorBlog?.name) || blogName;
+    const routerPostUrl = new URL(postUrl).hostname === 'www.tumblr.com'
+      ? postUrl
+      : `${blogViewUrl.replace(/\/$/, '')}/${id}${slug ? `/${slug}` : ''}`;
 
     const postAttributionLink = postElement.querySelector(postAttributionLinkSelector);
     const reblogAttributionLink = postElement.querySelector(reblogAttributionLinkSelector);
@@ -46,16 +46,14 @@ const processPosts = async function (postElements) {
 
     if (postAttributionLink && postAttributionLink.textContent === postAttributionName) {
       postAttributionLink.dataset.originalHref ??= postAttributionLink.getAttribute('href');
-      postAttributionLink.dataset.blogName = blogName;
-      postAttributionLink.dataset.postId = id;
+      postAttributionLink.dataset.routerUrl = routerPostUrl;
       postAttributionLink.href = postUrl;
       postAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
     }
 
     if (reblogAttributionLink && reblogAttributionLink.textContent === rebloggedFromName) {
       reblogAttributionLink.dataset.originalHref ??= reblogAttributionLink.getAttribute('href');
-      reblogAttributionLink.dataset.blogName = rebloggedFromName;
-      reblogAttributionLink.dataset.postId = rebloggedFromId;
+      reblogAttributionLink.dataset.routerUrl = parentPostUrl;
       reblogAttributionLink.href = rebloggedFromUrl;
       reblogAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
     }
@@ -66,15 +64,14 @@ const processPosts = async function (postElements) {
 
       if (trailAttributionLink && trailAttributionLink.textContent === blog?.name && post?.id) {
         trailAttributionLink.dataset.originalHref ??= trailAttributionLink.getAttribute('href');
-        trailAttributionLink.dataset.blogName = blog.name;
-        trailAttributionLink.dataset.postId = post.id;
 
         if (isContributedContent) {
+          trailAttributionLink.dataset.routerUrl = routerPostUrl;
           trailAttributionLink.href = postUrl;
         } else {
-          const blogUrl = blog.url.replace(/\/$/, '');
-          const hasCustomTheme = new URL(blogUrl).hostname !== 'www.tumblr.com';
-          trailAttributionLink.href = `${blogUrl}${hasCustomTheme ? `/post/${post.id}` : `/${post.id}`}`;
+          const hasCustomTheme = new URL(blog.url).hostname !== 'www.tumblr.com';
+          trailAttributionLink.dataset.routerUrl = `${blog.blogViewUrl.replace(/\/$/, '')}/${post.id}`;
+          trailAttributionLink.href = `${blog.url.replace(/\/$/, '')}${hasCustomTheme ? `/post/${post.id}` : `/${post.id}`}`;
         }
 
         trailAttributionLink.addEventListener('click', onLinkClick, listenerOptions);

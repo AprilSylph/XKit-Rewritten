@@ -27,7 +27,7 @@ const processPosts = async function (postElements) {
   postElements.forEach(async postElement => {
     const {
       authorBlog,
-      blog: { blogViewUrl },
+      blog,
       blogName,
       community,
       id,
@@ -40,7 +40,7 @@ const processPosts = async function (postElements) {
     const postAttributionName = (!!community && authorBlog?.name) || blogName;
     const routerPostUrl = new URL(postUrl).hostname === 'www.tumblr.com'
       ? postUrl
-      : `${blogViewUrl.replace(/\/$/, '')}/${id}${slug ? `/${slug}` : ''}`;
+      : `${blog.blogViewUrl.replace(/\/$/, '')}/${id}${slug ? `/${slug}` : ''}`;
 
     const postAttributionLink = postElement.querySelector(postAttributionLinkSelector);
     const reblogAttributionLink = postElement.querySelector(reblogAttributionLinkSelector);

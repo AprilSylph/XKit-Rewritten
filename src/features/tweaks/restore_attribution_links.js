@@ -95,5 +95,6 @@ export const clean = async function () {
     anchorElement.setAttribute('href', anchorElement.dataset.originalHref);
     anchorElement.removeEventListener('click', onLinkClick, listenerOptions);
     delete anchorElement.dataset.originalHref;
+    delete anchorElement.dataset.routerUrl;
   });
 };

@@ -38,9 +38,10 @@ const processPosts = async function (postElements) {
       slug,
     } = await timelineObject(postElement);
     const postAttributionName = (!!community && authorBlog?.name) || blogName;
-    const postRouterUrl = new URL(postUrl).hostname === 'www.tumblr.com'
-      ? postUrl
-      : `${blog.blogViewUrl.replace(/\/$/, '')}/${id}${slug ? `/${slug}` : ''}`;
+    const hasCustomTheme = new URL(postUrl).hostname !== 'www.tumblr.com';
+    const postRouterUrl = hasCustomTheme
+      ? `${blog.blogViewUrl.replace(/\/$/, '')}/${id}${slug ? `/${slug}` : ''}`
+      : postUrl;
 
     const postAttributionLink = postElement.querySelector(postAttributionLinkSelector);
     const reblogAttributionLink = postElement.querySelector(reblogAttributionLinkSelector);

@@ -1,12 +1,25 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { pageModifications } from '../../utils/mutations.js';
+import { buildStyle } from '../../utils/interface.js';
 
 const trackInfoSelector = keyToCss('trackInfo');
 
 let defaultVolume;
 
 const excludeClass = 'xkit-vanilla-audio-done';
+
+export const styleElement = buildStyle(`
+${keyToCss('hasRoundedCorners')} > .${excludeClass} {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+${keyToCss('hasRoundedCorners')} > .${excludeClass} ~ audio[controls] {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+`);
 
 const addAudioControls = nativePlayers => nativePlayers.forEach(nativePlayer => {
   if (nativePlayer.classList.contains(excludeClass)) return;

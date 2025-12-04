@@ -14,7 +14,7 @@
   "preferences": {
     "restore_attribution_links": {
       "type": "checkbox",
-      "label": "Restore links to individual posts in the post header",
+      "label": "Move post permalinks to the attributed blogname",
       "default": false
     },
     "create_button_no_bubbles": {

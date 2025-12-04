@@ -2,11 +2,48 @@ import { onNewPosts } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { timelineObject, trailItem } from '../../utils/react_props.js';
 import { navigate } from '../../utils/tumblr_helpers.js';
-import { trailItemSelector } from '../../utils/interface.js';
+import { buildStyle, trailItemSelector } from '../../utils/interface.js';
 
 const postAttributionLinkSelector = 'header a[rel="author"]';
 const reblogAttributionLinkSelector = `header ${keyToCss('subheader')} a${keyToCss('blogLink')}`;
 const trailAttributionLinkSelector = `${keyToCss('trailHeader')} a[rel="author"]`;
+
+const postBodyPermalinkSelector = `:is(
+  ${keyToCss('postContent')}${keyToCss('hasPermalink')},
+  ${keyToCss('reblog')}${keyToCss('withTrailItemPermalink')},
+  ${keyToCss('footerWrapper')}${keyToCss('isReblogWithAddedContent')}
+)`;
+const hasHoverColorSelector = keyToCss(
+  'heightRestrictorExpandButtonWrapper',
+  'contentWarningCover',
+  'expandTagsButtonWrapper'
+);
+
+// This takes advantage of tumblr's special-case code for audio players
+const preventPostClickAttributeName = 'data-audio-player';
+const preventPostClickAttributeValue = 'xkit-restore-attribution-links';
+
+export const styleElement = buildStyle(`
+/**
+ * Hides the header-wide anchor permalinks on processed posts, as they are redundant.
+ */
+article:has([${preventPostClickAttributeName}="${preventPostClickAttributeValue}"]) [rel="bookmark"] {
+  display: none !important;
+}
+
+/**
+ * Removes the different background colour when hovering a post body pseudo-permalink.
+ * This doesn't have :hover because, on reblogs with contributed content not viewed
+ * alone, Tumblr syncs the last reblog and footer's hover state using :has().
+ */
+${postBodyPermalinkSelector}[${preventPostClickAttributeName}] {
+  background-color: unset !important;
+  cursor: unset !important;
+}
+${postBodyPermalinkSelector}[${preventPostClickAttributeName}] ${hasHoverColorSelector} {
+  background-color: unset !important;
+}
+`);
 
 const onLinkClick = event => {
   event.stopPropagation();
@@ -46,6 +83,7 @@ const processPosts = async function (postElements) {
     const postAttributionLink = postElement.querySelector(postAttributionLinkSelector);
     const reblogAttributionLink = postElement.querySelector(reblogAttributionLinkSelector);
     const trailItemElements = [...postElement.querySelectorAll(trailItemSelector)];
+    const bodyPermalinkElements = [...postElement.querySelectorAll(postBodyPermalinkSelector)];
 
     if (postAttributionLink && postAttributionLink.textContent === postAttributionName) {
       postAttributionLink.dataset.originalHref ??= postAttributionLink.getAttribute('href');
@@ -80,6 +118,10 @@ const processPosts = async function (postElements) {
         trailAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
       }
     });
+
+    bodyPermalinkElements.forEach(bodyPermalinkElement =>
+      bodyPermalinkElement.setAttribute(preventPostClickAttributeName, preventPostClickAttributeValue)
+    );
   });
 };
 
@@ -98,4 +140,8 @@ export const clean = async function () {
     delete anchorElement.dataset.originalHref;
     delete anchorElement.dataset.routerUrl;
   });
+
+  [...document.querySelectorAll(
+    `[${preventPostClickAttributeName}="${preventPostClickAttributeValue}"]`
+  )].forEach(bodyPermalinkElement => bodyPermalinkElement.removeAttribute(preventPostClickAttributeName));
 };

@@ -8,7 +8,11 @@ export const styleElement = buildStyle();
 
 const blogs = new Set();
 const groupsFromHex = /^#(?<red>[A-Fa-f0-9]{1,2})(?<green>[A-Fa-f0-9]{1,2})(?<blue>[A-Fa-f0-9]{1,2})$/;
-const reblogSelector = keyToCss('reblog');
+
+// Prevent unreadable text by not theming trail items if they'll change
+// background color on hover until we implement compatibility with
+// postChromeBodyNavigationEventsRedesign.
+const reblogSelector = `${keyToCss('reblog')}:not(${keyToCss('withTrailItemPermalink')})`;
 const timelineSelector = keyToCss('timeline');
 
 let enableOnPeepr;

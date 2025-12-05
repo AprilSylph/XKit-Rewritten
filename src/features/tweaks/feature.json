@@ -14,7 +14,7 @@
   "preferences": {
     "restore_attribution_links": {
       "type": "checkbox",
-      "label": "Move post permalinks to blog names, à la 2016",
+      "label": "Move post permalinks back to attributed blognames",
       "default": false
     },
     "create_button_no_bubbles": {

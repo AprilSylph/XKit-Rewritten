@@ -5,9 +5,20 @@ import { pageModifications } from './mutations.js';
 
 const mobileBadgeSelector = `header ${keyToCss('hamburger')} + ${keyToCss('notificationBadge')}`;
 const hideBadgeClass = 'xkit-hide-mobile-menu-badge';
+const noTransitionClass = 'xkit-hide-mobile-menu-badge-no-transition';
+
+// load injected utility into module cache
+inject('/main_world/unbury_mobile_badge_data.js');
 
 document.documentElement.append(
-  buildStyle(`.${hideBadgeClass} ${mobileBadgeSelector} { transform: scale(0); }`)
+  buildStyle(`
+    .${hideBadgeClass} ${mobileBadgeSelector} {
+      transform: scale(0);
+    }
+    .${noTransitionClass} ${mobileBadgeSelector} {
+      transition: none;
+    }
+  `)
 );
 
 /** @typedef {'home' | 'communities' | 'activity' | 'messages' | 'inbox' | 'account'} NotificationType */
@@ -58,5 +69,15 @@ export const mobileMenuBadgeHide = Object.freeze({
   }
 });
 
-pageModifications.register(mobileBadgeSelector, () => mobileMenuBadgeHide.trigger());
+const waitForRender = () =>
+  new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+pageModifications.register(mobileBadgeSelector, () => {
+  mobileMenuBadgeHide.trigger();
+
+  document.documentElement.classList.add(noTransitionClass);
+  waitForRender().then(() => {
+    document.documentElement.classList.remove(noTransitionClass);
+  });
+});
 setInterval(() => mobileMenuBadgeHide.trigger(), 10_000);

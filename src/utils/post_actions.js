@@ -3,7 +3,7 @@ import { pageModifications } from './mutations.js';
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 
-// Remove outdated post options when loading module
+// Remove outdated post options when loading module.
 $('.xkit-post-option').remove();
 
 const postOptions = {};
@@ -24,7 +24,7 @@ const addPostOptions = ([postFormButton]) => {
 pageModifications.register(keyToCss('postFormButton'), addPostOptions);
 
 /**
- * Create and register a button to add to the new post form
+ * Create and register a button to add to the new post form.
  * @param {string} id Unique identifier for this post option
  * @param {object} options Construction options for this post option
  * @param {string} options.symbolId RemixIcon symbol to use

@@ -37,26 +37,26 @@ export const isMyPost = async (postElement) => {
   const userIsMember = userBlogNames.includes(blog.name);
   const userIsAdmin = adminBlogNames.includes(blog.name);
 
-  // Post belongs to the user's primary blog
+  // Post belongs to the user's primary blog.
   if (blog.name === primaryBlogName) return true;
 
-  // Post belongs to the user's single-member sideblog
+  // Post belongs to the user's single-member sideblog.
   if (postAuthor === undefined && userIsMember) return true;
 
-  // Post was created by the user on a group blog
+  // Post was created by the user on a group blog.
   if (postAuthor === primaryBlogName && !isSubmission) return true;
 
-  // Post was created by the user in a community
+  // Post was created by the user in a community.
   if (community && userBlogNames.includes(postAuthor)) return true;
 
-  // Submission belongs to group blog which the user is admin of
+  // Submission belongs to group blog which the user is admin of.
   if (isSubmission && userIsAdmin) return true;
 
   return false;
 };
 
 /**
- * Manipulate post form tags
+ * Manipulate post form tags.
  * @param {object} options Tags to add/remove to/from the current post form
  * @param {string[]} [options.add] Tags to insert
  * @param {string[]} [options.remove] Tags to remove

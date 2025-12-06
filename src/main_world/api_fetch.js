@@ -1,9 +1,9 @@
 export default function apiFetch (resource, init = {}) {
-  // add XKit header to all API requests
+  // Add XKit header to all API requests.
   init.headers ??= {};
   init.headers['X-XKit'] = '1';
 
-  // convert all keys in the body to snake_case
+  // Convert all keys in the body to snake_case.
   if (init.body !== undefined) {
     const objects = [init.body];
 

@@ -12,10 +12,13 @@ const postAttributionLinkSelector = `${headerSelector} a[rel="author"]`;
 const reblogAttributionLinkSelector = `${subheaderSelector} a${keyToCss('blogLink')}`;
 const trailAttributionLinkSelector = `${trailHeaderSelector} a[rel="author"]`;
 
-const postBodyPermalinkSelector = `:is(
-  ${keyToCss('postContent')}${keyToCss('hasPermalink')},
-  ${keyToCss('reblog')}${keyToCss('withTrailItemPermalink')},
-  ${keyToCss('footerWrapper')}${keyToCss('isReblogWithAddedContent')}
+const postContentEventPermalinkSelector = `${keyToCss('postContent')}${keyToCss('hasPermalink')}`;
+const trailItemEventPermalinkSelector = `${keyToCss('reblog')}${keyToCss('withTrailItemPermalink')}`;
+const footerEventPermalinkSelector = `${keyToCss('footerWrapper')}${keyToCss('isReblogWithAddedContent')}`;
+const anyElementEventPermalinkSelector = `:is(
+  ${postContentEventPermalinkSelector},
+  ${trailItemEventPermalinkSelector},
+  ${footerEventPermalinkSelector}
 )`;
 const hasHoverColorSelector = keyToCss(
   'heightRestrictorExpandButtonWrapper',
@@ -41,11 +44,11 @@ ${trailHeaderSelector}:has([data-router-url]:is(${trailAttributionLinkSelector})
  * This doesn't have :hover because, on reblogs with contributed content not viewed
  * alone, Tumblr syncs the last reblog and footer's hover state using :has().
  */
-${postBodyPermalinkSelector}[${preventPostClickAttributeName}] {
+${anyElementEventPermalinkSelector}[${preventPostClickAttributeName}] {
   background-color: unset !important;
   cursor: unset !important;
 }
-${postBodyPermalinkSelector}[${preventPostClickAttributeName}] ${hasHoverColorSelector} {
+${anyElementEventPermalinkSelector}[${preventPostClickAttributeName}] ${hasHoverColorSelector} {
   background-color: unset !important;
 }
 `);
@@ -88,13 +91,14 @@ const processPosts = async function (postElements) {
     const postAttributionLink = postElement.querySelector(postAttributionLinkSelector);
     const reblogAttributionLink = postElement.querySelector(reblogAttributionLinkSelector);
     const trailItemElements = [...postElement.querySelectorAll(trailItemSelector)];
-    const bodyPermalinkElements = [...postElement.querySelectorAll(postBodyPermalinkSelector)];
 
     if (postAttributionLink && postAttributionLink.textContent === postAttributionName) {
       postAttributionLink.dataset.originalHref ??= postAttributionLink.getAttribute('href');
       postAttributionLink.dataset.routerUrl = postRouterUrl;
       postAttributionLink.href = postUrl;
       postAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
+
+      postElement.querySelector(postContentEventPermalinkSelector)?.setAttribute(preventPostClickAttributeName, preventPostClickAttributeValue);
     }
 
     if (reblogAttributionLink && reblogAttributionLink.textContent === rebloggedFromName) {
@@ -114,6 +118,7 @@ const processPosts = async function (postElements) {
         if (isContributedContent) {
           trailAttributionLink.dataset.routerUrl = postRouterUrl;
           trailAttributionLink.href = postUrl;
+          postElement.querySelector(footerEventPermalinkSelector)?.setAttribute(preventPostClickAttributeName, preventPostClickAttributeValue);
         } else {
           const hasCustomTheme = new URL(blog.url).hostname !== 'www.tumblr.com';
           trailAttributionLink.dataset.routerUrl = `${blog.blogViewUrl.replace(/\/$/, '')}/${post.id}`;
@@ -121,12 +126,9 @@ const processPosts = async function (postElements) {
         }
 
         trailAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
+        trailAttributionLink.closest(trailItemEventPermalinkSelector)?.setAttribute(preventPostClickAttributeName, preventPostClickAttributeValue);
       }
     });
-
-    bodyPermalinkElements.forEach(bodyPermalinkElement =>
-      bodyPermalinkElement.setAttribute(preventPostClickAttributeName, preventPostClickAttributeValue)
-    );
   });
 };
 

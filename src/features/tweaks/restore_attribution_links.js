@@ -2,11 +2,56 @@ import { onNewPosts } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { timelineObject, trailItem } from '../../utils/react_props.js';
 import { navigate } from '../../utils/tumblr_helpers.js';
-import { trailItemSelector } from '../../utils/interface.js';
+import { buildStyle, postSelector, trailItemSelector } from '../../utils/interface.js';
 
-const postAttributionLinkSelector = 'header a[rel="author"]';
-const reblogAttributionLinkSelector = `header ${keyToCss('subheader')} a${keyToCss('blogLink')}`;
-const trailAttributionLinkSelector = `${keyToCss('trailHeader')} a[rel="author"]`;
+const headerSelector = `${postSelector} header`;
+const subheaderSelector = `${headerSelector} ${keyToCss('subheader')}`;
+const trailHeaderSelector = keyToCss('trailHeader');
+
+const postAttributionLinkSelector = `${headerSelector} a[rel="author"]`;
+const reblogAttributionLinkSelector = `${subheaderSelector} a${keyToCss('blogLink')}`;
+const trailAttributionLinkSelector = `${trailHeaderSelector} a[rel="author"]`;
+
+const postContentEventPermalinkSelector = `${keyToCss('postContent')}${keyToCss('hasPermalink')}`;
+const trailItemEventPermalinkSelector = `${keyToCss('reblog')}${keyToCss('withTrailItemPermalink')}`;
+const footerEventPermalinkSelector = `${keyToCss('footerWrapper')}${keyToCss('isReblogWithAddedContent')}`;
+const anyElementEventPermalinkSelector = `:is(
+  ${postContentEventPermalinkSelector},
+  ${trailItemEventPermalinkSelector},
+  ${footerEventPermalinkSelector}
+)`;
+const hasHoverColorSelector = keyToCss(
+  'heightRestrictorExpandButtonWrapper',
+  'contentWarningCover',
+  'expandTagsButtonWrapper'
+);
+
+// This takes advantage of tumblr's special-case code for audio players
+const preventPostClickAttributeName = 'data-audio-player';
+const preventPostClickAttributeValue = 'xkit-restore-attribution-links';
+
+export const styleElement = buildStyle(`
+/**
+ * Hides the cover-style permalinks on processed headers, as they are redundant.
+ */
+${headerSelector}:has([data-router-url]:is(${postAttributionLinkSelector})) [rel="bookmark"],
+${trailHeaderSelector}:has([data-router-url]:is(${trailAttributionLinkSelector})) [rel="bookmark"] {
+  display: none !important;
+}
+
+/**
+ * Removes the different background colour when hovering a post body pseudo-permalink.
+ * This doesn't have :hover because, on reblogs with contributed content not viewed
+ * alone, Tumblr syncs the last reblog and footer's hover state using :has().
+ */
+${anyElementEventPermalinkSelector}[${preventPostClickAttributeName}] {
+  background-color: unset !important;
+  cursor: unset !important;
+}
+${anyElementEventPermalinkSelector}[${preventPostClickAttributeName}] ${hasHoverColorSelector} {
+  background-color: unset !important;
+}
+`);
 
 const onLinkClick = event => {
   event.stopPropagation();
@@ -52,6 +97,8 @@ const processPosts = async function (postElements) {
       postAttributionLink.dataset.routerUrl = postRouterUrl;
       postAttributionLink.href = postUrl;
       postAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
+
+      postElement.querySelector(postContentEventPermalinkSelector)?.setAttribute(preventPostClickAttributeName, preventPostClickAttributeValue);
     }
 
     if (reblogAttributionLink && reblogAttributionLink.textContent === rebloggedFromName) {
@@ -71,6 +118,7 @@ const processPosts = async function (postElements) {
         if (isContributedContent) {
           trailAttributionLink.dataset.routerUrl = postRouterUrl;
           trailAttributionLink.href = postUrl;
+          postElement.querySelector(footerEventPermalinkSelector)?.setAttribute(preventPostClickAttributeName, preventPostClickAttributeValue);
         } else {
           const hasCustomTheme = new URL(blog.url).hostname !== 'www.tumblr.com';
           trailAttributionLink.dataset.routerUrl = `${blog.blogViewUrl.replace(/\/$/, '')}/${post.id}`;
@@ -78,6 +126,7 @@ const processPosts = async function (postElements) {
         }
 
         trailAttributionLink.addEventListener('click', onLinkClick, listenerOptions);
+        trailAttributionLink.closest(trailItemEventPermalinkSelector)?.setAttribute(preventPostClickAttributeName, preventPostClickAttributeValue);
       }
     });
   });
@@ -98,4 +147,8 @@ export const clean = async function () {
     delete anchorElement.dataset.originalHref;
     delete anchorElement.dataset.routerUrl;
   });
+
+  [...document.querySelectorAll(
+    `[${preventPostClickAttributeName}="${preventPostClickAttributeValue}"]`
+  )].forEach(bodyPermalinkElement => bodyPermalinkElement.removeAttribute(preventPostClickAttributeName));
 };

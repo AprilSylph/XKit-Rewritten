@@ -74,7 +74,7 @@ ${keyToCss('cell')}, ${postSelector}
     article > header,
     article ${keyToCss('reblog')}
   ) {
-  max-width: unset;
+  max-width: unset !important;
 }
 
 /* Center non-expanded content */
@@ -107,7 +107,7 @@ ${keyToCss('cell')}, ${postSelector}
 /* Fix ad containers */
 ${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner')},
 ${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner')} header {
-  max-width: unset;
+  max-width: unset !important;
 }
 [data-is-resizable="true"][style="width: 540px;"],
 ${keyToCss('takeoverBanner')} {

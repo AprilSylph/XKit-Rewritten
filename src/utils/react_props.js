@@ -3,8 +3,8 @@ import { weakMemoize } from './memoize.js';
 import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
 /**
- * @param {Element} postElement An on-screen post
- * @returns {Promise<object>} The post's buried timelineObject property
+ * @param {Element} postElement An on-screen post element
+ * @returns {Promise<object>} The post element's buried timelineObject property
  */
 export const timelineObject = weakMemoize(postElement =>
   inject('/main_world/unbury_timeline_object.js', [], postElement)
@@ -16,6 +16,14 @@ export const timelineObject = weakMemoize(postElement =>
  */
 export const cellItem = weakMemoize(cellElement =>
   inject('/main_world/unbury_cell_item.js', [], cellElement)
+);
+
+/**
+ * @param {Element} trailItemElement An on-screen reblog trail item element
+ * @returns {Promise<object>} The trail item element's trailItem context value
+ */
+export const trailItem = weakMemoize(trailItemElement =>
+  inject('/main_world/unbury_trail_item.js', [], trailItemElement)
 );
 
 /**

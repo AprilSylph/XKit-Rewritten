@@ -2,11 +2,15 @@ import { onNewPosts } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { timelineObject, trailItem } from '../../utils/react_props.js';
 import { navigate } from '../../utils/tumblr_helpers.js';
-import { buildStyle, trailItemSelector } from '../../utils/interface.js';
+import { buildStyle, postSelector, trailItemSelector } from '../../utils/interface.js';
 
-const postAttributionLinkSelector = 'header a[rel="author"]';
-const reblogAttributionLinkSelector = `header ${keyToCss('subheader')} a${keyToCss('blogLink')}`;
-const trailAttributionLinkSelector = `${keyToCss('trailHeader')} a[rel="author"]`;
+const headerSelector = `${postSelector} header`;
+const subheaderSelector = `${headerSelector} ${keyToCss('subheader')}`;
+const trailHeaderSelector = keyToCss('trailHeader');
+
+const postAttributionLinkSelector = `${headerSelector} a[rel="author"]`;
+const reblogAttributionLinkSelector = `${subheaderSelector} a${keyToCss('blogLink')}`;
+const trailAttributionLinkSelector = `${trailHeaderSelector} a[rel="author"]`;
 
 const postBodyPermalinkSelector = `:is(
   ${keyToCss('postContent')}${keyToCss('hasPermalink')},
@@ -25,9 +29,10 @@ const preventPostClickAttributeValue = 'xkit-restore-attribution-links';
 
 export const styleElement = buildStyle(`
 /**
- * Hides the header-wide anchor permalinks on processed posts, as they are redundant.
+ * Hides the cover-style permalinks on processed headers, as they are redundant.
  */
-article:has([${preventPostClickAttributeName}="${preventPostClickAttributeValue}"]) [rel="bookmark"] {
+${headerSelector}:has([data-router-url]:is(${postAttributionLinkSelector})) [rel="bookmark"],
+${trailHeaderSelector}:has([data-router-url]:is(${trailAttributionLinkSelector})) [rel="bookmark"] {
   display: none !important;
 }
 

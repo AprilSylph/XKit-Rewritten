@@ -26,7 +26,7 @@ const processNotifications = (notificationElements) => {
     if (notification !== undefined) {
       const { targetRootPostId, targetPostId } = notification;
 
-      // Available on "replied to your post" notifications, which appear toalways target the root post.
+      // Available on "replied to your post" notifications, which appear to always target the root post.
       const blockablePostId = notification.actions?.longTap?.meta?.postId;
 
       notificationElement.dataset.targetRootPostId = targetRootPostId || targetPostId || blockablePostId || '';

@@ -50,7 +50,7 @@ ${keyToCss('grid')}${keyToCss('community')} {
   grid-template-columns:
     min(calc(100% - ${communityGap * 3}px - ${communitySidebarMaxWidth}px), var(${maxPostWidthVar}))
 
-    /* Not modified from tumblr style. */
+    /* Not modified from Tumblr style. */
     minmax(${communitySidebarMinWidth}px, ${communitySidebarMaxWidth}px);
 }
 ${keyToCss('grid')}${keyToCss('community')} ${keyToCss('newPostBar')} > ${keyToCss('bar')},

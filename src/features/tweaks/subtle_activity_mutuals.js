@@ -25,7 +25,7 @@ ${keyToCss('tumblelogName', 'activityHeader')}:not(:hover) :is(${labelSelector})
 }
 
 ${keyToCss('activityHeader')} div:has(> .${spanClass}) {
-  /* fixes hover detection when covered by the "activityItemLink" <a> element */
+  /* Fixes hover detection when covered by the "activityItemLink" <a> element. */
   isolation: isolate;
 }
 

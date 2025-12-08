@@ -50,7 +50,7 @@ ${keyToCss('grid')}${keyToCss('community')} {
   grid-template-columns:
     min(calc(100% - ${communityGap * 3}px - ${communitySidebarMaxWidth}px), var(${maxPostWidthVar}))
 
-    /* not modified from tumblr style */
+    /* Not modified from tumblr style. */
     minmax(${communitySidebarMinWidth}px, ${communitySidebarMaxWidth}px);
 }
 ${keyToCss('grid')}${keyToCss('community')} ${keyToCss('newPostBar')} > ${keyToCss('bar')},
@@ -67,7 +67,7 @@ ${patioPostColumn} {
 `);
 
 const styleElement = buildStyle(`
-/* Widen posts */
+/* Widen posts. */
 ${keyToCss('cell')}, ${postSelector}
   :is(
     article,
@@ -77,7 +77,7 @@ ${keyToCss('cell')}, ${postSelector}
   max-width: unset !important;
 }
 
-/* Center non-expanded content */
+/* Center non-expanded content. */
 :root:not(.${expandMediaClass}) ${postSelector}
   :is(
     ${keyToCss('videoBlock', 'audioBlock', 'link', 'pollBlock', 'imageBlockLink')},
@@ -87,7 +87,7 @@ ${keyToCss('cell')}, ${postSelector}
   max-width: 540px;
 }
 
-/* Widen + lock aspect ratios of expanded content */
+/* Widen + lock aspect ratios of expanded content. */
 :root.${expandMediaClass} ${postSelector}
   :is(
     ${keyToCss('videoBlock', 'audioBlock', 'link', 'pollBlock')},
@@ -104,7 +104,7 @@ ${keyToCss('cell')}, ${postSelector}
   height: unset !important;
 }
 
-/* Fix ad containers */
+/* Fix ad containers. */
 ${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner')},
 ${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner')} header {
   max-width: unset !important;

@@ -33,7 +33,7 @@ const styleElement = buildStyle(`
     margin-left: 0;
     margin-right: 0.5ch;
 
-    /* fixes hover when covered by the "permalink" <a> element */
+    /* Fixes hover when covered by the "permalink" <a> element. */
     isolation: isolate;
   }
 

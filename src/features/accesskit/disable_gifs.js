@@ -5,17 +5,17 @@ import { buildStyle, postSelector } from '../../utils/interface.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { memoize } from '../../utils/memoize.js';
 
-const canvasClass = 'xkit-paused-gif-placeholder';
 const pausedPosterAttribute = 'data-paused-gif-use-poster';
+const pausedContentVar = '--xkit-paused-gif-content';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
+const hoverFixAttribute = 'data-paused-gif-hover-fix';
 const containerClass = 'xkit-paused-gif-container';
 
 let loadingMode;
 
 const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
-const parentHovered = `:is(:hover > *, [${hoverContainerAttribute}]:hover *)`;
 
 export const styleElement = buildStyle(`
 [${labelAttribute}]::after {
@@ -45,16 +45,17 @@ export const styleElement = buildStyle(`
   transform: translateY(-50%);
 }
 
-.${canvasClass} {
-  position: absolute;
-  visibility: visible;
-
-  background-color: rgb(var(--white));
-}
-
-.${canvasClass}${parentHovered},
 [${labelAttribute}]${hovered}::after,
 [${pausedPosterAttribute}]:not(${hovered}) > div > ${keyToCss('knightRiderLoader')} {
+  display: none;
+}
+
+${keyToCss('blogCard')} ${keyToCss('headerImage')}${keyToCss('small')}[${labelAttribute}]::after {
+  font-size: 0.8rem;
+  top: calc(140px - 1em - 2.2ch);
+}
+
+img:is([${pausedPosterAttribute}], [style*="${pausedContentVar}"]):not(${hovered}) ~ div > ${keyToCss('knightRiderLoader')} {
   display: none;
 }
 ${keyToCss('background')}[${labelAttribute}]::after {
@@ -72,8 +73,16 @@ ${keyToCss('background')}[${labelAttribute}]::after {
   display: none;
 }
 
+img[style*="${pausedContentVar}"]:not(${hovered}) {
+  content: var(${pausedContentVar});
+}
 [style*="${pausedBackgroundImageVar}"]:not(${hovered}) {
   background-image: var(${pausedBackgroundImageVar}) !important;
+}
+
+[${hoverFixAttribute}] {
+  position: relative;
+  pointer-events: auto !important;
 }
 `);
 
@@ -87,27 +96,6 @@ const addLabel = (element, inside = false) => {
     target.clientHeight && target.clientHeight <= 30 && target.setAttribute(labelAttribute, 'hr');
   }
 };
-
-/**
- * Fetches the selected image and tests if it is animated. On older browsers without ImageDecoder
- * support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
- */
-const isAnimated = memoize(async sourceUrl => {
-  const response = await fetch(sourceUrl, { headers: { Accept: 'image/webp,*/*' } });
-  const contentType = response.headers.get('Content-Type');
-
-  if (typeof ImageDecoder === 'function' && await ImageDecoder.isTypeSupported(contentType)) {
-    const decoder = new ImageDecoder({
-      type: contentType,
-      data: response.body,
-      preferAnimation: true
-    });
-    await decoder.decode();
-    return decoder.tracks.selectedTrack.animated;
-  } else {
-    return !sourceUrl.endsWith('.webp');
-  }
-});
 
 /**
  * Fetches the selected image, tests if it is animated, and returns a blob URL with the paused image
@@ -148,49 +136,33 @@ const createPausedUrlIfAnimated = memoize(async sourceUrl => {
   return URL.createObjectURL(blob);
 });
 
-const pauseGif = async function (gifElement) {
-  if (gifElement.currentSrc.endsWith('.webp') && !(await isAnimated(gifElement.currentSrc))) return;
-
-  const image = new Image();
-  image.src = gifElement.currentSrc;
-  image.onload = () => {
-    if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      canvas.className = gifElement.className;
-      canvas.classList.add(canvasClass);
-      canvas.setAttribute('style', gifElement.getAttribute('style'));
-      canvas.getContext('2d').drawImage(image, 0, 0);
-      gifElement.after(canvas);
-      addLabel(gifElement);
-    }
-  };
-};
-
 const processGifs = function (gifElements) {
-  gifElements.forEach(gifElement => {
+  gifElements.forEach(async gifElement => {
     if (gifElement.closest(`${keyToCss('avatarImage', 'subAvatarImage')}, .block-editor-writing-flow`)) return;
-    const pausedGifElements = [...gifElement.parentNode.querySelectorAll(`.${canvasClass}`)];
-    if (pausedGifElements.length) {
-      gifElement.after(...pausedGifElements);
-      return;
-    }
-
     gifElement.decoding = 'sync';
 
     const posterElement = gifElement.parentElement.querySelector(keyToCss('poster'));
     if (posterElement) {
       gifElement.parentElement.setAttribute(pausedPosterAttribute, loadingMode);
-      addLabel(posterElement);
-      return;
-    }
-
-    if (gifElement.complete && gifElement.currentSrc) {
-      pauseGif(gifElement);
     } else {
-      gifElement.onload = () => pauseGif(gifElement);
+      const sourceUrl = gifElement.currentSrc ||
+        await new Promise(resolve => gifElement.addEventListener('load', () => resolve(gifElement.currentSrc), { once: true }));
+
+      gifElement.style.setProperty(pausedContentVar, 'linear-gradient(transparent, transparent)');
+      const pausedUrl = await createPausedUrlIfAnimated(sourceUrl).catch(() => undefined);
+      if (!pausedUrl) {
+        gifElement.style.removeProperty(pausedContentVar);
+        return;
+      }
+
+      gifElement.style.setProperty(pausedContentVar, `url(${pausedUrl})`);
     }
+    addLabel(gifElement);
+
+    gifElement.closest(keyToCss(
+      'albumImage', // post audio element
+      'imgLink' // trending tag: https://www.tumblr.com/explore/trending
+    ))?.setAttribute(hoverFixAttribute, '');
   });
 };
 
@@ -218,6 +190,11 @@ const processBackgroundGifs = function (gifBackgroundElements) {
       sourceValue.replace(sourceUrlRegex, `url("${pausedUrl}")`)
     );
     addLabel(gifBackgroundElement, true);
+
+    gifBackgroundElement.closest(keyToCss(
+      'media', // old activity item: "liked your post", "reblogged your post", "mentioned you in a post"
+      'activityMedia' // new activity item: "replied to your post", "replied to you in a post"
+    ))?.setAttribute(hoverFixAttribute, '');
   });
 };
 
@@ -257,11 +234,20 @@ export const main = async function () {
       ${
         'figure' // post image/imageset; recommended blog carousel entry; blog view sidebar "more like this"; post in grid view; blog card modal post entry
       },
+      ${
+        'main.labs' // labs settings header: https://www.tumblr.com/settings/labs
+      },
       ${keyToCss(
         'linkCard', // post link element
+        'albumImage', // post audio element
+        'messageImage', // direct message attached image
+        'messagePost', // direct message linked post
         'typeaheadRow', // modal search dropdown entry
         'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
+        'headerBanner', // blog view header
+        'headerImage', // modal blog card header, activity page "biggest fans" header
         'topPost', // activity page top post
+        'colorfulListItemWrapper', // trending tag: https://www.tumblr.com/explore/trending
         'takeoverBanner' // advertisement
       )}
     ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
@@ -270,6 +256,8 @@ export const main = async function () {
 
   const gifBackgroundImage = `
     ${keyToCss(
+      'media', // old activity item: "liked your post", "reblogged your post", "mentioned you in a post"
+      'activityMedia', // new activity item: "replied to your post", "replied to you in a post"
       'communityHeaderImage', // search page tags section header: https://www.tumblr.com/search/gif?v=tag
       'bannerImage', // tagged page sidebar header: https://www.tumblr.com/tagged/gif
       'tagChicletWrapper', // "trending" / "your tags" timeline carousel entry: https://www.tumblr.com/dashboard/trending, https://www.tumblr.com/dashboard/hubs
@@ -281,6 +269,7 @@ export const main = async function () {
   const hoverableElement = [
     `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`, // recommended blog carousel entry
     `div:has(> a${keyToCss('cover')}):has(${keyToCss('communityCategoryImage')})`, // tumblr communities browse page entry: https://www.tumblr.com/communities/browse
+    `${keyToCss('gridTimelineObject')}` // likes page or patio grid view post: https://www.tumblr.com/likes
   ].join(', ');
   pageModifications.register(hoverableElement, processHoverableElements);
 
@@ -304,10 +293,12 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children)
   );
 
-  $(`.${canvasClass}`).remove();
   $(`[${labelAttribute}]`).removeAttr(labelAttribute);
   $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
   $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
+  $(`[${hoverFixAttribute}]`).removeAttr(hoverFixAttribute);
+  [...document.querySelectorAll(`img[style*="${pausedContentVar}"]`)]
+    .forEach(element => element.style.removeProperty(pausedContentVar));
   [...document.querySelectorAll(`[style*="${pausedBackgroundImageVar}"]`)]
     .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
 };

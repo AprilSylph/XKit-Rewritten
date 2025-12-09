@@ -208,15 +208,16 @@ const processBackgroundGifs = function (gifBackgroundElements) {
     const pausedUrl = await createPausedUrlIfAnimated(
       sourceUrl.replace(/^url\(["']/, '').replace(/["']\)$/, '')
     );
-    if (pausedUrl) {
-      gifBackgroundElement.style.setProperty(
-        pausedBackgroundImageVar,
-        sourceValue.replace(sourceUrlRegex, `url("${pausedUrl}")`)
-      );
-      addLabel(gifBackgroundElement, true);
-    } else {
+    if (!pausedUrl) {
       gifBackgroundElement.style.removeProperty(pausedBackgroundImageVar);
+      return;
     }
+
+    gifBackgroundElement.style.setProperty(
+      pausedBackgroundImageVar,
+      sourceValue.replace(sourceUrlRegex, `url("${pausedUrl}")`)
+    );
+    addLabel(gifBackgroundElement, true);
   });
 };
 

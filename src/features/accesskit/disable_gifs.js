@@ -207,7 +207,7 @@ const processBackgroundGifs = function (gifBackgroundElements) {
     );
     const pausedUrl = await createPausedUrlIfAnimated(
       sourceUrl.replace(/^url\(["']/, '').replace(/["']\)$/, '')
-    ).catch(() => undefined);
+    );
     if (pausedUrl) {
       gifBackgroundElement.style.setProperty(
         pausedBackgroundImageVar,

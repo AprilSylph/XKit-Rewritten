@@ -149,7 +149,7 @@ const processGifs = function (gifElements) {
         await new Promise(resolve => gifElement.addEventListener('load', () => resolve(gifElement.currentSrc), { once: true }));
 
       gifElement.style.setProperty(pausedContentVar, 'linear-gradient(transparent, transparent)');
-      const pausedUrl = await createPausedUrlIfAnimated(sourceUrl);
+      const pausedUrl = await createPausedUrlIfAnimated(sourceUrl).catch(() => undefined);
       if (!pausedUrl) {
         gifElement.style.removeProperty(pausedContentVar);
         return;

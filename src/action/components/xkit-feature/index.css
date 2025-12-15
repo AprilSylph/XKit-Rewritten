@@ -74,6 +74,10 @@ summary:focus {
   font-size: 1.25rem;
 }
 
+[data-deprecated="false"] .help[href]::before {
+  content: '' / 'Help';
+}
+
 [data-deprecated="false"] .help:not([href]) i {
   display: none;
 }
@@ -90,6 +94,10 @@ summary:focus {
 
 [data-deprecated="true"] .help {
   pointer-events: none;
+}
+
+[data-deprecated="true"] .help::before {
+  content: '' / 'Deprecated';
 }
 
 [data-deprecated="true"] .help i::before {

@@ -70,22 +70,31 @@ summary:focus {
   text-decoration: none;
 }
 
-.help:not([href]) i {
+.help i {
+  font-size: 1.25rem;
+}
+
+[data-deprecated="false"] .help:not([href]) i {
   display: none;
 }
 
-.help:not([href])::before {
+[data-deprecated="false"] .help:not([href])::before {
   padding: 0 1ex;
   border-radius: 1em;
 
-  background-color: orange;
+  background-color: #ff62ce;
   color: rgb(var(--white));
   content: 'New!';
   line-height: 1.5;
 }
 
-.help i {
-  font-size: 1.25rem;
+[data-deprecated="true"] .help {
+  pointer-events: none;
+}
+
+[data-deprecated="true"] .help i::before {
+  content: '\EA20';
+  color: #ff8a00;
 }
 
 .title,

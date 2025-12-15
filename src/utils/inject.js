@@ -1,12 +1,12 @@
 /**
- * Runs a script in the page's "main" execution environment and returns its result.
- * This permits access to variables exposed by the Tumblr web platform that are normally inaccessible
- * in the content script sandbox.
- * See the src/main_world directory and [../main_world/index.js](../main_world/index.js).
- * @param {string} path Absolute path of script to inject (will be fed to `runtime.getURL()`)
- * @param {Array} [args] Array of arguments to pass to the script
- * @param {Element} [target] Target element; will be accessible as the `this` value in the injected function.
- * @returns {Promise<any>} The transmitted result of the script
+ * Runs a function in the page's "main" execution environment and returns
+ * its result. This permits access to variables exposed by the Tumblr web
+ * platform that are normally inaccessible in the content script sandbox.
+ * @see [src/main_world/index.js](../main_world/index.js) and named scripts in the same directory
+ * @param {string} path Absolute path of script to inject; will be fed to {@linkcode https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getURL|browser.runtime.getURL()}
+ * @param {Array} [args] Array of arguments to pass to the injected function
+ * @param {Element} [target] Target element; will be accessible as the `this` value in the injected function
+ * @returns {Promise<any>} The transmitted result of the function call
  */
 export const inject = (path, args = [], target = document.documentElement) =>
   new Promise((resolve, reject) => {

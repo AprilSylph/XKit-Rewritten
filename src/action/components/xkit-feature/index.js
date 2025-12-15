@@ -6,7 +6,7 @@ const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
     <details>
       <summary>
-        <div class="icon">
+        <div aria-hidden="true" class="icon">
           <slot name="icon"></slot>
         </div>
         <div class="meta">
@@ -14,7 +14,7 @@ const templateDocument = new DOMParser().parseFromString(`
           <p class="description"><slot name="description"></slot></p>
         </div>
         <div class="buttons">
-          <a class="help" target="_blank"><i class="ri-fw ri-question-fill" style="color:rgb(var(--black))"></i></a>
+          <a class="help" target="_blank"><i aria-hidden="true" class="ri-fw ri-question-fill" style="color:rgb(var(--black))"></i></a>
           <input type="checkbox" checked class="toggle-button" aria-label="Enable this feature">
         </div>
       </summary>

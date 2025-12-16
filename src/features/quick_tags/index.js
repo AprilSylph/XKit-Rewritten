@@ -19,6 +19,8 @@ const tagsClass = 'xkit-quick-tags-tags';
 let originalPostTag;
 let answerTag;
 let autoTagAsker;
+let showReblogSuggestions;
+let tagBundles;
 
 let controlButtonTemplate;
 
@@ -66,13 +68,6 @@ const createBundleButton = tagBundle => {
   return bundleButton;
 };
 
-const populatePopups = async function () {
-  const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-
-  popupElement.replaceChildren(popupForm, ...tagBundles.map(createBundleButton));
-  postOptionPopupElement.replaceChildren(...tagBundles.map(createBundleButton));
-};
-
 const processPostForm = async function ([selectedTagsElement]) {
   if (selectedTagsElement.classList.contains(excludeClass)) {
     return;
@@ -105,9 +100,11 @@ const processPostForm = async function ([selectedTagsElement]) {
 
 export const onStorageChanged = async function (changes) {
   if (Object.keys(changes).some(key => key.startsWith('quick_tags'))) {
-    if (Object.keys(changes).includes(storageKey)) populatePopups();
+    if (Object.keys(changes).includes(storageKey)) {
+      ({ newValue: tagBundles = [] } = changes[storageKey]);
+    }
 
-    ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+    ({ originalPostTag, answerTag, autoTagAsker, showReblogSuggestions } = await getPreferences('quick_tags'));
     if (originalPostTag || answerTag || autoTagAsker) {
       pageModifications.register('#selected-tags', processPostForm);
     } else {
@@ -124,7 +121,27 @@ const togglePopupDisplay = async function ({ target, currentTarget: controlButto
   if (buttonContainer.contains(popupElement)) {
     buttonContainer.removeChild(popupElement);
   } else {
+    popupElement.replaceChildren(popupForm, ...tagBundles.map(createBundleButton));
     appendWithoutOverflow(popupElement, buttonContainer);
+
+    if (showReblogSuggestions) {
+      const { rebloggedFromUuid, rebloggedFromId } = await timelineObject(controlButton.closest(postSelector));
+      if (rebloggedFromUuid && rebloggedFromId) {
+        const { response: { tags, blogName, postAuthor, rebloggedRootName } } = await apiFetch(`/v2/blog/${rebloggedFromUuid}/posts/${rebloggedFromId}`);
+
+        const suggestableTags = new Set(tags);
+        if (blogName) suggestableTags.add(blogName);
+        if (postAuthor) suggestableTags.add(postAuthor);
+        if (rebloggedRootName) suggestableTags.add(rebloggedRootName);
+
+        const tagsToSuggest = [...suggestableTags].filter((tag, index, array) => array.indexOf(tag) === index);
+
+        if (tagsToSuggest.length) {
+          popupElement.lastElementChild?.style?.setProperty('margin-bottom', '6px');
+          popupElement.append(...tagsToSuggest.map(tag => createBundleButton({ title: tag, tags: tag })));
+        }
+      }
+    }
   }
 };
 
@@ -134,6 +151,7 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
   if (currentTarget.contains(postOptionPopupElement)) {
     currentTarget.removeChild(postOptionPopupElement);
   } else {
+    postOptionPopupElement.replaceChildren(...tagBundles.map(createBundleButton));
     appendWithoutOverflow(postOptionPopupElement, currentTarget);
   }
 };
@@ -278,9 +296,9 @@ export const main = async function () {
   onNewPosts.addListener(processPosts);
   registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });
 
-  populatePopups();
+  ({ [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey));
 
-  ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+  ({ originalPostTag, answerTag, autoTagAsker, showReblogSuggestions } = await getPreferences('quick_tags'));
   if (originalPostTag || answerTag || autoTagAsker) {
     pageModifications.register('#selected-tags', processPostForm);
   }

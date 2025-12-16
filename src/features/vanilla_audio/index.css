@@ -1,5 +1,4 @@
-.xkit-vanilla-audio-done [role="slider"],
-.xkit-vanilla-audio-done [role="button"] {
+.xkit-vanilla-audio-done :is(button, [role="slider"]) {
   display: none;
 }
 

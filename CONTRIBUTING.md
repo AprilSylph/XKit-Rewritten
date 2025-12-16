@@ -28,6 +28,6 @@ This project's JavaScript style is enforced by linting. Use **`npm run autofix`*
 
 Stylesheets should preferably aim to follow Nicolas Gallagher's [Idiomatic CSS](https://github.com/necolas/idiomatic-css#readme) principles. Additionally, element classnames and IDs should be `kebab-case`, to fit with the automatic casing of [`data-*` attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/data-*).
 
-Filenames should be `snake_case` to fit with the casing of WebExtension manifest files.
+Filenames should be `snake_case` to match the casing of WebExtension [`manifest.json`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json) keys.
 
 This style guide only applies to the `src/` directory. The style guide does not apply to vendored files.

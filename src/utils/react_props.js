@@ -3,24 +3,32 @@ import { weakMemoize } from './memoize.js';
 import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
 /**
- * @param {Element} postElement - An on-screen post
- * @returns {Promise<object>} - The post's buried timelineObject property
+ * @param {Element} postElement An on-screen post element
+ * @returns {Promise<object>} The post element's buried timelineObject property
  */
 export const timelineObject = weakMemoize(postElement =>
   inject('/main_world/unbury_timeline_object.js', [], postElement)
 );
 
 /**
- * @param {Element} notificationElement - An on-screen notification
- * @returns {Promise<object>} - The notification's buried notification property
+ * @param {Element} trailItemElement An on-screen reblog trail item element
+ * @returns {Promise<object>} The trail item element's trailItem context value
+ */
+export const trailItem = weakMemoize(trailItemElement =>
+  inject('/main_world/unbury_trail_item.js', [], trailItemElement)
+);
+
+/**
+ * @param {Element} notificationElement An on-screen notification
+ * @returns {Promise<object>} The notification's buried notification property
  */
 export const notificationObject = weakMemoize(notificationElement =>
   inject('/main_world/unbury_notification.js', [], notificationElement)
 );
 
 /**
- * @param {Element} meatballMenu - An on-screen meatball menu element in a blog modal header or blog card
- * @returns {Promise<object>} - The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
+ * @param {Element} meatballMenu An on-screen meatball menu element in a blog modal header or blog card
+ * @returns {Promise<object>} The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
  */
 export const blogData = async (meatballMenu) => inject('/main_world/unbury_blog.js', [], meatballMenu);
 
@@ -49,9 +57,9 @@ export const isMyPost = async (postElement) => {
 
 /**
  * Manipulate post form tags
- * @param {object} options - Tags to add/remove to/from the current post form
- * @param {string[]} [options.add] - Tags to insert
- * @param {string[]} [options.remove] - Tags to remove
+ * @param {object} options Tags to add/remove to/from the current post form
+ * @param {string[]} [options.add] Tags to insert
+ * @param {string[]} [options.remove] Tags to remove
  * @returns {Promise<void>} Resolves when finished
  */
 export const editPostFormTags = async ({ add = [], remove = [] }) =>

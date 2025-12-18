@@ -3,9 +3,10 @@ const createSelector = (...components) => `:is(${components.filter(Boolean).join
 export const timelineSelector = ':is([data-timeline], [data-timeline-id])';
 
 const startsWith = string => `^${string}`;
+const endsWith = string => `${string}$`;
 const exactly = string => `^${string}$`;
-
 const anyBlogName = '[a-z0-9-]{1,32}';
+const anyPostId = '[0-9]{1,20}';
 const uuidV4 = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}';
 
 const peeprPostsTimelineId = ({ blogName, postId, postRole, searchMode, searchTerm, postType, tag }) =>
@@ -53,6 +54,13 @@ export const blogPostsTimelineFilter = blogName =>
 // Matches any blog's main posts timeline, not including subpages such as drafts or in-blog searches.
 export const anyBlogPostsTimelineFilter = blogPostsTimelineFilter(anyBlogName);
 
+export const postPermalinkTimelineFilter = postId =>
+  ({ dataset: { timeline, timelineId } }) =>
+    timeline?.match(endsWith(`posts/${postId}/permalink`)) ||
+    timelineId?.match(exactly(peeprPostsTimelineId({ blog: anyBlogName, postId })));
+
+export const anyPostPermalinkTimelineFilter = postPermalinkTimelineFilter(anyPostId);
+
 export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId } }) =>
   timeline === '/v2/timeline?which=blog_subscriptions' ||
   which === 'blog_subscriptions' ||
@@ -66,6 +74,21 @@ export const anyDraftsTimelineFilter = ({ dataset: { timeline, timelineId } }) =
 export const anyQueueTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.match(exactly(`/v2/blog/${anyBlogName}/posts/queue`)) ||
   timelineId?.match(exactly(`queue-${uuidV4}-${anyBlogName}`));
+
+export const anyFlaggedReviewTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timeline?.match(exactly(`/v2/blog/${anyBlogName}/posts/review`));
+
+export const likesTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timeline === 'v2/user/likes' ||
+  timelineId === 'likes' ||
+  timelineId?.match(exactly(`likes-${uuidV4}`));
+
+export const peeprLikesTimelineFilter = blogName =>
+  ({ dataset: { timeline, timelineId } }) =>
+    timelineId === `peepr-likes-${blogName}`;
+
+export const inboxTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timeline?.startsWith('/v2/user/inbox');
 
 export const tagTimelineFilter = tag =>
   ({ dataset: { timeline, timelineId } }) =>

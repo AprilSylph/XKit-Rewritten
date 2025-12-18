@@ -4,15 +4,16 @@ on:
   schedule:
     - cron: 0 6 * * 1-5
 
+permissions:
+  actions: write
+  issues: write
+  pull-requests: write
+
 jobs:
   stale:
-    permissions:
-      actions: write
-      issues: write
-      pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - name: Close Stale Issues
+      - name: Close Stale Issues and PRs
         uses: actions/stale@v10
         with:
           exempt-all-assignees: true

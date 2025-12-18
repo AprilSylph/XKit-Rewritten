@@ -10,6 +10,9 @@ on:
       - eslint.config.js
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Test

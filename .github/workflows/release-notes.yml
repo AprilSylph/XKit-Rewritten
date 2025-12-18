@@ -8,6 +8,9 @@ on:
         type: string
         required: false
 
+permissions:
+  contents: read
+
 jobs:
   create:
     name: Create

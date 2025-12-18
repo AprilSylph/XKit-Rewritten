@@ -6,7 +6,7 @@ const modifiedAttribute = 'data-xkit-tweaks-create-button-no-bubbles';
 
 const processCreateButtons = (createButtons) => {
   if (window.matchMedia('not (min-width: 990px)').matches) {
-    return; // No action needed on mobile/tablet layouts
+    return; // No action is needed on mobile/tablet layouts.
   }
 
   createButtons.forEach(createButton => {

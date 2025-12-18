@@ -3,7 +3,7 @@ import { dom } from './dom.js';
 import { timelineObject } from './react_props.js';
 import { buildSvg } from './remixicon.js';
 
-// Remove outdated buttons when loading module
+// Remove outdated buttons when loading module.
 $('.xkit-control-button-container').remove();
 
 /**
@@ -24,7 +24,7 @@ export const createControlButtonTemplate = function (symbolId, buttonClass, labe
 };
 
 /**
- * Create a deep-level clone of a button template that is ready to add to the page
+ * Create a deep-level clone of a button template that is ready to add to the page.
  * @param {HTMLDivElement} template A button template as returned by createControlButtonTemplate()
  * @param {object} events An object of DOM Event names and handler functions,
  *                          e.g. { click: () => { alert('Hello!'); } }

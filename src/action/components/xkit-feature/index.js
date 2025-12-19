@@ -26,7 +26,6 @@ const templateDocument = new DOMParser().parseFromString(`
 const adoptedStyleSheets = await fetchStyleSheets([
   '/lib/normalize.min.css',
   '/lib/remixicon/remixicon.css',
-  '/lib/spectrum.css',
   '/lib/toggle-button.css',
   './index.css'
 ].map(import.meta.resolve));
@@ -124,17 +123,6 @@ class XKitFeatureElement extends CustomElement {
             });
             preferenceInput.appendChild(option);
           }
-          break;
-        case 'color':
-          preferenceInput.value = preference.value;
-          $(preferenceInput)
-            .on('change.spectrum', this.#writePreference)
-            .spectrum({
-              preferredFormat: 'hex',
-              showInput: true,
-              showInitial: true,
-              allowEmpty: true
-            });
           break;
         case 'iframe':
           preferenceInput.src = preference.src;

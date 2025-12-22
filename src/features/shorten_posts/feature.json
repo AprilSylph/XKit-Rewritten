@@ -6,7 +6,6 @@
     "color": "white",
     "background_color": "#4d6a86"
   },
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#shorten-posts",
   "preferences": {
     "showTags": {
       "type": "checkbox",

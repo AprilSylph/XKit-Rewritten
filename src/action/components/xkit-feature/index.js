@@ -14,7 +14,9 @@ const templateDocument = new DOMParser().parseFromString(`
           <p class="description"><slot name="description"></slot></p>
         </div>
         <div class="buttons">
-          <a class="help" target="_blank"><i aria-hidden="true" class="ri-fw ri-question-fill" style="color:rgb(var(--black))"></i></a>
+          <div class="badge">
+            <slot name="badge"></slot>
+          </div>
           <input type="checkbox" checked class="toggle-button" aria-label="Enable this feature">
         </div>
       </summary>
@@ -37,12 +39,10 @@ class XKitFeatureElement extends CustomElement {
 
   #detailsElement;
   #enabledToggle;
-  #helpAnchor;
   #preferencesList;
 
   deprecated = false;
   featureName = '';
-  help = '';
   preferences = {};
   relatedTerms = [];
 
@@ -51,7 +51,6 @@ class XKitFeatureElement extends CustomElement {
 
     this.#detailsElement = this.shadowRoot.querySelector('details');
     this.#enabledToggle = this.shadowRoot.querySelector('input[type="checkbox"]');
-    this.#helpAnchor = this.shadowRoot.querySelector('a.help');
     this.#preferencesList = this.shadowRoot.querySelector('ul.preferences');
   }
 
@@ -180,10 +179,6 @@ class XKitFeatureElement extends CustomElement {
     this.#enabledToggle.id = this.featureName;
     this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
     this.dataset.relatedTerms = this.relatedTerms;
-
-    if (this.help) {
-      this.#helpAnchor.href = this.help;
-    }
 
     if (Object.keys(this.preferences).length !== 0) {
       this.#renderPreferences({

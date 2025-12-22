@@ -46,7 +46,7 @@ summary:focus {
 
 .icon,
 .meta,
-.help {
+.badge {
   margin-right: 1ch;
 }
 
@@ -62,47 +62,23 @@ summary:focus {
   margin-left: auto;
 }
 
-.help {
+.badge ::slotted {
   display: flex;
   justify-content: center;
   align-items: center;
+}
 
+.badge ::slotted(a) {
   text-decoration: none;
 }
 
-.help i {
-  font-size: 1.25rem;
-}
-
-[data-deprecated="false"] .help[href]::before {
-  content: '' / 'Help';
-}
-
-[data-deprecated="false"] .help:not([href]) i {
-  display: none;
-}
-
-[data-deprecated="false"] .help:not([href])::before {
-  padding: 0 1ex;
+.badge ::slotted(span) {
+  padding: 2px 6px;
   border-radius: 1em;
 
   background-color: #ff62ce;
   color: rgb(var(--white));
-  content: 'New!';
   line-height: 1.5;
-}
-
-[data-deprecated="true"] .help {
-  pointer-events: none;
-}
-
-[data-deprecated="true"] .help::before {
-  content: '' / 'Deprecated';
-}
-
-[data-deprecated="true"] .help i::before {
-  content: '\EA20';
-  color: #ff8a00;
 }
 
 .title,

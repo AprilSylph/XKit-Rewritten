@@ -34,6 +34,14 @@ const hexToRGBComponents = hex => {
 };
 const hexToRGB = hex => hexToRGBComponents(hex).join(', ');
 
+const colorsAreSimilar = (hexA, hexB) => {
+  const componentsA = hexToRGBComponents(hexA);
+  const componentsB = hexToRGBComponents(hexB);
+  return Object.keys(componentsA).every(
+    i => Math.abs(componentsA[i] - componentsB[i]) < 32
+  );
+};
+
 const createContrastingColor = hex => {
   const components = hexToRGBComponents(hex);
   const isLight = average(components) > 128;
@@ -69,8 +77,8 @@ const processPosts = async function (postElements) {
         } = theme;
 
         const backgroundColorRGB = hexToRGB(backgroundColor);
-        const titleColorRGB = titleColor === backgroundColor ? createContrastingColor(titleColor) : hexToRGB(titleColor);
-        const linkColorRGB = linkColor === backgroundColor ? createContrastingColor(linkColor) : hexToRGB(linkColor);
+        const titleColorRGB = colorsAreSimilar(titleColor, backgroundColor) ? createContrastingColor(titleColor) : hexToRGB(titleColor);
+        const linkColorRGB = colorsAreSimilar(linkColor, backgroundColor) ? createContrastingColor(linkColor) : hexToRGB(linkColor);
 
         styleElement.textContent += `
           [data-xkit-themed="${name}"] {

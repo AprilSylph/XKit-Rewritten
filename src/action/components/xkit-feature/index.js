@@ -1,5 +1,5 @@
 import { CustomElement, fetchStyleSheets } from '../index.js';
-import Coloris, { init as ColorisInit } from '../../../lib/coloris.min.js';
+import Coloris from '../../../lib/coloris.min.js';
 
 const localName = 'xkit-feature';
 
@@ -128,7 +128,7 @@ class XKitFeatureElement extends CustomElement {
           break;
         case 'color':
           preferenceInput.value = preference.value;
-          ColorisInit();
+          Coloris.init(); // eslint-disable-line import-x/no-named-as-default-member
           Coloris({
             alpha: false,
             clearButton: true,

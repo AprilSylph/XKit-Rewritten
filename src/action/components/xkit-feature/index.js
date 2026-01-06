@@ -1,4 +1,5 @@
 import { CustomElement, fetchStyleSheets } from '../index.js';
+import Coloris from '../../../lib/coloris.min.js';
 
 const localName = 'xkit-feature';
 
@@ -26,9 +27,9 @@ const templateDocument = new DOMParser().parseFromString(`
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
+  '/lib/coloris.min.css',
   '/lib/normalize.min.css',
   '/lib/remixicon/remixicon.css',
-  '/lib/spectrum.css',
   '/lib/toggle-button.css',
   './index.css'
 ].map(import.meta.resolve));
@@ -126,14 +127,15 @@ class XKitFeatureElement extends CustomElement {
           break;
         case 'color':
           preferenceInput.value = preference.value;
-          $(preferenceInput)
-            .on('change.spectrum', this.#writePreference)
-            .spectrum({
-              preferredFormat: 'hex',
-              showInput: true,
-              showInitial: true,
-              allowEmpty: true
-            });
+          Coloris.init(); // eslint-disable-line import-x/no-named-as-default-member
+          Coloris({
+            alpha: false,
+            clearButton: true,
+            closeButton: true,
+            el: preferenceInput,
+            swatches: ['#ff4930', '#ff8a00', '#00cf35', '#00b8ff', '#7c5cff', '#ff62ce'],
+            themeMode: 'auto',
+          });
           break;
         case 'iframe':
           preferenceInput.src = preference.src;

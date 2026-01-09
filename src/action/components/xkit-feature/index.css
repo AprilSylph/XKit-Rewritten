@@ -7,6 +7,7 @@ summary {
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
+  column-gap: 1ch;
   padding: 1ch;
 
   cursor: pointer;
@@ -45,12 +46,6 @@ summary:focus {
 }
 
 .icon,
-.meta,
-.badge {
-  margin-right: 1ch;
-}
-
-.icon,
 .buttons {
   flex-shrink: 0;
 }
@@ -59,6 +54,7 @@ summary:focus {
   display: flex;
   flex-direction: row;
   align-items: center;
+  column-gap: 1ch;
   height: 36px;
   margin-left: auto;
 }

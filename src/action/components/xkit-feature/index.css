@@ -33,15 +33,15 @@ summary:focus {
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  border-radius: 5px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
 .icon ::slotted(i) {
-  font-size: 26px;
-  line-height: 32px;
+  font-size: 30px;
+  line-height: 36px;
 }
 
 .icon,
@@ -59,7 +59,7 @@ summary:focus {
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 32px;
+  height: 36px;
   margin-left: auto;
 }
 
@@ -87,7 +87,7 @@ summary:focus {
   margin: 0;
 
   font-size: 14px;
-  line-height: 16px;
+  line-height: 18px;
 }
 
 .disabled .title::after {

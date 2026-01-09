@@ -8,7 +8,7 @@
 
   const restartListeners = {};
 
-  // prevent referencing outdated resources after firefox extension update/restart
+  // Prevent referencing outdated resources after firefox extension update/restart.
   const timestamp = Date.now();
 
   const runFeature = async function (name) {
@@ -121,7 +121,7 @@
     ]);
 
     /**
-     * fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
+     * Fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await.
      * @see https://github.com/sveltejs/kit/issues/7805#issuecomment-1330078207
      */
     await Promise.all(['css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));

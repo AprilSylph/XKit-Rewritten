@@ -174,6 +174,7 @@ const showPopupOnHover = async ({ currentTarget }) => {
   appendWithoutOverflow(popupElement, buttonDiv, popupPosition);
   popupElement.parentNode.addEventListener('click', removePopupOnClick, { once: true });
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
+  document.body.addEventListener('touchend', removePopupOnOutsideTouch);
 
   const thisPostID = thisPost.dataset.id;
   if (thisPostID !== lastPostID) {
@@ -190,6 +191,7 @@ const showPopupOnHover = async ({ currentTarget }) => {
 const removePopupOnClick = () => {
   clearTimeout(timeoutID);
   popupElement.parentNode?.removeEventListener('mouseleave', removePopupOnLeave);
+  document.body.removeEventListener('touchend', removePopupOnOutsideTouch);
   popupElement.remove();
 };
 
@@ -198,9 +200,16 @@ const removePopupOnLeave = () => {
     if (!popupElement.matches(':focus-within') && !popupElement.parentNode?.matches(':hover')) {
       popupElement.parentNode?.removeEventListener('click', removePopupOnClick);
       popupElement.parentNode?.removeEventListener('mouseleave', removePopupOnLeave);
+      document.body.removeEventListener('touchend', removePopupOnOutsideTouch);
       popupElement.remove();
     }
   }, 500);
+};
+
+const removePopupOnOutsideTouch = async ({ target }) => {
+  if (!target.closest(reblogButtonSelector)) {
+    removePopupOnLeave();
+  }
 };
 
 const markPostReblogged = ({ footer, state }) => {
@@ -429,6 +438,7 @@ export const main = async function () {
   resetPopupState();
 
   $(document.body).on('mouseenter', buttonSelector, showPopupOnHover);
+  $(document.body).on('pointercancel', buttonSelector, showPopupOnHover);
   $(document.body).on('contextmenu', buttonSelector, preventLongPressMenu);
 
   if (quickTagsIntegration) {
@@ -443,6 +453,7 @@ export const main = async function () {
 
 export const clean = async function () {
   $(document.body).off('mouseenter', buttonSelector, showPopupOnHover);
+  $(document.body).off('pointercancel', buttonSelector, showPopupOnHover);
   $(document.body).off('contextmenu', buttonSelector, preventLongPressMenu);
   popupElement.remove();
 

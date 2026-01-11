@@ -134,6 +134,14 @@ export const styleElement = buildStyle(`
     font-weight: bold;
   }
 
+  /* Move reblog modal to the left instead of the right */
+  body > div > div[style]:has(> ${keyToCss('withinModal')} > ${keyToCss('menuItemsWrapper', 'reblogsDisabledInfo')}) {
+    direction: rtl;
+  }
+  body > div > div[style] > ${keyToCss('withinModal')}:has(> ${keyToCss('menuItemsWrapper', 'reblogsDisabledInfo')}) {
+    direction: initial;
+  }
+
   .${reblogLinkClass} {
     display: flex;
     padding: 8px;

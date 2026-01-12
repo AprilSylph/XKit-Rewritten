@@ -11,8 +11,8 @@ The enhancement suite for Tumblr's new web interface.
 ## Screenshots
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/refs/heads/master/assets/screenshots/dark.png">
-  <img src="https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/refs/heads/master/assets/screenshots/light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/b33b6f89b1bb1ccac1cb747af3f0798722f01e2e/assets/screenshots/dark.webp">
+  <img src="https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/b33b6f89b1bb1ccac1cb747af3f0798722f01e2e/assets/screenshots/light.webp">
 </picture>
 
 ## Installation

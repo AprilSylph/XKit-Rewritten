@@ -1,5 +1,5 @@
 @layer xkit-hide-on-disable {
-  [data-xkit-hide-on-disable] {
+  :is([data-xkit-hide-on-disable], #extra#specificity) {
     display: revert-layer !important;
   }
 }

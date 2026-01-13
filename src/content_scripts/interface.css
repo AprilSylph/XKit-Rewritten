@@ -1,0 +1,5 @@
+@layer xkit-hide-on-disable {
+  [data-xkit-hide-on-disable] {
+    display: revert-layer !important;
+  }
+}

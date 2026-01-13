@@ -94,6 +94,19 @@ export const getPostElements = postFilterOptions => filterPostElements([...docum
  */
 export const buildStyle = (css = '') => dom('style', { class: 'xkit' }, null, [css]);
 
+// Elements with this attribute will be immediately hidden when XKit Rewritten is disabled in Firefox.
+export const hideOnXKitDisableAttribute = 'data-xkit-hide-on-disable';
+
+document.documentElement.append(
+  buildStyle(`
+    @layer xkit-hide-on-disable {
+      [${hideOnXKitDisableAttribute}] {
+        display: none !important;
+      }
+    }
+  `)
+);
+
 /**
  * Determine a post's legacy type
  * @param {object} post Destructured into content and layout

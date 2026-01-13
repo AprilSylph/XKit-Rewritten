@@ -1,6 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
-import { postSelector } from './interface.js';
+import { hideOnXKitDisableAttribute, postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { inject } from './inject.js';
 import { blogData, timelineObject } from './react_props.js';
@@ -80,6 +80,7 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
     const meatballItemButton = dom('button', {
       class: 'xkit-meatball-button',
       [`data-xkit-${type}-meatball-button`]: id,
+      [hideOnXKitDisableAttribute]: '',
       hidden: true
     }, {
       click: onclick

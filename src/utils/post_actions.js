@@ -2,6 +2,7 @@ import { buildSvg } from './remixicon.js';
 import { pageModifications } from './mutations.js';
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { hideOnXKitDisableAttribute } from './interface.js';
 
 // Remove outdated post options when loading module
 $('.xkit-post-option').remove();
@@ -32,7 +33,7 @@ pageModifications.register(keyToCss('postFormButton'), addPostOptions);
  */
 export const registerPostOption = async function (id, { symbolId, onclick }) {
   postOptions[id] = dom('label', { class: 'xkit-post-option' }, null, [
-    dom('button', null, { click: onclick }, [buildSvg(symbolId)])
+    dom('button', { [hideOnXKitDisableAttribute]: '' }, { click: onclick }, [buildSvg(symbolId)])
   ]);
 
   pageModifications.trigger(addPostOptions);

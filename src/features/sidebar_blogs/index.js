@@ -1,6 +1,6 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { a, div, img } from '../../utils/dom.js';
-import { buildStyle } from '../../utils/interface.js';
+import { buildStyle, hideOnXKitDisableAttribute } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { onClickNavigate } from '../../utils/tumblr_helpers.js';
 import { userBlogs } from '../../utils/user.js';
@@ -68,7 +68,7 @@ export const styleElement = buildStyle(`
 `);
 
 const narrowSidebarAvatars = div(
-  { id: 'narrow-sidebar-avatars' },
+  { id: 'narrow-sidebar-avatars', [hideOnXKitDisableAttribute]: '' },
   userBlogs.map(({ name, avatar }) =>
     a(
       {

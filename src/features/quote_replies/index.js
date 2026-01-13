@@ -2,7 +2,7 @@ import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { inject } from '../../utils/inject.js';
 import { showErrorModal } from '../../utils/modals.js';
-import { buildStyle, notificationSelector } from '../../utils/interface.js';
+import { buildStyle, hideOnXKitDisableAttribute, notificationSelector } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { getPreferences } from '../../utils/preferences.js';
@@ -85,6 +85,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
     'button',
     {
       class: `${buttonClass} ${notification.matches(dropdownSelector) ? dropdownButtonClass : ''}`,
+      [hideOnXKitDisableAttribute]: '',
       title: 'Quote this reply'
     },
     {

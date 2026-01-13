@@ -5,6 +5,9 @@ import { pageModifications } from '../../utils/mutations.js';
 import { onClickNavigate } from '../../utils/tumblr_helpers.js';
 import { userBlogs } from '../../utils/user.js';
 
+// Remove outdated elements when loading module
+$('#narrow-sidebar-avatars').remove();
+
 export const styleElement = buildStyle(`
 :root {
   --sidebar-blogs-padding: 10px;

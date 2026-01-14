@@ -3,7 +3,7 @@ import { dom } from './dom.js';
 import { timelineSelector } from './timeline_id.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
-export const trailItemSelector = `${keyToCss('reblogTrailWrapper')} > ${keyToCss('reblog')}`;
+export const trailItemSelector = `${postSelector} ${keyToCss('reblog')}`;
 export const blogViewSelector = '[style*="--blog-title-color"] *';
 export const notificationSelector = `:is(${keyToCss('notification')}[role="listitem"], ${keyToCss('activityItem')})`;
 

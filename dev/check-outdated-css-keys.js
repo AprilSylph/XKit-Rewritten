@@ -5,7 +5,7 @@ import fs from 'node:fs/promises';
 const getCssMap = async () => {
   const cssMapUrl = /(?<="cssMapUrl":")[^"]+.json(?=")/.exec(
     await fetch('https://www.tumblr.com/').then(response => response.text())
-  );
+  )[0];
   return fetch(cssMapUrl).then(response => response.json());
 };
 

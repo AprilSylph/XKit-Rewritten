@@ -25,24 +25,20 @@ summary:focus {
   background-color: rgb(var(--active-grey));
 }
 
-.disabled summary {
-  color: rgba(var(--black), .8);
-}
-
 .icon {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 8px;
   overflow: hidden;
 }
 
 .icon ::slotted(i) {
-  font-size: 30px;
-  line-height: 36px;
+  font-size: 26px;
+  line-height: 32px;
 }
 
 .icon,
@@ -55,7 +51,7 @@ summary:focus {
   flex-direction: row;
   align-items: center;
   column-gap: 8px;
-  height: 36px;
+  height: 32px;
   margin-left: auto;
 }
 
@@ -81,9 +77,21 @@ summary:focus {
 .title,
 .description {
   margin: 0;
+}
 
-  font-size: 14px;
-  line-height: 18px;
+.title {
+  font-size: 15px;
+  line-height: 18.5px;
+}
+
+.description {
+  font-size: 13px;
+  line-height: 16px;
+  opacity: 70%;
+}
+
+.disabled:not([open], :focus-within, :hover) :is(.icon, .meta) {
+  opacity: 60%;
 }
 
 .disabled .title::after {

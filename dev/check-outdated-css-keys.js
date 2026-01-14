@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs/promises';
-import { glob } from 'glob';
 
 const getCssMap = async () => {
   const cssMapUrl = /(?<="cssMapUrl":")[^"]+.json(?=")/.exec(
@@ -11,7 +10,7 @@ const getCssMap = async () => {
 };
 
 const getUsedCssKeys = async () => {
-  const sourceFilePaths = await glob('src/**/*.js');
+  const sourceFilePaths = await Array.fromAsync(fs.glob('src/**/*.js'));
   const sourceFileContents = await Promise.all(
     sourceFilePaths.map(path => fs.readFile(path, 'utf8'))
   );

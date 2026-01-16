@@ -35,8 +35,8 @@ const adoptedStyleSheets = await fetchStyleSheets([
 ].map(import.meta.resolve));
 
 class XKitFeatureElement extends CustomElement {
-  #enabledFeaturesKey = 'enabledScripts';
-  #specialAccessKey = 'specialAccess';
+  static #enabledFeaturesKey = 'enabledScripts';
+  static #specialAccessKey = 'specialAccess';
 
   #detailsElement;
   #enabledToggle;
@@ -151,8 +151,8 @@ class XKitFeatureElement extends CustomElement {
   #handleEnabledToggleInput = async ({ currentTarget }) => {
     const { checked, id } = currentTarget;
     let {
-      [this.#enabledFeaturesKey]: enabledFeatures = [],
-      [this.#specialAccessKey]: specialAccess = []
+      [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures = [],
+      [XKitFeatureElement.#specialAccessKey]: specialAccess = []
     } = await browser.storage.local.get();
 
     const hasPreferences = Object.keys(this.preferences).length !== 0;
@@ -171,8 +171,8 @@ class XKitFeatureElement extends CustomElement {
     this.disabled = !checked;
 
     browser.storage.local.set({
-      [this.#enabledFeaturesKey]: enabledFeatures,
-      [this.#specialAccessKey]: specialAccess
+      [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures,
+      [XKitFeatureElement.#specialAccessKey]: specialAccess
     });
   };
 

@@ -1,12 +1,12 @@
 import { dom } from './dom.js';
 
-// Remove any outdated modal when loading module
+// Remove any outdated modal when loading module.
 document.getElementById('xkit-modal')?.remove();
 
 let lastFocusedElement;
 
 /**
- * Show a takeover prompt to the user
+ * Show a takeover prompt to the user.
  * @param {object} options Destructured
  * @param {string} [options.title] Prompt title
  * @param {(string|Node)[]} [options.message] Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
@@ -19,7 +19,7 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
     role: 'dialog',
     'aria-modal': 'true',
 
-    // prevents Tumblr's trapFocusInsideGlass function from stealing focus when opened from mobile drawer
+    // Prevents Tumblr's trapFocusInsideGlass function from stealing focus when opened from mobile drawer.
     'data-skip-glass-focus-trap': ''
   }, null, [
     dom('style', null, null, ['body { overflow: hidden; }']),

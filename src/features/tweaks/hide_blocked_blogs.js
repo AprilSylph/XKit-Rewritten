@@ -13,7 +13,7 @@ export const styleElement = buildStyle(`
 const processPosts = (postElements) => {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     const postIsMine = await isMyPost(postElement);
-    if (postIsMine) return; // Filtering should not be applied to one's own posts
+    if (postIsMine) return; // Filtering should not be applied to one's own posts.
 
     const { blog = {}, trail = [] } = await timelineObject(postElement);
     const blockedBlogNames = new Set(

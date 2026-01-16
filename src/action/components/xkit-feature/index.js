@@ -35,54 +35,49 @@ const adoptedStyleSheets = await fetchStyleSheets([
 ].map(import.meta.resolve));
 
 /**
- * @typedef CheckboxPreferenceObject
+ * @typedef BasePreference
+ * @property {string} label Label displayed to the user to describe the preference.
+ * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
+ */
+
+/**
+ * @typedef Checkbox
  * @property {"checkbox"} type Type of preference.
- * @property {string} label Label displayed to the user to describe the preference.
  * @property {boolean} default Default value of the preference to display to the user.
- * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
  */
 
 /**
- * @typedef TextPreferenceObject
+ * @typedef Text
  * @property {"text"} type Type of preference.
- * @property {string} label Label displayed to the user to describe the preference.
  * @property {string} default Default value of the preference to display to the user.
- * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
  */
 
 /**
- * @typedef TextAreaPreferenceObject
+ * @typedef TextArea
  * @property {"textarea"} type Type of preference.
- * @property {string} label Label displayed to the user to describe the preference.
  * @property {string} default Default value of the preference to display to the user.
- * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
  */
 
 /**
- * @typedef ColorPreferenceObject
+ * @typedef Color
  * @property {"color"} type Type of preference.
- * @property {string} label Label displayed to the user to describe the preference.
  * @property {string} default Default value of the preference to display to the user.
- * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
  */
 
 /**
- * @typedef SelectPreferenceObject
+ * @typedef Select
  * @property {"select"} type Type of preference.
- * @property {string} label Label displayed to the user to describe the preference.
  * @property {{ label: string, value: string }[]} options List of options for the user to choose between.
  * @property {string} default Default value of the preference to display to the user. Must match one of the `options` item's `value`.
- * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
  */
 
 /**
- * @typedef IframePreferenceObject
+ * @typedef Iframe
  * @property {"iframe"} type Type of preference.
- * @property {string} label Accessible label to describe the preference.
  * @property {string} src A URL, relative to `src/`, to be embedded in the feature's preference list.
  */
 
-/** @typedef {CheckboxPreferenceObject | TextPreferenceObject | TextAreaPreferenceObject | ColorPreferenceObject | SelectPreferenceObject | IframePreferenceObject} Preference */
+/** @typedef {BasePreference & (Checkbox | Text | TextArea | Color | Select | Iframe)} Preference */
 /** @typedef {Record<string, Preference>} Preferences */
 
 class XKitFeatureElement extends CustomElement {

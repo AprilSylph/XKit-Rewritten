@@ -55,7 +55,7 @@ class XKitFeatureElement extends CustomElement {
     this.#preferencesList = this.shadowRoot.querySelector('ul.preferences');
   }
 
-  #writePreference = async ({ currentTarget }) => {
+  static #writePreference = async ({ currentTarget }) => {
     const { id } = currentTarget;
     const [featureName, preferenceType, preferenceName] = id.split('.');
     const storageKey = `${featureName}.preferences.${preferenceName}`;
@@ -73,15 +73,15 @@ class XKitFeatureElement extends CustomElement {
     }
   };
 
-  #getDebouncedWritePreference = () => {
+  static #getDebouncedWritePreference = () => {
     let timeoutID;
     return ({ currentTarget }) => {
       clearTimeout(timeoutID);
-      timeoutID = setTimeout(() => this.#writePreference({ currentTarget }), 500);
+      timeoutID = setTimeout(() => XKitFeatureElement.#writePreference({ currentTarget }), 500);
     };
   };
 
-  #renderPreferences = async ({ featureName, preferences, preferenceList }) => {
+  static #renderPreferences = async ({ featureName, preferences, preferenceList }) => {
     for (const [key, preference] of Object.entries(preferences)) {
       const storageKey = `${featureName}.preferences.${key}`;
       const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
@@ -103,12 +103,12 @@ class XKitFeatureElement extends CustomElement {
       switch (preference.type) {
         case 'text':
         case 'textarea':
-          preferenceInput.addEventListener('input', this.#getDebouncedWritePreference());
+          preferenceInput.addEventListener('input', XKitFeatureElement.#getDebouncedWritePreference());
           break;
         case 'iframe':
           break;
         default:
-          preferenceInput.addEventListener('change', this.#writePreference);
+          preferenceInput.addEventListener('change', XKitFeatureElement.#writePreference);
       }
 
       switch (preference.type) {
@@ -183,7 +183,7 @@ class XKitFeatureElement extends CustomElement {
     this.dataset.relatedTerms = this.relatedTerms;
 
     if (Object.keys(this.preferences).length !== 0) {
-      this.#renderPreferences({
+      XKitFeatureElement.#renderPreferences({
         featureName: this.featureName,
         preferences: this.preferences,
         preferenceList: this.#preferencesList

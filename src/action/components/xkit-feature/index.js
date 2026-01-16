@@ -262,4 +262,14 @@ class XKitFeatureElement extends CustomElement {
 
 customElements.define(localName, XKitFeatureElement);
 
+/**
+ * @typedef XKitFeatureProps
+ * @property {boolean} [disabled] Whether or not the feature is currently disabled. Defaults to `false`.
+ * @property {boolean} deprecated Whether to hide the feature on installations on which it was not enabled at the time of deprecation.
+ * @property {string} featureName The feature's internal name (e.g. `"quick_reblog"`).
+ * @property {Preferences} [preferences] Record consisting of preference name keys and preference object values.
+ * @property {string[]} [relatedTerms] An optional array of strings related to this feature that a user might search for. Case insensitive.
+ */
+
+/** @type {(props: XKitFeatureProps) => XKitFeatureElement} */
 export const XKitFeature = (props = {}) => Object.assign(document.createElement(localName), props);

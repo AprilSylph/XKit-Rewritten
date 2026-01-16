@@ -107,6 +107,7 @@ class XKitFeatureElement extends CustomElement {
     this.#preferencesList = this.shadowRoot.querySelector('ul.preferences');
   }
 
+  /** @param {Event} event `input` or `change` events for any feature preferences. */
   static #writePreference = async ({ currentTarget }) => {
     const { id } = currentTarget;
     const [featureName, preferenceType, preferenceName] = id.split('.');
@@ -125,6 +126,7 @@ class XKitFeatureElement extends CustomElement {
     }
   };
 
+  /** @type {() => (event: Event) => void} */
   static #getDebouncedWritePreference = () => {
     let timeoutID;
     return ({ currentTarget }) => {
@@ -133,6 +135,7 @@ class XKitFeatureElement extends CustomElement {
     };
   };
 
+  /** @type {(props: { featureName: string, preferences: Preferences, preferenceList: HTMLUListElement }) => Promise<void>} */
   static #renderPreferences = async ({ featureName, preferences, preferenceList }) => {
     for (const [key, preference] of Object.entries(preferences)) {
       const storageKey = `${featureName}.preferences.${key}`;
@@ -200,6 +203,7 @@ class XKitFeatureElement extends CustomElement {
     }
   };
 
+  /** @param {InputEvent} event `input` event for the feature's "Enable this feature" toggle. */
   #handleEnabledToggleInput = async ({ currentTarget }) => {
     const { checked, id } = currentTarget;
     let {

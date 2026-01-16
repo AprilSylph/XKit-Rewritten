@@ -34,18 +34,70 @@ const adoptedStyleSheets = await fetchStyleSheets([
   './index.css'
 ].map(import.meta.resolve));
 
+/**
+ * @typedef CheckboxPreferenceObject
+ * @property {"checkbox"} type Type of preference.
+ * @property {string} label Label displayed to the user to describe the preference.
+ * @property {boolean} default Default value of the preference to display to the user.
+ * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
+ */
+
+/**
+ * @typedef TextPreferenceObject
+ * @property {"text"} type Type of preference.
+ * @property {string} label Label displayed to the user to describe the preference.
+ * @property {string} default Default value of the preference to display to the user.
+ * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
+ */
+
+/**
+ * @typedef TextAreaPreferenceObject
+ * @property {"textarea"} type Type of preference.
+ * @property {string} label Label displayed to the user to describe the preference.
+ * @property {string} default Default value of the preference to display to the user.
+ * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
+ */
+
+/**
+ * @typedef ColorPreferenceObject
+ * @property {"color"} type Type of preference.
+ * @property {string} label Label displayed to the user to describe the preference.
+ * @property {string} default Default value of the preference to display to the user.
+ * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
+ */
+
+/**
+ * @typedef SelectPreferenceObject
+ * @property {"select"} type Type of preference.
+ * @property {string} label Label displayed to the user to describe the preference.
+ * @property {{ label: string, value: string }[]} options List of options for the user to choose between.
+ * @property {string} default Default value of the preference to display to the user. Must match one of the `options` item's `value`.
+ * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
+ */
+
+/**
+ * @typedef IframePreferenceObject
+ * @property {"iframe"} type Type of preference.
+ * @property {string} label Accessible label to describe the preference.
+ * @property {string} src A URL, relative to `src/`, to be embedded in the feature's preference list.
+ */
+
+/** @typedef {CheckboxPreferenceObject | TextPreferenceObject | TextAreaPreferenceObject | ColorPreferenceObject | SelectPreferenceObject | IframePreferenceObject} Preference */
+/** @typedef {Record<string, Preference>} Preferences */
+
 class XKitFeatureElement extends CustomElement {
   static #enabledFeaturesKey = 'enabledScripts';
   static #specialAccessKey = 'specialAccess';
 
-  #detailsElement;
-  #enabledToggle;
-  #preferencesList;
+  /** @type {HTMLDetailsElement}  */ #detailsElement;
+  /** @type {HTMLInputElement}    */ #enabledToggle;
+  /** @type {HTMLUListElement}    */ #preferencesList;
 
-  deprecated = false;
-  featureName = '';
-  preferences = {};
-  relatedTerms = [];
+  /** @type {boolean}     */ #disabled = false;
+  /** @type {boolean}     */ deprecated = false;
+  /** @type {string}      */ featureName = '';
+  /** @type {Preferences} */ preferences = {};
+  /** @type {string[]}    */ relatedTerms = [];
 
   constructor () {
     super(templateDocument, adoptedStyleSheets);
@@ -194,9 +246,6 @@ class XKitFeatureElement extends CustomElement {
   disconnectedCallback () {
     this.#enabledToggle.removeEventListener('input', this.#handleEnabledToggleInput);
   }
-
-  /** @type {boolean} True if the feature can be enabled. Defaults to `false`. */
-  #disabled = false;
 
   set disabled (disabled = false) {
     this.#detailsElement.classList.toggle('disabled', disabled);

@@ -5,7 +5,7 @@ export const styleElement = buildStyle(`
 ${keyToCss('tags')}${keyToCss('collapsed')} {
   max-height: none !important;
 }
-${keyToCss('seeAll')} {
+${keyToCss('seeAll', 'seeAllWrapper')} {
   display: none;
 }
 `);

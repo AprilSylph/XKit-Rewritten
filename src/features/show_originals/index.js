@@ -7,13 +7,14 @@ import { translate } from '../../utils/language_data.js';
 import { userBlogs } from '../../utils/user.js';
 import {
   followingTimelineFilter,
-  anyBlogTimelineFilter,
-  blogTimelineFilter,
+  anyBlogPostsTimelineFilter,
+  blogPostsTimelineFilter,
   blogSubsTimelineFilter,
   timelineSelector,
   anyCommunityTimelineFilter,
   communitiesTimelineFilter
 } from '../../utils/timeline_id.js';
+import { a, div } from '../../utils/dom.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const whitelistedAttribute = 'data-show-originals-whitelisted';
@@ -37,14 +38,11 @@ const lengthenTimeline = async (timeline) => {
   }
 };
 
-const createButton = (textContent, onclick, mode) => {
-  const button = Object.assign(document.createElement('a'), { textContent, onclick });
-  button.dataset.mode = mode;
-  return button;
-};
+const createButton = (buttonText, onclick, mode) =>
+  a({ 'data-mode': mode, click: onclick }, [buttonText]);
 
 const addControls = async (timelineElement, location) => {
-  const controls = Object.assign(document.createElement('div'), { className: controlsClass });
+  const controls = div({ class: controlsClass });
   controls.dataset.location = location;
 
   timelineElement.prepend(controls);
@@ -76,11 +74,11 @@ const addControls = async (timelineElement, location) => {
 
 const getLocation = timelineElement => {
   const isBlog =
-    anyBlogTimelineFilter(timelineElement) && !timelineElement.matches(channelSelector);
+    anyBlogPostsTimelineFilter(timelineElement) && !timelineElement.matches(channelSelector);
 
   const on = {
     dashboard: followingTimelineFilter(timelineElement),
-    disabled: isBlog && disabledBlogs.some(name => blogTimelineFilter(name)(timelineElement)),
+    disabled: isBlog && disabledBlogs.some(name => blogPostsTimelineFilter(name)(timelineElement)),
     peepr: isBlog,
     blogSubscriptions: blogSubsTimelineFilter(timelineElement),
     community: anyCommunityTimelineFilter(timelineElement) || communitiesTimelineFilter(timelineElement)

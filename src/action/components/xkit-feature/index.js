@@ -1,4 +1,5 @@
 import { CustomElement, fetchStyleSheets } from '../index.js';
+import Coloris from '../../../lib/coloris.min.js';
 
 const localName = 'xkit-feature';
 
@@ -6,7 +7,7 @@ const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
     <details>
       <summary>
-        <div class="icon">
+        <div aria-hidden="true" class="icon">
           <slot name="icon"></slot>
         </div>
         <div class="meta">
@@ -14,7 +15,9 @@ const templateDocument = new DOMParser().parseFromString(`
           <p class="description"><slot name="description"></slot></p>
         </div>
         <div class="buttons">
-          <a class="help" target="_blank"><i class="ri-fw ri-question-fill" style="color:rgb(var(--black))"></i></a>
+          <div class="badge">
+            <slot name="badge"></slot>
+          </div>
           <input type="checkbox" checked class="toggle-button" aria-label="Enable this feature">
         </div>
       </summary>
@@ -24,9 +27,9 @@ const templateDocument = new DOMParser().parseFromString(`
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
+  '/lib/coloris.min.css',
   '/lib/normalize.min.css',
   '/lib/remixicon/remixicon.css',
-  '/lib/spectrum.css',
   '/lib/toggle-button.css',
   './index.css'
 ].map(import.meta.resolve));
@@ -37,12 +40,10 @@ class XKitFeatureElement extends CustomElement {
 
   #detailsElement;
   #enabledToggle;
-  #helpAnchor;
   #preferencesList;
 
   deprecated = false;
   featureName = '';
-  help = '';
   preferences = {};
   relatedTerms = [];
 
@@ -51,7 +52,6 @@ class XKitFeatureElement extends CustomElement {
 
     this.#detailsElement = this.shadowRoot.querySelector('details');
     this.#enabledToggle = this.shadowRoot.querySelector('input[type="checkbox"]');
-    this.#helpAnchor = this.shadowRoot.querySelector('a.help');
     this.#preferencesList = this.shadowRoot.querySelector('ul.preferences');
   }
 
@@ -117,23 +117,25 @@ class XKitFeatureElement extends CustomElement {
           break;
         case 'select':
           for (const { value, label } of preference.options) {
-            const option = document.createElement('option');
-            option.value = value;
-            option.textContent = label;
-            option.selected = value === preference.value;
+            const option = Object.assign(document.createElement('option'), {
+              value,
+              textContent: label,
+              selected: value === preference.value
+            });
             preferenceInput.appendChild(option);
           }
           break;
         case 'color':
           preferenceInput.value = preference.value;
-          $(preferenceInput)
-            .on('change.spectrum', this.#writePreference)
-            .spectrum({
-              preferredFormat: 'hex',
-              showInput: true,
-              showInitial: true,
-              allowEmpty: true
-            });
+          Coloris.init(); // eslint-disable-line import-x/no-named-as-default-member
+          Coloris({
+            alpha: false,
+            clearButton: true,
+            closeButton: true,
+            el: preferenceInput,
+            swatches: ['#ff4930', '#ff8a00', '#00cf35', '#00b8ff', '#7c5cff', '#ff62ce'],
+            themeMode: 'auto',
+          });
           break;
         case 'iframe':
           preferenceInput.src = preference.src;
@@ -179,10 +181,6 @@ class XKitFeatureElement extends CustomElement {
     this.#enabledToggle.id = this.featureName;
     this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
     this.dataset.relatedTerms = this.relatedTerms;
-
-    if (this.help) {
-      this.#helpAnchor.href = this.help;
-    }
 
     if (Object.keys(this.preferences).length !== 0) {
       this.#renderPreferences({

@@ -22,10 +22,10 @@ const processPosts = (postElements) => {
         .filter(({ isBlockedFromPrimary }) => isBlockedFromPrimary)
         .map(({ name }) => name)
     );
+    const timelineElement = postElement.closest(timelineSelector);
 
     for (const blogName of blockedBlogNames) {
       const isTimelineExempt = blogTimelineFilter(blogName);
-      const timelineElement = postElement.closest(timelineSelector);
       if (isTimelineExempt(timelineElement)) {
         // This blog is blocked, but we're on that blog's timeline.
         // Consider Tumblr's own warning interstitial to be sufficient.

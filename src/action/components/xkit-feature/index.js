@@ -34,18 +34,65 @@ const adoptedStyleSheets = await fetchStyleSheets([
   './index.css'
 ].map(import.meta.resolve));
 
+/**
+ * @typedef BasePreference
+ * @property {string} label Label displayed to the user to describe the preference.
+ * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
+ */
+
+/**
+ * @typedef Checkbox
+ * @property {"checkbox"} type Type of preference.
+ * @property {boolean} default Default value of the preference to display to the user.
+ */
+
+/**
+ * @typedef Text
+ * @property {"text"} type Type of preference.
+ * @property {string} default Default value of the preference to display to the user.
+ */
+
+/**
+ * @typedef TextArea
+ * @property {"textarea"} type Type of preference.
+ * @property {string} default Default value of the preference to display to the user.
+ */
+
+/**
+ * @typedef Color
+ * @property {"color"} type Type of preference.
+ * @property {string} default Default value of the preference to display to the user.
+ */
+
+/**
+ * @typedef Select
+ * @property {"select"} type Type of preference.
+ * @property {{ label: string, value: string }[]} options List of options for the user to choose between.
+ * @property {string} default Default value of the preference to display to the user. Must match one of the `options` item's `value`.
+ */
+
+/**
+ * @typedef Iframe
+ * @property {"iframe"} type Type of preference.
+ * @property {string} src A URL, relative to `src/`, to be embedded in the feature's preference list.
+ */
+
+/** @typedef {BasePreference & (Checkbox | Text | TextArea | Color | Select | Iframe)} Preference */
+/** @typedef {Record<string, Preference>} Preferences */
+
 class XKitFeatureElement extends CustomElement {
-  #enabledFeaturesKey = 'enabledScripts';
-  #specialAccessKey = 'specialAccess';
+  static #enabledFeaturesKey = 'enabledScripts';
+  static #specialAccessKey = 'specialAccess';
 
-  #detailsElement;
-  #enabledToggle;
-  #preferencesList;
+  /** @type {HTMLDetailsElement}  */ #detailsElement;
+  /** @type {HTMLInputElement}    */ #enabledToggle;
+  /** @type {HTMLUListElement}    */ #preferencesList;
 
-  deprecated = false;
-  featureName = '';
-  preferences = {};
-  relatedTerms = [];
+  /** @type {boolean}     */ #disabled = false;
+  /** @type {boolean}     */ deprecated = false;
+  /** @type {string}      */ featureName = '';
+  /** @type {Preferences} */ preferences = {};
+  /** @type {string[]}    */ relatedTerms = [];
 
   constructor () {
     super(templateDocument, adoptedStyleSheets);
@@ -55,7 +102,8 @@ class XKitFeatureElement extends CustomElement {
     this.#preferencesList = this.shadowRoot.querySelector('ul.preferences');
   }
 
-  #writePreference = async ({ currentTarget }) => {
+  /** @param {Event} event `input` or `change` events for any feature preferences. */
+  static #writePreference = async ({ currentTarget }) => {
     const { id } = currentTarget;
     const [featureName, preferenceType, preferenceName] = id.split('.');
     const storageKey = `${featureName}.preferences.${preferenceName}`;
@@ -73,15 +121,17 @@ class XKitFeatureElement extends CustomElement {
     }
   };
 
-  #getDebouncedWritePreference = () => {
+  /** @type {() => (event: Event) => void} */
+  static #getDebouncedWritePreference = () => {
     let timeoutID;
     return ({ currentTarget }) => {
       clearTimeout(timeoutID);
-      timeoutID = setTimeout(() => this.#writePreference({ currentTarget }), 500);
+      timeoutID = setTimeout(() => XKitFeatureElement.#writePreference({ currentTarget }), 500);
     };
   };
 
-  #renderPreferences = async ({ featureName, preferences, preferenceList }) => {
+  /** @type {(props: { featureName: string, preferences: Preferences, preferenceList: HTMLUListElement }) => Promise<void>} */
+  static #renderPreferences = async ({ featureName, preferences, preferenceList }) => {
     for (const [key, preference] of Object.entries(preferences)) {
       const storageKey = `${featureName}.preferences.${key}`;
       const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
@@ -103,12 +153,12 @@ class XKitFeatureElement extends CustomElement {
       switch (preference.type) {
         case 'text':
         case 'textarea':
-          preferenceInput.addEventListener('input', this.#getDebouncedWritePreference());
+          preferenceInput.addEventListener('input', XKitFeatureElement.#getDebouncedWritePreference());
           break;
         case 'iframe':
           break;
         default:
-          preferenceInput.addEventListener('change', this.#writePreference);
+          preferenceInput.addEventListener('change', XKitFeatureElement.#writePreference);
       }
 
       switch (preference.type) {
@@ -148,11 +198,12 @@ class XKitFeatureElement extends CustomElement {
     }
   };
 
+  /** @param {InputEvent} event `input` event for the feature's "Enable this feature" toggle. */
   #handleEnabledToggleInput = async ({ currentTarget }) => {
     const { checked, id } = currentTarget;
     let {
-      [this.#enabledFeaturesKey]: enabledFeatures = [],
-      [this.#specialAccessKey]: specialAccess = []
+      [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures = [],
+      [XKitFeatureElement.#specialAccessKey]: specialAccess = []
     } = await browser.storage.local.get();
 
     const hasPreferences = Object.keys(this.preferences).length !== 0;
@@ -171,8 +222,8 @@ class XKitFeatureElement extends CustomElement {
     this.disabled = !checked;
 
     browser.storage.local.set({
-      [this.#enabledFeaturesKey]: enabledFeatures,
-      [this.#specialAccessKey]: specialAccess
+      [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures,
+      [XKitFeatureElement.#specialAccessKey]: specialAccess
     });
   };
 
@@ -183,7 +234,7 @@ class XKitFeatureElement extends CustomElement {
     this.dataset.relatedTerms = this.relatedTerms;
 
     if (Object.keys(this.preferences).length !== 0) {
-      this.#renderPreferences({
+      XKitFeatureElement.#renderPreferences({
         featureName: this.featureName,
         preferences: this.preferences,
         preferenceList: this.#preferencesList
@@ -194,9 +245,6 @@ class XKitFeatureElement extends CustomElement {
   disconnectedCallback () {
     this.#enabledToggle.removeEventListener('input', this.#handleEnabledToggleInput);
   }
-
-  /** @type {boolean} True if the feature can be enabled. Defaults to `false`. */
-  #disabled = false;
 
   set disabled (disabled = false) {
     this.#detailsElement.classList.toggle('disabled', disabled);
@@ -209,4 +257,14 @@ class XKitFeatureElement extends CustomElement {
 
 customElements.define(localName, XKitFeatureElement);
 
+/**
+ * @typedef XKitFeatureProps
+ * @property {boolean} [disabled] Whether or not the feature is currently disabled. Defaults to `false`.
+ * @property {boolean} deprecated Whether to hide the feature on installations on which it was not enabled at the time of deprecation.
+ * @property {string} featureName The feature's internal name (e.g. `"quick_reblog"`).
+ * @property {Preferences} [preferences] Record consisting of preference name keys and preference object values.
+ * @property {string[]} [relatedTerms] An optional array of strings related to this feature that a user might search for. Case insensitive.
+ */
+
+/** @type {(props: XKitFeatureProps) => XKitFeatureElement} */
 export const XKitFeature = (props = {}) => Object.assign(document.createElement(localName), props);

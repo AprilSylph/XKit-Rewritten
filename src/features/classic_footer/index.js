@@ -230,11 +230,13 @@ const getButtonChildren = (noteCount) => {
 const onNoteCountClick = (event) => {
   event.stopPropagation();
   const postElement = event.currentTarget.closest(postOrRadarSelector);
-  const closeNotesButton = postElement?.querySelector(closeNotesButtonSelector);
+  if (!postElement) { return; }
+
+  const closeNotesButton = postElement.querySelector(closeNotesButtonSelector);
 
   closeNotesButton
     ? closeNotesButton.click()
-    : postElement?.querySelector(`[${activeAttribute}] ${replyButtonSelector}`)?.click();
+    : [...postElement.querySelectorAll(`[${activeAttribute}] ${replyButtonSelector}`)].at(-1)?.click();
 };
 
 const processPosts = (postElements) => postElements.forEach(async postElement => {

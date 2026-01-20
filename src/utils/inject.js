@@ -24,7 +24,7 @@ export const inject = (path, args = [], target = document.documentElement) =>
         reject(exception);
       } else if (type === 'xkit-injection-element-response') {
         resolve(target);
-      } else if (result) {
+      } else {
         resolve(result);
       }
     };

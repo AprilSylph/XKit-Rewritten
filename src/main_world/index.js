@@ -19,7 +19,7 @@ document.documentElement.addEventListener('xkit-injection-request', async event 
 
     if (result instanceof Element) {
       result.dispatchEvent(
-        new CustomEvent('xkit-injection-response', { detail: JSON.stringify({ id }), bubbles: true })
+        new CustomEvent('xkit-injection-element-response', { detail: JSON.stringify({ id }), bubbles: true })
       );
     } else {
       document.documentElement.dispatchEvent(

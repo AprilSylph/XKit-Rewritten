@@ -13,20 +13,23 @@ export const inject = (path, args = [], target = document.documentElement) =>
     const requestId = String(Math.random());
     const data = { path: browser.runtime.getURL(path), args, id: requestId };
 
-    const responseHandler = ({ detail, bubbles, target }) => {
+    const responseHandler = ({ detail, type, target }) => {
       const { id, result, exception } = JSON.parse(detail);
       if (id !== requestId) return;
 
-      target.removeEventListener('xkit-injection-response', responseHandler);
+      document.documentElement.removeEventListener('xkit-injection-response', responseHandler);
+      document.documentElement.removeEventListener('xkit-injection-element-response', responseHandler);
+
       if (exception) {
         reject(exception);
-      } else if (bubbles) {
+      } else if (type === 'xkit-injection-element-response') {
         resolve(target);
       } else if (result) {
         resolve(result);
       }
     };
     document.documentElement.addEventListener('xkit-injection-response', responseHandler);
+    document.documentElement.addEventListener('xkit-injection-element-response', responseHandler);
 
     target.dispatchEvent(
       new CustomEvent('xkit-injection-request', { detail: JSON.stringify(data), bubbles: true })

@@ -2,11 +2,12 @@
 
 import fs from 'node:fs/promises';
 
-const getCssMap = async () => {
+const getCssMapKeys = async () => {
   const cssMapUrl = /(?<="cssMapUrl":")[^"]+.json(?=")/.exec(
     await fetch('https://www.tumblr.com/').then(response => response.text())
   )[0];
-  return fetch(cssMapUrl).then(response => response.json());
+  const cssMap = await fetch(cssMapUrl).then(response => response.json());
+  return new Set(Object.keys(cssMap));
 };
 
 const getUsedCssKeys = async () => {
@@ -17,19 +18,18 @@ const getUsedCssKeys = async () => {
   const keyToCssArgsStrings = sourceFileContents.flatMap(file =>
     [...file.matchAll(/(?<=keyToCss\()[a-zA-Z'\s,]+(?=\))/g)].map(match => match[0])
   );
-  const usedCssKeysSet = new Set(
+  return new Set(
     keyToCssArgsStrings.flatMap(string =>
       [...string.matchAll(/(?<=')[a-zA-Z]+(?=')/g)].map(match => match[0])
     )
   );
-  return [...usedCssKeysSet];
 };
 
-Promise.all([getCssMap(), getUsedCssKeys()]).then(([cssMap, usedCssKeys]) => {
-  const invalidCssKeys = usedCssKeys.filter(key => !cssMap[key]);
-  if (invalidCssKeys.length) {
+Promise.all([getCssMapKeys(), getUsedCssKeys()]).then(([cssMapKeys, usedCssKeys]) => {
+  const invalidCssKeys = usedCssKeys.difference(cssMapKeys);
+  if (invalidCssKeys.size) {
     console.log('keyToCss is called with outdated/invalid key arguments:');
-    invalidCssKeys.forEach(arg => console.log('-', arg));
+    invalidCssKeys.forEach(key => console.log('-', key));
   } else {
     console.log('all keyToCss keys are valid!');
   }

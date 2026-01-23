@@ -11,7 +11,7 @@ import { showErrorModal } from '../../utils/modals.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { popoverStackingContextFix } from '../../utils/post_popovers.js';
 
-// Clean up previous instance after addon reload
+// Clean up previous instance after addon reload.
 document.getElementById('quick-reblog')?.remove();
 
 const quickTagsTabId = 'xkit-quick-reblog-quick-tags-tab';
@@ -247,7 +247,7 @@ async function reblogPost ({ currentTarget }) {
         popupElement.remove();
         lastPostID = null;
       } else {
-        // popup was moved to another post during apiFetch
+        // Popup was moved to another post during apiFetch.
       }
 
       notify(response.displayText);

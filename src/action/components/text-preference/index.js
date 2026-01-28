@@ -27,8 +27,8 @@ class TextPreferenceElement extends CustomElement {
   constructor () {
     super(templateDocument, adoptedStyleSheets);
 
-    this.#inputElement = this.shadowRoot.querySelector('input');
-    this.#labelElement = this.shadowRoot.querySelector('label');
+    this.#inputElement = this.shadowRoot.getElementById('text');
+    this.#labelElement = this.#inputElement.labels[0];
   }
 
   /** @param {string} label Label displayed to the user to describe the preference. */
@@ -39,10 +39,10 @@ class TextPreferenceElement extends CustomElement {
   set value (value = '') { this.#inputElement.value = value; }
   get value () { return this.#inputElement.value; }
 
-  /** @type {(event: { currentTarget: HTMLInputElement }) => void} */
-  #onInput = ({ currentTarget }) => {
+  /** @type {(event: InputEvent) => void} */
+  #onInput = () => {
     const storageKey = `${this.featureName}.preferences.${this.preferenceName}`;
-    const storageValue = currentTarget.value;
+    const storageValue = this.#inputElement.value;
 
     clearTimeout(this.#timeoutID);
     this.#timeoutID = setTimeout(() => browser.storage.local.set({ [storageKey]: storageValue }), 500);

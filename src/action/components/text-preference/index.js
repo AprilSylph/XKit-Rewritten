@@ -39,8 +39,7 @@ class TextPreferenceElement extends CustomElement {
   set value (value = '') { this.#inputElement.value = value; }
   get value () { return this.#inputElement.value; }
 
-  /** @type {(event: InputEvent) => void} */
-  #onInput = () => {
+  /** @type {(event: InputEvent) => void} */ #onInput = () => {
     const storageKey = `${this.featureName}.preferences.${this.preferenceName}`;
     const storageValue = this.#inputElement.value;
 

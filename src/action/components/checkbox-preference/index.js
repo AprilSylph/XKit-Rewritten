@@ -38,8 +38,7 @@ class CheckboxPreferenceElement extends CustomElement {
   set value (value = false) { this.#inputElement.checked = value; }
   get value () { return this.#inputElement.checked; }
 
-  /** @type {(event: Event) => void} */
-  #onChange = () => {
+  /** @type {(event: Event) => void} */ #onChange = () => {
     const storageKey = `${this.featureName}.preferences.${this.preferenceName}`;
     const storageValue = this.#inputElement.checked;
 

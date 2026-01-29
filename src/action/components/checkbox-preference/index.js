@@ -4,10 +4,8 @@ const localName = 'checkbox-preference';
 
 const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
-    <li>
-      <input id="checkbox" type="checkbox">
-      <label for="checkbox"></label>
-    </li>
+    <input id="checkbox" type="checkbox">
+    <label for="checkbox"></label>
   </template>
 `, 'text/html');
 

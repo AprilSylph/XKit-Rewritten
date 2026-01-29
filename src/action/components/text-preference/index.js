@@ -4,10 +4,8 @@ const localName = 'text-preference';
 
 const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
-    <li>
-      <label for="text"></label>
-      <input id="text" type="text" size="28" spellcheck="false">
-    </li>
+    <label for="text"></label>
+    <input id="text" type="text" size="28" spellcheck="false">
   </template>
 `, 'text/html');
 

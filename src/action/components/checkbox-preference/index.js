@@ -26,8 +26,8 @@ class CheckboxPreferenceElement extends CustomElement {
   constructor () {
     super(templateDocument, adoptedStyleSheets);
 
-    this.#inputElement = this.shadowRoot.querySelector('input');
-    this.#labelElement = this.shadowRoot.querySelector('label');
+    this.#inputElement = this.shadowRoot.getElementById('checkbox');
+    this.#labelElement = this.#inputElement.labels[0];
   }
 
   /** @param {string} label Label displayed to the user to describe the preference. */
@@ -38,9 +38,11 @@ class CheckboxPreferenceElement extends CustomElement {
   set value (value = false) { this.#inputElement.checked = value; }
   get value () { return this.#inputElement.checked; }
 
-  #onChange = async ({ currentTarget }) => {
+  /** @type {(event: Event) => void} */ #onChange = () => {
     const storageKey = `${this.featureName}.preferences.${this.preferenceName}`;
-    browser.storage.local.set({ [storageKey]: currentTarget.checked });
+    const storageValue = this.#inputElement.checked;
+
+    browser.storage.local.set({ [storageKey]: storageValue });
   };
 
   connectedCallback () { this.#inputElement.addEventListener('change', this.#onChange); }

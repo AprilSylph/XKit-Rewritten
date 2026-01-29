@@ -47,8 +47,14 @@ class TextPreferenceElement extends CustomElement {
     this.#timeoutID = setTimeout(() => browser.storage.local.set({ [storageKey]: storageValue }), 500);
   };
 
-  connectedCallback () { this.#inputElement.addEventListener('input', this.#onInput); }
-  disconnectedCallback () { this.#inputElement.removeEventListener('input', this.#onInput); }
+  connectedCallback () {
+    this.role ??= 'listitem';
+    this.#inputElement.addEventListener('input', this.#onInput);
+  }
+
+  disconnectedCallback () {
+    this.#inputElement.removeEventListener('input', this.#onInput);
+  }
 }
 
 customElements.define(localName, TextPreferenceElement);

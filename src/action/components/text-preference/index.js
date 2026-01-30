@@ -13,7 +13,7 @@ const templateDocument = new DOMParser().parseFromString(`
 
 const adoptedStyleSheets = await fetchStyleSheets([
   '/lib/normalize.min.css',
-  './index.css'
+  './index.css',
 ].map(import.meta.resolve));
 
 class TextPreferenceElement extends CustomElement {

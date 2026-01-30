@@ -69,7 +69,7 @@ export const styleElement = buildStyle(`
 }
 ${keyToCss('background')}[${labelAttribute}="after"]::after,
 ${keyToCss('background')}[${labelAttribute}="before"]::before {
-  /* prevent double labels in recommended post cards */
+  /* Prevent double labels in recommended post cards. */
   display: none;
 }
 

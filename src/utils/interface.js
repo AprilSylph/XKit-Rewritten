@@ -110,6 +110,9 @@ export const displayInlineFlexUnlessDisabledAttr = 'data-xkit-display-inline-fle
  * static stylesheet. A CSS variable set to any global keyword is treated in
  * var() expressions as if it were undefined.
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/var
+ *
+ * Don't reference this to try to create on-disable behavior in rules in other
+ * src/content_scripts/*.css files: the rules themselves will be invalidated!
  */
 export const noneIfXkitDisabledVar = '--none-if-xkit-disabled';
 

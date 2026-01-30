@@ -95,7 +95,11 @@ export const getPostElements = postFilterOptions => filterPostElements([...docum
  */
 export const buildStyle = (css = '') => dom('style', { class: 'xkit' }, null, [css]);
 
-// Elements with these attributes will be immediately hidden when XKit Rewritten is disabled in Firefox.
+/**
+ * Elements with these attributes will be immediately hidden when XKit Rewritten
+ * is disabled in Firefox. Be sure that CSS that sets display: none on them for
+ * other reasons has higher than 0-1-0 specificity.
+ */
 export const displayBlockUnlessDisabledAttr = 'data-xkit-display-block';
 export const displayInlineBlockUnlessDisabledAttr = 'data-xkit-display-inline-block';
 export const displayFlexUnlessDisabledAttr = 'data-xkit-display-flex';

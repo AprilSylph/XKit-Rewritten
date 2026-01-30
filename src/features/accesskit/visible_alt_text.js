@@ -45,7 +45,7 @@ const processImages = function (imageElements) {
       click: event => {
         event.preventDefault();
         event.stopPropagation();
-      }
+      },
     }, [alt]);
     imageBlock.append(caption);
   }

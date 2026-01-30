@@ -78,11 +78,11 @@ const narrowSidebarAvatars = div(
         href: `/blog/${name}`,
         title: name,
         class: 'narrow-sidebar-avatar',
-        click: onClickNavigate
+        click: onClickNavigate,
       },
-      [img({ src: avatar.at(-1)?.url })]
-    )
-  )
+      [img({ src: avatar.at(-1)?.url })],
+    ),
+  ),
 );
 
 const processNavigationLinks = ([navigationLinks]) =>

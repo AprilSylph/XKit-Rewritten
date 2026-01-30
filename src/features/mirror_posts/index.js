@@ -9,10 +9,10 @@ const archiveDotOrgForm = dom('form', {
   method: 'post',
   action: 'https://web.archive.org/save',
   target: '_blank',
-  tabindex: -1
+  tabindex: -1,
 }, null, [
   dom('input', { hidden: true, name: 'url_preload', type: 'text' }),
-  dom('button', { class: 'blue', type: 'submit' }, null, ['Wayback Machine'])
+  dom('button', { class: 'blue', type: 'submit' }, null, ['Wayback Machine']),
 ]);
 
 const onButtonClicked = async function ({ currentTarget }) {
@@ -23,7 +23,7 @@ const onButtonClicked = async function ({ currentTarget }) {
     'button',
     { class: 'blue' },
     { click: () => window.open(`https://archive.today/?run=1&url=${encodeURIComponent(ampUrl)}`, '_blank') },
-    ['archive.today']
+    ['archive.today'],
   );
 
   archiveDotOrgForm.elements.url_preload.value = ampUrl;
@@ -31,7 +31,7 @@ const onButtonClicked = async function ({ currentTarget }) {
   showModal({
     title: meatballButtonLabel,
     message: ['Note: this will not work for dashboard-only blogs.'],
-    buttons: [modalCancelButton, archiveDotOrgForm, archiveTodayButton]
+    buttons: [modalCancelButton, archiveDotOrgForm, archiveTodayButton],
   });
 };
 

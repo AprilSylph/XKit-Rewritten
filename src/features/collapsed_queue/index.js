@@ -34,7 +34,7 @@ export const main = async function () {
 
   timeline = [
     runInQueue && anyQueueTimelineFilter,
-    runInDrafts && anyDraftsTimelineFilter
+    runInDrafts && anyDraftsTimelineFilter,
   ].filter(Boolean);
 
   onNewPosts.addListener(processPosts);

@@ -223,7 +223,7 @@ async function reblogPost ({ currentTarget }) {
   const tags = [
     ...tagsInput.value.split(','),
     ...reblogTag ? [reblogTag] : [],
-    ...(state === 'queue' && queueTag) ? [queueTag] : []
+    ...(state === 'queue' && queueTag) ? [queueTag] : [],
   ].join(',');
   const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } = await timelineObject(postElement);
 
@@ -235,7 +235,7 @@ async function reblogPost ({ currentTarget }) {
     parent_post_id: postID,
     parent_tumblelog_uuid: parentTumblelogUUID,
     reblog_key: reblogKey,
-    state
+    state,
   };
 
   try {
@@ -294,9 +294,9 @@ const renderQuickTags = () => browser.storage.local.get(quickTagsStorageKey)
         'data-tags': tagBundle.tags,
         click: onTagsButtonClick,
       }, [
-        span({}, [tagBundle.title])
-      ]))
-    )
+        span({}, [tagBundle.title]),
+      ])),
+    ),
   );
 
 const renderTagSuggestions = ({ blogName, content, layout, postAuthor, rebloggedRootName, tags, trail }) => {
@@ -313,9 +313,9 @@ const renderTagSuggestions = ({ blogName, content, layout, postAuthor, reblogged
         'data-tags': tag,
         click: onTagsButtonClick,
       }, [
-        span({}, [`#${tag}`])
-      ])
-    )
+        span({}, [`#${tag}`]),
+      ]),
+    ),
   );
 };
 
@@ -347,7 +347,7 @@ const updateQuickTags = (changes) => {
 
 const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) => {
   const {
-    [rememberedBlogStorageKey]: rememberedBlogs = {}
+    [rememberedBlogStorageKey]: rememberedBlogs = {},
   } = await browser.storage.local.get(rememberedBlogStorageKey);
 
   const selectedBlogHash = blogHashes.get(selectedBlog);
@@ -387,13 +387,13 @@ export const main = async function () {
     reblogTag,
     queueTag,
     alreadyRebloggedEnabled,
-    alreadyRebloggedLimit
+    alreadyRebloggedLimit,
   } = await getPreferences('quick_reblog'));
 
   blogSelector.replaceChildren(
     ...userBlogs.map(({ name, uuid }) => option({ value: uuid }, [name])),
     ...joinedCommunities.length ? [hr()] : [],
-    ...joinedCommunities.map(({ title, uuid, blog: { name } }) => option({ value: uuid }, [`${title} (${name})`]))
+    ...joinedCommunities.map(({ title, uuid, blog: { name } }) => option({ value: uuid }, [`${title} (${name})`])),
   );
 
   [...userBlogs, ...joinedCommunities].forEach((data) => {
@@ -410,7 +410,7 @@ export const main = async function () {
     accountKey = blogHashes.get(primaryBlog.uuid);
 
     const {
-      [rememberedBlogStorageKey]: rememberedBlogs = {}
+      [rememberedBlogStorageKey]: rememberedBlogs = {},
     } = await browser.storage.local.get(rememberedBlogStorageKey);
 
     const savedBlogHash = rememberedBlogs[accountKey];

@@ -30,8 +30,8 @@ export const createEditRequestBody = postData => {
     canBeTipped,
     communityLabels: {
       hasCommunityLabel,
-      categories: communityLabelCategories
-    }
+      categories: communityLabelCategories,
+    },
   } = postData;
 
   return {
@@ -47,7 +47,7 @@ export const createEditRequestBody = postData => {
 
     canBeTipped,
     hasCommunityLabel,
-    communityLabelCategories
+    communityLabelCategories,
   };
 };
 

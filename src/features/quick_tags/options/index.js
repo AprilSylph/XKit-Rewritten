@@ -14,7 +14,7 @@ const saveNewBundle = async event => {
 
   const tagBundle = {
     title: title.value,
-    tags: tags.value
+    tags: tags.value,
   };
 
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
@@ -36,8 +36,8 @@ Sortable.create(bundlesList, {
       const newTagBundles = order.map(i => tagBundles[i]);
 
       browser.storage.local.set({ [storageKey]: newTagBundles });
-    }
-  }
+    },
+  },
 });
 
 const editTagBundle = async ({ currentTarget }) => {

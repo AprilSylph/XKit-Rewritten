@@ -42,7 +42,7 @@ const localExport = async function () {
 
   const tempLink = Object.assign(document.createElement('a'), {
     href: blobUrl,
-    download: `XKit Backup @ ${dateString}.json`
+    download: `XKit Backup @ ${dateString}.json`,
   });
 
   document.documentElement.appendChild(tempLink);

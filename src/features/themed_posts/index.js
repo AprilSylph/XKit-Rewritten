@@ -38,7 +38,7 @@ const colorsAreSimilar = (hexA, hexB) => {
   const componentsA = hexToRGBComponents(hexA);
   const componentsB = hexToRGBComponents(hexB);
   return Object.keys(componentsA).every(
-    i => Math.abs(componentsA[i] - componentsB[i]) < 32
+    i => Math.abs(componentsA[i] - componentsB[i]) < 32,
   );
 };
 
@@ -61,7 +61,7 @@ const processPosts = async function (postElements) {
 
     const blogData = [
       visibleBlog,
-      ...reblogTrailTheming ? trail.map(item => item.blog).filter(item => item !== undefined) : []
+      ...reblogTrailTheming ? trail.map(item => item.blog).filter(item => item !== undefined) : [],
     ];
 
     blogData.forEach(({ name, theme }) => {
@@ -73,7 +73,7 @@ const processPosts = async function (postElements) {
         const {
           backgroundColor,
           titleColor,
-          linkColor
+          linkColor,
         } = theme;
 
         const backgroundColorRGB = hexToRGB(backgroundColor);

@@ -76,7 +76,7 @@ export const main = async function () {
     likedColour,
     tagColour,
     colouredTags,
-    colourSourceTags
+    colourSourceTags,
   } = await getPreferences('painter'));
 
   tagArray = colouredTags
@@ -84,7 +84,7 @@ export const main = async function () {
     .map(tag => tag
       .trim()
       .replace(/#/g, '')
-      .toLowerCase()
+      .toLowerCase(),
     );
 
   onNewPosts.addListener(paint);

@@ -123,7 +123,7 @@ const isAnimated = memoize(async sourceUrl => {
     const decoder = new ImageDecoder({
       type: contentType,
       data: response.body,
-      preferAnimation: true
+      preferAnimation: true,
     });
     await decoder.decode();
     return decoder.tracks.selectedTrack.animated;
@@ -143,7 +143,7 @@ const pauseGif = async function (gifElement) {
         width: image.naturalWidth,
         height: image.naturalHeight,
         class: `${gifElement.className} ${canvasClass}`,
-        style: gifElement.getAttribute('style')
+        style: gifElement.getAttribute('style'),
       });
       canvasElement.getContext('2d').drawImage(image, 0, 0);
       gifElement.after(canvasElement);
@@ -227,7 +227,7 @@ export const main = async function () {
         'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
         'topPost', // activity page top post
         'takeoverBanner', // advertisement
-        'mrecContainer' // advertisement
+        'mrecContainer', // advertisement
       )}
     ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
   `;
@@ -237,19 +237,19 @@ export const main = async function () {
     ${keyToCss(
       'communityHeaderImage', // search page tags section header: https://www.tumblr.com/search/gif?v=tag
       'bannerImage', // tagged page sidebar header: https://www.tumblr.com/tagged/gif
-      'tagChicletWrapper' // "trending" / "your tags" timeline carousel entry: https://www.tumblr.com/dashboard/trending, https://www.tumblr.com/dashboard/hubs
+      'tagChicletWrapper', // "trending" / "your tags" timeline carousel entry: https://www.tumblr.com/dashboard/trending, https://www.tumblr.com/dashboard/hubs
     )}[style*=".gif"]
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
 
   pageModifications.register(
     `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`, // recommended blog carousel entry: https://www.tumblr.com/tagged/gif
-    processHoverableElements
+    processHoverableElements,
   );
 
   pageModifications.register(
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
-    processRows
+    processRows,
   );
 
   browser.storage.local.onChanged.addListener(onStorageChanged);
@@ -264,7 +264,7 @@ export const clean = async function () {
   pageModifications.unregister(processHoverableElements);
 
   [...document.querySelectorAll(`.${containerClass}`)].forEach(wrapper =>
-    wrapper.replaceWith(...wrapper.children)
+    wrapper.replaceWith(...wrapper.children),
   );
 
   $(`.${canvasClass}`).remove();

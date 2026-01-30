@@ -20,7 +20,7 @@ const processPosts = (postElements) => {
       [blog, ...trail.map(({ blog }) => blog)]
         .filter(Boolean)
         .filter(({ isBlockedFromPrimary }) => isBlockedFromPrimary)
-        .map(({ name }) => name)
+        .map(({ name }) => name),
     );
 
     for (const blogName of blockedBlogNames) {

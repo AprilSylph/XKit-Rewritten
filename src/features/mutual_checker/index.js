@@ -114,7 +114,7 @@ const getIsFollowing = async (blogName, element) => {
     const blog = [
       await blogData(element),
       (await timelineObject(element))?.blog,
-      (await timelineObject(element))?.authorBlog
+      (await timelineObject(element))?.authorBlog,
     ].find((data) => blogName === data?.name);
 
     following[blogName] = blog
@@ -156,12 +156,12 @@ const createIcon = (blogName, color = 'rgb(var(--black))') =>
     xmlns: 'http://www.w3.org/2000/svg',
     class: mutualIconClass,
     viewBox: '0 0 1000 1000',
-    fill: color
+    fill: color,
   }, null, [
     dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
-      translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
+      translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName),
     ]),
-    dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path })
+    dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path }),
   ]);
 
 export const clean = async function () {

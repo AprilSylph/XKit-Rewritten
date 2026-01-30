@@ -19,7 +19,7 @@ export const followingTimelineFilter = ({ dataset: { timeline, timelineId } }) =
 export const followingTimelineSelector = createSelector(
   `[data-timeline="${'/v2/timeline/dashboard'}"]`,
   `[data-timeline-id="${'/dashboard/following'}"]`,
-  `[data-timeline-id^="${'following-'}"]`
+  `[data-timeline-id^="${'following-'}"]`,
 );
 
 export const forYouTimelineFilter = ({ dataset: { timeline, timelineId } }) =>

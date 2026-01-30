@@ -62,8 +62,8 @@ const processLabels = labels => labels.forEach(label => {
         'svg',
         { class: iconClass, width: 14, height: 14, xmlns: 'http://www.w3.org/2000/svg' },
         null,
-        [dom('use', { href: iconHref, xmlns: 'http://www.w3.org/2000/svg' })]
-      )
+        [dom('use', { href: iconHref, xmlns: 'http://www.w3.org/2000/svg' })],
+      ),
     );
   }
 

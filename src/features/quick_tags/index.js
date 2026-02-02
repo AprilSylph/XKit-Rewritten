@@ -156,31 +156,43 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
       }
     });
 
+    await updatePostOnPage(postElement, ['tags', 'tagsV2']);
     notify(displayText);
   } else {
     await megaEdit([postId], { mode: 'add', tags: tagsToAdd });
+
+    await updatePostOnPage(postElement, ['tags', 'tagsV2']);
     notify(`Edited legacy post on ${blogName}`);
   }
-
-  await updatePostOnPage(postElement, ['tags', 'tagsV2']);
 };
 
 const processFormSubmit = function ({ currentTarget }) {
+  if (popupElement.classList.contains('processing')) { return; }
+  popupElement.classList.add('processing');
+
   const postElement = currentTarget.closest(postSelector);
   const inputTags = popupInput.value.split(',').map(inputTag => inputTag.trim());
 
-  addTagsToPost({ postElement, inputTags }).catch(showErrorModal);
-  currentTarget.reset();
+  addTagsToPost({ postElement, inputTags })
+    .then(() => currentTarget.reset())
+    .catch(showErrorModal)
+    .finally(() => popupElement.classList.remove('processing'));
 };
 
 const processBundleClick = function ({ target }) {
   if (target.tagName !== 'BUTTON') { return; }
+  if (popupElement.classList.contains('processing')) { return; }
+  popupElement.classList.add('processing');
 
   const postElement = target.closest(postSelector);
   const inputTags = target.dataset.tags.split(',').map(inputTag => inputTag.trim());
 
-  addTagsToPost({ postElement, inputTags }).catch(showErrorModal);
-  popupElement.remove();
+  addTagsToPost({ postElement, inputTags })
+    .catch(showErrorModal)
+    .finally(() => {
+      popupElement.classList.remove('processing');
+      popupElement.remove();
+    });
 };
 
 const processPostOptionBundleClick = function ({ target }) {

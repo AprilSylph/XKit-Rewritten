@@ -91,3 +91,10 @@
 #quick-tags-post-option button:not(:last-child) {
   margin-bottom: 2px;
 }
+
+#quick-tags.processing input,
+#quick-tags.processing button,
+#quick-tags-post-option.processing button {
+  cursor: not-allowed;
+  opacity: 0.65;
+}

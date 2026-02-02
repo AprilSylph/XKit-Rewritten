@@ -14,6 +14,9 @@ const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';
 const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
+// Remove outdated elements when loading module
+$(`.${buttonClass}`).remove();
+
 export const styleElement = buildStyle(`
 button.xkit-quote-replies {
   position: relative;

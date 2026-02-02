@@ -78,7 +78,7 @@ const deleteBundle = async ({ currentTarget }) => {
 const renderBundles = async function () {
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
 
-  bundlesList.append(...tagBundles.map(({ title, tags }, index) => {
+  bundlesList.replaceChildren(...tagBundles.map(({ title, tags }, index) => {
     const bundleTemplateClone = bundleTemplate.content.cloneNode(true);
 
     bundleTemplateClone.querySelector('.bundle').id = index;
@@ -95,7 +95,6 @@ const renderBundles = async function () {
 
 browser.storage.local.onChanged.addListener((changes) => {
   if (Object.keys(changes).includes(storageKey)) {
-    bundlesList.textContent = '';
     renderBundles();
   }
 });

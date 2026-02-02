@@ -1,6 +1,6 @@
 import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { canvas, div } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { memoize } from '../../utils/memoize.js';
@@ -139,14 +139,14 @@ const pauseGif = async function (gifElement) {
   image.src = gifElement.currentSrc;
   image.onload = () => {
     if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      canvas.className = gifElement.className;
-      canvas.classList.add(canvasClass);
-      canvas.setAttribute('style', gifElement.getAttribute('style'));
-      canvas.getContext('2d').drawImage(image, 0, 0);
-      gifElement.after(canvas);
+      const canvasElement = canvas({
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+        class: `${gifElement.className} ${canvasClass}`,
+        style: gifElement.getAttribute('style')
+      });
+      canvasElement.getContext('2d').drawImage(image, 0, 0);
+      gifElement.after(canvasElement);
       addLabel(gifElement);
     }
   };
@@ -193,7 +193,7 @@ const processRows = function (rowsElements) {
       if (row.previousElementSibling?.classList?.contains(containerClass)) {
         row.previousElementSibling.append(row);
       } else {
-        const wrapper = dom('div', { class: containerClass, [hoverContainerAttribute]: '' });
+        const wrapper = div({ class: containerClass, [hoverContainerAttribute]: '' });
         row.replaceWith(wrapper);
         wrapper.append(row);
       }

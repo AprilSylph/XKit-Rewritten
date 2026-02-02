@@ -1,10 +1,15 @@
-.xkit-vanilla-audio-done [role="slider"],
-.xkit-vanilla-audio-done [role="button"] {
+.xkit-vanilla-audio-done {
+  cursor: auto;
+}
+
+.xkit-vanilla-audio-done :is(button, [role="slider"]) {
   display: none;
 }
 
 .xkit-vanilla-audio-done .trackInfo {
   padding-left: 20px;
+  pointer-events: auto;
+  user-select: auto;
 }
 
 .xkit-vanilla-audio-done ~ audio[controls] {

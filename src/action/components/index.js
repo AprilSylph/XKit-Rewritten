@@ -29,3 +29,16 @@ export function fetchStyleSheets (urls) {
     .forEach(url => cachedStyleSheets.set(url, fetchStyleSheet(url)));
   return Promise.all(urls.map(url => cachedStyleSheets.get(url)));
 }
+
+const parser = new DOMParser();
+export const domParse = (strings, ...values) => {
+  // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/raw#building_an_identity_tag
+  const templateStringValue = String.raw({ raw: strings }, ...values);
+  return parser.parseFromString(templateStringValue, 'text/html');
+};
+
+const domParseCache = new Map();
+export const domParseMemo = (strings, ...values) => {
+  domParseCache.has(strings) || domParseCache.set(strings, domParse(strings, ...values));
+  return domParseCache.get(strings);
+};

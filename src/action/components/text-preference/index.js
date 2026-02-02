@@ -1,15 +1,15 @@
-import { CustomElement, fetchStyleSheets } from '../index.js';
+import { CustomElement, fetchStyleSheets, domParse as html } from '../index.js';
 
 const localName = 'text-preference';
 
-const templateDocument = new DOMParser().parseFromString(`
+const templateDocument = html`
   <template id="${localName}">
     <li>
       <label for="text"></label>
       <input id="text" type="text" size="28" spellcheck="false">
     </li>
   </template>
-`, 'text/html');
+`;
 
 const adoptedStyleSheets = await fetchStyleSheets([
   '/lib/normalize.min.css',

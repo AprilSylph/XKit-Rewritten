@@ -1,9 +1,9 @@
-import { CustomElement, fetchStyleSheets } from '../index.js';
+import { CustomElement, fetchStyleSheets, domParse as html } from '../index.js';
 import Coloris from '../../../lib/coloris.js';
 
 const localName = 'xkit-feature';
 
-const templateDocument = new DOMParser().parseFromString(`
+const templateDocument = html`
   <template id="${localName}">
     <details>
       <summary>
@@ -24,7 +24,7 @@ const templateDocument = new DOMParser().parseFromString(`
       <ul class="preferences"></ul>
     </details>
   </template>
-`, 'text/html');
+`;
 
 const adoptedStyleSheets = await fetchStyleSheets([
   '/lib/coloris.css',

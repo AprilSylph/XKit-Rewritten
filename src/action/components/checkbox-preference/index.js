@@ -1,15 +1,15 @@
-import { CustomElement, fetchStyleSheets } from '../index.js';
+import { CustomElement, fetchStyleSheets, domParse as html } from '../index.js';
 
 const localName = 'checkbox-preference';
 
-const templateDocument = new DOMParser().parseFromString(`
+const templateDocument = html`
   <template id="${localName}">
     <li>
       <input id="checkbox" type="checkbox">
       <label for="checkbox"></label>
     </li>
   </template>
-`, 'text/html');
+`;
 
 const adoptedStyleSheets = await fetchStyleSheets([
   '/lib/normalize.min.css',

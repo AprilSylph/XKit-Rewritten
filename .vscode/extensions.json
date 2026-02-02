@@ -1,5 +1,6 @@
 {
     "recommendations": [
+        "bierner.lit-html",
         "dbaeumer.vscode-eslint",
         "editorconfig.editorconfig",
         "github.github-vscode-theme",

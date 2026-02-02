@@ -36,9 +36,3 @@ export const domParse = (strings, ...values) => {
   const templateStringValue = String.raw({ raw: strings }, ...values);
   return parser.parseFromString(templateStringValue, 'text/html');
 };
-
-const domParseCache = new Map();
-export const domParseMemo = (strings, ...values) => {
-  domParseCache.has(strings) || domParseCache.set(strings, domParse(strings, ...values));
-  return domParseCache.get(strings);
-};

@@ -4,10 +4,8 @@ const localName = 'text-preference';
 
 const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
-    <li>
-      <label for="text"></label>
-      <input id="text" type="text" size="28" spellcheck="false">
-    </li>
+    <label for="text"></label>
+    <input id="text" type="text" size="28" spellcheck="false">
   </template>
 `, 'text/html');
 
@@ -47,8 +45,14 @@ class TextPreferenceElement extends CustomElement {
     this.#timeoutID = setTimeout(() => browser.storage.local.set({ [storageKey]: storageValue }), 500);
   };
 
-  connectedCallback () { this.#inputElement.addEventListener('input', this.#onInput); }
-  disconnectedCallback () { this.#inputElement.removeEventListener('input', this.#onInput); }
+  connectedCallback () {
+    this.role ??= 'listitem';
+    this.#inputElement.addEventListener('input', this.#onInput);
+  }
+
+  disconnectedCallback () {
+    this.#inputElement.removeEventListener('input', this.#onInput);
+  }
 }
 
 customElements.define(localName, TextPreferenceElement);

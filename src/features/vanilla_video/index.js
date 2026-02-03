@@ -15,7 +15,7 @@ const cloneVideoElements = videoElements => videoElements.forEach(videoElement =
     crossOrigin: videoElement.crossOrigin,
     poster: videoElement.poster,
     volume: defaultVolume / 100,
-    className: vanillaVideoClass
+    className: vanillaVideoClass,
   });
   newVideoElement.setAttribute('playsinline', true);
 
@@ -26,7 +26,7 @@ const cloneVideoElements = videoElements => videoElements.forEach(videoElement =
 
   const videoSources = [...videoElement.children];
   newVideoElement.append(
-    ...videoSources.map(sourceElement => sourceElement.cloneNode(true))
+    ...videoSources.map(sourceElement => sourceElement.cloneNode(true)),
   );
 
   videoElement.before(newVideoElement);

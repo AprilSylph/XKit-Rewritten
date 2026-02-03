@@ -57,6 +57,7 @@
         "content_scripts/main.js"
       ],
       "css": [
+        "content_scripts/interface.css",
         "content_scripts/control_buttons.css",
         "content_scripts/meatballs.css",
         "content_scripts/sidebar.css",

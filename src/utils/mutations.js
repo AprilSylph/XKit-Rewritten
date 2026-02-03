@@ -20,8 +20,8 @@ export const pageModifications = Object.freeze({
 
   /**
    * Register a page modification
-   * @param {string} selector - CSS selector for elements to target
-   * @param {Function} modifierFunction - Function to handle matching elements (accepts one Element[] argument)
+   * @param {string} selector CSS selector for elements to target
+   * @param {Function} modifierFunction Function to handle matching elements (accepts one Element[] argument)
    */
   register (selector, modifierFunction) {
     if (this.listeners.has(modifierFunction) === false) {
@@ -32,7 +32,7 @@ export const pageModifications = Object.freeze({
 
   /**
    * Unregister a page modification
-   * @param {Function} modifierFunction - Previously-registered function to remove
+   * @param {Function} modifierFunction Previously-registered function to remove
    */
   unregister (modifierFunction) {
     this.listeners.delete(modifierFunction);
@@ -40,7 +40,7 @@ export const pageModifications = Object.freeze({
 
   /**
    * Run a page modification on all existing matching elements
-   * @param {Function} modifierFunction - Previously-registered function to run
+   * @param {Function} modifierFunction Previously-registered function to run
    */
   trigger (modifierFunction) {
     const selector = this.listeners.get(modifierFunction);
@@ -55,22 +55,22 @@ export const pageModifications = Object.freeze({
 
     const matchingElements = [
       ...rootNode.querySelectorAll(selector),
-      ...headNode.querySelectorAll(selector)
+      ...headNode.querySelectorAll(selector),
     ];
     if (matchingElements.length !== 0) {
       modifierFunction(matchingElements);
     }
-  }
+  },
 });
 
 export const onNewPosts = Object.freeze({
   addListener: callback => pageModifications.register(`${postSelector}:not(.sortable-fallback) article`, callback),
-  removeListener: callback => pageModifications.unregister(callback)
+  removeListener: callback => pageModifications.unregister(callback),
 });
 
 export const onNewNotifications = Object.freeze({
   addListener: callback => pageModifications.register(notificationSelector, callback),
-  removeListener: callback => pageModifications.unregister(callback)
+  removeListener: callback => pageModifications.unregister(callback),
 });
 
 const onBeforeRepaint = () => {
@@ -91,7 +91,7 @@ const onBeforeRepaint = () => {
 
     const matchingElements = [
       ...addedNodes.filter(addedNode => addedNode.matches(selector)),
-      ...addedNodes.flatMap(addedNode => [...addedNode.querySelectorAll(selector)])
+      ...addedNodes.flatMap(addedNode => [...addedNode.querySelectorAll(selector)]),
     ].filter((value, index, array) => index === array.indexOf(value));
 
     if (matchingElements.length !== 0) {

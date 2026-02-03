@@ -14,7 +14,7 @@ const targetWrapperSelector = keyToCss(
   'targetWrapper',
   'targetWrapperBlock',
   'targetWrapperFlex',
-  'targetWrapperInline'
+  'targetWrapperInline',
 );
 
 /**

@@ -40,7 +40,7 @@ const muteNotificationsMessage = [
   'Unlike Tumblr\'s option to "Mute notifications", this will not prevent notifications for this post from being created, so they will still increment your unread notification count.',
   '\n\n',
   'You can use "Mute Notifications" in addition to or instead of this feature. ',
-  'It will completely prevent the post from generating notifications while it is enabled, and can be applied temporarily or permanently.'
+  'It will completely prevent the post from generating notifications while it is enabled, and can be applied temporarily or permanently.',
 ];
 
 const onButtonClicked = async function ({ currentTarget }) {
@@ -56,7 +56,7 @@ const onButtonClicked = async function ({ currentTarget }) {
   const message = shouldBlockNotifications
     ? [
         'Notifications for this post will be hidden from your activity feed.',
-        ...(muted ? [] : muteNotificationsMessage)
+        ...(muted ? [] : muteNotificationsMessage),
       ]
     : ['Notifications for this post will appear in your activity feed again.'];
 
@@ -79,9 +79,9 @@ const onButtonClicked = async function ({ currentTarget }) {
         click () {
           hideModal();
           saveNotificationPreference();
-        }
-      }, [textContent])
-    ]
+        },
+      }, [textContent]),
+    ],
   });
 };
 

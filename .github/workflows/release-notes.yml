@@ -8,13 +8,16 @@ on:
         type: string
         required: false
 
+permissions:
+  contents: read
+
 jobs:
   create:
     name: Create
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 

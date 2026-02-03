@@ -7,13 +7,21 @@ const addedNodesPool = [];
 let repaintQueued = false;
 let timerId;
 
+const isolateErrors = callback => {
+  try {
+    callback();
+  } catch (exception) {
+    console.error(exception);
+  }
+};
+
 export const pageModifications = Object.freeze({
   listeners: new Map(),
 
   /**
    * Register a page modification
-   * @param {string} selector - CSS selector for elements to target
-   * @param {Function} modifierFunction - Function to handle matching elements (accepts one Element[] argument)
+   * @param {string} selector CSS selector for elements to target
+   * @param {Function} modifierFunction Function to handle matching elements (accepts one Element[] argument)
    */
   register (selector, modifierFunction) {
     if (this.listeners.has(modifierFunction) === false) {
@@ -24,7 +32,7 @@ export const pageModifications = Object.freeze({
 
   /**
    * Unregister a page modification
-   * @param {Function} modifierFunction - Previously-registered function to remove
+   * @param {Function} modifierFunction Previously-registered function to remove
    */
   unregister (modifierFunction) {
     this.listeners.delete(modifierFunction);
@@ -32,7 +40,7 @@ export const pageModifications = Object.freeze({
 
   /**
    * Run a page modification on all existing matching elements
-   * @param {Function} modifierFunction - Previously-registered function to run
+   * @param {Function} modifierFunction Previously-registered function to run
    */
   trigger (modifierFunction) {
     const selector = this.listeners.get(modifierFunction);
@@ -56,7 +64,7 @@ export const pageModifications = Object.freeze({
 });
 
 export const onNewPosts = Object.freeze({
-  addListener: callback => pageModifications.register(`${postSelector} article`, callback),
+  addListener: callback => pageModifications.register(`${postSelector}:not(.sortable-fallback) article`, callback),
   removeListener: callback => pageModifications.unregister(callback)
 });
 
@@ -77,7 +85,7 @@ const onBeforeRepaint = () => {
   for (const [modifierFunction, selector] of pageModifications.listeners) {
     if (modifierFunction.length === 0) {
       const shouldRun = addedNodes.some(addedNode => addedNode.matches(selector) || addedNode.querySelector(selector) !== null);
-      if (shouldRun) modifierFunction();
+      if (shouldRun) isolateErrors(() => modifierFunction());
       continue;
     }
 
@@ -87,7 +95,7 @@ const onBeforeRepaint = () => {
     ].filter((value, index, array) => index === array.indexOf(value));
 
     if (matchingElements.length !== 0) {
-      modifierFunction(matchingElements);
+      isolateErrors(() => modifierFunction(matchingElements));
     }
   }
 };

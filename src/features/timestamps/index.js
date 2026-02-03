@@ -92,7 +92,7 @@ const constructISOString = function (unixTime) {
 };
 
 const constructRelativeTimeString = function (unixTime) {
-  const now = Math.trunc(new Date().getTime() / 1000);
+  const now = Math.trunc(Date.now() / 1000);
   const unixDiff = unixTime - now;
   const unixDiffAbsolute = Math.abs(unixDiff);
 
@@ -175,7 +175,7 @@ const addReblogTimestamps = async function () {
         timestampElement.textContent = constructTimeString(result);
         timestampElement.title = constructRelativeTimeString(result);
       }).catch(exception => {
-        timestampElement.textContent = (exception.body && exception.body.meta) ? exception.body.meta.msg : '';
+        timestampElement.textContent = exception.body?.meta?.msg ?? '';
       });
     });
   });
@@ -214,7 +214,7 @@ const preferenceHandlers = {
   }
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes) {
   ({ alwaysShowYear, headerTimestamps, isoFormat, reblogTimestamps } = await getPreferences('timestamps'));
 
   const changesKeys = Object.keys(changes);

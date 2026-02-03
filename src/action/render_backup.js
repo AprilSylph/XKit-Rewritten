@@ -40,9 +40,10 @@ const localExport = async function () {
 
   const dateString = `${fourDigitYear}-${twoDigitMonth}-${twoDigitDate}`;
 
-  const tempLink = document.createElement('a');
-  tempLink.href = blobUrl;
-  tempLink.download = `XKit Backup @ ${dateString}.json`;
+  const tempLink = Object.assign(document.createElement('a'), {
+    href: blobUrl,
+    download: `XKit Backup @ ${dateString}.json`
+  });
 
   document.documentElement.appendChild(tempLink);
   tempLink.click();
@@ -78,11 +79,7 @@ const localRestore = async function () {
 
 const renderLocalBackup = async function () {
   updateLocalExportDisplay();
-  browser.storage.onChanged.addListener((changes, areaName) => {
-    if (areaName === 'local') {
-      updateLocalExportDisplay();
-    }
-  });
+  browser.storage.local.onChanged.addListener(updateLocalExportDisplay);
 
   localCopyButton.addEventListener('click', localCopy);
   localDownloadButton.addEventListener('click', localExport);

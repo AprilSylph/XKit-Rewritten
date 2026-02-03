@@ -74,7 +74,7 @@ ${keyToCss('cell')}, ${postSelector}
     article > header,
     article ${keyToCss('reblog')}
   ) {
-  max-width: unset;
+  max-width: unset !important;
 }
 
 /* Center non-expanded content */
@@ -107,7 +107,7 @@ ${keyToCss('cell')}, ${postSelector}
 /* Fix ad containers */
 ${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner')},
 ${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner')} header {
-  max-width: unset;
+  max-width: unset !important;
 }
 [data-is-resizable="true"][style="width: 540px;"],
 ${keyToCss('takeoverBanner')} {
@@ -133,7 +133,7 @@ const processPostImages = images => images.forEach(image => {
   }
 });
 
-export const onStorageChanged = async (changes, areaName) =>
+export const onStorageChanged = async (changes) =>
   Object.keys(changes).some(key => key.startsWith('panorama')) && main();
 
 export const main = async () => {
@@ -146,7 +146,7 @@ export const main = async () => {
   } = await getPreferences('panorama');
 
   document.documentElement.style.setProperty(maxPostWidthVar, maxPostWidth);
-  document.documentElement.classList[expandPostMedia ? 'add' : 'remove'](expandMediaClass);
+  document.documentElement.classList.toggle(expandMediaClass, expandPostMedia);
 
   document.documentElement.append(styleElement);
   mainEnable ? document.documentElement.append(mainStyleElement) : mainStyleElement.remove();

@@ -24,7 +24,7 @@ export const styleElement = buildStyle(`
 
 let timeoutID;
 
-const onLoadersAdded = loaders => {
+const onLoadersAdded = () => {
   if (active) {
     clearTimeout(timeoutID);
   }
@@ -32,7 +32,7 @@ const onLoadersAdded = loaders => {
 
 const scrollToBottom = () => {
   clearTimeout(timeoutID);
-  window.scrollTo({ top: document.documentElement.scrollHeight });
+  requestAnimationFrame(() => window.scrollTo({ top: document.documentElement.scrollHeight }));
 
   timeoutID = setTimeout(() => {
     if (!document.querySelector(knightRiderLoaderSelector)) {
@@ -79,7 +79,7 @@ const addButtonToPage = async function ([scrollToTopButton]) {
     scrollToBottomButton.addEventListener('click', onclick);
     scrollToBottomButton.id = scrollToBottomButtonId;
 
-    scrollToBottomButton.classList[active ? 'add' : 'remove'](activeClass);
+    scrollToBottomButton.classList.toggle(activeClass, active);
   }
 
   scrollToTopButton.after(scrollToBottomButton);

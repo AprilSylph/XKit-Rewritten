@@ -1,0 +1,10 @@
+{
+  "title": "Sidebar Blogs",
+  "description": "Always show your blogs in the sidebar",
+  "icon": {
+    "class_name": "ri-account-circle-line",
+    "color": "white",
+    "background_color": "#5A96C5"
+  },
+  "relatedTerms": [ "Header Options" ]
+}

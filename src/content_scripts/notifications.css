@@ -30,13 +30,11 @@
 }
 
 #xkit-toasts[data-in-sidebar="true"] {
-  width: 320px;
   margin-bottom: 1ch;
 }
 
 #xkit-toasts[data-in-sidebar="true"] div {
   border-top: none;
-
   text-align: left;
 }
 

@@ -30,7 +30,7 @@ export const main = async () =>
       if (tags.length) {
         filteredScreen.parentElement.setAttribute(tagsAttribute, tags.map(tag => `#${tag}`).join(' '.repeat(3)));
       }
-    })
+    }),
   );
 
 export const clean = () => $(`[${tagsAttribute}]`).removeAttr(tagsAttribute);

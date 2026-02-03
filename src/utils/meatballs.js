@@ -1,6 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
-import { getClosestRenderedElement, postSelector } from './interface.js';
+import { displayBlockUnlessDisabledAttr, getClosestRenderedElement, postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { blogData, timelineObject } from './react_props.js';
 
@@ -78,6 +78,7 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
     const meatballItemButton = dom('button', {
       class: 'xkit-meatball-button',
       [`data-xkit-${type}-meatball-button`]: id,
+      [displayBlockUnlessDisabledAttr]: '',
       hidden: true,
     }, {
       click: onclick,

@@ -17,7 +17,7 @@
       clean,
       stylesheet,
       styleElement,
-      onStorageChanged
+      onStorageChanged,
     } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
 
     if (main) {
@@ -26,9 +26,9 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: browser.runtime.getURL(`/features/${name}/index.css?t=${timestamp}`)
+        href: browser.runtime.getURL(`/features/${name}/index.css?t=${timestamp}`),
+        className: 'xkit',
       });
-      link.className = 'xkit';
       document.documentElement.appendChild(link);
     }
     if (styleElement) {
@@ -36,28 +36,26 @@
       document.documentElement.append(styleElement);
     }
 
-    restartListeners[name] = async (changes, areaName) => {
-      if (areaName !== 'local') return;
-
+    restartListeners[name] = async (changes) => {
       const { [enabledFeaturesKey]: enabledFeatures } = changes;
       if (enabledFeatures && !enabledFeatures.newValue.includes(name)) return;
 
       if (onStorageChanged instanceof Function) {
-        onStorageChanged(changes, areaName);
+        onStorageChanged(changes);
       } else if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
         await clean?.();
         await main?.();
       }
     };
 
-    browser.storage.onChanged.addListener(restartListeners[name]);
+    browser.storage.local.onChanged.addListener(restartListeners[name]);
   };
 
   const destroyFeature = async function (name) {
     const {
       clean,
       stylesheet,
-      styleElement
+      styleElement,
     } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
 
     if (clean) {
@@ -70,15 +68,11 @@
       styleElement.remove();
     }
 
-    browser.storage.onChanged.removeListener(restartListeners[name]);
+    browser.storage.local.onChanged.removeListener(restartListeners[name]);
     delete restartListeners[name];
   };
 
-  const onStorageChanged = async function (changes, areaName) {
-    if (areaName !== 'local') {
-      return;
-    }
-
+  const onStorageChanged = async function (changes) {
     const { [enabledFeaturesKey]: enabledFeatures } = changes;
 
     if (enabledFeatures) {
@@ -104,25 +98,26 @@
     document.documentElement.addEventListener('xkit-injection-ready', resolve, { once: true });
 
     const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
-    const script = document.createElement('script');
-    script.type = 'module';
-    script.nonce = nonce;
-    script.src = browser.runtime.getURL(`/main_world/index.js?t=${timestamp}`);
+    const script = Object.assign(document.createElement('script'), {
+      type: 'module',
+      nonce,
+      src: browser.runtime.getURL(`/main_world/index.js?t=${timestamp}`),
+    });
     document.documentElement.append(script);
   });
 
   const init = async function () {
     $('style.xkit, link.xkit').remove();
 
-    browser.storage.onChanged.addListener(onStorageChanged);
+    browser.storage.local.onChanged.addListener(onStorageChanged);
 
     const [
       installedFeatures,
-      { [enabledFeaturesKey]: enabledFeatures = [] }
+      { [enabledFeaturesKey]: enabledFeatures = [] },
     ] = await Promise.all([
       getInstalledFeatures(),
       browser.storage.local.get(enabledFeaturesKey),
-      initMainWorld()
+      initMainWorld(),
     ]);
 
     /**

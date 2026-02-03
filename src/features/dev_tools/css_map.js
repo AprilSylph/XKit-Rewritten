@@ -44,7 +44,7 @@ const onBeforeRepaint = () => {
   const matchingElements = [
     ...addedNodes.filter(addedNode => addedNode.matches(selector)),
     ...addedNodes.flatMap(addedNode => [...addedNode.querySelectorAll(selector)]),
-    ...attributeTargets
+    ...attributeTargets,
   ].filter((value, index, array) => index === array.indexOf(value));
 
   processElements(matchingElements);
@@ -80,7 +80,7 @@ const observe = () =>
   observer.observe(rootNode, {
     childList: true,
     subtree: true,
-    attributeFilter: ['class']
+    attributeFilter: ['class'],
   });
 const disconnect = () => observer.disconnect();
 

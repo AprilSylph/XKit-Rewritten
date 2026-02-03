@@ -13,7 +13,7 @@ const addToastContainerToPage = () => {
     document.body.querySelector(`${drawerContentSelector} ${sidebarSelector}`),
     document.body.querySelector(drawerContentSelector),
     document.body.querySelector(`${desktopLayoutSelector} ${sidebarSelector}`),
-    document.body
+    document.body,
   ].find(candidateNode => candidateNode !== null && getComputedStyle(candidateNode).display !== 'none');
 
   if (targetNode.children.namedItem(toastContainerId) === null) {
@@ -28,7 +28,7 @@ const addToastContainerToPage = () => {
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
- * @param {string} textContent - Text to display to the user as a notification
+ * @param {string} textContent Text to display to the user as a notification
  */
 export const notify = async textContent => {
   addToastContainerToPage();

@@ -33,12 +33,12 @@ const onButtonClicked = ({ currentTarget }) => {
   showModal({
     title: 'Block this post?',
     message: [
-      'All instances of this post (including reblogs) will be hidden.'
+      'All instances of this post (including reblogs) will be hidden.',
     ],
     buttons: [
       modalCancelButton,
-      dom('button', { class: 'red' }, { click: () => blockPost(rootID) }, ['Block this post'])
-    ]
+      dom('button', { class: 'red' }, { click: () => blockPost(rootID) }, ['Block this post']),
+    ],
   });
 };
 

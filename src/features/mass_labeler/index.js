@@ -9,7 +9,7 @@ const data = [
   { text: 'Content Label: Mature', category: undefined },
   { text: 'Drug/Alcohol Addiction', category: 'drug_use' },
   { text: 'Violence', category: 'violence' },
-  { text: 'Sexual Themes', category: 'sexual_themes' }
+  { text: 'Sexual Themes', category: 'sexual_themes' },
 ];
 
 /**
@@ -37,7 +37,7 @@ const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
   day: 'numeric',
   hour: 'numeric',
   minute: 'numeric',
-  timeZoneName: 'short'
+  timeZoneName: 'short',
 });
 
 const timezoneOffsetMs = new Date().getTimezoneOffset() * 60000;
@@ -49,13 +49,13 @@ const showInitialPrompt = async () => {
       label({}, [text, input({
         type: 'checkbox',
         name: category,
-        ...(!category ? { checked: true, disabled: true } : {})
-      })])
+        ...(!category ? { checked: true, disabled: true } : {}),
+      })]),
     ),
     'Posts to label:',
     label({}, [
       'Posts on blog:',
-      select({ name: 'blog', required: true }, userBlogs.map(createBlogOption))
+      select({ name: 'blog', required: true }, userBlogs.map(createBlogOption)),
     ]),
     label({}, [
       small({}, ['Posts with any of these tags (optional):']),
@@ -63,13 +63,13 @@ const showInitialPrompt = async () => {
         type: 'text',
         name: 'tags',
         placeholder: 'Comma-separated',
-        autocomplete: 'off'
-      })
+        autocomplete: 'off',
+      }),
     ]),
     label({}, [
       'Posts from after:',
-      input({ type: 'datetime-local', name: 'after', value: '2006-09-29T00:00' })
-    ])
+      input({ type: 'datetime-local', name: 'after', value: '2006-09-29T00:00' }),
+    ]),
   ]);
 
   if (location.pathname.startsWith('/blog/')) {
@@ -83,8 +83,8 @@ const showInitialPrompt = async () => {
     message: [initialForm],
     buttons: [
       modalCancelButton,
-      input({ class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' })
-    ]
+      input({ class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' }),
+    ],
   });
 };
 
@@ -142,7 +142,7 @@ const confirmInitialPrompt = async event => {
     ...(tags.length
       ? [
           ' tagged ',
-          ...elementsAsList(tags.map(createTagSpan), 'or')
+          ...elementsAsList(tags.map(createTagSpan), 'or'),
         ]
       : []),
     ' from after ',
@@ -150,9 +150,9 @@ const confirmInitialPrompt = async event => {
     ' will be labelled as ',
     strong({}, [
       'Mature Content',
-      ...addedCategoryText.flatMap(text => [' + ', text])
+      ...addedCategoryText.flatMap(text => [' + ', text]),
     ]),
-    '.'
+    '.',
   ];
 
   showModal({
@@ -163,11 +163,11 @@ const confirmInitialPrompt = async event => {
       button(
         {
           class: 'red',
-          click: () => setLabelsBulk({ uuid, name, tags, after, addedCategories }).catch(showErrorModal)
+          click: () => setLabelsBulk({ uuid, name, tags, after, addedCategories }).catch(showErrorModal),
         },
-        ['Go!']
-      )
-    ]
+        ['Go!'],
+      ),
+    ],
   });
 };
 
@@ -179,9 +179,9 @@ const showTagsNotFound = ({ tags, name }) =>
       ...elementsAsList(tags.map(createTagSpan), 'or'),
       ' on ',
       createBlogSpan(name),
-      '. Did you misspell a tag?'
+      '. Did you misspell a tag?',
     ],
-    buttons: [modalCompleteButton]
+    buttons: [modalCompleteButton],
   });
 
 const showPostsNotFound = ({ name }) =>
@@ -190,9 +190,9 @@ const showPostsNotFound = ({ name }) =>
     message: [
       "It looks like you don't have any unlabelled posts with the selected criteria on ",
       createBlogSpan(name),
-      '.'
+      '.',
     ],
-    buttons: [modalCompleteButton]
+    buttons: [modalCompleteButton],
   });
 
 const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
@@ -206,8 +206,8 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
       '\n\n',
       gatherStatus,
       '\n',
-      labelStatus
-    ]
+      labelStatus,
+    ],
   });
 
   let fetchedPosts = 0;
@@ -227,7 +227,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
             .filter(({ timestamp }) => timestamp > after)
             .filter(
               ({ communityLabels: { hasCommunityLabel, categories } }) =>
-                !hasCommunityLabel || addedCategories.some(cat => !categories.includes(cat))
+                !hasCommunityLabel || addedCategories.some(cat => !categories.includes(cat)),
             )
             .forEach(postData => filteredPostsMap.set(postData.id, postData));
 
@@ -238,7 +238,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
           gatherStatus.textContent =
             `Found ${filteredPostsMap.size} unlabelled posts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
         }),
-        sleep(1000)
+        sleep(1000),
       ]);
     }
   };
@@ -283,7 +283,7 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
         }).finally(() => {
           labelStatus.textContent = `Set content labels on ${labelledCount} posts... ${labelledFailCount ? `(failed: ${labelledFailCount})` : ''}`;
         }),
-        sleep(1000)
+        sleep(1000),
       ]);
     }
   }
@@ -294,12 +294,12 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
     title: 'All done!',
     message: [
       `Set content labels on ${labelledCount} posts${labelledFailCount ? ` (failed: ${labelledFailCount})` : ''}.\n`,
-      'Refresh the page to see the result.'
+      'Refresh the page to see the result.',
     ],
     buttons: [
       button({ click: hideModal }, ['Close']),
-      button({ class: 'blue', click: () => location.reload() }, ['Refresh'])
-    ]
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh']),
+    ],
   });
 };
 
@@ -309,9 +309,9 @@ const sidebarOptions = {
   rows: [{
     label: 'Add content labels',
     onclick: showInitialPrompt,
-    carrot: true
+    carrot: true,
   }],
-  visibility: () => /^\/blog\/[^/]+\/?$/.test(location.pathname)
+  visibility: () => /^\/blog\/[^/]+\/?$/.test(location.pathname),
 };
 
 export const main = async function () {

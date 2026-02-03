@@ -69,11 +69,11 @@ export const bulkCommunityLabel = async function (blogName, postIds, options) {
     form_key: formKey,
     has_community_label: options.hasCommunityLabel,
     categories: options.categories,
-    post_keys: postIds.map(id => ({ id }))
+    post_keys: postIds.map(id => ({ id })),
   };
 
   return inject(
     '/main_world/post_request.js',
-    [`https://www.tumblr.com/svc/blog/${blogName}/bulk_community_label_posts`, $.param(requestBody)]
+    [`https://www.tumblr.com/svc/blog/${blogName}/bulk_community_label_posts`, $.param(requestBody)],
   );
 };

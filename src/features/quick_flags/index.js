@@ -13,7 +13,7 @@ const data = [
   { text: 'Content Label: Mature', category: undefined },
   { text: 'Drug/Alcohol Addiction', category: 'drug_use' },
   { text: 'Violence', category: 'violence' },
-  { text: 'Sexual Themes', category: 'sexual_themes' }
+  { text: 'Sexual Themes', category: 'sexual_themes' },
 ];
 
 const buttonClass = 'xkit-quick-flags-button';
@@ -68,7 +68,7 @@ const handlePopupClick = async (checkbox, category) => {
 
   const {
     hasCommunityLabel: currentHasCommunityLabel,
-    categories: currentCategories
+    categories: currentCategories,
   } = postData.communityLabels;
 
   let hasCommunityLabel;
@@ -110,8 +110,8 @@ const updatePostWarningElement = async (postElement) => {
   const {
     communityLabels: {
       hasCommunityLabel: renderedHasCommunityLabel,
-      categories: renderedCategories = []
-    }
+      categories: renderedCategories = [],
+    },
   } = await timelineObject(postElement);
 
   const renderedPostStateIncorrect =
@@ -123,7 +123,7 @@ const updatePostWarningElement = async (postElement) => {
 
   if (renderedPostStateIncorrect) {
     const warningElement = div({ class: warningClass }, [
-      'note: navigate away and back or refresh to see edited content labels!'
+      'note: navigate away and back or refresh to see edited content labels!',
     ]);
     postElement.querySelector(keyToCss('footerRow', 'postOwnerControls'))?.after(warningElement);
   }

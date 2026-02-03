@@ -1,7 +1,7 @@
 import { keyToClasses, keyToCss } from '../../utils/css_map.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
-import { buildStyle } from '../../utils/interface.js';
+import { buildStyle, displayBlockUnlessDisabledAttr } from '../../utils/interface.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { cellItem } from '../../utils/react_props.js';
 import { debounce } from '../../utils/debounce.js';
@@ -84,6 +84,7 @@ const addButtonToPage = async function ([scrollToTopButton]) {
     scrollToBottomButton.style.transform = 'rotate(180deg)';
     scrollToBottomButton.addEventListener('click', onclick);
     scrollToBottomButton.id = scrollToBottomButtonId;
+    scrollToBottomButton.setAttribute(displayBlockUnlessDisabledAttr, '');
 
     scrollToBottomButton.classList.toggle(activeClass, active);
   }

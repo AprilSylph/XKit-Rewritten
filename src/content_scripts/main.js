@@ -17,7 +17,7 @@
       clean,
       stylesheet,
       styleElement,
-      onStorageChanged
+      onStorageChanged,
     } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
 
     if (main) {
@@ -27,7 +27,7 @@
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
         href: browser.runtime.getURL(`/features/${name}/index.css?t=${timestamp}`),
-        className: 'xkit'
+        className: 'xkit',
       });
       document.documentElement.appendChild(link);
     }
@@ -55,7 +55,7 @@
     const {
       clean,
       stylesheet,
-      styleElement
+      styleElement,
     } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
 
     if (clean) {
@@ -113,11 +113,11 @@
 
     const [
       installedFeatures,
-      { [enabledFeaturesKey]: enabledFeatures = [] }
+      { [enabledFeaturesKey]: enabledFeatures = [] },
     ] = await Promise.all([
       getInstalledFeatures(),
       browser.storage.local.get(enabledFeaturesKey),
-      initMainWorld()
+      initMainWorld(),
     ]);
 
     /**

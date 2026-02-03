@@ -3,6 +3,7 @@ import { getPreferences } from '../../utils/preferences.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { anyQueueTimelineFilter, anyDraftsTimelineFilter } from '../../utils/timeline_id.js';
+import { div } from '../../utils/dom.js';
 
 const wrapperClass = 'xkit-collapsed-queue-wrapper';
 const containerClass = 'xkit-collapsed-queue-container';
@@ -17,9 +18,8 @@ const processPosts = async function (postElements) {
     const headerElement = postElement.querySelector('header');
     const footerElement = postElement.querySelector(footerSelector);
 
-    const wrapper = Object.assign(document.createElement('div'), { className: wrapperClass });
-    const container = Object.assign(document.createElement('div'), { className: containerClass });
-    wrapper.append(container);
+    const container = div({ class: containerClass });
+    const wrapper = div({ class: wrapperClass }, [container]);
 
     footerElement.before(wrapper);
     while (wrapper.previousElementSibling && wrapper.previousElementSibling !== headerElement) {
@@ -34,7 +34,7 @@ export const main = async function () {
 
   timeline = [
     runInQueue && anyQueueTimelineFilter,
-    runInDrafts && anyDraftsTimelineFilter
+    runInDrafts && anyDraftsTimelineFilter,
   ].filter(Boolean);
 
   onNewPosts.addListener(processPosts);

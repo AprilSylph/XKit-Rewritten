@@ -14,7 +14,7 @@ const saveNewBundle = async event => {
 
   const tagBundle = {
     title: title.value,
-    tags: tags.value
+    tags: tags.value,
   };
 
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
@@ -36,8 +36,8 @@ Sortable.create(bundlesList, {
       const newTagBundles = order.map(i => tagBundles[i]);
 
       browser.storage.local.set({ [storageKey]: newTagBundles });
-    }
-  }
+    },
+  },
 });
 
 const editTagBundle = async ({ currentTarget }) => {
@@ -54,7 +54,7 @@ const editTagBundle = async ({ currentTarget }) => {
     currentTarget.firstElementChild.className = 'ri-pencil-line';
 
     const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-    const index = parseInt(parentNode.id);
+    const index = parseInt(parentNode.id, 10);
     const tagBundle = tagBundles[index];
 
     for (const input of inputs) {
@@ -70,7 +70,7 @@ const deleteBundle = async ({ currentTarget }) => {
   const { parentNode: { parentNode } } = currentTarget;
 
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-  const index = parseInt(parentNode.id);
+  const index = parseInt(parentNode.id, 10);
   tagBundles.splice(index, 1);
   browser.storage.local.set({ [storageKey]: tagBundles });
 };
@@ -78,7 +78,7 @@ const deleteBundle = async ({ currentTarget }) => {
 const renderBundles = async function () {
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
 
-  bundlesList.append(...tagBundles.map(({ title, tags }, index) => {
+  bundlesList.replaceChildren(...tagBundles.map(({ title, tags }, index) => {
     const bundleTemplateClone = bundleTemplate.content.cloneNode(true);
 
     bundleTemplateClone.querySelector('.bundle').id = index;
@@ -95,7 +95,6 @@ const renderBundles = async function () {
 
 browser.storage.local.onChanged.addListener((changes) => {
   if (Object.keys(changes).includes(storageKey)) {
-    bundlesList.textContent = '';
     renderBundles();
   }
 });

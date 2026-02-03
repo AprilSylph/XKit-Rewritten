@@ -1,5 +1,5 @@
-cp node_modules/@melloware/coloris/dist/coloris.min.css src/lib/
-cp node_modules/@melloware/coloris/dist/esm/coloris.min.js src/lib/
+cp node_modules/@melloware/coloris/dist/coloris.css src/lib/
+cp node_modules/@melloware/coloris/dist/esm/coloris.js src/lib/
 cp node_modules/jquery/dist/jquery.slim.min.js src/lib/
 cp node_modules/moment/dist/moment.js src/lib/
 cp node_modules/remixicon/fonts/*.{css,eot,woff2,woff,ttf,svg} src/lib/remixicon/

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "XKit Rewritten",
-  "version": "1.1.7",
+  "version": "1.2.0",
 
   "short_name": "XKit",
   "author": "April Sylph",
@@ -57,6 +57,7 @@
         "content_scripts/main.js"
       ],
       "css": [
+        "content_scripts/interface.css",
         "content_scripts/control_buttons.css",
         "content_scripts/meatballs.css",
         "content_scripts/sidebar.css",

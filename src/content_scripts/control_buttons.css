@@ -1,5 +1,4 @@
 .xkit-control-button-container {
-  display: inline-block;
   position: relative;
 
   margin-left: 20px;
@@ -47,7 +46,7 @@
   fill: rgba(var(--black), 0.4);
 }
 
-@media (max-width: 990px) {
+@media not (min-width: 990px) {
   .xkit-control-button-container.in-legacy-footer {
     margin-left: 0;
   }

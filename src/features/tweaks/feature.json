@@ -14,7 +14,12 @@
   "preferences": {
     "restore_attribution_links": {
       "type": "checkbox",
-      "label": "Restore links to individual posts in the post header",
+      "label": "Move post permalinks back to attributed blognames",
+      "default": false
+    },
+    "create_button_no_bubbles": {
+      "type": "checkbox",
+      "label": "Make the “Create” button start a new text post",
       "default": false
     },
     "slim_filtered_screens": {
@@ -88,6 +93,11 @@
       "label": "Hide posts that I've liked on the dashboard",
       "default": false
     },
+    "hide_blocked_blogs": {
+      "type": "checkbox",
+      "label": "Hide all posts from blogs I've blocked",
+      "default": false
+    },
     "hide_follower_counts": {
       "type": "checkbox",
       "label": "Hide my follower count where possible",
@@ -107,6 +117,12 @@
       "type": "checkbox",
       "label": "Hide the Activity notification badge",
       "default": false
+    },
+    "hide_new_posts_indicator": {
+      "type": "checkbox",
+      "label": "Hide the floating “New posts” indicator button on the dashboard",
+      "default": false,
+      "inherit": "tweaks.preferences.no_where_were_we"
     }
   }
 }

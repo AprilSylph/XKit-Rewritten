@@ -4,14 +4,16 @@ on:
   schedule:
     - cron: 0 6 * * 1-5
 
+permissions:
+  actions: write
+  issues: write
+
 jobs:
   stale:
-    permissions:
-      issues: write
     runs-on: ubuntu-latest
     steps:
       - name: Close Stale Issues
-        uses: actions/stale@v9.1.0
+        uses: actions/stale@v10
         with:
           days-before-stale: 30
           days-before-close: 7

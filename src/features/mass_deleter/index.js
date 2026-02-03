@@ -1,6 +1,6 @@
-import { dom } from '../../utils/dom.js';
+import { button, form, input, label, small, span } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
-import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
+import { createBlogSpan, modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 
@@ -24,21 +24,21 @@ const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
   day: 'numeric',
   hour: 'numeric',
   minute: 'numeric',
-  timeZoneName: 'short'
+  timeZoneName: 'short',
 });
 
 const showDeleteDraftsPrompt = () => {
-  const form = dom('form', { id: 'xkit-mass-deleter-delete-drafts' }, { submit: confirmDeleteDrafts }, [
-    dom('label', null, null, [
+  const formElement = form({ id: 'xkit-mass-deleter-delete-drafts', submit: confirmDeleteDrafts }, [
+    label({}, [
       'Delete drafts before:',
-      dom('input', { type: 'datetime-local', name: 'before', value: createNowString(), required: true })
-    ])
+      input({ type: 'datetime-local', name: 'before', value: createNowString(), required: true }),
+    ]),
   ]);
 
   showModal({
     title: 'Mass Deleter',
-    message: [form],
-    buttons: [modalCancelButton, dom('input', { type: 'submit', form: form.id, class: 'blue', value: 'Next' })]
+    message: [formElement],
+    buttons: [modalCancelButton, input({ type: 'submit', form: formElement.id, class: 'blue', value: 'Next' })],
   });
 };
 
@@ -50,38 +50,39 @@ const confirmDeleteDrafts = event => {
   const beforeMs = elements.before.valueAsNumber + timezoneOffsetMs;
 
   const beforeString = dateTimeFormat.format(new Date(beforeMs));
-  const beforeElement = dom('span', { style: 'white-space: nowrap; font-weight: bold;' }, null, [beforeString]);
+  const beforeElement = span({ style: 'white-space: nowrap; font-weight: bold;' }, [beforeString]);
 
   const before = beforeMs / 1000;
 
   showModal({
     title: 'Delete drafts?',
-    message: ['Every draft on this blog dated before ', beforeElement, ' will be deleted.'],
+    message: ['Every draft on ', createBlogSpan(blogName), ' dated before ', beforeElement, ' will be deleted.'],
     buttons: [
       modalCancelButton,
-      dom(
-        'button',
-        { class: 'red' },
-        { click: () => deleteDrafts({ blogName, before }).catch(showErrorModal) },
-        ['Delete them!']
-      )
-    ]
+      button(
+        {
+          class: 'red',
+          click: () => deleteDrafts({ blogName, before }).catch(showErrorModal),
+        },
+        ['Delete them!'],
+      ),
+    ],
   });
 };
 
 const deleteDrafts = async function ({ blogName, before }) {
-  const foundPostsElement = dom('span', null, null, ['Gathering drafts...']);
-  const deleteCountElement = dom('span');
+  const foundPostsElement = span({}, ['Gathering drafts...']);
+  const deleteCountElement = span();
 
   showModal({
     title: 'Deleting drafts...',
     message: [
-      dom('small', null, null, ['Do not navigate away from this page.']),
+      small({}, ['Do not navigate away from this page.']),
       '\n\n',
       foundPostsElement,
       '\n',
-      deleteCountElement
-    ]
+      deleteCountElement,
+    ],
   });
 
   let fetchedPosts = 0;
@@ -101,7 +102,7 @@ const deleteDrafts = async function ({ blogName, before }) {
 
         foundPostsElement.textContent = `Found ${drafts.length} drafts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
       }),
-      sleep(1000)
+      sleep(1000),
     ]);
   }
 
@@ -126,7 +127,7 @@ const deleteDrafts = async function ({ blogName, before }) {
       }).finally(() => {
         deleteCountElement.textContent = `Deleted ${deleteCount} drafts... ${failCount ? `(failed: ${failCount})` : ''}`;
       }),
-      sleep(1000)
+      sleep(1000),
     ]);
   }
 
@@ -134,49 +135,52 @@ const deleteDrafts = async function ({ blogName, before }) {
     title: 'All done!',
     message: [
       `Deleted ${deleteCount} drafts. ${failCount ? `(failed: ${failCount})` : ''}\n`,
-      'Refresh the page to see the result.'
+      'Refresh the page to see the result.',
     ],
     buttons: [
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh'])
-    ]
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh']),
+    ],
   });
 };
 
 const showNoDraftsError = () => showModal({
   title: 'Nothing to delete!',
   message: ['No drafts found for the specified time range.'],
-  buttons: [modalCompleteButton]
+  buttons: [modalCompleteButton],
 });
 
-const showClearQueuePrompt = () => showModal({
-  title: 'Clear your queue?',
-  message: [
-    'All posts in this blog\'s queue will be deleted.\n',
-    'Scheduled posts will not be affected.'
-  ],
-  buttons: [
-    modalCancelButton,
-    dom('button', { class: 'red' }, { click: () => clearQueue().catch(showErrorModal) }, ['Clear it!'])
-  ]
-});
+const showClearQueuePrompt = () => {
+  const blogName = location.pathname.split('/')[2];
 
-const clearQueue = async function () {
-  const foundPostsElement = dom('span', null, null, ['Gathering queued posts...']);
-  const deleteCountElement = dom('span');
+  showModal({
+    title: 'Clear your queue?',
+    message: [
+      'All posts in ', createBlogSpan(blogName), '\'s queue will be deleted.\n',
+      'Scheduled posts will not be affected.',
+    ],
+    buttons: [
+      modalCancelButton,
+      button({ class: 'red', click: () => clearQueue({ blogName }).catch(showErrorModal) }, ['Clear it!']),
+    ],
+  });
+};
+
+const clearQueue = async function ({ blogName }) {
+  const foundPostsElement = span({}, ['Gathering queued posts...']);
+  const deleteCountElement = span();
 
   showModal({
     title: 'Clearing your queue...',
     message: [
-      dom('small', null, null, ['Do not navigate away from this page.']),
+      small({}, ['Do not navigate away from this page.']),
       '\n\n',
       foundPostsElement,
       '\n',
-      deleteCountElement
-    ]
+      deleteCountElement,
+    ],
   });
 
   const queuedPosts = [];
-  const blogName = location.pathname.split('/')[2];
   let resource = `/v2/blog/${blogName}/posts/queue?limit=50`;
 
   while (resource) {
@@ -191,7 +195,7 @@ const clearQueue = async function () {
 
         foundPostsElement.textContent = `Found ${queuedPosts.length} queued posts${resource ? '...' : '.'}`;
       }),
-      sleep(1000)
+      sleep(1000),
     ]);
   }
 
@@ -217,7 +221,7 @@ const clearQueue = async function () {
       }).finally(() => {
         deleteCountElement.textContent = `Deleted ${deleteCount} queued posts... ${failCount ? `(failed: ${failCount})` : ''}`;
       }),
-      sleep(1000)
+      sleep(1000),
     ]);
   }
 
@@ -225,18 +229,18 @@ const clearQueue = async function () {
     title: 'All done!',
     message: [
       `Deleted ${deleteCount} queued posts. ${failCount ? `(failed: ${failCount})` : ''}\n`,
-      'Refresh the page to see the result.'
+      'Refresh the page to see the result.',
     ],
     buttons: [
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh'])
-    ]
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh']),
+    ],
   });
 };
 
 const showEmptyQueueError = () => showModal({
   title: 'No queued posts!',
   message: ['Looks like there is nothing to clear here.'],
-  buttons: [modalCompleteButton]
+  buttons: [modalCompleteButton],
 });
 
 const deleteDraftsSidebarOptions = {
@@ -245,9 +249,9 @@ const deleteDraftsSidebarOptions = {
   rows: [{
     label: 'Delete drafts',
     onclick: showDeleteDraftsPrompt,
-    carrot: true
+    carrot: true,
   }],
-  visibility: () => /\/blog\/.+\/drafts/.test(location.pathname)
+  visibility: () => /\/blog\/.+\/drafts/.test(location.pathname),
 };
 
 const clearQueueSidebarOptions = {
@@ -256,9 +260,9 @@ const clearQueueSidebarOptions = {
   rows: [{
     label: 'Clear queue',
     onclick: showClearQueuePrompt,
-    carrot: true
+    carrot: true,
   }],
-  visibility: () => /\/blog\/.+\/queue/.test(location.pathname)
+  visibility: () => /\/blog\/.+\/queue/.test(location.pathname),
 };
 
 export const main = async function () {

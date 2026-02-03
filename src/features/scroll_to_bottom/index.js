@@ -101,6 +101,7 @@ const cloneButton = (target, mode) => {
   clonedButton.removeAttribute('aria-label');
   clonedButton.addEventListener('click', onclick);
   clonedButton.classList.add(buttonClass, mode);
+  clonedButton.setAttribute(displayBlockUnlessDisabledAttr, '');
 
   clonedButton.classList.toggle(activeClass, activeElement);
   return clonedButton;

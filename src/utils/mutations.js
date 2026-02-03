@@ -55,22 +55,22 @@ export const pageModifications = Object.freeze({
 
     const matchingElements = [
       ...rootNode.querySelectorAll(selector),
-      ...headNode.querySelectorAll(selector)
+      ...headNode.querySelectorAll(selector),
     ];
     if (matchingElements.length !== 0) {
       modifierFunction(matchingElements);
     }
-  }
+  },
 });
 
 export const onNewPosts = Object.freeze({
   addListener: callback => pageModifications.register(`${postSelector}:not(.sortable-fallback) article`, callback),
-  removeListener: callback => pageModifications.unregister(callback)
+  removeListener: callback => pageModifications.unregister(callback),
 });
 
 export const onNewNotifications = Object.freeze({
   addListener: callback => pageModifications.register(notificationSelector, callback),
-  removeListener: callback => pageModifications.unregister(callback)
+  removeListener: callback => pageModifications.unregister(callback),
 });
 
 const onBeforeRepaint = () => {
@@ -91,7 +91,7 @@ const onBeforeRepaint = () => {
 
     const matchingElements = [
       ...addedNodes.filter(addedNode => addedNode.matches(selector)),
-      ...addedNodes.flatMap(addedNode => [...addedNode.querySelectorAll(selector)])
+      ...addedNodes.flatMap(addedNode => [...addedNode.querySelectorAll(selector)]),
     ].filter((value, index, array) => index === array.indexOf(value));
 
     if (matchingElements.length !== 0) {

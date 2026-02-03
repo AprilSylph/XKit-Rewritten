@@ -137,7 +137,7 @@ document.documentElement.append(
     [${displayInlineFlexUnlessDisabledAttr}] {
       display: var(--none-if-xkit-disabled, inline-flex);
     }
-  `)
+  `),
 );
 
 /**

@@ -308,10 +308,10 @@ const processReblogButton = async reblogButton => {
     'aria-label': reblogButton.getAttribute('aria-label'),
     class: reblogLinkClass,
     click: onReblogLinkClick,
-    href: `/reblog/${blogName}/${idString}/${reblogKey}`
+    href: `/reblog/${blogName}/${idString}/${reblogKey}`,
   }, [
     link({ rel: 'stylesheet', class: 'xkit', href: `data:text/css,${encodeURIComponent(styleContent)}` }),
-    reblogButton.firstElementChild.cloneNode(true)]
+    reblogButton.firstElementChild.cloneNode(true)],
   );
 
   reblogButton.before(reblogLink);

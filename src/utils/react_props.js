@@ -83,6 +83,6 @@ export const updatePostOnPage = async (postElement, keys) => {
   await inject(
     '/main_world/edit_timeline_object.js',
     [currentTimelineObject, changeEntries],
-    postElement.closest(keyToCss('timeline'))
+    postElement.closest(keyToCss('timeline')),
   );
 };

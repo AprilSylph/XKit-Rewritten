@@ -32,6 +32,6 @@ export const inject = (path, args = [], target = document.documentElement) =>
     document.documentElement.addEventListener('xkit-injection-element-response', responseHandler);
 
     target.dispatchEvent(
-      new CustomEvent('xkit-injection-request', { detail: JSON.stringify(data), bubbles: true })
+      new CustomEvent('xkit-injection-request', { detail: JSON.stringify(data), bubbles: true }),
     );
   });

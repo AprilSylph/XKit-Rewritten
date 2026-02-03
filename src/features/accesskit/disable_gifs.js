@@ -118,7 +118,7 @@ const isAnimated = memoize(async sourceUrl => {
     const decoder = new ImageDecoder({
       type: contentType,
       data: response.body,
-      preferAnimation: true
+      preferAnimation: true,
     });
     await decoder.decode();
     return decoder.tracks.selectedTrack.animated;
@@ -142,7 +142,7 @@ const createPausedUrlIfAnimated = memoize(async sourceUrl => {
     const decoder = new ImageDecoder({
       type: contentType,
       data: response.body,
-      preferAnimation: true
+      preferAnimation: true,
     });
     const { image: videoFrame } = await decoder.decode();
     if (decoder.tracks.selectedTrack.animated === false) {
@@ -177,7 +177,7 @@ const pauseGif = async function (gifElement) {
         width: image.naturalWidth,
         height: image.naturalHeight,
         class: `${gifElement.className} ${canvasClass}`,
-        style: gifElement.getAttribute('style')
+        style: gifElement.getAttribute('style'),
       });
       canvasElement.getContext('2d').drawImage(image, 0, 0);
       gifElement.after(canvasElement);
@@ -221,10 +221,10 @@ const processBackgroundGifs = function (gifBackgroundElements) {
 
     gifBackgroundElement.style.setProperty(
       pausedBackgroundImageVar,
-      sourceValue.replace(sourceUrlRegex, 'linear-gradient(transparent, transparent)')
+      sourceValue.replace(sourceUrlRegex, 'linear-gradient(transparent, transparent)'),
     );
     const pausedUrl = await createPausedUrlIfAnimated(
-      sourceUrl.replace(/^url\(["']/, '').replace(/["']\)$/, '')
+      sourceUrl.replace(/^url\(["']/, '').replace(/["']\)$/, ''),
     ).catch(() => undefined);
     if (!pausedUrl) {
       gifBackgroundElement.style.removeProperty(pausedBackgroundImageVar);
@@ -233,7 +233,7 @@ const processBackgroundGifs = function (gifBackgroundElements) {
 
     gifBackgroundElement.style.setProperty(
       pausedBackgroundImageVar,
-      sourceValue.replace(sourceUrlRegex, `url("${pausedUrl}")`)
+      sourceValue.replace(sourceUrlRegex, `url("${pausedUrl}")`),
     );
     addLabel(gifBackgroundElement, true);
   });
@@ -281,7 +281,7 @@ export const main = async function () {
         'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
         'topPost', // activity page top post
         'takeoverBanner', // advertisement
-        'mrecContainer' // advertisement
+        'mrecContainer', // advertisement
       )}
     ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
   `;
@@ -292,7 +292,7 @@ export const main = async function () {
       'communityHeaderImage', // search page tags section header: https://www.tumblr.com/search/gif?v=tag
       'bannerImage', // tagged page sidebar header: https://www.tumblr.com/tagged/gif
       'tagChicletWrapper', // "trending" / "your tags" timeline carousel entry: https://www.tumblr.com/dashboard/trending, https://www.tumblr.com/dashboard/hubs
-      'communityCategoryImage' // tumblr communities browse page entry: https://www.tumblr.com/communities/browse, https://www.tumblr.com/communities/browse/movies
+      'communityCategoryImage', // tumblr communities browse page entry: https://www.tumblr.com/communities/browse, https://www.tumblr.com/communities/browse/movies
     )}:is([style*=".gif"], [style*=".webp"])
   `;
   pageModifications.register(gifBackgroundImage, processBackgroundGifs);
@@ -305,7 +305,7 @@ export const main = async function () {
 
   pageModifications.register(
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
-    processRows
+    processRows,
   );
 
   browser.storage.local.onChanged.addListener(onStorageChanged);
@@ -320,7 +320,7 @@ export const clean = async function () {
   pageModifications.unregister(processHoverableElements);
 
   [...document.querySelectorAll(`.${containerClass}`)].forEach(wrapper =>
-    wrapper.replaceWith(...wrapper.children)
+    wrapper.replaceWith(...wrapper.children),
   );
 
   $(`.${canvasClass}`).remove();

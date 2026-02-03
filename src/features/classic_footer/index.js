@@ -230,11 +230,13 @@ const getButtonChildren = (noteCount) => {
 const onNoteCountClick = (event) => {
   event.stopPropagation();
   const postElement = event.currentTarget.closest(postOrRadarSelector);
-  const closeNotesButton = postElement?.querySelector(closeNotesButtonSelector);
+  if (!postElement) { return; }
+
+  const closeNotesButton = postElement.querySelector(closeNotesButtonSelector);
 
   closeNotesButton
     ? closeNotesButton.click()
-    : postElement?.querySelector(`[${activeAttribute}] ${replyButtonSelector}`)?.click();
+    : [...postElement.querySelectorAll(`[${activeAttribute}] ${replyButtonSelector}`)].at(-1)?.click();
 };
 
 const processPosts = (postElements) => postElements.forEach(async postElement => {
@@ -306,10 +308,10 @@ const processReblogButton = async reblogButton => {
     'aria-label': reblogButton.getAttribute('aria-label'),
     class: reblogLinkClass,
     click: onReblogLinkClick,
-    href: `/reblog/${blogName}/${idString}/${reblogKey}`
+    href: `/reblog/${blogName}/${idString}/${reblogKey}`,
   }, [
     link({ rel: 'stylesheet', class: 'xkit', href: `data:text/css,${encodeURIComponent(styleContent)}` }),
-    reblogButton.firstElementChild.cloneNode(true)]
+    reblogButton.firstElementChild.cloneNode(true)],
   );
 
   reblogButton.before(reblogLink);

@@ -18,16 +18,16 @@ const cache = {};
 const locale = document.documentElement.lang;
 const currentDayTimeFormat = new Intl.DateTimeFormat(locale, {
   hour: 'numeric',
-  minute: 'numeric'
+  minute: 'numeric',
 });
 const currentYearTimeFormat = new Intl.DateTimeFormat(locale, {
   day: 'numeric',
-  month: 'short'
+  month: 'short',
 });
 const shortTimeFormat = new Intl.DateTimeFormat(locale, {
   day: 'numeric',
   month: 'short',
-  year: 'numeric'
+  year: 'numeric',
 });
 const longTimeFormat = new Intl.DateTimeFormat(locale, {
   weekday: 'long',
@@ -37,7 +37,7 @@ const longTimeFormat = new Intl.DateTimeFormat(locale, {
   hour: 'numeric',
   minute: '2-digit',
   second: '2-digit',
-  timeZoneName: 'short'
+  timeZoneName: 'short',
 });
 const relativeTimeFormat = new Intl.RelativeTimeFormat(locale, { style: 'long' });
 const thresholds = [
@@ -47,7 +47,7 @@ const thresholds = [
   { unit: 'day', denominator: 86400 },
   { unit: 'hour', denominator: 3600 },
   { unit: 'minute', denominator: 60 },
-  { unit: 'second', denominator: 1 }
+  { unit: 'second', denominator: 1 },
 ];
 
 const constructTimeString = function (unixTime) {
@@ -211,7 +211,7 @@ const preferenceHandlers = {
     if (reblogTimestamps !== 'none') {
       onNewPosts.addListener(addReblogTimestamps);
     }
-  }
+  },
 };
 
 export const onStorageChanged = async function (changes) {

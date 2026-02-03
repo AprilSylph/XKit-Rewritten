@@ -21,6 +21,12 @@ export default [
   }),
 
   /**
+   * Enforce consistent use of trailing commas in object and array literals.
+   * @see https://eslint.style/rules/comma-dangle
+   */
+  { rules: { '@stylistic/comma-dangle': ['warn', 'always-multiline'] } },
+
+  /**
    * Use recommended `import-x` lint rules. Additionally, prevent cyclical imports.
    * @see https://github.com/un-ts/eslint-plugin-import-x/blob/master/src/config/flat/recommended.ts
    * @see https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/no-cycle.md

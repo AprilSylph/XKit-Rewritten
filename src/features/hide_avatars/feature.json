@@ -1,5 +1,6 @@
 {
   "title": "Hide Avatars",
+  "description": "Disappear avatars of specified blogs",
   "icon": {
     "class_name": "ri-user-unfollow-line",
     "color": "white",
@@ -9,7 +10,7 @@
   "preferences": {
     "hiddenAvatars": {
       "type": "textarea",
-      "label": "Usernames (comma-separated)",
+      "label": "Blognames (comma-separated)",
       "default": ""
     }
   }

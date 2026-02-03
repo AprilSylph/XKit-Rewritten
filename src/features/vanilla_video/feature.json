@@ -1,6 +1,6 @@
 {
   "title": "Vanilla Video",
-  "description": "Use the browser's controls for video posts",
+  "description": "Use the browser's controls for video",
   "icon": {
     "class_name": "ri-movie-line",
     "color": "white",
@@ -20,6 +20,11 @@
         { "value": "100", "label": "100%" }
       ],
       "default": "100"
+    },
+    "tumblrTvEnable": {
+      "type": "checkbox",
+      "label": "Enable on Tumblr TV",
+      "default": false
     }
   }
 }

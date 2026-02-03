@@ -1,10 +1,10 @@
 {
   "title": "Classic Search",
-  "description": "Go to tagged pages easily",
+  "description": "Go to tagged pages more easily",
   "icon": {
     "class_name": "ri-search-line",
     "color": "white",
-    "background_color": "#f7650d"
+    "background_color": "#395875"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#classic-search",
   "preferences": {

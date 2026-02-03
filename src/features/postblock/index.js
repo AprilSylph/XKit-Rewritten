@@ -33,12 +33,12 @@ const onButtonClicked = ({ currentTarget }) => {
   showModal({
     title: 'Block this post?',
     message: [
-      'All instances of this post (including reblogs) will be hidden.'
+      'All instances of this post (including reblogs) will be hidden.',
     ],
     buttons: [
       modalCancelButton,
-      dom('button', { class: 'red' }, { click: () => blockPost(rootID) }, ['Block this post'])
-    ]
+      dom('button', { class: 'red' }, { click: () => blockPost(rootID) }, ['Block this post']),
+    ],
   });
 };
 
@@ -49,7 +49,7 @@ const blockPost = async rootID => {
   browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes) {
   if (Object.keys(changes).includes(storageKey)) {
     ({ newValue: blockedPostRootIDs = [] } = changes[storageKey]);
     pageModifications.trigger(processPosts);

@@ -20,7 +20,7 @@ let controlButtonTemplate;
 
 const blogPlaceholder = {
   avatar: [{ url: 'https://assets.tumblr.com/pop/src/assets/images/avatar/anonymous_avatar_96-223fabe0.png' }],
-  name: 'anonymous'
+  name: 'anonymous',
 };
 
 const onButtonClicked = async function ({ currentTarget: controlButton }) {
@@ -28,11 +28,12 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   const postId = postElement.dataset.id;
 
   const {
-    blog: { uuid }
+    blog: { uuid },
   } = await timelineObject(postElement);
 
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}?fields[blogs]=name,avatar`);
-  const { blog, content = [], trail = [], isBlocksPostFormat } = postData;
+  const { blog, authorBlog, community, content = [], trail = [], isBlocksPostFormat } = postData;
+  const visibleBlog = community ? authorBlog : blog;
 
   if (isBlocksPostFormat === false) {
     await new Promise(resolve => {
@@ -43,12 +44,12 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
           dom('strong', null, null, ['legacy post editor']),
           ' or a previous XKit version.',
           '\n\n',
-          'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.'
+          'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.',
         ],
         buttons: [
           modalCancelButton,
-          dom('button', { class: 'blue' }, { click: resolve }, ['Continue'])
-        ]
+          dom('button', { class: 'blue' }, { click: resolve }, ['Continue']),
+        ],
       });
     });
   }
@@ -60,12 +61,12 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
         message: [
           `Trimming an ask from a thread will result in it appearing broken on custom themes (i.e. ${blog?.name}.tumblr.com).`,
           '\n\n',
-          'To avoid issues with custom themes, leave the ask intact when trimming.'
+          'To avoid issues with custom themes, leave the ask intact when trimming.',
         ],
         buttons: [
           modalCancelButton,
-          dom('button', { class: 'blue' }, { click: resolve }, ['Continue'])
-        ]
+          dom('button', { class: 'blue' }, { click: resolve }, ['Continue']),
+        ],
       });
     });
   }
@@ -86,8 +87,8 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
       dom('img', { class: avatarPreviewClass, src }),
       dom('div', { class: textPreviewClass }, null, [
         dom('strong', null, null, [name]),
-        dom('p', null, null, [textContent])
-      ])
+        dom('p', null, null, [textContent]),
+      ]),
     ]);
 
     return { wrapper, checkbox };
@@ -97,14 +98,14 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
   trailData.slice(0, -1).forEach(({ checkbox }) => { checkbox.checked = true; });
 
   const contentData = content.length
-    ? [createPreviewItem({ blog, content, disableCheckbox: true })]
+    ? [createPreviewItem({ blog: visibleBlog, content, disableCheckbox: true })]
     : [];
 
   const previewElement = dom(
     'div',
     { class: reblogPreviewClass },
     null,
-    [...trailData, ...contentData].map(({ wrapper }) => wrapper)
+    [...trailData, ...contentData].map(({ wrapper }) => wrapper),
   );
 
   const onClickTrim = async () => {
@@ -118,8 +119,8 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
         method: 'PUT',
         body: {
           ...createEditRequestBody(postData),
-          exclude_trail_items: excludeTrailItems
-        }
+          exclude_trail_items: excludeTrailItems,
+        },
       });
       notify(displayText);
 
@@ -148,9 +149,9 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
     title: 'Trim this post?',
     message: [
       'Select trail items to remove:',
-      previewElement
+      previewElement,
     ],
-    buttons: [modalCancelButton, trimButton]
+    buttons: [modalCancelButton, trimButton],
   });
 };
 

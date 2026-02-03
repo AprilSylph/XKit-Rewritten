@@ -1,6 +1,6 @@
 const checkForNoResults = function () {
   const nothingFound = [...document.querySelectorAll('xkit-feature')].every(featureElement =>
-    featureElement.classList.contains('search-hidden') || featureElement.classList.contains('filter-hidden')
+    featureElement.classList.contains('search-hidden') || featureElement.classList.contains('filter-hidden'),
   );
 
   document.querySelector('.no-results').style.display = nothingFound ? 'flex' : 'none';

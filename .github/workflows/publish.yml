@@ -4,10 +4,13 @@ on:
   release:
     types: [ published ]
 
+permissions:
+  contents: read
+
 jobs:
   firefox:
     name: Firefox
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -32,7 +35,7 @@ jobs:
           WEB_EXT_CHANNEL: listed
   chrome:
     name: Chrome
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -46,7 +49,7 @@ jobs:
         run: npm ci
 
       - name: Upload to Web Store
-        run: npx chrome-webstore-upload upload --source=src/ --auto-publish
+        run: npx chrome-webstore-upload
         env:
           EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}

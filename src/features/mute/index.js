@@ -14,7 +14,7 @@ import {
   inboxTimelineFilter,
   likesTimelineFilter,
   peeprLikesTimelineFilter,
-  timelineSelector
+  timelineSelector,
 } from '../../utils/timeline_id.js';
 import { controlsClass as showOriginalsControlsClass } from '../show_originals/index.js';
 import { userBlogNames } from '../../utils/user.js';
@@ -68,7 +68,7 @@ const processBlogTimelineElement = async timelineElement => {
     const mutedBlogControls = div({ class: mutedBlogControlsClass, 'data-muted-blog-controls-mode': mutedBlogMode }, [
       `You have muted ${mutedBlogMode} posts from ${name}!`,
       br(),
-      button({ click: () => mutedBlogControls.remove() }, ['show posts anyway'])
+      button({ click: () => mutedBlogControls.remove() }, ['show posts anyway']),
     ]);
     timelineElement.prepend(mutedBlogControls);
     timelineElement.querySelector(`.${showOriginalsControlsClass}`)?.after(mutedBlogControls);
@@ -81,7 +81,7 @@ const shouldDisable = timelineElement => Boolean(
   likesTimelineFilter(timelineElement) ||
   userBlogNames.some(name => peeprLikesTimelineFilter(name)(timelineElement)) ||
   inboxTimelineFilter(timelineElement) ||
-  anyPostPermalinkTimelineFilter(timelineElement)
+  anyPostPermalinkTimelineFilter(timelineElement),
 );
 
 const processTimelines = async timelineElements => {
@@ -144,7 +144,7 @@ const processPosts = async function (postElements) {
         relevantBlogUuid === timelineBlogUuid
           ? mutedBlogControlsHiddenAttribute
           : hiddenAttribute,
-        ''
+        '',
       );
 
     const isRebloggedPost = contributedContentOriginal
@@ -181,7 +181,7 @@ const onMeatballButtonClicked = function ({ currentTarget }) {
   const createRadioElement = value =>
     label({}, [
       `Hide ${value} posts`,
-      input({ type: 'radio', name: 'muteOption', value })
+      input({ type: 'radio', name: 'muteOption', value }),
     ]);
 
   const formElement = form(
@@ -189,8 +189,8 @@ const onMeatballButtonClicked = function ({ currentTarget }) {
     [
       createRadioElement('all'),
       createRadioElement('original'),
-      createRadioElement('reblogged')
-    ]
+      createRadioElement('reblogged'),
+    ],
   );
 
   formElement.elements.muteOption.value = currentMode;
@@ -202,16 +202,16 @@ const onMeatballButtonClicked = function ({ currentTarget }) {
       buttons: [
         modalCancelButton,
         button({ class: 'blue', click: () => unmuteUser(uuid) }, ['Unmute']),
-        input({ type: 'submit', form: formElement.id, class: 'red', value: 'Update Mode' })
-      ]
+        input({ type: 'submit', form: formElement.id, class: 'red', value: 'Update Mode' }),
+      ],
     })
     : showModal({
       title: `Mute ${name}?`,
       message: [formElement],
       buttons: [
         modalCancelButton,
-        input({ type: 'submit', form: formElement.id, class: 'red', value: 'Mute' })
-      ]
+        input({ type: 'submit', form: formElement.id, class: 'red', value: 'Mute' }),
+      ],
     });
 };
 
@@ -227,7 +227,7 @@ const muteUser = event => {
 
   browser.storage.local.set({
     [mutedBlogEntriesStorageKey]: Object.entries(mutedBlogs),
-    [blogNamesStorageKey]: blogNames
+    [blogNamesStorageKey]: blogNames,
   });
 
   hideModal();
@@ -243,7 +243,7 @@ const unmuteUser = uuid => {
 export const onStorageChanged = async function (changes, areaName) {
   const {
     [blogNamesStorageKey]: blogNamesChanges,
-    [mutedBlogEntriesStorageKey]: mutedBlogsEntriesChanges
+    [mutedBlogEntriesStorageKey]: mutedBlogsEntriesChanges,
   } = changes;
 
   if (Object.keys(changes).some(key => key.startsWith('mute.preferences') && changes[key].oldValue !== undefined)) {
@@ -273,12 +273,12 @@ export const main = async function () {
   registerMeatballItem({
     id: meatballButtonId,
     label: meatballButtonLabel,
-    onclick: onMeatballButtonClicked
+    onclick: onMeatballButtonClicked,
   });
   registerBlogMeatballItem({
     id: meatballButtonId,
     label: meatballButtonLabel,
-    onclick: onMeatballButtonClicked
+    onclick: onMeatballButtonClicked,
   });
   onNewPosts.addListener(processPosts);
 };

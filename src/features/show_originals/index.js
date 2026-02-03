@@ -34,7 +34,7 @@ let whitelist;
 let disabledBlogs;
 
 const hardcodedModes = {
-  peeprFiltered: 'off'
+  peeprFiltered: 'off',
 };
 
 const lengthenTimeline = async (timeline) => {

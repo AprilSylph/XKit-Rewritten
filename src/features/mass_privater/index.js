@@ -16,7 +16,7 @@ const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
   day: 'numeric',
   hour: 'numeric',
   minute: 'numeric',
-  timeZoneName: 'short'
+  timeZoneName: 'short',
 });
 
 /**
@@ -51,16 +51,16 @@ const showInitialPrompt = async (makePrivate) => {
   const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event, makePrivate).catch(showErrorModal) }, [
     dom('label', null, null, [
       'Posts on blog:',
-      dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption))
+      dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption)),
     ]),
     dom('label', null, null, [
       'Posts from before:',
-      dom('input', { type: 'datetime-local', name: 'before', value: createNowString(), required: true })
+      dom('input', { type: 'datetime-local', name: 'before', value: createNowString(), required: true }),
     ]),
     dom('label', null, null, [
       dom('small', null, null, ['Posts with any of these tags (optional):']),
-      dom('input', { type: 'text', name: 'tags', placeholder: 'Comma-separated', autocomplete: 'off' })
-    ])
+      dom('input', { type: 'text', name: 'tags', placeholder: 'Comma-separated', autocomplete: 'off' }),
+    ]),
   ]);
 
   if (location.pathname.startsWith('/blog/')) {
@@ -74,8 +74,8 @@ const showInitialPrompt = async (makePrivate) => {
     message: [initialForm],
     buttons: [
       modalCancelButton,
-      dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' })
-    ]
+      dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' }),
+    ],
   });
 };
 
@@ -127,14 +127,14 @@ const confirmInitialPrompt = async (event, makePrivate) => {
         beforeElement,
         ' tagged ',
         ...elementsAsList(tags.map(createTagSpan), 'or'),
-        ` will be set to ${makePrivate ? 'private' : 'public'}.`
+        ` will be set to ${makePrivate ? 'private' : 'public'}.`,
       ]
     : [
         `Every ${makePrivate ? 'published' : 'private'} post on `,
         createBlogSpan(name),
         ' from before ',
         beforeElement,
-        ` will be set to ${makePrivate ? 'private' : 'public'}.`
+        ` will be set to ${makePrivate ? 'private' : 'public'}.`,
       ];
 
   showModal({
@@ -146,9 +146,9 @@ const confirmInitialPrompt = async (event, makePrivate) => {
         'button',
         { class: 'red' },
         { click: () => editPosts({ makePrivate, uuid, name, tags, before }).catch(showErrorModal) },
-        [makePrivate ? 'Private them!' : 'Unprivate them!']
-      )
-    ]
+        [makePrivate ? 'Private them!' : 'Unprivate them!'],
+      ),
+    ],
   });
 };
 
@@ -160,9 +160,9 @@ const showTagsNotFound = ({ tags, name }) =>
       ...elementsAsList(tags.map(createTagSpan), 'or'),
       ' on ',
       createBlogSpan(name),
-      '. Did you misspell a tag?'
+      '. Did you misspell a tag?',
     ],
-    buttons: [modalCompleteButton]
+    buttons: [modalCompleteButton],
   });
 
 const showPostsNotFound = ({ name }) =>
@@ -171,9 +171,9 @@ const showPostsNotFound = ({ name }) =>
     message: [
       "It looks like you don't have any posts with the specified criteria on ",
       createBlogSpan(name),
-      '.'
+      '.',
     ],
-    buttons: [modalCompleteButton]
+    buttons: [modalCompleteButton],
   });
 
 const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
@@ -187,16 +187,16 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
       dom('tr', null, null, [
         dom('td', null, null, [
           dom('a', { href: `/@${blogName}/${id}`, target: '_blank' }, null, [id]),
-          summary ? ':' : ''
+          summary ? ':' : '',
         ]),
         dom('td', null, null, [
-          summary.replaceAll('\n', ' ')
-        ])
-      ])
+          summary.replaceAll('\n', ' '),
+        ]),
+      ]),
     );
   const failedStatus = dom('div', { class: 'mass-privater-failed' }, null, [
     'Failed/incompatible posts:',
-    failedTableElement
+    failedTableElement,
   ]);
 
   showModal({
@@ -206,8 +206,8 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
       '\n\n',
       gatherStatus,
       editStatus,
-      failedStatus
-    ]
+      failedStatus,
+    ],
   });
 
   let fetchedPosts = 0;
@@ -224,7 +224,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
             .filter(postData =>
               tags.length
                 ? postData.tags.some(tag => tags.includes(tag.toLowerCase()))
-                : true
+                : true,
             )
             .forEach((postData) => filteredPostsMap.set(postData.id, postData));
 
@@ -234,7 +234,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
 
           gatherStatus.textContent = `Found ${filteredPostsMap.size} posts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
         }),
-        sleep(1000)
+        sleep(1000),
       ]);
     }
   };
@@ -272,7 +272,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
         }).finally(() => {
           editStatus.textContent = `\nPrivated ${successCount} posts... ${failCount ? `(failed: ${failCount})` : ''}`;
         }),
-        sleep(1000)
+        sleep(1000),
       ]);
     }
   } else {
@@ -281,7 +281,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
     const editablePosts = [];
     filteredPosts.forEach(postData => isNpfCompatible(postData)
       ? editablePosts.push(postData)
-      : showFailedPost(postData)
+      : showFailedPost(postData),
     );
     for (const postData of editablePosts) {
       await Promise.all([
@@ -289,8 +289,8 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
           method: 'PUT',
           body: {
             ...createEditRequestBody(postData),
-            state: 'published'
-          }
+            state: 'published',
+          },
         }).then(() => {
           successCount++;
         }).catch(() => {
@@ -299,7 +299,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
         }).finally(() => {
           editStatus.textContent = `\nUnprivated ${successCount} posts... ${failCount ? `(failed: ${failCount})` : ''}`;
         }),
-        sleep(1000)
+        sleep(1000),
       ]);
     }
   }
@@ -313,12 +313,12 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
     message: [
       `${makePrivate ? 'Privated' : 'Unprivated'} ${successCount} posts${failCount ? ` (failed: ${failCount})` : ''}.\n`,
       'Refresh the page to see the result.',
-      failedStatus
+      failedStatus,
     ],
     buttons: [
       dom('button', null, { click: hideModal }, ['Close']),
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh'])
-    ]
+      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh']),
+    ],
   });
 
   failedTableElement.scrollTop = failedTableScrollTop;
@@ -331,15 +331,15 @@ const sidebarOptions = {
     {
       label: 'Private posts',
       onclick: () => showInitialPrompt(true),
-      carrot: true
+      carrot: true,
     },
     {
       label: 'Unprivate posts',
       onclick: () => showInitialPrompt(false),
-      carrot: true
-    }
+      carrot: true,
+    },
   ],
-  visibility: () => /^\/blog\/[^/]+\/?$/.test(location.pathname)
+  visibility: () => /^\/blog\/[^/]+\/?$/.test(location.pathname),
 };
 
 export const main = async () => addSidebarItem(sidebarOptions);

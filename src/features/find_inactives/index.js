@@ -16,7 +16,7 @@ const thresholds = [
   { unit: 'day', denominator: 86400 },
   { unit: 'hour', denominator: 3600 },
   { unit: 'minute', denominator: 60 },
-  { unit: 'second', denominator: 1 }
+  { unit: 'second', denominator: 1 },
 ];
 const constructRelativeTimeString = function (unixTime) {
   const now = Math.trunc(new Date().getTime() / 1000);
@@ -40,10 +40,10 @@ const sidebarOptions = {
     {
       label: 'Find inactive blogs',
       onclick: () => showFetchBlogs().catch(showErrorModal),
-      carrot: true
-    }
+      carrot: true,
+    },
   ],
-  visibility: () => /\/following/.test(location.pathname)
+  visibility: () => /\/following/.test(location.pathname),
 };
 
 const buckets = 90;
@@ -115,8 +115,8 @@ const showFetchBlogs = async () => {
       small({}, ['Please wait.']),
       br(),
       br(),
-      foundBlogsElement
-    ]
+      foundBlogsElement,
+    ],
   });
 
   const blogs = [];
@@ -131,7 +131,7 @@ const showFetchBlogs = async () => {
 
         foundBlogsElement.textContent = `Collected ${blogs.length}/${userInfo.following} blogs${resource ? '...' : '.'}`;
       }),
-      sleep(500)
+      sleep(500),
     ]);
   }
   blogs.sort((a, b) => b.updated - a.updated);
@@ -161,12 +161,12 @@ const showSelectBlogs = blogs => {
 
     const avatar = img({
       src: blog.avatar.at(-1)?.url,
-      class: avatarClass
+      class: avatarClass,
     });
     blog.checkbox = input({ type: 'checkbox' });
     const link = a(
       { href: blog.blogViewUrl, target: '_blank' },
-      [blog.name]
+      [blog.name],
     );
     const relativeUpdated = blog.updated ? constructRelativeTimeString(blog.updated) : 'never';
 
@@ -175,7 +175,7 @@ const showSelectBlogs = blogs => {
       td({}, [avatar]),
       td({}, [link]),
       td({}, [relativeUpdated]),
-      td({}, [blog.checkbox])
+      td({}, [blog.checkbox]),
     ]);
 
     blog.confirmElement = div({}, [avatar.cloneNode(true), ` ${blog.name}`]);
@@ -190,7 +190,7 @@ const showSelectBlogs = blogs => {
   const canvasElement = canvas({
     width: canvasOuterWidth * canvasScale,
     height: canvasOuterHeight * canvasScale,
-    class: canvasClass
+    class: canvasClass,
   });
   const canvasContext = canvasElement.getContext('2d');
   canvasContext.scale(canvasScale, canvasScale);
@@ -251,7 +251,7 @@ const showSelectBlogs = blogs => {
     value: 0,
     max: lastBucket,
     class: sliderClass,
-    input: event => updateDisplay(event.target.value)
+    input: event => updateDisplay(event.target.value),
   });
 
   const createButton = (text, onClick) =>
@@ -260,17 +260,17 @@ const showSelectBlogs = blogs => {
   const selectNoneButton = createButton('none', () =>
     visibleBlogs.forEach(({ checkbox }) => {
       checkbox.checked = false;
-    })
+    }),
   );
   const selectNonMutualsButton = createButton('non-mutuals', () =>
     visibleBlogs.forEach(({ checkbox, isFollowingYou }) => {
       checkbox.checked = !isFollowingYou;
-    })
+    }),
   );
   const selectAllButton = createButton('all', () =>
     visibleBlogs.forEach(({ checkbox }) => {
       checkbox.checked = true;
-    })
+    }),
   );
 
   const onClickContinue = () => {
@@ -281,7 +281,7 @@ const showSelectBlogs = blogs => {
       showModal({
         title: 'Nothing selected!',
         message: ['Select the checkboxes next to blogs you want to unfollow and try again.'],
-        buttons: [button({ click: showSelectBlogsModal }, ['Back'])]
+        buttons: [button({ click: showSelectBlogsModal }, ['Back'])],
       });
     }
   };
@@ -291,7 +291,7 @@ const showSelectBlogs = blogs => {
       title: 'Select Inactive Blogs',
       message: [
         small({}, [
-          'Use the slider to display blogs with no posts after the selected date.'
+          'Use the slider to display blogs with no posts after the selected date.',
         ]),
         canvasElement,
         slider,
@@ -302,14 +302,14 @@ const showSelectBlogs = blogs => {
           ' / ',
           selectNonMutualsButton,
           ' / ',
-          selectAllButton
+          selectAllButton,
         ]),
-        div({ class: tableContainerClass }, [tableElement])
+        div({ class: tableContainerClass }, [tableElement]),
       ],
       buttons: [
         modalCancelButton,
-        button({ class: 'blue', click: onClickContinue }, ['Unfollow Selected'])
-      ]
+        button({ class: 'blue', click: onClickContinue }, ['Unfollow Selected']),
+      ],
     });
 
   showSelectBlogsModal();
@@ -324,13 +324,13 @@ const showConfirmBlogs = (blogs, goBack) => {
       br(),
       div(
         { class: confirmContainerClass },
-        blogs.map(({ confirmElement }) => confirmElement)
-      )
+        blogs.map(({ confirmElement }) => confirmElement),
+      ),
     ],
     buttons: [
       button({ click: goBack }, ['Go back']),
-      button({ class: 'red', click: () => unfollowBlogs(blogs) }, ['Unfollow'])
-    ]
+      button({ class: 'red', click: () => unfollowBlogs(blogs) }, ['Unfollow']),
+    ],
   });
 };
 
@@ -343,8 +343,8 @@ const unfollowBlogs = async blogs => {
       small({}, ['Do not navigate away from this page.']),
       br(),
       br(),
-      unfollowStatus
-    ]
+      unfollowStatus,
+    ],
   });
 
   const succeeded = [];
@@ -359,7 +359,7 @@ const unfollowBlogs = async blogs => {
       }).finally(() => {
         unfollowStatus.textContent = `Unfollowed ${succeeded.length} blogs... ${failed.length ? `(failed: ${failed.length})` : ''}`;
       }),
-      sleep(1000)
+      sleep(1000),
     ]);
   }
 
@@ -369,12 +369,12 @@ const unfollowBlogs = async blogs => {
     title: 'All done!',
     message: [
       `Unfollowed ${succeeded.length} blogs${failed.length ? ` (failed: ${failed.length})` : ''}.\n`,
-      'Refresh the page to see the result.'
+      'Refresh the page to see the result.',
     ],
     buttons: [
       button({ click: hideModal }, ['Close']),
-      button({ class: 'blue', click: () => location.reload() }, ['Refresh'])
-    ]
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh']),
+    ],
   });
 };
 

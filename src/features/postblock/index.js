@@ -73,12 +73,12 @@ const migrateBlockedPosts = async ({ detail }) => {
           message: [
             `Would you like to import ${toAdd.length} blocked post id${
               toAdd.length === 1 ? '' : 's'
-            } from New XKit to XKit Rewritten?`
+            } from New XKit to XKit Rewritten?`,
           ],
           buttons: [
             modalCancelButton,
-            dom('button', { class: 'blue' }, { click: resolve }, ['Confirm'])
-          ]
+            dom('button', { class: 'blue' }, { click: resolve }, ['Confirm']),
+          ],
         });
       });
 
@@ -88,13 +88,13 @@ const migrateBlockedPosts = async ({ detail }) => {
       showModal({
         title: 'Success',
         message: `Imported ${toAdd.length > 1 ? `${toAdd.length} blocked posts` : 'a blocked post'}!`,
-        buttons: [modalCompleteButton]
+        buttons: [modalCompleteButton],
       });
     } else {
       showModal({
         title: 'No new blocked posts!',
         message: 'Your XKit Rewritten configuration has these posts blocked already.',
-        buttons: [modalCompleteButton]
+        buttons: [modalCompleteButton],
       });
     }
   }

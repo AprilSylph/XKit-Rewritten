@@ -17,7 +17,7 @@ export const timelineObject = weakMemoize(postElement =>
  * @returns {Promise<object>} The post's buried item property
  */
 export const cellItem = weakMemoize(cellElement =>
-  inject('/main_world/unbury_cell_item.js', [], cellElement)
+  inject('/main_world/unbury_cell_item.js', [], cellElement),
 );
 
 /**

@@ -32,7 +32,7 @@ export const main = async () => {
       ${listTimelineObjectInnerSelector}:first-child ${keyToCss('videoCTA', 'videoImageCTA')},
       ${keyToCss('adTimelineObject', 'instreamAd', 'mrecContainer', 'nativeIponWebAd', 'takeoverBanner')}${blazeFilter}
     `,
-    processVideoCTAs
+    processVideoCTAs,
   );
 };
 

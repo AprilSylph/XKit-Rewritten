@@ -4,16 +4,14 @@ const localName = 'checkbox-preference';
 
 const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
-    <li>
-      <input id="checkbox" type="checkbox">
-      <label for="checkbox"></label>
-    </li>
+    <input id="checkbox" type="checkbox">
+    <label for="checkbox"></label>
   </template>
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
   '/lib/normalize.min.css',
-  './index.css'
+  './index.css',
 ].map(import.meta.resolve));
 
 class CheckboxPreferenceElement extends CustomElement {
@@ -45,8 +43,14 @@ class CheckboxPreferenceElement extends CustomElement {
     browser.storage.local.set({ [storageKey]: storageValue });
   };
 
-  connectedCallback () { this.#inputElement.addEventListener('change', this.#onChange); }
-  disconnectedCallback () { this.#inputElement.removeEventListener('change', this.#onChange); }
+  connectedCallback () {
+    this.role ??= 'listitem';
+    this.#inputElement.addEventListener('change', this.#onChange);
+  }
+
+  disconnectedCallback () {
+    this.#inputElement.removeEventListener('change', this.#onChange);
+  }
 }
 
 customElements.define(localName, CheckboxPreferenceElement);

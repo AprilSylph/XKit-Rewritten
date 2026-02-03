@@ -1,5 +1,5 @@
 import { CustomElement, fetchStyleSheets } from '../index.js';
-import Coloris from '../../../lib/coloris.min.js';
+import Coloris from '../../../lib/coloris.js';
 
 const localName = 'xkit-feature';
 
@@ -27,11 +27,11 @@ const templateDocument = new DOMParser().parseFromString(`
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
-  '/lib/coloris.min.css',
+  '/lib/coloris.css',
   '/lib/normalize.min.css',
   '/lib/remixicon/remixicon.css',
   '/lib/toggle-button.css',
-  './index.css'
+  './index.css',
 ].map(import.meta.resolve));
 
 /**
@@ -170,7 +170,7 @@ class XKitFeatureElement extends CustomElement {
             const option = Object.assign(document.createElement('option'), {
               value,
               textContent: label,
-              selected: value === preference.value
+              selected: value === preference.value,
             });
             preferenceInput.appendChild(option);
           }
@@ -203,7 +203,7 @@ class XKitFeatureElement extends CustomElement {
     const { checked, id } = currentTarget;
     let {
       [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures = [],
-      [XKitFeatureElement.#specialAccessKey]: specialAccess = []
+      [XKitFeatureElement.#specialAccessKey]: specialAccess = [],
     } = await browser.storage.local.get();
 
     const hasPreferences = Object.keys(this.preferences).length !== 0;
@@ -223,7 +223,7 @@ class XKitFeatureElement extends CustomElement {
 
     browser.storage.local.set({
       [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures,
-      [XKitFeatureElement.#specialAccessKey]: specialAccess
+      [XKitFeatureElement.#specialAccessKey]: specialAccess,
     });
   };
 
@@ -237,7 +237,7 @@ class XKitFeatureElement extends CustomElement {
       XKitFeatureElement.#renderPreferences({
         featureName: this.featureName,
         preferences: this.preferences,
-        preferenceList: this.#preferencesList
+        preferenceList: this.#preferencesList,
       });
     }
   }

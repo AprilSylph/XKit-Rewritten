@@ -18,9 +18,9 @@ export const createControlButtonTemplate = function (symbolId, buttonClass, labe
   return dom('span', { class: `xkit-control-button-container ${buttonClass}`, [displayInlineBlockUnlessDisabledAttr]: '' }, null, [
     dom('button', { class: 'xkit-control-button', 'aria-label': label, title: label }, null, [
       dom('span', { class: 'xkit-control-button-inner', tabindex: '-1' }, null, [
-        buildSvg(symbolId)
-      ])
-    ])
+        buildSvg(symbolId),
+      ]),
+    ]),
   ]);
 };
 

@@ -18,7 +18,7 @@ const addPostOptions = ([postFormButton]) => {
     ...Object.keys(postOptions)
       .sort()
       .map(id => postOptions[id])
-      .filter(postOption => !postActions.contains(postOption))
+      .filter(postOption => !postActions.contains(postOption)),
   );
 };
 
@@ -33,7 +33,7 @@ pageModifications.register(keyToCss('postFormButton'), addPostOptions);
  */
 export const registerPostOption = async function (id, { symbolId, onclick }) {
   postOptions[id] = dom('label', { class: 'xkit-post-option', [displayBlockUnlessDisabledAttr]: '' }, null, [
-    dom('button', null, { click: onclick }, [buildSvg(symbolId)])
+    dom('button', null, { click: onclick }, [buildSvg(symbolId)]),
   ]);
 
   pageModifications.trigger(addPostOptions);

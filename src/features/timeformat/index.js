@@ -88,7 +88,7 @@ const thresholds = [
   { unit: 'day', denominator: 86400 },
   { unit: 'hour', denominator: 3600 },
   { unit: 'minute', denominator: 60 },
-  { unit: 'second', denominator: 1 }
+  { unit: 'second', denominator: 1 },
 ];
 
 const constructRelativeTimeString = function (unixTime) {
@@ -111,7 +111,7 @@ const updateRelativeTime = timeElement => {
 };
 
 const observer = new MutationObserver(mutations =>
-  mutations.forEach(({ target: { parentElement: timeElement } }) => timeElement?.unixTime && updateRelativeTime(timeElement))
+  mutations.forEach(({ target: { parentElement: timeElement } }) => timeElement?.unixTime && updateRelativeTime(timeElement)),
 );
 
 const formatTimeElements = function (timeElements) {

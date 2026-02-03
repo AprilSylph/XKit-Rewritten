@@ -17,9 +17,7 @@ const renderBlockedPosts = async function () {
   const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
 
   postsBlockedCount.textContent = `${blockedPostRootIDs.length} blocked ${blockedPostRootIDs.length === 1 ? 'post' : 'posts'}`;
-  blockedPostList.textContent = '';
-
-  for (const blockedPostID of blockedPostRootIDs) {
+  blockedPostList.replaceChildren(...blockedPostRootIDs.map(blockedPostID => {
     const templateClone = blockedPostTemplate.content.cloneNode(true);
     const spanElement = templateClone.querySelector('span');
     const unblockButton = templateClone.querySelector('button');
@@ -28,8 +26,8 @@ const renderBlockedPosts = async function () {
     unblockButton.dataset.postId = blockedPostID;
     unblockButton.addEventListener('click', unblockPost);
 
-    blockedPostList.append(templateClone);
-  }
+    return templateClone;
+  }));
 };
 
 browser.storage.local.onChanged.addListener((changes) => {

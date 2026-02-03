@@ -28,9 +28,9 @@ const popupInput = dom(
   'input',
   {
     placeholder: 'Tags (comma separated)',
-    autocomplete: 'off'
+    autocomplete: 'off',
   },
-  { keydown: event => event.stopPropagation() }
+  { keydown: event => event.stopPropagation() },
 );
 const doSmartQuotes = ({ currentTarget }) => {
   const { value } = currentTarget;
@@ -79,7 +79,7 @@ const processPostForm = async function ([selectedTagsElement]) {
 
   if (originalPostTag && location.pathname.startsWith('/new')) {
     editPostFormTags({
-      add: originalPostTag.split(',').map(tag => tag.trim())
+      add: originalPostTag.split(',').map(tag => tag.trim()),
     });
   } else if ((answerTag || autoTagAsker) && location.pathname.startsWith('/edit')) {
     const [blogName, postId] = location.pathname.split('/').slice(2);
@@ -88,7 +88,7 @@ const processPostForm = async function ([selectedTagsElement]) {
     const {
       response = {},
       state = response.state,
-      askingName = response.askingName
+      askingName = response.askingName,
     } = await (postOnScreen ? timelineObject(postOnScreen) : apiFetch(`/v2/blog/${blogName}/posts/${postId}`));
 
     if (state === 'submission') {
@@ -152,8 +152,8 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
       method: 'PUT',
       body: {
         ...createEditRequestBody(postData),
-        tags: tags.join(',')
-      }
+        tags: tags.join(','),
+      },
     });
 
     await updatePostOnPage(postElement, ['tags', 'tagsV2']);
@@ -228,8 +228,8 @@ const migrateTags = async ({ detail }) => {
         newTagBundle =>
           !tagBundles.some(
             tagBundle =>
-              newTagBundle.title === tagBundle.title && newTagBundle.tags === tagBundle.tags
-          )
+              newTagBundle.title === tagBundle.title && newTagBundle.tags === tagBundle.tags,
+          ),
       );
 
     if (toAdd.length) {
@@ -241,12 +241,12 @@ const migrateTags = async ({ detail }) => {
               toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'tag bundle'
             } from New XKit to XKit Rewritten?`,
             '\n\n',
-            dom('ul', null, null, toAdd.map(({ title }) => dom('li', null, null, [title])))
+            dom('ul', null, null, toAdd.map(({ title }) => dom('li', null, null, [title]))),
           ],
           buttons: [
             modalCancelButton,
-            dom('button', { class: 'blue' }, { click: resolve }, ['Confirm'])
-          ]
+            dom('button', { class: 'blue' }, { click: resolve }, ['Confirm']),
+          ],
         });
       });
 
@@ -256,13 +256,13 @@ const migrateTags = async ({ detail }) => {
       showModal({
         title: 'Success',
         message: `Imported ${toAdd.length > 1 ? `${toAdd.length} tag bundles` : 'a tag bundle'}!`,
-        buttons: [modalCompleteButton]
+        buttons: [modalCompleteButton],
       });
     } else {
       showModal({
         title: 'No new bundles!',
         message: 'Your XKit Rewritten configuration has these tag bundles already.',
-        buttons: [modalCompleteButton]
+        buttons: [modalCompleteButton],
       });
     }
   }

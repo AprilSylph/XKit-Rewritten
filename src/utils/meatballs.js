@@ -1,6 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
-import { getClosestRenderedElement, postSelector } from './interface.js';
+import { displayBlockUnlessDisabledAttr, getClosestRenderedElement, postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { blogData, timelineObject } from './react_props.js';
 
@@ -9,7 +9,7 @@ const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, 
 
 const meatballItems = {
   post: {},
-  blog: {}
+  blog: {},
 };
 
 /**
@@ -55,7 +55,7 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
       meatballMenu,
       type: 'post',
       reactData: await timelineObject(meatballMenu),
-      reactDataKey: '__timelineObjectData'
+      reactDataKey: '__timelineObjectData',
     });
     return;
   }
@@ -64,7 +64,7 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
       meatballMenu,
       type: 'blog',
       reactData: await blogData(meatballMenu),
-      reactDataKey: '__blogData'
+      reactDataKey: '__blogData',
     });
   }
 });
@@ -78,11 +78,12 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
     const meatballItemButton = dom('button', {
       class: 'xkit-meatball-button',
       [`data-xkit-${type}-meatball-button`]: id,
-      hidden: true
+      [displayBlockUnlessDisabledAttr]: '',
+      hidden: true,
     }, {
-      click: onclick
+      click: onclick,
     }, [
-      '\u22EF'
+      '\u22EF',
     ]);
     meatballItemButton[reactDataKey] = reactData;
 

@@ -8,7 +8,7 @@ export default function editTimelineObject (currentTimelineObject, changeEntries
     if (typeof props?.value?.onEditTimelineObject === 'function') {
       props.value.onEditTimelineObject(
         currentTimelineObject,
-        value => Object.assign(value, Object.fromEntries(changeEntries))
+        value => Object.assign(value, Object.fromEntries(changeEntries)),
       );
       return;
     } else {

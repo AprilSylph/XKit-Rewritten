@@ -63,10 +63,14 @@ export const isNpfCompatible = postData => {
 export const navigate = location => inject('/main_world/navigate.js', [location]);
 
 export const onClickNavigate = event => {
-  if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+  if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) {
+    event.stopImmediatePropagation();
+    return;
+  }
 
   const href = event.currentTarget.getAttribute('href');
   if (href) {
+    event.stopImmediatePropagation();
     event.preventDefault();
     navigate(href);
   }

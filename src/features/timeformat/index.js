@@ -92,7 +92,7 @@ const thresholds = [
 ];
 
 const constructRelativeTimeString = function (unixTime) {
-  const now = Math.trunc(new Date().getTime() / 1000);
+  const now = Math.trunc(Date.now() / 1000);
   const unixDiff = unixTime - now;
   const unixDiffAbsolute = Math.abs(unixDiff);
 

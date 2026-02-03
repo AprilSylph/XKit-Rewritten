@@ -5,6 +5,7 @@ import { keyToCss } from '../../utils/css_map.js';
 const vanillaVideoClass = 'xkit-vanilla-video-player';
 
 let defaultVolume;
+let tumblrTvEnable;
 
 const cloneVideoElements = videoElements => videoElements.forEach(videoElement => {
   if (videoElement.previousElementSibling?.classList.contains(vanillaVideoClass)) return;
@@ -33,8 +34,14 @@ const cloneVideoElements = videoElements => videoElements.forEach(videoElement =
 
 export const onStorageChanged = async function (changes) {
   const {
-    'vanilla_video.preferences.defaultVolume': defaultVolumeChanges
+    'vanilla_video.preferences.defaultVolume': defaultVolumeChanges,
+    'vanilla_video.preferences.tumblrTvEnable': tumblrTvEnableChanges,
   } = changes;
+
+  if (tumblrTvEnableChanges && tumblrTvEnableChanges.oldValue !== undefined) {
+    clean().then(main);
+    return;
+  }
 
   if (defaultVolumeChanges && defaultVolumeChanges.oldValue !== undefined) {
     ({ newValue: defaultVolume } = defaultVolumeChanges);
@@ -42,8 +49,10 @@ export const onStorageChanged = async function (changes) {
 };
 
 export const main = async function () {
-  ({ defaultVolume } = await getPreferences('vanilla_video'));
-  pageModifications.register(`${keyToCss('videoPlayer')} video:not(.${vanillaVideoClass})`, cloneVideoElements);
+  ({ defaultVolume, tumblrTvEnable } = await getPreferences('vanilla_video'));
+
+  const notOnTumblrTv = `:not(${keyToCss('slide')} ${keyToCss('take')} *)`;
+  pageModifications.register(`${keyToCss('videoPlayer')} video:not(.${vanillaVideoClass})${tumblrTvEnable ? '' : notOnTumblrTv}`, cloneVideoElements);
 };
 
 export const clean = async function () {

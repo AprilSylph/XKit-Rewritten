@@ -1,6 +1,6 @@
 import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { canvas, div } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { memoize } from '../../utils/memoize.js';
@@ -9,6 +9,7 @@ const canvasClass = 'xkit-paused-gif-placeholder';
 const pausedPosterAttribute = 'data-paused-gif-use-poster';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
+const labelSizeAttribute = 'data-paused-gif-label-size';
 const containerClass = 'xkit-paused-gif-container';
 const backgroundGifClass = 'xkit-paused-background-gif';
 
@@ -18,7 +19,8 @@ const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
 const parentHovered = `:is(:hover > *, [${hoverContainerAttribute}]:hover *)`;
 
 export const styleElement = buildStyle(`
-[${labelAttribute}]::after {
+[${labelAttribute}="after"]::after,
+[${labelAttribute}="before"]::before {
   position: absolute;
   top: 1ch;
   right: 1ch;
@@ -35,11 +37,16 @@ export const styleElement = buildStyle(`
   line-height: 1em;
   pointer-events: none;
 }
-[${labelAttribute}="mini"]::after {
+[${labelAttribute}="before"]::before {
+  z-index: 1;
+}
+[${labelSizeAttribute}="mini"][${labelAttribute}="after"]::after,
+[${labelSizeAttribute}="mini"][${labelAttribute}="before"]::before {
   font-size: 0.6rem;
 }
+[${labelSizeAttribute}="hr"][${labelAttribute}="after"]::after,
+[${labelSizeAttribute}="hr"][${labelAttribute}="before"]::before {
 
-[${labelAttribute}="hr"]::after {
   font-size: 0.6rem;
   top: 50%;
   transform: translateY(-50%);
@@ -48,16 +55,20 @@ export const styleElement = buildStyle(`
 .${canvasClass} {
   position: absolute;
   visibility: visible;
+  top: 0;
+  left: 0;
 
   background-color: rgb(var(--white));
 }
 
 .${canvasClass}${parentHovered},
-[${labelAttribute}]${hovered}::after,
+[${labelAttribute}="after"]${hovered}::after,
+[${labelAttribute}="before"]${hovered}::before,
 [${pausedPosterAttribute}]:not(${hovered}) > div > ${keyToCss('knightRiderLoader')} {
-  display: none;
+  display: none !important;
 }
-${keyToCss('background')}[${labelAttribute}]::after {
+${keyToCss('background')}[${labelAttribute}="after"]::after,
+${keyToCss('background')}[${labelAttribute}="before"]::before {
   /* prevent double labels in recommended post cards */
   display: none;
 }
@@ -84,12 +95,19 @@ ${keyToCss('background')}[${labelAttribute}]::after {
 
 const addLabel = (element, inside = false) => {
   const target = inside ? element : element.parentElement;
-  if (target && getComputedStyle(target, '::after').content === 'none') {
-    target.setAttribute(labelAttribute, '');
+  if (target) {
+    const mode =
+      getComputedStyle(target, '::after').content === 'none'
+        ? 'after'
+        : getComputedStyle(target, '::before').content === 'none'
+          ? 'before'
+          : 'invalid';
 
-    target.clientWidth && target.clientWidth <= 150 && target.setAttribute(labelAttribute, 'mini');
-    target.clientHeight && target.clientHeight <= 50 && target.setAttribute(labelAttribute, 'mini');
-    target.clientHeight && target.clientHeight <= 30 && target.setAttribute(labelAttribute, 'hr');
+    target.setAttribute(labelAttribute, mode);
+
+    target.clientWidth && target.clientWidth <= 150 && target.setAttribute(labelSizeAttribute, 'mini');
+    target.clientHeight && target.clientHeight <= 50 && target.setAttribute(labelSizeAttribute, 'mini');
+    target.clientHeight && target.clientHeight <= 30 && target.setAttribute(labelSizeAttribute, 'hr');
   }
 };
 
@@ -121,14 +139,14 @@ const pauseGif = async function (gifElement) {
   image.src = gifElement.currentSrc;
   image.onload = () => {
     if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      canvas.className = gifElement.className;
-      canvas.classList.add(canvasClass);
-      canvas.setAttribute('style', gifElement.getAttribute('style'));
-      canvas.getContext('2d').drawImage(image, 0, 0);
-      gifElement.after(canvas);
+      const canvasElement = canvas({
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+        class: `${gifElement.className} ${canvasClass}`,
+        style: gifElement.getAttribute('style')
+      });
+      canvasElement.getContext('2d').drawImage(image, 0, 0);
+      gifElement.after(canvasElement);
       addLabel(gifElement);
     }
   };
@@ -175,7 +193,7 @@ const processRows = function (rowsElements) {
       if (row.previousElementSibling?.classList?.contains(containerClass)) {
         row.previousElementSibling.append(row);
       } else {
-        const wrapper = dom('div', { class: containerClass, [hoverContainerAttribute]: '' });
+        const wrapper = div({ class: containerClass, [hoverContainerAttribute]: '' });
         row.replaceWith(wrapper);
         wrapper.append(row);
       }
@@ -203,10 +221,13 @@ export const main = async function () {
       },
       ${keyToCss(
         'linkCard', // post link element
+        'messageImage', // direct message attached image
+        'messagePost', // direct message linked post
         'typeaheadRow', // modal search dropdown entry
         'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
         'topPost', // activity page top post
-        'takeoverBanner' // advertisement
+        'takeoverBanner', // advertisement
+        'mrecContainer' // advertisement
       )}
     ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
   `;
@@ -249,6 +270,7 @@ export const clean = async function () {
   $(`.${canvasClass}`).remove();
   $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
   $(`[${labelAttribute}]`).removeAttr(labelAttribute);
+  $(`[${labelSizeAttribute}]`).removeAttr(labelSizeAttribute);
   $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
   $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
 };

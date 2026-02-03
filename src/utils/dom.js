@@ -4,6 +4,7 @@
 
 /**
  * Create elements with simple syntax
+ * @deprecated Obsoleted by `element()` and element-specific shorthand functions.
  * @param {string} tagName Type of element to create
  * @param {Attributes} [attributes] Property-value pairs to set as HTML/XML attributes (e.g. { href: '/' })
  * @param {Events} [events] Property-value pairs to set as event listeners (e.g. { click: () => {} })
@@ -26,7 +27,7 @@ export function dom (tagName, attributes = {}, events = {}, children = []) {
 /** @typedef {Attributes & Events} Properties */
 
 /**
- * Create elements with even simpler syntax
+ * Create elements with very simple syntax
  * @param {string} tagName Type of element to create
  * @param {Properties} [properties] Property-value pairs to set as HTML/XML attributes or event listeners
  * @param {Children} [children] Zero or more valid children

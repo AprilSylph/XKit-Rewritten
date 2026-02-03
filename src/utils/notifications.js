@@ -13,7 +13,7 @@ const addToastContainerToPage = () => {
     document.body.querySelector(`${drawerContentSelector} ${sidebarSelector}`),
     document.body.querySelector(drawerContentSelector),
     document.body.querySelector(`${desktopLayoutSelector} ${sidebarSelector}`),
-    document.body
+    document.body,
   ].find(candidateNode => candidateNode !== null && getComputedStyle(candidateNode).display !== 'none');
 
   if (targetNode.children.namedItem(toastContainerId) === null) {

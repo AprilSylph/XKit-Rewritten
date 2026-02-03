@@ -2,8 +2,10 @@ import { getPreferences } from '../../utils/preferences.js';
 
 let enabledTweaks;
 
+const getTweak = name => import(browser.runtime.getURL(`/features/tweaks/${name}.js`));
+
 const runTweak = async function (name) {
-  const { main: run, styleElement } = await import(`./${name}.js`);
+  const { main: run, styleElement } = await getTweak(name);
   if (run) {
     run().catch(console.error);
   }
@@ -14,7 +16,7 @@ const runTweak = async function (name) {
 };
 
 const destroyTweak = async function (name) {
-  const { clean: destroy, styleElement } = await import(`./${name}.js`);
+  const { clean: destroy, styleElement } = await getTweak(name);
   if (destroy) {
     destroy().catch(console.error);
   }

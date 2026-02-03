@@ -18,7 +18,7 @@ document.documentElement.append(
     .${noTransitionClass} ${mobileBadgeSelector} {
       transition: none;
     }
-  `)
+  `),
 );
 
 /** @typedef {'home' | 'communities' | 'activity' | 'messages' | 'inbox' | 'account'} NotificationType */
@@ -66,7 +66,7 @@ export const mobileMenuBadgeHide = Object.freeze({
     } else {
       document.documentElement.classList.remove(hideBadgeClass);
     }
-  }
+  },
 });
 
 const waitForRender = () =>

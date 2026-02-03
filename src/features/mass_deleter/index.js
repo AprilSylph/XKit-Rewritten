@@ -24,21 +24,21 @@ const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
   day: 'numeric',
   hour: 'numeric',
   minute: 'numeric',
-  timeZoneName: 'short'
+  timeZoneName: 'short',
 });
 
 const showDeleteDraftsPrompt = () => {
   const formElement = form({ id: 'xkit-mass-deleter-delete-drafts', submit: confirmDeleteDrafts }, [
     label({}, [
       'Delete drafts before:',
-      input({ type: 'datetime-local', name: 'before', value: createNowString(), required: true })
-    ])
+      input({ type: 'datetime-local', name: 'before', value: createNowString(), required: true }),
+    ]),
   ]);
 
   showModal({
     title: 'Mass Deleter',
     message: [formElement],
-    buttons: [modalCancelButton, input({ type: 'submit', form: formElement.id, class: 'blue', value: 'Next' })]
+    buttons: [modalCancelButton, input({ type: 'submit', form: formElement.id, class: 'blue', value: 'Next' })],
   });
 };
 
@@ -62,11 +62,11 @@ const confirmDeleteDrafts = event => {
       button(
         {
           class: 'red',
-          click: () => deleteDrafts({ blogName, before }).catch(showErrorModal)
+          click: () => deleteDrafts({ blogName, before }).catch(showErrorModal),
         },
-        ['Delete them!']
-      )
-    ]
+        ['Delete them!'],
+      ),
+    ],
   });
 };
 
@@ -81,8 +81,8 @@ const deleteDrafts = async function ({ blogName, before }) {
       '\n\n',
       foundPostsElement,
       '\n',
-      deleteCountElement
-    ]
+      deleteCountElement,
+    ],
   });
 
   let fetchedPosts = 0;
@@ -102,7 +102,7 @@ const deleteDrafts = async function ({ blogName, before }) {
 
         foundPostsElement.textContent = `Found ${drafts.length} drafts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
       }),
-      sleep(1000)
+      sleep(1000),
     ]);
   }
 
@@ -127,7 +127,7 @@ const deleteDrafts = async function ({ blogName, before }) {
       }).finally(() => {
         deleteCountElement.textContent = `Deleted ${deleteCount} drafts... ${failCount ? `(failed: ${failCount})` : ''}`;
       }),
-      sleep(1000)
+      sleep(1000),
     ]);
   }
 
@@ -135,18 +135,18 @@ const deleteDrafts = async function ({ blogName, before }) {
     title: 'All done!',
     message: [
       `Deleted ${deleteCount} drafts. ${failCount ? `(failed: ${failCount})` : ''}\n`,
-      'Refresh the page to see the result.'
+      'Refresh the page to see the result.',
     ],
     buttons: [
-      button({ class: 'blue', click: () => location.reload() }, ['Refresh'])
-    ]
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh']),
+    ],
   });
 };
 
 const showNoDraftsError = () => showModal({
   title: 'Nothing to delete!',
   message: ['No drafts found for the specified time range.'],
-  buttons: [modalCompleteButton]
+  buttons: [modalCompleteButton],
 });
 
 const showClearQueuePrompt = () => {
@@ -156,12 +156,12 @@ const showClearQueuePrompt = () => {
     title: 'Clear your queue?',
     message: [
       'All posts in ', createBlogSpan(blogName), '\'s queue will be deleted.\n',
-      'Scheduled posts will not be affected.'
+      'Scheduled posts will not be affected.',
     ],
     buttons: [
       modalCancelButton,
-      button({ class: 'red', click: () => clearQueue({ blogName }).catch(showErrorModal) }, ['Clear it!'])
-    ]
+      button({ class: 'red', click: () => clearQueue({ blogName }).catch(showErrorModal) }, ['Clear it!']),
+    ],
   });
 };
 
@@ -176,8 +176,8 @@ const clearQueue = async function ({ blogName }) {
       '\n\n',
       foundPostsElement,
       '\n',
-      deleteCountElement
-    ]
+      deleteCountElement,
+    ],
   });
 
   const queuedPosts = [];
@@ -195,7 +195,7 @@ const clearQueue = async function ({ blogName }) {
 
         foundPostsElement.textContent = `Found ${queuedPosts.length} queued posts${resource ? '...' : '.'}`;
       }),
-      sleep(1000)
+      sleep(1000),
     ]);
   }
 
@@ -221,7 +221,7 @@ const clearQueue = async function ({ blogName }) {
       }).finally(() => {
         deleteCountElement.textContent = `Deleted ${deleteCount} queued posts... ${failCount ? `(failed: ${failCount})` : ''}`;
       }),
-      sleep(1000)
+      sleep(1000),
     ]);
   }
 
@@ -229,18 +229,18 @@ const clearQueue = async function ({ blogName }) {
     title: 'All done!',
     message: [
       `Deleted ${deleteCount} queued posts. ${failCount ? `(failed: ${failCount})` : ''}\n`,
-      'Refresh the page to see the result.'
+      'Refresh the page to see the result.',
     ],
     buttons: [
-      button({ class: 'blue', click: () => location.reload() }, ['Refresh'])
-    ]
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh']),
+    ],
   });
 };
 
 const showEmptyQueueError = () => showModal({
   title: 'No queued posts!',
   message: ['Looks like there is nothing to clear here.'],
-  buttons: [modalCompleteButton]
+  buttons: [modalCompleteButton],
 });
 
 const deleteDraftsSidebarOptions = {
@@ -249,9 +249,9 @@ const deleteDraftsSidebarOptions = {
   rows: [{
     label: 'Delete drafts',
     onclick: showDeleteDraftsPrompt,
-    carrot: true
+    carrot: true,
   }],
-  visibility: () => /\/blog\/.+\/drafts/.test(location.pathname)
+  visibility: () => /\/blog\/.+\/drafts/.test(location.pathname),
 };
 
 const clearQueueSidebarOptions = {
@@ -260,9 +260,9 @@ const clearQueueSidebarOptions = {
   rows: [{
     label: 'Clear queue',
     onclick: showClearQueuePrompt,
-    carrot: true
+    carrot: true,
   }],
-  visibility: () => /\/blog\/.+\/queue/.test(location.pathname)
+  visibility: () => /\/blog\/.+\/queue/.test(location.pathname),
 };
 
 export const main = async function () {

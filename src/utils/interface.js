@@ -1,9 +1,10 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { inject } from './inject.js';
 import { timelineSelector } from './timeline_id.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
-export const trailItemSelector = `${keyToCss('reblogTrailWrapper')} > ${keyToCss('reblog')}`;
+export const trailItemSelector = `${postSelector} ${keyToCss('reblog')}`;
 export const blogViewSelector = '[style*="--blog-title-color"] *';
 export const notificationSelector = `:is(${keyToCss('notification')}[role="listitem"], ${keyToCss('activityItem')})`;
 
@@ -156,3 +157,6 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
     element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.left + 15 - elementRect.left}px`);
   }
 };
+
+export const getClosestRenderedElement = (element, selector) =>
+  inject('/main_world/closest_rendered_element.js', [selector], element);

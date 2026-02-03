@@ -1,6 +1,6 @@
 import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
 import { dom } from '../../utils/dom.js';
-import { appendWithoutOverflow, buildStyle, filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
+import { appendWithoutOverflow, buildStyle, filterPostElements, postSelector } from '../../utils/interface.js';
 import { megaEdit } from '../../utils/mega_editor.js';
 import { modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
@@ -8,13 +8,12 @@ import { notify } from '../../utils/notifications.js';
 import { registerPostOption, unregisterPostOption } from '../../utils/post_actions.js';
 import { popoverStackingContextFix } from '../../utils/post_popovers.js';
 import { getPreferences } from '../../utils/preferences.js';
-import { timelineObject, editPostFormTags } from '../../utils/react_props.js';
+import { timelineObject, editPostFormTags, updatePostOnPage } from '../../utils/react_props.js';
 import { apiFetch, createEditRequestBody, isNpfCompatible } from '../../utils/tumblr_helpers.js';
 
 const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
 const excludeClass = 'xkit-quick-tags-done';
-const tagsClass = 'xkit-quick-tags-tags';
 
 let originalPostTag;
 let answerTag;
@@ -57,8 +56,6 @@ const popupForm = dom('form', null, { submit: event => event.preventDefault() },
 const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option' });
 
 const storageKey = 'quick_tags.preferences.tagBundles';
-
-let editedTagsMap = new WeakMap();
 
 const createBundleButton = tagBundle => {
   const bundleButton = dom('button', null, null, [tagBundle.title]);
@@ -165,17 +162,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
     notify(`Edited legacy post on ${blogName}`);
   }
 
-  editedTagsMap.set(getTimelineItemWrapper(postElement), tags);
-  addFakeTagsToFooter(postElement, tags);
-};
-
-const addFakeTagsToFooter = (postElement, tags) => {
-  const fakeTags = tags.map(tag =>
-    dom('a', { href: `/tagged/${encodeURIComponent(tag)}`, target: '_blank' }, null, [`#${tag}`]),
-  );
-  const tagsElement = dom('div', { class: tagsClass }, null, [dom('div', null, null, fakeTags)]);
-
-  postElement.querySelector('footer').parentNode.prepend(tagsElement);
+  await updatePostOnPage(postElement, ['tags', 'tagsV2']);
 };
 
 const processFormSubmit = function ({ currentTarget }) {
@@ -204,9 +191,6 @@ const processPostOptionBundleClick = function ({ target }) {
 };
 
 const processPosts = postElements => filterPostElements(postElements).forEach(async postElement => {
-  const tags = editedTagsMap.get(getTimelineItemWrapper(postElement));
-  tags && addFakeTagsToFooter(postElement, tags);
-
   const { state, canEdit } = await timelineObject(postElement);
   if (canEdit && ['ask', 'submission'].includes(state) === false) {
     const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
@@ -297,9 +281,6 @@ export const clean = async function () {
 
   $(`.${buttonClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
-  $(`.${tagsClass}`).remove();
-
-  editedTagsMap = new WeakMap();
 
   window.removeEventListener('xkit-quick-tags-migration', migrateTags);
 };

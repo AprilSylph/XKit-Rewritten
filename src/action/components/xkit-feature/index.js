@@ -1,5 +1,5 @@
 import { CustomElement, fetchStyleSheets } from '../index.js';
-import Coloris from '../../../lib/coloris.min.js';
+import Coloris from '../../../lib/coloris.js';
 
 const localName = 'xkit-feature';
 
@@ -27,7 +27,7 @@ const templateDocument = new DOMParser().parseFromString(`
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
-  '/lib/coloris.min.css',
+  '/lib/coloris.css',
   '/lib/normalize.min.css',
   '/lib/remixicon/remixicon.css',
   '/lib/toggle-button.css',

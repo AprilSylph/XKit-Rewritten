@@ -21,6 +21,12 @@ export default [
   }),
 
   /**
+   * Enforce consistent use of trailing commas in object and array literals.
+   * @see https://eslint.style/rules/comma-dangle
+   */
+  { rules: { '@stylistic/comma-dangle': ['warn', 'always-multiline'] } },
+
+  /**
    * Use recommended `import-x` lint rules. Additionally, prevent cyclical imports.
    * @see https://github.com/un-ts/eslint-plugin-import-x/blob/master/src/config/flat/recommended.ts
    * @see https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/no-cycle.md
@@ -32,6 +38,11 @@ export default [
    * @see https://github.com/gajus/eslint-plugin-jsdoc?tab=readme-ov-file#readme
    */
   jsdoc.configs['flat/recommended'],
+
+  /**
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-hyphen-before-param-description.md
+   */
+  { rules: { 'jsdoc/require-hyphen-before-param-description': ['error', 'never', { tags: { '*': 'never' } }] } },
 
   /**
    * Do not require JSDoc on "main world" injected scripts, which have definitions

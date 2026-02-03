@@ -112,7 +112,7 @@ const openPostById = async id => {
   const timeoutId = setTimeout(() => showModal({
     title: 'NotificationBlock',
     message: [`Searching for post ${id} on your blogs. Please wait...`],
-    buttons: [dom('button', { class: 'red' }, { click: () => { canceled = true; } }, ['Cancel'])]
+    buttons: [dom('button', { class: 'red' }, { click: () => { canceled = true; } }, ['Cancel'])],
   }), 500);
 
   const sortedUserBlogs = [...userBlogs].sort((a, b) => b.posts - a.posts);
@@ -137,7 +137,7 @@ const openPostById = async id => {
   showModal({
     title: 'NotificationBlock',
     message: [`Failed to find and open post ${id}! It may not be one of your original posts.`],
-    buttons: [modalCompleteButton]
+    buttons: [modalCompleteButton],
   });
 };
 

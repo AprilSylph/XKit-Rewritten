@@ -35,7 +35,7 @@ const renderBlocked = async function () {
     anchorElement.addEventListener('click', async event => {
       event.preventDefault();
       await browser.storage.local.set({
-        [toOpenStorageKey]: { blockedPostID }
+        [toOpenStorageKey]: { blockedPostID },
       });
       window.open('https://www.tumblr.com/');
     });

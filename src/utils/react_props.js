@@ -1,5 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { inject } from './inject.js';
+import { apiFetch } from './tumblr_helpers.js';
 import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
 /**
@@ -15,9 +16,10 @@ export const timelineObject = postElement => {
  * @param {Element} trailItemElement An on-screen reblog trail item element
  * @returns {Promise<object>} The trail item element's trailItem context value
  */
-export const trailItem = weakMemoize(trailItemElement =>
-  inject('/main_world/unbury_trail_item.js', [], trailItemElement)
-);
+export const trailItem = trailItemElement => {
+  trailItemElement.trailItemPromise ??= inject('/main_world/unbury_trail_item.js', [], trailItemElement);
+  return trailItemElement.trailItemPromise;
+};
 
 /**
  * @param {Element} notificationElement An on-screen notification

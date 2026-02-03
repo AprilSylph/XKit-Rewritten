@@ -1,8 +1,10 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { inject } from './inject.js';
 import { timelineSelector } from './timeline_id.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
+export const trailItemSelector = `${postSelector} ${keyToCss('reblog')}`;
 export const blogViewSelector = '[style*="--blog-title-color"] *';
 export const notificationSelector = `:is(${keyToCss('notification')}[role="listitem"], ${keyToCss('activityItem')})`;
 
@@ -12,7 +14,7 @@ const targetWrapperSelector = keyToCss(
   'targetWrapper',
   'targetWrapperBlock',
   'targetWrapperFlex',
-  'targetWrapperInline'
+  'targetWrapperInline',
 );
 
 /**
@@ -94,6 +96,51 @@ export const getPostElements = postFilterOptions => filterPostElements([...docum
 export const buildStyle = (css = '') => dom('style', { class: 'xkit' }, null, [css]);
 
 /**
+ * Elements with these attributes will be immediately hidden when XKit Rewritten
+ * is disabled in Firefox. Be sure that CSS that sets display: none on them for
+ * other reasons has higher than 0-1-0 specificity.
+ */
+export const displayBlockUnlessDisabledAttr = 'data-xkit-display-block';
+export const displayInlineBlockUnlessDisabledAttr = 'data-xkit-display-inline-block';
+export const displayFlexUnlessDisabledAttr = 'data-xkit-display-flex';
+export const displayInlineFlexUnlessDisabledAttr = 'data-xkit-display-inline-flex';
+
+/**
+ * This variable is set to "unset" in the src/content_scripts/interface.css
+ * static stylesheet. A CSS variable set to any global keyword is treated in
+ * var() expressions as if it were undefined.
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/var
+ *
+ * Don't reference this to try to create on-disable behavior in rules in other
+ * src/content_scripts/*.css files: the rules themselves will be invalidated!
+ */
+export const noneIfXkitDisabledVar = '--none-if-xkit-disabled';
+
+document.documentElement.append(
+  buildStyle(`
+    /**
+     * This "none" fallback value will apply if Firefox invalidates the static
+     * stylesheet but leaves this style element in the DOM.
+     */
+    :where(:root) {
+      --none-if-xkit-disabled: none;
+    }
+    [${displayBlockUnlessDisabledAttr}] {
+      display: var(--none-if-xkit-disabled, block);
+    }
+    [${displayInlineBlockUnlessDisabledAttr}] {
+      display: var(--none-if-xkit-disabled, inline-block);
+    }
+    [${displayFlexUnlessDisabledAttr}] {
+      display: var(--none-if-xkit-disabled, flex);
+    }
+    [${displayInlineFlexUnlessDisabledAttr}] {
+      display: var(--none-if-xkit-disabled, inline-flex);
+    }
+  `),
+);
+
+/**
  * Determine a post's legacy type
  * @param {object} post Destructured into content and layout
  * @param {Array} [post.trail] Full post trail
@@ -155,3 +202,6 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
     element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.left + 15 - elementRect.left}px`);
   }
 };
+
+export const getClosestRenderedElement = (element, selector) =>
+  inject('/main_world/closest_rendered_element.js', [selector], element);

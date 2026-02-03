@@ -11,9 +11,10 @@ XKit-Rewritten/
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
 ├── LICENSE
-├── README.md
 ├── package-lock.json
-└── package.json
+├── package.json
+├── README.md
+└── SECURITY.md
 ```
 
 ### `src/`
@@ -27,6 +28,7 @@ src/
 ├── features/             User-facing features
 ├── icons/                Extension icons
 ├── lib/                  External libraries
+├── main_world/           Scripts to execute in the webpage context
 ├── utils/                Helpers for writing features
 └── manifest.json
 ```
@@ -44,4 +46,16 @@ features/
 │   ├── index.js          The feature's module script
 │   ├── options/          Files for rendering the feature's preferences
 │   └── <option_name>.js  Child scripts
+```
+
+#### `main_world/`
+
+These scripts run in the context of the webpage, rather than the extension sandbox.
+
+See [src/utils/inject.js](../src/utils/inject.js) for how to run these scripts as part of feature code.
+
+```
+main_world/
+├── index.js              Facilitates communication between inject() and task-specific module scripts
+└── <script_name>.js      Task-specific modules; each consists of a single function as its default export
 ```

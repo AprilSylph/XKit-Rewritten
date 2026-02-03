@@ -1,0 +1,6 @@
+{
+  "javascript.preferences.autoImportFileExcludePatterns": ["node_modules/**/*"],
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "javascript.preferences.importModuleSpecifierEnding": "js",
+  "javascript.suggest.paths": true
+}

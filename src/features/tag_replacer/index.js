@@ -14,16 +14,16 @@ const showInitialPrompt = async () => {
   const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmReplaceTag(event).catch(showErrorModal) }, [
     dom('label', null, null, [
       'Replace tags on:',
-      dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption))
+      dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption)),
     ]),
     dom('label', null, null, [
       'Remove this tag:',
-      dom('input', { type: 'text', name: 'oldTag', required: true, placeholder: 'Required', autocomplete: 'off' })
+      dom('input', { type: 'text', name: 'oldTag', required: true, placeholder: 'Required', autocomplete: 'off' }),
     ]),
     dom('label', null, null, [
       'Add new tag/tags:',
-      dom('input', { type: 'text', name: 'newTag', placeholder: 'Optional, comma-separated', autocomplete: 'off' })
-    ])
+      dom('input', { type: 'text', name: 'newTag', placeholder: 'Optional, comma-separated', autocomplete: 'off' }),
+    ]),
   ]);
 
   if (location.pathname.startsWith('/blog/')) {
@@ -40,12 +40,12 @@ const showInitialPrompt = async () => {
       submitButton.className = {
         add: 'blue',
         remove: 'red',
-        replace: 'blue'
+        replace: 'blue',
       }[mode];
       submitButton.value = {
         add: 'Add Tags',
         remove: 'Remove Tag',
-        replace: 'Replace Tag'
+        replace: 'Replace Tag',
       }[mode];
     } else {
       submitButton.disabled = true;
@@ -60,10 +60,10 @@ const showInitialPrompt = async () => {
       initialForm,
       dom('small', null, null, [
         'This tool uses the Mass Post Editor API to process posts in bulk.\n',
-        'Any new tags will be added to the end of each post\'s tags.'
-      ])
+        'Any new tags will be added to the end of each post\'s tags.',
+      ]),
     ],
-    buttons: [modalCancelButton, submitButton]
+    buttons: [modalCancelButton, submitButton],
   });
 };
 
@@ -117,7 +117,7 @@ const confirmReplaceTag = async event => {
   const title = {
     add: `Add tags to ${totalPosts} posts?`,
     remove: `Remove tags from ${totalPosts} posts?`,
-    replace: `Replace tags on ${totalPosts} posts?`
+    replace: `Replace tags on ${totalPosts} posts?`,
   }[mode];
 
   const message = {
@@ -127,14 +127,14 @@ const confirmReplaceTag = async event => {
       ' on ',
       createBlogSpan(name),
       ` will gain the ${toAdd.length > 1 ? 'tags:\n' : 'tag: '}`,
-      ...toAdd.flatMap(tag => [createTagSpan(tag), ' '])
+      ...toAdd.flatMap(tag => [createTagSpan(tag), ' ']),
     ],
     remove: [
       'The tag ',
       createTagSpan(oldTag.toLowerCase()),
       ' on ',
       createBlogSpan(name),
-      ' will be removed.'
+      ' will be removed.',
     ],
     replace: [
       'The tag ',
@@ -142,8 +142,8 @@ const confirmReplaceTag = async event => {
       ' on ',
       createBlogSpan(name),
       ` will be replaced with the ${toAdd.length > 1 ? 'tags:\n' : 'tag: '}`,
-      ...toAdd.flatMap(tag => [createTagSpan(tag), ' '])
-    ]
+      ...toAdd.flatMap(tag => [createTagSpan(tag), ' ']),
+    ],
   }[mode];
 
   const buttonClass = { add: 'blue', remove: 'red', replace: 'blue' }[mode];
@@ -158,16 +158,16 @@ const confirmReplaceTag = async event => {
         'button',
         { class: buttonClass },
         { click: () => replaceTag({ uuid, oldTag, toAdd, toRemove, mode }).catch(showErrorModal) },
-        [buttonText]
-      )
-    ]
+        [buttonText],
+      ),
+    ],
   });
 };
 
 const showTagNotFound = ({ tag, name }) => showModal({
   title: 'No posts found!',
   message: ['It looks like you don\'t have any posts tagged ', createTagSpan(tag.toLowerCase()), ' on ', createBlogSpan(name), '.'],
-  buttons: [modalCompleteButton]
+  buttons: [modalCompleteButton],
 });
 
 const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
@@ -182,8 +182,8 @@ const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
       '\n\n',
       gatherStatus,
       appendStatus,
-      removeStatus
-    ]
+      removeStatus,
+    ],
   });
 
   const taggedPosts = [];
@@ -198,7 +198,7 @@ const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
 
         gatherStatus.textContent = `Found ${taggedPosts.length} posts${resource ? '...' : '.'}`;
       }),
-      sleep(1000)
+      sleep(1000),
     ]);
   }
 
@@ -222,7 +222,7 @@ const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
         }).finally(() => {
           appendStatus.textContent = `\nAdded new tags to ${appendedCount} posts... ${appendedFailCount ? `(failed: ${appendedFailCount})` : ''}`;
         }),
-        sleep(1000)
+        sleep(1000),
       ]);
     }
 
@@ -237,7 +237,7 @@ const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
         }).finally(() => {
           removeStatus.textContent = `\nRemoved old tags from ${removedCount} posts... ${removedFailCount ? `(failed: ${removedFailCount})` : ''}`;
         }),
-        sleep(1000)
+        sleep(1000),
       ]);
     }
   }
@@ -248,11 +248,11 @@ const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
     title: 'Thank you, come again!',
     message: [
       toAdd.length ? `Added new tags to ${appendedCount} posts${appendedFailCount ? ` (failed: ${appendedFailCount})` : ''}.\n` : '',
-      toRemove.length ? `Removed old tags from ${removedCount} posts${removedFailCount ? ` (failed: ${removedFailCount})` : ''}.` : ''
+      toRemove.length ? `Removed old tags from ${removedCount} posts${removedFailCount ? ` (failed: ${removedFailCount})` : ''}.` : '',
     ],
     buttons: [
-      modalCompleteButton
-    ]
+      modalCompleteButton,
+    ],
   });
 };
 
@@ -262,8 +262,8 @@ const sidebarOptions = {
   rows: [{
     label: 'Replace a tag',
     onclick: showInitialPrompt,
-    carrot: true
-  }]
+    carrot: true,
+  }],
 };
 
 export const main = async () => addSidebarItem(sidebarOptions);

@@ -5,26 +5,27 @@
   "scripts": {
     "test": "web-ext lint",
     "posttest": "eslint src/ --cache",
+    "autofix": "eslint src/ --fix",
     "start": "web-ext run",
     "build": "web-ext build",
     "enable-hooks": "husky",
     "disable-hooks": "git config --unset core.hooksPath"
   },
   "devDependencies": {
-    "chrome-webstore-upload-cli": "^3.4.0",
-    "eslint": "^9.36.0",
+    "chrome-webstore-upload-cli": "^3.5.0",
+    "eslint": "^9.39.2",
     "eslint-plugin-jsdoc": "^52.0.4",
     "husky": "^9.1.7",
     "neostandard": "^0.12.2",
     "web-ext": "^8.10.0"
   },
   "dependencies": {
+    "@melloware/coloris": "^0.25.0",
     "jquery": "^3.7.1",
     "moment": "^2.30.1",
     "normalize.css": "^8.0.1",
-    "remixicon": "^4.6.0",
+    "remixicon": "^4.9.1",
     "sortablejs": "^1.15.6",
-    "spectrum-colorpicker": "^1.8.1",
     "webextension-polyfill": "^0.12.0"
   },
   "webExt": {

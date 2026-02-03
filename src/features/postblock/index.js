@@ -23,14 +23,14 @@ const addWarningElement = (postElement, rootID) => {
     click: ({ currentTarget }) => {
       getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
       currentTarget.disabled = true;
-    }
+    },
   }, 'show it');
 
   const unblockButton = dom('button', null, {
     click: () => {
       unblockPost(rootID);
       warningElement.remove();
-    }
+    },
   }, 'unblock it');
 
   const warningElement = dom('div', { class: warningClass }, null, [
@@ -38,7 +38,7 @@ const addWarningElement = (postElement, rootID) => {
     dom('br'),
     showButton,
     ' / ',
-    unblockButton
+    unblockButton,
   ]);
   postElement.closest(timelineSelector).before(warningElement);
 };
@@ -54,7 +54,7 @@ const processPosts = postElements =>
       id,
       blog: { uuid },
       rebloggedFromId,
-      rebloggedFromUuid
+      rebloggedFromUuid,
     } = await timelineObject(postElement);
 
     const rootID = rebloggedRootId || postID;

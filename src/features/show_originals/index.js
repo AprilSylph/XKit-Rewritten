@@ -13,8 +13,9 @@ import {
   timelineSelector,
   anyCommunityTimelineFilter,
   communitiesTimelineFilter,
-  blogpackTimelineFilter
+  blogpackTimelineFilter,
 } from '../../utils/timeline_id.js';
+import { a, div } from '../../utils/dom.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
@@ -37,14 +38,11 @@ const lengthenTimeline = async (timeline) => {
   }
 };
 
-const createButton = (textContent, onclick, mode) => {
-  const button = Object.assign(document.createElement('a'), { textContent, onclick });
-  button.dataset.mode = mode;
-  return button;
-};
+const createButton = (buttonText, onclick, mode) =>
+  a({ 'data-mode': mode, click: onclick }, [buttonText]);
 
 const addControls = async (timelineElement, location) => {
-  const controls = Object.assign(document.createElement('div'), { className: controlsClass });
+  const controls = div({ class: controlsClass });
   controls.dataset.location = location;
 
   timelineElement.prepend(controls);
@@ -83,7 +81,7 @@ const getLocation = timelineElement => {
     peepr: isBlog,
     blogSubscriptions: blogSubsTimelineFilter(timelineElement),
     community: anyCommunityTimelineFilter(timelineElement) || communitiesTimelineFilter(timelineElement),
-    blogpack: blogpackTimelineFilter(timelineElement)
+    blogpack: blogpackTimelineFilter(timelineElement),
   };
   return Object.keys(on).find(location => on[location]);
 };
@@ -127,7 +125,7 @@ export const main = async function () {
     showOwnReblogs,
     showReblogsWithContributedContent,
     showReblogsOfNotFollowing,
-    whitelistedUsernames
+    whitelistedUsernames,
   } = await getPreferences('show_originals'));
 
   whitelist = whitelistedUsernames.split(',').map(username => username.trim());

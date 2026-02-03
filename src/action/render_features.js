@@ -21,7 +21,7 @@ const renderFeatures = async function () {
   const installedFeatures = await getInstalledFeatures();
   const {
     [enabledFeaturesKey]: enabledFeatures = [],
-    [specialAccessKey]: specialAccess = []
+    [specialAccessKey]: specialAccess = [],
   } = await browser.storage.local.get();
 
   const orderedEnabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName));
@@ -30,7 +30,7 @@ const renderFeatures = async function () {
   for (const featureName of [...orderedEnabledFeatures, ...disabledFeatures]) {
     const url = browser.runtime.getURL(`/features/${featureName}/feature.json`);
     const file = await fetch(url);
-    const { title, description, icon, ...metadata } = await file.json();
+    const { title, description, icon, help, ...metadata } = await file.json();
 
     const disabled = enabledFeatures.includes(featureName) === false;
     if (disabled && metadata.deprecated && !specialAccess.includes(featureName)) {
@@ -60,6 +60,37 @@ const renderFeatures = async function () {
       iconElement.style.backgroundColor = icon.background_color ?? '#ffffff';
       iconElement.style.color = icon.color ?? '#000000';
       featureElement.append(iconElement);
+    }
+
+    if (metadata.deprecated) {
+      const iconElement = document.createElement('i');
+      iconElement.setAttribute('slot', 'badge');
+      iconElement.setAttribute('aria-label', 'Deprecated');
+      iconElement.setAttribute('title', 'This feature is deprecated.');
+      iconElement.classList.add('ri-fw', 'ri-alert-fill');
+      iconElement.style.color = '#ff8a00';
+      iconElement.style.cursor = 'auto';
+      iconElement.style.fontSize = '1.25rem';
+      featureElement.append(iconElement);
+    } else if (help) {
+      const anchorElement = document.createElement('a');
+      anchorElement.setAttribute('slot', 'badge');
+      anchorElement.setAttribute('aria-label', 'Help');
+      anchorElement.setAttribute('href', help);
+      anchorElement.setAttribute('target', '_blank');
+      featureElement.append(anchorElement);
+
+      const iconElement = document.createElement('i');
+      iconElement.setAttribute('aria-hidden', 'true');
+      iconElement.classList.add('ri-fw', 'ri-question-fill');
+      iconElement.style.color = 'rgb(var(--black))';
+      iconElement.style.fontSize = '1.25rem';
+      anchorElement.append(iconElement);
+    } else {
+      const spanElement = document.createElement('span');
+      spanElement.setAttribute('slot', 'badge');
+      spanElement.textContent = 'New!';
+      featureElement.append(spanElement);
     }
 
     featureElements.push(featureElement);

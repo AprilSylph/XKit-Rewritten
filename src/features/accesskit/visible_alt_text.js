@@ -1,4 +1,5 @@
 import { keyToCss } from '../../utils/css_map.js';
+import { figcaption } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
@@ -40,11 +41,12 @@ const processImages = function (imageElements) {
     const shouldShowCaption = mode === 'show' || !isDefaultAltText;
     if (!shouldShowCaption) continue;
 
-    const caption = Object.assign(document.createElement('figcaption'), { textContent: alt });
-    caption.addEventListener('click', event => {
-      event.preventDefault();
-      event.stopPropagation();
-    });
+    const caption = figcaption({
+      click: event => {
+        event.preventDefault();
+        event.stopPropagation();
+      },
+    }, [alt]);
     imageBlock.append(caption);
   }
 };

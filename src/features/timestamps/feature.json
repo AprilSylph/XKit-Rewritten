@@ -6,7 +6,6 @@
     "color": "white",
     "background_color": "#d2196d"
   },
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#timestamps",
   "preferences": {
     "alwaysShowYear": {
       "type": "checkbox",

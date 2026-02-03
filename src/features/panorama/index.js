@@ -120,7 +120,7 @@ const processVideoIframes = iframes => iframes.forEach(iframe => {
   if (maxWidth && height) {
     iframe.style.setProperty(
       aspectRatioVar,
-      `${maxWidth.replace('px', '')} / ${height.replace('px', '')}`
+      `${maxWidth.replace('px', '')} / ${height.replace('px', '')}`,
     );
   }
 });
@@ -142,7 +142,7 @@ export const main = async () => {
     expandPostMedia,
     mainEnable,
     communitiesEnable,
-    patioEnable
+    patioEnable,
   } = await getPreferences('panorama');
 
   document.documentElement.style.setProperty(maxPostWidthVar, maxPostWidth);
@@ -155,7 +155,7 @@ export const main = async () => {
 
   pageModifications.register(
     `${postSelector} ${keyToCss('videoBlock')} iframe[style*="max-width"][style*="height"]`,
-    processVideoIframes
+    processVideoIframes,
   );
   pageModifications.register('figure img', processPostImages);
 };
@@ -164,7 +164,7 @@ export const clean = async () => {
   pageModifications.unregister(processVideoIframes);
   pageModifications.unregister(processPostImages);
   [...document.querySelectorAll(`iframe[style*="${aspectRatioVar}"]`)].forEach(el =>
-    el.style.removeProperty(aspectRatioVar)
+    el.style.removeProperty(aspectRatioVar),
   );
   [...document.querySelectorAll(`[${modifiedSizesAttr}]`)].forEach(image => {
     image.sizes = image.getAttribute(modifiedSizesAttr);

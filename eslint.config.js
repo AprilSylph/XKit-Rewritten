@@ -61,9 +61,9 @@ export default [
         'warn',
         {
           publicOnly: true,
-          require: { FunctionDeclaration: true, FunctionExpression: true, ArrowFunctionExpression: true }
-        }
-      ]
-    }
-  }
+          require: { FunctionDeclaration: true, FunctionExpression: true, ArrowFunctionExpression: true },
+        },
+      ],
+    },
+  },
 ];

@@ -38,7 +38,7 @@ const paint = postElements => filterPostElements(postElements, { excludeClass })
       try {
         const { response: { tags: sourceTags } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
         if (sourceTags.some(tag => tagArray.includes(tag.toLowerCase()))) coloursToApply.push(tagColour);
-      } catch (exception) {
+      } catch {
         // The source post can't be found, so we can't extract tags from it either.
         // This means we don't have to do anything else with it, and we can quit quietly.
       }

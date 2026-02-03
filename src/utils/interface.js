@@ -1,8 +1,10 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { inject } from './inject.js';
 import { timelineSelector } from './timeline_id.js';
 
 export const postSelector = '[tabindex="-1"][data-id]';
+export const trailItemSelector = `${postSelector} ${keyToCss('reblog')}`;
 export const blogViewSelector = '[style*="--blog-title-color"] *';
 export const notificationSelector = `:is(${keyToCss('notification')}[role="listitem"], ${keyToCss('activityItem')})`;
 
@@ -37,15 +39,15 @@ export const getPopoverWrapper = element => {
 
 /**
  * @typedef {object} PostFilterOptions
- * @property {string} [excludeClass] - Classname to exclude and add
- * @property {Function|Function[]} [timeline] - Filter results to matching timeline element children
- * @property {boolean} [noBlogView] - Whether to exclude posts in the blog view modal
- * @property {boolean} [includeFiltered] - Whether to include filtered posts
+ * @property {string} [excludeClass] Classname to exclude and add
+ * @property {Function|Function[]} [timeline] Filter results to matching timeline element children
+ * @property {boolean} [noBlogView] Whether to exclude posts in the blog view modal
+ * @property {boolean} [includeFiltered] Whether to include filtered posts
  */
 
 /**
- * @param {Element[]} postElements - Post elements (or descendants) to filter
- * @param {PostFilterOptions} [postFilterOptions] - Post filter options
+ * @param {Element[]} postElements Post elements (or descendants) to filter
+ * @param {PostFilterOptions} [postFilterOptions] Post filter options
  * @returns {HTMLDivElement[]} Matching post elements
  */
 export const filterPostElements = function (postElements, { excludeClass, timeline, noBlogView = false, includeFiltered = false } = {}) {
@@ -82,23 +84,23 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
 };
 
 /**
- * @param {PostFilterOptions} postFilterOptions - Post filter options
+ * @param {PostFilterOptions} postFilterOptions Post filter options
  * @returns {HTMLDivElement[]} Matching post elements on the page
  */
 export const getPostElements = postFilterOptions => filterPostElements([...document.querySelectorAll(postSelector)], postFilterOptions);
 
 /**
- * @param {string} [css] - CSS rules to be included
+ * @param {string} [css] CSS rules to be included
  * @returns {HTMLStyleElement} Style element containing the provided CSS
  */
 export const buildStyle = (css = '') => dom('style', { class: 'xkit' }, null, [css]);
 
 /**
  * Determine a post's legacy type
- * @param {object} post - Destructured into content and layout
- * @param {Array} [post.trail] - Full post trail
- * @param {Array} [post.content] - Post content array
- * @param {Array} [post.layout] - Post layout array
+ * @param {object} post Destructured into content and layout
+ * @param {Array} [post.trail] Full post trail
+ * @param {Array} [post.content] Post content array
+ * @param {Array} [post.layout] Post layout array
  * @returns {string} The determined legacy type of the post
  * @see https://github.com/tumblr/docs/blob/master/npf-spec.md#mapping-npf-post-content-to-legacy-post-types
  */
@@ -155,3 +157,6 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
     element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.left + 15 - elementRect.left}px`);
   }
 };
+
+export const getClosestRenderedElement = (element, selector) =>
+  inject('/main_world/closest_rendered_element.js', [selector], element);

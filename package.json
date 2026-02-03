@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "test": "web-ext lint",
-    "posttest": "eslint src/",
-    "autofix": "eslint src/ --fix",
+    "posttest": "eslint .",
+    "autofix": "eslint . --fix",
     "start": "web-ext run",
     "build": "web-ext build"
   },

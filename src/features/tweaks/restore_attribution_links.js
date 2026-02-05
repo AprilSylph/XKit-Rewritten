@@ -1,8 +1,8 @@
-import { onNewPosts } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
+import { buildStyle, postSelector, trailItemSelector } from '../../utils/interface.js';
+import { onNewPosts } from '../../utils/mutations.js';
 import { timelineObject, trailItem } from '../../utils/react_props.js';
 import { navigate } from '../../utils/tumblr_helpers.js';
-import { buildStyle, postSelector, trailItemSelector } from '../../utils/interface.js';
 
 const headerSelector = `${postSelector} header`;
 const subheaderSelector = `${headerSelector} ${keyToCss('subheader')}`;

@@ -1,15 +1,15 @@
 import { sha256 } from '../../utils/crypto.js';
-import { timelineObject } from '../../utils/react_props.js';
-import { apiFetch } from '../../utils/tumblr_helpers.js';
+import { keyToCss } from '../../utils/css_map.js';
+import { div, select, input, fieldset, button, option, hr, span } from '../../utils/dom.js';
 import { postSelector, filterPostElements, postType, appendWithoutOverflow, buildStyle } from '../../utils/interface.js';
-import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../../utils/user.js';
-import { getPreferences } from '../../utils/preferences.js';
+import { showErrorModal } from '../../utils/modals.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
-import { div, select, input, fieldset, button, option, hr, span } from '../../utils/dom.js';
-import { showErrorModal } from '../../utils/modals.js';
-import { keyToCss } from '../../utils/css_map.js';
 import { popoverStackingContextFix } from '../../utils/post_popovers.js';
+import { getPreferences } from '../../utils/preferences.js';
+import { timelineObject } from '../../utils/react_props.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
+import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../../utils/user.js';
 
 // Clean up previous instance after addon reload
 document.getElementById('quick-reblog')?.remove();

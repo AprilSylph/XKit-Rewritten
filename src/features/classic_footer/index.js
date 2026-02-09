@@ -135,10 +135,10 @@ export const styleElement = buildStyle(`
   }
 
   /* Move reblog modal to the left instead of the right */
-  body > div > div[style]:has(> ${keyToCss('withinModal')} > ${keyToCss('menuItemsWrapper', 'reblogsDisabledInfo')}) {
+  body > div[id^="portal/"] > div:has(a[role="menuitem"][href^="/reblog/"], ${keyToCss('reblogsDisabledInfo')) {
     direction: rtl;
   }
-  body > div > div[style] > ${keyToCss('withinModal')}:has(> ${keyToCss('menuItemsWrapper', 'reblogsDisabledInfo')}) {
+  body > div[id^="portal/"] > div > [role="menu"]:has(a[role="menuitem"][href^="/reblog/"], ${keyToCss('reblogsDisabledInfo')) {
     direction: initial;
   }
 

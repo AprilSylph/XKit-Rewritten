@@ -1,9 +1,9 @@
-import { filterPostElements } from '../../utils/interface.js';
-import { getPreferences } from '../../utils/preferences.js';
-import { onNewPosts } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { anyQueueTimelineFilter, anyDraftsTimelineFilter } from '../../utils/timeline_id.js';
 import { div } from '../../utils/dom.js';
+import { filterPostElements } from '../../utils/interface.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
+import { anyQueueTimelineFilter, anyDraftsTimelineFilter } from '../../utils/timeline_id.js';
 
 const wrapperClass = 'xkit-collapsed-queue-wrapper';
 const containerClass = 'xkit-collapsed-queue-container';

@@ -1,5 +1,5 @@
-import { CustomElement, fetchStyleSheets } from '../index.js';
 import Coloris from '../../../lib/coloris.js';
+import { CustomElement, fetchStyleSheets } from '../index.js';
 
 const localName = 'xkit-feature';
 

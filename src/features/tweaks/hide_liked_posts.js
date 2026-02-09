@@ -1,13 +1,16 @@
-import { onNewPosts } from '../../utils/mutations.js';
 import { buildStyle, getTimelineItemWrapper, filterPostElements } from '../../utils/interface.js';
+import { onNewPosts } from '../../utils/mutations.js';
 import { isMyPost, timelineObject } from '../../utils/react_props.js';
 import { followingTimelineFilter } from '../../utils/timeline_id.js';
 
 const timeline = followingTimelineFilter;
 
 const hiddenAttribute = 'data-tweaks-hide-liked-posts-hidden';
-
-export const styleElement = buildStyle(`[${hiddenAttribute}] article { display: none; }`);
+export const styleElement = buildStyle(`
+[${hiddenAttribute}] {
+  content: linear-gradient(transparent, transparent);
+  height: 0;
+}`);
 
 const processPosts = async function (postElements) {
   filterPostElements(postElements, { timeline }).forEach(async postElement => {

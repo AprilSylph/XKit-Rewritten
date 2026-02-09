@@ -1,0 +1,339 @@
+#quick-reblog {
+  position: absolute;
+  z-index: 97;
+  box-shadow: 0 0 15px 0 rgba(0,0,0,.5);
+  padding: 2px;
+  border-radius: 3px;
+  overflow: hidden;
+  color: rgb(var(--black));
+  font-size: .875rem;
+  font-weight: normal;
+  background-color: rgb(var(--white));
+  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  max-width: 250px;
+  line-height: 1;
+}
+
+#quick-reblog [hidden] {
+  display: none !important;
+}
+
+#quick-reblog {
+  --icon-spacing: 12px;
+}
+@media not (min-width: 990px) {
+  #quick-reblog {
+    --icon-spacing: 0px;
+  }
+}
+
+#quick-reblog[data-position="below"] {
+  inset: 100% 50% auto auto;
+  transform: translate(calc(50% + var(--horizontal-offset, 0%)), var(--icon-spacing));
+}
+#quick-reblog[data-position="above"] {
+  inset: auto 50% 100% auto;
+  transform: translate(calc(50% + var(--horizontal-offset, 0%)), calc(0px - var(--icon-spacing)));
+}
+
+#quick-reblog select,
+#quick-reblog input {
+  border: none;
+  border-radius: 0;
+  color: inherit;
+  background-color: inherit;
+}
+
+#quick-reblog input {
+  padding: 10px;
+  margin-bottom: 2px;
+}
+
+#quick-reblog select {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  font-family: var(--font-family);
+  font-weight: bold;
+}
+
+#quick-reblog .select-container {
+  display: flex;
+  gap: 2px;
+  padding: 6px;
+  margin-bottom: 2px;
+
+  background-color: inherit;
+}
+
+#quick-reblog .avatar {
+  flex: none;
+  height: 26px;
+  width: 26px;
+
+  background-size: cover;
+  border-radius: 2px;
+}
+
+#quick-reblog [role="tablist"] {
+  display: flex;
+  flex-direction: row;
+  column-gap: 2px;
+}
+
+#quick-reblog [role="tablist"] [role="tab"] {
+  isolation: isolate;
+
+  box-sizing: border-box;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 6px 10px;
+
+  background-color: rgb(var(--white));
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  color: rgb(var(--black));
+  font-size: .75rem;
+  font-weight: bold;
+}
+
+#quick-reblog [role="tablist"] [role="tab"][aria-selected="true"] {
+  cursor: default;
+}
+
+#quick-reblog [role="tablist"] [role="tab"][aria-selected="false"] {
+  background-color: rgba(var(--white), 0.4);
+  color: rgba(var(--black), 0.4);
+}
+
+#quick-reblog [role="tablist"] [role="tab"][aria-selected="false"]:hover {
+  background-color: rgba(var(--white), 0.65);
+  color: rgba(var(--black), 0.65);
+}
+
+#quick-reblog [role="tabpanel"] {
+  --line-height: 1rem;
+  --vertical-padding: .4375rem;
+  --vertical-margin: 2px;
+  --button-height: calc(
+    var(--vertical-padding) +
+    var(--line-height) +
+    var(--vertical-padding) +
+    var(--vertical-margin)
+  );
+  --maximum-buttons: 4;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: content-box;
+  max-height: calc(
+    (var(--button-height) * var(--maximum-buttons)) -
+    var(--vertical-margin)
+  );
+  margin-bottom: var(--vertical-margin);
+  overflow-y: auto;
+
+  font-size: .875rem;
+  line-height: var(--line-height);
+}
+
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *) {
+  background-color: rgb(var(--white));
+  border: 4px solid rgb(var(--white));
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *):focus-visible {
+  outline-offset: -2px;
+}
+
+
+#quick-reblog [role="tabpanel"]:is([role="tablist"][hidden] ~ *):empty {
+  display: none;
+}
+
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *):empty::before {
+  padding: var(--vertical-padding) 0;
+
+  color: rgba(var(--black), 0.65);
+  content: "There’s nothing here.";
+  text-align: center;
+}
+
+#quick-reblog [role="tabpanel"] button {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  flex-shrink: 0;
+  padding: var(--vertical-padding) 10px;
+  margin-bottom: var(--vertical-margin);
+
+  background-color: rgba(var(--white), 0.65);
+  color: rgba(var(--black), 0.65);
+  font-size: inherit;
+  line-height: inherit;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *) button {
+  background-color: rgba(var(--black), 0.07);
+}
+
+#quick-reblog [role="tabpanel"] button:last-child {
+  margin-bottom: 0;
+}
+
+#quick-reblog [role="tabpanel"] button:hover {
+  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
+  color: rgb(var(--black));
+}
+
+#quick-reblog [role="tabpanel"] button:active {
+  background-image: linear-gradient(rgba(var(--black), 0.25), rgba(var(--black), 0.25));
+}
+
+#quick-reblog [role="tabpanel"] button:focus-visible {
+  outline-offset: -2px;
+}
+
+#quick-reblog [role="tabpanel"] button::after {
+  content: "\2713";
+  visibility: hidden;
+}
+
+#quick-reblog [role="tabpanel"] button[aria-pressed="true"]::after {
+  visibility: visible;
+}
+
+#quick-reblog [role="tabpanel"] button > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#quick-reblog .action-buttons {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  min-width: 200px;
+}
+
+#quick-reblog .action-buttons button {
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 10px;
+
+  background-color: rgb(var(--white));
+  font-weight: bold;
+}
+
+#quick-reblog .action-buttons:enabled button:hover {
+  background-image: linear-gradient(rgba(var(--black), 0.07), rgba(var(--black), 0.07));
+}
+
+#quick-reblog .action-buttons:enabled button:active {
+  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
+}
+
+#quick-reblog .action-buttons button:not(:first-child) {
+  margin-left: 2px;
+}
+
+#quick-reblog .action-buttons:disabled::before {
+  content: "Processing…";
+  font-weight: bold;
+  color: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  background-color: rgb(var(--white));
+  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
+}
+
+#quick-reblog button[data-state="published"] { color: rgb(var(--blue)); }
+#quick-reblog button[data-state="queue"] { color: rgb(var(--pink)); }
+#quick-reblog button[data-state="draft"] { color: rgb(var(--orange)); }
+
+#quick-reblog .action-buttons.community-selected button:not([data-state="published"]) { display: none; }
+
+/* === AlreadyReblogged === */
+
+footer.published :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--green)); }
+footer.queue :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--purple)); }
+footer.draft :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--red)); }
+
+footer:is(.published, .queue, .draft) :is(a, button) svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"]) {
+  --icon-color-primary: currentColor; /* Ensure that colouration is applied to icon */
+}
+
+footer:is(.published, .queue, .draft) :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) {
+  position: relative; /* For absolute positioning of tick pseudo-element */
+}
+
+/* Cut-out for tick in 2025 post footer */
+footer:is(.published, .queue, .draft) :is(a, button) svg:has(use[href="#managed-icon__ds-reblog-24"]) {
+  -webkit-mask-image: radial-gradient(
+    calc(14.7px / 2) calc(18px / 2) at bottom 4px left 21px,
+    transparent 99%,
+    white 100%
+  );
+  mask-image: radial-gradient(
+    calc(14.7px / 2) calc(18px / 2) at bottom 4px left 21px,
+    transparent 99%,
+    white 100%
+  );
+}
+
+/* Styles for tick pseudo-element */
+footer:is(.published, .queue, .draft) :is(a, button):has(use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"]))::after {
+  position: absolute;
+
+  display: inline-block;
+  padding: 2px;
+  border-radius: 100%;
+
+  content: "\2713";
+  font-family: "Favorit", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1;
+}
+
+/* Pre-2025 post footer */
+footer:is(.published, .queue, .draft) a:has(use[href="#managed-icon__reblog"])::after {
+  background-color: var(--content-panel);
+  bottom: -5px;
+  right: -5px;
+}
+
+/* 2025 post footer */
+footer:is(.published, .queue, .draft) :is(a, button):has(use[href="#managed-icon__ds-reblog-24"])::after {
+  bottom: 4px;
+  left: 21px;
+}
+
+/* === XKit 7 override === */
+
+#x1cpostage_box {
+  display: none !important;
+}

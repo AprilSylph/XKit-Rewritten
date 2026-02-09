@@ -7,22 +7,25 @@ let lastFocusedElement;
 
 /**
  * Show a takeover prompt to the user
- * @param {object} options - Destructured
- * @param {string} [options.title] - Prompt title
- * @param {(string|Node)[]} [options.message] - Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
- * @param {(HTMLElement)[]} [options.buttons] - Array of buttons to be displayed in the modal
+ * @param {object} options Destructured
+ * @param {string} [options.title] Prompt title
+ * @param {(string|Node)[]} [options.message] Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
+ * @param {(HTMLElement)[]} [options.buttons] Array of buttons to be displayed in the modal
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {
   const modalElement = dom('div', {
     id: 'xkit-modal',
     tabindex: '-1',
     role: 'dialog',
-    'aria-modal': 'true'
+    'aria-modal': 'true',
+
+    // prevents Tumblr's trapFocusInsideGlass function from stealing focus when opened from mobile drawer
+    'data-skip-glass-focus-trap': '',
   }, null, [
     dom('style', null, null, ['body { overflow: hidden; }']),
     title ? dom('h3', { class: 'title' }, null, [title]) : '',
     dom('div', { class: 'message' }, null, message),
-    dom('div', { class: 'buttons' }, null, buttons)
+    dom('div', { class: 'buttons' }, null, buttons),
   ]);
 
   hideModal();
@@ -51,11 +54,14 @@ export const showErrorModal = exception => {
         exception.body?.errors?.[0]?.detail,
         exception.errors?.[0]?.detail,
         exception.message,
-        browser.runtime?.id === undefined && 'Please refresh this browser tab!'
+        browser.runtime?.id === undefined && 'Please refresh this browser tab!',
       ]
         .filter(Boolean)
-        .join('\n\n')
+        .join('\n\n'),
     ],
-    buttons: [modalCompleteButton]
+    buttons: [modalCompleteButton],
   });
 };
+
+export const createTagSpan = tag => dom('span', { class: 'xkit-modal-tag' }, null, [tag]);
+export const createBlogSpan = name => dom('span', { class: 'xkit-modal-blog' }, null, [name]);

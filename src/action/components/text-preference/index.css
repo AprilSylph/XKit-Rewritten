@@ -1,0 +1,28 @@
+:host {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 8px;
+  padding: 4px;
+}
+
+label {
+  flex-shrink: 0;
+}
+
+input {
+  flex-shrink: 1;
+
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 4px;
+  border: none;
+  border-radius: 3px;
+
+  background-color: rgb(var(--passive-grey));
+  color: rgb(var(--black));
+}
+
+input:focus {
+  background-color: rgb(var(--active-grey));
+}

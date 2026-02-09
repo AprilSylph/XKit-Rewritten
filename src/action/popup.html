@@ -4,15 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XKit Control Panel</title>
-    <link rel="icon" href="/icons/128.png" type="image/png">
-    <link rel="stylesheet" href="/lib/normalize.min.css">
-    <link rel="stylesheet" href="/lib/toggle-button.css">
-    <link rel="stylesheet" href="/lib/remixicon/remixicon.css">
-    <link rel="stylesheet" href="/lib/spectrum.css">
-    <link rel="stylesheet" href="popup.css">
-    <link rel="stylesheet" href="configuration.css">
-    <link rel="stylesheet" href="backup.css">
-    <link rel="stylesheet" href="links.css">
+    <link rel="icon" href="../icons/128.png" type="image/png">
+    <link rel="stylesheet" href="../lib/coloris.css">
+    <link rel="stylesheet" href="../lib/normalize.min.css">
+    <link rel="stylesheet" href="../lib/remixicon/remixicon.css">
+    <link rel="stylesheet" href="./backup.css">
+    <link rel="stylesheet" href="./configuration.css">
+    <link rel="stylesheet" href="./links.css">
+    <link rel="stylesheet" href="./popup.css">
+    <script defer src="../lib/browser-polyfill.min.js"></script>
+    <script defer src="../lib/jquery.slim.min.js"></script>
+    <script defer src="./popup.js"></script>
+    <script defer src="./render_backup.js"></script>
+    <script type="module" src="./render_features.js"></script>
   </head>
   <body>
     <header id="permissions-banner" hidden>
@@ -41,22 +45,26 @@
         <div class="no-results">
           <p>No results found.</p>
         </div>
-        <div class="scripts"></div>
+        <div class="features"></div>
       </section>
       <section id="backup">
         <details id="export" open>
           <summary><h4>Export</h4></summary>
-          <pre id="local-storage-export"></pre>
-          <div class="buttons-container">
-            <button id="copy-local">Copy All</button>
-            <button id="download-local">Download</button>
+          <div class="content">
+            <pre id="local-storage-export"></pre>
+            <div class="buttons-container">
+              <button id="copy-local">Copy All</button>
+              <button id="download-local">Download</button>
+            </div>
           </div>
         </details>
         <details id="import">
           <summary><h4>Import</h4></summary>
-          <label for="local-storage-import">Paste the contents of your saved backup here.</label>
-          <textarea id="local-storage-import" rows="10" spellcheck="false"></textarea>
-          <button id="restore-local"></button>
+          <div class="content">
+            <label for="local-storage-import">Paste the contents of your saved backup here.</label>
+            <textarea id="local-storage-import" rows="10" spellcheck="false"></textarea>
+            <button id="restore-local"></button>
+          </div>
         </details>
       </section>
       <section id="links">
@@ -65,6 +73,10 @@
           <li><a href="https://github.com/AprilSylph/XKit-Rewritten/wiki" target="_blank">User guide</a></li>
           <li><a href="https://github.com/AprilSylph/XKit-Rewritten/discussions" target="_blank">Support & discussion</a></li>
           <li><a href="https://github.com/AprilSylph/XKit-Rewritten/releases" target="_blank">Changelog</a><small id="version"></small></li>
+        </ul>
+        <h4>Donate</h4>
+        <ul>
+          <li><a href="https://github.com/AprilSylph/XKit-Rewritten?sponsor=1#readme" target="_blank">Sponsor the project</a></li>
         </ul>
         <h4>Get involved</h4>
         <ul>
@@ -83,26 +95,6 @@
         </ul>
       </section>
     </main>
-
-    <template id="script">
-      <details class="script">
-        <summary>
-          <div class="icon">
-            <i class="ri-fw"></i>
-          </div>
-          <div class="meta">
-            <h4 class="title"></h4>
-            <p class="description"></p>
-          </div>
-          <div class="buttons">
-            <a class="help" target="_blank"><i class="ri-fw ri-question-fill" style="color:rgb(var(--black))"></i></a>
-            <input type="checkbox" class="toggle-button" aria-label="Enable this feature">
-          </div>
-        </summary>
-        <p class="note"></p>
-        <ul class="preferences"></ul>
-      </details>
-    </template>
 
     <template id="checkbox-preference">
       <li>
@@ -146,12 +138,5 @@
         <iframe></iframe>
       </li>
     </template>
-
-    <script src="/lib/browser-polyfill.min.js"></script>
-    <script src="/lib/jquery.min.js"></script>
-    <script src="/lib/spectrum.js"></script>
-    <script src="popup.js"></script>
-    <script src="render_scripts.js"></script>
-    <script src="render_backup.js"></script>
   </body>
 </html>

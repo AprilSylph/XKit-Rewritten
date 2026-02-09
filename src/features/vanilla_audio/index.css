@@ -1,0 +1,24 @@
+.xkit-vanilla-audio-done {
+  cursor: auto;
+}
+
+.xkit-vanilla-audio-done :is(button, [role="slider"]) {
+  display: none;
+}
+
+.xkit-vanilla-audio-done .trackInfo {
+  padding-left: 20px;
+  pointer-events: auto;
+  user-select: auto;
+}
+
+.xkit-vanilla-audio-done ~ audio[controls] {
+  width: 100%;
+}
+
+/* XKit 7 override */
+
+.xkit-vanilla-audio-done ~ .xkit-audio-plus-slider-container,
+.xkit-vanilla-audio-done ~ div[style="margin: 10px 0; padding: 0 20px;"] {
+  display: none !important;
+}

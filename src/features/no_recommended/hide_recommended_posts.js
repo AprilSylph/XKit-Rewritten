@@ -10,8 +10,9 @@ const timeline = followingTimelineFilter;
 const includeFiltered = true;
 
 export const styleElement = buildStyle(`
-[${hiddenAttribute}]:not([${unHiddenAttribute}]) article {
-  display: none;
+[${hiddenAttribute}]:not([${unHiddenAttribute}]) {
+  content: linear-gradient(transparent, transparent);
+  height: 0;
 }
 
 :not([${unHiddenAttribute}]) + [${unHiddenAttribute}]::before {

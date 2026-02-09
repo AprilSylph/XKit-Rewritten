@@ -1,4 +1,5 @@
 import { keyToCss } from '../../utils/css_map.js';
+import { figcaption } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
@@ -26,8 +27,10 @@ const processImages = function (imageElements) {
   const imageBlocks = new Map();
   imageElements.forEach(imageElement => {
     const { alt } = imageElement;
-    const imageBlock = imageElement.closest(imageBlockSelector);
-    imageBlocks.set(imageBlock, alt);
+    if (alt) {
+      const imageBlock = imageElement.closest(imageBlockSelector);
+      imageBlocks.set(imageBlock, alt);
+    }
   });
 
   for (const [imageBlock, alt] of imageBlocks) {
@@ -38,18 +41,17 @@ const processImages = function (imageElements) {
     const shouldShowCaption = mode === 'show' || !isDefaultAltText;
     if (!shouldShowCaption) continue;
 
-    const caption = Object.assign(document.createElement('figcaption'), { textContent: alt });
-    caption.addEventListener('click', event => {
-      event.preventDefault();
-      event.stopPropagation();
-    });
+    const caption = figcaption({
+      click: event => {
+        event.preventDefault();
+        event.stopPropagation();
+      },
+    }, [alt]);
     imageBlock.append(caption);
   }
 };
 
-const onStorageChanged = async function (changes, areaName) {
-  if (areaName !== 'local') return;
-
+const onStorageChanged = async function (changes) {
   const { 'accesskit.preferences.visible_alt_text_mode': modeChanges } = changes;
   if (modeChanges?.oldValue === undefined) return;
 
@@ -63,12 +65,12 @@ export const main = async function () {
   ({ visible_alt_text_mode: mode } = await getPreferences('accesskit'));
 
   pageModifications.register(`article ${imageBlockSelector} img[alt]`, processImages);
-  browser.storage.onChanged.addListener(onStorageChanged);
+  browser.storage.local.onChanged.addListener(onStorageChanged);
 };
 
 export const clean = async function () {
   pageModifications.unregister(processImages);
-  browser.storage.onChanged.removeListener(onStorageChanged);
+  browser.storage.local.onChanged.removeListener(onStorageChanged);
 
   $(`.${processedClass} figcaption`).remove();
   $(`.${processedClass}`).removeClass(processedClass);

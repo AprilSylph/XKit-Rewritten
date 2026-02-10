@@ -1,3 +1,5 @@
+const preferenceSelector = 'checkbox-preference, color-preference, select-preference, text-preference, textarea-preference';
+
 const checkForNoResults = function () {
   const nothingFound = [...document.querySelectorAll('xkit-feature')].every(featureElement =>
     featureElement.classList.contains('search-hidden') || featureElement.classList.contains('filter-hidden'),
@@ -19,14 +21,14 @@ $('nav a').on('click', event => {
 document.getElementById('search').addEventListener('input', ({ currentTarget }) => {
   const query = currentTarget.value.toLowerCase();
   const featureElements = [...document.querySelectorAll('xkit-feature')];
-  const preferenceElements = featureElements.flatMap(({ shadowRoot }) => [...shadowRoot.querySelectorAll('[role="listitem"]')]);
+  const preferenceElements = featureElements.flatMap(({ shadowRoot }) => [...shadowRoot.querySelectorAll(preferenceSelector)]);
 
   featureElements.forEach(featureElement => {
     const textContent = featureElement.textContent.toLowerCase();
     const shadowContent = featureElement.shadowRoot.textContent.toLowerCase();
     const relatedTerms = featureElement.dataset.relatedTerms.toLowerCase();
     const preferencesContent = [
-      ...featureElement.shadowRoot.querySelectorAll('[role="listitem"]'),
+      ...featureElement.shadowRoot.querySelectorAll(preferenceSelector),
     ].map(({ shadowRoot }) => shadowRoot.textContent.toLowerCase()).join('\n');
 
     const hasMatch =

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "XKit Rewritten",
-  "version": "1.1.1",
+  "version": "1.2.1",
 
   "short_name": "XKit",
   "author": "April Sylph",
@@ -53,10 +53,11 @@
       "run_at": "document_end",
       "js": [
         "lib/browser-polyfill.min.js",
-        "lib/jquery.min.js",
+        "lib/jquery.slim.min.js",
         "content_scripts/main.js"
       ],
       "css": [
+        "content_scripts/interface.css",
         "content_scripts/control_buttons.css",
         "content_scripts/meatballs.css",
         "content_scripts/sidebar.css",
@@ -71,10 +72,11 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{6e710c58-36cc-49d6-b772-bfc3030fa56e}",
-      "strict_min_version": "121.0"
+      "data_collection_permissions": { "required": ["none"] },
+      "strict_min_version": "128.0"
     },
     "gecko_android": {
-      "strict_min_version": "121.0"
+      "strict_min_version": "128.0"
     }
   }
 }

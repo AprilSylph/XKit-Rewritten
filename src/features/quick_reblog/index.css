@@ -24,7 +24,7 @@
 #quick-reblog {
   --icon-spacing: 12px;
 }
-@media (max-width: 990px) {
+@media not (min-width: 990px) {
   #quick-reblog {
     --icon-spacing: 0px;
   }
@@ -48,7 +48,7 @@
 }
 
 #quick-reblog input {
-  padding: 1ch;
+  padding: 10px;
   margin-bottom: 2px;
 }
 
@@ -64,7 +64,8 @@
 
 #quick-reblog .select-container {
   display: flex;
-  padding: 4px;
+  gap: 2px;
+  padding: 6px;
   margin-bottom: 2px;
 
   background-color: inherit;
@@ -74,66 +75,149 @@
   flex: none;
   height: 26px;
   width: 26px;
-  margin-right: 2px;
 
   background-size: cover;
   border-radius: 2px;
 }
 
-#quick-reblog .quick-tags {
-  font-size: .875rem;
-  line-height: 1.125;
-  --button-height: calc(1.125em + (0.75ch * 2) + 2px);
+#quick-reblog [role="tablist"] {
+  display: flex;
+  flex-direction: row;
+  column-gap: 2px;
 }
 
-#quick-reblog .quick-tags:not([hidden]) {
+#quick-reblog [role="tablist"] [role="tab"] {
+  isolation: isolate;
+
+  box-sizing: border-box;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 6px 10px;
+
+  background-color: rgb(var(--white));
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  color: rgb(var(--black));
+  font-size: .75rem;
+  font-weight: bold;
+}
+
+#quick-reblog [role="tablist"] [role="tab"][aria-selected="true"] {
+  cursor: default;
+}
+
+#quick-reblog [role="tablist"] [role="tab"][aria-selected="false"] {
+  background-color: rgba(var(--white), 0.4);
+  color: rgba(var(--black), 0.4);
+}
+
+#quick-reblog [role="tablist"] [role="tab"][aria-selected="false"]:hover {
+  background-color: rgba(var(--white), 0.65);
+  color: rgba(var(--black), 0.65);
+}
+
+#quick-reblog [role="tabpanel"] {
+  --line-height: 1rem;
+  --vertical-padding: .4375rem;
+  --vertical-margin: 2px;
+  --button-height: calc(
+    var(--vertical-padding) +
+    var(--line-height) +
+    var(--vertical-padding) +
+    var(--vertical-margin)
+  );
+  --maximum-buttons: 4;
+
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  max-height: calc(var(--button-height) * 4);
+  box-sizing: content-box;
+  max-height: calc(
+    (var(--button-height) * var(--maximum-buttons)) -
+    var(--vertical-margin)
+  );
+  margin-bottom: var(--vertical-margin);
   overflow-y: auto;
+
+  font-size: .875rem;
+  line-height: var(--line-height);
 }
 
-#quick-reblog .quick-tags button {
-  position: relative;
-
-  flex-shrink: 0;
-  display: flex;
-  justify-content: flex-start;
-  overflow-x: hidden;
-  padding: 0.75ch 1ch;
-  padding-right: calc(1ch + 1em + 1ch);
-  margin-bottom: 2px;
-
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *) {
   background-color: rgb(var(--white));
-  color: rgb(var(--black));
+  border: 4px solid rgb(var(--white));
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *):focus-visible {
+  outline-offset: -2px;
+}
+
+
+#quick-reblog [role="tabpanel"]:is([role="tablist"][hidden] ~ *):empty {
+  display: none;
+}
+
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *):empty::before {
+  padding: var(--vertical-padding) 0;
+
+  color: rgba(var(--black), 0.65);
+  content: "There’s nothing here.";
+  text-align: center;
+}
+
+#quick-reblog [role="tabpanel"] button {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  flex-shrink: 0;
+  padding: var(--vertical-padding) 10px;
+  margin-bottom: var(--vertical-margin);
+
+  background-color: rgba(var(--white), 0.65);
+  color: rgba(var(--black), 0.65);
   font-size: inherit;
   line-height: inherit;
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
-
-  opacity: 0.65;
 }
 
-#quick-reblog .quick-tags button:hover {
-  background-color: rgb(var(--secondary-accent));
-  opacity: 1;
+#quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *) button {
+  background-color: rgba(var(--black), 0.07);
 }
 
-#quick-reblog .quick-tags button[data-checked="true"]::after {
-  position: absolute;
-  top: 50%;
-  right: 1ch;
-  z-index: 1;
-  transform: translateY(-50%);
+#quick-reblog [role="tabpanel"] button:last-child {
+  margin-bottom: 0;
+}
 
-  display: inline-block;
-  height: 1em;
-  width: 1em;
+#quick-reblog [role="tabpanel"] button:hover {
+  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
+  color: rgb(var(--black));
+}
 
+#quick-reblog [role="tabpanel"] button:active {
+  background-image: linear-gradient(rgba(var(--black), 0.25), rgba(var(--black), 0.25));
+}
+
+#quick-reblog [role="tabpanel"] button:focus-visible {
+  outline-offset: -2px;
+}
+
+#quick-reblog [role="tabpanel"] button::after {
   content: "\2713";
-  line-height: 1;
+  visibility: hidden;
+}
+
+#quick-reblog [role="tabpanel"] button[aria-pressed="true"]::after {
+  visibility: visible;
+}
+
+#quick-reblog [role="tabpanel"] button > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #quick-reblog .action-buttons {
@@ -144,18 +228,24 @@
 }
 
 #quick-reblog .action-buttons button {
-  flex-basis: calc(100% / 3);
-  flex-grow: 1;
   display: flex;
   justify-content: center;
-  padding: 1ch;
+  box-sizing: border-box;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 10px;
 
   background-color: rgb(var(--white));
   font-weight: bold;
 }
 
 #quick-reblog .action-buttons:enabled button:hover {
-  background-color: rgb(var(--secondary-accent));
+  background-image: linear-gradient(rgba(var(--black), 0.07), rgba(var(--black), 0.07));
+}
+
+#quick-reblog .action-buttons:enabled button:active {
+  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
 }
 
 #quick-reblog .action-buttons button:not(:first-child) {
@@ -187,16 +277,20 @@
 
 /* === AlreadyReblogged === */
 
-footer.published :is(button:not([role]), a[href^="/reblog/"]) use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]) { --icon-color-primary: rgb(var(--green)); }
-footer.queue :is(button:not([role]), a[href^="/reblog/"]) use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]) { --icon-color-primary: rgb(var(--purple)); }
-footer.draft :is(button:not([role]), a[href^="/reblog/"]) use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]) { --icon-color-primary: rgb(var(--red)); }
+footer.published :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--green)); }
+footer.queue :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--purple)); }
+footer.draft :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--red)); }
 
-footer:is(.published, .queue, .draft) :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"])) {
-  position: relative;
+footer:is(.published, .queue, .draft) :is(a, button) svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"]) {
+  --icon-color-primary: currentColor; /* Ensure that colouration is applied to icon */
+}
+
+footer:is(.published, .queue, .draft) :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) {
+  position: relative; /* For absolute positioning of tick pseudo-element */
 }
 
 /* Cut-out for tick in 2025 post footer */
-footer:is(.published, .queue, .draft) :is(a[href^="/reblog/"], button) svg:has(use[href="#managed-icon__ds-reblog-24"]) {
+footer:is(.published, .queue, .draft) :is(a, button) svg:has(use[href="#managed-icon__ds-reblog-24"]) {
   -webkit-mask-image: radial-gradient(
     calc(14.7px / 2) calc(18px / 2) at bottom 4px left 21px,
     transparent 99%,
@@ -210,7 +304,7 @@ footer:is(.published, .queue, .draft) :is(a[href^="/reblog/"], button) svg:has(u
 }
 
 /* Styles for tick pseudo-element */
-footer:is(.published, .queue, .draft) :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after {
+footer:is(.published, .queue, .draft) :is(a, button):has(use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"]))::after {
   position: absolute;
 
   display: inline-block;
@@ -226,21 +320,17 @@ footer:is(.published, .queue, .draft) :is(button:not([role]), a[href^="/reblog/"
 }
 
 /* Pre-2025 post footer */
-footer:is(.published, .queue, .draft) a[href^="/reblog/"]:has(use[href="#managed-icon__reblog"])::after {
+footer:is(.published, .queue, .draft) a:has(use[href="#managed-icon__reblog"])::after {
   background-color: var(--content-panel);
   bottom: -5px;
   right: -5px;
 }
 
 /* 2025 post footer */
-footer:is(.published, .queue, .draft) :is(a[href^="/reblog/"], button):has(use[href="#managed-icon__ds-reblog-24"])::after {
+footer:is(.published, .queue, .draft) :is(a, button):has(use[href="#managed-icon__ds-reblog-24"])::after {
   bottom: 4px;
   left: 21px;
 }
-
-footer.published :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after { color: rgb(var(--green)); }
-footer.queue :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after { color: rgb(var(--purple)); }
-footer.draft :is(button:not([role]), a[href^="/reblog/"]):has(use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__reblog"]))::after { color: rgb(var(--red)); }
 
 /* === XKit 7 override === */
 

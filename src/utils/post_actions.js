@@ -1,7 +1,8 @@
-import { buildSvg } from './remixicon.js';
-import { pageModifications } from './mutations.js';
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
+import { displayBlockUnlessDisabledAttr } from './interface.js';
+import { pageModifications } from './mutations.js';
+import { buildSvg } from './remixicon.js';
 
 // Remove outdated post options when loading module
 $('.xkit-post-option').remove();
@@ -17,7 +18,7 @@ const addPostOptions = ([postFormButton]) => {
     ...Object.keys(postOptions)
       .sort()
       .map(id => postOptions[id])
-      .filter(postOption => !postActions.contains(postOption))
+      .filter(postOption => !postActions.contains(postOption)),
   );
 };
 
@@ -31,8 +32,8 @@ pageModifications.register(keyToCss('postFormButton'), addPostOptions);
  * @param {Function} options.onclick Click handler function for this button
  */
 export const registerPostOption = async function (id, { symbolId, onclick }) {
-  postOptions[id] = dom('label', { class: 'xkit-post-option' }, null, [
-    dom('button', null, { click: onclick }, [buildSvg(symbolId)])
+  postOptions[id] = dom('label', { class: 'xkit-post-option', [displayBlockUnlessDisabledAttr]: '' }, null, [
+    dom('button', null, { click: onclick }, [buildSvg(symbolId)]),
   ]);
 
   pageModifications.trigger(addPostOptions);

@@ -1,14 +1,18 @@
-import { buildStyle, filterPostElements, blogViewSelector, postSelector } from '../../utils/interface.js';
-import { getPreferences } from '../../utils/preferences.js';
-import { onNewPosts } from '../../utils/mutations.js';
-import { timelineObject } from '../../utils/react_props.js';
 import { keyToCss } from '../../utils/css_map.js';
+import { buildStyle, filterPostElements, blogViewSelector, postSelector } from '../../utils/interface.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
+import { timelineObject } from '../../utils/react_props.js';
 
 export const styleElement = buildStyle();
 
 const blogs = new Set();
 const groupsFromHex = /^#(?<red>[A-Fa-f0-9]{1,2})(?<green>[A-Fa-f0-9]{1,2})(?<blue>[A-Fa-f0-9]{1,2})$/;
-const reblogSelector = keyToCss('reblog');
+
+// Prevent unreadable text by not theming trail items if they'll change
+// background color on hover until we implement compatibility with
+// postChromeBodyNavigationEventsRedesign.
+const reblogSelector = `${keyToCss('reblog')}:not(${keyToCss('withTrailItemPermalink')})`;
 const timelineSelector = keyToCss('timeline');
 
 let enableOnPeepr;
@@ -19,11 +23,32 @@ let blacklist;
 
 let reblogTrailTheming = true;
 
-const hexToRGB = (hex) => {
+const clamp = (number, lower, upper) => Math.min(Math.max(number, lower), upper);
+const average = array => array.reduce((prev, cur) => prev + cur, 0) / array.length;
+
+const hexToRGBComponents = hex => {
   const { red, green, blue } = hex.match(groupsFromHex).groups;
   return [red, green, blue]
     .map(color => color.padEnd(2, color))
-    .map(color => parseInt(color, 16))
+    .map(color => parseInt(color, 16));
+};
+const hexToRGB = hex => hexToRGBComponents(hex).join(', ');
+
+const colorsAreSimilar = (hexA, hexB) => {
+  const componentsA = hexToRGBComponents(hexA);
+  const componentsB = hexToRGBComponents(hexB);
+  return Object.keys(componentsA).every(
+    i => Math.abs(componentsA[i] - componentsB[i]) < 32,
+  );
+};
+
+const createContrastingColor = hex => {
+  const components = hexToRGBComponents(hex);
+  const isLight = average(components) > 128;
+  const adjustment = isLight ? -100 : 100;
+
+  return components
+    .map(component => clamp(component + adjustment, 0, 255))
     .join(', ');
 };
 
@@ -36,7 +61,7 @@ const processPosts = async function (postElements) {
 
     const blogData = [
       visibleBlog,
-      ...reblogTrailTheming ? trail.map(item => item.blog).filter(item => item !== undefined) : []
+      ...reblogTrailTheming ? trail.map(item => item.blog).filter(item => item !== undefined) : [],
     ];
 
     blogData.forEach(({ name, theme }) => {
@@ -48,12 +73,12 @@ const processPosts = async function (postElements) {
         const {
           backgroundColor,
           titleColor,
-          linkColor
+          linkColor,
         } = theme;
 
         const backgroundColorRGB = hexToRGB(backgroundColor);
-        const titleColorRGB = hexToRGB(titleColor);
-        const linkColorRGB = hexToRGB(linkColor);
+        const titleColorRGB = colorsAreSimilar(titleColor, backgroundColor) ? createContrastingColor(titleColor) : hexToRGB(titleColor);
+        const linkColorRGB = colorsAreSimilar(linkColor, backgroundColor) ? createContrastingColor(linkColor) : hexToRGB(linkColor);
 
         styleElement.textContent += `
           [data-xkit-themed="${name}"] {

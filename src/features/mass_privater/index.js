@@ -29,16 +29,16 @@ const showInitialPrompt = async () => {
   const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event).catch(showErrorModal) }, [
     dom('label', null, null, [
       'Posts on blog:',
-      dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption))
+      dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption)),
     ]),
     dom('label', null, null, [
       'Posts from before:',
-      dom('input', { type: 'datetime-local', name: 'before', value: createNowString(), required: true })
+      dom('input', { type: 'datetime-local', name: 'before', value: createNowString(), required: true }),
     ]),
     dom('label', null, null, [
       dom('small', null, null, ['Posts with any of these tags (optional):']),
-      dom('input', { type: 'text', name: 'tags', placeholder: 'Comma-separated', autocomplete: 'off' })
-    ])
+      dom('input', { type: 'text', name: 'tags', placeholder: 'Comma-separated', autocomplete: 'off' }),
+    ]),
   ]);
 
   if (location.pathname.startsWith('/blog/')) {
@@ -52,8 +52,8 @@ const showInitialPrompt = async () => {
     message: [initialForm],
     buttons: [
       modalCancelButton,
-      dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' })
-    ]
+      dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' }),
+    ],
   });
 };
 
@@ -105,14 +105,14 @@ const confirmInitialPrompt = async event => {
         beforeElement,
         ' tagged ',
         ...elementsAsList(tags.map(createTagSpan), 'or'),
-        ' will be set to private.'
+        ' will be set to private.',
       ]
     : [
         'Every published post on ',
         createBlogSpan(name),
         ' from before ',
         beforeElement,
-        ' will be set to private.'
+        ' will be set to private.',
       ];
 
   showModal({
@@ -124,9 +124,9 @@ const confirmInitialPrompt = async event => {
         'button',
         { class: 'red' },
         { click: () => privatePosts({ uuid, name, tags, before }).catch(showErrorModal) },
-        ['Private them!']
-      )
-    ]
+        ['Private them!'],
+      ),
+    ],
   });
 };
 
@@ -138,9 +138,9 @@ const showTagsNotFound = ({ tags, name }) =>
       ...elementsAsList(tags.map(createTagSpan), 'or'),
       ' on ',
       createBlogSpan(name),
-      '. Did you misspell a tag?'
+      '. Did you misspell a tag?',
     ],
-    buttons: [modalCompleteButton]
+    buttons: [modalCompleteButton],
   });
 
 const showPostsNotFound = ({ name }) =>
@@ -149,9 +149,9 @@ const showPostsNotFound = ({ name }) =>
     message: [
       "It looks like you don't have any posts with the specified criteria on ",
       createBlogSpan(name),
-      '.'
+      '.',
     ],
-    buttons: [modalCompleteButton]
+    buttons: [modalCompleteButton],
   });
 
 const privatePosts = async ({ uuid, name, tags, before }) => {
@@ -164,8 +164,8 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
       dom('small', null, null, ['Do not navigate away from this page.']),
       '\n\n',
       gatherStatus,
-      privateStatus
-    ]
+      privateStatus,
+    ],
   });
 
   let fetchedPosts = 0;
@@ -187,7 +187,7 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
 
           gatherStatus.textContent = `Found ${filteredPostIdsSet.size} posts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
         }),
-        sleep(1000)
+        sleep(1000),
       ]);
     }
   };
@@ -222,7 +222,7 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
       }).finally(() => {
         privateStatus.textContent = `\nPrivated ${privatedCount} posts... ${privatedFailCount ? `(failed: ${privatedFailCount})` : ''}`;
       }),
-      sleep(1000)
+      sleep(1000),
     ]);
   }
 
@@ -232,12 +232,12 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
     title: 'All done!',
     message: [
       `Privated ${privatedCount} posts${privatedFailCount ? ` (failed: ${privatedFailCount})` : ''}.\n`,
-      'Refresh the page to see the result.'
+      'Refresh the page to see the result.',
     ],
     buttons: [
       dom('button', null, { click: hideModal }, ['Close']),
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh'])
-    ]
+      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh']),
+    ],
   });
 };
 
@@ -247,9 +247,9 @@ const sidebarOptions = {
   rows: [{
     label: 'Make posts private',
     onclick: showInitialPrompt,
-    carrot: true
+    carrot: true,
   }],
-  visibility: () => /^\/blog\/[^/]+\/?$/.test(location.pathname)
+  visibility: () => /^\/blog\/[^/]+\/?$/.test(location.pathname),
 };
 
 export const main = async () => addSidebarItem(sidebarOptions);

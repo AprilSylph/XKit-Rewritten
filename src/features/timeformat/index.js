@@ -86,7 +86,7 @@ const updateRelativeTime = timeElement => {
 };
 
 const observer = new MutationObserver(mutations =>
-  mutations.forEach(({ target: { parentElement: timeElement } }) => timeElement?.unixTime && updateRelativeTime(timeElement))
+  mutations.forEach(({ target: { parentElement: timeElement } }) => timeElement?.unixTime && updateRelativeTime(timeElement)),
 );
 
 const formatTimeElements = function (timeElements) {

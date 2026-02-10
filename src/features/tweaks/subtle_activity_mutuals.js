@@ -1,7 +1,7 @@
-import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { buildStyle } from '../../utils/interface.js';
 import { dom } from '../../utils/dom.js';
+import { buildStyle } from '../../utils/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
 
 const labelSelector = `${keyToCss('activity', 'activityItem')} ${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')}`;
 
@@ -62,8 +62,8 @@ const processLabels = labels => labels.forEach(label => {
         'svg',
         { class: iconClass, width: 14, height: 14, xmlns: 'http://www.w3.org/2000/svg' },
         null,
-        [dom('use', { href: iconHref, xmlns: 'http://www.w3.org/2000/svg' })]
-      )
+        [dom('use', { href: iconHref, xmlns: 'http://www.w3.org/2000/svg' })],
+      ),
     );
   }
 

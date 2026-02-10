@@ -1,10 +1,10 @@
+import { keyToCss } from '../../utils/css_map.js';
 import { getPostElements } from '../../utils/interface.js';
-import { timelineObject } from '../../utils/react_props.js';
-import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
-import { keyToCss } from '../../utils/css_map.js';
+import { timelineObject } from '../../utils/react_props.js';
 import { constructRelativeTimeString } from '../../utils/text_format.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
 
 const noteCountSelector = keyToCss('noteCount');
 const reblogHeaderSelector = keyToCss('reblogHeader');
@@ -19,16 +19,16 @@ const cache = {};
 const locale = document.documentElement.lang;
 const currentDayTimeFormat = new Intl.DateTimeFormat(locale, {
   hour: 'numeric',
-  minute: 'numeric'
+  minute: 'numeric',
 });
 const currentYearTimeFormat = new Intl.DateTimeFormat(locale, {
   day: 'numeric',
-  month: 'short'
+  month: 'short',
 });
 const shortTimeFormat = new Intl.DateTimeFormat(locale, {
   day: 'numeric',
   month: 'short',
-  year: 'numeric'
+  year: 'numeric',
 });
 const longTimeFormat = new Intl.DateTimeFormat(locale, {
   weekday: 'long',
@@ -38,7 +38,7 @@ const longTimeFormat = new Intl.DateTimeFormat(locale, {
   hour: 'numeric',
   minute: '2-digit',
   second: '2-digit',
-  timeZoneName: 'short'
+  timeZoneName: 'short',
 });
 
 const constructTimeString = function (unixTime) {
@@ -187,7 +187,7 @@ const preferenceHandlers = {
     if (reblogTimestamps !== 'none') {
       onNewPosts.addListener(addReblogTimestamps);
     }
-  }
+  },
 };
 
 export const onStorageChanged = async function (changes) {

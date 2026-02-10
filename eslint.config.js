@@ -21,11 +21,24 @@ export default [
   }),
 
   /**
-   * Use recommended `import-x` lint rules. Additionally, prevent cyclical imports.
+   * Enforce consistent use of trailing commas in object and array literals.
+   * @see https://eslint.style/rules/comma-dangle
+   */
+  { rules: { '@stylistic/comma-dangle': ['warn', 'always-multiline'] } },
+
+  /**
+   * Use recommended `import-x` lint rules; prevent cyclical imports; enforce alphabetical imports.
    * @see https://github.com/un-ts/eslint-plugin-import-x/blob/master/src/config/flat/recommended.ts
    * @see https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/no-cycle.md
+   * @see https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/order.md
    */
-  { rules: { ...plugins['import-x'].flatConfigs.recommended.rules, 'import-x/no-cycle': 'error' } },
+  {
+    rules: {
+      ...plugins['import-x'].flatConfigs.recommended.rules,
+      'import-x/no-cycle': 'error',
+      'import-x/order': ['warn', { alphabetize: { order: 'asc', caseInsensitive: true } }],
+    },
+  },
 
   /**
    * Import `eslint-plugin-jsdoc` and use its recommended config.

@@ -19,7 +19,7 @@ $('nav a').on('click', event => {
 document.getElementById('search').addEventListener('input', ({ currentTarget }) => {
   const query = currentTarget.value.toLowerCase();
   const featureElements = [...document.querySelectorAll('xkit-feature')];
-  const preferenceElements = featureElements.flatMap(({ shadowRoot }) => [...shadowRoot.querySelectorAll('li')]);
+  const preferenceElements = featureElements.flatMap(({ shadowRoot }) => [...shadowRoot.querySelectorAll('[role="listitem"]')]);
 
   featureElements.forEach(featureElement => {
     const textContent = featureElement.textContent.toLowerCase();
@@ -31,7 +31,7 @@ document.getElementById('search').addEventListener('input', ({ currentTarget }) 
   });
 
   preferenceElements.forEach(preferenceElement => {
-    const hasMatch = query.length >= 3 && preferenceElement.textContent.toLowerCase().includes(query);
+    const hasMatch = query.length >= 3 && preferenceElement.shadowRoot.textContent.toLowerCase().includes(query);
     preferenceElement.classList.toggle('search-highlighted', hasMatch);
   });
 

@@ -23,10 +23,18 @@ document.getElementById('search').addEventListener('input', ({ currentTarget }) 
 
   featureElements.forEach(featureElement => {
     const textContent = featureElement.textContent.toLowerCase();
-    const relatedTerms = featureElement.dataset.relatedTerms.toLowerCase();
     const shadowContent = featureElement.shadowRoot.textContent.toLowerCase();
+    const relatedTerms = featureElement.dataset.relatedTerms.toLowerCase();
+    const preferencesContent = [
+      ...featureElement.shadowRoot.querySelectorAll('[role="listitem"]'),
+    ].map(({ shadowRoot }) => shadowRoot.textContent.toLowerCase()).join('\n');
 
-    const hasMatch = textContent.includes(query) || relatedTerms.includes(query) || shadowContent.includes(query);
+    const hasMatch =
+      textContent.includes(query) ||
+      shadowContent.includes(query) ||
+      relatedTerms.includes(query) ||
+      preferencesContent.includes(query);
+
     featureElement.classList.toggle('search-hidden', !hasMatch);
   });
 

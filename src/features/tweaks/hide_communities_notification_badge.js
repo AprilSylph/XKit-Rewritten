@@ -1,12 +1,20 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
+import { mobileMenuBadgeHide } from '../../utils/mobile_menu_badge_hide.js';
 
-const communitiesButton = ':is(button, li):has(use[href="#managed-icon__communities"])';
-const mobileMenuButton = `button[aria-label="${translate('Menu')}"]`;
+const communitiesButton = `button[aria-label="${translate('Communities')}"]`;
 
 export const styleElement = buildStyle(`
-:is(${communitiesButton}, ${mobileMenuButton}) ${keyToCss('notificationBadge')} {
+${communitiesButton} ${keyToCss('notificationBadge')} {
   display: none;
 }
 `);
+
+export const main = async function () {
+  mobileMenuBadgeHide.register('communities');
+};
+
+export const clean = async function () {
+  mobileMenuBadgeHide.unregister('communities');
+};

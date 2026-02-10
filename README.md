@@ -1,4 +1,4 @@
-# XKit Rewritten [![CI](https://github.com/AprilSylph/XKit-Rewritten/actions/workflows/ci.yml/badge.svg)](https://github.com/AprilSylph/XKit-Rewritten/actions/workflows/ci.yml)
+# XKit Rewritten [![CI](https://github.com/AprilSylph/XKit-Rewritten/actions/workflows/ci.yml/badge.svg)](https://github.com/AprilSylph/XKit-Rewritten/actions/workflows/ci.yml) [![neostandard javascript style](https://img.shields.io/badge/code_style-neostandard-F7DF1E?logo=javascript)](https://github.com/neostandard/neostandard)
 The enhancement suite for Tumblr's new web interface.
 
 ## Features
@@ -10,8 +10,10 @@ The enhancement suite for Tumblr's new web interface.
 
 ## Screenshots
 
-![](https://github.com/AprilSylph/XKit-Rewritten/raw/8ef99528e6a464ce2286bf03f081f0202ccbdbfb/assets/screenshots/Firefox/Screenshot%202022-03-21%20at%2010.22.10%20am.png) | ![](https://github.com/AprilSylph/XKit-Rewritten/raw/8ef99528e6a464ce2286bf03f081f0202ccbdbfb/assets/screenshots/Firefox/Screenshot%202022-03-21%20at%2010.10.42%20am.png)
--- | --
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/466404386ff826e5a67393167bc47413fa9afe6b/assets/screenshots/dark.webp">
+  <img src="https://raw.githubusercontent.com/AprilSylph/XKit-Rewritten/466404386ff826e5a67393167bc47413fa9afe6b/assets/screenshots/light.webp">
+</picture>
 
 ## Installation
 - [Get this extension for Firefox](https://addons.mozilla.org/addon/xkit-rewritten/)

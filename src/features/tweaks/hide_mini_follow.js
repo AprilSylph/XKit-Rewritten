@@ -5,9 +5,7 @@ import { pageModifications } from '../../utils/mutations.js';
 
 const hiddenAttribute = 'data-tweaks-hide-mini-follow-hidden';
 
-export const styleElement = buildStyle(`
-article ${keyToCss('followButton')}:not(${keyToCss('postMeatballsContainer')} *), [${hiddenAttribute}] { display: none; }
-`);
+export const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
 
 const processButtons = buttons => buttons.forEach(button => {
   if (button.textContent === translate('Follow')) {

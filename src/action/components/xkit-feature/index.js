@@ -74,7 +74,7 @@ const adoptedStyleSheets = await fetchStyleSheets([
 /**
  * @typedef Iframe
  * @property {"iframe"} type Type of preference.
- * @property {string} src A URL, relative to `src/`, to be embedded in the feature's preference list.
+ * @property {string} src A page URL, relative to `src/`, to be embedded in the feature's preference list.
  */
 
 /** @typedef {BasePreference & (Checkbox | Text | TextArea | Color | Select | Iframe)} Preference */

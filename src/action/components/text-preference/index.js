@@ -26,7 +26,7 @@ class TextPreferenceElement extends CustomElement {
     super(templateDocument, adoptedStyleSheets);
 
     this.#inputElement = this.shadowRoot.getElementById('text');
-    this.#labelElement = this.#inputElement.labels[0];
+    this.#labelElement = this.shadowRoot.querySelector('label[for="text"]');
   }
 
   /** @param {string} label Label displayed to the user to describe the preference. */

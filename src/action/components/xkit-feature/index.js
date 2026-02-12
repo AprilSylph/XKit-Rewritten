@@ -36,7 +36,6 @@ const templateDocument = new DOMParser().parseFromString(`
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
-  '/lib/coloris.css',
   '/lib/normalize.min.css',
   '/lib/remixicon/remixicon.css',
   '/lib/toggle-button.css',

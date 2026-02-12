@@ -26,7 +26,9 @@ const templateDocument = new DOMParser().parseFromString(`
           <input type="checkbox" checked class="toggle-button" aria-label="Enable this feature">
         </div>
       </summary>
-      <ul class="preferences"></ul>
+      <ul class="preferences">
+        <slot name="preferences"></slot>
+      </ul>
     </details>
   </template>
 `, 'text/html');
@@ -108,8 +110,8 @@ class XKitFeatureElement extends CustomElement {
     this.#preferencesList = this.shadowRoot.querySelector('ul.preferences');
   }
 
-  /** @type {(props: { featureName: string, preferences: Preferences, preferenceList: HTMLUListElement }) => Promise<void>} */
-  static #renderPreferences = async ({ featureName, preferences, preferenceList }) => {
+  /** @type {(props: { featureName: string, preferences: Preferences }) => Promise<void>} */
+  #renderPreferences = async ({ featureName, preferences }) => {
     for (const [preferenceName, preference] of Object.entries(preferences)) {
       const storageKey = `${featureName}.preferences.${preferenceName}`;
       const { [storageKey]: storageValue } = await browser.storage.local.get(storageKey);
@@ -121,22 +123,22 @@ class XKitFeatureElement extends CustomElement {
 
       switch (preference.type) {
         case 'checkbox':
-          preferenceList.append(CheckboxPreference({ featureName, preferenceName, label, value }));
+          this.append(CheckboxPreference({ featureName, preferenceName, label, value }));
           break;
         case 'color':
-          preferenceList.append(ColorPreference({ featureName, preferenceName, label, value }));
+          this.append(ColorPreference({ featureName, preferenceName, label, value }));
           break;
         case 'iframe':
-          preferenceList.append(IframePreference({ label, src }));
+          this.append(IframePreference({ label, src }));
           break;
         case 'select':
-          preferenceList.append(SelectPreference({ featureName, preferenceName, label, options, value }));
+          this.append(SelectPreference({ featureName, preferenceName, label, options, value }));
           break;
         case 'text':
-          preferenceList.append(TextPreference({ featureName, preferenceName, label, value }));
+          this.append(TextPreference({ featureName, preferenceName, label, value }));
           break;
         case 'textarea':
-          preferenceList.append(TextAreaPreference({ featureName, preferenceName, label, value }));
+          this.append(TextAreaPreference({ featureName, preferenceName, label, value }));
           break;
         default:
           console.error(`Cannot render preference "${storageKey}": Unsupported type "${preference.type}"`);
@@ -180,10 +182,10 @@ class XKitFeatureElement extends CustomElement {
     this.dataset.relatedTerms = this.relatedTerms;
 
     if (Object.keys(this.preferences).length !== 0) {
-      XKitFeatureElement.#renderPreferences({
+      this.#renderPreferences({
         featureName: this.featureName,
         preferences: this.preferences,
-        preferenceList: this.#preferencesList,
+        this: this.#preferencesList,
       });
     }
   }

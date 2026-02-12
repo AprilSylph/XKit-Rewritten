@@ -29,7 +29,10 @@ class IframePreferenceElement extends CustomElement {
   set src (src = '') { this.#iframeElement.src = src; }
   get src () { return this.#iframeElement.src; }
 
-  connectedCallback () { this.role ??= 'listitem'; }
+  connectedCallback () {
+    this.role ??= 'listitem';
+    this.slot ||= 'preferences';
+  }
 }
 
 customElements.define(localName, IframePreferenceElement);

@@ -96,7 +96,6 @@ class XKitFeatureElement extends CustomElement {
 
   /** @type {HTMLDetailsElement}  */ #detailsElement;
   /** @type {HTMLInputElement}    */ #enabledToggle;
-  /** @type {HTMLUListElement}    */ #preferencesList;
 
   /** @type {boolean}     */ #disabled = false;
   /** @type {boolean}     */ deprecated = false;
@@ -109,12 +108,12 @@ class XKitFeatureElement extends CustomElement {
 
     this.#detailsElement = this.shadowRoot.querySelector('details');
     this.#enabledToggle = this.shadowRoot.querySelector('input[type="checkbox"]');
-    this.#preferencesList = this.shadowRoot.querySelector('ul.preferences');
   }
 
-  /** @type {(props: { featureName: string, preferences: Preferences }) => Promise<void>} */
-  #renderPreferences = async ({ featureName, preferences }) => {
-    for (const [preferenceName, preference] of Object.entries(preferences)) {
+  #renderPreferences = async () => {
+    const { featureName } = this;
+
+    for (const [preferenceName, preference] of Object.entries(this.preferences)) {
       const storageKey = `${featureName}.preferences.${preferenceName}`;
       const { [storageKey]: storageValue } = await browser.storage.local.get(storageKey);
 
@@ -183,13 +182,7 @@ class XKitFeatureElement extends CustomElement {
     this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
     this.dataset.relatedTerms = this.relatedTerms;
 
-    if (Object.keys(this.preferences).length !== 0) {
-      this.#renderPreferences({
-        featureName: this.featureName,
-        preferences: this.preferences,
-        this: this.#preferencesList,
-      });
-    }
+    this.#renderPreferences();
   }
 
   disconnectedCallback () {

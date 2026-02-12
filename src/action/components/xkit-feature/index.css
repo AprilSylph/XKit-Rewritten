@@ -121,6 +121,6 @@ ul.preferences:empty::before {
   content: "No preferences available for this feature.";
 }
 
-.search-highlighted {
+::slotted(.search-highlighted) {
   background-color: rgb(var(--search-highlight));
 }

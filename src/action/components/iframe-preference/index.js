@@ -30,7 +30,7 @@ class IframePreferenceElement extends CustomElement {
   get src () { return this.#iframeElement.src; }
 
   connectedCallback () {
-    this.role ??= 'listitem';
+    this.role ||= 'listitem';
     this.slot ||= 'preferences';
   }
 }

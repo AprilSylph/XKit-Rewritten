@@ -46,7 +46,7 @@ class TextAreaPreferenceElement extends CustomElement {
   };
 
   connectedCallback () {
-    this.role ??= 'listitem';
+    this.role ||= 'listitem';
     this.slot ||= 'preferences';
     this.#textAreaElement.addEventListener('input', this.#onInput);
   }

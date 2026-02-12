@@ -56,7 +56,7 @@ class SelectPreferenceElement extends CustomElement {
   };
 
   connectedCallback () {
-    this.role ??= 'listitem';
+    this.role ||= 'listitem';
     this.slot ||= 'preferences';
     this.#selectElement.addEventListener('change', this.#onChange);
   }

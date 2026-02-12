@@ -46,7 +46,7 @@ class TextPreferenceElement extends CustomElement {
   };
 
   connectedCallback () {
-    this.role ??= 'listitem';
+    this.role ||= 'listitem';
     this.slot ||= 'preferences';
     this.#inputElement.addEventListener('input', this.#onInput);
   }

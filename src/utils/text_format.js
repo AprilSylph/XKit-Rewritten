@@ -5,7 +5,7 @@ const thresholds = [
   { unit: 'day', denominator: 86400 },
   { unit: 'hour', denominator: 3600 },
   { unit: 'minute', denominator: 60 },
-  { unit: 'second', denominator: 1 }
+  { unit: 'second', denominator: 1 },
 ];
 
 const relativeTimeFormat = new Intl.RelativeTimeFormat(document.documentElement.lang, { style: 'long' });
@@ -30,7 +30,7 @@ export const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.l
   day: 'numeric',
   hour: 'numeric',
   minute: 'numeric',
-  timeZoneName: 'short'
+  timeZoneName: 'short',
 });
 
 /**

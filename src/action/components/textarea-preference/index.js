@@ -26,7 +26,7 @@ class TextAreaPreferenceElement extends CustomElement {
     super(templateDocument, adoptedStyleSheets);
 
     this.#textAreaElement = this.shadowRoot.getElementById('textarea');
-    this.#labelElement = this.#textAreaElement.labels[0];
+    this.#labelElement = this.shadowRoot.querySelector('label[for="textarea"]');
   }
 
   /** @param {string} label Label displayed to the user to describe the preference. */

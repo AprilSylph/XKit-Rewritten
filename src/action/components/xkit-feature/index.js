@@ -36,53 +36,6 @@ const adoptedStyleSheets = await fetchStyleSheets([
   './index.css',
 ].map(import.meta.resolve));
 
-/**
- * @typedef BasePreference
- * @property {string} label Label displayed to the user to describe the preference.
- * @property {string} [inherit] The storage key to inherit the value of, if the preference has not been set.
- */
-
-/**
- * @typedef Checkbox
- * @property {"checkbox"} type Type of preference.
- * @property {boolean} default Default value of the preference to display to the user.
- */
-
-/**
- * @typedef Text
- * @property {"text"} type Type of preference.
- * @property {string} default Default value of the preference to display to the user.
- */
-
-/**
- * @typedef TextArea
- * @property {"textarea"} type Type of preference.
- * @property {string} default Default value of the preference to display to the user.
- */
-
-/**
- * @typedef Color
- * @property {"color"} type Type of preference.
- * @property {string} default Default value of the preference to display to the user.
- */
-
-/**
- * @typedef Select
- * @property {"select"} type Type of preference.
- * @property {{ label: string, value: string }[]} options List of options for the user to choose between.
- * @property {string} default For `"select"`-type preferences, must match one of the `options` item's `value`.
- */
-
-/**
- * @typedef Iframe
- * @property {"iframe"} type Type of preference.
- * @property {string} src A page URL, relative to `src/`, to be embedded in the feature's preference list.
- * @property {never} default Not supported on `"iframe"`-type preferences.
- */
-
-/** @typedef {BasePreference & (Checkbox | Text | TextArea | Color | Select | Iframe)} Preference */
-/** @typedef {Record<string, Preference>} Preferences */
-
 class XKitFeatureElement extends CustomElement {
   static #enabledFeaturesKey = 'enabledScripts';
   static #specialAccessKey = 'specialAccess';

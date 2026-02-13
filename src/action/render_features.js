@@ -1,3 +1,9 @@
+import { CheckboxPreference } from './components/checkbox-preference/index.js';
+import { ColorPreference } from './components/color-preference/index.js';
+import { IframePreference } from './components/iframe-preference/index.js';
+import { SelectPreference } from './components/select-preference/index.js';
+import { TextPreference } from './components/text-preference/index.js';
+import { TextAreaPreference } from './components/textarea-preference/index.js';
 import { XKitFeature } from './components/xkit-feature/index.js';
 
 const configSection = document.getElementById('configuration');
@@ -30,7 +36,7 @@ const renderFeatures = async function () {
   for (const featureName of [...orderedEnabledFeatures, ...disabledFeatures]) {
     const url = browser.runtime.getURL(`/features/${featureName}/feature.json`);
     const file = await fetch(url);
-    const { title, description, icon, help, ...metadata } = await file.json();
+    const { title, description, icon, help, preferences, ...metadata } = await file.json();
 
     const disabled = enabledFeatures.includes(featureName) === false;
     if (disabled && metadata.deprecated && !specialAccess.includes(featureName)) {
@@ -91,6 +97,45 @@ const renderFeatures = async function () {
       spanElement.setAttribute('slot', 'badge');
       spanElement.textContent = 'New!';
       featureElement.append(spanElement);
+    }
+
+    if (preferences) {
+      const preferenceElements = [];
+
+      for (const [preferenceName, preference] of Object.entries(preferences)) {
+        const storageKey = `${featureName}.preferences.${preferenceName}`;
+        const { [storageKey]: storageValue } = await browser.storage.local.get(storageKey);
+
+        const label = preference.label ?? preferenceName;
+        const options = preference.options ?? [];
+        const src = preference.src ?? '';
+        const value = storageValue ?? preference.default;
+
+        switch (preference.type) {
+          case 'checkbox':
+            preferenceElements.push(CheckboxPreference({ featureName, preferenceName, label, value }));
+            break;
+          case 'color':
+            preferenceElements.push(ColorPreference({ featureName, preferenceName, label, value }));
+            break;
+          case 'iframe':
+            preferenceElements.push(IframePreference({ label, src }));
+            break;
+          case 'select':
+            preferenceElements.push(SelectPreference({ featureName, preferenceName, label, options, value }));
+            break;
+          case 'text':
+            preferenceElements.push(TextPreference({ featureName, preferenceName, label, value }));
+            break;
+          case 'textarea':
+            preferenceElements.push(TextAreaPreference({ featureName, preferenceName, label, value }));
+            break;
+          default:
+            console.error(`Cannot render preference "${storageKey}": Unsupported type "${preference.type}"`);
+        }
+      }
+
+      featureElement.append(...preferenceElements);
     }
 
     featureElements.push(featureElement);

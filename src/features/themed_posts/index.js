@@ -1,5 +1,5 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { buildStyle, filterPostElements, blogViewSelector, postSelector } from '../../utils/interface.js';
+import { buildStyle, filterPostElements, blogViewSelector } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject } from '../../utils/react_props.js';
@@ -114,16 +114,6 @@ export const main = async function () {
   blacklist = blacklistedUsernames.split(',').map(username => username.trim());
 
   if (reblogTrailTheming) {
-    styleElement.textContent += `
-      ${postSelector} ${reblogSelector} {
-        display: flow-root;
-        margin-top: 0;
-      }
-
-      ${postSelector} ${reblogSelector}:not(:last-child) > :last-child {
-        margin-bottom: 15px;
-      }
-    `;
     if (missingPostMode === 'palette') {
       styleElement.textContent += `
         ${timelineSelector} {

@@ -12,7 +12,7 @@
   "devDependencies": {
     "chrome-webstore-upload-cli": "^3.5.0",
     "eslint": "^9.39.2",
-    "eslint-plugin-jsdoc": "^52.0.4",
+    "eslint-plugin-jsdoc": "^62.5.4",
     "neostandard": "^0.12.2",
     "web-ext": "^9.3.0"
   },

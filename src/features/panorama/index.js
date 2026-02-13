@@ -86,8 +86,8 @@ ${keyToCss('cell')}, ${postSelector}
 :root:not(.${expandMediaClass}) ${postSelector} ${expandableImage} {
   max-width: 540px;
 }
-:root:not(.${expandMediaClass}) ${postSelector} ${keyToCss('rows')} >
-  :is(
+:root:not(.${expandMediaClass}) ${postSelector} ${keyToCss('rows')}
+  > :is(
     div:has(${keyToCss('videoBlock', 'audioBlock')}),
     ${keyToCss('link', 'pollBlock')}
   ) {

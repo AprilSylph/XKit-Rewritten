@@ -26,13 +26,16 @@ const templateDocument = new DOMParser().parseFromString(`
           <input type="checkbox" checked class="toggle-button" aria-label="Enable this feature">
         </div>
       </summary>
-      <ul class="preferences"></ul>
+      <ul class="preferences">
+        <slot name="preferences">
+          <span id="empty">No preferences available for this feature.</span>
+        </slot>
+      </ul>
     </details>
   </template>
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
-  '/lib/coloris.css',
   '/lib/normalize.min.css',
   '/lib/remixicon/remixicon.css',
   '/lib/toggle-button.css',
@@ -92,7 +95,6 @@ class XKitFeatureElement extends CustomElement {
 
   /** @type {HTMLDetailsElement}  */ #detailsElement;
   /** @type {HTMLInputElement}    */ #enabledToggle;
-  /** @type {HTMLUListElement}    */ #preferencesList;
 
   /** @type {boolean}     */ #disabled = false;
   /** @type {boolean}     */ deprecated = false;
@@ -105,12 +107,12 @@ class XKitFeatureElement extends CustomElement {
 
     this.#detailsElement = this.shadowRoot.querySelector('details');
     this.#enabledToggle = this.shadowRoot.querySelector('input[type="checkbox"]');
-    this.#preferencesList = this.shadowRoot.querySelector('ul.preferences');
   }
 
-  /** @type {(props: { featureName: string, preferences: Preferences, preferenceList: HTMLUListElement }) => Promise<void>} */
-  static #renderPreferences = async ({ featureName, preferences, preferenceList }) => {
-    for (const [preferenceName, preference] of Object.entries(preferences)) {
+  #renderPreferences = async () => {
+    const { featureName } = this;
+
+    for (const [preferenceName, preference] of Object.entries(this.preferences)) {
       const storageKey = `${featureName}.preferences.${preferenceName}`;
       const { [storageKey]: storageValue } = await browser.storage.local.get(storageKey);
 
@@ -121,22 +123,22 @@ class XKitFeatureElement extends CustomElement {
 
       switch (preference.type) {
         case 'checkbox':
-          preferenceList.append(CheckboxPreference({ featureName, preferenceName, label, value }));
+          this.append(CheckboxPreference({ featureName, preferenceName, label, value }));
           break;
         case 'color':
-          preferenceList.append(ColorPreference({ featureName, preferenceName, label, value }));
+          this.append(ColorPreference({ featureName, preferenceName, label, value }));
           break;
         case 'iframe':
-          preferenceList.append(IframePreference({ label, src }));
+          this.append(IframePreference({ label, src }));
           break;
         case 'select':
-          preferenceList.append(SelectPreference({ featureName, preferenceName, label, options, value }));
+          this.append(SelectPreference({ featureName, preferenceName, label, options, value }));
           break;
         case 'text':
-          preferenceList.append(TextPreference({ featureName, preferenceName, label, value }));
+          this.append(TextPreference({ featureName, preferenceName, label, value }));
           break;
         case 'textarea':
-          preferenceList.append(TextAreaPreference({ featureName, preferenceName, label, value }));
+          this.append(TextAreaPreference({ featureName, preferenceName, label, value }));
           break;
         default:
           console.error(`Cannot render preference "${storageKey}": Unsupported type "${preference.type}"`);
@@ -179,13 +181,7 @@ class XKitFeatureElement extends CustomElement {
     this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
     this.dataset.relatedTerms = this.relatedTerms;
 
-    if (Object.keys(this.preferences).length !== 0) {
-      XKitFeatureElement.#renderPreferences({
-        featureName: this.featureName,
-        preferences: this.preferences,
-        preferenceList: this.#preferencesList,
-      });
-    }
+    this.#renderPreferences();
   }
 
   disconnectedCallback () {

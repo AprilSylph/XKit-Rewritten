@@ -33,7 +33,7 @@ class SelectPreferenceElement extends CustomElement {
     super(templateDocument, adoptedStyleSheets);
 
     this.#selectElement = this.shadowRoot.getElementById('select');
-    this.#labelElement = this.#selectElement.labels[0];
+    this.#labelElement = this.shadowRoot.querySelector('label[for="select"]');
   }
 
   /** @param {string} label Label displayed to the user to describe the preference. */
@@ -56,7 +56,8 @@ class SelectPreferenceElement extends CustomElement {
   };
 
   connectedCallback () {
-    this.role ??= 'listitem';
+    this.role ||= 'listitem';
+    this.slot ||= 'preferences';
     this.#selectElement.addEventListener('change', this.#onChange);
   }
 

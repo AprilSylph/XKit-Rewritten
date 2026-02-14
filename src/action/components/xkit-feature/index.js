@@ -1,5 +1,10 @@
-import Coloris from '../../../lib/coloris.js';
+import { CheckboxPreference } from '../checkbox-preference/index.js';
+import { ColorPreference } from '../color-preference/index.js';
+import { IframePreference } from '../iframe-preference/index.js';
 import { CustomElement, fetchStyleSheets } from '../index.js';
+import { SelectPreference } from '../select-preference/index.js';
+import { TextPreference } from '../text-preference/index.js';
+import { TextAreaPreference } from '../textarea-preference/index.js';
 
 const localName = 'xkit-feature';
 
@@ -21,13 +26,16 @@ const templateDocument = new DOMParser().parseFromString(`
           <input type="checkbox" checked class="toggle-button" aria-label="Enable this feature">
         </div>
       </summary>
-      <ul class="preferences"></ul>
+      <ul class="preferences">
+        <slot name="preferences">
+          <span id="empty">No preferences available for this feature.</span>
+        </slot>
+      </ul>
     </details>
   </template>
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
-  '/lib/coloris.css',
   '/lib/normalize.min.css',
   '/lib/remixicon/remixicon.css',
   '/lib/toggle-button.css',
@@ -68,13 +76,14 @@ const adoptedStyleSheets = await fetchStyleSheets([
  * @typedef Select
  * @property {"select"} type Type of preference.
  * @property {{ label: string, value: string }[]} options List of options for the user to choose between.
- * @property {string} default Default value of the preference to display to the user. Must match one of the `options` item's `value`.
+ * @property {string} default For `"select"`-type preferences, must match one of the `options` item's `value`.
  */
 
 /**
  * @typedef Iframe
  * @property {"iframe"} type Type of preference.
- * @property {string} src A URL, relative to `src/`, to be embedded in the feature's preference list.
+ * @property {string} src A page URL, relative to `src/`, to be embedded in the feature's preference list.
+ * @property {never} default Not supported on `"iframe"`-type preferences.
  */
 
 /** @typedef {BasePreference & (Checkbox | Text | TextArea | Color | Select | Iframe)} Preference */
@@ -86,7 +95,6 @@ class XKitFeatureElement extends CustomElement {
 
   /** @type {HTMLDetailsElement}  */ #detailsElement;
   /** @type {HTMLInputElement}    */ #enabledToggle;
-  /** @type {HTMLUListElement}    */ #preferencesList;
 
   /** @type {boolean}     */ #disabled = false;
   /** @type {boolean}     */ deprecated = false;
@@ -99,102 +107,42 @@ class XKitFeatureElement extends CustomElement {
 
     this.#detailsElement = this.shadowRoot.querySelector('details');
     this.#enabledToggle = this.shadowRoot.querySelector('input[type="checkbox"]');
-    this.#preferencesList = this.shadowRoot.querySelector('ul.preferences');
   }
 
-  /** @param {Event} event `input` or `change` events for any feature preferences. */
-  static #writePreference = async ({ currentTarget }) => {
-    const { id } = currentTarget;
-    const [featureName, preferenceType, preferenceName] = id.split('.');
-    const storageKey = `${featureName}.preferences.${preferenceName}`;
+  #renderPreferences = async () => {
+    const { featureName } = this;
 
-    switch (preferenceType) {
-      case 'checkbox':
-        browser.storage.local.set({ [storageKey]: currentTarget.checked });
-        break;
-      case 'text':
-      case 'color':
-      case 'select':
-      case 'textarea':
-        browser.storage.local.set({ [storageKey]: currentTarget.value });
-        break;
-    }
-  };
+    for (const [preferenceName, preference] of Object.entries(this.preferences)) {
+      const storageKey = `${featureName}.preferences.${preferenceName}`;
+      const { [storageKey]: storageValue } = await browser.storage.local.get(storageKey);
 
-  /** @type {() => (event: Event) => void} */
-  static #getDebouncedWritePreference = () => {
-    let timeoutID;
-    return ({ currentTarget }) => {
-      clearTimeout(timeoutID);
-      timeoutID = setTimeout(() => XKitFeatureElement.#writePreference({ currentTarget }), 500);
-    };
-  };
-
-  /** @type {(props: { featureName: string, preferences: Preferences, preferenceList: HTMLUListElement }) => Promise<void>} */
-  static #renderPreferences = async ({ featureName, preferences, preferenceList }) => {
-    for (const [key, preference] of Object.entries(preferences)) {
-      const storageKey = `${featureName}.preferences.${key}`;
-      const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
-      preference.value = savedPreference ?? preference.default;
-
-      const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
-
-      const preferenceInput = preferenceTemplateClone.querySelector('input, select, textarea, iframe');
-      preferenceInput.id = `${featureName}.${preference.type}.${key}`;
-
-      const preferenceLabel = preferenceTemplateClone.querySelector('label');
-      if (preferenceLabel) {
-        preferenceLabel.textContent = preference.label || key;
-        preferenceLabel.setAttribute('for', `${featureName}.${preference.type}.${key}`);
-      } else {
-        preferenceInput.title = preference.label || key;
-      }
-
-      switch (preference.type) {
-        case 'text':
-        case 'textarea':
-          preferenceInput.addEventListener('input', XKitFeatureElement.#getDebouncedWritePreference());
-          break;
-        case 'iframe':
-          break;
-        default:
-          preferenceInput.addEventListener('change', XKitFeatureElement.#writePreference);
-      }
+      const label = preference.label ?? preferenceName;
+      const options = preference.options ?? [];
+      const src = preference.src ?? '';
+      const value = storageValue ?? preference.default;
 
       switch (preference.type) {
         case 'checkbox':
-          preferenceInput.checked = preference.value;
-          break;
-        case 'select':
-          for (const { value, label } of preference.options) {
-            const option = Object.assign(document.createElement('option'), {
-              value,
-              textContent: label,
-              selected: value === preference.value,
-            });
-            preferenceInput.appendChild(option);
-          }
+          this.append(CheckboxPreference({ featureName, preferenceName, label, value }));
           break;
         case 'color':
-          preferenceInput.value = preference.value;
-          Coloris.init(); // eslint-disable-line import-x/no-named-as-default-member
-          Coloris({
-            alpha: false,
-            clearButton: true,
-            closeButton: true,
-            el: preferenceInput,
-            swatches: ['#ff4930', '#ff8a00', '#00cf35', '#00b8ff', '#7c5cff', '#ff62ce'],
-            themeMode: 'auto',
-          });
+          this.append(ColorPreference({ featureName, preferenceName, label, value }));
           break;
         case 'iframe':
-          preferenceInput.src = preference.src;
+          this.append(IframePreference({ label, src }));
+          break;
+        case 'select':
+          this.append(SelectPreference({ featureName, preferenceName, label, options, value }));
+          break;
+        case 'text':
+          this.append(TextPreference({ featureName, preferenceName, label, value }));
+          break;
+        case 'textarea':
+          this.append(TextAreaPreference({ featureName, preferenceName, label, value }));
           break;
         default:
-          preferenceInput.value = preference.value;
+          console.error(`Cannot render preference "${storageKey}": Unsupported type "${preference.type}"`);
       }
-
-      preferenceList.appendChild(preferenceTemplateClone);
     }
   };
 
@@ -233,13 +181,7 @@ class XKitFeatureElement extends CustomElement {
     this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
     this.dataset.relatedTerms = this.relatedTerms;
 
-    if (Object.keys(this.preferences).length !== 0) {
-      XKitFeatureElement.#renderPreferences({
-        featureName: this.featureName,
-        preferences: this.preferences,
-        preferenceList: this.#preferencesList,
-      });
-    }
+    this.#renderPreferences();
   }
 
   disconnectedCallback () {

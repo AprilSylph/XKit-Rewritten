@@ -29,7 +29,7 @@ class ColorPreferenceElement extends CustomElement {
     super(templateDocument, adoptedStyleSheets);
 
     this.#inputElement = this.shadowRoot.getElementById('color');
-    this.#labelElement = this.#inputElement.labels[0];
+    this.#labelElement = this.shadowRoot.querySelector('label[for="color"]');
 
     Coloris.init(); // eslint-disable-line import-x/no-named-as-default-member
   }
@@ -50,7 +50,8 @@ class ColorPreferenceElement extends CustomElement {
   };
 
   connectedCallback () {
-    this.role ??= 'listitem';
+    this.role ||= 'listitem';
+    this.slot ||= 'preferences';
     this.#inputElement.addEventListener('change', this.#onChange);
 
     Coloris({

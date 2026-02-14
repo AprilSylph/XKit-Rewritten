@@ -25,7 +25,7 @@ class CheckboxPreferenceElement extends CustomElement {
     super(templateDocument, adoptedStyleSheets);
 
     this.#inputElement = this.shadowRoot.getElementById('checkbox');
-    this.#labelElement = this.#inputElement.labels[0];
+    this.#labelElement = this.shadowRoot.querySelector('label[for="checkbox"]');
   }
 
   /** @param {string} label Label displayed to the user to describe the preference. */
@@ -44,7 +44,8 @@ class CheckboxPreferenceElement extends CustomElement {
   };
 
   connectedCallback () {
-    this.role ??= 'listitem';
+    this.role ||= 'listitem';
+    this.slot ||= 'preferences';
     this.#inputElement.addEventListener('change', this.#onChange);
   }
 

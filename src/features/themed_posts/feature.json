@@ -1,11 +1,12 @@
 {
   "title": "Themed Posts",
-  "description": "Use users' theme colors for posts",
+  "description": "Use users' theme colours for posts",
   "icon": {
     "class_name": "ri-palette-line",
     "color": "white",
     "background_color": "peru"
   },
+  "relatedTerms": [ "colors" ],
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#themed-posts",
   "preferences": {
     "reblogTrailTheming": {
@@ -27,7 +28,7 @@
       "type": "select",
       "label": "Disabled/deleted blog theming",
       "options": [
-        { "value": "palette", "label": "default/palette color" },
+        { "value": "palette", "label": "default/palette colour" },
         { "value": "outer_post", "label": "inherit reblogging blog's theme" }
       ],
       "default": "palette"

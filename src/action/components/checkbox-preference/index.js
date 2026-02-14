@@ -44,7 +44,8 @@ class CheckboxPreferenceElement extends CustomElement {
   };
 
   connectedCallback () {
-    this.role ??= 'listitem';
+    this.role ||= 'listitem';
+    this.slot ||= 'preferences';
     this.#inputElement.addEventListener('change', this.#onChange);
   }
 

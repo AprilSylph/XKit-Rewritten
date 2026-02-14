@@ -111,16 +111,12 @@ ul.preferences {
   list-style-type: none;
 }
 
-ul.preferences:empty {
+ul.preferences #empty {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-ul.preferences:empty::before {
-  content: "No preferences available for this feature.";
-}
-
-.search-highlighted {
+::slotted(.search-highlighted) {
   background-color: rgb(var(--search-highlight));
 }

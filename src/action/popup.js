@@ -87,5 +87,9 @@ browser.permissions
   .then(updatePermissionsBannerVisibility);
 
 const params = new URLSearchParams(location.search);
-const pageIsEmbedded = params.get('embedded') === 'true';
-document.getElementById('embedded-banner').hidden = !pageIsEmbedded;
+if (params.get('embedded') === 'true') {
+  document.body.classList.add('embedded');
+}
+if (params.get('standalone') === 'true') {
+  document.body.classList.add('standalone');
+}

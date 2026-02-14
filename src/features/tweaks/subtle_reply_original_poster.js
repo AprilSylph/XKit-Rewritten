@@ -1,7 +1,7 @@
-import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { buildStyle } from '../../utils/interface.js';
 import { span } from '../../utils/dom.js';
+import { buildStyle } from '../../utils/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
 
 const labelSelector = `footer ${keyToCss('blogLinkWrapper')} ~ ${keyToCss('isOriginalPoster')}`;
 

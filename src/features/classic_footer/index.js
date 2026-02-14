@@ -134,6 +134,14 @@ export const styleElement = buildStyle(`
     font-weight: bold;
   }
 
+  /* Move reblog modal to the left instead of the right */
+  body > div[id^="portal/"] > div:has(a[role="menuitem"][href^="/reblog/"], ${keyToCss('reblogsDisabledInfo')}) {
+    direction: rtl;
+  }
+  body > div[id^="portal/"] > div > [role="menu"]:has(a[role="menuitem"][href^="/reblog/"], ${keyToCss('reblogsDisabledInfo')}) {
+    direction: initial;
+  }
+
   .${reblogLinkClass} {
     display: flex;
     padding: 8px;

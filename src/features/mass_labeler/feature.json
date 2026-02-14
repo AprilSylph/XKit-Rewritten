@@ -1,0 +1,10 @@
+{
+  "title": "Mass Labeler",
+  "description": "Content label posts in bulk",
+  "icon": {
+    "class_name": "ri-flag-2-line",
+    "color": "white",
+    "background_color": "#9d318b"
+  },
+  "relatedTerms": [ "Mature", "NSFW", "NSFT", "Flag", "Community Label" ]
+}

@@ -94,18 +94,6 @@
     return installedFeatures;
   };
 
-  const initMainWorld = () => new Promise(resolve => {
-    document.documentElement.addEventListener('xkit-injection-ready', resolve, { once: true });
-
-    const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
-    const script = Object.assign(document.createElement('script'), {
-      type: 'module',
-      nonce,
-      src: browser.runtime.getURL(`/main_world/index.js?t=${timestamp}`),
-    });
-    document.documentElement.append(script);
-  });
-
   const init = async function () {
     $('style.xkit, link.xkit').remove();
 
@@ -117,7 +105,6 @@
     ] = await Promise.all([
       getInstalledFeatures(),
       browser.storage.local.get(enabledFeaturesKey),
-      initMainWorld(),
     ]);
 
     /**

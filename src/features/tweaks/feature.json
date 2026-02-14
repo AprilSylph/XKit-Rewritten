@@ -9,12 +9,13 @@
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks",
   "relatedTerms": [
     "Blacklist",
-    "Separator"
+    "Separator",
+    "colored"
   ],
   "preferences": {
     "restore_attribution_links": {
       "type": "checkbox",
-      "label": "Move post permalinks back to attributed blognames",
+      "label": "Restore links to individual posts in the post header",
       "default": false
     },
     "create_button_no_bubbles": {

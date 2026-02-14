@@ -3,6 +3,7 @@ import { getPostElements } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject } from '../../utils/react_props.js';
+import { constructRelativeTimeString } from '../../utils/text_format.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 
 const noteCountSelector = keyToCss('noteCount');
@@ -39,16 +40,6 @@ const longTimeFormat = new Intl.DateTimeFormat(locale, {
   second: '2-digit',
   timeZoneName: 'short',
 });
-const relativeTimeFormat = new Intl.RelativeTimeFormat(locale, { style: 'long' });
-const thresholds = [
-  { unit: 'year', denominator: 31557600 },
-  { unit: 'month', denominator: 2629800 },
-  { unit: 'week', denominator: 604800 },
-  { unit: 'day', denominator: 86400 },
-  { unit: 'hour', denominator: 3600 },
-  { unit: 'minute', denominator: 60 },
-  { unit: 'second', denominator: 1 },
-];
 
 const constructTimeString = function (unixTime) {
   const date = new Date(unixTime * 1000);
@@ -89,21 +80,6 @@ const constructISOString = function (unixTime) {
   const twoDigitTimezoneOffsetMinutes = Math.trunc(timezoneOffsetAbsolute % 60).toString().padStart(2, '0');
 
   return `${fourDigitYear}-${twoDigitMonth}-${twoDigitDate}T${twoDigitHours}:${twoDigitMinutes}:${twoDigitSeconds}${timezoneOffsetIsNegative ? '+' : '-'}${twoDigitTimezoneOffsetHours}:${twoDigitTimezoneOffsetMinutes}`;
-};
-
-const constructRelativeTimeString = function (unixTime) {
-  const now = Math.trunc(Date.now() / 1000);
-  const unixDiff = unixTime - now;
-  const unixDiffAbsolute = Math.abs(unixDiff);
-
-  for (const { unit, denominator } of thresholds) {
-    if (unixDiffAbsolute >= denominator) {
-      const value = Math.trunc(unixDiff / denominator);
-      return relativeTimeFormat.format(value, unit);
-    }
-  }
-
-  return relativeTimeFormat.format(-0, 'second');
 };
 
 const addPostTimestamps = async function () {

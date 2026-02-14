@@ -17,6 +17,7 @@ import {
 import { userBlogs } from '../../utils/user.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
+const hiddenOnExemptBlogTimelineAttribute = 'data-show-originals-hidden-on-exempt-blog-timeline';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
 
@@ -29,7 +30,7 @@ let showOwnReblogs;
 let showReblogsWithContributedContent;
 let showReblogsOfNotFollowing;
 let whitelist;
-let disabledBlogs;
+let exemptBlogs;
 
 const lengthenTimeline = async (timeline) => {
   if (!timeline.querySelector(keyToCss('manualPaginatorButtons'))) {
@@ -45,9 +46,12 @@ const addControls = async (timelineElement, location) => {
   controls.dataset.location = location;
 
   timelineElement.prepend(controls);
+  lengthenTimeline(timelineElement);
 
   const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
     controls.dataset.showOriginals = mode;
+
+    if (location === 'exemptBlogTimeline') { return; }
 
     const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
     savedModes[location] = mode;
@@ -56,14 +60,11 @@ const addControls = async (timelineElement, location) => {
 
   const onButton = createButton(translate('Original Posts'), handleClick, 'on');
   const offButton = createButton(translate('All posts'), handleClick, 'off');
-  const disabledButton = createButton(translate('All posts'), null, 'disabled');
+  controls.append(onButton, offButton);
 
-  if (location === 'disabled') {
-    controls.append(disabledButton);
+  if (location === 'exemptBlogTimeline') {
+    controls.dataset.showOriginals = 'off';
   } else {
-    controls.append(onButton, offButton);
-
-    lengthenTimeline(timelineElement);
     const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
     const mode = savedModes[location] ?? 'on';
     controls.dataset.showOriginals = mode;
@@ -76,7 +77,7 @@ const getLocation = timelineElement => {
 
   const on = {
     dashboard: followingTimelineFilter(timelineElement),
-    disabled: isBlog && disabledBlogs.some(name => blogPostsTimelineFilter(name)(timelineElement)),
+    exemptBlogTimeline: isBlog && exemptBlogs.some(name => blogPostsTimelineFilter(name)(timelineElement)),
     peepr: isBlog,
     blogSubscriptions: blogSubsTimelineFilter(timelineElement),
     community: anyCommunityTimelineFilter(timelineElement) || communitiesTimelineFilter(timelineElement),
@@ -107,11 +108,18 @@ const processPosts = async function (postElements) {
       const myPost = await isMyPost(postElement);
 
       if (!rebloggedRootId) { return; }
-      if (showOwnReblogs && myPost) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
       if (showReblogsOfNotFollowing && !(rebloggedFromFollowing || trail.at(-1)?.blog?.followed)) { return; }
+
       const visibleBlogName = community ? postAuthor : blogName;
-      if (whitelist.includes(visibleBlogName)) { return; }
+      if (exemptBlogs.includes(visibleBlogName)) {
+        // This blog's reblogs should be shown, unless we're on the blog's timeline.
+        // If so, and if Show Originals is manually enabled by the user, hide this reblog.
+        getTimelineItemWrapper(postElement).setAttribute(hiddenOnExemptBlogTimelineAttribute, '');
+        return;
+      }
+
+      if ((showOwnReblogs && myPost)) { return; }
 
       getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
     });
@@ -130,7 +138,7 @@ export const main = async function () {
   const nonGroupUserBlogs = userBlogs
     .filter(blog => !blog.isGroupChannel)
     .map(blog => blog.name);
-  disabledBlogs = [...whitelist, ...showOwnReblogs ? nonGroupUserBlogs : []];
+  exemptBlogs = [...whitelist, ...showOwnReblogs ? nonGroupUserBlogs : []];
 
   onNewPosts.addListener(processPosts);
 };
@@ -139,6 +147,7 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  $(`[${hiddenOnExemptBlogTimelineAttribute}]`).removeAttr(hiddenOnExemptBlogTimelineAttribute);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
   $(`.${controlsClass}`).remove();
 };

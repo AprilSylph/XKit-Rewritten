@@ -1,6 +1,5 @@
 import { keyToCss } from './css_map.js';
 import { inject } from './inject.js';
-import { weakMemoize } from './memoize.js';
 import { apiFetch } from './tumblr_helpers.js';
 import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
@@ -8,25 +7,28 @@ import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
  * @param {Element} postElement An on-screen post element
  * @returns {Promise<object>} The post element's buried timelineObject property
  */
-export const timelineObject = weakMemoize(postElement =>
-  inject('/main_world/unbury_timeline_object.js', [], postElement),
-);
+export const timelineObject = postElement => {
+  postElement.timelineObjectPromise ??= inject('/main_world/unbury_timeline_object.js', [], postElement);
+  return postElement.timelineObjectPromise;
+};
 
 /**
  * @param {Element} trailItemElement An on-screen reblog trail item element
  * @returns {Promise<object>} The trail item element's trailItem context value
  */
-export const trailItem = weakMemoize(trailItemElement =>
-  inject('/main_world/unbury_trail_item.js', [], trailItemElement),
-);
+export const trailItem = trailItemElement => {
+  trailItemElement.trailItemPromise ??= inject('/main_world/unbury_trail_item.js', [], trailItemElement);
+  return trailItemElement.trailItemPromise;
+};
 
 /**
  * @param {Element} notificationElement An on-screen notification
  * @returns {Promise<object>} The notification's buried notification property
  */
-export const notificationObject = weakMemoize(notificationElement =>
-  inject('/main_world/unbury_notification.js', [], notificationElement),
-);
+export const notificationObject = notificationElement => {
+  notificationElement.notificationObjectPromise ??= inject('/main_world/unbury_notification.js', [], notificationElement);
+  return notificationElement.notificationObjectPromise;
+};
 
 /**
  * @param {Element} meatballMenu An on-screen meatball menu element in a blog modal header or blog card

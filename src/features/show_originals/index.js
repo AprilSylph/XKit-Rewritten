@@ -18,7 +18,7 @@ import { userBlogs } from '../../utils/user.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
-const controlsClass = 'xkit-show-originals-controls';
+export const controlsClass = 'xkit-show-originals-controls';
 
 const channelSelector = `${keyToCss('bar')} ~ *`;
 

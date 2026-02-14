@@ -1,10 +1,10 @@
-import { filterPostElements, getTimelineItemWrapper } from '../../utils/interface.js';
-import { isMyPost, timelineObject } from '../../utils/react_props.js';
-import { getPreferences } from '../../utils/preferences.js';
-import { onNewPosts } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
+import { a, div } from '../../utils/dom.js';
+import { filterPostElements, getTimelineItemWrapper } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
-import { userBlogs } from '../../utils/user.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
+import { isMyPost, timelineObject } from '../../utils/react_props.js';
 import {
   followingTimelineFilter,
   anyBlogPostsTimelineFilter,
@@ -14,7 +14,7 @@ import {
   anyCommunityTimelineFilter,
   communitiesTimelineFilter,
 } from '../../utils/timeline_id.js';
-import { a, div } from '../../utils/dom.js';
+import { userBlogs } from '../../utils/user.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
 const hiddenOnExemptBlogTimelineAttribute = 'data-show-originals-hidden-on-exempt-blog-timeline';

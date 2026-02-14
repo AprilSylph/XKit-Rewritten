@@ -1,8 +1,10 @@
+import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
-import { buildStyle } from '../../utils/interface.js';
+import { buildStyle, notificationSelector } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
-import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
-import { onNewNotifications } from '../../utils/mutations.js';
+import { hideModal, modalCancelButton, showModal } from '../../utils/modals.js';
+import { onNewNotifications, pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 import { notificationObject } from '../../utils/react_props.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { userBlogNames } from '../../utils/user.js';
@@ -15,10 +17,27 @@ const meatballButtonUnblockLabel = 'Unblock notifications';
 
 let blockedPostTargetIDs;
 
-export const styleElement = buildStyle();
+const hiddenAttribute = 'data-notificationblock-hidden';
+const placeholdersClass = 'xkit-notificationblock-placeholder';
 
-const buildCss = () => `:is(${blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')
-  }) { display: none !important; }`;
+const firstHidden = `[${hiddenAttribute}]:not([${hiddenAttribute}] + *)`;
+const firstHiddenOfDay = `[${hiddenAttribute}]:has(> ${keyToCss('dateSeparatorWrapper')})`;
+
+export const styleElement = buildStyle(`
+[${hiddenAttribute}] > ${notificationSelector} {
+  display: none !important;
+}
+
+body.${placeholdersClass} :is(${firstHidden}, ${firstHiddenOfDay})::after {
+  display: block;
+  padding-bottom: 1ch;
+
+  content: "(hidden notifications)";
+  text-align: center;
+  color: rgba(var(--black), .65);
+  font-size: .875rem;
+}
+`);
 
 const processNotifications = (notificationElements) => {
   notificationElements.forEach(async notificationElement => {
@@ -29,7 +48,13 @@ const processNotifications = (notificationElements) => {
       // available on "replied to your post" notifications, which appear to always target the root post
       const blockablePostId = notification.actions?.longTap?.meta?.postId;
 
-      notificationElement.dataset.targetRootPostId = targetRootPostId || targetPostId || blockablePostId || '';
+      const rootId = targetRootPostId || targetPostId || blockablePostId;
+
+      if (blockedPostTargetIDs.includes(rootId)) {
+        notificationElement.parentElement.setAttribute(hiddenAttribute, '');
+      } else {
+        notificationElement.parentElement.removeAttribute(hiddenAttribute);
+      }
     }
   });
 };
@@ -101,14 +126,16 @@ const unblockPostFilter = async ({ id, rebloggedRootId }) => {
 
 export const onStorageChanged = (changes) => {
   if (Object.keys(changes).includes(storageKey)) {
-    blockedPostTargetIDs = changes[storageKey].newValue;
-    styleElement.textContent = buildCss();
+    blockedPostTargetIDs = changes[storageKey].newValue ?? [];
+    pageModifications.trigger(processNotifications);
   }
 };
 
 export const main = async function () {
+  const { placeholders } = await getPreferences('notificationblock');
+  document.body.classList[placeholders ? 'add' : 'remove'](placeholdersClass);
+
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
-  styleElement.textContent = buildCss();
   onNewNotifications.addListener(processNotifications);
 
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
@@ -119,4 +146,7 @@ export const clean = async function () {
   onNewNotifications.removeListener(processNotifications);
   unregisterMeatballItem(meatballButtonBlockId);
   unregisterMeatballItem(meatballButtonUnblockId);
+
+  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  document.body.classList.remove(placeholdersClass);
 };

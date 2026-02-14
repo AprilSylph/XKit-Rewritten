@@ -24,6 +24,11 @@
       "label": "Automatically tag asker when answering",
       "default": false
     },
+    "showReblogSuggestions": {
+      "type": "checkbox",
+      "label": "Suggest tags from the source post on reblogs",
+      "default": false
+    },
     "tagBundles": {
       "type": "iframe",
       "label": "Manage tag bundles",

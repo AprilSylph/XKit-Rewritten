@@ -1,6 +1,6 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { onClickNavigate } from '../../utils/tumblr_helpers.js';
 import { pageModifications } from '../../utils/mutations.js';
+import { onClickNavigate } from '../../utils/tumblr_helpers.js';
 
 const modifiedAttribute = 'data-xkit-tweaks-create-button-no-bubbles';
 

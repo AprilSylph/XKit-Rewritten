@@ -24,7 +24,7 @@
   user-select: none;
 }
 
-.xkit-trim-reblogs-preview input:checked ~ * {
+.xkit-trim-reblogs-preview input:checked ~ :is(label > *) {
   opacity: 0.5;
   filter: grayscale(1);
   text-decoration: line-through;

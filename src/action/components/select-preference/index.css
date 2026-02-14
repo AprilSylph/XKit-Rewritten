@@ -1,0 +1,29 @@
+:host {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 8px;
+  padding: 4px;
+}
+
+label {
+  flex-shrink: 0;
+}
+
+select {
+  flex-shrink: 1;
+
+  box-sizing: border-box;
+  padding: 4px;
+  border: none;
+  border-radius: 3px;
+  overflow: hidden;
+
+  background-color: rgb(var(--passive-grey));
+  color: rgb(var(--black));
+  text-overflow: ellipsis;
+}
+
+select:focus {
+  background-color: rgb(var(--active-grey));
+}

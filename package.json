@@ -14,11 +14,11 @@
     "eslint": "^9.39.2",
     "eslint-plugin-jsdoc": "^52.0.4",
     "neostandard": "^0.12.2",
-    "web-ext": "^8.10.0"
+    "web-ext": "^9.3.0"
   },
   "dependencies": {
     "@melloware/coloris": "^0.25.0",
-    "jquery": "^3.7.1",
+    "jquery": "^4.0.0",
     "moment": "^2.30.1",
     "normalize.css": "^8.0.1",
     "remixicon": "^4.9.1",

@@ -1,10 +1,10 @@
 import { keyToClasses, keyToCss } from '../../utils/css_map.js';
+import { debounce } from '../../utils/debounce.js';
+import { buildStyle, displayBlockUnlessDisabledAttr } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
-import { buildStyle, displayBlockUnlessDisabledAttr } from '../../utils/interface.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { cellItem } from '../../utils/react_props.js';
-import { debounce } from '../../utils/debounce.js';
 
 const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
 $(`[id="${scrollToBottomButtonId}"]`).remove();

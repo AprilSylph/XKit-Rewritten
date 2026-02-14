@@ -6,5 +6,12 @@
     "class_name": "ri-download-fill",
     "color": "#e8d738",
     "background_color": "black"
+  },
+  "preferences": {
+    "stopAtCaughtUp": {
+      "type": "checkbox",
+      "label": "Stop scrolling the Following feed when I reach the Changes/Trending/etc. carousel",
+      "default": true
+    }
   }
 }

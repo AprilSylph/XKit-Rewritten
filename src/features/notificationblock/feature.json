@@ -7,5 +7,12 @@
     "background_color": "#f5223c"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#notificationblock",
-  "relatedTerms": [ "activity", "mute notifications", "notes" ]
+  "relatedTerms": [ "activity", "mute notifications", "notes" ],
+  "preferences": {
+    "manageBlockedPosts": {
+      "type": "iframe",
+      "label": "Manage posts with blocked notifications",
+      "src": "/features/notificationblock/options/index.html"
+    }
+  }
 }

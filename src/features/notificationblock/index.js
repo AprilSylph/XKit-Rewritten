@@ -1,13 +1,14 @@
 import { dom } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
-import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
+import { hideModal, modalCancelButton, modalCompleteButton, showModal } from '../../utils/modals.js';
 import { onNewNotifications } from '../../utils/mutations.js';
 import { notificationObject } from '../../utils/react_props.js';
-import { apiFetch } from '../../utils/tumblr_helpers.js';
-import { userBlogNames } from '../../utils/user.js';
+import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
+import { userBlogNames, userBlogs } from '../../utils/user.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
+const toOpenStorageKey = 'notificationblock.toOpen';
 const meatballButtonBlockId = 'notificationblock-block';
 const meatballButtonBlockLabel = 'Block notifications';
 const meatballButtonUnblockId = 'notificationblock-unblock';
@@ -106,6 +107,40 @@ export const onStorageChanged = (changes) => {
   }
 };
 
+const openPostById = async id => {
+  let canceled = false;
+  const timeoutId = setTimeout(() => showModal({
+    title: 'NotificationBlock',
+    message: [`Searching for post ${id} on your blogs. Please wait...`],
+    buttons: [dom('button', { class: 'red' }, { click: () => { canceled = true; } }, ['Cancel'])],
+  }), 500);
+
+  const sortedUserBlogs = [...userBlogs].sort((a, b) => b.posts - a.posts);
+  for (const { name } of sortedUserBlogs) {
+    try {
+      await apiFetch(`/v2/blog/${name}/posts/${id}`);
+      clearTimeout(timeoutId);
+      hideModal();
+      navigate(`/@${name}/${id}`);
+      return;
+    } catch {
+      if (canceled) {
+        hideModal();
+        return;
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+    }
+  }
+
+  clearTimeout(timeoutId);
+  showModal({
+    title: 'NotificationBlock',
+    message: [`Failed to find and open post ${id}! It may not be one of your original posts.`],
+    buttons: [modalCompleteButton],
+  });
+};
+
 export const main = async function () {
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
   styleElement.textContent = buildCss();
@@ -113,6 +148,17 @@ export const main = async function () {
 
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
   registerMeatballItem({ id: meatballButtonUnblockId, label: meatballButtonUnblockLabel, onclick: onButtonClicked, postFilter: unblockPostFilter });
+
+  const { [toOpenStorageKey]: toOpen } = await browser.storage.local.get(toOpenStorageKey);
+  if (toOpen) {
+    browser.storage.local.remove(toOpenStorageKey);
+    openPostById(toOpen.blockedPostID);
+  } else {
+    const blockedPostID = new URLSearchParams(location.search).get('notificationblock-id');
+    if (blockedPostID) {
+      openPostById(blockedPostID);
+    }
+  }
 };
 
 export const clean = async function () {

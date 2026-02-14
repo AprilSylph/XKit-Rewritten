@@ -1,9 +1,9 @@
-import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { canvas, div } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
-import { getPreferences } from '../../utils/preferences.js';
 import { memoize } from '../../utils/memoize.js';
+import { pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
 const pausedPosterAttribute = 'data-paused-gif-use-poster';

@@ -1,7 +1,7 @@
-import { filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
-import { getPreferences } from '../../utils/preferences.js';
-import { onNewPosts, pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
+import { filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
+import { onNewPosts, pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 import { followingTimelineFilter, followingTimelineSelector, timelineSelector } from '../../utils/timeline_id.js';
 
 const excludeAttribute = 'data-seen-posts-done';

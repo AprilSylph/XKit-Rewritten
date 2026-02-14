@@ -21,14 +21,14 @@ $('nav a').on('click', event => {
 document.getElementById('search').addEventListener('input', ({ currentTarget }) => {
   const query = currentTarget.value.toLowerCase();
   const featureElements = [...document.querySelectorAll('xkit-feature')];
-  const preferenceElements = featureElements.flatMap(({ shadowRoot }) => [...shadowRoot.querySelectorAll(preferenceSelector)]);
+  const preferenceElements = featureElements.flatMap(featureElement => [...featureElement.querySelectorAll(preferenceSelector)]);
 
   featureElements.forEach(featureElement => {
     const textContent = featureElement.textContent.toLowerCase();
     const shadowContent = featureElement.shadowRoot.textContent.toLowerCase();
     const relatedTerms = featureElement.dataset.relatedTerms.toLowerCase();
     const preferencesContent = [
-      ...featureElement.shadowRoot.querySelectorAll(preferenceSelector),
+      ...featureElement.querySelectorAll(preferenceSelector),
     ].map(({ shadowRoot }) => shadowRoot.textContent.toLowerCase()).join('\n');
 
     const hasMatch =

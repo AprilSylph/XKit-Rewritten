@@ -1,12 +1,12 @@
-import { getTimelineItemWrapper, filterPostElements } from '../../utils/interface.js';
-import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
-import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
-import { timelineObject } from '../../utils/react_props.js';
-import { onNewPosts, pageModifications } from '../../utils/mutations.js';
 import { dom } from '../../utils/dom.js';
-import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
+import { filterPostElements, getTimelineItemWrapper } from '../../utils/interface.js';
+import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
+import { hideModal, modalCancelButton, showModal } from '../../utils/modals.js';
+import { onNewPosts, pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
+import { timelineObject } from '../../utils/react_props.js';
 import { postPermalinkTimelineFilter, timelineSelector } from '../../utils/timeline_id.js';
+import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';

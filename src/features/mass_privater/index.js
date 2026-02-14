@@ -2,7 +2,7 @@ import { dom } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
 import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal, createTagSpan, createBlogSpan } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
-import { apiFetch } from '../../utils/tumblr_helpers.js';
+import { apiFetch, createEditRequestBody, isNpfCompatible } from '../../utils/tumblr_helpers.js';
 import { userBlogs } from '../../utils/user.js';
 
 const getPostsFormId = 'xkit-mass-privater-get-posts';
@@ -47,8 +47,8 @@ const createNowString = () => {
   return `${YYYY}-${MM}-${DD}T${hh}:${mm}`;
 };
 
-const showInitialPrompt = async () => {
-  const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event).catch(showErrorModal) }, [
+const showInitialPrompt = async (makePrivate) => {
+  const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event, makePrivate).catch(showErrorModal) }, [
     dom('label', null, null, [
       'Posts on blog:',
       dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption)),
@@ -70,7 +70,7 @@ const showInitialPrompt = async () => {
   }
 
   showModal({
-    title: 'Select posts to make private',
+    title: `Select posts to make ${makePrivate ? 'private' : 'public'}`,
     message: [initialForm],
     buttons: [
       modalCancelButton,
@@ -79,7 +79,7 @@ const showInitialPrompt = async () => {
   });
 };
 
-const confirmInitialPrompt = async event => {
+const confirmInitialPrompt = async (event, makePrivate) => {
   event.preventDefault();
 
   const { submitter } = event;
@@ -98,7 +98,7 @@ const confirmInitialPrompt = async event => {
     .map(tag => tag.trim().toLowerCase())
     .filter(Boolean);
 
-  if (tags.length) {
+  if (makePrivate && tags.length) {
     const getTagCount = async tag => {
       const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag } });
       return totalPosts ?? 0;
@@ -121,20 +121,20 @@ const confirmInitialPrompt = async event => {
 
   const message = tags.length
     ? [
-        'Every published post on ',
+        `Every ${makePrivate ? 'published' : 'private'} post on `,
         createBlogSpan(name),
         ' from before ',
         beforeElement,
         ' tagged ',
         ...elementsAsList(tags.map(createTagSpan), 'or'),
-        ' will be set to private.',
+        ` will be set to ${makePrivate ? 'private' : 'public'}.`,
       ]
     : [
-        'Every published post on ',
+        `Every ${makePrivate ? 'published' : 'private'} post on `,
         createBlogSpan(name),
         ' from before ',
         beforeElement,
-        ' will be set to private.',
+        ` will be set to ${makePrivate ? 'private' : 'public'}.`,
       ];
 
   showModal({
@@ -145,8 +145,8 @@ const confirmInitialPrompt = async event => {
       dom(
         'button',
         { class: 'red' },
-        { click: () => privatePosts({ uuid, name, tags, before }).catch(showErrorModal) },
-        ['Private them!'],
+        { click: () => editPosts({ makePrivate, uuid, name, tags, before }).catch(showErrorModal) },
+        [makePrivate ? 'Private them!' : 'Unprivate them!'],
       ),
     ],
   });
@@ -176,22 +176,42 @@ const showPostsNotFound = ({ name }) =>
     buttons: [modalCompleteButton],
   });
 
-const privatePosts = async ({ uuid, name, tags, before }) => {
+const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
-  const privateStatus = dom('span');
+  const editStatus = dom('span');
+
+  const failedTable = dom('table');
+  const failedTableElement = dom('div', null, null, [failedTable]);
+  const showFailedPost = ({ blogName, id, summary = '' }) =>
+    failedTable.append(
+      dom('tr', null, null, [
+        dom('td', null, null, [
+          dom('a', { href: `/@${blogName}/${id}`, target: '_blank' }, null, [id]),
+          summary ? ':' : '',
+        ]),
+        dom('td', null, null, [
+          summary.replaceAll('\n', ' '),
+        ]),
+      ]),
+    );
+  const failedStatus = dom('div', { class: 'mass-privater-failed' }, null, [
+    'Failed/incompatible posts:',
+    failedTableElement,
+  ]);
 
   showModal({
-    title: 'Making posts private...',
+    title: `Making posts ${makePrivate ? 'private' : 'public'}...`,
     message: [
       dom('small', null, null, ['Do not navigate away from this page.']),
       '\n\n',
       gatherStatus,
-      privateStatus,
+      editStatus,
+      failedStatus,
     ],
   });
 
   let fetchedPosts = 0;
-  const filteredPostIdsSet = new Set();
+  const filteredPostsMap = new Map();
 
   const collect = async resource => {
     while (resource) {
@@ -199,80 +219,129 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
         apiFetch(resource).then(({ response }) => {
           response.posts
             .filter(({ canEdit }) => canEdit === true)
-            .filter(({ state }) => state === 'published')
+            .filter(({ state }) => state === (makePrivate ? 'published' : 'private'))
             .filter(({ timestamp }) => timestamp < before)
-            .forEach(({ id }) => filteredPostIdsSet.add(id));
+            .filter(postData =>
+              tags.length
+                ? postData.tags.some(tag => tags.includes(tag.toLowerCase()))
+                : true,
+            )
+            .forEach((postData) => filteredPostsMap.set(postData.id, postData));
 
           fetchedPosts += response.posts.length;
 
           resource = response.links?.next?.href;
 
-          gatherStatus.textContent = `Found ${filteredPostIdsSet.size} posts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
+          gatherStatus.textContent = `Found ${filteredPostsMap.size} posts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
         }),
         sleep(1000),
       ]);
     }
   };
 
-  if (tags.length) {
+  if (makePrivate && tags.length) {
     for (const tag of tags) {
       await collect(`/v2/blog/${uuid}/posts?${$.param({ tag, before, limit: 50 })}`);
     }
   } else {
     await collect(`/v2/blog/${uuid}/posts?${$.param({ before, limit: 50 })}`);
   }
-  const filteredPostIds = [...filteredPostIdsSet];
 
-  if (filteredPostIds.length === 0) {
+  if (filteredPostsMap.size === 0) {
     showPostsNotFound({ name });
     return;
   }
 
-  let privatedCount = 0;
-  let privatedFailCount = 0;
+  const filteredPostIds = [...filteredPostsMap.keys()];
+  const filteredPosts = [...filteredPostsMap.values()];
 
-  while (filteredPostIds.length !== 0) {
-    const postIds = filteredPostIds.splice(0, 100);
+  let successCount = 0;
+  let failCount = 0;
 
-    if (privateStatus.textContent === '') privateStatus.textContent = '\nPrivating posts...';
+  if (makePrivate) {
+    while (filteredPostIds.length !== 0) {
+      const postIds = filteredPostIds.splice(0, 100);
 
-    await Promise.all([
-      megaEdit(postIds, { mode: 'private' }).then(() => {
-        privatedCount += postIds.length;
-      }).catch(() => {
-        privatedFailCount += postIds.length;
-      }).finally(() => {
-        privateStatus.textContent = `\nPrivated ${privatedCount} posts... ${privatedFailCount ? `(failed: ${privatedFailCount})` : ''}`;
-      }),
-      sleep(1000),
-    ]);
+      if (editStatus.textContent === '') editStatus.textContent = '\nPrivating posts...';
+
+      await Promise.all([
+        megaEdit(postIds, { mode: 'private' }).then(() => {
+          successCount += postIds.length;
+        }).catch(() => {
+          failCount += postIds.length;
+        }).finally(() => {
+          editStatus.textContent = `\nPrivated ${successCount} posts... ${failCount ? `(failed: ${failCount})` : ''}`;
+        }),
+        sleep(1000),
+      ]);
+    }
+  } else {
+    editStatus.textContent = '\nUnprivating posts...';
+
+    const editablePosts = [];
+    filteredPosts.forEach(postData => isNpfCompatible(postData)
+      ? editablePosts.push(postData)
+      : showFailedPost(postData),
+    );
+    for (const postData of editablePosts) {
+      await Promise.all([
+        apiFetch(`/v2/blog/${uuid}/posts/${postData.id}`, {
+          method: 'PUT',
+          body: {
+            ...createEditRequestBody(postData),
+            state: 'published',
+          },
+        }).then(() => {
+          successCount++;
+        }).catch(() => {
+          showFailedPost(postData);
+          failCount++;
+        }).finally(() => {
+          editStatus.textContent = `\nUnprivated ${successCount} posts... ${failCount ? `(failed: ${failCount})` : ''}`;
+        }),
+        sleep(1000),
+      ]);
+    }
   }
 
   await sleep(1000);
 
+  const failedTableScrollTop = failedTableElement.scrollTop;
+
   showModal({
     title: 'All done!',
     message: [
-      `Privated ${privatedCount} posts${privatedFailCount ? ` (failed: ${privatedFailCount})` : ''}.\n`,
+      `${makePrivate ? 'Privated' : 'Unprivated'} ${successCount} posts${failCount ? ` (failed: ${failCount})` : ''}.\n`,
       'Refresh the page to see the result.',
+      failedStatus,
     ],
     buttons: [
       dom('button', null, { click: hideModal }, ['Close']),
       dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh']),
     ],
   });
+
+  failedTableElement.scrollTop = failedTableScrollTop;
 };
 
 const sidebarOptions = {
   id: 'mass-privater',
   title: 'Mass Privater',
-  rows: [{
-    label: 'Make posts private',
-    onclick: showInitialPrompt,
-    carrot: true,
-  }],
+  rows: [
+    {
+      label: 'Private posts',
+      onclick: () => showInitialPrompt(true),
+      carrot: true,
+    },
+    {
+      label: 'Unprivate posts',
+      onclick: () => showInitialPrompt(false),
+      carrot: true,
+    },
+  ],
   visibility: () => /^\/blog\/[^/]+\/?$/.test(location.pathname),
 };
 
 export const main = async () => addSidebarItem(sidebarOptions);
 export const clean = async () => removeSidebarItem(sidebarOptions.id);
+export const stylesheet = true;

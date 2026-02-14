@@ -1,7 +1,7 @@
 import { keyToClasses, keyToCss } from '../../utils/css_map.js';
+import { buildStyle, displayBlockUnlessDisabledAttr } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
-import { buildStyle, displayBlockUnlessDisabledAttr } from '../../utils/interface.js';
 
 const buttonClass = 'xkit-scroll-to-bottom-button';
 $(`.${buttonClass}`).remove();

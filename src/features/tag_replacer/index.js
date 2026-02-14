@@ -21,7 +21,7 @@ const showInitialPrompt = async () => {
       dom('input', { type: 'text', name: 'oldTag', required: true, placeholder: 'Required', autocomplete: 'off' }),
     ]),
     dom('label', null, null, [
-      'Add this new tag:',
+      'Add new tag/tags:',
       dom('input', { type: 'text', name: 'newTag', placeholder: 'Optional, comma-separated', autocomplete: 'off' }),
     ]),
   ]);
@@ -32,6 +32,28 @@ const showInitialPrompt = async () => {
     if (option) option.selected = true;
   }
 
+  const submitButton = dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Replace Tag', disabled: true });
+  const updateSubmitButton = () => {
+    const { mode } = processTagInputs(initialForm.elements.oldTag, initialForm.elements.newTag);
+    if (mode) {
+      submitButton.disabled = false;
+      submitButton.className = {
+        add: 'blue',
+        remove: 'red',
+        replace: 'blue',
+      }[mode];
+      submitButton.value = {
+        add: 'Add Tags',
+        remove: 'Remove Tag',
+        replace: 'Replace Tag',
+      }[mode];
+    } else {
+      submitButton.disabled = true;
+    }
+  };
+  initialForm.elements.oldTag.addEventListener('input', updateSubmitButton);
+  initialForm.elements.newTag.addEventListener('input', updateSubmitButton);
+
   showModal({
     title: 'Replace what tag?',
     message: [
@@ -41,11 +63,33 @@ const showInitialPrompt = async () => {
         'Any new tags will be added to the end of each post\'s tags.',
       ]),
     ],
-    buttons: [
-      modalCancelButton,
-      dom('input', { class: 'blue', type: 'submit', form: getPostsFormId, value: 'Next' }),
-    ],
+    buttons: [modalCancelButton, submitButton],
   });
+};
+
+const processTagInputs = (oldTagInput, newTagInput) => {
+  const oldTags = oldTagInput.value
+    .replace(/"|#/g, '')
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(Boolean);
+  const newTags = newTagInput.value
+    .replace(/"|#/g, '')
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(Boolean);
+
+  if (oldTags.length === 1) {
+    const oldTag = oldTags[0];
+
+    const toAdd = newTags.filter(tag => tag.toLowerCase() !== oldTag.toLowerCase());
+    const toRemove = newTags.some(tag => tag.toLowerCase() === oldTag.toLowerCase()) ? [] : [oldTag];
+
+    if (toAdd.length && toRemove.length) return { mode: 'replace', oldTag, toAdd, toRemove };
+    if (toAdd.length) return { mode: 'add', oldTag, toAdd, toRemove };
+    if (toRemove.length) return { mode: 'remove', oldTag, toAdd, toRemove };
+  }
+  return {};
 };
 
 const confirmReplaceTag = async event => {
@@ -61,7 +105,8 @@ const confirmReplaceTag = async event => {
 
   const uuid = elements.blog.value;
   const name = elements.blog.selectedOptions[0].textContent;
-  const oldTag = elements.oldTag.value.replace(/,|"|#/g, '').trim();
+
+  const { oldTag, toAdd, toRemove, mode } = processTagInputs(elements.oldTag, elements.newTag);
 
   const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag: oldTag } });
   if (!totalPosts) {
@@ -69,33 +114,51 @@ const confirmReplaceTag = async event => {
     return;
   }
 
-  const newTag = elements.newTag.value.replace(/"|#/g, '').trim();
-  const remove = newTag === '';
+  const title = {
+    add: `Add tags to ${totalPosts} posts?`,
+    remove: `Remove tags from ${totalPosts} posts?`,
+    replace: `Replace tags on ${totalPosts} posts?`,
+  }[mode];
 
-  const newTags = newTag.split(',').map(tag => tag.trim());
-  const newMultiple = newTags.length > 1;
-
-  const appendOnly = newTags.some(tag => tag.toLowerCase() === oldTag.toLowerCase());
-
-  showModal({
-    title: `${remove ? 'Remove' : 'Replace'} tags on ${totalPosts} posts?`,
-    message: [
+  const message = {
+    add: [
+      'Posts with ',
+      createTagSpan(oldTag.toLowerCase()),
+      ' on ',
+      createBlogSpan(name),
+      ` will gain the ${toAdd.length > 1 ? 'tags:\n' : 'tag: '}`,
+      ...toAdd.flatMap(tag => [createTagSpan(tag), ' ']),
+    ],
+    remove: [
       'The tag ',
       createTagSpan(oldTag.toLowerCase()),
       ' on ',
       createBlogSpan(name),
-      ' will be ',
-      ...remove
-        ? ['removed.']
-        : [`replaced with the ${newMultiple ? 'tags:\n' : 'tag: '}`, ...newTags.flatMap(tag => [createTagSpan(tag), ' '])],
+      ' will be removed.',
     ],
+    replace: [
+      'The tag ',
+      createTagSpan(oldTag.toLowerCase()),
+      ' on ',
+      createBlogSpan(name),
+      ` will be replaced with the ${toAdd.length > 1 ? 'tags:\n' : 'tag: '}`,
+      ...toAdd.flatMap(tag => [createTagSpan(tag), ' ']),
+    ],
+  }[mode];
+
+  const buttonClass = { add: 'blue', remove: 'red', replace: 'blue' }[mode];
+  const buttonText = { add: 'Add them!', remove: 'Remove it!', replace: 'Replace it!' }[mode];
+
+  showModal({
+    title,
+    message,
     buttons: [
       modalCancelButton,
       dom(
         'button',
-        { class: remove ? 'red' : 'blue' },
-        { click: () => replaceTag({ uuid, oldTag, newTag, appendOnly }).catch(showErrorModal) },
-        [remove ? 'Remove it!' : 'Replace it!'],
+        { class: buttonClass },
+        { click: () => replaceTag({ uuid, oldTag, toAdd, toRemove, mode }).catch(showErrorModal) },
+        [buttonText],
       ),
     ],
   });
@@ -107,7 +170,7 @@ const showTagNotFound = ({ tag, name }) => showModal({
   buttons: [modalCompleteButton],
 });
 
-const replaceTag = async ({ uuid, oldTag, newTag, appendOnly }) => {
+const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const removeStatus = dom('span');
   const appendStatus = dom('span');
@@ -148,11 +211,11 @@ const replaceTag = async ({ uuid, oldTag, newTag, appendOnly }) => {
   while (taggedPostIds.length !== 0) {
     const postIds = taggedPostIds.splice(0, 100);
 
-    if (newTag) {
+    if (toAdd.length) {
       if (appendStatus.textContent === '') appendStatus.textContent = '\nAdding new tags...';
 
       await Promise.all([
-        megaEdit(postIds, { mode: 'add', tags: [newTag] }).then(() => {
+        megaEdit(postIds, { mode: 'add', tags: toAdd }).then(() => {
           appendedCount += postIds.length;
         }).catch(() => {
           appendedFailCount += postIds.length;
@@ -163,11 +226,11 @@ const replaceTag = async ({ uuid, oldTag, newTag, appendOnly }) => {
       ]);
     }
 
-    if (!appendOnly) {
+    if (toRemove.length) {
       if (removeStatus.textContent === '') removeStatus.textContent = '\nRemoving old tags...';
 
       await Promise.all([
-        megaEdit(postIds, { mode: 'remove', tags: [oldTag] }).then(() => {
+        megaEdit(postIds, { mode: 'remove', tags: toRemove }).then(() => {
           removedCount += postIds.length;
         }).catch(() => {
           removedFailCount += postIds.length;
@@ -184,8 +247,8 @@ const replaceTag = async ({ uuid, oldTag, newTag, appendOnly }) => {
   showModal({
     title: 'Thank you, come again!',
     message: [
-      newTag ? `Added new tags to ${appendedCount} posts${appendedFailCount ? ` (failed: ${appendedFailCount})` : ''}.\n` : '',
-      !appendOnly ? `Removed old tags from ${removedCount} posts${removedFailCount ? ` (failed: ${removedFailCount})` : ''}.` : '',
+      toAdd.length ? `Added new tags to ${appendedCount} posts${appendedFailCount ? ` (failed: ${appendedFailCount})` : ''}.\n` : '',
+      toRemove.length ? `Removed old tags from ${removedCount} posts${removedFailCount ? ` (failed: ${removedFailCount})` : ''}.` : '',
     ],
     buttons: [
       modalCompleteButton,

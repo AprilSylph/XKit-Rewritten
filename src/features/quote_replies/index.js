@@ -1,8 +1,8 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { inject } from '../../utils/inject.js';
-import { showErrorModal } from '../../utils/modals.js';
 import { buildStyle, displayInlineFlexUnlessDisabledAttr, notificationSelector } from '../../utils/interface.js';
+import { showErrorModal } from '../../utils/modals.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { getPreferences } from '../../utils/preferences.js';

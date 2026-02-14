@@ -73,6 +73,11 @@ export const tagTimelineFilter = tag =>
     timelineId?.startsWith(`hubsTimeline-${tag}-recent-`) ||
     timelineId?.match(exactly(`tag-${uuidV4}-${tag}-recent`));
 
+export const searchPostsTimelineFilter = search =>
+  ({ dataset: { timeline, timelineId } }) =>
+    timelineId?.startsWith('searchTimeline-post-') ||
+    timelineId?.match(startsWith(`search-${uuidV4}-`));
+
 export const anyCommunityTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timelineId?.match(exactly(`communities-${anyBlogName}-recent`)) ||
   timelineId?.match(exactly(`community-${uuidV4}-${anyBlogName}`));

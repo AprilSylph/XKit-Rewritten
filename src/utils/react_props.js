@@ -14,7 +14,7 @@ export const timelineObject = postElement => {
 
 /**
  * @param {Element} cellElement An on-screen timeline cell
- * @returns {Promise<object>} The post's buried item property
+ * @returns {Promise<object>} The element's buried item property
  */
 export const cellItem = cellElement => {
   cellElement.cellItemPromise ??= inject('/main_world/unbury_cell_item.js', [], cellElement);

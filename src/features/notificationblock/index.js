@@ -1,13 +1,13 @@
+import { keyToCss } from '../../utils/css_map.js';
+import { dom } from '../../utils/dom.js';
 import { buildStyle, notificationSelector } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
+import { hideModal, modalCancelButton, showModal } from '../../utils/modals.js';
 import { onNewNotifications, pageModifications } from '../../utils/mutations.js';
-import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
-import { dom } from '../../utils/dom.js';
-import { userBlogNames } from '../../utils/user.js';
-import { apiFetch } from '../../utils/tumblr_helpers.js';
-import { notificationObject } from '../../utils/react_props.js';
-import { keyToCss } from '../../utils/css_map.js';
 import { getPreferences } from '../../utils/preferences.js';
+import { notificationObject } from '../../utils/react_props.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
+import { userBlogNames } from '../../utils/user.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
 const meatballButtonBlockId = 'notificationblock-block';

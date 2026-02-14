@@ -111,79 +111,12 @@ ul.preferences {
   list-style-type: none;
 }
 
-ul.preferences:empty {
+ul.preferences #empty {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-ul.preferences:empty::before {
-  content: "No preferences available for this feature.";
-}
-
-li {
-  display: flex;
-  align-items: center;
-  padding: 4px;
-}
-
-li.search-highlighted {
+::slotted(.search-highlighted) {
   background-color: rgb(var(--search-highlight));
-}
-
-label:not(:first-child),
-input:not(:first-child) {
-  margin-left: 8px;
-}
-
-input[type="text"] {
-  box-sizing: border-box;
-  width: 65%;
-  padding-left: 8px;
-  padding-right: 8px;
-}
-
-input[type="text"],
-select,
-textarea {
-  padding: 4px;
-  border: none;
-  border-radius: 3px;
-
-  background-color: rgb(var(--passive-grey));
-  color: rgb(var(--black));
-}
-
-input[type="text"],
-select {
-  margin-left: auto;
-}
-
-input[type="text"]:focus,
-select:focus {
-  background-color: rgb(var(--active-grey));
-}
-
-textarea {
-  resize: none;
-  width: 100%;
-  scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
-  scrollbar-width: thin;
-}
-
-iframe {
-  border: none;
-  width: 100%;
-}
-
-.clr-field {
-  width: 100px;
-}
-
-.clr-field input[type="text"] {
-  width: 100%;
-}
-
-.clr-field button {
-  border-radius: 0 3px 3px 0;
 }

@@ -1,6 +1,6 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { getPreferences } from '../../utils/preferences.js';
 import { pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 
 const trackInfoSelector = keyToCss('trackInfo');
 

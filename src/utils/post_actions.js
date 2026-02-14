@@ -1,8 +1,8 @@
-import { buildSvg } from './remixicon.js';
-import { pageModifications } from './mutations.js';
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 import { displayBlockUnlessDisabledAttr } from './interface.js';
+import { pageModifications } from './mutations.js';
+import { buildSvg } from './remixicon.js';
 
 // Remove outdated post options when loading module
 $('.xkit-post-option').remove();

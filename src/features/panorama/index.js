@@ -66,6 +66,8 @@ ${patioPostColumn} {
 }
 `);
 
+const expandableImage = `${keyToCss('imageBlockButton', 'imageBlockLink', 'imageBlockGifAttribution')}:not(${keyToCss('unstretched')})`;
+
 const styleElement = buildStyle(`
 /* Widen posts */
 ${keyToCss('cell')}, ${postSelector}
@@ -78,13 +80,19 @@ ${keyToCss('cell')}, ${postSelector}
 }
 
 /* Center non-expanded content */
-:root:not(.${expandMediaClass}) ${postSelector}
-  :is(
-    ${keyToCss('videoBlock', 'audioBlock', 'link', 'pollBlock', 'imageBlockLink')},
-    figure${keyToCss('imageBlock')}:not(${keyToCss('unstretched')})
+:root:not(.${expandMediaClass}) ${postSelector} ${keyToCss('row')}:has(> ${expandableImage}) {
+  justify-content: center;
+}
+:root:not(.${expandMediaClass}) ${postSelector} ${expandableImage} {
+  max-width: 540px;
+}
+:root:not(.${expandMediaClass}) ${postSelector} ${keyToCss('rows')}
+  > :is(
+    div:has(${keyToCss('videoBlock', 'audioBlock')}),
+    ${keyToCss('link', 'pollBlock')}
   ) {
   margin: 0 auto;
-  max-width: 540px;
+  max-width: 556px;
 }
 
 /* Widen + lock aspect ratios of expanded content */

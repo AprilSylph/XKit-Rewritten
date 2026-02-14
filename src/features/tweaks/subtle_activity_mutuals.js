@@ -1,7 +1,7 @@
-import { pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { buildStyle } from '../../utils/interface.js';
 import { dom } from '../../utils/dom.js';
+import { buildStyle } from '../../utils/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
 
 const labelSelector = `${keyToCss('activity', 'activityItem')} ${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')}`;
 

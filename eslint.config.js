@@ -57,4 +57,20 @@ export default [
    * @see https://github.com/AprilSylph/XKit-Rewritten/blob/master/src/utils/inject.js
    */
   { files: ['src/main_world/**'], rules: { 'jsdoc/require-jsdoc': 'off' } },
+
+  /**
+   * Require JSDoc on functions exported from utils.
+   */
+  {
+    files: ['src/utils/**'],
+    rules: {
+      'jsdoc/require-jsdoc': [
+        'warn',
+        {
+          publicOnly: true,
+          require: { FunctionDeclaration: true, FunctionExpression: true, ArrowFunctionExpression: true },
+        },
+      ],
+    },
+  },
 ];

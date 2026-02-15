@@ -1,9 +1,9 @@
+import { keyToCss } from '../../utils/css_map.js';
 import { getPostElements } from '../../utils/interface.js';
-import { timelineObject } from '../../utils/react_props.js';
-import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
-import { keyToCss } from '../../utils/css_map.js';
+import { timelineObject } from '../../utils/react_props.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
 
 const noteCountSelector = keyToCss('noteCount');
 const reblogHeaderSelector = keyToCss('reblogHeader');
@@ -18,16 +18,16 @@ const cache = {};
 const locale = document.documentElement.lang;
 const currentDayTimeFormat = new Intl.DateTimeFormat(locale, {
   hour: 'numeric',
-  minute: 'numeric'
+  minute: 'numeric',
 });
 const currentYearTimeFormat = new Intl.DateTimeFormat(locale, {
   day: 'numeric',
-  month: 'short'
+  month: 'short',
 });
 const shortTimeFormat = new Intl.DateTimeFormat(locale, {
   day: 'numeric',
   month: 'short',
-  year: 'numeric'
+  year: 'numeric',
 });
 const longTimeFormat = new Intl.DateTimeFormat(locale, {
   weekday: 'long',
@@ -37,7 +37,7 @@ const longTimeFormat = new Intl.DateTimeFormat(locale, {
   hour: 'numeric',
   minute: '2-digit',
   second: '2-digit',
-  timeZoneName: 'short'
+  timeZoneName: 'short',
 });
 const relativeTimeFormat = new Intl.RelativeTimeFormat(locale, { style: 'long' });
 const thresholds = [
@@ -47,7 +47,7 @@ const thresholds = [
   { unit: 'day', denominator: 86400 },
   { unit: 'hour', denominator: 3600 },
   { unit: 'minute', denominator: 60 },
-  { unit: 'second', denominator: 1 }
+  { unit: 'second', denominator: 1 },
 ];
 
 const constructTimeString = function (unixTime) {
@@ -92,7 +92,7 @@ const constructISOString = function (unixTime) {
 };
 
 const constructRelativeTimeString = function (unixTime) {
-  const now = Math.trunc(new Date().getTime() / 1000);
+  const now = Math.trunc(Date.now() / 1000);
   const unixDiff = unixTime - now;
   const unixDiffAbsolute = Math.abs(unixDiff);
 
@@ -175,7 +175,7 @@ const addReblogTimestamps = async function () {
         timestampElement.textContent = constructTimeString(result);
         timestampElement.title = constructRelativeTimeString(result);
       }).catch(exception => {
-        timestampElement.textContent = (exception.body && exception.body.meta) ? exception.body.meta.msg : '';
+        timestampElement.textContent = exception.body?.meta?.msg ?? '';
       });
     });
   });
@@ -211,7 +211,7 @@ const preferenceHandlers = {
     if (reblogTimestamps !== 'none') {
       onNewPosts.addListener(addReblogTimestamps);
     }
-  }
+  },
 };
 
 export const onStorageChanged = async function (changes) {

@@ -1,7 +1,7 @@
 import { keyToClasses, keyToCss } from '../../utils/css_map.js';
+import { buildStyle, displayBlockUnlessDisabledAttr } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
-import { buildStyle } from '../../utils/interface.js';
 
 const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
 $(`[id="${scrollToBottomButtonId}"]`).remove();
@@ -24,7 +24,7 @@ export const styleElement = buildStyle(`
 
 let timeoutID;
 
-const onLoadersAdded = loaders => {
+const onLoadersAdded = () => {
   if (active) {
     clearTimeout(timeoutID);
   }
@@ -32,7 +32,7 @@ const onLoadersAdded = loaders => {
 
 const scrollToBottom = () => {
   clearTimeout(timeoutID);
-  window.scrollTo({ top: document.documentElement.scrollHeight });
+  requestAnimationFrame(() => window.scrollTo({ top: document.documentElement.scrollHeight }));
 
   timeoutID = setTimeout(() => {
     if (!document.querySelector(knightRiderLoaderSelector)) {
@@ -78,8 +78,9 @@ const addButtonToPage = async function ([scrollToTopButton]) {
     scrollToBottomButton.style.transform = 'rotate(180deg)';
     scrollToBottomButton.addEventListener('click', onclick);
     scrollToBottomButton.id = scrollToBottomButtonId;
+    scrollToBottomButton.setAttribute(displayBlockUnlessDisabledAttr, '');
 
-    scrollToBottomButton.classList[active ? 'add' : 'remove'](activeClass);
+    scrollToBottomButton.classList.toggle(activeClass, active);
   }
 
   scrollToTopButton.after(scrollToBottomButton);

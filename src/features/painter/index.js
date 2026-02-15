@@ -1,8 +1,8 @@
 import { filterPostElements } from '../../utils/interface.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject } from '../../utils/react_props.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
-import { getPreferences } from '../../utils/preferences.js';
-import { onNewPosts } from '../../utils/mutations.js';
 
 let ownColour;
 let originalColour;
@@ -38,7 +38,7 @@ const paint = postElements => filterPostElements(postElements, { excludeClass })
       try {
         const { response: { tags: sourceTags } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
         if (sourceTags.some(tag => tagArray.includes(tag.toLowerCase()))) coloursToApply.push(tagColour);
-      } catch (exception) {
+      } catch {
         // The source post can't be found, so we can't extract tags from it either.
         // This means we don't have to do anything else with it, and we can quit quietly.
       }
@@ -76,7 +76,7 @@ export const main = async function () {
     likedColour,
     tagColour,
     colouredTags,
-    colourSourceTags
+    colourSourceTags,
   } = await getPreferences('painter'));
 
   tagArray = colouredTags
@@ -84,7 +84,7 @@ export const main = async function () {
     .map(tag => tag
       .trim()
       .replace(/#/g, '')
-      .toLowerCase()
+      .toLowerCase(),
     );
 
   onNewPosts.addListener(paint);

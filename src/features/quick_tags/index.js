@@ -218,7 +218,7 @@ const removableTags = [
 ];
 
 const addRemoveTagButtons = tagElements => tagElements.forEach(async tagElement => {
-  const tag = tagElement.getAttribute('href').replace(/^\/tagged\//, '');
+  const tag = tagElement.getAttribute('href').replace(/.*\/tagged\//, '');
   if (!removableTags.includes(tag)) return;
 
   const postElement = tagElement.closest(postSelector);
@@ -315,7 +315,7 @@ export const main = async function () {
     pageModifications.register('#selected-tags', processPostForm);
   }
   if (quickRemoveButtons) {
-    pageModifications.register(`${keyToCss('footerWrapper')} ${keyToCss('tag')}:not(.xkit-removable-tag)`, addRemoveTagButtons);
+    pageModifications.register(`${keyToCss('footerWrapper')} a${keyToCss('tag')}[href*="/tagged/"]:not(.xkit-removable-tag)`, addRemoveTagButtons);
   }
 
   window.addEventListener('xkit-quick-tags-migration', migrateTags);

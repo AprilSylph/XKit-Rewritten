@@ -108,8 +108,6 @@
   const init = async function () {
     $('style.xkit, link.xkit').remove();
 
-    if (Math.random() > 0.5) throw new Error('djsn');
-
     browser.storage.local.onChanged.addListener(onStorageChanged);
 
     const [

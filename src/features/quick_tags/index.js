@@ -219,7 +219,7 @@ const addRemoveTagButtons = tagElements => tagElements.forEach(tagElement => {
   };
 
   const removeButton =
-    dom('button', null, { click: onClickRemove }, [
+    dom('button', { title: 'Remove this tag' }, { click: onClickRemove }, [
       dom('svg', { height: 10, width: 10, style: '--icon-color-primary: RGB(var(--black));', role: 'presentation', xmlns: 'http://www.w3.org/2000/svg' }, null, [
         dom('use', { href: '#managed-icon__close-thin', xmlns: 'http://www.w3.org/2000/svg' }),
       ]),

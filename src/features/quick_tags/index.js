@@ -19,6 +19,7 @@ const excludeClass = 'xkit-quick-tags-done';
 let originalPostTag;
 let answerTag;
 let autoTagAsker;
+let quickRemoveButtons;
 
 let controlButtonTemplate;
 
@@ -103,6 +104,11 @@ const processPostForm = async function ([selectedTagsElement]) {
 
 export const onStorageChanged = async function (changes) {
   if (Object.keys(changes).some(key => key.startsWith('quick_tags'))) {
+    if (Object.keys(changes).includes('quick_tags.preferences.quickRemoveButtons')) {
+      clean().then(main);
+      return;
+    }
+
     if (Object.keys(changes).includes(storageKey)) populatePopups();
 
     ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
@@ -207,7 +213,6 @@ const addRemoveTagButtons = tagElements => tagElements.forEach(tagElement => {
   const tag = tagElement.getAttribute('href').replace(/^\/tagged\//, '');
   const postElement = tagElement.closest(postSelector);
 
-  // if (!preferenceNameGoesHere) return;
   // if (!['Youtube'].includes(tag)) return;
 
   const onClickRemove = async event => {
@@ -295,12 +300,13 @@ export const main = async function () {
 
   populatePopups();
 
-  ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+  ({ originalPostTag, answerTag, autoTagAsker, quickRemoveButtons } = await getPreferences('quick_tags'));
   if (originalPostTag || answerTag || autoTagAsker) {
     pageModifications.register('#selected-tags', processPostForm);
   }
-
-  pageModifications.register(`${keyToCss('footerWrapper')} ${keyToCss('tag')}:not(.xkit-removable-tag)`, addRemoveTagButtons);
+  if (quickRemoveButtons) {
+    pageModifications.register(`${keyToCss('footerWrapper')} ${keyToCss('tag')}:not(.xkit-removable-tag)`, addRemoveTagButtons);
+  }
 
   window.addEventListener('xkit-quick-tags-migration', migrateTags);
 };

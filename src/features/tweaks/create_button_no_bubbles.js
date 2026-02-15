@@ -1,6 +1,6 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { onClickNavigate } from '../../utils/tumblr_helpers.js';
 import { pageModifications } from '../../utils/mutations.js';
+import { onClickNavigate } from '../../utils/tumblr_helpers.js';
 
 const modifiedAttribute = 'data-xkit-tweaks-create-button-no-bubbles';
 
@@ -10,10 +10,10 @@ const processCreateButtons = (createButtons) => {
   }
 
   createButtons.forEach(createButton => {
-    createButton.dataset.href ??= createButton.getAttribute('href');
+    createButton.dataset.originalHref ??= createButton.getAttribute('href');
 
     createButton.setAttribute(modifiedAttribute, '');
-    createButton.setAttribute('href', createButton.dataset.href.replace(/\/new$/, '/new/text'));
+    createButton.setAttribute('href', createButton.dataset.originalHref.replace(/\/new$/, '/new/text'));
     createButton.addEventListener('click', onClickNavigate);
   });
 };
@@ -27,7 +27,8 @@ export const clean = async function () {
 
   [...document.querySelectorAll(`[${modifiedAttribute}]`)].forEach(modifiedButton => {
     modifiedButton.removeAttribute(modifiedAttribute);
-    modifiedButton.setAttribute('href', modifiedButton.dataset.href);
+    modifiedButton.setAttribute('href', modifiedButton.dataset.originalHref);
     modifiedButton.removeEventListener('click', onClickNavigate);
+    delete modifiedButton.dataset.originalHref;
   });
 };

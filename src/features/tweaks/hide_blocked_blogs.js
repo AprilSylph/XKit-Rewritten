@@ -1,7 +1,7 @@
-import { blogTimelineFilter, timelineSelector } from '../../utils/timeline_id.js';
 import { buildStyle, getTimelineItemWrapper, filterPostElements } from '../../utils/interface.js';
-import { isMyPost, timelineObject } from '../../utils/react_props.js';
 import { onNewPosts } from '../../utils/mutations.js';
+import { isMyPost, timelineObject } from '../../utils/react_props.js';
+import { blogTimelineFilter, timelineSelector } from '../../utils/timeline_id.js';
 
 const hiddenAttribute = 'data-xkit-tweaks-hide-blocked-blogs-hidden';
 export const styleElement = buildStyle(`
@@ -20,7 +20,7 @@ const processPosts = (postElements) => {
       [blog, ...trail.map(({ blog }) => blog)]
         .filter(Boolean)
         .filter(({ isBlockedFromPrimary }) => isBlockedFromPrimary)
-        .map(({ name }) => name)
+        .map(({ name }) => name),
     );
 
     for (const blogName of blockedBlogNames) {

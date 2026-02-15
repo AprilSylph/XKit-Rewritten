@@ -9,7 +9,8 @@
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks",
   "relatedTerms": [
     "Blacklist",
-    "Separator"
+    "Separator",
+    "colored"
   ],
   "preferences": {
     "restore_attribution_links": {

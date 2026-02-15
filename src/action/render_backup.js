@@ -40,9 +40,10 @@ const localExport = async function () {
 
   const dateString = `${fourDigitYear}-${twoDigitMonth}-${twoDigitDate}`;
 
-  const tempLink = document.createElement('a');
-  tempLink.href = blobUrl;
-  tempLink.download = `XKit Backup @ ${dateString}.json`;
+  const tempLink = Object.assign(document.createElement('a'), {
+    href: blobUrl,
+    download: `XKit Backup @ ${dateString}.json`,
+  });
 
   document.documentElement.appendChild(tempLink);
   tempLink.click();

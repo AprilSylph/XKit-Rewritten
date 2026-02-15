@@ -1,7 +1,7 @@
-import { filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
-import { getPreferences } from '../../utils/preferences.js';
-import { onNewPosts, pageModifications } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
+import { filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
+import { onNewPosts, pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 import { followingTimelineFilter, followingTimelineSelector, timelineSelector } from '../../utils/timeline_id.js';
 
 const excludeAttribute = 'data-seen-posts-done';
@@ -32,7 +32,7 @@ const observer = new IntersectionObserver(
       timers.delete(element);
     }
   }),
-  { rootMargin: '-20px 0px' }
+  { rootMargin: '-20px 0px' },
 );
 
 const markAsSeen = (element) => {
@@ -74,7 +74,7 @@ const dimPosts = function (postElements, reprocessPosts = false) {
 
 const onSoftRefresh = loaderElements => {
   const refreshedPostElements = loaderElements.flatMap(
-    element => [...element.closest(timelineSelector).querySelectorAll(postSelector)]
+    element => [...element.closest(timelineSelector).querySelectorAll(postSelector)],
   );
   dimPosts(refreshedPostElements, true);
 };
@@ -83,7 +83,7 @@ export const onStorageChanged = async function (changes) {
   const {
     'seen_posts.preferences.hideSeenPosts': hideSeenPostsChanges,
     'seen_posts.preferences.onlyDimAvatars': onlyDimAvatarsChanges,
-    [storageKey]: seenPostsChanges
+    [storageKey]: seenPostsChanges,
   } = changes;
 
   if (hideSeenPostsChanges && hideSeenPostsChanges.oldValue !== undefined) {

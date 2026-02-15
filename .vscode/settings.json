@@ -1,0 +1,8 @@
+{
+  "editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" },
+  "eslint.validate": ["javascript"],
+  "javascript.preferences.autoImportFileExcludePatterns": ["node_modules/**/*"],
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "javascript.preferences.importModuleSpecifierEnding": "js",
+  "javascript.suggest.paths": true
+}

@@ -205,6 +205,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
 
 const addRemoveTagButtons = tagElements => tagElements.forEach(tagElement => {
   const tag = tagElement.getAttribute('href').replace(/^\/tagged\//, '');
+  const postElement = tagElement.closest(postSelector);
 
   // if (!preferenceNameGoesHere) return;
   // if (!['Youtube'].includes(tag)) return;
@@ -214,9 +215,7 @@ const addRemoveTagButtons = tagElements => tagElements.forEach(tagElement => {
     event.stopPropagation();
 
     removeButton.disabled = true;
-    editPostTags({ postElement: tagElement.closest(postSelector), inputTagsRemove: [tag] })
-      .catch(showErrorModal)
-      .finally(() => { removeButton.disabled = false; });
+    editPostTags({ postElement, inputTagsRemove: [tag] }).catch(showErrorModal);
   };
 
   const removeButton =

@@ -217,11 +217,13 @@ const removableTags = [
   'SoundCloud',
 ];
 
-const addRemoveTagButtons = tagElements => tagElements.forEach(tagElement => {
+const addRemoveTagButtons = tagElements => tagElements.forEach(async tagElement => {
   const tag = tagElement.getAttribute('href').replace(/^\/tagged\//, '');
-  const postElement = tagElement.closest(postSelector);
-
   if (!removableTags.includes(tag)) return;
+
+  const postElement = tagElement.closest(postSelector);
+  const { state, canEdit } = await timelineObject(postElement);
+  if (!canEdit || ['ask', 'submission'].includes(state)) return;
 
   const onClickRemove = async event => {
     event.preventDefault();

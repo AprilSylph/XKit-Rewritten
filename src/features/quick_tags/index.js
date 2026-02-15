@@ -209,11 +209,19 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   }
 });
 
+const removableTags = [
+  'Youtube',
+  'Instagram',
+  'Spotify',
+  'Bandcamp',
+  'SoundCloud',
+];
+
 const addRemoveTagButtons = tagElements => tagElements.forEach(tagElement => {
   const tag = tagElement.getAttribute('href').replace(/^\/tagged\//, '');
   const postElement = tagElement.closest(postSelector);
 
-  // if (!['Youtube'].includes(tag)) return;
+  if (!removableTags.includes(tag)) return;
 
   const onClickRemove = async event => {
     event.preventDefault();

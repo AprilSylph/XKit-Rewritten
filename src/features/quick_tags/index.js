@@ -200,13 +200,10 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   if (canEdit && ['ask', 'submission'].includes(state) === false) {
     const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
     insertControlButton(postElement, clonedControlButton, buttonClass);
-
-    [...postElement.querySelectorAll(`${keyToCss('footerWrapper')} ${keyToCss('tag')}:not(.xkit-removable-tag)`)]
-      .forEach(tagElement => addRemoveTagButton({ tagElement, postElement }));
   }
 });
 
-const addRemoveTagButton = ({ tagElement, postElement }) => {
+const addRemoveTagButtons = tagElements => tagElements.forEach(tagElement => {
   const tag = tagElement.getAttribute('href').replace(/^\/tagged\//, '');
 
   // if (!preferenceNameGoesHere) return;
@@ -217,7 +214,7 @@ const addRemoveTagButton = ({ tagElement, postElement }) => {
     event.stopPropagation();
 
     removeButton.disabled = true;
-    editPostTags({ postElement, inputTagsRemove: [tag] })
+    editPostTags({ postElement: tagElement.closest(postSelector), inputTagsRemove: [tag] })
       .catch(showErrorModal)
       .finally(() => { removeButton.disabled = false; });
   };
@@ -231,7 +228,7 @@ const addRemoveTagButton = ({ tagElement, postElement }) => {
 
   tagElement.append(removeButton);
   tagElement.classList.add('xkit-removable-tag');
-};
+});
 
 popupElement.addEventListener('click', processBundleClick);
 popupForm.addEventListener('submit', processFormSubmit);
@@ -304,12 +301,15 @@ export const main = async function () {
     pageModifications.register('#selected-tags', processPostForm);
   }
 
+  pageModifications.register(`${keyToCss('footerWrapper')} ${keyToCss('tag')}:not(.xkit-removable-tag)`, addRemoveTagButtons);
+
   window.addEventListener('xkit-quick-tags-migration', migrateTags);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
   pageModifications.unregister(processPostForm);
+  pageModifications.unregister(addRemoveTagButtons);
   popupElement.remove();
 
   unregisterPostOption('quick-tags');

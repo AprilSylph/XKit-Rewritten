@@ -212,6 +212,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
 const removableTags = [
   'Youtube',
   'Instagram',
+  'Vimeo',
   'Spotify',
   'Bandcamp',
   'SoundCloud',

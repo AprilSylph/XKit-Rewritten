@@ -149,7 +149,7 @@
 
     const throwIfInitRejectedOrSlow = Promise.race([
       initPromise,
-      new Promise((resolve, reject) => setTimeout(reject, delaySeconds * 1000))
+      new Promise((resolve, reject) => setTimeout(reject, delaySeconds * 1000)),
     ]);
 
     throwIfInitRejectedOrSlow.catch(() => {
@@ -177,7 +177,7 @@
             color: rgb(var(--white-on-dark));
             border-top: 1px solid rgb(var(--white-on-dark), 0.15);
           }
-        `
+        `,
       });
       document.documentElement.append(styleElement);
 

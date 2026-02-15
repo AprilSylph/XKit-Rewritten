@@ -92,9 +92,10 @@
   margin-bottom: 2px;
 }
 
-.xkit-removable-tag {
+.xkit-removable-tag.xkit-removable-tag {
   border: 1px solid rgba(var(--black), .13);
   border-radius: 1em;
+  padding-block: 0;
 }
 
 .xkit-removable-tag + .xkit-removable-tag {

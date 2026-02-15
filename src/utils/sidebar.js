@@ -1,23 +1,23 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
-import { blogViewSelector } from './interface.js';
+import { blogViewSelector, displayBlockUnlessDisabledAttr } from './interface.js';
 import { pageModifications } from './mutations.js';
 
 $('#xkit-sidebar').remove();
 
-const sidebarItems = dom('div', { id: 'xkit-sidebar' });
+const sidebarItems = dom('div', { id: 'xkit-sidebar', [displayBlockUnlessDisabledAttr]: '' });
 const conditions = new Map();
 
 const carrotSvg = dom('svg', {
   xmlns: 'http://www.w3.org/2000/svg',
   viewBox: '0 0 13 20.1',
   width: '12',
-  height: '12'
+  height: '12',
 }, null, [
   dom('path', {
     xmlns: 'http://www.w3.org/2000/svg',
-    d: 'M0 2.9l7.2 7.2-7.1 7.1L3 20.1l7.1-7.1 2.9-2.9L2.9 0 0 2.9'
-  })
+    d: 'M0 2.9l7.2 7.2-7.1 7.1L3 20.1l7.1-7.1 2.9-2.9L2.9 0 0 2.9',
+  }),
 ]);
 
 /**
@@ -41,8 +41,8 @@ const buildSidebarRow = ({ label, onclick, href, count, carrot }) =>
         ? dom('span', { class: 'count', 'data-count-for': label }, null, [count])
         : carrot === true
           ? carrotSvg.cloneNode(true)
-          : ''
-    ])
+          : '',
+    ]),
   ]);
 
 /**
@@ -56,7 +56,7 @@ const buildSidebarRow = ({ label, onclick, href, count, carrot }) =>
 export const addSidebarItem = function ({ id, title, rows, visibility }) {
   const sidebarItem = dom('div', { id, class: 'xkit-sidebar-item' }, null, [
     dom('h1', null, null, [title]),
-    dom('ul', null, null, rows.map(buildSidebarRow))
+    dom('ul', null, null, rows.map(buildSidebarRow)),
   ]);
 
   if (visibility instanceof Function) {
@@ -66,7 +66,7 @@ export const addSidebarItem = function ({ id, title, rows, visibility }) {
 
   sidebarItems.replaceChildren(...[
     ...sidebarItems.children,
-    sidebarItem
+    sidebarItem,
   ].sort(({ id: firstId }, { id: secondId }) => firstId.localeCompare(secondId)));
 
   return sidebarItem;

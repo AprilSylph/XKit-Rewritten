@@ -1,8 +1,7 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
-import { postSelector } from './interface.js';
+import { displayBlockUnlessDisabledAttr, getClosestRenderedElement, postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
-import { inject } from './inject.js';
 import { blogData, timelineObject } from './react_props.js';
 
 const postHeaderSelector = `${postSelector} :is(article > header, article > div > header)`;
@@ -10,7 +9,7 @@ const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, 
 
 const meatballItems = {
   post: {},
-  blog: {}
+  blog: {},
 };
 
 /**
@@ -50,23 +49,22 @@ export const unregisterBlogMeatballItem = id => {
 };
 
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
-  const inPostHeader = await inject('/main_world/test_header_element.js', [postHeaderSelector], meatballMenu);
-  if (inPostHeader) {
+  const closestHeader = await getClosestRenderedElement(meatballMenu, 'header');
+  if (closestHeader?.matches(postHeaderSelector)) {
     addTypedMeatballItems({
       meatballMenu,
       type: 'post',
       reactData: await timelineObject(meatballMenu),
-      reactDataKey: '__timelineObjectData'
+      reactDataKey: '__timelineObjectData',
     });
     return;
   }
-  const inBlogHeader = await inject('/main_world/test_header_element.js', [blogHeaderSelector], meatballMenu);
-  if (inBlogHeader) {
+  if (closestHeader?.matches(blogHeaderSelector)) {
     addTypedMeatballItems({
       meatballMenu,
       type: 'blog',
       reactData: await blogData(meatballMenu),
-      reactDataKey: '__blogData'
+      reactDataKey: '__blogData',
     });
   }
 });
@@ -80,11 +78,12 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
     const meatballItemButton = dom('button', {
       class: 'xkit-meatball-button',
       [`data-xkit-${type}-meatball-button`]: id,
-      hidden: true
+      [displayBlockUnlessDisabledAttr]: '',
+      hidden: true,
     }, {
-      click: onclick
+      click: onclick,
     }, [
-      '\u22EF'
+      '\u22EF',
     ]);
     meatballItemButton[reactDataKey] = reactData;
 

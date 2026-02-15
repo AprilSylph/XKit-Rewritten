@@ -17,7 +17,7 @@
       clean,
       stylesheet,
       styleElement,
-      onStorageChanged
+      onStorageChanged,
     } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
 
     if (main) {
@@ -26,9 +26,9 @@
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
-        href: browser.runtime.getURL(`/features/${name}/index.css?t=${timestamp}`)
+        href: browser.runtime.getURL(`/features/${name}/index.css?t=${timestamp}`),
+        className: 'xkit',
       });
-      link.className = 'xkit';
       document.documentElement.appendChild(link);
     }
     if (styleElement) {
@@ -55,7 +55,7 @@
     const {
       clean,
       stylesheet,
-      styleElement
+      styleElement,
     } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
 
     if (clean) {
@@ -98,10 +98,11 @@
     document.documentElement.addEventListener('xkit-injection-ready', resolve, { once: true });
 
     const { nonce } = [...document.scripts].find(script => script.getAttributeNames().includes('nonce'));
-    const script = document.createElement('script');
-    script.type = 'module';
-    script.nonce = nonce;
-    script.src = browser.runtime.getURL(`/main_world/index.js?t=${timestamp}`);
+    const script = Object.assign(document.createElement('script'), {
+      type: 'module',
+      nonce,
+      src: browser.runtime.getURL(`/main_world/index.js?t=${timestamp}`),
+    });
     document.documentElement.append(script);
   });
 
@@ -112,11 +113,11 @@
 
     const [
       installedFeatures,
-      { [enabledFeaturesKey]: enabledFeatures = [] }
+      { [enabledFeaturesKey]: enabledFeatures = [] },
     ] = await Promise.all([
       getInstalledFeatures(),
       browser.storage.local.get(enabledFeaturesKey),
-      initMainWorld()
+      initMainWorld(),
     ]);
 
     /**

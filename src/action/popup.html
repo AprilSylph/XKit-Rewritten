@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XKit Control Panel</title>
     <link rel="icon" href="../icons/128.png" type="image/png">
+    <link rel="stylesheet" href="../lib/coloris.css">
     <link rel="stylesheet" href="../lib/normalize.min.css">
     <link rel="stylesheet" href="../lib/remixicon/remixicon.css">
-    <link rel="stylesheet" href="../lib/spectrum.css">
     <link rel="stylesheet" href="./backup.css">
     <link rel="stylesheet" href="./configuration.css">
     <link rel="stylesheet" href="./links.css">
     <link rel="stylesheet" href="./popup.css">
     <script defer src="../lib/browser-polyfill.min.js"></script>
-    <script defer src="../lib/jquery.min.js"></script>
-    <script defer src="../lib/spectrum.js"></script>
+    <script defer src="../lib/jquery.slim.min.js"></script>
     <script defer src="./popup.js"></script>
     <script defer src="./render_backup.js"></script>
     <script type="module" src="./render_features.js"></script>
@@ -96,48 +95,5 @@
         </ul>
       </section>
     </main>
-
-    <template id="checkbox-preference">
-      <li>
-        <input type="checkbox">
-        <label></label>
-      </li>
-    </template>
-
-    <template id="text-preference">
-      <li>
-        <label></label>
-        <input type="text" spellcheck="false">
-      </li>
-    </template>
-
-    <template id="select-preference">
-      <li>
-        <label></label>
-        <select></select>
-      </li>
-    </template>
-
-    <template id="color-preference">
-      <li>
-        <input type="text">
-        <label></label>
-      </li>
-    </template>
-
-    <template id="textarea-preference">
-      <li>
-        <label></label>
-      </li>
-      <li>
-        <textarea rows="5" spellcheck="false"></textarea>
-      </li>
-    </template>
-
-    <template id="iframe-preference">
-      <li>
-        <iframe></iframe>
-      </li>
-    </template>
   </body>
 </html>

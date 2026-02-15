@@ -8,14 +8,13 @@
     "autofix": "eslint src/ --fix",
     "start": "web-ext run",
     "build": "web-ext build",
-    "enable-hooks": "husky",
+    "enable-hooks": "git config core.hooksPath .githooks",
     "disable-hooks": "git config --unset core.hooksPath"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^3.5.0",
     "eslint": "^9.39.2",
     "eslint-plugin-jsdoc": "^52.0.4",
-    "husky": "^9.1.7",
     "neostandard": "^0.12.2",
     "web-ext": "^9.3.0"
   },

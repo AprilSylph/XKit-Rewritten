@@ -41,9 +41,10 @@ export const notificationObject = notificationElement => {
  * @returns {Promise<NotePropsData>} An object containing the element's buried note component props and, if it is a
  *                                threaded reply, its parents' buried note component props values
  */
-export const notePropsObjects = weakMemoize(noteElement =>
-  inject('/main_world/unbury_note_props.js', [], noteElement),
-);
+export const notePropsObjects = noteElement => {
+  noteElement.notePropsObjectsPromise ??= inject('/main_world/unbury_note_props.js', [], noteElement);
+  return noteElement.notePropsObjectsPromise;
+};
 
 /**
  * @param {Element} meatballMenu An on-screen meatball menu element in a blog modal header or blog card

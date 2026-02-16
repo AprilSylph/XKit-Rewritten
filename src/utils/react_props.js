@@ -40,7 +40,7 @@ export const notificationObject = weakMemoize(notificationElement =>
  *                                threaded reply, its parents' buried note component props values
  */
 export const notePropsObjects = weakMemoize(noteElement =>
-  inject('/main_world/unbury_note_props.js', [], noteElement),
+  inject('/main_world/unbury_note_props.js', [], noteElement)
 );
 
 /**

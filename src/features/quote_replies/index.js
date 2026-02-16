@@ -1,8 +1,8 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { inject } from '../../utils/inject.js';
+import { buildStyle, displayInlineFlexUnlessDisabledAttr, notificationSelector } from '../../utils/interface.js';
 import { showErrorModal } from '../../utils/modals.js';
-import { buildStyle, notificationSelector } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { getPreferences } from '../../utils/preferences.js';
@@ -26,7 +26,6 @@ button.xkit-quote-replies {
   align-self: center;
   transform: translateY(-2px);
 
-  display: inline-flex;
   align-items: center;
   margin: 0 6px;
 
@@ -91,6 +90,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
     'button',
     {
       class: `${buttonClass} ${notification.matches(dropdownSelector) ? dropdownButtonClass : ''}`,
+      [displayInlineFlexUnlessDisabledAttr]: '',
       title: 'Quote this reply',
     },
     {

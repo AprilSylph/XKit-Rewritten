@@ -2,7 +2,6 @@ import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 import { getClosestRenderedElement, postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
-import { inject } from './inject.js';
 import { blogData, notePropsObjects, timelineObject } from './react_props.js';
 
 const postHeaderSelector = `${postSelector} :is(article > header, article > div > header)`;
@@ -88,7 +87,7 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
     });
     return;
   }
-  const inPostActivity = await inject('/main_world/test_parent_element.js', [`${keyToCss('postActivity')} *`], meatballMenu);
+  const inPostActivity = Boolean(await getClosestRenderedElement(meatballMenu, `${keyToCss('postActivity')} *`));
   if (inPostActivity) {
     const __notePropsData = await notePropsObjects(meatballMenu);
 

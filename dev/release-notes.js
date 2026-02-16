@@ -5,6 +5,7 @@ import { exec } from 'child_process';
 const {
   GITHUB_API_URL = 'https://api.github.com',
   GITHUB_REPOSITORY = 'AprilSylph/XKit-Rewritten',
+  GITHUB_TOKEN,
 } = process.env;
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -29,6 +30,7 @@ exec('git log $(git describe --tags --abbrev=0)..HEAD --reverse --pretty --forma
       fetch(`${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/commits/${ref}`, {
         headers: {
           Accept: 'application/vnd.github+json',
+          ...GITHUB_TOKEN && { Authorization: `Bearer ${GITHUB_TOKEN}` },
           'X-GitHub-Api-Version': '2022-11-28',
         },
       }),

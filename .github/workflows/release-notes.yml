@@ -22,3 +22,5 @@ jobs:
 
       - name: Print release notes
         run: dev/release-notes.js >> $GITHUB_STEP_SUMMARY
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

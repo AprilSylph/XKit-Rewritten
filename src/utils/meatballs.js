@@ -1,6 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
-import { postSelector } from './interface.js';
+import { getClosestRenderedElement, postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { inject } from './inject.js';
 import { blogData, notePropsObjects, timelineObject } from './react_props.js';
@@ -69,8 +69,8 @@ export const unregisterReplyMeatballItem = id => {
 };
 
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
-  const inPostHeader = await inject('/main_world/test_header_element.js', [postHeaderSelector], meatballMenu);
-  if (inPostHeader) {
+  const closestHeader = await getClosestRenderedElement(meatballMenu, 'header');
+  if (closestHeader?.matches(postHeaderSelector)) {
     addTypedMeatballItems({
       meatballMenu,
       type: 'post',
@@ -79,8 +79,7 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
     });
     return;
   }
-  const inBlogHeader = await inject('/main_world/test_header_element.js', [blogHeaderSelector], meatballMenu);
-  if (inBlogHeader) {
+  if (closestHeader?.matches(blogHeaderSelector)) {
     addTypedMeatballItems({
       meatballMenu,
       type: 'blog',

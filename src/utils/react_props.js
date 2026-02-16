@@ -1,13 +1,23 @@
+import { keyToCss } from './css_map.js';
 import { inject } from './inject.js';
 import { weakMemoize } from './memoize.js';
+import { apiFetch } from './tumblr_helpers.js';
 import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
 
 /**
- * @param {Element} postElement An on-screen post
- * @returns {Promise<object>} The post's buried timelineObject property
+ * @param {Element} postElement An on-screen post element
+ * @returns {Promise<object>} The post element's buried timelineObject property
  */
 export const timelineObject = weakMemoize(postElement =>
   inject('/main_world/unbury_timeline_object.js', [], postElement)
+);
+
+/**
+ * @param {Element} trailItemElement An on-screen reblog trail item element
+ * @returns {Promise<object>} The trail item element's trailItem context value
+ */
+export const trailItem = weakMemoize(trailItemElement =>
+  inject('/main_world/unbury_trail_item.js', [], trailItemElement)
 );
 
 /**
@@ -71,3 +81,21 @@ export const isMyPost = async (postElement) => {
  */
 export const editPostFormTags = async ({ add = [], remove = [] }) =>
   inject('/main_world/control_tags_input.js', [{ add, remove }]);
+
+/**
+ * Request that Tumblr's frontend code re-render a post on the page with up-to-date data from the API.
+ * @param {HTMLElement} postElement The target post element
+ * @param {string[]} keys Array of timelineObject key names to update
+ */
+export const updatePostOnPage = async (postElement, keys) => {
+  const currentTimelineObject = await timelineObject(postElement);
+  const { response: newTimelineObject } = await apiFetch(`/v2/blog/${currentTimelineObject.blog.uuid}/posts/${currentTimelineObject.id}?reblog_info=true`);
+
+  const changeEntries = Object.entries(newTimelineObject).filter(([key]) => keys.includes(key));
+
+  await inject(
+    '/main_world/edit_timeline_object.js',
+    [currentTimelineObject, changeEntries],
+    postElement.closest(keyToCss('timeline'))
+  );
+};

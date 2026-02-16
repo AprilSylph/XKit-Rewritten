@@ -34,7 +34,7 @@ exec('git log $(git describe --tags --abbrev=0)..HEAD --reverse --pretty --forma
           'X-GitHub-Api-Version': '2022-11-28',
         },
       }),
-      sleep(1000),
+      sleep(GITHUB_TOKEN ? 0 : 1000),
     ]);
     if (!response.ok) {
       fatalError = `Error ${response.status}: ${response.statusText}`;

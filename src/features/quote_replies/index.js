@@ -2,15 +2,15 @@ import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { inject } from '../../utils/inject.js';
 import { buildStyle, displayInlineFlexUnlessDisabledAttr, notificationSelector } from '../../utils/interface.js';
+import { registerReplyMeatballItem, unregisterReplyMeatballItem } from '../../utils/meatballs.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { getPreferences } from '../../utils/preferences.js';
+import { timelineObject } from '../../utils/react_props.js';
 import { buildSvg } from '../../utils/remixicon.js';
 import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
 import { userBlogNames, userBlogs } from '../../utils/user.js';
-import { registerReplyMeatballItem, unregisterReplyMeatballItem } from '../../utils/meatballs.js';
-import { timelineObject } from '../../utils/react_props.js';
 
 const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';

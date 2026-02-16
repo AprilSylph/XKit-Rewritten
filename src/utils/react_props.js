@@ -31,6 +31,22 @@ export const notificationObject = notificationElement => {
 };
 
 /**
+ * @typedef NotePropsData
+ * @property {object} noteProps A note element's buried note component props
+ * @property {object} [parentNoteProps] A note element's parent reply's buried note component props, if it is a threaded reply
+ */
+
+/**
+ * @param {Element} noteElement An on-screen post note element
+ * @returns {Promise<NotePropsData>} An object containing the element's buried note component props and, if it is a
+ *                                threaded reply, its parents' buried note component props values
+ */
+export const notePropsObjects = noteElement => {
+  noteElement.notePropsObjectsPromise ??= inject('/main_world/unbury_note_props.js', [], noteElement);
+  return noteElement.notePropsObjectsPromise;
+};
+
+/**
  * @param {Element} meatballMenu An on-screen meatball menu element in a blog modal header or blog card
  * @returns {Promise<object>} The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
  */

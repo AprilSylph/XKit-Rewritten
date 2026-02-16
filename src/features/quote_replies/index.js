@@ -77,7 +77,7 @@ let newTab;
 const processNotifications = notifications => notifications.forEach(async notification => {
   const [notificationProps, tumblelogName] = await Promise.all([
     inject('/main_world/get_notification_props.js', [], notification),
-    inject('/main_world/get_tumblelogname_prop.js', [], notification)
+    inject('/main_world/get_tumblelogname_prop.js', [], notification),
   ]);
 
   if (!['reply', 'reply_to_comment', 'note_mention'].includes(notificationProps.type === 'generic' ? notificationProps.subtype : notificationProps.type)) return;
@@ -91,7 +91,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
     'button',
     {
       class: `${buttonClass} ${notification.matches(dropdownSelector) ? dropdownButtonClass : ''}`,
-      title: 'Quote this reply'
+      title: 'Quote this reply',
     },
     {
       click () {
@@ -99,9 +99,9 @@ const processNotifications = notifications => notifications.forEach(async notifi
         quoteActivityReply(tumblelogName, notificationProps)
           .catch(showErrorModal)
           .finally(() => { this.disabled = false; });
-      }
+      },
     },
-    [buildSvg('ri-chat-quote-line')]
+    [buildSvg('ri-chat-quote-line')],
   ));
 });
 
@@ -111,7 +111,7 @@ const createGenericActivityReplyPost = async (notificationProps) => {
     timestamp,
     title: { textContent: titleContent },
     body: { content: [bodyDescriptionContent, bodyQuoteContent] },
-    actions
+    actions,
   } = notificationProps;
   const summaryFormatting = bodyDescriptionContent.formatting?.find(({ type }) => type === 'semantic_color');
 
@@ -136,21 +136,21 @@ const createGenericActivityReplyPost = async (notificationProps) => {
       type: 'text',
       text: `@${replyingBlog.name}`,
       formatting: [
-        { start: 0, end: replyingBlog.name.length + 1, type: 'mention', blog: { uuid: replyingBlog.uuid } }]
+        { start: 0, end: replyingBlog.name.length + 1, type: 'mention', blog: { uuid: replyingBlog.uuid } }],
     },
     {
       type: 'text',
       text: bodyDescriptionContent.text,
       formatting: summaryFormatting
         ? [{ start: summaryFormatting.start, end: summaryFormatting.end, type: 'link', url: actions.tap.href }]
-        : []
+        : [],
     },
     bodyQuoteContent,
-    { type: 'text', text: '\u200B' }
+    { type: 'text', text: '\u200B' },
   ];
   const tags = [
     ...originalPostTag ? [originalPostTag] : [],
-    ...tagReplyingBlog ? [replyingBlog.name] : []
+    ...tagReplyingBlog ? [replyingBlog.name] : [],
   ].join(',');
 
   return { content, tags };
@@ -159,7 +159,7 @@ const createGenericActivityReplyPost = async (notificationProps) => {
 const createActivityReplyPost = async ({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary }) => {
   const { response } = await apiFetch(
     `/v2/blog/${targetTumblelogName}/post/${targetPostId}/notes/timeline`,
-    { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } }
+    { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } },
   );
 
   const reply = response?.timeline?.elements?.[0];
@@ -179,22 +179,22 @@ const createReplyPost = ({ type, replyingBlogName, replyingBlogUuid, targetPostS
   const verbiage = {
     reply: 'replied to your post',
     reply_to_comment: 'replied to you in a post',
-    note_mention: 'mentioned you on a post'
+    note_mention: 'mentioned you on a post',
   }[type];
   const text = `@${replyingBlogName} ${verbiage} \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`;
   const formatting = [
     { start: 0, end: replyingBlogName.length + 1, type: 'mention', blog: { uuid: replyingBlogUuid } },
-    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: targetPostUrl }
+    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: targetPostUrl },
   ];
 
   const content = [
     { type: 'text', text, formatting },
     Object.assign(replyContent[0], { subtype: 'indented' }),
-    { type: 'text', text: '\u200B' }
+    { type: 'text', text: '\u200B' },
   ];
   const tags = [
     ...originalPostTag ? [originalPostTag] : [],
-    ...tagReplyingBlog ? [replyingBlogName] : []
+    ...tagReplyingBlog ? [replyingBlogName] : [],
   ].join(',');
 
   return { content, tags };
@@ -215,13 +215,13 @@ const determineNoteReplyType = ({ noteProps, parentNoteProps }) => {
   if (parentNoteProps && userBlogNames.includes(parentNoteProps.note.blogName)) {
     return {
       type: 'reply_to_comment',
-      targetBlogName: parentNoteProps.note.blogName
+      targetBlogName: parentNoteProps.note.blogName,
     };
   }
   if (userBlogNames.includes(noteProps.blog.name)) {
     return {
       type: 'reply',
-      targetBlogName: noteProps.blog.name
+      targetBlogName: noteProps.blog.name,
     };
   }
   for (const { formatting = [] } of noteProps.note.content) {
@@ -229,7 +229,7 @@ const determineNoteReplyType = ({ noteProps, parentNoteProps }) => {
       if (type === 'mention' && userBlogNames.includes(blog.name)) {
         return {
           type: 'note_mention',
-          targetBlogName: blog.name
+          targetBlogName: blog.name,
         };
       }
     }
@@ -240,8 +240,8 @@ const determineNoteReplyType = ({ noteProps, parentNoteProps }) => {
 const quoteNoteReply = async ({ currentTarget }) => {
   const {
     noteProps: {
-      note: { blogName: replyingBlogName, content: replyContent }
-    }
+      note: { blogName: replyingBlogName, content: replyContent },
+    },
   } = currentTarget.__notePropsData;
 
   const { type, targetBlogName } = determineNoteReplyType(currentTarget.__notePropsData);
@@ -284,7 +284,7 @@ export const main = async function () {
     id: meatballButtonId,
     label: 'Quote this reply',
     notePropsFilter: notePropsData => Boolean(determineNoteReplyType(notePropsData)),
-    onclick: event => quoteNoteReply(event).catch(showErrorModal)
+    onclick: event => quoteNoteReply(event).catch(showErrorModal),
   });
 
   const { [storageKey]: draftLocation } = await browser.storage.local.get(storageKey);

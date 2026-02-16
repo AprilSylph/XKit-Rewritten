@@ -9,7 +9,7 @@ import { primaryBlogName, userBlogNames, adminBlogNames } from './user.js';
  * @returns {Promise<object>} The post element's buried timelineObject property
  */
 export const timelineObject = weakMemoize(postElement =>
-  inject('/main_world/unbury_timeline_object.js', [], postElement)
+  inject('/main_world/unbury_timeline_object.js', [], postElement),
 );
 
 /**
@@ -17,7 +17,7 @@ export const timelineObject = weakMemoize(postElement =>
  * @returns {Promise<object>} The trail item element's trailItem context value
  */
 export const trailItem = weakMemoize(trailItemElement =>
-  inject('/main_world/unbury_trail_item.js', [], trailItemElement)
+  inject('/main_world/unbury_trail_item.js', [], trailItemElement),
 );
 
 /**
@@ -25,7 +25,7 @@ export const trailItem = weakMemoize(trailItemElement =>
  * @returns {Promise<object>} The notification's buried notification property
  */
 export const notificationObject = weakMemoize(notificationElement =>
-  inject('/main_world/unbury_notification.js', [], notificationElement)
+  inject('/main_world/unbury_notification.js', [], notificationElement),
 );
 
 /**
@@ -96,6 +96,6 @@ export const updatePostOnPage = async (postElement, keys) => {
   await inject(
     '/main_world/edit_timeline_object.js',
     [currentTimelineObject, changeEntries],
-    postElement.closest(keyToCss('timeline'))
+    postElement.closest(keyToCss('timeline')),
   );
 };

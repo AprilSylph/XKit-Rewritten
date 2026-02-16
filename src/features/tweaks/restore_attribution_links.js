@@ -23,7 +23,7 @@ const anyElementEventPermalinkSelector = `:is(
 const hasHoverColorSelector = keyToCss(
   'heightRestrictorExpandButtonWrapper',
   'contentWarningCover',
-  'expandTagsButtonWrapper'
+  'expandTagsButtonWrapper',
 );
 
 // This takes advantage of tumblr's special-case code for audio players
@@ -140,7 +140,7 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
   [...document.querySelectorAll(
-    `[data-original-href]:is(${postAttributionLinkSelector}, ${reblogAttributionLinkSelector}, ${trailAttributionLinkSelector})`
+    `[data-original-href]:is(${postAttributionLinkSelector}, ${reblogAttributionLinkSelector}, ${trailAttributionLinkSelector})`,
   )].forEach(anchorElement => {
     anchorElement.setAttribute('href', anchorElement.dataset.originalHref);
     anchorElement.removeEventListener('click', onLinkClick, listenerOptions);
@@ -149,6 +149,6 @@ export const clean = async function () {
   });
 
   [...document.querySelectorAll(
-    `[${preventPostClickAttributeName}="${preventPostClickAttributeValue}"]`
+    `[${preventPostClickAttributeName}="${preventPostClickAttributeValue}"]`,
   )].forEach(bodyPermalinkElement => bodyPermalinkElement.removeAttribute(preventPostClickAttributeName));
 };

@@ -6,8 +6,8 @@ permissions:
   contents: read
 
 jobs:
-  create:
-    name: Create
+  generate:
+    name: Generate
     runs-on: ubuntu-slim
     steps:
       - name: Checkout
@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: Print release notes
+      - name: Generate release notes
         run: dev/release-notes.js >> $GITHUB_STEP_SUMMARY
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

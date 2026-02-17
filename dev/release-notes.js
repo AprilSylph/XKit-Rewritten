@@ -8,17 +8,15 @@ const {
   GITHUB_TOKEN,
 } = process.env;
 
-const headers = new Headers();
-headers.append('Accept', 'application/vnd.github+json');
-headers.append('X-GitHub-Api-Version', '2022-11-28');
-GITHUB_TOKEN && headers.append('Authorization', `Bearer ${GITHUB_TOKEN}`);
-
 try {
   const latestTag = execSync('git describe --tags --abbrev=0', { encoding: 'utf8' }).trim();
   const refs = new Set(execSync(`git log ${latestTag}..HEAD --reverse --pretty --format="%H" --follow src/`, { encoding: 'utf8' }).trim().split('\n'));
   const commits = new Map();
 
-  const response = await fetch(`${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/commits?per_page=100`, { headers });
+  const response = await fetch(
+    `${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/commits?per_page=100`,
+    { headers: { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', ...GITHUB_TOKEN && { Authorization: `Bearer ${GITHUB_TOKEN}` } } },
+  );
   if (!response.ok) { throw new Error(`Error ${response.status}: ${response.statusText}`); }
 
   for (const commit of await response.json()) {

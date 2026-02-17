@@ -8,6 +8,11 @@ const {
   GITHUB_TOKEN,
 } = process.env;
 
+const headers = new Headers();
+headers.append('Accept', 'application/vnd.github+json');
+headers.append('X-GitHub-Api-Version', '2022-11-28');
+GITHUB_TOKEN && headers.append('Authorization', `Bearer ${GITHUB_TOKEN}`);
+
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 exec('git log $(git describe --tags --abbrev=0)..HEAD --reverse --pretty --format="%H" --follow src/', async (error, stdout, stderr) => {
@@ -27,13 +32,7 @@ exec('git log $(git describe --tags --abbrev=0)..HEAD --reverse --pretty --forma
     if (!ref) { continue; }
 
     const [response] = await Promise.all([
-      fetch(`${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/commits/${ref}`, {
-        headers: {
-          Accept: 'application/vnd.github+json',
-          ...GITHUB_TOKEN && { Authorization: `Bearer ${GITHUB_TOKEN}` },
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      }),
+      fetch(`${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/commits/${ref}`, { headers }),
       sleep(GITHUB_TOKEN ? 0 : 1000),
     ]);
     if (!response.ok) {

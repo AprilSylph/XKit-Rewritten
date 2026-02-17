@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-import { exec } from 'child_process';
+import { execSync } from 'node:child_process';
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const {
   GITHUB_API_URL = 'https://api.github.com',
@@ -13,22 +15,12 @@ headers.append('Accept', 'application/vnd.github+json');
 headers.append('X-GitHub-Api-Version', '2022-11-28');
 GITHUB_TOKEN && headers.append('Authorization', `Bearer ${GITHUB_TOKEN}`);
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-exec('git log $(git describe --tags --abbrev=0)..HEAD --reverse --pretty --format="%H" --follow src/', async (error, stdout, stderr) => {
-  if (error) {
-    console.error('error: ', error);
-    return;
-  }
-
-  if (stderr) {
-    console.error('stderr: ', stderr);
-  }
-
-  let fatalError = null;
+try {
+  const latestTag = execSync('git describe --tags --abbrev=0', { encoding: 'utf8' }).trim();
+  const refs = execSync(`git log ${latestTag}..HEAD --reverse --pretty --format="%H" --follow src/`, { encoding: 'utf8' }).trim().split('\n');
 
   console.log('```md');
-  for (const ref of stdout.split('\n')) {
+  for (const ref of refs) {
     if (!ref) { continue; }
 
     const [response] = await Promise.all([
@@ -36,14 +28,14 @@ exec('git log $(git describe --tags --abbrev=0)..HEAD --reverse --pretty --forma
       sleep(GITHUB_TOKEN ? 0 : 1000),
     ]);
     if (!response.ok) {
-      fatalError = `Error ${response.status}: ${response.statusText}`;
-      break;
+      console.log('```');
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
 
     const { author, commit } = await response.json();
     if (!commit) {
-      fatalError = `Fatal: API returned no commit info for ref ${ref}`;
-      break;
+      console.log('```');
+      throw new Error(`Fatal: API returned no commit info for ref ${ref}`);
     }
 
     console.log(`- ${
@@ -59,8 +51,6 @@ exec('git log $(git describe --tags --abbrev=0)..HEAD --reverse --pretty --forma
     }`);
   }
   console.log('```');
-
-  if (fatalError) {
-    console.log(`\`${fatalError}\``);
-  }
-});
+} catch (exception) {
+  console.error(exception);
+}

@@ -61,6 +61,10 @@
 
 #quick-tags fieldset {
   display: contents;
+
+  background-color: inherit;
+  color: inherit;
+  font: inherit;
 }
 
 #quick-tags form {

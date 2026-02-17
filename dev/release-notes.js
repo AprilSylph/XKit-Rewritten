@@ -11,7 +11,6 @@ const {
 try {
   const latestTag = execSync('git describe --tags --abbrev=0', { encoding: 'utf8' }).trim();
   const refs = new Set(execSync(`git log ${latestTag}..HEAD --reverse --pretty --format="%H" --follow src/`, { encoding: 'utf8' }).trim().split('\n'));
-  const commits = new Map();
 
   const response = await fetch(
     `${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/commits?per_page=100`,
@@ -19,11 +18,11 @@ try {
   );
   if (!response.ok) { throw new Error(`Error ${response.status}: ${response.statusText}`); }
 
+  const commits = new Map();
   for (const commit of await response.json()) {
     commits.set(commit.sha, commit);
   }
-
-  if (!refs.isSubsetOf(commits)) { console.warn('Could not find commit info for one or more commits!'); }
+  if (!refs.isSubsetOf(commits)) { console.warn('⚠️ Could not find commit info for one or more commits!'); }
 
   console.log('```md');
   for (const ref of refs) {

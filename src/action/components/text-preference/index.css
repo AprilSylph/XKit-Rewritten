@@ -13,7 +13,6 @@ label {
 input {
   flex-shrink: 1;
 
-  box-sizing: border-box;
   min-width: 0;
   padding: 4px;
   border: none;

@@ -53,9 +53,6 @@ html, main {
 }
 
 body {
-  padding: 0;
-  margin: 0;
-
   background-color: rgb(var(--white));
   color: rgb(var(--black));
   font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
@@ -65,7 +62,6 @@ body {
 
 #permissions-banner,
 #embedded-banner {
-  box-sizing: border-box;
   width: 375px;
   min-width: 100%;
   max-width: 100%;

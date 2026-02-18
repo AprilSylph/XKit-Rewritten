@@ -44,7 +44,6 @@ header {
 
 #blocked-posts {
   padding: 0;
-  border-bottom: 1px solid rgb(var(--grey));
   margin: 0;
 }
 

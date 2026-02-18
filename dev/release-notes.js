@@ -16,7 +16,7 @@ try {
     `${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/commits?per_page=100`,
     { headers: { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', ...GITHUB_TOKEN && { Authorization: `Bearer ${GITHUB_TOKEN}` } } },
   );
-  if (!response.ok) { throw new Error(`🛑 Error ${response.status}: ${response.statusText}`); }
+  if (!response.ok) { throw new Error(`🛑 HTTP ${response.status} (${response.statusText})`); }
 
   const commits = new Map();
   for (const commit of await response.json()) {

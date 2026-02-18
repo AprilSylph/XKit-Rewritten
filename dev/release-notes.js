@@ -25,9 +25,7 @@ try {
   if (!refs.isSubsetOf(commits)) { console.warn('⚠️ Could not find commit info for one or more commits!'); }
 
   console.log('```md');
-  for (const ref of refs) {
-    if (!commits.has(ref)) { continue; }
-
+  for (const ref of refs.intersection(commits)) {
     const { author, commit } = commits.get(ref);
 
     console.log(`- ${

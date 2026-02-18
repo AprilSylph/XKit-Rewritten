@@ -22,8 +22,6 @@ html {
 }
 
 body {
-  padding: 3px;
-
   background-color: rgb(var(--white));
   color: rgb(var(--black));
   font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
@@ -33,14 +31,11 @@ body {
 }
 
 section:not(:last-child) {
-  padding-bottom: 1ch;
-  border-bottom: 1px solid rgb(var(--dark-grey));
-  margin-bottom: 1em;
+  margin-bottom: 16px;
 }
 
 h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
+  margin-block: 8px;
 }
 
 input[type="text"] {
@@ -55,9 +50,10 @@ input[type="text"] {
 #new-bundle {
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-column-gap: 1rem;
-  grid-row-gap: 0.5rem;
+  grid-column-gap: 8px;
+  grid-row-gap: 8px;
   align-items: center;
+  padding-inline-end: 4px;
   margin: 0;
 }
 

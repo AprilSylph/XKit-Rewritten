@@ -26,6 +26,8 @@ try {
 
   console.log('```md');
   for (const ref of refs) {
+    if (!commits.has(ref)) { continue; }
+
     const { author, commit } = commits.get(ref);
 
     console.log(`- ${

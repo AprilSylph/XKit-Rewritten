@@ -15,7 +15,8 @@
 }
 
 html {
-  font-size: 14px;
+  font: menu;
+  line-height: 1.15;
   scrollbar-color: rgb(var(--grey)) transparent;
   scrollbar-width: thin;
   overflow-y: hidden;
@@ -24,8 +25,6 @@ html {
 body {
   background-color: rgb(var(--white));
   color: rgb(var(--black));
-  font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
-  font-size: 100%;
   -webkit-user-select: none;
   user-select: none;
 }
@@ -38,10 +37,7 @@ header {
   margin-bottom: 1em;
 }
 
-#posts-blocked-count {
-  font-weight: bold;
-}
-
+#posts-blocked-count,
 #blocked-posts {
   padding: 0;
   margin: 0;

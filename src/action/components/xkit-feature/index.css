@@ -10,6 +10,7 @@ summary {
   column-gap: 8px;
   padding: 8px;
 
+  font: caption;
   cursor: pointer;
 }
 
@@ -69,9 +70,9 @@ summary:focus {
   padding: 2px 6px;
   border-radius: 1em;
 
+  font: small-caption;
   background-color: #ff62ce;
   color: rgb(var(--white));
-  line-height: 1.5;
 }
 
 .title,
@@ -79,13 +80,7 @@ summary:focus {
   margin: 0;
 }
 
-.title {
-  font-size: larger;
-  font-weight: bold;
-}
-
 .description {
-  font-size: small;
   opacity: 70%;
 }
 
@@ -107,6 +102,7 @@ ul.preferences {
   padding: 0 4px;
   margin: 8px 0;
 
+  line-height: 1.15;
   list-style-type: none;
 }
 

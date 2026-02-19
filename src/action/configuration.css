@@ -9,6 +9,7 @@
   padding: 1ch;
   border-bottom: 1px solid rgb(var(--active-grey));
 
+  font: caption;
   background-color: rgb(var(--white));
 }
 
@@ -40,7 +41,7 @@ label[for="filter"] {
 
   color: rgb(var(--active-grey));
   content: "Loading...";
-  font-size: large;
+  font-size: larger;
   font-weight: bold;
 }
 

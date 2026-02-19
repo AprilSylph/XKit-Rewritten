@@ -42,7 +42,7 @@ html {
   align-items: stretch;
   overflow-y: scroll;
 
-  font-size: small;
+  font: menu;
   scrollbar-color: rgb(var(--active-grey)) rgb(var(--white));
 }
 
@@ -97,14 +97,13 @@ nav {
 }
 
 nav a {
-  flex-grow: 1;
+  flex: 1;
   padding: 8px;
   border-radius: 5px;
   margin: 0 4px;
 
   color: rgb(var(--black));
-  font-weight: bold;
-  line-height: 1;
+  font: caption;
   text-align: center;
   text-decoration: none;
 }

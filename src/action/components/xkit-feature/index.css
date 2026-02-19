@@ -80,13 +80,12 @@ summary:focus {
 }
 
 .title {
-  font-size: 15px;
-  line-height: 18.5px;
+  font-size: larger;
+  font-weight: bold;
 }
 
 .description {
-  font-size: 13px;
-  line-height: 16px;
+  font-size: small;
   opacity: 70%;
 }
 

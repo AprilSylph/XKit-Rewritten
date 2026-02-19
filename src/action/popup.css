@@ -42,7 +42,7 @@ html {
   align-items: stretch;
   overflow-y: scroll;
 
-  font-size: 14px;
+  font-size: small;
   scrollbar-color: rgb(var(--active-grey)) rgb(var(--white));
 }
 
@@ -55,8 +55,6 @@ html, main {
 body {
   background-color: rgb(var(--white));
   color: rgb(var(--black));
-  font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
-  font-size: 100%;
   user-select: none;
 }
 
@@ -77,7 +75,7 @@ body {
   border-radius: 0.5ch;
   margin: 8px auto 0;
 
-  font-family: 'Courier New', Courier, monospace;
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   line-height: 1;
 }
 
@@ -106,7 +104,7 @@ nav a {
 
   color: rgb(var(--black));
   font-weight: bold;
-  line-height: 1em;
+  line-height: 1;
   text-align: center;
   text-decoration: none;
 }

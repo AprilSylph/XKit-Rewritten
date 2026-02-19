@@ -40,8 +40,8 @@ label[for="filter"] {
 
   color: rgb(var(--active-grey));
   content: "Loading...";
-  font-size: 1.3125rem;
-  font-weight: 700;
+  font-size: large;
+  font-weight: bold;
 }
 
 xkit-feature.search-hidden,

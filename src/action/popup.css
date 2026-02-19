@@ -42,7 +42,6 @@ html {
   align-items: stretch;
   overflow-y: scroll;
 
-  font: menu;
   scrollbar-color: rgb(var(--active-grey)) rgb(var(--white));
 }
 
@@ -55,6 +54,8 @@ html, main {
 body {
   background-color: rgb(var(--white));
   color: rgb(var(--black));
+  font: menu;
+  line-height: inherit;
   user-select: none;
 }
 
@@ -104,6 +105,7 @@ nav a {
 
   color: rgb(var(--black));
   font: caption;
+  line-height: inherit;
   text-align: center;
   text-decoration: none;
 }

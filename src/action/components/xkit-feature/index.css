@@ -11,6 +11,7 @@ summary {
   padding: 8px;
 
   font: caption;
+  line-height: inherit;
   cursor: pointer;
 }
 
@@ -71,6 +72,7 @@ summary:focus {
   border-radius: 1em;
 
   font: small-caption;
+  line-height: inherit;
   background-color: #ff62ce;
   color: rgb(var(--white));
 }
@@ -102,7 +104,6 @@ ul.preferences {
   padding: 0 4px;
   margin: 8px 0;
 
-  line-height: 1.15;
   list-style-type: none;
 }
 

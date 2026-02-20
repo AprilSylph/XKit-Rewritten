@@ -129,7 +129,7 @@ section.open:empty {
 }
 
 section.open:empty::before {
-  content: "No one's around to help.";
+  content: "No one’s around to help.";
 }
 
 section h2 {

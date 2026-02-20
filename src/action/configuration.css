@@ -39,7 +39,7 @@ label[for="filter"] {
   height: 100px;
 
   color: rgb(var(--active-grey));
-  content: "Loading...";
+  content: "Loading…";
   font-size: 1.133rem;
   font-weight: bold;
 }

@@ -1,5 +1,5 @@
 /** @typedef {Record<string, string>} Attributes */
-/** @typedef {Record<string, () => void>} Events */
+/** @typedef {Record<string, (event: Event) => void>} Events */
 /** @typedef {(string | Node)[]} Children */
 
 /**

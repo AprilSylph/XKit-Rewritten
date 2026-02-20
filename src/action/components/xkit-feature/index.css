@@ -71,7 +71,6 @@ summary:focus {
 
   background-color: #ff62ce;
   color: rgb(var(--white));
-  line-height: 1.5;
 }
 
 .title,
@@ -79,15 +78,9 @@ summary:focus {
   margin: 0;
 }
 
-.title {
-  font-size: 15px;
-  line-height: 18.5px;
-}
-
 .description {
-  font-size: 13px;
-  line-height: 16px;
-  opacity: 70%;
+  font-size: 0.867rem;
+  opacity: 69%;
 }
 
 .disabled:not([open], :focus-within, :hover) :is(.icon, .meta) {

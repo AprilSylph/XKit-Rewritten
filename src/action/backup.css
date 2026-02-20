@@ -42,8 +42,8 @@
 
   background-color: rgb(var(--passive-grey));
   color: rgb(var(--black));
-  font-family: monospace, monospace;
-  font-size: smaller;
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.867rem;
   white-space: pre;
 }
 

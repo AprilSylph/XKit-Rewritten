@@ -42,7 +42,7 @@ html {
   align-items: stretch;
   overflow-y: scroll;
 
-  font-size: 14px;
+  font-size: 15px;
   scrollbar-color: rgb(var(--active-grey)) rgb(var(--white));
 }
 
@@ -55,8 +55,7 @@ html, main {
 body {
   background-color: rgb(var(--white));
   color: rgb(var(--black));
-  font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
-  font-size: 100%;
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -77,8 +76,8 @@ body {
   border-radius: 0.5ch;
   margin: 8px auto 0;
 
-  font-family: 'Courier New', Courier, monospace;
-  line-height: 1;
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.867rem;
 }
 
 #grant-host-permission:focus {
@@ -106,7 +105,6 @@ nav a {
 
   color: rgb(var(--black));
   font-weight: bold;
-  line-height: 1em;
   text-align: center;
   text-decoration: none;
 }

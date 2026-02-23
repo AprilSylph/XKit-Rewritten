@@ -19,8 +19,6 @@ const quickTagsPanelId = 'xkit-quick-reblog-quick-tags-panel';
 const suggestedTagsTabId = 'xkit-quick-reblog-suggested-tags-tab';
 const suggestedTagsPanelId = 'xkit-quick-reblog-suggested-tags-panel';
 
-const stopEventPropagation = event => event.stopPropagation();
-
 const blogSelector = select({ change: onBlogSelectorChange });
 const blogAvatar = div({ class: 'avatar' });
 const blogSelectorContainer = div({ class: 'select-container' }, [blogAvatar, blogSelector]);
@@ -53,7 +51,7 @@ const actionButtons = fieldset({ class: 'action-buttons' }, [
   button({ 'data-state': 'queue', click: reblogPost }, ['Queue']),
   button({ 'data-state': 'draft', click: reblogPost }, ['Draft']),
 ]);
-const popupElement = div({ id: 'quick-reblog', click: stopEventPropagation }, [
+const popupElement = div({ id: 'quick-reblog', click: event => event.stopPropagation() }, [
   blogSelectorContainer,
   commentInput,
   tagsTabList,

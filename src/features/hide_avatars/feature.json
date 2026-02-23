@@ -1,0 +1,17 @@
+{
+  "title": "Hide Avatars",
+  "description": "Disappear avatars of specified blogs",
+  "icon": {
+    "class_name": "ri-user-unfollow-line",
+    "color": "white",
+    "background_color": "#b5241c"
+  },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#hide-avatars",
+  "preferences": {
+    "hiddenAvatars": {
+      "type": "textarea",
+      "label": "Blognames (comma-separated)",
+      "default": ""
+    }
+  }
+}

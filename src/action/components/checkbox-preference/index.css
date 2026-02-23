@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  align-items: flex-start;
+  column-gap: 8px;
+  padding: 4px;
+}
+
+input {
+  height: 1.15em;
+}
+
+@supports (height: 1lh) {
+  input {
+    height: 1lh;
+  }
+}

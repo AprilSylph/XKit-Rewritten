@@ -1,0 +1,22 @@
+{
+  "title": "Quote Replies",
+  "description": "Reply to reply notifications",
+  "icon": {
+    "class_name": "ri-chat-quote-line",
+    "color": "white",
+    "background_color": "#00b8ff"
+  },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quote-replies",
+  "preferences": {
+    "tagReplyingBlog": {
+      "type": "checkbox",
+      "label": "Automatically tag the quoted user",
+      "default": false
+    },
+    "newTab": {
+      "type": "checkbox",
+      "label": "Open created posts in new tabs",
+      "default": false
+    }
+  }
+}

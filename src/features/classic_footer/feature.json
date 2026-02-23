@@ -1,0 +1,27 @@
+{
+  "title": "Classic Footer",
+  "description": "See the total note count on posts",
+  "icon": {
+    "class_name": "ri-layout-bottom-line",
+    "color": "white",
+    "background_color": "#395875"
+  },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#classic-footer",
+  "preferences": {
+    "noReblogMenu": {
+      "type": "checkbox",
+      "label": "Turn reblog buttons back into links",
+      "default": true
+    },
+    "modernButtonStyle": {
+      "type": "checkbox",
+      "label": "Use a modern look for the note count",
+      "default": false
+    },
+    "noZeroNotes": {
+      "type": "checkbox",
+      "label": "Hide the note count on posts with no notes",
+      "default": false
+    }
+  }
+}

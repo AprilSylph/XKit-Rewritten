@@ -23,7 +23,7 @@ const inputEvents = (event) => {
   event.stopPropagation();
 
   if (enableKeyNav) {
-    if (event.key === 'Enter' && event.ctrlKey) {
+    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
       actionButtons.elements.item(0).click();
     }
 

@@ -22,16 +22,14 @@ const suggestedTagsPanelId = 'xkit-quick-reblog-suggested-tags-panel';
 const inputEvents = (event) => {
   event.stopPropagation();
 
-  if (enableKeyNav) {
-    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
-      actionButtons.elements.item(0).click();
-    }
+  if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+    actionButtons.elements.item(0).click();
+  }
 
-    if (event.key === 'Escape') {
-      const { parentNode } = popupElement;
-      parentNode?.removeEventListener('mouseleave', removePopupOnLeave);
-      popupElement.remove();
-    }
+  if (event.key === 'Escape') {
+    const { parentNode } = popupElement;
+    parentNode?.removeEventListener('mouseleave', removePopupOnLeave);
+    popupElement.remove();
   }
 };
 
@@ -94,7 +92,6 @@ let reblogTag;
 let queueTag;
 let alreadyRebloggedEnabled;
 let alreadyRebloggedLimit;
-let enableKeyNav;
 
 const alreadyRebloggedStorageKey = 'quick_reblog.alreadyRebloggedList';
 const rememberedBlogStorageKey = 'quick_reblog.rememberedBlogs';
@@ -414,7 +411,6 @@ export const main = async function () {
     queueTag,
     alreadyRebloggedEnabled,
     alreadyRebloggedLimit,
-    enableKeyNav,
   } = await getPreferences('quick_reblog'));
 
   blogSelector.replaceChildren(

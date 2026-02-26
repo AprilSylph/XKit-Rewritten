@@ -7,7 +7,6 @@
   --in-content-primary-button-background-active: #053e94;
   --in-content-box-info-background: #f0f0f4;
 
-  --white: 255, 255, 255;
   --accent: 10, 132, 255;
   --passive-grey: 223, 223, 229;
   --active-grey: 207, 207, 216;
@@ -25,7 +24,6 @@
     --in-content-primary-button-background-active: #aaf2ff;
     --in-content-box-info-background: #36353e;
 
-    --white: 66, 65, 77;
     --accent: 54, 213, 255;
     --passive-grey: 83, 83, 94;
     --active-grey: 91, 91, 102;
@@ -41,7 +39,7 @@ html {
   overflow-y: scroll;
 
   font-size: 14px;
-  scrollbar-color: rgb(var(--active-grey)) rgb(var(--white));
+  scrollbar-color: GrayText Canvas;
 }
 
 html, main {
@@ -51,7 +49,7 @@ html, main {
 }
 
 body {
-  background-color: rgb(var(--white));
+  background-color: Canvas;
   color: CanvasText;
   font: inherit;
   -webkit-user-select: none;
@@ -167,6 +165,6 @@ textarea {
 
 textarea,
 pre {
-  scrollbar-color: FieldText Field;
+  scrollbar-color: GrayText Field;
   scrollbar-width: thin;
 }

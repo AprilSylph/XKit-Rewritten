@@ -19,7 +19,7 @@ textarea {
 
   background-color: rgb(var(--passive-grey));
   color: FieldText;
-  scrollbar-color: FieldText Field;
+  scrollbar-color: GrayText Field;
   scrollbar-width: thin;
 }
 

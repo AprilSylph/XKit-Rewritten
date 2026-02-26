@@ -70,7 +70,7 @@ summary:focus {
   border-radius: 1em;
 
   background-color: #ff62ce;
-  color: rgb(var(--white));
+  color: Canvas;
 }
 
 .title,

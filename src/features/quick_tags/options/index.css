@@ -1,12 +1,10 @@
 :root {
-  --white: 255, 255, 255;
   --light-grey: 223, 223, 229;
   --dark-grey: 207, 207, 216;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --white: 66, 65, 77;
     --light-grey: 83, 83, 94;
     --dark-grey: 91, 91, 102;
   }
@@ -20,7 +18,7 @@ html {
 }
 
 body {
-  background-color: rgb(var(--white));
+  background-color: Canvas;
   color: CanvasText;
   font: inherit;
   -webkit-user-select: none;

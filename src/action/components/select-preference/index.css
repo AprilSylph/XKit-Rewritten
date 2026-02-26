@@ -22,7 +22,3 @@ select {
   color: FieldText;
   text-overflow: ellipsis;
 }
-
-select:focus {
-  background-color: rgb(var(--active-grey));
-}

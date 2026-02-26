@@ -80,7 +80,7 @@
 }
 
 #import {
-  border-top: 1px dotted rgb(var(--active-grey));
+  border-top: 1px dotted GrayText;
 }
 
 #restore-local {

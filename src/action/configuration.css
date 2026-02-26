@@ -7,7 +7,7 @@
   flex-direction: row;
   align-items: center;
   padding: 1ch;
-  border-bottom: 1px solid rgb(var(--active-grey));
+  border-bottom: 1px solid GrayText;
 
   background-color: Canvas;
 }
@@ -38,7 +38,7 @@ label[for="filter"] {
   align-items: center;
   height: 100px;
 
-  color: rgb(var(--active-grey));
+  color: GrayText;
   content: "Loading…";
   font-size: 1.133rem;
   font-weight: bold;

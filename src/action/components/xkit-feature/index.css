@@ -1,5 +1,5 @@
 details {
-  border-bottom: 1px dotted rgb(var(--active-grey));
+  border-bottom: 1px dotted GrayText;
 }
 
 summary {
@@ -22,7 +22,7 @@ summary:hover {
 }
 
 summary:focus {
-  background-color: rgb(var(--active-grey));
+  outline-offset: -3px;
 }
 
 .icon {

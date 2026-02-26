@@ -22,7 +22,3 @@ textarea {
   scrollbar-color: GrayText Field;
   scrollbar-width: thin;
 }
-
-textarea:focus {
-  background-color: rgb(var(--active-grey));
-}

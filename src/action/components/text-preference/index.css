@@ -21,7 +21,3 @@ input {
   background-color: Field;
   color: FieldText;
 }
-
-input:focus {
-  background-color: rgb(var(--active-grey));
-}

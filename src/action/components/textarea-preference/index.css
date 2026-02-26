@@ -17,7 +17,7 @@ textarea {
   border-radius: 3px;
   resize: none;
 
-  background-color: rgb(var(--passive-grey));
+  background-color: Field;
   color: FieldText;
   scrollbar-color: GrayText Field;
   scrollbar-width: thin;

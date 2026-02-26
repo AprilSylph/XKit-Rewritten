@@ -40,7 +40,7 @@
   border: none;
   margin: 0;
 
-  background-color: rgb(var(--passive-grey));
+  background-color: Field;
   color: FieldText;
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: smaller;

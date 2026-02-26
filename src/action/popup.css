@@ -7,7 +7,6 @@
   --in-content-primary-button-background-active: #053e94;
   --in-content-box-info-background: #f0f0f4;
 
-  --passive-grey: 223, 223, 229;
   --active-grey: 207, 207, 216;
 
   --search-highlight: 255, 233, 0;
@@ -23,7 +22,6 @@
     --in-content-primary-button-background-active: #aaf2ff;
     --in-content-box-info-background: #36353e;
 
-    --passive-grey: 83, 83, 94;
     --active-grey: 91, 91, 102;
 
     --search-highlight: 0, 62, 170;
@@ -100,7 +98,7 @@ nav a {
 }
 
 nav a:hover {
-  background-color: rgb(var(--passive-grey));
+  background-color: ButtonFace;
 }
 
 nav a:active, nav a.selected {
@@ -133,7 +131,7 @@ textarea {
   border: none;
   border-radius: 3px;
 
-  background-color: rgb(var(--passive-grey));
+  background-color: Field;
   color: FieldText;
 }
 

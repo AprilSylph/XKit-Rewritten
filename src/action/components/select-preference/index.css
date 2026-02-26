@@ -18,7 +18,7 @@ select {
   border-radius: 3px;
   overflow: hidden;
 
-  background-color: rgb(var(--passive-grey));
+  background-color: Field;
   color: FieldText;
   text-overflow: ellipsis;
 }

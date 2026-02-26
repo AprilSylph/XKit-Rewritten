@@ -25,7 +25,7 @@ input {
   border: none;
   border-radius: 3px;
 
-  background-color: rgb(var(--passive-grey));
+  background-color: Field;
   color: FieldText;
 }
 

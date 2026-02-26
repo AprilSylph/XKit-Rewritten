@@ -18,8 +18,8 @@ textarea {
   resize: none;
 
   background-color: rgb(var(--passive-grey));
-  color: rgb(var(--black));
-  scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
+  color: FieldText;
+  scrollbar-color: FieldText Field;
   scrollbar-width: thin;
 }
 

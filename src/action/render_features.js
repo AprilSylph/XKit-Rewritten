@@ -89,7 +89,7 @@ const renderFeatures = async function () {
       const iconElement = document.createElement('i');
       iconElement.setAttribute('aria-hidden', 'true');
       iconElement.classList.add('ri-fw', 'ri-question-fill');
-      iconElement.style.color = 'rgb(var(--black))';
+      iconElement.style.color = 'CanvasText';
       iconElement.style.fontSize = '1.25rem';
       anchorElement.append(iconElement);
     } else {

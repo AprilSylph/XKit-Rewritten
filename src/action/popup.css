@@ -7,7 +7,6 @@
   --in-content-primary-button-background-active: #053e94;
   --in-content-box-info-background: #f0f0f4;
 
-  --black: 21, 20, 25;
   --white: 255, 255, 255;
   --accent: 10, 132, 255;
   --passive-grey: 223, 223, 229;
@@ -26,7 +25,6 @@
     --in-content-primary-button-background-active: #aaf2ff;
     --in-content-box-info-background: #36353e;
 
-    --black: 251, 251, 254;
     --white: 66, 65, 77;
     --accent: 54, 213, 255;
     --passive-grey: 83, 83, 94;
@@ -54,7 +52,7 @@ html, main {
 
 body {
   background-color: rgb(var(--white));
-  color: rgb(var(--black));
+  color: CanvasText;
   font: inherit;
   -webkit-user-select: none;
   user-select: none;
@@ -103,7 +101,7 @@ nav a {
   border-radius: 5px;
   margin: 0 4px;
 
-  color: rgb(var(--black));
+  color: ButtonText;
   font-weight: bold;
   text-align: center;
   text-decoration: none;
@@ -144,7 +142,7 @@ textarea {
   border-radius: 3px;
 
   background-color: rgb(var(--passive-grey));
-  color: rgb(var(--black));
+  color: FieldText;
 }
 
 ::placeholder {
@@ -169,6 +167,6 @@ textarea {
 
 textarea,
 pre {
-  scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
+  scrollbar-color: FieldText Field;
   scrollbar-width: thin;
 }

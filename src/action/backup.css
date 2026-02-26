@@ -41,7 +41,7 @@
   margin: 0;
 
   background-color: rgb(var(--passive-grey));
-  color: rgb(var(--black));
+  color: FieldText;
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: smaller;
   white-space: pre;
@@ -68,7 +68,7 @@
   margin-left: 1ch;
 
   content: "Copied!";
-  color: rgb(var(--black));
+  color: CanvasText;
   font-weight: normal;
 
   transition: opacity 1s;

@@ -19,7 +19,7 @@ select {
   overflow: hidden;
 
   background-color: rgb(var(--passive-grey));
-  color: rgb(var(--black));
+  color: FieldText;
   text-overflow: ellipsis;
 }
 

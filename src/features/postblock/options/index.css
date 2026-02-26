@@ -1,5 +1,4 @@
 :root {
-  --black: 21, 20, 25;
   --white: 255, 255, 255;
   --grey: 207, 207, 216;
   --accent: 10, 132, 255;
@@ -7,7 +6,6 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --black: 251, 251, 254;
     --white: 66, 65, 77;
     --grey: 91, 91, 102;
     --accent: 54, 213, 255;
@@ -23,7 +21,7 @@ html {
 
 body {
   background-color: rgb(var(--white));
-  color: rgb(var(--black));
+  color: CanvasText;
   font: inherit;
   -webkit-user-select: none;
   user-select: none;

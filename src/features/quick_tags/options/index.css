@@ -1,5 +1,4 @@
 :root {
-  --black: 21, 20, 25;
   --white: 255, 255, 255;
   --light-grey: 223, 223, 229;
   --dark-grey: 207, 207, 216;
@@ -7,7 +6,6 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --black: 251, 251, 254;
     --white: 66, 65, 77;
     --light-grey: 83, 83, 94;
     --dark-grey: 91, 91, 102;
@@ -23,7 +21,7 @@ html {
 
 body {
   background-color: rgb(var(--white));
-  color: rgb(var(--black));
+  color: CanvasText;
   font: inherit;
   -webkit-user-select: none;
   user-select: none;
@@ -43,7 +41,7 @@ input[type="text"] {
   border-radius: 3px;
 
   background-color: rgb(var(--light-grey));
-  color: rgb(var(--black));
+  color: FieldText;
 }
 
 #new-bundle {
@@ -104,7 +102,7 @@ input[type="text"] {
 }
 
 .bundle button i {
-  color: rgb(var(--black));
+  color: CanvasText;
   font-size: 21px;
 }
 
@@ -138,7 +136,7 @@ input[type="text"] {
   overflow-x: hidden;
   border: none;
 
-  color: rgb(var(--black));
+  color: CanvasText;
   background: transparent;
   text-overflow: ellipsis;
 }

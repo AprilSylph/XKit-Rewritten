@@ -19,7 +19,7 @@ input {
   border-radius: 3px;
 
   background-color: rgb(var(--passive-grey));
-  color: rgb(var(--black));
+  color: FieldText;
 }
 
 input:focus {

@@ -59,7 +59,7 @@
   margin: 0;
 
   background-color: inherit;
-  color: rgb(var(--accent));
+  color: LinkText;
   cursor: pointer;
   font-weight: bold;
 }

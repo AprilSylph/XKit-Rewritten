@@ -26,9 +26,8 @@
   text-decoration: none;
 }
 
-#links :link,
-#links :visited {
-  color: rgb(var(--accent));
+#links :is(:link, :visited) {
+  color: LinkText;
 }
 
 #version {

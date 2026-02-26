@@ -7,7 +7,6 @@
   --in-content-primary-button-background-active: #053e94;
   --in-content-box-info-background: #f0f0f4;
 
-  --accent: 10, 132, 255;
   --passive-grey: 223, 223, 229;
   --active-grey: 207, 207, 216;
 
@@ -24,7 +23,6 @@
     --in-content-primary-button-background-active: #aaf2ff;
     --in-content-box-info-background: #36353e;
 
-    --accent: 54, 213, 255;
     --passive-grey: 83, 83, 94;
     --active-grey: 91, 91, 102;
 
@@ -74,10 +72,6 @@ body {
   margin: 8px auto 0;
 
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
-}
-
-#grant-host-permission:focus {
-  outline: 2px solid rgb(var(--accent));
 }
 
 #permissions-banner:not([hidden]) + #embedded-banner {

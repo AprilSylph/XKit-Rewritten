@@ -115,5 +115,13 @@ ul.preferences #empty {
 }
 
 ::slotted(.search-highlighted) {
-  background-color: rgb(var(--search-highlight));
+  background-color: Highlight;
+  color: HighlightText;
+}
+
+@supports (background-color: Mark) {
+  ::slotted(.search-highlighted) {
+    background-color: Mark;
+    color: MarkText;
+  }
 }

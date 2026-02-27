@@ -6,8 +6,6 @@
   --in-content-primary-button-background-hover: #0250bb;
   --in-content-primary-button-background-active: #053e94;
   --in-content-box-info-background: #f0f0f4;
-
-  --search-highlight: 255, 233, 0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,8 +17,6 @@
     --in-content-primary-button-background-hover: #80ebff;
     --in-content-primary-button-background-active: #aaf2ff;
     --in-content-box-info-background: #36353e;
-
-    --search-highlight: 0, 62, 170;
   }
 }
 

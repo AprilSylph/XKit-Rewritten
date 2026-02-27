@@ -17,7 +17,7 @@ const templateDocument = new DOMParser().parseFromString(`
           <div class="badge">
             <slot name="badge"></slot>
           </div>
-          <input type="checkbox" checked aria-label="Enable this feature">
+          <input type="checkbox" checked role="switch" aria-label="Enable this feature">
         </div>
       </summary>
       <ul class="preferences">
@@ -51,7 +51,7 @@ class XKitFeatureElement extends CustomElement {
     super(templateDocument, adoptedStyleSheets);
 
     this.#detailsElement = this.shadowRoot.querySelector('details');
-    this.#enabledToggle = this.shadowRoot.querySelector('input[type="checkbox"]');
+    this.#enabledToggle = this.shadowRoot.querySelector('[role="switch"]');
   }
 
   /** @param {InputEvent & { currentTarget: HTMLInputElement }} event `input` event for the feature's "Enable this feature" toggle. */

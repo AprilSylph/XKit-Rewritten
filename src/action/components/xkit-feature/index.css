@@ -25,7 +25,7 @@ summary:focus {
   background-color: rgb(var(--active-grey));
 }
 
-input[type="checkbox"] {
+[role="switch"] {
   --toggle-height: 16px;
   --toggle-width: 32px;
   --toggle-border-width: 1px;
@@ -44,14 +44,14 @@ input[type="checkbox"] {
   color: FieldText;
 }
 
-input[type="checkbox"]:checked {
+[role="switch"]:checked {
   border-color: transparent;
 
   background-color: SelectedItem;
   color: SelectedItemText;
 }
 
-input[type="checkbox"]::before {
+[role="switch"]::before {
   --toggle-dot-diameter: calc(
     var(--toggle-height)
     - (var(--toggle-border-width) * 2)
@@ -77,12 +77,12 @@ input[type="checkbox"]::before {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  input[type="checkbox"]::before {
+  [role="switch"]::before {
     transition: transform 100ms;
   }
 }
 
-input[type="checkbox"]:checked::before {
+[role="switch"]:checked::before {
   transform: translateX(var(--toggle-dot-transform-x));
 }
 

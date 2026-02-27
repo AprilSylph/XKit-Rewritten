@@ -1,25 +1,3 @@
-:root {
-  --in-content-button-background: #9da6af54;
-  --in-content-button-background-hover: #9da6afa8;
-  --in-content-button-background-active: #9da6af;
-  --in-content-primary-button-background: #0061e0;
-  --in-content-primary-button-background-hover: #0250bb;
-  --in-content-primary-button-background-active: #053e94;
-  --in-content-box-info-background: #f0f0f4;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --in-content-button-background: #2b2a33;
-    --in-content-button-background-hover: #52525e;
-    --in-content-button-background-active: #5b5b66;
-    --in-content-primary-button-background: #00ddff;
-    --in-content-primary-button-background-hover: #80ebff;
-    --in-content-primary-button-background-active: #aaf2ff;
-    --in-content-box-info-background: #36353e;
-  }
-}
-
 html {
   display: flex;
   flex-direction: column;

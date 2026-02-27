@@ -1,17 +1,5 @@
-:root {
-  --grey: 207, 207, 216;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --grey: 91, 91, 102;
-  }
-}
-
 html {
   font-size: 14px;
-  scrollbar-color: rgb(var(--grey)) transparent;
-  scrollbar-width: thin;
   overflow-y: hidden;
 }
 
@@ -60,7 +48,7 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 1ch 0;
-  border-top: 1px solid rgb(var(--grey));
+  border-top: 1px solid ButtonFace;
 }
 
 .blocked-post button {

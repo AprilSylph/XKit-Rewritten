@@ -14,7 +14,7 @@ const templateDocument = new DOMParser().parseFromString(`
 
 const adoptedStyleSheets = await fetchStyleSheets([
   '/lib/coloris.css',
-  '/lib/normalize.min.css',
+  '/lib/modern-normalize.css',
   './index.css',
 ].map(import.meta.resolve));
 

@@ -1,9 +1,17 @@
 import { inject } from './inject.js';
 
 /**
- * @param {...any} args Arguments to pass to window.tumblr.apiFetch()
+ * @typedef {string | number | boolean | null | Json[] | { [key: string]: Json }} Json
+ * @see https://www.typescriptlang.org/play/3-7/types-and-code-flow/recursive-type-references.ts.html
+ */
+
+/** @typedef {Record<string, Json>} Dictionary */
+/** @typedef {Record<string, string>} QueryParams */
+
+/**
+ * @param {globalThis.RequestInit & { queryParams?: QueryParams, body?: (string | Dictionary) }} args Arguments to pass to `window.tumblr.apiFetch()`
  * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#apifetch}
- * @returns {Promise<Response|Error>} Resolves or rejects with result of window.tumblr.apiFetch()
+ * @returns {Promise<Response | Error>} Resolves or rejects with result of `window.tumblr.apiFetch()`
  */
 export const apiFetch = async (...args) => inject('/main_world/api_fetch.js', args);
 

@@ -1,5 +1,7 @@
-const callback = () => { window.frameElement.height = document.documentElement.scrollHeight; };
-const observer = new ResizeObserver(callback);
+const resizeObserverCallback = () => {
+  const { height } = document.documentElement.getBoundingClientRect();
+  window.frameElement.height = Math.ceil(height);
+};
 
-callback();
+const observer = new ResizeObserver(resizeObserverCallback);
 observer.observe(document.documentElement);

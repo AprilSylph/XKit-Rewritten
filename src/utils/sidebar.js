@@ -23,7 +23,7 @@ const carrotSvg = dom('svg', {
 /**
  * @typedef {object} sidebarRowOptions
  * @property {string} label Human-readable link text
- * @property {Function} onclick Click event handler for this row
+ * @property {(event: PointerEvent) => void} onclick Click event handler for this row
  * @property {string} [href] Optional link URL for this row
  * @property {string} [count] Human-readable additional link text
  * @property {boolean} [carrot] Whether to include a right-facing arrow on the link (ignored if count is specified)

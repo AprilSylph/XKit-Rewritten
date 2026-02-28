@@ -13,7 +13,6 @@ label {
 select {
   flex-shrink: 1;
 
-  box-sizing: border-box;
   padding: 4px;
   border: none;
   border-radius: 3px;

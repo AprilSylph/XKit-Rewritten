@@ -33,7 +33,6 @@
 
 #backup pre,
 #backup textarea {
-  box-sizing: border-box;
   max-height: calc(10em + 2ch);
   overflow: auto;
   overflow-wrap: break-word;
@@ -43,7 +42,7 @@
 
   background-color: rgb(var(--passive-grey));
   color: rgb(var(--black));
-  font-family: monospace, monospace;
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: smaller;
   white-space: pre;
 }

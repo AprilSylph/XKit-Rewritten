@@ -19,11 +19,10 @@
   "dependencies": {
     "@melloware/coloris": "^0.25.0",
     "jquery": "^4.0.0",
+    "modern-normalize": "^3.0.1",
     "moment": "^2.30.1",
-    "normalize.css": "^8.0.1",
     "remixicon": "^4.9.1",
-    "sortablejs": "^1.15.6",
-    "webextension-polyfill": "^0.12.0"
+    "sortablejs": "^1.15.6"
   },
   "webExt": {
     "sourceDir": "src/",

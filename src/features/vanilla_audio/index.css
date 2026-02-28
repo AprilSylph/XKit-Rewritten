@@ -1,4 +1,7 @@
 .xkit-vanilla-audio-done {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+
   cursor: auto;
 }
 
@@ -8,12 +11,28 @@
 
 .xkit-vanilla-audio-done .trackInfo {
   padding-left: 20px;
+
   pointer-events: auto;
   user-select: auto;
 }
 
 .xkit-vanilla-audio-done ~ audio[controls] {
   width: 100%;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  overflow: clip;
+
+  color-scheme: dark;
+}
+
+@supports (selector(audio::-webkit-media-controls-panel)) {
+  .xkit-vanilla-audio-done ~ audio[controls] {
+    height: 40px;
+    background-color: #484848;
+  }
+  .xkit-vanilla-audio-done ~ audio::-webkit-media-controls-panel {
+    background-color: #484848;
+  }
 }
 
 /* XKit 7 override */

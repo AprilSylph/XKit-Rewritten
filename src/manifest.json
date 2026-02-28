@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "XKit Rewritten",
-  "version": "1.2.1",
+  "version": "1.2.2",
 
   "short_name": "XKit",
   "author": "April Sylph",
@@ -52,7 +52,7 @@
       ],
       "run_at": "document_end",
       "js": [
-        "lib/browser-polyfill.min.js",
+        "browser_polyfill.js",
         "lib/jquery.slim.min.js",
         "content_scripts/main.js"
       ],

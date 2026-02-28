@@ -2,6 +2,7 @@ import { button, form, input, label, small, span } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
 import { createBlogSpan, modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
+import { dateTimeFormat } from '../../utils/text_format.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 
 const timezoneOffsetMs = new Date().getTimezoneOffset() * 60000;
@@ -18,14 +19,6 @@ const createNowString = () => {
 
   return `${YYYY}-${MM}-${DD}T${hh}:${mm}`;
 };
-const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-  hour: 'numeric',
-  minute: 'numeric',
-  timeZoneName: 'short',
-});
 
 const showDeleteDraftsPrompt = () => {
   const formElement = form({ id: 'xkit-mass-deleter-delete-drafts', submit: confirmDeleteDrafts }, [

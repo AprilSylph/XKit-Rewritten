@@ -10,7 +10,7 @@ const templateDocument = new DOMParser().parseFromString(`
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
-  '/lib/normalize.min.css',
+  '/lib/modern-normalize.css',
   './index.css',
 ].map(import.meta.resolve));
 

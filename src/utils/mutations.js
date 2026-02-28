@@ -1,5 +1,6 @@
 import { keyToCss } from './css_map.js';
 import { notificationSelector, postSelector } from './interface.js';
+
 const rootNode = document.getElementById('root');
 const headNode = document.querySelector('head');
 
@@ -16,12 +17,12 @@ const isolateErrors = callback => {
 };
 
 export const pageModifications = Object.freeze({
-  listeners: new Map(),
+  /** @type {Map<(elements: Element[]) => void, string>} */ listeners: new Map(),
 
   /**
    * Register a page modification
    * @param {string} selector CSS selector for elements to target
-   * @param {Function} modifierFunction Function to handle matching elements (accepts one Element[] argument)
+   * @param {(elements: Element[]) => void} modifierFunction Function to handle matching elements
    */
   register (selector, modifierFunction) {
     if (this.listeners.has(modifierFunction) === false) {
@@ -32,7 +33,7 @@ export const pageModifications = Object.freeze({
 
   /**
    * Unregister a page modification
-   * @param {Function} modifierFunction Previously-registered function to remove
+   * @param {(elements: Element[]) => void} modifierFunction Previously-registered function to remove
    */
   unregister (modifierFunction) {
     this.listeners.delete(modifierFunction);
@@ -40,7 +41,7 @@ export const pageModifications = Object.freeze({
 
   /**
    * Run a page modification on all existing matching elements
-   * @param {Function} modifierFunction Previously-registered function to run
+   * @param {(elements: Element[]) => void} modifierFunction Previously-registered function to run
    */
   trigger (modifierFunction) {
     const selector = this.listeners.get(modifierFunction);

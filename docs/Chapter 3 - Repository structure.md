@@ -8,7 +8,6 @@ XKit-Rewritten/
 ├── dev/                  Developer scripts
 ├── docs/                 Technical documentation
 ├── src/                  Extension source code
-├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
 ├── LICENSE
 ├── package-lock.json

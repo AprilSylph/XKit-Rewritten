@@ -12,7 +12,6 @@ label {
 textarea {
   align-self: stretch;
 
-  box-sizing: border-box;
   padding: 4px;
   border: none;
   border-radius: 3px;

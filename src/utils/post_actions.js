@@ -29,7 +29,7 @@ pageModifications.register(keyToCss('postFormButton'), addPostOptions);
  * @param {string} id Unique identifier for this post option
  * @param {object} options Construction options for this post option
  * @param {string} options.symbolId RemixIcon symbol to use
- * @param {Function} options.onclick Click handler function for this button
+ * @param {(event: PointerEvent) => void} options.onclick Click handler function for this button
  */
 export const registerPostOption = async function (id, { symbolId, onclick }) {
   postOptions[id] = dom('label', { class: 'xkit-post-option', [displayBlockUnlessDisabledAttr]: '' }, null, [

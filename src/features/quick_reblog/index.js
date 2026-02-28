@@ -19,12 +19,10 @@ const quickTagsPanelId = 'xkit-quick-reblog-quick-tags-panel';
 const suggestedTagsTabId = 'xkit-quick-reblog-suggested-tags-tab';
 const suggestedTagsPanelId = 'xkit-quick-reblog-suggested-tags-panel';
 
-const stopEventPropagation = event => event.stopPropagation();
-
 const blogSelector = select({ change: onBlogSelectorChange });
 const blogAvatar = div({ class: 'avatar' });
 const blogSelectorContainer = div({ class: 'select-container' }, [blogAvatar, blogSelector]);
-const commentInput = input({ autocomplete: 'off', placeholder: 'Comment', keydown: stopEventPropagation });
+const commentInput = input({ autocomplete: 'off', placeholder: 'Comment', keydown: onTextFieldKeyDown });
 const tagsTabList = div({ role: 'tablist' }, [
   button({
     'aria-controls': quickTagsPanelId,
@@ -46,14 +44,14 @@ const tagsInput = input({
   list: 'quick-reblog-tag-suggestions',
   placeholder: 'Tags (comma separated)',
   input: onTagsInput,
-  keydown: stopEventPropagation,
+  keydown: onTextFieldKeyDown,
 });
 const actionButtons = fieldset({ class: 'action-buttons' }, [
   button({ 'data-state': 'published', click: reblogPost }, ['Reblog']),
   button({ 'data-state': 'queue', click: reblogPost }, ['Queue']),
   button({ 'data-state': 'draft', click: reblogPost }, ['Draft']),
 ]);
-const popupElement = div({ id: 'quick-reblog', click: stopEventPropagation }, [
+const popupElement = div({ id: 'quick-reblog', click: event => event.stopPropagation() }, [
   blogSelectorContainer,
   commentInput,
   tagsTabList,
@@ -124,6 +122,19 @@ function onTabClick ({ currentTarget }) {
   currentTarget.getAttribute('aria-controls').split(',')
     .map(elementId => document.getElementById(elementId))
     .forEach(tabPanel => tabPanel.removeAttribute('hidden'));
+}
+
+/** @param {KeyboardEvent} event commentInput/tagsInput keydown event object */
+function onTextFieldKeyDown (event) {
+  event.stopPropagation();
+
+  if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+    actionButtons.elements.item(0).click();
+  }
+
+  if (event.key === 'Escape') {
+    removePopupOnClick();
+  }
 }
 
 /** @param {InputEvent} event tagsInput input event object */

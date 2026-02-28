@@ -37,10 +37,12 @@ export const getPopoverWrapper = element => {
     : closestWrapper;
 };
 
+/** @typedef {(timeline: HTMLElement) => boolean} TimelineFilter */
+
 /**
- * @typedef {object} PostFilterOptions
+ * @typedef PostFilterOptions
  * @property {string} [excludeClass] Classname to exclude and add
- * @property {Function|Function[]} [timeline] Filter results to matching timeline element children
+ * @property {TimelineFilter | TimelineFilter[]} [timeline] Filter results to matching timeline element children
  * @property {boolean} [noBlogView] Whether to exclude posts in the blog view modal
  * @property {boolean} [includeFiltered] Whether to include filtered posts
  */

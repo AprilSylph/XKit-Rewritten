@@ -241,13 +241,13 @@ const determineNoteReplyType = ({ noteData, parentNoteData, timelineObjectData }
 
   if (parentNoteData && userBlogNames.includes(parentNoteData.blogName)) {
     return {
-      type: 'reply_to_comment',
+      type: 'reply_to_comment', // "replied to you in a post"
       targetBlogName: parentNoteData.blogName,
     };
   }
   if (userBlogNames.includes(timelineObjectData.blogName)) {
     return {
-      type: 'reply',
+      type: 'reply', // "replied to your post"
       targetBlogName: timelineObjectData.blogName,
     };
   }
@@ -255,7 +255,7 @@ const determineNoteReplyType = ({ noteData, parentNoteData, timelineObjectData }
     for (const { type, blog } of formatting) {
       if (type === 'mention' && userBlogNames.includes(blog.name)) {
         return {
-          type: 'note_mention',
+          type: 'note_mention', // "mentioned you on a post"
           targetBlogName: blog.name,
         };
       }

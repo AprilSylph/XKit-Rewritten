@@ -13,7 +13,7 @@ const onStorageChanged = async function () {
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
 
   localExportDisplayElement.textContent = stringifiedStorage;
-  localOverwriteWarning.hidden = Object.keys(storageLocal).length === 0;
+  localOverwriteWarning.dataset.hidden = Object.keys(storageLocal).length === 0;
 };
 
 const localCopy = async function () {
@@ -61,6 +61,8 @@ const localRestore = async function () {
 
     const parsedStorage = JSON.parse(importText);
 
+    localOverwriteWarning.dataset.forceHidden = localOverwriteWarning.dataset.hidden;
+
     await browser.storage.local.clear();
     await browser.storage.local.set(parsedStorage);
 
@@ -78,6 +80,7 @@ const localRestore = async function () {
     localRestoreButton.disabled = false;
     localRestoreButton.classList.remove('success', 'failure');
     localRestoreButton.textContent = '';
+    delete localOverwriteWarning.dataset.forceHidden;
   }
 };
 

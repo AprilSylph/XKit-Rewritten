@@ -47,9 +47,14 @@
   white-space: pre;
 }
 
-#overwrite-warning:not([hidden]) {
+#overwrite-warning[data-force-hidden="false"],
+#overwrite-warning:where([data-hidden="false"]) {
   display: flex;
   justify-content: center;
+}
+#overwrite-warning[data-force-hidden="true"],
+#overwrite-warning:where([data-hidden="true"]) {
+  display: none;
 }
 
 .buttons-container {

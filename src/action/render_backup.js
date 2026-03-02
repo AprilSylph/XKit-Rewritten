@@ -8,15 +8,11 @@ const localRestoreButton = document.getElementById('restore-local');
 
 const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
 
-const updateLocalExportDisplay = async function () {
+const onStorageChanged = async function () {
   const storageLocal = await browser.storage.local.get();
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
 
   localExportDisplayElement.textContent = stringifiedStorage;
-};
-
-const updateLocalOverwriteWarning = async function () {
-  const storageLocal = await browser.storage.local.get();
   localOverwriteWarning.hidden = Object.keys(storageLocal).length === 0;
 };
 
@@ -82,15 +78,12 @@ const localRestore = async function () {
     localRestoreButton.disabled = false;
     localRestoreButton.classList.remove('success', 'failure');
     localRestoreButton.textContent = '';
-    updateLocalOverwriteWarning();
   }
 };
 
 const renderLocalBackup = async function () {
-  updateLocalExportDisplay();
-  browser.storage.local.onChanged.addListener(updateLocalExportDisplay);
-
-  updateLocalOverwriteWarning();
+  onStorageChanged();
+  browser.storage.local.onChanged.addListener(onStorageChanged);
 
   localCopyButton.addEventListener('click', localCopy);
   localDownloadButton.addEventListener('click', localExport);

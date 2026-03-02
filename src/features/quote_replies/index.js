@@ -103,6 +103,14 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
+const quoteNotificationReply = async (tumblelogName, notificationProps) => {
+  const data = notificationProps.type === 'generic'
+    ? await createGenericNotificationReplyData(notificationProps)
+    : await createNotificationReplyData(notificationProps);
+
+  openPostDraft(tumblelogName, data);
+};
+
 const processNoteReplyButtons = noteReplyButtons => noteReplyButtons.forEach(async noteReplyButton => {
   const parentNoteElement = noteReplyButton.closest(keyToCss('threadedRepliesWrapper'))?.previousElementSibling;
 
@@ -131,6 +139,48 @@ const processNoteReplyButtons = noteReplyButtons => noteReplyButtons.forEach(asy
     [buildSvg('ri-chat-quote-line')],
   ));
 });
+
+const determineNoteReplyType = ({ noteData, parentNoteData, timelineObjectData }) => {
+  if (userBlogNames.includes(noteData.blogName)) return false;
+  if (timelineObjectData.community) return false;
+
+  if (parentNoteData && userBlogNames.includes(parentNoteData.blogName)) {
+    return {
+      type: 'reply_to_comment', // "replied to you in a post"
+      targetBlogName: parentNoteData.blogName,
+    };
+  }
+  if (userBlogNames.includes(timelineObjectData.blogName)) {
+    return {
+      type: 'reply', // "replied to your post"
+      targetBlogName: timelineObjectData.blogName,
+    };
+  }
+  for (const { formatting = [] } of noteData.content) {
+    for (const { type, blog } of formatting) {
+      if (type === 'mention' && userBlogNames.includes(blog.name)) {
+        return {
+          type: 'note_mention', // "mentioned you on a post"
+          targetBlogName: blog.name,
+        };
+      }
+    }
+  }
+  return false;
+};
+
+const quoteNoteReply = async ({ noteData, noteReplyType, timelineObjectData }) => {
+  const { blogName: replyingBlogName, content: replyContent } = noteData;
+
+  const { type, targetBlogName } = noteReplyType;
+
+  const { summary: targetPostSummary, postUrl: targetPostUrl } = timelineObjectData;
+  const replyingBlogUuid = await apiFetch(`/v2/blog/${replyingBlogName}/info?fields[blogs]=uuid`)
+    .then(({ response: { blog: { uuid } } }) => uuid);
+
+  const data = createReplyData({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent });
+  openPostDraft(targetBlogName, data);
+};
 
 const createGenericNotificationReplyData = async (notificationProps) => {
   const {
@@ -225,56 +275,6 @@ const createReplyData = ({ type, replyingBlogName, replyingBlogUuid, targetPostS
   ].join(',');
 
   return { content, tags };
-};
-
-const quoteNotificationReply = async (tumblelogName, notificationProps) => {
-  const data = notificationProps.type === 'generic'
-    ? await createGenericNotificationReplyData(notificationProps)
-    : await createNotificationReplyData(notificationProps);
-
-  openPostDraft(tumblelogName, data);
-};
-
-const determineNoteReplyType = ({ noteData, parentNoteData, timelineObjectData }) => {
-  if (userBlogNames.includes(noteData.blogName)) return false;
-  if (timelineObjectData.community) return false;
-
-  if (parentNoteData && userBlogNames.includes(parentNoteData.blogName)) {
-    return {
-      type: 'reply_to_comment', // "replied to you in a post"
-      targetBlogName: parentNoteData.blogName,
-    };
-  }
-  if (userBlogNames.includes(timelineObjectData.blogName)) {
-    return {
-      type: 'reply', // "replied to your post"
-      targetBlogName: timelineObjectData.blogName,
-    };
-  }
-  for (const { formatting = [] } of noteData.content) {
-    for (const { type, blog } of formatting) {
-      if (type === 'mention' && userBlogNames.includes(blog.name)) {
-        return {
-          type: 'note_mention', // "mentioned you on a post"
-          targetBlogName: blog.name,
-        };
-      }
-    }
-  }
-  return false;
-};
-
-const quoteNoteReply = async ({ noteData, noteReplyType, timelineObjectData }) => {
-  const { blogName: replyingBlogName, content: replyContent } = noteData;
-
-  const { type, targetBlogName } = noteReplyType;
-
-  const { summary: targetPostSummary, postUrl: targetPostUrl } = timelineObjectData;
-  const replyingBlogUuid = await apiFetch(`/v2/blog/${replyingBlogName}/info?fields[blogs]=uuid`)
-    .then(({ response: { blog: { uuid } } }) => uuid);
-
-  const data = createReplyData({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent });
-  openPostDraft(targetBlogName, data);
 };
 
 const openPostDraft = async (tumblelogName, data) => {

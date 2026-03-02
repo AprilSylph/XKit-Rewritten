@@ -126,16 +126,14 @@ const togglePopupDisplay = async function ({ target, currentTarget: controlButto
       if (rebloggedFromUuid && rebloggedFromId) {
         const { response: { tags, blogName, postAuthor, rebloggedRootName } } = await apiFetch(`/v2/blog/${rebloggedFromUuid}/posts/${rebloggedFromId}`);
 
-        const suggestableTags = new Set(tags);
-        if (blogName) suggestableTags.add(blogName);
-        if (postAuthor) suggestableTags.add(postAuthor);
-        if (rebloggedRootName) suggestableTags.add(rebloggedRootName);
+        const suggestedTags = new Set(tags);
+        if (blogName) suggestedTags.add(blogName);
+        if (postAuthor) suggestedTags.add(postAuthor);
+        if (rebloggedRootName) suggestedTags.add(rebloggedRootName);
 
-        const tagsToSuggest = [...suggestableTags].filter((tag, index, array) => array.indexOf(tag) === index);
-
-        if (tagsToSuggest.length) {
+        if (suggestedTags.size) {
           popupElement.lastElementChild?.style?.setProperty('margin-bottom', '6px');
-          popupElement.append(...tagsToSuggest.map(tag => createBundleButton({ title: tag, tags: tag })));
+          popupElement.append(...[...suggestedTags].map(tag => createBundleButton({ title: tag, tags: tag })));
         }
       }
     }

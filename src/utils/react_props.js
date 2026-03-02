@@ -32,11 +32,11 @@ export const notificationObject = notificationElement => {
 
 /**
  * @param {Element} noteElement An on-screen post note element
- * @returns {Promise<object>} The element's buried note component props
+ * @returns {Promise<object>} The element's buried note property
  */
-export const notePropsObject = noteElement => {
-  noteElement.notePropsObjectPromise ??= inject('/main_world/unbury_note_props.js', [], noteElement);
-  return noteElement.notePropsObjectPromise;
+export const noteObject = noteElement => {
+  noteElement.noteObjectPromise ??= inject('/main_world/unbury_note.js', [], noteElement);
+  return noteElement.noteObjectPromise;
 };
 
 /**

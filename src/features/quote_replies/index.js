@@ -6,7 +6,7 @@ import { showErrorModal } from '../../utils/modals.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { getPreferences } from '../../utils/preferences.js';
-import { notePropsObject, timelineObject } from '../../utils/react_props.js';
+import { noteObject, timelineObject } from '../../utils/react_props.js';
 import { buildSvg } from '../../utils/remixicon.js';
 import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
 import { userBlogNames, userBlogs } from '../../utils/user.js';
@@ -104,15 +104,14 @@ const processNotifications = notifications => notifications.forEach(async notifi
 });
 
 const processNoteReplyButtons = noteReplyButtons => noteReplyButtons.forEach(async noteReplyButton => {
-  const noteProps = await notePropsObject(noteReplyButton);
-
   const parentNoteElement = noteReplyButton.closest(keyToCss('threadedRepliesWrapper'))?.previousElementSibling;
-  const parentNoteProps = parentNoteElement ? await notePropsObject(parentNoteElement) : undefined;
 
-  const noteReplyType = determineNoteReplyType({ noteProps, parentNoteProps });
-  if (!noteReplyType) return;
-
+  const noteData = await noteObject(noteReplyButton);
+  const parentNoteData = parentNoteElement && await noteObject(parentNoteElement);
   const timelineObjectData = await timelineObject(noteReplyButton);
+
+  const noteReplyType = determineNoteReplyType({ noteData, parentNoteData, timelineObjectData });
+  if (!noteReplyType) return;
 
   noteReplyButton.parentElement.append(dom(
     'button',
@@ -124,7 +123,7 @@ const processNoteReplyButtons = noteReplyButtons => noteReplyButtons.forEach(asy
     {
       click () {
         this.disabled = true;
-        quoteNoteReply({ noteProps, noteReplyType, timelineObjectData })
+        quoteNoteReply({ noteData, noteReplyType, timelineObjectData })
           .catch(showErrorModal)
           .finally(() => { this.disabled = false; });
       },
@@ -236,23 +235,23 @@ const quoteNotificationReply = async (tumblelogName, notificationProps) => {
   openPostDraft(tumblelogName, data);
 };
 
-const determineNoteReplyType = ({ noteProps, parentNoteProps }) => {
-  if (userBlogNames.includes(noteProps.note.blogName)) return false;
-  if (noteProps.communityId) return false;
+const determineNoteReplyType = ({ noteData, parentNoteData, timelineObjectData }) => {
+  if (userBlogNames.includes(noteData.blogName)) return false;
+  if (timelineObjectData.community) return false;
 
-  if (parentNoteProps && userBlogNames.includes(parentNoteProps.note.blogName)) {
+  if (parentNoteData && userBlogNames.includes(parentNoteData.blogName)) {
     return {
       type: 'reply_to_comment',
-      targetBlogName: parentNoteProps.note.blogName,
+      targetBlogName: parentNoteData.blogName,
     };
   }
-  if (userBlogNames.includes(noteProps.blog.name)) {
+  if (userBlogNames.includes(timelineObjectData.blogName)) {
     return {
       type: 'reply',
-      targetBlogName: noteProps.blog.name,
+      targetBlogName: timelineObjectData.blogName,
     };
   }
-  for (const { formatting = [] } of noteProps.note.content) {
+  for (const { formatting = [] } of noteData.content) {
     for (const { type, blog } of formatting) {
       if (type === 'mention' && userBlogNames.includes(blog.name)) {
         return {
@@ -265,8 +264,8 @@ const determineNoteReplyType = ({ noteProps, parentNoteProps }) => {
   return false;
 };
 
-const quoteNoteReply = async ({ noteProps, noteReplyType, timelineObjectData }) => {
-  const { note: { blogName: replyingBlogName, content: replyContent } } = noteProps;
+const quoteNoteReply = async ({ noteData, noteReplyType, timelineObjectData }) => {
+  const { blogName: replyingBlogName, content: replyContent } = noteData;
 
   const { type, targetBlogName } = noteReplyType;
 

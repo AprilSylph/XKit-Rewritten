@@ -5,7 +5,7 @@ export default function unburyNoteProps () {
 
   while (fiber !== null) {
     const props = fiber.memoizedProps || {};
-    // requiring rootReplyId ensures that we return the same props signature on parent and child replies
+    // finding rootReplyId ensures that we return the same props signature on parent/child/unthreaded replies
     if (props.rootReplyId && props.note?.replyId) {
       return props;
     }

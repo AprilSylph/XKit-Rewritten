@@ -19,7 +19,7 @@
   margin: 0;
 }
 
-#backup label, #backup p {
+#backup label {
   margin: 0;
 }
 
@@ -45,6 +45,11 @@
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: smaller;
   white-space: pre;
+}
+
+#overwrite-warning:not([hidden]) {
+  display: flex;
+  justify-content: center;
 }
 
 .buttons-container {

@@ -8,10 +8,14 @@
 }
 .mass-privater-failed-table {
   display: grid;
-  grid: auto-flow / auto 1fr;
+  grid: auto-flow / auto auto 1fr;
   gap: 1ch;
+  align-items: center;
 }
-.mass-privater-failed-table > div {
+.mass-privater-failed-table > .time {
+  font-size: 0.875em;
+}
+.mass-privater-failed-table > .summary {
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

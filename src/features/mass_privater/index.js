@@ -154,18 +154,24 @@ const showPostsNotFound = ({ name }) =>
     buttons: [modalCompleteButton],
   });
 
+const dateFormat = new Intl.DateTimeFormat(document.documentElement.lang, { dateStyle: 'medium' });
+const timeFormat = new Intl.DateTimeFormat(document.documentElement.lang, { timeStyle: 'short' });
+
 const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const editStatus = dom('span');
 
   const failedTable = dom('div', { class: 'mass-privater-failed-table' });
   const failedTableWrapper = dom('form', { class: 'mass-privater-failed-table-wrapper' }, null, [failedTable]);
-  const showFailedPost = ({ blogName, id, summary = '' }) =>
+  const showFailedPost = ({ blogName, id, timestamp, summary = '' }) =>
     failedTable.append(
-      dom('div', null, null, [
-        dom('a', { href: `/@${blogName}/${id}`, target: '_blank' }, null, [id]),
+      dom('div', { class: 'date' }, null, [
+        dom('a', { href: `/@${blogName}/${id}`, target: '_blank' }, null, [dateFormat.format(new Date(timestamp * 1000))]),
       ]),
-      dom('div', null, null, [
+      dom('div', { class: 'time' }, null, [
+        timeFormat.format(new Date(timestamp * 1000)),
+      ]),
+      dom('div', { class: 'summary' }, null, [
         summary.replaceAll('\n', ' '),
       ]),
     );

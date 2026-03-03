@@ -2,6 +2,7 @@
   margin-top: 1em;
 }
 .mass-privater-failed-table-wrapper {
+  margin-top: 0.5em;
   max-height: 300px;
   overflow-y: auto;
 }

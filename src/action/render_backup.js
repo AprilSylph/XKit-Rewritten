@@ -3,15 +3,17 @@ const localCopyButton = document.getElementById('copy-local');
 const localDownloadButton = document.getElementById('download-local');
 
 const localImportTextarea = document.getElementById('local-storage-import');
+const localOverwriteWarning = document.getElementById('overwrite-warning');
 const localRestoreButton = document.getElementById('restore-local');
 
 const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
 
-const updateLocalExportDisplay = async function () {
+const onStorageChanged = async function () {
   const storageLocal = await browser.storage.local.get();
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
 
   localExportDisplayElement.textContent = stringifiedStorage;
+  localOverwriteWarning.dataset.hidden = Object.keys(storageLocal).length === 0;
 };
 
 const localCopy = async function () {
@@ -58,6 +60,10 @@ const localRestore = async function () {
     localRestoreButton.disabled = true;
 
     const parsedStorage = JSON.parse(importText);
+
+    localOverwriteWarning.dataset.forceHidden = localOverwriteWarning.dataset.hidden;
+
+    await browser.storage.local.clear();
     await browser.storage.local.set(parsedStorage);
 
     localRestoreButton.classList.add('success');
@@ -74,12 +80,13 @@ const localRestore = async function () {
     localRestoreButton.disabled = false;
     localRestoreButton.classList.remove('success', 'failure');
     localRestoreButton.textContent = '';
+    delete localOverwriteWarning.dataset.forceHidden;
   }
 };
 
 const renderLocalBackup = async function () {
-  updateLocalExportDisplay();
-  browser.storage.local.onChanged.addListener(updateLocalExportDisplay);
+  onStorageChanged();
+  browser.storage.local.onChanged.addListener(onStorageChanged);
 
   localCopyButton.addEventListener('click', localCopy);
   localDownloadButton.addEventListener('click', localExport);

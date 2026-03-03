@@ -158,23 +158,20 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const editStatus = dom('span');
 
-  const failedTable = dom('table');
-  const failedTableElement = dom('div', null, null, [failedTable]);
+  const failedTable = dom('div', { class: 'mass-privater-failed-table' });
+  const failedTableWrapper = dom('form', { class: 'mass-privater-failed-table-wrapper' }, null, [failedTable]);
   const showFailedPost = ({ blogName, id, summary = '' }) =>
     failedTable.append(
-      dom('tr', null, null, [
-        dom('td', null, null, [
-          dom('a', { href: `/@${blogName}/${id}`, target: '_blank' }, null, [id]),
-          summary ? ':' : '',
-        ]),
-        dom('td', null, null, [
-          summary.replaceAll('\n', ' '),
-        ]),
+      dom('div', null, null, [
+        dom('a', { href: `/@${blogName}/${id}`, target: '_blank' }, null, [id]),
+      ]),
+      dom('div', null, null, [
+        summary.replaceAll('\n', ' '),
       ]),
     );
   const failedStatus = dom('div', { class: 'mass-privater-failed' }, null, [
     'Failed/incompatible posts:',
-    failedTableElement,
+    failedTableWrapper,
   ]);
 
   showModal({
@@ -284,7 +281,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
 
   await sleep(1000);
 
-  const failedTableScrollTop = failedTableElement.scrollTop;
+  const wrapperScrollTop = failedTableWrapper.scrollTop;
 
   showModal({
     title: 'All done!',
@@ -299,7 +296,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
     ],
   });
 
-  failedTableElement.scrollTop = failedTableScrollTop;
+  failedTableWrapper.scrollTop = wrapperScrollTop;
 };
 
 const sidebarOptions = {

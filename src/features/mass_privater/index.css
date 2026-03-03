@@ -1,15 +1,21 @@
 .mass-privater-failed {
   margin-top: 1em;
 }
-.mass-privater-failed > div {
+.mass-privater-failed-table-wrapper {
   max-height: 300px;
   overflow-y: auto;
 }
-.mass-privater-failed td {
+.mass-privater-failed-table {
+  display: grid;
+  grid: auto-flow / auto 1fr;
+  gap: 1em;
+}
+.mass-privater-failed-table > div {
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  text-align: initial;
 }
-.mass-privater-failed:has(table:empty) {
+.mass-privater-failed:has(.mass-privater-failed-table:empty) {
   display: none;
 }

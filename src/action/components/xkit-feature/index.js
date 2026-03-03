@@ -43,10 +43,10 @@ class XKitFeatureElement extends CustomElement {
   /** @type {HTMLDetailsElement}  */ #detailsElement;
   /** @type {HTMLInputElement}    */ #enabledToggle;
 
-  /** @type {boolean}     */ #disabled = false;
-  /** @type {boolean}     */ deprecated = false;
-  /** @type {string}      */ featureName = '';
-  /** @type {string[]}    */ relatedTerms = [];
+  /** @type {boolean}   */ #disabled = false;
+  /** @type {boolean}   */ deprecated = false;
+  /** @type {string}    */ featureName = '';
+  /** @type {string[]}  */ relatedTerms = [];
 
   constructor () {
     super(templateDocument, adoptedStyleSheets);
@@ -55,32 +55,33 @@ class XKitFeatureElement extends CustomElement {
     this.#enabledToggle = this.shadowRoot.querySelector('input[type="checkbox"]');
   }
 
-  /** @param {InputEvent} event `input` event for the feature's "Enable this feature" toggle. */
+  /** @param {InputEvent & { currentTarget: HTMLInputElement }} event `input` event for the feature's "Enable this feature" toggle. */
   #handleEnabledToggleInput = async ({ currentTarget: { checked } }) => {
-    let {
+    const {
       [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures = [],
       [XKitFeatureElement.#specialAccessKey]: specialAccess = [],
     } = await browser.storage.local.get();
 
-    const hasPreferences = this.querySelector('[slot="preferences"]') !== null;
-    if (hasPreferences) this.#detailsElement.open = checked;
+    /** @type {Set<string>} */ const enabledFeaturesSet = new Set(enabledFeatures);
+    /** @type {Set<string>} */ const specialAccessSet = new Set(specialAccess);
 
-    if (checked) {
-      enabledFeatures.push(this.featureName);
-    } else {
-      enabledFeatures = enabledFeatures.filter(x => x !== this.featureName);
+    checked
+      ? enabledFeaturesSet.add(this.featureName)
+      : enabledFeaturesSet.delete(this.featureName);
 
-      if (this.deprecated && !specialAccess.includes(this.featureName)) {
-        specialAccess.push(this.featureName);
-      }
-    }
+    this.deprecated
+      ? specialAccessSet.add(this.featureName)
+      : specialAccessSet.delete(this.featureName);
+
+    await browser.storage.local.set({
+      [XKitFeatureElement.#enabledFeaturesKey]: Array.from(enabledFeaturesSet),
+      [XKitFeatureElement.#specialAccessKey]: Array.from(specialAccessSet),
+    });
 
     this.disabled = !checked;
 
-    browser.storage.local.set({
-      [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures,
-      [XKitFeatureElement.#specialAccessKey]: specialAccess,
-    });
+    const hasPreferences = this.querySelector('[slot="preferences"]') !== null;
+    if (hasPreferences) this.#detailsElement.open = checked;
   };
 
   connectedCallback () {

@@ -8,7 +8,7 @@
 .mass-privater-failed-table {
   display: grid;
   grid: auto-flow / auto 1fr;
-  gap: 1em;
+  gap: 1ch;
 }
 .mass-privater-failed-table > div {
   overflow-x: hidden;

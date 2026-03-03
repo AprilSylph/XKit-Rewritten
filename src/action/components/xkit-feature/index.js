@@ -56,8 +56,7 @@ class XKitFeatureElement extends CustomElement {
   }
 
   /** @param {InputEvent} event `input` event for the feature's "Enable this feature" toggle. */
-  #handleEnabledToggleInput = async ({ currentTarget }) => {
-    const { checked, id } = currentTarget;
+  #handleEnabledToggleInput = async ({ currentTarget: { checked } }) => {
     let {
       [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures = [],
       [XKitFeatureElement.#specialAccessKey]: specialAccess = [],
@@ -67,12 +66,12 @@ class XKitFeatureElement extends CustomElement {
     if (hasPreferences) this.#detailsElement.open = checked;
 
     if (checked) {
-      enabledFeatures.push(id);
+      enabledFeatures.push(this.featureName);
     } else {
-      enabledFeatures = enabledFeatures.filter(x => x !== id);
+      enabledFeatures = enabledFeatures.filter(x => x !== this.featureName);
 
-      if (this.deprecated && !specialAccess.includes(id)) {
-        specialAccess.push(id);
+      if (this.deprecated && !specialAccess.includes(this.featureName)) {
+        specialAccess.push(this.featureName);
       }
     }
 
@@ -86,7 +85,6 @@ class XKitFeatureElement extends CustomElement {
 
   connectedCallback () {
     this.#detailsElement.dataset.deprecated = this.deprecated;
-    this.#enabledToggle.id = this.featureName;
     this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
     this.dataset.relatedTerms = this.relatedTerms;
   }

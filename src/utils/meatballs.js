@@ -2,7 +2,7 @@ import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 import { displayBlockUnlessDisabledAttr, getClosestRenderedElement, postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
-import { blogData, timelineObject } from './react_props.js';
+import { blogData, notePropsObjects, timelineObject } from './react_props.js';
 
 const postHeaderSelector = `${postSelector} :is(article > header, article > div > header)`;
 const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
@@ -10,6 +10,7 @@ const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, 
 const meatballItems = {
   post: {},
   blog: {},
+  reply: {},
 };
 
 /**
@@ -48,6 +49,24 @@ export const unregisterBlogMeatballItem = id => {
   $(`[data-xkit-blog-meatball-button="${id}"]`).remove();
 };
 
+/**
+ * Add a custom button to post replies' meatball menus.
+ * @param {object} options Destructured
+ * @param {string} options.id Identifier for this button (must be unique)
+ * @param {string|Function} options.label Button text to display. May be a function accepting the note component props data of the reply element being actioned on.
+ * @param {Function} options.onclick Button click listener function
+ * @param {Function} [options.notePropsFilter] Filter function, called with the note component props data of the reply element being actioned on. Must return true for button to be added.
+ */
+export const registerReplyMeatballItem = function ({ id, label, onclick, notePropsFilter }) {
+  meatballItems.reply[id] = { label, onclick, filter: notePropsFilter };
+  pageModifications.trigger(addMeatballItems);
+};
+
+export const unregisterReplyMeatballItem = id => {
+  delete meatballItems.reply[id];
+  $(`[data-xkit-reply-meatball-button="${id}"]`).remove();
+};
+
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
   const closestHeader = await getClosestRenderedElement(meatballMenu, 'header');
   if (closestHeader?.matches(postHeaderSelector)) {
@@ -66,6 +85,20 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
       reactData: await blogData(meatballMenu),
       reactDataKey: '__blogData',
     });
+    return;
+  }
+  const inPostActivity = Boolean(await getClosestRenderedElement(meatballMenu, `${keyToCss('postActivity')} *`));
+  if (inPostActivity) {
+    const __notePropsData = await notePropsObjects(meatballMenu);
+
+    if (__notePropsData?.noteProps?.note?.type === 'reply') {
+      addTypedMeatballItems({
+        meatballMenu,
+        type: 'reply',
+        reactData: __notePropsData,
+        reactDataKey: '__notePropsData',
+      });
+    }
   }
 });
 

@@ -59,14 +59,6 @@
   text-align: center;
 }
 
-#quick-tags fieldset {
-  display: contents;
-
-  background-color: inherit;
-  color: inherit;
-  font: inherit;
-}
-
 #quick-tags form {
   margin: 2px 0;
 }
@@ -100,7 +92,7 @@
   margin-bottom: 2px;
 }
 
-#quick-tags fieldset:disabled :is(input, button) {
+#quick-tags:disabled :is(input, button) {
   cursor: not-allowed;
   opacity: 0.65;
 }

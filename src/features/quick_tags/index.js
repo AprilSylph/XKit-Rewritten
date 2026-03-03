@@ -23,6 +23,7 @@ let controlButtonTemplate;
 
 export const styleElement = buildStyle(popoverStackingContextFix);
 
+const popupElement = dom('fieldset', { id: 'quick-tags' });
 const popupInput = dom(
   'input',
   {
@@ -51,10 +52,8 @@ const checkLength = ({ currentTarget }) => {
 };
 popupInput.addEventListener('input', checkLength);
 const popupForm = dom('form', null, { submit: event => event.preventDefault() }, [popupInput]);
-const popupFieldset = dom('fieldset', null, null, [popupForm]);
 
-const popupElement = dom('div', { id: 'quick-tags' }, null, [popupFieldset]);
-const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option' });
+const postOptionPopupElement = dom('fieldset', { id: 'quick-tags-post-option' });
 
 const storageKey = 'quick_tags.preferences.tagBundles';
 
@@ -67,7 +66,7 @@ const createBundleButton = tagBundle => {
 const populatePopups = async function () {
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
 
-  popupFieldset.replaceChildren(popupForm, ...tagBundles.map(createBundleButton));
+  popupElement.replaceChildren(popupForm, ...tagBundles.map(createBundleButton));
   postOptionPopupElement.replaceChildren(...tagBundles.map(createBundleButton));
 };
 
@@ -168,7 +167,7 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 };
 
 const processFormSubmit = function ({ currentTarget }) {
-  popupFieldset.disabled = true;
+  popupElement.disabled = true;
 
   const postElement = currentTarget.closest(postSelector);
   const inputTags = popupInput.value.split(',').map(inputTag => inputTag.trim());
@@ -176,12 +175,12 @@ const processFormSubmit = function ({ currentTarget }) {
   addTagsToPost({ postElement, inputTags })
     .then(() => currentTarget.reset())
     .catch(showErrorModal)
-    .finally(() => { popupFieldset.disabled = false; });
+    .finally(() => { popupElement.disabled = false; });
 };
 
 const processBundleClick = function ({ target }) {
   if (target.tagName !== 'BUTTON') { return; }
-  popupFieldset.disabled = true;
+  popupElement.disabled = true;
 
   const postElement = target.closest(postSelector);
   const inputTags = target.dataset.tags.split(',').map(inputTag => inputTag.trim());
@@ -189,7 +188,7 @@ const processBundleClick = function ({ target }) {
   addTagsToPost({ postElement, inputTags })
     .catch(showErrorModal)
     .finally(() => {
-      popupFieldset.disabled = false;
+      popupElement.disabled = false;
       popupElement.remove();
     });
 };

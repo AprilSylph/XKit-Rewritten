@@ -1,14 +1,18 @@
-import { buildStyle, getTimelineItemWrapper, filterPostElements } from '../../utils/interface.js';
+import { createPostHideFunctions } from '../../main_world/hide_posts.js';
+import { filterPostElements } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { isMyPost, timelineObject } from '../../utils/react_props.js';
 import { blogTimelineFilter, timelineSelector } from '../../utils/timeline_id.js';
 
-const hiddenAttribute = 'data-xkit-tweaks-hide-blocked-blogs-hidden';
-export const styleElement = buildStyle(`
-[${hiddenAttribute}] {
-  content: linear-gradient(transparent, transparent);
-  height: 0;
-}`);
+const { hidePost, showPosts } = createPostHideFunctions({
+  id: 'tweaks-hide-blocked-blogs',
+
+  // Only applies to posts hidden by a blocked blog in the trail (see isTimelineExempt below)
+  controlsOnPermalinkPage: {
+    message: 'This post contains a blocked blog!',
+    buttonText: 'show post anyway',
+  },
+});
 
 const processPosts = (postElements) => {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
@@ -32,7 +36,7 @@ const processPosts = (postElements) => {
         continue;
       }
 
-      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
+      hidePost(postElement);
       break;
     }
   });
@@ -44,5 +48,5 @@ export const main = async function () {
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  showPosts();
 };

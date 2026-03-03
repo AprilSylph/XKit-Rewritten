@@ -1,17 +1,19 @@
+import { createPostHideFunctions } from '../../main_world/hide_posts.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
+import { getTimelineItemWrapper } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 
-const hiddenAttribute = 'data-tweaks-hide-filtered-posts-hidden';
-export const styleElement = buildStyle(`
-[${hiddenAttribute}] {
-  content: linear-gradient(transparent, transparent);
-  height: 0;
-}`);
+const { hidePost, showPosts } = createPostHideFunctions({
+  id: 'tweaks-hide-filtered-posts',
+  controlsOnPermalinkPage: {
+    message: 'This post contains filtered tags or content!',
+    buttonText: 'show post anyway',
+  },
+});
 
 const hideFilteredPosts = filteredScreens => filteredScreens
   .map(getTimelineItemWrapper)
-  .forEach(timelineItem => timelineItem.setAttribute(hiddenAttribute, ''));
+  .forEach(hidePost);
 
 export const main = async function () {
   const filteredScreenSelector = `article ${keyToCss('filteredScreen')}`;
@@ -20,6 +22,5 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(hideFilteredPosts);
-
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  showPosts();
 };

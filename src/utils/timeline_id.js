@@ -59,7 +59,7 @@ export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId 
   timelineId === '/dashboard/blog_subs';
 
 export const blogpackTimelineFilter = ({ dataset: { timeline, which } }) =>
-  timeline.includes('blogpack') ||
+  timeline?.includes('blogpack') ||
   which === 'blogpack';
 
 export const anyDraftsTimelineFilter = ({ dataset: { timeline, timelineId } }) =>

@@ -24,7 +24,7 @@ const styleElement = buildStyle(`
 `);
 document.documentElement.append(styleElement);
 
-export const createPostHideFunctions = ({ id, controlsOnPermalinkPage, hideAutomatically = true }) => {
+export const createPostHideFunctions = ({ id, permalinkPageControls, hideAutomatically = true }) => {
   const hiddenAttribute = `data-xkit-${id}-hidden`;
 
   const controlledHiddenAttribute = `data-xkit-${id}-hidden-controlled`;
@@ -44,11 +44,11 @@ export const createPostHideFunctions = ({ id, controlsOnPermalinkPage, hideAutom
       const timelineElement = postElement.closest(timelineSelector);
 
       if (anyPostPermalinkTimelineFilter(timelineElement)) {
-        if (controlsOnPermalinkPage) {
+        if (permalinkPageControls) {
           getTimelineItemWrapper(postElement).setAttribute(controlledHiddenAttribute, '');
 
           if (timelineElement.querySelector(`[${controlsAttribute}]`) === null) {
-            const { message, buttonText } = controlsOnPermalinkPage;
+            const { message, buttonText } = permalinkPageControls;
             const controlsElement = div({ class: controlsClass, [controlsAttribute]: id }, [
               message,
               br(),

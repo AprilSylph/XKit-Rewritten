@@ -8,7 +8,7 @@ const { hidePost, showPosts } = createPostHideFunctions({
   id: 'tweaks-hide-blocked-blogs',
 
   // Only applies to posts hidden by a blocked blog in the trail (see isTimelineExempt below)
-  controlsOnPermalinkPage: {
+  permalinkPageControls: {
     message: 'This post contains a blocked blog!',
     buttonText: 'show post anyway',
   },

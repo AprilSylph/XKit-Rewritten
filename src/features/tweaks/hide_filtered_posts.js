@@ -5,7 +5,7 @@ import { pageModifications } from '../../utils/mutations.js';
 
 const { hidePost, showPosts } = createPostHideFunctions({
   id: 'tweaks-hide-filtered-posts',
-  controlsOnPermalinkPage: {
+  permalinkPageControls: {
     message: 'This post contains filtered tags or content!',
     buttonText: 'show post anyway',
   },

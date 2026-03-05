@@ -14,7 +14,7 @@ let blockedPostRootIDs = [];
 
 const { hidePost, showPost, showPosts } = createPostHideFunctions({
   id: 'postblock',
-  controlsOnPermalinkPage: {
+  permalinkPageControls: {
     message: 'You have hidden this post with PostBlock!',
     buttonText: 'show post anyway',
   },

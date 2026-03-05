@@ -44,6 +44,10 @@ summary:focus {
   color: rgb(var(--black));
 }
 
+[role="switch"]:hover {
+  background-color: rgb(var(--active-grey));
+}
+
 [role="switch"]:focus-visible {
   outline-offset: 2px;
 }

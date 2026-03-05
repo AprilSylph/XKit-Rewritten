@@ -17,7 +17,7 @@ const templateDocument = new DOMParser().parseFromString(`
           <div class="badge">
             <slot name="badge"></slot>
           </div>
-          <input type="checkbox" checked class="toggle-button" aria-label="Enable this feature">
+          <input type="checkbox" checked aria-label="Enable this feature">
         </div>
       </summary>
       <ul class="preferences">
@@ -32,7 +32,6 @@ const templateDocument = new DOMParser().parseFromString(`
 const adoptedStyleSheets = await fetchStyleSheets([
   '/lib/modern-normalize.css',
   '/lib/remixicon/remixicon.css',
-  '/lib/toggle-button.css',
   './index.css',
 ].map(import.meta.resolve));
 

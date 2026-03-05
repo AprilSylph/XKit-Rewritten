@@ -25,6 +25,67 @@ summary:focus {
   background-color: rgb(var(--active-grey));
 }
 
+input[type="checkbox"] {
+  --toggle-height: 16px;
+  --toggle-width: 32px;
+  --toggle-border-width: 1px;
+  --toggle-dot-margin: 1px;
+
+  appearance: none;
+  height: var(--toggle-height);
+  width: var(--toggle-width);
+  padding: 0;
+  border-color: GrayText;
+  border-style: solid;
+  border-width: var(--toggle-border-width);
+  border-radius: 9999px;
+
+  background-color: Field;
+  color: FieldText;
+}
+
+input[type="checkbox"]:checked {
+  border-color: transparent;
+
+  background-color: SelectedItem;
+  color: SelectedItemText;
+}
+
+input[type="checkbox"]::before {
+  --toggle-dot-diameter: calc(
+    var(--toggle-height)
+    - (var(--toggle-border-width) * 2)
+    - (var(--toggle-dot-margin) * 2)
+  );
+  --toggle-dot-transform-x: calc(
+    var(--toggle-width)
+    - (var(--toggle-border-width) * 2)
+    - (var(--toggle-dot-margin) * 2)
+    - var(--toggle-dot-diameter)
+  );
+
+  translate: 0;
+
+  display: block;
+  height: var(--toggle-dot-diameter);
+  width: var(--toggle-dot-diameter);
+  margin: var(--toggle-dot-margin);
+  border-radius: inherit;
+
+  content: "";
+  background-color: currentColor;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  input[type="checkbox"]::before {
+    transition: transform 100ms;
+  }
+}
+
+input[type="checkbox"]:checked::before {
+  transform: translateX(var(--toggle-dot-transform-x));
+}
+
 .icon {
   display: flex;
   justify-content: center;

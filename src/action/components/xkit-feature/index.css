@@ -120,10 +120,11 @@ summary:focus {
   margin-left: auto;
 }
 
-.badge ::slotted {
+.badge ::slotted(*) {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 1em;
 }
 
 .badge ::slotted(a) {
@@ -132,7 +133,6 @@ summary:focus {
 
 .badge ::slotted(span) {
   padding: 2px 6px;
-  border-radius: 1em;
 
   background-color: #ff62ce;
   color: rgb(var(--white));

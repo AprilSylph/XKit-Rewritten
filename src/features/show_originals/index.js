@@ -15,6 +15,7 @@ import {
   communitiesTimelineFilter,
   anyBlogPeeprTimelineFilter,
   blogPeeprTimelineFilter,
+  blogpackTimelineFilter,
 } from '../../utils/timeline_id.js';
 import { userBlogs } from '../../utils/user.js';
 
@@ -93,6 +94,7 @@ const getLocation = timelineElement => {
     peeprFiltered: isPeepr,
     blogSubscriptions: blogSubsTimelineFilter(timelineElement),
     community: anyCommunityTimelineFilter(timelineElement) || communitiesTimelineFilter(timelineElement),
+    blogpack: blogpackTimelineFilter(timelineElement),
   };
   return Object.keys(on).find(location => on[location]);
 };

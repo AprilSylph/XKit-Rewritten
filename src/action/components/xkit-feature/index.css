@@ -35,20 +35,24 @@ summary:focus {
   height: var(--toggle-height);
   width: var(--toggle-width);
   padding: 0;
-  border-color: GrayText;
+  border-color: rgb(var(--black));
   border-style: solid;
   border-width: var(--toggle-border-width);
   border-radius: 9999px;
 
-  background-color: Field;
-  color: FieldText;
+  background-color: rgb(var(--passive-grey));
+  color: rgb(var(--black));
+}
+
+[role="switch"]:focus-visible {
+  outline-offset: 2px;
 }
 
 [role="switch"]:checked {
   border-color: transparent;
 
-  background-color: SelectedItem;
-  color: SelectedItemText;
+  background-color: rgb(var(--accent));
+  color: rgb(var(--white));
 }
 
 [role="switch"]::before {
@@ -148,7 +152,7 @@ summary:focus {
   opacity: 69%;
 }
 
-.disabled:not([open], :focus-within, :hover) :is(.icon, .meta) {
+.disabled:not([open], :focus-within, :hover) :is(.icon, .meta, .buttons) {
   opacity: 60%;
 }
 

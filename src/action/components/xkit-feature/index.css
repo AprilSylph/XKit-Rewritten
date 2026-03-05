@@ -72,7 +72,7 @@ summary:focus {
     - var(--toggle-dot-diameter)
   );
 
-  translate: 0;
+  transform: translateX(0);
 
   display: block;
   height: var(--toggle-dot-diameter);

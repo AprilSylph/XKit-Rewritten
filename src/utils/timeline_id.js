@@ -53,6 +53,12 @@ export const blogPostsTimelineFilter = blogName =>
 // Matches any blog's main posts timeline, not including subpages such as drafts or in-blog searches.
 export const anyBlogPostsTimelineFilter = blogPostsTimelineFilter(anyBlogName);
 
+export const blogPeeprTimelineFilter = blogName =>
+  ({ dataset: { timeline, timelineId } }) =>
+    timelineId?.match(startsWith(`peepr-posts-${blogName}-`));
+
+export const anyBlogPeeprTimelineFilter = blogPeeprTimelineFilter(anyBlogName);
+
 export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId } }) =>
   timeline === '/v2/timeline?which=blog_subscriptions' ||
   which === 'blog_subscriptions' ||

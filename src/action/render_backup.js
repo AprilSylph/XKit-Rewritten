@@ -69,7 +69,7 @@ const localRestore = async function () {
     localRestoreButton.classList.add('success');
     localRestoreButton.textContent = 'Successfully restored!';
     localImportTextarea.value = '';
-    document.querySelector('a[href="#configuration"]').classList.add('outdated');
+    document.getElementById('configuration-tab').classList.add('outdated');
   } catch (exception) {
     localRestoreButton.classList.add('failure');
     localRestoreButton.textContent =
@@ -96,7 +96,7 @@ const renderLocalBackup = async function () {
 
 renderLocalBackup();
 
-document.querySelectorAll('#backup details').forEach(details => details.addEventListener('toggle', ({ currentTarget }) => {
+document.querySelectorAll('#backup-panel details').forEach(details => details.addEventListener('toggle', ({ currentTarget }) => {
   if (currentTarget.open) {
     [...currentTarget.parentNode.children]
       .filter(element => element !== currentTarget)

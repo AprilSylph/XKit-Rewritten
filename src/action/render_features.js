@@ -6,9 +6,9 @@ import { TextPreference } from './components/text-preference/index.js';
 import { TextAreaPreference } from './components/textarea-preference/index.js';
 import { XKitFeature } from './components/xkit-feature/index.js';
 
-const configSection = document.getElementById('configuration');
-const configSectionLink = document.querySelector('a[href="#configuration"]');
-const featuresDiv = configSection.querySelector('.features');
+const configPanel = document.getElementById('configuration-panel');
+const configTab = document.getElementById('configuration-tab');
+const featuresDiv = configPanel.querySelector('.features');
 
 const enabledFeaturesKey = 'enabledScripts';
 const specialAccessKey = 'specialAccess';
@@ -146,7 +146,7 @@ const renderFeatures = async function () {
 
 renderFeatures();
 
-configSectionLink.addEventListener('click', ({ currentTarget }) => {
+configTab.addEventListener('click', ({ currentTarget }) => {
   if (currentTarget.classList.contains('outdated')) {
     currentTarget.classList.remove('outdated');
     renderFeatures();

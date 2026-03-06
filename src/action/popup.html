@@ -28,12 +28,12 @@
       &#x2139;&#xFE0F; XKit Rewritten can also be configured via the button in the browser toolbar.
     </header>
     <main>
-      <nav>
-        <a href="#configuration" role="button" class="selected">Configuration</a>
-        <a href="#backup" role="button">Backup</a>
-        <a href="#links" role="button">Links</a>
-      </nav>
-      <section id="configuration" class="open">
+      <div role="tablist" aria-label="Navigation">
+        <button id="configuration-tab" role="tab" aria-controls="configuration-panel" aria-selected="true">Configuration</button>
+        <button id="backup-tab" role="tab" aria-controls="backup-panel" aria-selected="false">Backup</button>
+        <button id="links-tab" role="tab" aria-controls="links-panel" aria-selected="false">Links</button>
+      </div>
+      <section id="configuration-panel" role="tabpanel" aria-labelledby="configuration-tab">
         <div class="finder">
           <input id="search" type="text" placeholder="Search" autocomplete="off" spellcheck="false">
           <label for="filter">Filter by</label>
@@ -48,7 +48,7 @@
         </div>
         <div class="features"></div>
       </section>
-      <section id="backup">
+      <section id="backup-panel" role="tabpanel" aria-labelledby="backup-tab" hidden>
         <details id="export" open>
           <summary><h4>Export</h4></summary>
           <div class="content">
@@ -69,7 +69,7 @@
           </div>
         </details>
       </section>
-      <section id="links">
+      <section id="links-panel" role="tabpanel" aria-labelledby="links-tab" hidden>
         <h4>Help & information</h4>
         <ul>
           <li><a href="https://github.com/AprilSylph/XKit-Rewritten/wiki" target="_blank">User guide</a></li>

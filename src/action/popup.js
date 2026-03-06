@@ -8,15 +8,18 @@ const checkForNoResults = function () {
   document.querySelector('.no-results').style.display = nothingFound ? 'flex' : 'none';
 };
 
-$('nav a').on('click', event => {
-  event.preventDefault();
+[...document.querySelectorAll('[role="tab"]')].forEach(tab =>
+  tab.addEventListener('click', ({ currentTarget }) => {
+    const targetPanelId = currentTarget.getAttribute('aria-controls');
 
-  $('nav .selected').removeClass('selected');
-  $(event.currentTarget).addClass('selected');
+    const tabList = currentTarget.closest('[role="tablist"]');
+    const tabListTabElements = Array.from(tabList.querySelectorAll('[role="tab"]'));
+    const tabListPanelIds = tabListTabElements.map(tab => tab.getAttribute('aria-controls'));
 
-  $('section.open').removeClass('open');
-  $(`section${event.currentTarget.getAttribute('href')}`).addClass('open');
-});
+    tabListTabElements.forEach(tab => tab.setAttribute('aria-selected', tab === currentTarget ? 'true' : 'false'));
+    tabListPanelIds.forEach(panelId => document.getElementById(panelId)?.toggleAttribute('hidden', targetPanelId !== panelId));
+  }),
+);
 
 document.getElementById('search').addEventListener('input', ({ currentTarget }) => {
   const query = currentTarget.value.toLowerCase();

@@ -72,7 +72,7 @@ body {
   display: none;
 }
 
-nav {
+[role="tablist"] {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -81,43 +81,28 @@ nav {
   border-bottom: 1px solid rgb(var(--active-grey));
 }
 
-nav a {
+[role="tablist"] [role="tab"] {
   flex-grow: 1;
   padding: 8px;
+  border: none;
   border-radius: 5px;
   margin: 0 4px;
 
+  background-color: transparent;
   color: rgb(var(--black));
   font-weight: bold;
   text-align: center;
   text-decoration: none;
 }
 
-nav a:hover {
+[role="tablist"] [role="tab"]:hover {
   background-color: rgb(var(--passive-grey));
+  cursor: pointer;
 }
 
-nav a:active, nav a.selected {
+[role="tablist"] [role="tab"]:active,
+[role="tablist"] [role="tab"][aria-selected="true"] {
   background-color: rgb(var(--active-grey));
-}
-
-section:not(.open) {
-  display: none;
-}
-
-section.open:empty {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 1em 0;
-}
-
-section.open:empty::before {
-  content: "No one’s around to help.";
-}
-
-section h2 {
-  text-align: center;
 }
 
 input[type="text"],

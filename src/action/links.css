@@ -1,33 +1,33 @@
-#links {
+#links-panel {
   position: relative;
 
   margin: 1em 0;
   padding: 0 1em;
 }
 
-#links h4 {
+#links-panel h4 {
   margin-bottom: 0;
 }
 
-#links ul {
+#links-panel ul {
   padding-left: 1em;
 }
 
-#links h4 + ul {
+#links-panel h4 + ul {
   margin-top: 1ch;
 }
 
-#links li {
+#links-panel li {
   margin-bottom: 1ch;
 }
 
-#links a {
+#links-panel a {
   font-weight: bold;
   text-decoration: none;
 }
 
-#links :link,
-#links :visited {
+#links-panel :link,
+#links-panel :visited {
   color: rgb(var(--accent));
 }
 

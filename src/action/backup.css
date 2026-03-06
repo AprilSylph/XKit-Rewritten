@@ -1,8 +1,8 @@
-#backup details {
+#backup-panel details {
   padding: 1ch;
 }
 
-#backup details > .content {
+#backup-panel details > .content {
   margin-top: 0.5em;
 
   display: flex;
@@ -10,20 +10,20 @@
   gap: 0.5em;
 }
 
-#backup details[open] ~ details summary ~ * {
+#backup-panel details[open] ~ details summary ~ * {
   display: none;
 }
 
-#backup h4 {
+#backup-panel h4 {
   display: inline-block;
   margin: 0;
 }
 
-#backup label {
+#backup-panel label {
   margin: 0;
 }
 
-#backup pre {
+#backup-panel pre {
   width: 0;
   min-width: 100%;
 
@@ -31,8 +31,8 @@
   user-select: all;
 }
 
-#backup pre,
-#backup textarea {
+#backup-panel pre,
+#backup-panel textarea {
   max-height: calc(10em + 2ch);
   overflow: auto;
   overflow-wrap: break-word;

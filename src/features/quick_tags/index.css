@@ -91,3 +91,26 @@
 #quick-tags-post-option button:not(:last-child) {
   margin-bottom: 2px;
 }
+
+.xkit-removable-tag.xkit-removable-tag {
+  border: 1px solid rgba(var(--black), .13);
+  border-radius: 1em;
+  padding-block: 0;
+}
+
+.xkit-removable-tag + .xkit-removable-tag {
+  margin-left: 5px;
+}
+
+.xkit-removable-tag > button {
+  opacity: .5;
+  margin-left: 5px;
+}
+
+.xkit-removable-tag > button:hover:not(:disabled) {
+  opacity: 1;
+}
+
+.xkit-removable-tag > button:disabled {
+  opacity: .13;
+}

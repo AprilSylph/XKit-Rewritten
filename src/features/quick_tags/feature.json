@@ -24,6 +24,11 @@
       "label": "Automatically tag asker when answering",
       "default": false
     },
+    "quickRemoveButtons": {
+      "type": "checkbox",
+      "label": "Show quick remove buttons on auto-added tags",
+      "default": false
+    },
     "tagBundles": {
       "type": "iframe",
       "label": "Manage tag bundles",

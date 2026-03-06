@@ -105,6 +105,27 @@ body {
   background-color: rgb(var(--active-grey));
 }
 
+[role="tabpanel"] {
+  position: relative;
+}
+
+[role="tabpanel"]:focus-visible {
+  outline-offset: -3px;
+}
+
+[role="tabpanel"]:focus-visible::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+
+  content: "";
+  outline: inherit;
+  outline-offset: inherit;
+}
+
 input[type="text"],
 select,
 textarea {

@@ -78,7 +78,7 @@ export const updatePostOnPage = async (postElement, keys) => {
   const currentTimelineObject = await timelineObject(postElement);
   const { response: newTimelineObject } = await apiFetch(`/v2/blog/${currentTimelineObject.blog.uuid}/posts/${currentTimelineObject.id}?reblog_info=true`);
 
-  const changeEntries = Object.entries(newTimelineObject).filter(([key]) => keys.includes(key));
+  const changeEntries = keys.map(key => [key, newTimelineObject[key]]);
 
   await inject(
     '/main_world/edit_timeline_object.js',

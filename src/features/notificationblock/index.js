@@ -8,7 +8,6 @@ import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
 import { userBlogNames, userBlogs } from '../../utils/user.js';
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
-const toOpenStorageKey = 'notificationblock.toOpen';
 const meatballButtonBlockId = 'notificationblock-block';
 const meatballButtonBlockLabel = 'Block notifications';
 const meatballButtonUnblockId = 'notificationblock-unblock';
@@ -149,19 +148,13 @@ export const main = async function () {
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
   registerMeatballItem({ id: meatballButtonUnblockId, label: meatballButtonUnblockLabel, onclick: onButtonClicked, postFilter: unblockPostFilter });
 
-  const { [toOpenStorageKey]: toOpen } = await browser.storage.local.get(toOpenStorageKey);
-  if (toOpen) {
-    browser.storage.local.remove(toOpenStorageKey);
-    openPostById(toOpen.blockedPostID);
-  } else {
-    const blockedPostIDFromSearchParam = new URLSearchParams(location.search).get('notificationblock-id');
-    if (blockedPostIDFromSearchParam) {
-      // remove search param now, so it doesn't persist if after we successfully
-      // navigate, the user dismisses peepr and returns to the dashboard
-      navigate(location.pathname);
+  const blockedPostIDFromSearchParam = new URLSearchParams(location.search).get('xkit-notificationblock-open-post-id');
+  if (blockedPostIDFromSearchParam) {
+    // remove search param now, so it doesn't persist if after we successfully
+    // navigate, the user dismisses peepr and returns to the dashboard
+    navigate(location.pathname);
 
-      openPostById(blockedPostIDFromSearchParam);
-    }
+    openPostById(blockedPostIDFromSearchParam);
   }
 };
 

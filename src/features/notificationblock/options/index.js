@@ -3,7 +3,6 @@ const blockedPostList = document.getElementById('notification-blocked-posts');
 const blockedPostTemplate = document.getElementById('notification-blocked-post');
 
 const storageKey = 'notificationblock.blockedPostTargetIDs';
-const toOpenStorageKey = 'notificationblock.toOpen';
 
 const unblockPost = async function ({ currentTarget }) {
   let { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
@@ -29,16 +28,7 @@ const renderBlocked = async function () {
     spanElement.textContent = blockedPostID;
     unblockButton.dataset.postId = blockedPostID;
     unblockButton.addEventListener('click', unblockPost);
-
-    anchorElement.href = `https://www.tumblr.com/?notificationblock-id=${blockedPostID}`;
-
-    anchorElement.addEventListener('click', async event => {
-      event.preventDefault();
-      await browser.storage.local.set({
-        [toOpenStorageKey]: { blockedPostID },
-      });
-      window.open('https://www.tumblr.com/');
-    });
+    anchorElement.href = `https://www.tumblr.com/?xkit-notificationblock-open-post-id=${blockedPostID}`;
 
     blockedPostList.append(templateClone);
   }

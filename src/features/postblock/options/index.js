@@ -46,7 +46,7 @@ const renderBlockedPosts = async function () {
   }));
 };
 
-browser.storage.onChanged.addListener((changes) => {
+browser.storage.local.onChanged.addListener((changes) => {
   if (Object.keys(changes).includes(storageKey) || Object.keys(changes).includes(uuidsStorageKey)) {
     renderBlockedPosts();
   }

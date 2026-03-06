@@ -31,6 +31,7 @@ const renderBlockedPosts = async function () {
     if (uuids[blockedPostID]) {
       const a = document.createElement('a');
       a.href = `https://www.tumblr.com/?xkit-postblock-open-post-id=${blockedPostID}`;
+      a.target = '_blank';
       spanElement.replaceWith(a);
       a.append(spanElement);
     }

@@ -58,12 +58,3 @@
 #quick-flags label.no-category {
   font-weight: bold;
 }
-
-.xkit-quick-flags-warning {
-  display: flex;
-  justify-content: center;
-  padding: 0.5em;
-  line-height: 1;
-
-  background-color: rgb(var(--secondary-accent));
-}

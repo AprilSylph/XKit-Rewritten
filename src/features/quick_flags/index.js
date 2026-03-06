@@ -1,7 +1,6 @@
 import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
-import { keyToCss } from '../../utils/css_map.js';
 import { div, input, label } from '../../utils/dom.js';
-import { appendWithoutOverflow, filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
+import { appendWithoutOverflow, filterPostElements, postSelector } from '../../utils/interface.js';
 import { bulkCommunityLabel } from '../../utils/mega_editor.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { onNewPosts } from '../../utils/mutations.js';
@@ -18,13 +17,10 @@ const data = [
 
 const buttonClass = 'xkit-quick-flags-button';
 const excludeClass = 'xkit-quick-flags-done';
-const warningClass = 'xkit-quick-flags-warning';
 
 const symbolId = 'ri-flag-2-line';
 
 let controlButtonTemplate;
-
-let editedPostStates = new WeakMap();
 
 const popupData = data.map(entry => ({ ...entry, checkbox: input({ type: 'checkbox' }) }));
 
@@ -92,40 +88,11 @@ const handlePopupClick = async (checkbox, category) => {
     await bulkCommunityLabel(name, [id], { hasCommunityLabel, categories });
 
     notify('Updated content labels!');
-    editedPostStates.set(getTimelineItemWrapper(postElement), { hasCommunityLabel, categories });
-    updatePostWarningElement(postElement);
     updateCheckboxes({ hasCommunityLabel, categories });
   } catch (error) {
     console.log(error);
     notify(error.body?.errors?.[0]?.detail || 'Failed to update content labels!');
     updateCheckboxes({ hasCommunityLabel: currentHasCommunityLabel, categories: currentCategories });
-  }
-};
-
-const updatePostWarningElement = async (postElement) => {
-  const editedPostState = editedPostStates.get(getTimelineItemWrapper(postElement));
-  if (!editedPostState) return;
-
-  const { hasCommunityLabel, categories } = editedPostState;
-  const {
-    communityLabels: {
-      hasCommunityLabel: renderedHasCommunityLabel,
-      categories: renderedCategories = [],
-    },
-  } = await timelineObject(postElement);
-
-  const renderedPostStateIncorrect =
-    renderedHasCommunityLabel !== hasCommunityLabel ||
-    renderedCategories.length !== categories.length ||
-    renderedCategories.some(category => !categories.includes(category));
-
-  postElement.querySelector(`.${warningClass}`)?.remove();
-
-  if (renderedPostStateIncorrect) {
-    const warningElement = div({ class: warningClass }, [
-      'note: navigate away and back or refresh to see edited content labels!',
-    ]);
-    postElement.querySelector(keyToCss('footerRow', 'postOwnerControls'))?.after(warningElement);
   }
 };
 
@@ -139,8 +106,6 @@ popupData.forEach(({ category, checkbox }) => {
 
 const processPosts = postElements =>
   filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
-    updatePostWarningElement(postElement);
-
     const { state, canEdit } = await timelineObject(postElement);
     if (canEdit && ['ask', 'submission'].includes(state) === false) {
       const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
@@ -158,10 +123,7 @@ export const clean = async function () {
 
   popupElement.remove();
   $(`.${buttonClass}`).remove();
-  $(`.${warningClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
-
-  editedPostStates = new WeakMap();
 };
 
 export const stylesheet = true;

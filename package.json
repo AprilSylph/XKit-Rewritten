@@ -4,10 +4,12 @@
   "type": "module",
   "scripts": {
     "test": "web-ext lint",
-    "posttest": "eslint src/",
+    "posttest": "eslint src/ --cache",
     "autofix": "eslint src/ --fix",
     "start": "web-ext run",
-    "build": "web-ext build"
+    "build": "web-ext build",
+    "enable-hooks": "git config core.hooksPath .githooks",
+    "disable-hooks": "git config --unset core.hooksPath"
   },
   "devDependencies": {
     "chrome-webstore-upload-cli": "^3.5.0",

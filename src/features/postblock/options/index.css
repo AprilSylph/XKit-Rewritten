@@ -38,6 +38,10 @@ header {
   flex-wrap: wrap;
 }
 
+a {
+  color: rgb(var(--accent));
+}
+
 #posts-blocked-count,
 #posts-blocked-info {
   margin: 0;

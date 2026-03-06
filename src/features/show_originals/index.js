@@ -8,13 +8,12 @@ import { isMyPost, timelineObject } from '../../utils/react_props.js';
 import {
   followingTimelineFilter,
   anyBlogPostsTimelineFilter,
-  blogPostsTimelineFilter,
+  anyBlogPeeprTimelineFilter,
+  blogTimelineFilter,
   blogSubsTimelineFilter,
   timelineSelector,
   anyCommunityTimelineFilter,
   communitiesTimelineFilter,
-  anyBlogPeeprTimelineFilter,
-  blogPeeprTimelineFilter,
   blogpackTimelineFilter,
 } from '../../utils/timeline_id.js';
 import { userBlogs } from '../../utils/user.js';
@@ -56,11 +55,11 @@ const addControls = async (timelineElement, location) => {
   const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
     controls.dataset.showOriginals = mode;
 
-    if (hardcodedModes[location]) return;
-
-    const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
-    savedModes[location] = mode;
-    browser.storage.local.set({ [storageKey]: savedModes });
+    if (!hardcodedModes[location]) {
+      const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
+      savedModes[location] = mode;
+      browser.storage.local.set({ [storageKey]: savedModes });
+    }
   };
 
   const onButton = createButton(translate('Original Posts'), handleClick, 'on');
@@ -80,17 +79,15 @@ const addControls = async (timelineElement, location) => {
 };
 
 const getLocation = timelineElement => {
-  const isBlog =
+  const isBlogPosts =
     anyBlogPostsTimelineFilter(timelineElement) && !timelineElement.matches(channelSelector);
 
   const isPeepr = anyBlogPeeprTimelineFilter(timelineElement);
 
   const on = {
     dashboard: followingTimelineFilter(timelineElement),
-    disabled:
-      (isBlog && disabledBlogs.some(name => blogPostsTimelineFilter(name)(timelineElement))) ||
-      (isPeepr && disabledBlogs.some(name => blogPeeprTimelineFilter(name)(timelineElement))),
-    peepr: isBlog,
+    disabled: (isBlogPosts || isPeepr) && disabledBlogs.some(name => blogTimelineFilter(name)(timelineElement)),
+    peepr: isBlogPosts,
     peeprFiltered: isPeepr,
     blogSubscriptions: blogSubsTimelineFilter(timelineElement),
     community: anyCommunityTimelineFilter(timelineElement) || communitiesTimelineFilter(timelineElement),

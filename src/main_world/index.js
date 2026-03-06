@@ -42,5 +42,3 @@ document.documentElement.addEventListener('xkit-injection-request', async event 
     );
   }
 }, { signal: controller.signal });
-
-document.documentElement.dispatchEvent(new CustomEvent('xkit-injection-ready'));

@@ -1,24 +1,23 @@
 #links-panel {
-  position: relative;
-
-  margin: 1em 0;
-  padding: 0 1em;
+  padding: 8px;
 }
 
 #links-panel h4 {
-  margin-bottom: 0;
+  margin-block: 8px;
 }
 
 #links-panel ul {
-  padding-left: 1em;
+  padding-inline: 16px;
+  margin-block-start: 0;
+  margin-block-end: 16px;
 }
 
-#links-panel h4 + ul {
-  margin-top: 1ch;
+#links-panel ul:last-child {
+  margin-block-end: 8px;
 }
 
-#links-panel li {
-  margin-bottom: 1ch;
+#links-panel ul li {
+  margin-bottom: 8px;
 }
 
 #links-panel a {

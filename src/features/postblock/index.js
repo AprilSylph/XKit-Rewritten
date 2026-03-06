@@ -61,7 +61,7 @@ const processPosts = postElements =>
     if (blockedPostRootIDs.includes(rootID)) {
       getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
 
-      if (postPermalinkTimelineFilter(rootID)(postElement.closest(timelineSelector))) {
+      if (postPermalinkTimelineFilter(postID)(postElement.closest(timelineSelector))) {
         addWarningElement(postElement, rootID);
       }
     } else {

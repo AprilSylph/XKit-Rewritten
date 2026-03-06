@@ -1,7 +1,7 @@
 import { dom } from '../../utils/dom.js';
-import { filterPostElements, getTimelineItemWrapper } from '../../utils/interface.js';
+import { getTimelineItemWrapper, filterPostElements } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
-import { hideModal, modalCancelButton, showModal } from '../../utils/modals.js';
+import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { timelineObject } from '../../utils/react_props.js';

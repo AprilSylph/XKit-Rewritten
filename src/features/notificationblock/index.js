@@ -148,13 +148,13 @@ export const main = async function () {
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
   registerMeatballItem({ id: meatballButtonUnblockId, label: meatballButtonUnblockLabel, onclick: onButtonClicked, postFilter: unblockPostFilter });
 
-  const blockedPostIDFromSearchParam = new URLSearchParams(location.search).get('xkit-notificationblock-open-post-id');
-  if (blockedPostIDFromSearchParam) {
+  const blockedPostID = new URLSearchParams(location.search).get('xkit-notificationblock-open-post-id');
+  if (blockedPostID) {
     // remove search param now, so it doesn't persist if after we successfully
     // navigate, the user dismisses peepr and returns to the dashboard
     navigate(location.pathname);
 
-    openPostById(blockedPostIDFromSearchParam);
+    openPostById(blockedPostID);
   }
 };
 

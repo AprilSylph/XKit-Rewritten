@@ -29,11 +29,11 @@
     </header>
     <main>
       <div role="tablist" aria-label="Navigation">
-        <button id="configuration-tab" role="tab" aria-controls="configuration-panel" aria-selected="true">Configuration</button>
-        <button id="backup-tab" role="tab" aria-controls="backup-panel" aria-selected="false">Backup</button>
-        <button id="links-tab" role="tab" aria-controls="links-panel" aria-selected="false">Links</button>
+        <button id="configuration-tab" role="tab" aria-controls="configuration-panel" aria-selected="true" tabindex="0">Configuration</button>
+        <button id="backup-tab" role="tab" aria-controls="backup-panel" aria-selected="false" tabindex="-1">Backup</button>
+        <button id="links-tab" role="tab" aria-controls="links-panel" aria-selected="false" tabindex="-1">Links</button>
       </div>
-      <section id="configuration-panel" role="tabpanel" aria-labelledby="configuration-tab">
+      <section id="configuration-panel" role="tabpanel" aria-labelledby="configuration-tab" tabindex="0">
         <div class="finder">
           <input id="search" type="text" placeholder="Search" autocomplete="off" spellcheck="false">
           <label for="filter">Filter by</label>
@@ -48,7 +48,7 @@
         </div>
         <div class="features"></div>
       </section>
-      <section id="backup-panel" role="tabpanel" aria-labelledby="backup-tab" hidden>
+      <section id="backup-panel" role="tabpanel" aria-labelledby="backup-tab" tabindex="0" hidden>
         <details id="export" open>
           <summary><h4>Export</h4></summary>
           <div class="content">
@@ -69,7 +69,7 @@
           </div>
         </details>
       </section>
-      <section id="links-panel" role="tabpanel" aria-labelledby="links-tab" hidden>
+      <section id="links-panel" role="tabpanel" aria-labelledby="links-tab" tabindex="0" hidden>
         <h4>Help & information</h4>
         <ul>
           <li><a href="https://github.com/AprilSylph/XKit-Rewritten/wiki" target="_blank">User guide</a></li>

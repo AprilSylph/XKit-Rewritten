@@ -8,15 +8,36 @@ const checkForNoResults = function () {
   document.querySelector('.no-results').style.display = nothingFound ? 'flex' : 'none';
 };
 
+document.querySelector('[role="tablist"]').addEventListener('keydown', (/** @type {KeyboardEvent} */ event) => {
+  if (event.target.getAttribute('role') !== 'tab') return;
+
+  switch (event.key) {
+    case 'ArrowLeft':
+      event.target.previousElementSibling?.focus();
+      event.target.previousElementSibling?.click();
+      break;
+    case 'ArrowRight':
+      event.target.nextElementSibling?.focus();
+      event.target.nextElementSibling?.click();
+      break;
+    default:
+      return;
+  }
+
+  event.stopPropagation();
+});
+
 [...document.querySelectorAll('[role="tab"]')].forEach(tab =>
   tab.addEventListener('click', ({ currentTarget }) => {
     const targetPanelId = currentTarget.getAttribute('aria-controls');
-
     const tabList = currentTarget.closest('[role="tablist"]');
-    const tabListTabElements = Array.from(tabList.querySelectorAll('[role="tab"]'));
-    const tabListPanelIds = tabListTabElements.map(tab => tab.getAttribute('aria-controls'));
+    const tabListChildren = Array.from(tabList.children);
+    const tabListPanelIds = tabListChildren.map(tab => tab.getAttribute('aria-controls'));
 
-    tabListTabElements.forEach(tab => tab.setAttribute('aria-selected', tab === currentTarget ? 'true' : 'false'));
+    tabListChildren.forEach(tab => {
+      tab.setAttribute('aria-selected', tab === currentTarget ? 'true' : 'false');
+      tab.setAttribute('tabindex', tab === currentTarget ? '0' : '-1');
+    });
     tabListPanelIds.forEach(panelId => document.getElementById(panelId)?.toggleAttribute('hidden', targetPanelId !== panelId));
   }),
 );

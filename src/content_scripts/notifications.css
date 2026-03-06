@@ -12,10 +12,13 @@
 
 #xkit-toasts div {
   padding: 10px;
-  border-top: 1px solid rgba(var(--white-on-dark), .13);
+  border-top: 1px solid rgba(var(--white-on-dark), 0.13);
 
   background-color: rgb(var(--navy));
-  background-image: linear-gradient(rgba(var(--white-on-dark), .07), rgba(var(--white-on-dark), .07));
+  background-image: linear-gradient(
+    rgba(var(--white-on-dark), 0.07),
+    rgba(var(--white-on-dark), 0.07)
+  );
   color: rgb(var(--white-on-dark));
   font-family: var(--font-family);
   line-height: 1.5;
@@ -39,7 +42,7 @@
 }
 
 #xkit-toasts[data-in-sidebar="true"] div:not(:last-child) {
-  border-bottom: 1px solid rgba(var(--white-on-dark), .13);
+  border-bottom: 1px solid rgba(var(--white-on-dark), 0.13);
 }
 
 [role="dialog"] #xkit-toasts[data-in-sidebar="false"] {

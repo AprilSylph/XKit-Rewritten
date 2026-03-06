@@ -154,9 +154,13 @@ export const main = async function () {
     browser.storage.local.remove(toOpenStorageKey);
     openPostById(toOpen.blockedPostID);
   } else {
-    const blockedPostID = new URLSearchParams(location.search).get('notificationblock-id');
-    if (blockedPostID) {
-      openPostById(blockedPostID);
+    const blockedPostIDFromSearchParam = new URLSearchParams(location.search).get('notificationblock-id');
+    if (blockedPostIDFromSearchParam) {
+      // remove search param now, so it doesn't persist if after we successfully
+      // navigate, the user dismisses peepr and returns to the dashboard
+      navigate(location.pathname);
+
+      openPostById(blockedPostIDFromSearchParam);
     }
   }
 };

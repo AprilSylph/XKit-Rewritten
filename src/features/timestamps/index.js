@@ -8,6 +8,7 @@ import { apiFetch } from '../../utils/tumblr_helpers.js';
 
 const noteCountSelector = keyToCss('noteCount');
 const reblogHeaderSelector = keyToCss('reblogHeader');
+const engagementControlsSelector = keyToCss('engagementControls');
 
 let alwaysShowYear;
 let headerTimestamps;
@@ -90,6 +91,7 @@ const addPostTimestamps = async function () {
     cache[id] = Promise.resolve(timestamp);
 
     const noteCountElement = postElement.querySelector(noteCountSelector);
+    const engagementControlsElement = postElement.querySelector(engagementControlsSelector);
 
     const relativeTimeString = constructRelativeTimeString(timestamp);
 
@@ -100,7 +102,12 @@ const addPostTimestamps = async function () {
     timestampElement.textContent = constructTimeString(timestamp);
     timestampElement.title = relativeTimeString;
 
-    $(noteCountElement).after(timestampElement);
+    if (noteCountElement) {
+      noteCountElement.after(timestampElement);
+    } else if (engagementControlsElement) {
+      timestampElement.classList.add('in-new-footer');
+      engagementControlsElement.before(timestampElement);
+    }
 
     if (headerTimestamps) {
       const longTimestampElement = document.createElement('div');

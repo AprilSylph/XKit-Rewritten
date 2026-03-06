@@ -38,6 +38,10 @@ header {
   margin-bottom: 1em;
 }
 
+a {
+  color: rgb(var(--accent));
+}
+
 #notification-blocked-count {
   font-weight: bold;
 }

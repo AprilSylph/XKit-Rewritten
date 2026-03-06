@@ -32,6 +32,10 @@ let showReblogsOfNotFollowing;
 let whitelist;
 let exemptBlogs;
 
+const hardcodedModes = {
+  exemptBlogTimeline: 'off',
+};
+
 const lengthenTimeline = async (timeline) => {
   if (!timeline.querySelector(keyToCss('manualPaginatorButtons'))) {
     timeline.classList.add(lengthenedClass);
@@ -51,24 +55,20 @@ const addControls = async (timelineElement, location) => {
   const handleClick = async ({ currentTarget: { dataset: { mode } } }) => {
     controls.dataset.showOriginals = mode;
 
-    if (location === 'exemptBlogTimeline') { return; }
-
-    const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
-    savedModes[location] = mode;
-    browser.storage.local.set({ [storageKey]: savedModes });
+    if (!hardcodedModes[location]) {
+      const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
+      savedModes[location] = mode;
+      browser.storage.local.set({ [storageKey]: savedModes });
+    }
   };
 
   const onButton = createButton(translate('Original Posts'), handleClick, 'on');
   const offButton = createButton(translate('All posts'), handleClick, 'off');
   controls.append(onButton, offButton);
 
-  if (location === 'exemptBlogTimeline') {
-    controls.dataset.showOriginals = 'off';
-  } else {
-    const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
-    const mode = savedModes[location] ?? 'on';
-    controls.dataset.showOriginals = mode;
-  }
+  const { [storageKey]: savedModes = {} } = await browser.storage.local.get(storageKey);
+  const mode = hardcodedModes[location] ?? savedModes[location] ?? 'on';
+  controls.dataset.showOriginals = mode;
 };
 
 const getLocation = timelineElement => {

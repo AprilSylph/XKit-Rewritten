@@ -21,6 +21,9 @@ jobs:
           node-version: lts/*
 
       - name: Generate release notes
-        run: dev/release-notes.js >> $GITHUB_STEP_SUMMARY
+        run: |
+          echo "\`\`\`md" >> $GITHUB_STEP_SUMMARY
+          dev/release-notes.js >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

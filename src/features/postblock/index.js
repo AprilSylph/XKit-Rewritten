@@ -14,7 +14,6 @@ const hiddenAttribute = 'data-postblock-hidden';
 const warningClass = 'xkit-postblock-warning';
 const storageKey = 'postblock.blockedPostRootIDs';
 const uuidsStorageKey = 'postblock.uuids';
-const toOpenStorageKey = 'postblock.toOpen';
 
 let uuids = {};
 
@@ -130,13 +129,14 @@ export const main = async function () {
   registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
   onNewPosts.addListener(processPosts);
 
-  const { [toOpenStorageKey]: toOpen } = await browser.storage.local.get(toOpenStorageKey);
-  if (toOpen) {
-    browser.storage.local.remove(toOpenStorageKey);
+  const blockedPostID = new URLSearchParams(location.search).get('xkit-postblock-open-post-id');
+  if (blockedPostID) {
+    // remove search param now, so it doesn't persist if after we successfully
+    // navigate, the user dismisses peepr and returns to the dashboard
+    navigate(location.pathname);
 
     try {
-      const { uuid, blockedPostID } = toOpen;
-      const { response: { blog: { name } } } = await apiFetch(`/v2/blog/${uuid}/info`);
+      const { response: { blog: { name } } } = await apiFetch(`/v2/blog/${uuids[blockedPostID]}/info`);
       navigate(`/@${name}/${blockedPostID}`);
     } catch (e) {
       notify('Failed to open blocked post!');

@@ -57,7 +57,7 @@ export const anyBlogPostsTimelineFilter = blogPostsTimelineFilter(anyBlogName);
 export const postPermalinkTimelineFilter = postId =>
   ({ dataset: { timeline, timelineId } }) =>
     timeline?.match(endsWith(`posts/${postId}/permalink`)) ||
-    timelineId?.match(exactly(peeprPostsTimelineId({ blog: anyBlogName, postId })));
+    timelineId?.match(exactly(peeprPostsTimelineId({ blogName: anyBlogName, postId })));
 
 export const anyPostPermalinkTimelineFilter = postPermalinkTimelineFilter(anyPostId);
 

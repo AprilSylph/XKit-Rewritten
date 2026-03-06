@@ -1,7 +1,10 @@
 import { keyToClasses, keyToCss } from '../../utils/css_map.js';
+import { debounce } from '../../utils/debounce.js';
 import { buildStyle, displayBlockUnlessDisabledAttr } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
+import { cellItem } from '../../utils/react_props.js';
 
 const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
 $(`[id="${scrollToBottomButtonId}"]`).remove();
@@ -13,6 +16,7 @@ ${keyToCss('notifications')} + div
 `;
 const knightRiderLoaderSelector = `:is(${loaderSelector}) > ${keyToCss('knightRiderLoader')}`;
 
+let stopAtCaughtUp;
 let scrollToBottomButton;
 let active = false;
 
@@ -42,7 +46,9 @@ const scrollToBottom = () => {
 };
 const observer = new ResizeObserver(scrollToBottom);
 
-const startScrolling = () => {
+const startScrolling = async () => {
+  if (stopAtCaughtUp && await scrollToCaughtUp()) return;
+
   observer.observe(document.documentElement);
   active = true;
   scrollToBottomButton.classList.add(activeClass);
@@ -89,15 +95,56 @@ const addButtonToPage = async function ([scrollToTopButton]) {
   pageModifications.register('*', checkForButtonRemoved);
 };
 
+const reliablyScrollToTarget = target => {
+  const callback = () => {
+    window.scrollBy({ top: target?.getBoundingClientRect?.()?.top });
+    debouncedDisconnect();
+  };
+  const observer = new ResizeObserver(callback);
+  const debouncedDisconnect = debounce(() => observer.disconnect(), 500);
+  observer.observe(document.documentElement);
+  callback();
+};
+
+const caughtUpCarouselObjectType = 'followed_tag_carousel_card';
+
+const scrollToCaughtUp = async (addedCells) => {
+  for (const cell of addedCells || [...document.querySelectorAll(keyToCss('cell'))]) {
+    const item = await cellItem(cell);
+    if (item.elements?.some(({ objectType }) => objectType === caughtUpCarouselObjectType)) {
+      const titleElement = cell?.previousElementSibling;
+      if (!titleElement) continue;
+
+      if (active) {
+        stopScrolling();
+      } else {
+        const titleElementTop = titleElement?.getBoundingClientRect?.()?.top;
+        const isAboveViewportBottom = titleElementTop !== undefined && titleElementTop < window.innerHeight;
+        if (isAboveViewportBottom) continue;
+      }
+
+      reliablyScrollToTarget(titleElement);
+      return true;
+    }
+  }
+};
+
+const onCellsAdded = addedCells => active && scrollToCaughtUp(addedCells);
+
 export const main = async function () {
+  ({ stopAtCaughtUp } = await getPreferences('scroll_to_bottom'));
+
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
   pageModifications.register(knightRiderLoaderSelector, onLoadersAdded);
+  stopAtCaughtUp && pageModifications.register(keyToCss(('cell')), onCellsAdded);
 };
 
 export const clean = async function () {
   pageModifications.unregister(addButtonToPage);
   pageModifications.unregister(checkForButtonRemoved);
   pageModifications.unregister(onLoadersAdded);
+  pageModifications.unregister(onCellsAdded);
+
   stopScrolling();
   scrollToBottomButton?.remove();
 };

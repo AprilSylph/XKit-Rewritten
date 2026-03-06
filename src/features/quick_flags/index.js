@@ -5,7 +5,7 @@ import { bulkCommunityLabel } from '../../utils/mega_editor.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
-import { timelineObject } from '../../utils/react_props.js';
+import { timelineObject, updatePostOnPage } from '../../utils/react_props.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 
 const data = [
@@ -94,6 +94,8 @@ const handlePopupClick = async (checkbox, category) => {
     notify(error.body?.errors?.[0]?.detail || 'Failed to update content labels!');
     updateCheckboxes({ hasCommunityLabel: currentHasCommunityLabel, categories: currentCategories });
   }
+
+  await updatePostOnPage(postElement, ['communityLabels', 'headerContext']);
 };
 
 popupData.forEach(({ category, checkbox }) => {

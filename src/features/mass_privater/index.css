@@ -1,0 +1,26 @@
+.mass-privater-failed {
+  margin-top: 1em;
+}
+.mass-privater-failed-table-wrapper {
+  margin-top: 0.5em;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.mass-privater-failed-table {
+  display: grid;
+  grid: auto-flow / auto auto 1fr;
+  gap: 1ch;
+  align-items: center;
+}
+.mass-privater-failed-table > .time {
+  font-size: 0.875em;
+}
+.mass-privater-failed-table > .summary {
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: initial;
+}
+.mass-privater-failed:has(.mass-privater-failed-table:empty) {
+  display: none;
+}

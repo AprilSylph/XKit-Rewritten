@@ -1,6 +1,6 @@
 import { dom } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
-import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal, createTagSpan, createBlogSpan } from '../../utils/modals.js';
+import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal, createTagSpan, createBlogSpan, withErrorModal } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { dateTimeFormat, elementsAsList } from '../../utils/text_format.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
@@ -26,7 +26,7 @@ const createNowString = () => {
 };
 
 const showInitialPrompt = async () => {
-  const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event).catch(showErrorModal) }, [
+  const initialForm = dom('form', { id: getPostsFormId }, { submit: withErrorModal(confirmInitialPrompt) }, [
     dom('label', null, null, [
       'Posts on blog:',
       dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption)),

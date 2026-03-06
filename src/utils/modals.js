@@ -63,5 +63,14 @@ export const showErrorModal = exception => {
   });
 };
 
+export const withErrorModal = func =>
+  async (...args) => {
+    try {
+      return await func(...args);
+    } catch (exception) {
+      showErrorModal(exception);
+    }
+  };
+
 export const createTagSpan = tag => dom('span', { class: 'xkit-modal-tag' }, null, [tag]);
 export const createBlogSpan = name => dom('span', { class: 'xkit-modal-blog' }, null, [name]);

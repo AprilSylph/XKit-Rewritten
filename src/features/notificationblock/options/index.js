@@ -17,9 +17,7 @@ const renderBlocked = async function () {
   const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
 
   postsBlockedCount.textContent = `${blockedPostRootIDs.length} ${blockedPostRootIDs.length === 1 ? 'post' : 'posts'} with blocked notifications`;
-  blockedPostList.textContent = '';
-
-  for (const blockedPostID of blockedPostRootIDs) {
+  blockedPostList.replaceChildren(...blockedPostRootIDs.map(blockedPostID => {
     const templateClone = blockedPostTemplate.content.cloneNode(true);
     const anchorElement = templateClone.querySelector('a');
     const spanElement = templateClone.querySelector('span');
@@ -30,12 +28,12 @@ const renderBlocked = async function () {
     unblockButton.addEventListener('click', unblockPost);
     anchorElement.href = `https://www.tumblr.com/?xkit-notificationblock-open-post-id=${blockedPostID}`;
 
-    blockedPostList.append(templateClone);
-  }
+    return templateClone;
+  }));
 };
 
-browser.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === 'local' && Object.keys(changes).includes(storageKey)) {
+browser.storage.local.onChanged.addListener((changes) => {
+  if (Object.keys(changes).includes(storageKey)) {
     renderBlocked();
   }
 });

@@ -39,6 +39,18 @@ export const createPostHideFunctions = ({ id, permalinkPageControls, hideAutomat
     `;
   }
 
+  const addPermalinkPageControls = timelineElement => {
+    if (timelineElement.querySelector(`[${controlsAttribute}]`) === null) {
+      const { message, buttonText } = permalinkPageControls;
+      const controlsElement = div({ class: controlsClass, [controlsAttribute]: id }, [
+        message,
+        br(),
+        button({ click: () => controlsElement.remove() }, [buttonText]),
+      ]);
+      timelineElement.prepend(controlsElement);
+    }
+  };
+
   return {
     hidePost: postElement => {
       const timelineElement = postElement.closest(timelineSelector);
@@ -46,16 +58,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls, hideAutomat
       if (anyPostPermalinkTimelineFilter(timelineElement)) {
         if (permalinkPageControls) {
           getTimelineItemWrapper(postElement).setAttribute(controlledHiddenAttribute, '');
-
-          if (timelineElement.querySelector(`[${controlsAttribute}]`) === null) {
-            const { message, buttonText } = permalinkPageControls;
-            const controlsElement = div({ class: controlsClass, [controlsAttribute]: id }, [
-              message,
-              br(),
-              button({ click: () => controlsElement.remove() }, [buttonText]),
-            ]);
-            timelineElement.prepend(controlsElement);
-          }
+          addPermalinkPageControls(timelineElement);
         }
         return;
       }

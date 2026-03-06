@@ -3,7 +3,7 @@ const blockedPostList = document.getElementById('blocked-posts');
 const blockedPostTemplate = document.getElementById('blocked-post');
 
 const storageKey = 'postblock.blockedPostRootIDs';
-const uuidsStorageKey = 'postblock.uuids';
+const shortUrlsStorageKey = 'postblock.shortUrls';
 
 const unblockPost = async function ({ currentTarget }) {
   let { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
@@ -16,7 +16,7 @@ const unblockPost = async function ({ currentTarget }) {
 
 const renderBlockedPosts = async function () {
   const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
-  const { [uuidsStorageKey]: uuids = {} } = await browser.storage.local.get(uuidsStorageKey);
+  const { [shortUrlsStorageKey]: shortUrls = {} } = await browser.storage.local.get(shortUrlsStorageKey);
 
   postsBlockedCount.textContent = `${blockedPostRootIDs.length} blocked ${blockedPostRootIDs.length === 1 ? 'post' : 'posts'}`;
   blockedPostList.replaceChildren(...blockedPostRootIDs.map(blockedPostID => {
@@ -28,9 +28,9 @@ const renderBlockedPosts = async function () {
     unblockButton.dataset.postId = blockedPostID;
     unblockButton.addEventListener('click', unblockPost);
 
-    if (uuids[blockedPostID]) {
+    if (shortUrls[blockedPostID]) {
       const a = document.createElement('a');
-      a.href = `https://www.tumblr.com/?xkit-postblock-open-post-id=${blockedPostID}`;
+      a.href = shortUrls[blockedPostID];
       a.target = '_blank';
       spanElement.replaceWith(a);
       a.append(spanElement);
@@ -41,7 +41,7 @@ const renderBlockedPosts = async function () {
 };
 
 browser.storage.local.onChanged.addListener((changes) => {
-  if (Object.keys(changes).includes(storageKey) || Object.keys(changes).includes(uuidsStorageKey)) {
+  if (Object.keys(changes).includes(storageKey) || Object.keys(changes).includes(shortUrlsStorageKey)) {
     renderBlockedPosts();
   }
 });

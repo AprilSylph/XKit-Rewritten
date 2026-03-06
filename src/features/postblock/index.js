@@ -3,19 +3,18 @@ import { getTimelineItemWrapper, filterPostElements } from '../../utils/interfac
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
-import { notify } from '../../utils/notifications.js';
 import { timelineObject } from '../../utils/react_props.js';
 import { postPermalinkTimelineFilter, timelineSelector } from '../../utils/timeline_id.js';
-import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
 const hiddenAttribute = 'data-postblock-hidden';
 const warningClass = 'xkit-postblock-warning';
 const storageKey = 'postblock.blockedPostRootIDs';
-const uuidsStorageKey = 'postblock.uuids';
+const shortUrlsStorageKey = 'postblock.shortUrls';
 
-let uuids = {};
+let shortUrls = {};
 
 const addWarningElement = (postElement, rootID) => {
   const showButton = dom('button', null, {
@@ -47,14 +46,7 @@ let blockedPostRootIDs = [];
 const processPosts = postElements =>
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     const postID = postElement.dataset.id;
-    const {
-      rebloggedRootId,
-      rebloggedRootUuid,
-      id,
-      blog: { uuid },
-      rebloggedFromId,
-      rebloggedFromUuid,
-    } = await timelineObject(postElement);
+    const { id, shortUrl, rebloggedRootId, rebloggedRootUuid } = await timelineObject(postElement);
 
     const rootID = rebloggedRootId || postID;
 
@@ -68,16 +60,22 @@ const processPosts = postElements =>
       getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
     }
 
-    const saveUuidPair = (id, uuid) => {
-      if (blockedPostRootIDs.includes(id) && !uuids[id]) {
-        uuids[id] = uuid;
-        browser.storage.local.set({ [uuidsStorageKey]: uuids });
-      }
-    };
+    if (blockedPostRootIDs.includes(id) && shortUrls[id] !== shortUrl) {
+      shortUrls[id] = shortUrl;
+      browser.storage.local.set({ [shortUrlsStorageKey]: shortUrls });
+    }
 
-    saveUuidPair(rebloggedRootId, rebloggedRootUuid);
-    saveUuidPair(id, uuid);
-    saveUuidPair(rebloggedFromId, rebloggedFromUuid);
+    if (rebloggedRootId && blockedPostRootIDs.includes(rebloggedRootId) && shortUrls[rebloggedRootId] === undefined) {
+      try {
+        const { response: { shortUrl } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
+        shortUrls[rebloggedRootId] = shortUrl;
+      } catch (exception) {
+        console.error(exception);
+        // don't try to fetch this root post again
+        shortUrls[rebloggedRootId] = false;
+      }
+      browser.storage.local.set({ [shortUrlsStorageKey]: shortUrls });
+    }
   });
 
 const onButtonClicked = ({ currentTarget }) => {
@@ -110,10 +108,10 @@ const unblockPost = async rootID => {
 };
 
 export const onStorageChanged = async function (changes) {
-  const { [storageKey]: blockedPostChanges, [uuidsStorageKey]: uuidsChanges } = changes;
+  const { [storageKey]: blockedPostChanges, [shortUrlsStorageKey]: shortUrlsChanges } = changes;
 
-  if (uuidsChanges) {
-    ({ newValue: uuids } = uuidsChanges);
+  if (shortUrlsChanges) {
+    ({ newValue: shortUrls } = shortUrlsChanges);
   }
 
   if (blockedPostChanges) {
@@ -124,24 +122,11 @@ export const onStorageChanged = async function (changes) {
 
 export const main = async function () {
   ({ [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey));
-  ({ [uuidsStorageKey]: uuids = {} } = await browser.storage.local.get(uuidsStorageKey));
+  ({ [shortUrlsStorageKey]: shortUrls = {} } = await browser.storage.local.get(shortUrlsStorageKey));
 
   registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
+
   onNewPosts.addListener(processPosts);
-
-  const blockedPostID = new URLSearchParams(location.search).get('xkit-postblock-open-post-id');
-  if (blockedPostID) {
-    // remove search param now, so it doesn't persist if after we successfully
-    // navigate, the user dismisses peepr and returns to the dashboard
-    navigate(location.pathname);
-
-    try {
-      const { response: { blog: { name } } } = await apiFetch(`/v2/blog/${uuids[blockedPostID]}/info`);
-      navigate(`/@${name}/${blockedPostID}`);
-    } catch (e) {
-      notify('Failed to open blocked post!');
-    }
-  }
 };
 
 export const clean = async function () {

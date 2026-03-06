@@ -1,5 +1,6 @@
+import { createPostHideFunctions } from '../../main_world/hide_posts.js';
 import { dom } from '../../utils/dom.js';
-import { getTimelineItemWrapper, filterPostElements } from '../../utils/interface.js';
+import { filterPostElements } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
@@ -7,10 +8,17 @@ import { timelineObject } from '../../utils/react_props.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
-const hiddenAttribute = 'data-postblock-hidden';
 const storageKey = 'postblock.blockedPostRootIDs';
 
 let blockedPostRootIDs = [];
+
+const { hidePost, showPost, showPosts } = createPostHideFunctions({
+  id: 'postblock',
+  permalinkPageControls: {
+    message: 'You have hidden this post with PostBlock!',
+    buttonText: 'show post anyway',
+  },
+});
 
 const processPosts = postElements =>
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
@@ -20,9 +28,9 @@ const processPosts = postElements =>
     const rootID = rebloggedRootId || postID;
 
     if (blockedPostRootIDs.includes(rootID)) {
-      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
+      hidePost(postElement);
     } else {
-      getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
+      showPost(postElement);
     }
   });
 
@@ -68,7 +76,7 @@ export const clean = async function () {
   unregisterMeatballItem(meatballButtonId);
   onNewPosts.removeListener(processPosts);
 
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  showPosts();
 };
 
 export const stylesheet = true;

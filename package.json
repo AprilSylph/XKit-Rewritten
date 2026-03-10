@@ -8,7 +8,7 @@
     "autofix": "eslint src/ --fix",
     "start": "web-ext run",
     "build": "web-ext build",
-    "enable-hooks": "git config core.hooksPath .githooks",
+    "enable-hooks": "git config core.hooksPath .git-hooks",
     "disable-hooks": "git config --unset core.hooksPath"
   },
   "devDependencies": {

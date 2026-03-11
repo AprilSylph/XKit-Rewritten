@@ -1,4 +1,5 @@
 .DS_Store
+.eslintcache
 .vscode/
 .web-extension-id
 **.less

@@ -1,33 +1,32 @@
-#links {
-  position: relative;
-
-  margin: 1em 0;
-  padding: 0 1em;
+#links-panel {
+  padding: 8px;
 }
 
-#links h4 {
-  margin-bottom: 0;
+#links-panel h4 {
+  margin-block: 8px;
 }
 
-#links ul {
-  padding-left: 1em;
+#links-panel ul {
+  padding-inline: 16px;
+  margin-block-start: 0;
+  margin-block-end: 16px;
 }
 
-#links h4 + ul {
-  margin-top: 1ch;
+#links-panel ul:last-child {
+  margin-block-end: 8px;
 }
 
-#links li {
-  margin-bottom: 1ch;
+#links-panel ul li {
+  margin-bottom: 8px;
 }
 
-#links a {
+#links-panel a {
   font-weight: bold;
   text-decoration: none;
 }
 
-#links :link,
-#links :visited {
+#links-panel :link,
+#links-panel :visited {
   color: rgb(var(--accent));
 }
 

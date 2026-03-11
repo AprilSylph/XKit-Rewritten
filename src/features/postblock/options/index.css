@@ -24,8 +24,7 @@ html {
 body {
   background-color: rgb(var(--white));
   color: rgb(var(--black));
-  font-family: "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
-  font-size: 100%;
+  font: inherit;
   -webkit-user-select: none;
   user-select: none;
 }
@@ -35,17 +34,30 @@ header {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1em;
+  column-gap: 6px;
+  flex-wrap: wrap;
+}
+
+#posts-blocked-count,
+#posts-blocked-info {
+  margin: 0;
 }
 
 #posts-blocked-count {
-  font-weight: bold;
+  font-size: 15px;
+}
+
+#posts-blocked-info {
+  font-size: 11px;
 }
 
 #blocked-posts {
   padding: 0;
-  border-bottom: 1px solid rgb(var(--grey));
-  margin: 0;
+  margin: 1em 0 0;
+}
+
+#blocked-posts:empty {
+  display: none;
 }
 
 .blocked-post {

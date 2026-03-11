@@ -20,6 +20,11 @@
         { "value": "100", "label": "100%" }
       ],
       "default": "100"
+    },
+    "tumblrTvEnable": {
+      "type": "checkbox",
+      "label": "Enable on Tumblr TV",
+      "default": false
     }
   }
 }

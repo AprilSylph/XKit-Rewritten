@@ -39,9 +39,9 @@ label[for="filter"] {
   height: 100px;
 
   color: rgb(var(--active-grey));
-  content: "Loading...";
-  font-size: 1.3125rem;
-  font-weight: 700;
+  content: "Loading…";
+  font-size: 1.133rem;
+  font-weight: bold;
 }
 
 xkit-feature.search-hidden,

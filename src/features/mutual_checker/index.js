@@ -1,13 +1,13 @@
+import { keyToCss } from '../../utils/css_map.js';
+import { dom } from '../../utils/dom.js';
 import { buildStyle, getTimelineItemWrapper, filterPostElements, getPopoverWrapper, notificationSelector } from '../../utils/interface.js';
+import { translate } from '../../utils/language_data.js';
+import { onNewPosts, onNewNotifications, pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 import { blogData, notificationObject, timelineObject } from '../../utils/react_props.js';
+import { followingTimelineSelector } from '../../utils/timeline_id.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { primaryBlogName } from '../../utils/user.js';
-import { keyToCss } from '../../utils/css_map.js';
-import { onNewPosts, onNewNotifications, pageModifications } from '../../utils/mutations.js';
-import { dom } from '../../utils/dom.js';
-import { getPreferences } from '../../utils/preferences.js';
-import { translate } from '../../utils/language_data.js';
-import { followingTimelineSelector } from '../../utils/timeline_id.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenAttribute = 'data-mutual-checker-hidden';
@@ -114,7 +114,7 @@ const getIsFollowing = async (blogName, element) => {
     const blog = [
       await blogData(element),
       (await timelineObject(element))?.blog,
-      (await timelineObject(element))?.authorBlog
+      (await timelineObject(element))?.authorBlog,
     ].find((data) => blogName === data?.name);
 
     following[blogName] = blog
@@ -156,12 +156,12 @@ const createIcon = (blogName, color = 'rgb(var(--black))') =>
     xmlns: 'http://www.w3.org/2000/svg',
     class: mutualIconClass,
     viewBox: '0 0 1000 1000',
-    fill: color
+    fill: color,
   }, null, [
     dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
-      translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
+      translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName),
     ]),
-    dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path })
+    dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path }),
   ]);
 
 export const clean = async function () {

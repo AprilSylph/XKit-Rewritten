@@ -1,11 +1,11 @@
 import { buildStyle, filterPostElements, getTimelineItemWrapper } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { timelineObject } from '../../utils/react_props.js';
-import { forYouTimelineFilter } from '../../utils/timeline_id.js';
+import { forYouTimelineFilter, searchPostsTimelineFilter } from '../../utils/timeline_id.js';
 import { joinedCommunityUuids } from '../../utils/user.js';
 
 const hiddenAttribute = 'data-no-recommended-community-posts-hidden';
-const timeline = forYouTimelineFilter;
+const timeline = [forYouTimelineFilter, searchPostsTimelineFilter];
 const includeFiltered = true;
 
 export const styleElement = buildStyle(`[${hiddenAttribute}] {

@@ -2,14 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="color-scheme" content="light dark">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XKit: Manage blocked posts</title>
     <link rel="icon" href="/icons/128.png" type="image/png">
-    <link rel="stylesheet" href="/lib/normalize.min.css">
+    <link rel="stylesheet" href="/lib/modern-normalize.css">
     <link rel="stylesheet" href="index.css">
-    <script src="/action/resize_frames.js" defer></script>
-    <script src="/lib/browser-polyfill.min.js" defer></script>
-    <script src="index.js" defer></script>
+    <script defer src="/action/resize_frames.js"></script>
+    <script defer src="/browser_polyfill.js"></script>
+    <script defer src="index.js"></script>
   </head>
   <body>
     <template id="blocked-post">
@@ -20,8 +21,8 @@
     </template>
     <main>
       <header>
-        <span id="posts-blocked-count"></span>
-        <small>Unblocking a post will immediately unhide it.</small>
+        <h3 id="posts-blocked-count">Loading…</h3>
+        <p id="posts-blocked-info">Unblocking a post will immediately unhide it.</p>
       </header>
       <ul id="blocked-posts"></ul>
     </main>

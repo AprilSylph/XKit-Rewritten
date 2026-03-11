@@ -36,7 +36,7 @@
 #quick-tags {
   --icon-spacing: 12px;
 }
-@media (max-width: 990px) {
+@media not (min-width: 990px) {
   #quick-tags {
     --icon-spacing: 0px;
   }
@@ -90,43 +90,4 @@
 #quick-tags button:not(:last-child),
 #quick-tags-post-option button:not(:last-child) {
   margin-bottom: 2px;
-}
-
-.xkit-quick-tags-tags {
-	position: relative;
-
-	box-sizing: border-box;
-	padding-left: var(--post-padding);
-	padding-right: var(--post-padding);
-	margin-top: 12px;
-
-	font-family: var(--font-family);
-	font-size: 1rem;
-	font-weight: 400;
-	line-height: 1.5;
-	word-break: break-word;
-}
-
-.xkit-quick-tags-tags + div {
-  display: none !important;
-}
-
-.xkit-quick-tags-tags > div {
-  margin: -2px -6px;
-  padding-top: 4px;
-}
-
-.xkit-quick-tags-tags a {
-	vertical-align: bottom;
-
-	display: inline-block;
-  padding: 2px 6px;
-	margin: -2px 0;
-
-	color: rgba(var(--black), .65);
-	text-decoration: none;
-}
-
-.xkit-quick-tags-tags a:hover {
-  text-decoration: underline;
 }

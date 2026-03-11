@@ -26,7 +26,7 @@ export default function apiFetch (resource, init = {}) {
       objects.push(
         ...currentObjects
           .flatMap(Object.values)
-          .filter(value => value instanceof Object)
+          .filter(value => value instanceof Object),
       );
     }
   }

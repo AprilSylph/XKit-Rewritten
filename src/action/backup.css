@@ -1,8 +1,8 @@
-#backup details {
+#backup-panel details {
   padding: 1ch;
 }
 
-#backup details > .content {
+#backup-panel details > .content {
   margin-top: 0.5em;
 
   display: flex;
@@ -10,20 +10,20 @@
   gap: 0.5em;
 }
 
-#backup details[open] ~ details summary ~ * {
+#backup-panel details[open] ~ details summary ~ * {
   display: none;
 }
 
-#backup h4 {
+#backup-panel h4 {
   display: inline-block;
   margin: 0;
 }
 
-#backup label {
+#backup-panel label {
   margin: 0;
 }
 
-#backup pre {
+#backup-panel pre {
   width: 0;
   min-width: 100%;
 
@@ -31,9 +31,8 @@
   user-select: all;
 }
 
-#backup pre,
-#backup textarea {
-  box-sizing: border-box;
+#backup-panel pre,
+#backup-panel textarea {
   max-height: calc(10em + 2ch);
   overflow: auto;
   overflow-wrap: break-word;
@@ -43,9 +42,19 @@
 
   background-color: rgb(var(--passive-grey));
   color: rgb(var(--black));
-  font-family: monospace, monospace;
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: smaller;
   white-space: pre;
+}
+
+#overwrite-warning[data-force-hidden="false"],
+#overwrite-warning:where([data-hidden="false"]) {
+  display: flex;
+  justify-content: center;
+}
+#overwrite-warning[data-force-hidden="true"],
+#overwrite-warning:where([data-hidden="true"]) {
+  display: none;
 }
 
 .buttons-container {

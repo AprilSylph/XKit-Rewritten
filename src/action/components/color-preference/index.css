@@ -1,0 +1,34 @@
+:host {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 8px;
+  padding: 4px;
+}
+
+span {
+  display: contents;
+}
+
+label,
+.clr-field {
+  flex-shrink: 0;
+}
+
+button {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+input {
+  padding: 4px;
+  border: none;
+  border-radius: 3px;
+
+  background-color: rgb(var(--passive-grey));
+  color: rgb(var(--black));
+}
+
+input:focus {
+  background-color: rgb(var(--active-grey));
+}

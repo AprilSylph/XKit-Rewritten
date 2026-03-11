@@ -1,9 +1,9 @@
+import { dom } from '../../utils/dom.js';
 import { getTimelineItemWrapper, filterPostElements } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
-import { timelineObject } from '../../utils/react_props.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
-import { dom } from '../../utils/dom.js';
+import { timelineObject } from '../../utils/react_props.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
@@ -33,12 +33,12 @@ const onButtonClicked = ({ currentTarget }) => {
   showModal({
     title: 'Block this post?',
     message: [
-      'All instances of this post (including reblogs) will be hidden.'
+      'All instances of this post (including reblogs) will be hidden.',
     ],
     buttons: [
       modalCancelButton,
-      dom('button', { class: 'red' }, { click: () => blockPost(rootID) }, ['Block this post'])
-    ]
+      dom('button', { class: 'red' }, { click: () => blockPost(rootID) }, ['Block this post']),
+    ],
   });
 };
 

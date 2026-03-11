@@ -9,12 +9,18 @@
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks",
   "relatedTerms": [
     "Blacklist",
-    "Separator"
+    "Separator",
+    "colored"
   ],
   "preferences": {
     "restore_attribution_links": {
       "type": "checkbox",
       "label": "Restore links to individual posts in the post header",
+      "default": false
+    },
+    "create_button_no_bubbles": {
+      "type": "checkbox",
+      "label": "Make the “Create” button start a new text post",
       "default": false
     },
     "slim_filtered_screens": {
@@ -81,6 +87,11 @@
     "hide_liked_posts": {
       "type": "checkbox",
       "label": "Hide posts that I've liked on the dashboard",
+      "default": false
+    },
+    "hide_blocked_blogs": {
+      "type": "checkbox",
+      "label": "Hide all posts from blogs I've blocked",
       "default": false
     },
     "hide_follower_counts": {

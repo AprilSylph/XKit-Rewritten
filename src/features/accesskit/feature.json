@@ -7,7 +7,7 @@
     "background_color": "#df46f6"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#accesskit",
-  "relatedTerms": [ "Disable GIFs" ],
+  "relatedTerms": [ "Disable GIFs", "colors" ],
   "preferences": {
     "disable_gifs": {
       "type": "checkbox",

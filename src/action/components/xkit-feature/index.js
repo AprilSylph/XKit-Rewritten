@@ -6,7 +6,7 @@ const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
     <details>
       <summary>
-        <div class="icon">
+        <div aria-hidden="true" class="icon">
           <slot name="icon"></slot>
         </div>
         <div class="meta">
@@ -14,191 +14,84 @@ const templateDocument = new DOMParser().parseFromString(`
           <p class="description"><slot name="description"></slot></p>
         </div>
         <div class="buttons">
-          <a class="help" target="_blank"><i class="ri-fw ri-question-fill" style="color:rgb(var(--black))"></i></a>
-          <input type="checkbox" checked class="toggle-button" aria-label="Enable this feature">
+          <div class="badge">
+            <slot name="badge"></slot>
+          </div>
+          <input type="checkbox" checked role="switch" aria-label="Enable this feature">
         </div>
       </summary>
-      <ul class="preferences"></ul>
+      <ul class="preferences">
+        <slot name="preferences">
+          <span id="empty">No preferences available for this feature.</span>
+        </slot>
+      </ul>
     </details>
   </template>
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
-  '/lib/normalize.min.css',
+  '/lib/modern-normalize.css',
   '/lib/remixicon/remixicon.css',
-  '/lib/spectrum.css',
-  '/lib/toggle-button.css',
-  './index.css'
+  './index.css',
 ].map(import.meta.resolve));
 
 class XKitFeatureElement extends CustomElement {
-  #enabledFeaturesKey = 'enabledScripts';
-  #specialAccessKey = 'specialAccess';
+  static #enabledFeaturesKey = 'enabledScripts';
+  static #specialAccessKey = 'specialAccess';
 
-  #detailsElement;
-  #enabledToggle;
-  #helpAnchor;
-  #preferencesList;
+  /** @type {HTMLDetailsElement}  */ #detailsElement;
+  /** @type {HTMLInputElement}    */ #enabledToggle;
 
-  deprecated = false;
-  featureName = '';
-  help = '';
-  preferences = {};
-  relatedTerms = [];
+  /** @type {boolean}   */ #disabled = false;
+  /** @type {boolean}   */ deprecated = false;
+  /** @type {string}    */ featureName = '';
+  /** @type {string[]}  */ relatedTerms = [];
 
   constructor () {
     super(templateDocument, adoptedStyleSheets);
 
     this.#detailsElement = this.shadowRoot.querySelector('details');
-    this.#enabledToggle = this.shadowRoot.querySelector('input[type="checkbox"]');
-    this.#helpAnchor = this.shadowRoot.querySelector('a.help');
-    this.#preferencesList = this.shadowRoot.querySelector('ul.preferences');
+    this.#enabledToggle = this.shadowRoot.querySelector('[role="switch"]');
   }
 
-  #writePreference = async ({ currentTarget }) => {
-    const { id } = currentTarget;
-    const [featureName, preferenceType, preferenceName] = id.split('.');
-    const storageKey = `${featureName}.preferences.${preferenceName}`;
-
-    switch (preferenceType) {
-      case 'checkbox':
-        browser.storage.local.set({ [storageKey]: currentTarget.checked });
-        break;
-      case 'text':
-      case 'color':
-      case 'select':
-      case 'textarea':
-        browser.storage.local.set({ [storageKey]: currentTarget.value });
-        break;
-    }
-  };
-
-  #getDebouncedWritePreference = () => {
-    let timeoutID;
-    return ({ currentTarget }) => {
-      clearTimeout(timeoutID);
-      timeoutID = setTimeout(() => this.#writePreference({ currentTarget }), 500);
-    };
-  };
-
-  #renderPreferences = async ({ featureName, preferences, preferenceList }) => {
-    for (const [key, preference] of Object.entries(preferences)) {
-      const storageKey = `${featureName}.preferences.${key}`;
-      const { [storageKey]: savedPreference } = await browser.storage.local.get(storageKey);
-      preference.value = savedPreference ?? preference.default;
-
-      const preferenceTemplateClone = document.getElementById(`${preference.type}-preference`).content.cloneNode(true);
-
-      const preferenceInput = preferenceTemplateClone.querySelector('input, select, textarea, iframe');
-      preferenceInput.id = `${featureName}.${preference.type}.${key}`;
-
-      const preferenceLabel = preferenceTemplateClone.querySelector('label');
-      if (preferenceLabel) {
-        preferenceLabel.textContent = preference.label || key;
-        preferenceLabel.setAttribute('for', `${featureName}.${preference.type}.${key}`);
-      } else {
-        preferenceInput.title = preference.label || key;
-      }
-
-      switch (preference.type) {
-        case 'text':
-        case 'textarea':
-          preferenceInput.addEventListener('input', this.#getDebouncedWritePreference());
-          break;
-        case 'iframe':
-          break;
-        default:
-          preferenceInput.addEventListener('change', this.#writePreference);
-      }
-
-      switch (preference.type) {
-        case 'checkbox':
-          preferenceInput.checked = preference.value;
-          break;
-        case 'select':
-          for (const { value, label } of preference.options) {
-            const option = document.createElement('option');
-            option.value = value;
-            option.textContent = label;
-            option.selected = value === preference.value;
-            preferenceInput.appendChild(option);
-          }
-          break;
-        case 'color':
-          preferenceInput.value = preference.value;
-          $(preferenceInput)
-            .on('change.spectrum', this.#writePreference)
-            .spectrum({
-              preferredFormat: 'hex',
-              showInput: true,
-              showInitial: true,
-              allowEmpty: true
-            });
-          break;
-        case 'iframe':
-          preferenceInput.src = preference.src;
-          break;
-        default:
-          preferenceInput.value = preference.value;
-      }
-
-      preferenceList.appendChild(preferenceTemplateClone);
-    }
-  };
-
-  #handleEnabledToggleInput = async ({ currentTarget }) => {
-    const { checked, id } = currentTarget;
-    let {
-      [this.#enabledFeaturesKey]: enabledFeatures = [],
-      [this.#specialAccessKey]: specialAccess = []
+  /** @param {InputEvent & { currentTarget: HTMLInputElement }} event `input` event for the feature's "Enable this feature" toggle. */
+  #handleEnabledToggleInput = async ({ currentTarget: { checked } }) => {
+    const {
+      [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures = [],
+      [XKitFeatureElement.#specialAccessKey]: specialAccess = [],
     } = await browser.storage.local.get();
 
-    const hasPreferences = Object.keys(this.preferences).length !== 0;
-    if (hasPreferences) this.#detailsElement.open = checked;
+    /** @type {Set<string>} */ const enabledFeaturesSet = new Set(enabledFeatures);
+    /** @type {Set<string>} */ const specialAccessSet = new Set(specialAccess);
 
-    if (checked) {
-      enabledFeatures.push(id);
-    } else {
-      enabledFeatures = enabledFeatures.filter(x => x !== id);
+    checked
+      ? enabledFeaturesSet.add(this.featureName)
+      : enabledFeaturesSet.delete(this.featureName);
 
-      if (this.deprecated && !specialAccess.includes(id)) {
-        specialAccess.push(id);
-      }
-    }
+    this.deprecated
+      ? specialAccessSet.add(this.featureName)
+      : specialAccessSet.delete(this.featureName);
+
+    await browser.storage.local.set({
+      [XKitFeatureElement.#enabledFeaturesKey]: Array.from(enabledFeaturesSet),
+      [XKitFeatureElement.#specialAccessKey]: Array.from(specialAccessSet),
+    });
 
     this.disabled = !checked;
 
-    browser.storage.local.set({
-      [this.#enabledFeaturesKey]: enabledFeatures,
-      [this.#specialAccessKey]: specialAccess
-    });
+    const hasPreferences = this.querySelector('[slot="preferences"]') !== null;
+    if (hasPreferences) this.#detailsElement.open = checked;
   };
 
   connectedCallback () {
     this.#detailsElement.dataset.deprecated = this.deprecated;
-    this.#enabledToggle.id = this.featureName;
     this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
     this.dataset.relatedTerms = this.relatedTerms;
-
-    if (this.help) {
-      this.#helpAnchor.href = this.help;
-    }
-
-    if (Object.keys(this.preferences).length !== 0) {
-      this.#renderPreferences({
-        featureName: this.featureName,
-        preferences: this.preferences,
-        preferenceList: this.#preferencesList
-      });
-    }
   }
 
   disconnectedCallback () {
     this.#enabledToggle.removeEventListener('input', this.#handleEnabledToggleInput);
   }
-
-  /** @type {boolean} True if the feature can be enabled. Defaults to `false`. */
-  #disabled = false;
 
   set disabled (disabled = false) {
     this.#detailsElement.classList.toggle('disabled', disabled);
@@ -211,4 +104,13 @@ class XKitFeatureElement extends CustomElement {
 
 customElements.define(localName, XKitFeatureElement);
 
+/**
+ * @typedef XKitFeatureProps
+ * @property {boolean} [disabled] Whether or not the feature is currently disabled. Defaults to `false`.
+ * @property {boolean} deprecated Whether to hide the feature on installations on which it was not enabled at the time of deprecation.
+ * @property {string} featureName The feature's internal name (e.g. `"quick_reblog"`).
+ * @property {string[]} [relatedTerms] An optional array of strings related to this feature that a user might search for. Case insensitive.
+ */
+
+/** @type {(props: XKitFeatureProps) => XKitFeatureElement} */
 export const XKitFeature = (props = {}) => Object.assign(document.createElement(localName), props);

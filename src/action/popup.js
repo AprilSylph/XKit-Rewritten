@@ -1,37 +1,71 @@
+const preferenceSelector = 'checkbox-preference, color-preference, select-preference, text-preference, textarea-preference';
+
 const checkForNoResults = function () {
   const nothingFound = [...document.querySelectorAll('xkit-feature')].every(featureElement =>
-    featureElement.classList.contains('search-hidden') || featureElement.classList.contains('filter-hidden')
+    featureElement.classList.contains('search-hidden') || featureElement.classList.contains('filter-hidden'),
   );
 
   document.querySelector('.no-results').style.display = nothingFound ? 'flex' : 'none';
 };
 
-$('nav a').on('click', event => {
-  event.preventDefault();
+document.querySelector('[role="tablist"]').addEventListener('keydown', (/** @type {KeyboardEvent} */ event) => {
+  if (event.target.getAttribute('role') !== 'tab') return;
 
-  $('nav .selected').removeClass('selected');
-  $(event.currentTarget).addClass('selected');
+  switch (event.key) {
+    case 'ArrowLeft':
+      event.target.previousElementSibling?.focus();
+      event.target.previousElementSibling?.click();
+      break;
+    case 'ArrowRight':
+      event.target.nextElementSibling?.focus();
+      event.target.nextElementSibling?.click();
+      break;
+    default:
+      return;
+  }
 
-  $('section.open').removeClass('open');
-  $(`section${event.currentTarget.getAttribute('href')}`).addClass('open');
+  event.stopPropagation();
 });
+
+[...document.querySelectorAll('[role="tab"]')].forEach(tab =>
+  tab.addEventListener('click', ({ currentTarget }) => {
+    const targetPanelId = currentTarget.getAttribute('aria-controls');
+    const tabList = currentTarget.closest('[role="tablist"]');
+    const tabListChildren = Array.from(tabList.children);
+    const tabListPanelIds = tabListChildren.map(tab => tab.getAttribute('aria-controls'));
+
+    tabListChildren.forEach(tab => {
+      tab.setAttribute('aria-selected', tab === currentTarget ? 'true' : 'false');
+      tab.setAttribute('tabindex', tab === currentTarget ? '0' : '-1');
+    });
+    tabListPanelIds.forEach(panelId => document.getElementById(panelId)?.toggleAttribute('hidden', targetPanelId !== panelId));
+  }),
+);
 
 document.getElementById('search').addEventListener('input', ({ currentTarget }) => {
   const query = currentTarget.value.toLowerCase();
   const featureElements = [...document.querySelectorAll('xkit-feature')];
-  const preferenceElements = featureElements.flatMap(({ shadowRoot }) => [...shadowRoot.querySelectorAll('li')]);
+  const preferenceElements = featureElements.flatMap(featureElement => [...featureElement.querySelectorAll(preferenceSelector)]);
 
   featureElements.forEach(featureElement => {
     const textContent = featureElement.textContent.toLowerCase();
-    const relatedTerms = featureElement.dataset.relatedTerms.toLowerCase();
     const shadowContent = featureElement.shadowRoot.textContent.toLowerCase();
+    const relatedTerms = featureElement.dataset.relatedTerms.toLowerCase();
+    const preferencesContent = [
+      ...featureElement.querySelectorAll(preferenceSelector),
+    ].map(({ shadowRoot }) => shadowRoot.textContent.toLowerCase()).join('\n');
 
-    const hasMatch = textContent.includes(query) || relatedTerms.includes(query) || shadowContent.includes(query);
+    const hasMatch =
+      textContent.includes(query) ||
+      shadowContent.includes(query) ||
+      relatedTerms.includes(query) ||
+      preferencesContent.includes(query);
+
     featureElement.classList.toggle('search-hidden', !hasMatch);
   });
 
   preferenceElements.forEach(preferenceElement => {
-    const hasMatch = query.length >= 3 && preferenceElement.textContent.toLowerCase().includes(query);
+    const hasMatch = query.length >= 3 && preferenceElement.shadowRoot.textContent.toLowerCase().includes(query);
     preferenceElement.classList.toggle('search-highlighted', hasMatch);
   });
 

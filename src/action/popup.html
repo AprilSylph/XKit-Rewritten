@@ -2,19 +2,19 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="color-scheme" content="light dark">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XKit Control Panel</title>
     <link rel="icon" href="../icons/128.png" type="image/png">
-    <link rel="stylesheet" href="../lib/normalize.min.css">
+    <link rel="stylesheet" href="../lib/coloris.css">
+    <link rel="stylesheet" href="../lib/modern-normalize.css">
     <link rel="stylesheet" href="../lib/remixicon/remixicon.css">
-    <link rel="stylesheet" href="../lib/spectrum.css">
     <link rel="stylesheet" href="./backup.css">
     <link rel="stylesheet" href="./configuration.css">
     <link rel="stylesheet" href="./links.css">
     <link rel="stylesheet" href="./popup.css">
-    <script defer src="../lib/browser-polyfill.min.js"></script>
-    <script defer src="../lib/jquery.min.js"></script>
-    <script defer src="../lib/spectrum.js"></script>
+    <script defer src="../browser_polyfill.js"></script>
+    <script defer src="../lib/jquery.slim.min.js"></script>
     <script defer src="./popup.js"></script>
     <script defer src="./render_backup.js"></script>
     <script type="module" src="./render_features.js"></script>
@@ -28,12 +28,12 @@
       &#x2139;&#xFE0F; XKit Rewritten can also be configured via the button in the browser toolbar.
     </header>
     <main>
-      <nav>
-        <a href="#configuration" role="button" class="selected">Configuration</a>
-        <a href="#backup" role="button">Backup</a>
-        <a href="#links" role="button">Links</a>
-      </nav>
-      <section id="configuration" class="open">
+      <div role="tablist" aria-label="Navigation">
+        <button id="configuration-tab" role="tab" aria-controls="configuration-panel" aria-selected="true" tabindex="0">Configuration</button>
+        <button id="backup-tab" role="tab" aria-controls="backup-panel" aria-selected="false" tabindex="-1">Backup</button>
+        <button id="links-tab" role="tab" aria-controls="links-panel" aria-selected="false" tabindex="-1">Links</button>
+      </div>
+      <section id="configuration-panel" role="tabpanel" aria-labelledby="configuration-tab" tabindex="0">
         <div class="finder">
           <input id="search" type="text" placeholder="Search" autocomplete="off" spellcheck="false">
           <label for="filter">Filter by</label>
@@ -48,7 +48,7 @@
         </div>
         <div class="features"></div>
       </section>
-      <section id="backup">
+      <section id="backup-panel" role="tabpanel" aria-labelledby="backup-tab" tabindex="0" hidden>
         <details id="export" open>
           <summary><h4>Export</h4></summary>
           <div class="content">
@@ -65,10 +65,11 @@
             <label for="local-storage-import">Paste the contents of your saved backup here.</label>
             <textarea id="local-storage-import" rows="10" spellcheck="false"></textarea>
             <button id="restore-local"></button>
+            <div id="overwrite-warning">⚠️ Warning: Existing data will be overwritten!</div>
           </div>
         </details>
       </section>
-      <section id="links">
+      <section id="links-panel" role="tabpanel" aria-labelledby="links-tab" tabindex="0" hidden>
         <h4>Help & information</h4>
         <ul>
           <li><a href="https://github.com/AprilSylph/XKit-Rewritten/wiki" target="_blank">User guide</a></li>
@@ -99,48 +100,5 @@
         </footer>
       </section>
     </main>
-
-    <template id="checkbox-preference">
-      <li>
-        <input type="checkbox">
-        <label></label>
-      </li>
-    </template>
-
-    <template id="text-preference">
-      <li>
-        <label></label>
-        <input type="text" spellcheck="false">
-      </li>
-    </template>
-
-    <template id="select-preference">
-      <li>
-        <label></label>
-        <select></select>
-      </li>
-    </template>
-
-    <template id="color-preference">
-      <li>
-        <input type="text">
-        <label></label>
-      </li>
-    </template>
-
-    <template id="textarea-preference">
-      <li>
-        <label></label>
-      </li>
-      <li>
-        <textarea rows="5" spellcheck="false"></textarea>
-      </li>
-    </template>
-
-    <template id="iframe-preference">
-      <li>
-        <iframe></iframe>
-      </li>
-    </template>
   </body>
 </html>

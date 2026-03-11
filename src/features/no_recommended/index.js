@@ -2,8 +2,10 @@ import { getPreferences } from '../../utils/preferences.js';
 
 let enabledOptions;
 
+const getOption = name => import(browser.runtime.getURL(`/features/no_recommended/${name}.js`));
+
 const runOption = async function (name) {
-  const { main: run, styleElement } = await import(`./${name}.js`);
+  const { main: run, styleElement } = await getOption(name);
   if (run) {
     run().catch(console.error);
   }
@@ -14,7 +16,7 @@ const runOption = async function (name) {
 };
 
 const destroyOption = async function (name) {
-  const { clean: destroy, styleElement } = await import(`./${name}.js`);
+  const { clean: destroy, styleElement } = await getOption(name);
   if (destroy) {
     destroy().catch(console.error);
   }

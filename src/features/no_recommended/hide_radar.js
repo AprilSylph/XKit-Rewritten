@@ -1,6 +1,6 @@
-import { pageModifications } from '../../utils/mutations.js';
-import { translate } from '../../utils/language_data.js';
 import { buildStyle } from '../../utils/interface.js';
+import { translate } from '../../utils/language_data.js';
+import { pageModifications } from '../../utils/mutations.js';
 
 const hiddenAttribute = 'data-no-recommended-radar-hidden';
 

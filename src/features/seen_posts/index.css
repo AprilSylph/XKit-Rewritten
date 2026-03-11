@@ -1,5 +1,6 @@
-body:not(.xkit-seen-posts-only-dim-avatar) [data-seen-posts-seen]:not(:hover),
-body.xkit-seen-posts-only-dim-avatar [data-seen-posts-seen]:not(:hover) article > :first-child  > :first-child img {
+body.xkit-seen-posts-only-dim-avatar [data-seen-posts-seen]:not(:hover) article header figure, /* Unmodified Tumblr DOM structure */
+body.xkit-seen-posts-only-dim-avatar [data-seen-posts-seen]:not(:hover) article .dbplus-stickyContainer figure, /* Dashboard+ floating avatars */
+body:not(.xkit-seen-posts-only-dim-avatar) [data-seen-posts-seen]:not(:hover) {
   opacity: 0.5;
 }
 

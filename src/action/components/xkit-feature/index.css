@@ -25,6 +25,75 @@ summary:focus {
   background-color: rgb(var(--active-grey));
 }
 
+[role="switch"] {
+  --toggle-height: 16px;
+  --toggle-width: 32px;
+  --toggle-border-width: 1px;
+  --toggle-dot-margin: 1px;
+
+  appearance: none;
+  height: var(--toggle-height);
+  width: var(--toggle-width);
+  padding: 0;
+  border-color: rgb(var(--black));
+  border-style: solid;
+  border-width: var(--toggle-border-width);
+  border-radius: 9999px;
+
+  background-color: rgb(var(--passive-grey));
+  color: rgb(var(--black));
+}
+
+[role="switch"]:hover {
+  background-color: rgb(var(--active-grey));
+}
+
+[role="switch"]:focus-visible {
+  outline-offset: 2px;
+}
+
+[role="switch"]:checked {
+  border-color: transparent;
+
+  background-color: rgb(var(--accent));
+  color: rgb(var(--white));
+}
+
+[role="switch"]::before {
+  --toggle-dot-diameter: calc(
+    var(--toggle-height)
+    - (var(--toggle-border-width) * 2)
+    - (var(--toggle-dot-margin) * 2)
+  );
+  --toggle-dot-transform-x: calc(
+    var(--toggle-width)
+    - (var(--toggle-border-width) * 2)
+    - (var(--toggle-dot-margin) * 2)
+    - var(--toggle-dot-diameter)
+  );
+
+  transform: translateX(0);
+
+  display: block;
+  height: var(--toggle-dot-diameter);
+  width: var(--toggle-dot-diameter);
+  margin: var(--toggle-dot-margin);
+  border-radius: inherit;
+
+  content: "";
+  background-color: currentColor;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [role="switch"]::before {
+    transition: transform 100ms;
+  }
+}
+
+[role="switch"]:checked::before {
+  transform: translateX(var(--toggle-dot-transform-x));
+}
+
 .icon {
   display: flex;
   justify-content: center;
@@ -55,10 +124,11 @@ summary:focus {
   margin-left: auto;
 }
 
-.badge ::slotted {
+.badge ::slotted(*) {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 1em;
 }
 
 .badge ::slotted(a) {
@@ -67,7 +137,6 @@ summary:focus {
 
 .badge ::slotted(span) {
   padding: 2px 6px;
-  border-radius: 1em;
 
   background-color: #ff62ce;
   color: rgb(var(--white));
@@ -87,7 +156,7 @@ summary:focus {
   opacity: 69%;
 }
 
-.disabled:not([open], :focus-within, :hover) :is(.icon, .meta) {
+.disabled:not([open], :focus-within, :hover) :is(.icon, .meta, .buttons) {
   opacity: 60%;
 }
 

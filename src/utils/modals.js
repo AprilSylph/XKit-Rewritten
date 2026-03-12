@@ -63,7 +63,7 @@ export const showErrorModal = exception => {
   });
 };
 
-export const withErrorModal = func =>
+export const withModalOnError = func =>
   async (...args) => {
     try {
       return await func(...args);

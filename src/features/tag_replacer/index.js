@@ -1,6 +1,6 @@
 import { dom } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
-import { showModal, modalCancelButton, modalCompleteButton, showErrorModal, createTagSpan, createBlogSpan, withErrorModal } from '../../utils/modals.js';
+import { showModal, modalCancelButton, modalCompleteButton, showErrorModal, createTagSpan, createBlogSpan, withModalOnError } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { userBlogs } from '../../utils/user.js';
@@ -11,7 +11,7 @@ const createBlogOption = ({ name, title, uuid }) => dom('option', { value: uuid,
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const showInitialPrompt = async () => {
-  const initialForm = dom('form', { id: getPostsFormId }, { submit: withErrorModal(confirmReplaceTag) }, [
+  const initialForm = dom('form', { id: getPostsFormId }, { submit: withModalOnError(confirmReplaceTag) }, [
     dom('label', null, null, [
       'Replace tags on:',
       dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption)),

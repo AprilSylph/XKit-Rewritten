@@ -1,7 +1,6 @@
-import { disableWhileProcessing } from '../../utils/disable_while_processing.js';
 import { button, form, input } from '../../utils/dom.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
-import { showModal, modalCompleteButton, withErrorModal } from '../../utils/modals.js';
+import { showModal, modalCompleteButton, showErrorModal } from '../../utils/modals.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 
 const meatballButtonId = 'mirror_posts';
@@ -40,10 +39,18 @@ async function onButtonClicked ({ currentTarget }) {
 
   // `blog.isHiddenFromBlogNetwork` is only defined in the blog view; if we're somewhere else, we need to fetch it.
   if (!community && blog.isHiddenFromBlogNetwork === undefined) {
-    const { response } = await disableWhileProcessing(currentTarget, apiFetch(`/v2/blog/${blog.uuid}/info?fields[blogs]=?is_hidden_from_blog_network`));
-    if (response.blog.isHiddenFromBlogNetwork) {
-      showModal({ ...modalProps, message: ['This blog’s privacy settings do not allow archiving.'] });
+    try {
+      currentTarget.disabled = true;
+      const { response } = await apiFetch(`/v2/blog/${blog.uuid}/info?fields[blogs]=?is_hidden_from_blog_network`);
+      if (response.blog.isHiddenFromBlogNetwork) {
+        showModal({ ...modalProps, message: ['This blog’s privacy settings do not allow archiving.'] });
+        return;
+      }
+    } catch (exception) {
+      showErrorModal(exception);
       return;
+    } finally {
+      currentTarget.disabled = false;
     }
   }
 
@@ -51,5 +58,5 @@ async function onButtonClicked ({ currentTarget }) {
   waybackMachineForm.requestSubmit();
 }
 
-export const main = async () => registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: withErrorModal(onButtonClicked) });
+export const main = async () => registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
 export const clean = async () => unregisterMeatballItem(meatballButtonId);

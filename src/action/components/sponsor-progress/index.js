@@ -41,7 +41,7 @@ class SponsorProgressElement extends CustomElement {
 
   async connectedCallback () {
     try {
-      const response = await fetch('https://aprilsylph.github.io/github-sponsors-listing/');
+      const response = await fetch('https://sponsors.aprilsylph.dev/');
       const data = await response.json();
 
       if (typeof data?.sponsorsListing?.activeGoal?.percentComplete !== 'number') {

@@ -8,7 +8,7 @@
 }
 .mass-privater-failed-table {
   display: grid;
-  grid: auto-flow / auto auto 1fr;
+  grid: auto-flow / auto 1fr;
   gap: 1ch;
   align-items: center;
 }

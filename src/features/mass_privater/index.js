@@ -155,7 +155,6 @@ const showPostsNotFound = ({ name }) =>
   });
 
 const dateFormat = new Intl.DateTimeFormat(document.documentElement.lang, { dateStyle: 'medium' });
-const timeFormat = new Intl.DateTimeFormat(document.documentElement.lang, { timeStyle: 'short' });
 
 const editPosts = async ({ mode, uuid, name, tags, before }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
@@ -167,9 +166,6 @@ const editPosts = async ({ mode, uuid, name, tags, before }) => {
     failedTable.append(
       dom('div', { class: 'date' }, null, [
         dom('a', { href: `/@${blogName}/${id}`, target: '_blank' }, null, [dateFormat.format(new Date(timestamp * 1000))]),
-      ]),
-      dom('div', { class: 'time' }, null, [
-        timeFormat.format(new Date(timestamp * 1000)),
       ]),
       dom('div', { class: 'summary' }, null, [
         summary.replaceAll('\n', ' '),

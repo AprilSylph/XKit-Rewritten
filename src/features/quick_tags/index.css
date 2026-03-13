@@ -14,10 +14,10 @@
 
   background-color: rgb(var(--white));
   background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
-  box-shadow: 0 0 15px 0 rgba(0, 0, 0, .5);
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.5);
   color: rgb(var(--black));
   font-family: var(--font-family);
-  font-size: .875rem;
+  font-size: 0.875rem;
   font-weight: normal;
 }
 
@@ -48,7 +48,10 @@
 }
 #quick-tags[data-position="above"] {
   inset: auto 50% 100% auto;
-  transform: translate(calc(50% + var(--horizontal-offset, 0%)), calc(0px - var(--icon-spacing)));
+  transform: translate(
+    calc(50% + var(--horizontal-offset, 0%)),
+    calc(0px - var(--icon-spacing))
+  );
 }
 
 #quick-tags:empty::before,

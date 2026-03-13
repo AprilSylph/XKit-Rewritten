@@ -139,7 +139,7 @@ textarea {
 
 ::placeholder {
   color: inherit;
-  opacity: .55;
+  opacity: 0.55;
 }
 
 input[type="text"] {

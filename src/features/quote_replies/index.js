@@ -100,7 +100,15 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
-const processGenericReply = async (notificationProps) => {
+const quoteReply = async (tumblelogName, notificationProps) => {
+  const data = notificationProps.type === 'generic'
+    ? await createGenericReplyData(notificationProps)
+    : await createReplyData(notificationProps);
+
+  openPostDraft(tumblelogName, data);
+};
+
+const createGenericReplyData = async (notificationProps) => {
   const {
     subtype: type,
     timestamp,
@@ -118,7 +126,7 @@ const processGenericReply = async (notificationProps) => {
       ? bodyDescriptionContent.text.slice(summaryFormatting.start + 1, summaryFormatting.end - 1)
       : bodyDescriptionContent.text;
 
-    return await processReply({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary });
+    return await createReplyData({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary });
   } catch (exception) {
     console.error(exception);
     console.debug('[XKit] Falling back to generic quote content due to fetch/parse failure');
@@ -151,7 +159,7 @@ const processGenericReply = async (notificationProps) => {
   return { content, tags };
 };
 
-const processReply = async ({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary }) => {
+const createReplyData = async ({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary }) => {
   const { response } = await apiFetch(
     `/v2/blog/${targetTumblelogName}/post/${targetPostId}/notes/timeline`,
     { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } },
@@ -188,14 +196,10 @@ const processReply = async ({ type, timestamp, targetPostId, targetTumblelogName
   return { content, tags };
 };
 
-const quoteReply = async (tumblelogName, notificationProps) => {
+const openPostDraft = async (tumblelogName, data) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
 
-  const { content, tags } = notificationProps.type === 'generic'
-    ? await processGenericReply(notificationProps)
-    : await processReply(notificationProps);
-
-  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
+  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { state: 'draft', ...data } });
 
   const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;
 

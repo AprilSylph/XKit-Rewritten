@@ -2,7 +2,7 @@ import { createControlButtonTemplate, cloneControlButton, insertControlButton } 
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { filterPostElements, postSelector } from '../../utils/interface.js';
-import { showModal, hideModal, modalCancelButton, showErrorModal, withErrorModal } from '../../utils/modals.js';
+import { showModal, hideModal, modalCancelButton, showErrorModal } from '../../utils/modals.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { timelineObject } from '../../utils/react_props.js';
@@ -160,7 +160,7 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const items = trail.length + (content.length ? 1 : 0);
 
   if (canEdit && ['ask', 'submission'].includes(state) === false) {
-    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: withErrorModal(onButtonClicked) }, items < 2);
+    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: event => onButtonClicked(event).catch(showErrorModal) }, items < 2);
     insertControlButton(postElement, clonedControlButton, buttonClass);
   }
 });

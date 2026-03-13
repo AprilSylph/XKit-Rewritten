@@ -1,4 +1,5 @@
 import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
+import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { appendWithoutOverflow, buildStyle, filterPostElements, postSelector } from '../../utils/interface.js';
 import { megaEdit } from '../../utils/mega_editor.js';
@@ -18,6 +19,7 @@ const excludeClass = 'xkit-quick-tags-done';
 let originalPostTag;
 let answerTag;
 let autoTagAsker;
+let quickRemoveButtons;
 
 let controlButtonTemplate;
 
@@ -102,6 +104,11 @@ const processPostForm = async function ([selectedTagsElement]) {
 
 export const onStorageChanged = async function (changes) {
   if (Object.keys(changes).some(key => key.startsWith('quick_tags'))) {
+    if (Object.keys(changes).includes('quick_tags.preferences.quickRemoveButtons')) {
+      clean().then(main);
+      return;
+    }
+
     if (Object.keys(changes).includes(storageKey)) populatePopups();
 
     ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
@@ -135,17 +142,20 @@ const togglePostOptionPopupDisplay = async function ({ target, currentTarget }) 
   }
 };
 
-const addTagsToPost = async function ({ postElement, inputTags = [] }) {
+const editPostTags = async function ({ postElement, inputTagsAdd = [], inputTagsRemove = [] }) {
   const postId = postElement.dataset.id;
   const { blog: { uuid }, blogName } = await timelineObject(postElement);
 
   const { response: postData } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`);
-  const { tags = [] } = postData;
+  let { tags = [] } = postData;
 
-  const tagsToAdd = inputTags.filter(inputTag => tags.includes(inputTag) === false);
-  if (tagsToAdd.length === 0) { return; }
+  const tagsToAdd = inputTagsAdd.filter(inputTag => tags.includes(inputTag) === false);
+  const tagsToRemove = inputTagsRemove.filter(inputTag => tags.includes(inputTag));
+
+  if (tagsToAdd.length === 0 && tagsToRemove.length === 0) { return; }
 
   tags.push(...tagsToAdd);
+  tags = tags.filter(tag => !tagsToRemove.includes(tag));
 
   if (isNpfCompatible(postData)) {
     const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
@@ -158,7 +168,8 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 
     notify(displayText);
   } else {
-    await megaEdit([postId], { mode: 'add', tags: tagsToAdd });
+    tagsToAdd.length && await megaEdit([postId], { mode: 'add', tags: tagsToAdd });
+    tagsToRemove.length && await megaEdit([postId], { mode: 'remove', tags: tagsToRemove });
     notify(`Edited legacy post on ${blogName}`);
   }
 
@@ -169,7 +180,7 @@ const processFormSubmit = function ({ currentTarget }) {
   const postElement = currentTarget.closest(postSelector);
   const inputTags = popupInput.value.split(',').map(inputTag => inputTag.trim());
 
-  addTagsToPost({ postElement, inputTags }).catch(showErrorModal);
+  editPostTags({ postElement, inputTagsAdd: inputTags }).catch(showErrorModal);
   currentTarget.reset();
 };
 
@@ -179,7 +190,7 @@ const processBundleClick = function ({ target }) {
   const postElement = target.closest(postSelector);
   const inputTags = target.dataset.tags.split(',').map(inputTag => inputTag.trim());
 
-  addTagsToPost({ postElement, inputTags }).catch(showErrorModal);
+  editPostTags({ postElement, inputTagsAdd: inputTags }).catch(showErrorModal);
   popupElement.remove();
 };
 
@@ -196,6 +207,42 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
     const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: togglePopupDisplay });
     insertControlButton(postElement, clonedControlButton, buttonClass);
   }
+});
+
+const removableTags = [
+  'Youtube',
+  'Instagram',
+  'Vimeo',
+  'Spotify',
+  'Bandcamp',
+  'SoundCloud',
+];
+
+const addRemoveTagButtons = tagElements => tagElements.forEach(async tagElement => {
+  const tag = tagElement.getAttribute('href').replace(/.*\/tagged\//, '');
+  if (!removableTags.includes(tag)) return;
+
+  const postElement = tagElement.closest(postSelector);
+  const { state, canEdit } = await timelineObject(postElement);
+  if (!canEdit || ['ask', 'submission'].includes(state)) return;
+
+  const onClickRemove = async event => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    removeButton.disabled = true;
+    editPostTags({ postElement, inputTagsRemove: [tag] }).catch(showErrorModal);
+  };
+
+  const removeButton =
+    dom('button', { title: 'Remove this tag' }, { click: onClickRemove }, [
+      dom('svg', { height: 10, width: 10, style: '--icon-color-primary: RGB(var(--black));', role: 'presentation', xmlns: 'http://www.w3.org/2000/svg' }, null, [
+        dom('use', { href: '#managed-icon__close-thin', xmlns: 'http://www.w3.org/2000/svg' }),
+      ]),
+    ]);
+
+  tagElement.append(removeButton);
+  tagElement.classList.add('xkit-removable-tag');
 });
 
 popupElement.addEventListener('click', processBundleClick);
@@ -264,9 +311,12 @@ export const main = async function () {
 
   populatePopups();
 
-  ({ originalPostTag, answerTag, autoTagAsker } = await getPreferences('quick_tags'));
+  ({ originalPostTag, answerTag, autoTagAsker, quickRemoveButtons } = await getPreferences('quick_tags'));
   if (originalPostTag || answerTag || autoTagAsker) {
     pageModifications.register('#selected-tags', processPostForm);
+  }
+  if (quickRemoveButtons) {
+    pageModifications.register(`${keyToCss('footerWrapper')} a${keyToCss('tag')}[href*="/tagged/"]:not(.xkit-removable-tag)`, addRemoveTagButtons);
   }
 
   window.addEventListener('xkit-quick-tags-migration', migrateTags);
@@ -275,12 +325,15 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
   pageModifications.unregister(processPostForm);
+  pageModifications.unregister(addRemoveTagButtons);
   popupElement.remove();
 
   unregisterPostOption('quick-tags');
 
   $(`.${buttonClass}`).remove();
   $(`.${excludeClass}`).removeClass(excludeClass);
+  $('.xkit-removable-tag > button').remove();
+  $('.xkit-removable-tag').removeClass('xkit-removable-tag');
 
   window.removeEventListener('xkit-quick-tags-migration', migrateTags);
 };

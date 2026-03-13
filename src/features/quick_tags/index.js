@@ -23,7 +23,7 @@ let controlButtonTemplate;
 
 export const styleElement = buildStyle(popoverStackingContextFix);
 
-const popupElement = dom('div', { id: 'quick-tags' });
+const popupElement = dom('fieldset', { id: 'quick-tags' });
 const popupInput = dom(
   'input',
   {
@@ -53,7 +53,7 @@ const checkLength = ({ currentTarget }) => {
 popupInput.addEventListener('input', checkLength);
 const popupForm = dom('form', null, { submit: event => event.preventDefault() }, [popupInput]);
 
-const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option' });
+const postOptionPopupElement = dom('fieldset', { id: 'quick-tags-post-option' });
 
 const storageKey = 'quick_tags.preferences.tagBundles';
 
@@ -156,31 +156,41 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
       },
     });
 
+    await updatePostOnPage(postElement, ['tags', 'tagsV2']);
     notify(displayText);
   } else {
     await megaEdit([postId], { mode: 'add', tags: tagsToAdd });
+
+    await updatePostOnPage(postElement, ['tags', 'tagsV2']);
     notify(`Edited legacy post on ${blogName}`);
   }
-
-  await updatePostOnPage(postElement, ['tags', 'tagsV2']);
 };
 
 const processFormSubmit = function ({ currentTarget }) {
+  popupElement.disabled = true;
+
   const postElement = currentTarget.closest(postSelector);
   const inputTags = popupInput.value.split(',').map(inputTag => inputTag.trim());
 
-  addTagsToPost({ postElement, inputTags }).catch(showErrorModal);
-  currentTarget.reset();
+  addTagsToPost({ postElement, inputTags })
+    .then(() => currentTarget.reset())
+    .catch(showErrorModal)
+    .finally(() => { popupElement.disabled = false; });
 };
 
 const processBundleClick = function ({ target }) {
   if (target.tagName !== 'BUTTON') { return; }
+  popupElement.disabled = true;
 
   const postElement = target.closest(postSelector);
   const inputTags = target.dataset.tags.split(',').map(inputTag => inputTag.trim());
 
-  addTagsToPost({ postElement, inputTags }).catch(showErrorModal);
-  popupElement.remove();
+  addTagsToPost({ postElement, inputTags })
+    .catch(showErrorModal)
+    .finally(() => {
+      popupElement.disabled = false;
+      popupElement.remove();
+    });
 };
 
 const processPostOptionBundleClick = function ({ target }) {

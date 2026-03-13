@@ -25,8 +25,8 @@ const createNowString = () => {
   return `${YYYY}-${MM}-${DD}T${hh}:${mm}`;
 };
 
-const showInitialPrompt = async (makePrivate) => {
-  const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event, makePrivate).catch(showErrorModal) }, [
+const showInitialPrompt = async (mode) => {
+  const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event, mode).catch(showErrorModal) }, [
     dom('label', null, null, [
       'Posts on blog:',
       dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption)),
@@ -48,7 +48,7 @@ const showInitialPrompt = async (makePrivate) => {
   }
 
   showModal({
-    title: `Select posts to make ${makePrivate ? 'private' : 'public'}`,
+    title: `Select posts to make ${mode}`,
     message: [initialForm],
     buttons: [
       modalCancelButton,
@@ -57,7 +57,7 @@ const showInitialPrompt = async (makePrivate) => {
   });
 };
 
-const confirmInitialPrompt = async (event, makePrivate) => {
+const confirmInitialPrompt = async (event, mode) => {
   event.preventDefault();
 
   const { submitter } = event;
@@ -76,7 +76,7 @@ const confirmInitialPrompt = async (event, makePrivate) => {
     .map(tag => tag.trim().toLowerCase())
     .filter(Boolean);
 
-  if (makePrivate && tags.length) {
+  if (mode === 'private' && tags.length) {
     const getTagCount = async tag => {
       const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag } });
       return totalPosts ?? 0;
@@ -99,20 +99,20 @@ const confirmInitialPrompt = async (event, makePrivate) => {
 
   const message = tags.length
     ? [
-        `Every ${makePrivate ? 'published' : 'private'} post on `,
+        `Every ${mode === 'private' ? 'published' : 'private'} post on `,
         createBlogSpan(name),
         ' from before ',
         beforeElement,
         ' tagged ',
         ...elementsAsList(tags.map(createTagSpan), 'or'),
-        ` will be set to ${makePrivate ? 'private' : 'public'}.`,
+        ` will be set to ${mode}.`,
       ]
     : [
-        `Every ${makePrivate ? 'published' : 'private'} post on `,
+        `Every ${mode === 'private' ? 'published' : 'private'} post on `,
         createBlogSpan(name),
         ' from before ',
         beforeElement,
-        ` will be set to ${makePrivate ? 'private' : 'public'}.`,
+        ` will be set to ${mode}.`,
       ];
 
   showModal({
@@ -123,8 +123,8 @@ const confirmInitialPrompt = async (event, makePrivate) => {
       dom(
         'button',
         { class: 'red' },
-        { click: () => editPosts({ makePrivate, uuid, name, tags, before }).catch(showErrorModal) },
-        [makePrivate ? 'Private them!' : 'Unprivate them!'],
+        { click: () => editPosts({ mode, uuid, name, tags, before }).catch(showErrorModal) },
+        [mode === 'private' ? 'Private them!' : 'Unprivate them!'],
       ),
     ],
   });
@@ -157,7 +157,7 @@ const showPostsNotFound = ({ name }) =>
 const dateFormat = new Intl.DateTimeFormat(document.documentElement.lang, { dateStyle: 'medium' });
 const timeFormat = new Intl.DateTimeFormat(document.documentElement.lang, { timeStyle: 'short' });
 
-const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
+const editPosts = async ({ mode, uuid, name, tags, before }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const editStatus = dom('span');
 
@@ -181,7 +181,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
   ]);
 
   showModal({
-    title: `Making posts ${makePrivate ? 'private' : 'public'}...`,
+    title: `Making posts ${mode}...`,
     message: [
       dom('small', null, null, ['Do not navigate away from this page.']),
       '\n\n',
@@ -200,7 +200,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
         apiFetch(resource).then(({ response }) => {
           response.posts
             .filter(({ canEdit }) => canEdit === true)
-            .filter(({ state }) => state === (makePrivate ? 'published' : 'private'))
+            .filter(({ state }) => state === (mode === 'private' ? 'published' : 'private'))
             .filter(({ timestamp }) => timestamp < before)
             .filter(postData =>
               tags.length
@@ -220,7 +220,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
     }
   };
 
-  if (makePrivate && tags.length) {
+  if (mode === 'private' && tags.length) {
     for (const tag of tags) {
       await collect(`/v2/blog/${uuid}/posts?${$.param({ tag, before, limit: 50 })}`);
     }
@@ -233,17 +233,15 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
     return;
   }
 
-  const filteredPostIds = [...filteredPostsMap.keys()];
-  const filteredPosts = [...filteredPostsMap.values()];
-
   let successCount = 0;
   let failCount = 0;
 
-  if (makePrivate) {
+  if (mode === 'private') {
+    editStatus.textContent = '\nPrivating posts...';
+
+    const filteredPostIds = [...filteredPostsMap.keys()];
     while (filteredPostIds.length !== 0) {
       const postIds = filteredPostIds.splice(0, 100);
-
-      if (editStatus.textContent === '') editStatus.textContent = '\nPrivating posts...';
 
       await Promise.all([
         megaEdit(postIds, { mode: 'private' }).then(() => {
@@ -259,6 +257,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
   } else {
     editStatus.textContent = '\nUnprivating posts...';
 
+    const filteredPosts = [...filteredPostsMap.values()];
     const editablePosts = [];
     filteredPosts.forEach(postData => isNpfCompatible(postData)
       ? editablePosts.push(postData)
@@ -292,7 +291,7 @@ const editPosts = async ({ makePrivate, uuid, name, tags, before }) => {
   showModal({
     title: 'All done!',
     message: [
-      `${makePrivate ? 'Privated' : 'Unprivated'} ${successCount} posts${failCount ? ` (failed: ${failCount})` : ''}.\n`,
+      `${mode === 'private' ? 'Privated' : 'Unprivated'} ${successCount} posts${failCount ? ` (failed: ${failCount})` : ''}.\n`,
       'Refresh the page to see the result.',
       failedStatus,
     ],
@@ -311,12 +310,12 @@ const sidebarOptions = {
   rows: [
     {
       label: 'Private posts',
-      onclick: () => showInitialPrompt(true),
+      onclick: () => showInitialPrompt('private'),
       carrot: true,
     },
     {
       label: 'Unprivate posts',
-      onclick: () => showInitialPrompt(false),
+      onclick: () => showInitialPrompt('public'),
       carrot: true,
     },
   ],

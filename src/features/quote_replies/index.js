@@ -6,27 +6,28 @@ import { showErrorModal } from '../../utils/modals.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { getPreferences } from '../../utils/preferences.js';
+import { noteObject, timelineObject } from '../../utils/react_props.js';
 import { buildSvg } from '../../utils/remixicon.js';
 import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
-import { userBlogs } from '../../utils/user.js';
+import { userBlogNames, userBlogs } from '../../utils/user.js';
 
 const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';
-const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
 // Remove outdated elements when loading module
 $(`.${buttonClass}`).remove();
 
 export const styleElement = buildStyle(`
 button.xkit-quote-replies {
+  align-items: center;
+  cursor: pointer;
+}
+
+button.xkit-quote-replies.in-notification {
   position: relative;
   align-self: center;
   transform: translateY(-2px);
-
-  align-items: center;
   margin: 0 6px;
-
-  cursor: pointer;
 }
 
 button.xkit-quote-replies svg {
@@ -42,18 +43,18 @@ button.xkit-quote-replies:disabled svg {
   transition-property: none;
 }
 
-button.xkit-quote-replies-dropdown {
+button.xkit-quote-replies.in-notification-dropdown {
   align-self: flex-start;
   margin: 10px 0 0;
 }
 
 @media (hover: hover) {
-  button.xkit-quote-replies svg {
+  button.xkit-quote-replies.in-notification svg {
     opacity: 0;
     transform: scale(0);
   }
 
-  ${notificationSelector}:is(:hover, :focus-within) button.xkit-quote-replies svg {
+  ${notificationSelector}:is(:hover, :focus-within) button.xkit-quote-replies.in-notification svg {
     opacity: 1;
     transform: scale(1);
   }
@@ -86,14 +87,14 @@ const processNotifications = notifications => notifications.forEach(async notifi
   activityElement.after(dom(
     'button',
     {
-      class: `${buttonClass} ${notification.matches(dropdownSelector) ? dropdownButtonClass : ''}`,
+      class: `${buttonClass} in-notification ${notification.matches(dropdownSelector) ? 'in-notification-dropdown' : ''}`,
       [displayInlineFlexUnlessDisabledAttr]: '',
       title: 'Quote this reply',
     },
     {
       click () {
         this.disabled = true;
-        quoteReply(tumblelogName, notificationProps)
+        quoteNotificationReply(tumblelogName, notificationProps)
           .catch(showErrorModal)
           .finally(() => { this.disabled = false; });
       },
@@ -102,15 +103,86 @@ const processNotifications = notifications => notifications.forEach(async notifi
   ));
 });
 
-const quoteReply = async (tumblelogName, notificationProps) => {
+const quoteNotificationReply = async (tumblelogName, notificationProps) => {
   const data = notificationProps.type === 'generic'
-    ? await createGenericReplyData(notificationProps)
-    : await createReplyData(notificationProps);
+    ? await createGenericNotificationReplyData(notificationProps)
+    : await createNotificationReplyData(notificationProps);
 
   openPostDraft(tumblelogName, data);
 };
 
-const createGenericReplyData = async (notificationProps) => {
+const processNoteReplyButtons = noteReplyButtons => noteReplyButtons.forEach(async noteReplyButton => {
+  const parentNoteElement = noteReplyButton.closest(keyToCss('threadedRepliesWrapper'))?.previousElementSibling;
+
+  const noteData = await noteObject(noteReplyButton);
+  const parentNoteData = parentNoteElement && await noteObject(parentNoteElement);
+  const timelineObjectData = await timelineObject(noteReplyButton);
+
+  const noteReplyType = determineNoteReplyType({ noteData, parentNoteData, timelineObjectData });
+  if (!noteReplyType) return;
+
+  noteReplyButton.parentElement.append(dom(
+    'button',
+    {
+      class: buttonClass,
+      [displayInlineFlexUnlessDisabledAttr]: '',
+      title: 'Quote this reply',
+    },
+    {
+      click () {
+        this.disabled = true;
+        quoteNoteReply({ noteData, noteReplyType, timelineObjectData })
+          .catch(showErrorModal)
+          .finally(() => { this.disabled = false; });
+      },
+    },
+    [buildSvg('ri-chat-quote-line')],
+  ));
+});
+
+const determineNoteReplyType = ({ noteData, parentNoteData, timelineObjectData }) => {
+  if (userBlogNames.includes(noteData.blogName)) return false;
+  if (timelineObjectData.community) return false;
+
+  if (parentNoteData && userBlogNames.includes(parentNoteData.blogName)) {
+    return {
+      type: 'reply_to_comment', // "replied to you in a post"
+      targetBlogName: parentNoteData.blogName,
+    };
+  }
+  if (userBlogNames.includes(timelineObjectData.blogName)) {
+    return {
+      type: 'reply', // "replied to your post"
+      targetBlogName: timelineObjectData.blogName,
+    };
+  }
+  for (const { formatting = [] } of noteData.content) {
+    for (const { type, blog } of formatting) {
+      if (type === 'mention' && userBlogNames.includes(blog.name)) {
+        return {
+          type: 'note_mention', // "mentioned you on a post"
+          targetBlogName: blog.name,
+        };
+      }
+    }
+  }
+  return false;
+};
+
+const quoteNoteReply = async ({ noteData, noteReplyType, timelineObjectData }) => {
+  const { blogName: replyingBlogName, content: replyContent } = noteData;
+
+  const { type, targetBlogName } = noteReplyType;
+
+  const { summary: targetPostSummary, postUrl: targetPostUrl } = timelineObjectData;
+  const replyingBlogUuid = await apiFetch(`/v2/blog/${replyingBlogName}/info?fields[blogs]=uuid`)
+    .then(({ response: { blog: { uuid } } }) => uuid);
+
+  const data = createReplyData({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent });
+  openPostDraft(targetBlogName, data);
+};
+
+const createGenericNotificationReplyData = async (notificationProps) => {
   const {
     subtype: type,
     timestamp,
@@ -128,7 +200,7 @@ const createGenericReplyData = async (notificationProps) => {
       ? bodyDescriptionContent.text.slice(summaryFormatting.start + 1, summaryFormatting.end - 1)
       : bodyDescriptionContent.text;
 
-    return await createReplyData({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary });
+    return await createNotificationReplyData({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary });
   } catch (exception) {
     console.error(exception);
     console.debug('[XKit] Falling back to generic quote content due to fetch/parse failure');
@@ -161,7 +233,7 @@ const createGenericReplyData = async (notificationProps) => {
   return { content, tags };
 };
 
-const createReplyData = async ({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary }) => {
+const createNotificationReplyData = async ({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary }) => {
   const { response } = await apiFetch(
     `/v2/blog/${targetTumblelogName}/post/${targetPostId}/notes/timeline`,
     { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } },
@@ -174,25 +246,32 @@ const createReplyData = async ({ type, timestamp, targetPostId, targetTumblelogN
     throw new Error('Reply not found.');
   }
 
+  const { content: replyContent, blog: { name: replyingBlogName, uuid: replyingBlogUuid } } = reply;
+  const targetPostUrl = `https://${targetTumblelogName}.tumblr.com/post/${targetPostId}`;
+
+  return createReplyData({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent });
+};
+
+const createReplyData = ({ type, replyingBlogName, replyingBlogUuid, targetPostSummary, targetPostUrl, replyContent }) => {
   const verbiage = {
     reply: 'replied to your post',
     reply_to_comment: 'replied to you in a post',
     note_mention: 'mentioned you on a post',
   }[type];
-  const text = `@${reply.blog.name} ${verbiage} \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`;
+  const text = `@${replyingBlogName} ${verbiage} \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`;
   const formatting = [
-    { start: 0, end: reply.blog.name.length + 1, type: 'mention', blog: { uuid: reply.blog.uuid } },
-    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: `https://${targetTumblelogName}.tumblr.com/post/${targetPostId}` },
+    { start: 0, end: replyingBlogName.length + 1, type: 'mention', blog: { uuid: replyingBlogUuid } },
+    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: targetPostUrl },
   ];
 
   const content = [
     { type: 'text', text, formatting },
-    Object.assign(reply.content[0], { subtype: 'indented' }),
+    Object.assign(replyContent[0], { subtype: 'indented' }),
     { type: 'text', text: '\u200B' },
   ];
   const tags = [
     ...originalPostTag ? [originalPostTag] : [],
-    ...tagReplyingBlog ? [reply.blog.name] : [],
+    ...tagReplyingBlog ? [replyingBlogName] : [],
   ].join(',');
 
   return { content, tags };
@@ -223,6 +302,7 @@ export const main = async function () {
   ({ tagReplyingBlog, newTab } = await getPreferences('quote_replies'));
 
   pageModifications.register(notificationSelector, processNotifications);
+  pageModifications.register(`${keyToCss('replyCountButton')}:has(use[href="#managed-icon__ds-reply-outline-16"])`, processNoteReplyButtons);
 
   const { [storageKey]: draftLocation } = await browser.storage.local.get(storageKey);
   browser.storage.local.remove(storageKey);
@@ -234,6 +314,8 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(processNotifications);
+  pageModifications.unregister(processNoteReplyButtons);
+
   $(`.${buttonClass}`).remove();
 };
 

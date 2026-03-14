@@ -7,11 +7,11 @@ import { getPreferences } from '../../utils/preferences.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
 const pausedPosterAttribute = 'data-paused-gif-use-poster';
+const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
 const labelSizeAttribute = 'data-paused-gif-label-size';
 const containerClass = 'xkit-paused-gif-container';
-const backgroundGifClass = 'xkit-paused-background-gif';
 
 let loadingMode;
 
@@ -83,13 +83,8 @@ ${keyToCss('background')}[${labelAttribute}="before"]::before {
   display: none;
 }
 
-.${backgroundGifClass}:not(:hover) {
-  background-image: none !important;
-  background-color: rgb(var(--secondary-accent));
-}
-
-.${backgroundGifClass}:not(:hover) > :is(div, span) {
-  color: rgb(var(--black));
+[style*="${pausedBackgroundImageVar}"]:not(${hovered}) {
+  background-image: var(${pausedBackgroundImageVar}) !important;
 }
 `);
 
@@ -178,9 +173,17 @@ const processGifs = function (gifElements) {
   });
 };
 
+const urlRegex = /url\(["'][^)]*?\.(?:gif|gifv|webp)["']\)/g;
 const processBackgroundGifs = function (gifBackgroundElements) {
-  gifBackgroundElements.forEach(gifBackgroundElement => {
-    gifBackgroundElement.classList.add(backgroundGifClass);
+  gifBackgroundElements.forEach(async gifBackgroundElement => {
+    const sourceValue = gifBackgroundElement.style.backgroundImage;
+    const sourceUrl = sourceValue.match(urlRegex)?.[0];
+    if (!sourceUrl) return;
+
+    gifBackgroundElement.style.setProperty(
+      pausedBackgroundImageVar,
+      sourceValue.replaceAll(urlRegex, 'linear-gradient(rgb(var(--secondary-accent)), rgb(var(--secondary-accent)))'),
+    );
     addLabel(gifBackgroundElement, true);
   });
 };
@@ -268,9 +271,10 @@ export const clean = async function () {
   );
 
   $(`.${canvasClass}`).remove();
-  $(`.${backgroundGifClass}`).removeClass(backgroundGifClass);
   $(`[${labelAttribute}]`).removeAttr(labelAttribute);
   $(`[${labelSizeAttribute}]`).removeAttr(labelSizeAttribute);
   $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
   $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
+  [...document.querySelectorAll(`[style*="${pausedBackgroundImageVar}"]`)]
+    .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
 };

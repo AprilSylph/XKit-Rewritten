@@ -277,20 +277,20 @@
 
 /* === AlreadyReblogged === */
 
-footer.published :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--green)); }
-footer.queue :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--purple)); }
-footer.draft :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--red)); }
+[data-already-reblogged-state="published"] :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--green)); }
+[data-already-reblogged-state="queue"] :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--purple)); }
+[data-already-reblogged-state="draft"] :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--red)); }
 
-footer:is(.published, .queue, .draft) :is(a, button) svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"]) {
+[data-already-reblogged-state] :is(a, button) svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"]) {
   --icon-color-primary: currentColor; /* Ensure that colouration is applied to icon */
 }
 
-footer:is(.published, .queue, .draft) :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) {
+[data-already-reblogged-state] :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) {
   position: relative; /* For absolute positioning of tick pseudo-element */
 }
 
 /* Cut-out for tick in 2025 post footer */
-footer:is(.published, .queue, .draft) :is(a, button) svg:has(use[href="#managed-icon__ds-reblog-24"]) {
+[data-already-reblogged-state] :is(a, button) svg:has(use[href="#managed-icon__ds-reblog-24"]) {
   -webkit-mask-image: radial-gradient(
     calc(14.7px / 2) calc(18px / 2) at bottom 4px left 21px,
     transparent 99%,
@@ -304,7 +304,7 @@ footer:is(.published, .queue, .draft) :is(a, button) svg:has(use[href="#managed-
 }
 
 /* Styles for tick pseudo-element */
-footer:is(.published, .queue, .draft) :is(a, button):has(use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"]))::after {
+[data-already-reblogged-state] :is(a, button):has(use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"]))::after {
   position: absolute;
 
   display: inline-block;
@@ -320,14 +320,14 @@ footer:is(.published, .queue, .draft) :is(a, button):has(use:is([href="#managed-
 }
 
 /* Pre-2025 post footer */
-footer:is(.published, .queue, .draft) a:has(use[href="#managed-icon__reblog"])::after {
+[data-already-reblogged-state] a:has(use[href="#managed-icon__reblog"])::after {
   background-color: var(--content-panel);
   bottom: -5px;
   right: -5px;
 }
 
 /* 2025 post footer */
-footer:is(.published, .queue, .draft) :is(a, button):has(use[href="#managed-icon__ds-reblog-24"])::after {
+[data-already-reblogged-state] :is(a, button):has(use[href="#managed-icon__ds-reblog-24"])::after {
   bottom: 4px;
   left: 21px;
 }

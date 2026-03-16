@@ -223,15 +223,12 @@ const removePopupOnOutsideTouch = async ({ target }) => {
   }
 };
 
-const markPostReblogged = ({ footer, state }) => {
-  footer.classList.remove('published', 'queue', 'draft');
-  footer.classList.add(state);
+const markPostReblogged = ({ postElement, state }) => {
+  postElement.dataset.alreadyRebloggedState = state;
 };
 
 /** @param {PointerEvent} event actionButtons.children[*] click event object */
 async function reblogPost ({ currentTarget }) {
-  const footer = popupElement.closest('footer');
-
   currentTarget.blur();
   actionButtons.disabled = true;
 
@@ -261,7 +258,7 @@ async function reblogPost ({ currentTarget }) {
   try {
     const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
     if (meta.status === 201) {
-      markPostReblogged({ footer, state });
+      markPostReblogged({ postElement, state });
 
       if (lastPostID === postID) {
         popupElement.remove();
@@ -299,9 +296,7 @@ const processPosts = async function (postElements) {
     const rootID = rebloggedRootId || id;
 
     if (alreadyRebloggedList.includes(rootID)) {
-      const reblogLink = postElement.querySelector(reblogButtonSelector);
-      const footer = reblogLink?.closest('footer');
-      if (footer) markPostReblogged({ footer, state: 'published' });
+      markPostReblogged({ postElement, state: 'published' });
     }
   });
 };

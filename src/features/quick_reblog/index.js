@@ -7,7 +7,7 @@ import { onNewPosts } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { popoverStackingContextFix } from '../../utils/post_popovers.js';
 import { getPreferences } from '../../utils/preferences.js';
-import { timelineObject } from '../../utils/react_props.js';
+import { timelineObject, trailItem } from '../../utils/react_props.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../../utils/user.js';
 
@@ -176,8 +176,13 @@ const showPopupOnHover = async ({ currentTarget }) => {
   const buttonDiv = currentTarget.closest(buttonDivSelector) ?? currentTarget.parentElement;
   if (buttonDiv.matches(':has([aria-expanded="true"])')) return;
 
-  const thisPost = currentTarget.closest(postSelector);
-  const { blog, canReblog } = await timelineObject(thisPost);
+  const timelineObjectData = await timelineObject(currentTarget);
+  const trailItemData = await trailItem(currentTarget);
+
+  const { blog } = trailItemData ?? timelineObjectData;
+  const { canReblog, id: thisPostID } = trailItemData?.post ?? timelineObjectData;
+
+  // todo: check what happens if you reblog a post from a blog, password protect the blog, then hover the reblog
   if (canReblog === false || blog?.isPasswordProtected) return;
 
   clearTimeout(timeoutID);
@@ -187,14 +192,13 @@ const showPopupOnHover = async ({ currentTarget }) => {
   popupElement.parentNode.addEventListener('mouseleave', removePopupOnLeave);
   document.body.addEventListener('touchend', removePopupOnOutsideTouch);
 
-  const thisPostID = thisPost.dataset.id;
   if (thisPostID !== lastPostID) {
     if (!rememberLastBlog) {
       blogSelector.value = blogSelector.options[0].value;
       onBlogSelectorChange();
     }
     resetPopupState();
-    timelineObject(thisPost).then(renderTagSuggestions);
+    renderTagSuggestions(timelineObjectData);
   }
   lastPostID = thisPostID;
 };
@@ -232,8 +236,17 @@ async function reblogPost ({ currentTarget }) {
   currentTarget.blur();
   actionButtons.disabled = true;
 
-  const postElement = currentTarget.closest(postSelector);
-  const postID = postElement.dataset.id;
+  const footer = currentTarget.closest('footer');
+
+  const timelineObjectData = await timelineObject(footer);
+  const trailItemData = await trailItem(footer);
+
+  const { blog: { uuid: parentTumblelogUUID } } = trailItemData ?? timelineObjectData;
+  const { id: postID } = trailItemData?.post ?? timelineObjectData;
+
+  // trail items have the same reblog key as their parent post
+  const { reblogKey } = timelineObjectData;
+
   const { state } = currentTarget.dataset;
 
   const blog = blogSelector.value;
@@ -242,7 +255,6 @@ async function reblogPost ({ currentTarget }) {
     ...reblogTag ? [reblogTag] : [],
     ...(state === 'queue' && queueTag) ? [queueTag] : [],
   ].join(',');
-  const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } = await timelineObject(postElement);
 
   const requestPath = `/v2/blog/${blog}/posts`;
 
@@ -258,7 +270,7 @@ async function reblogPost ({ currentTarget }) {
   try {
     const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
     if (meta.status === 201) {
-      markPostReblogged({ postElement, state });
+      markPostReblogged({ postElement: currentTarget.closest(postSelector), state });
 
       if (lastPostID === postID) {
         popupElement.remove();
@@ -271,7 +283,7 @@ async function reblogPost ({ currentTarget }) {
 
       if (alreadyRebloggedEnabled) {
         const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(alreadyRebloggedStorageKey);
-        const rootID = rebloggedRootId || postID;
+        const rootID = timelineObjectData.rebloggedRootId || postID;
 
         if (alreadyRebloggedList.includes(rootID) === false) {
           alreadyRebloggedList.push(rootID);

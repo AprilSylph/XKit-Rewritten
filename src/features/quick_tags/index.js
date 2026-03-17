@@ -147,23 +147,24 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 
   tags.push(...tagsToAdd);
 
+  let displayText = '';
+
   if (isNpfCompatible(postData)) {
-    const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
+    const { response } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
       method: 'PUT',
       body: {
         ...createEditRequestBody(postData),
         tags: tags.join(','),
       },
     });
-
-    await updatePostOnPage(postElement, ['tags', 'tagsV2']);
-    notify(displayText);
+    ({ displayText } = response);
   } else {
     await megaEdit([postId], { mode: 'add', tags: tagsToAdd });
-
-    await updatePostOnPage(postElement, ['tags', 'tagsV2']);
-    notify(`Edited legacy post on ${blogName}`);
+    displayText = `Edited legacy post on ${blogName}`;
   }
+
+  await updatePostOnPage(postElement, ['tags', 'tagsV2']);
+  notify(displayText);
 };
 
 const processFormSubmit = function ({ currentTarget }) {

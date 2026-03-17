@@ -1,4 +1,4 @@
-details {
+:host(:not(:last-child)) details {
   border-bottom: 1px dotted rgb(var(--active-grey));
 }
 

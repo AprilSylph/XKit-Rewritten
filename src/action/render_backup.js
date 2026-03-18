@@ -1,10 +1,12 @@
-const localExportDisplayElement = document.getElementById('local-storage-export');
-const localCopyButton = document.getElementById('copy-local');
-const localDownloadButton = document.getElementById('download-local');
+const exportForm = document.getElementById('export');
+const exportValueTextarea = document.getElementById('export-value');
+const exportCopyButton = document.getElementById('export-copy');
+const exportDownloadButton = document.getElementById('export-download');
 
-const localImportTextarea = document.getElementById('local-storage-import');
-const localOverwriteWarning = document.getElementById('overwrite-warning');
-const localRestoreButton = document.getElementById('restore-local');
+const importForm = document.getElementById('import');
+const importValueTextarea = document.getElementById('import-value');
+const importSubmitButton = document.getElementById('import-submit');
+const importWarningElement = document.getElementById('import-warning');
 
 const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
 
@@ -12,19 +14,19 @@ const onStorageChanged = async function () {
   const storageLocal = await browser.storage.local.get();
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
 
-  localExportDisplayElement.textContent = stringifiedStorage;
-  localOverwriteWarning.dataset.hidden = Object.keys(storageLocal).length === 0;
+  exportValueTextarea.value = stringifiedStorage;
+  importWarningElement.dataset.hidden = Object.keys(storageLocal).length === 0;
 };
 
-const localCopy = async function () {
-  if (localCopyButton.classList.contains('copied')) { return; }
+const localCopy = () => {
+  if (exportCopyButton.classList.contains('copied')) { return; }
 
-  navigator.clipboard.writeText(localExportDisplayElement.textContent).then(async () => {
-    localCopyButton.classList.add('copied');
+  navigator.clipboard.writeText(exportValueTextarea.value).then(async () => {
+    exportCopyButton.classList.add('copied');
     await sleep(2000);
-    localCopyButton.classList.add('fading');
+    exportCopyButton.classList.add('fading');
     await sleep(1000);
-    localCopyButton.classList.remove('copied', 'fading');
+    exportCopyButton.classList.remove('copied', 'fading');
   });
 };
 
@@ -53,53 +55,54 @@ const localExport = async function () {
   URL.revokeObjectURL(blobUrl);
 };
 
-const localRestore = async function () {
-  const importText = localImportTextarea.value;
+/** @type {(event: SubmitEvent) => void} */
+function onExportSubmit (event) {
+  event.preventDefault();
+  if (event.submitter === exportCopyButton) localCopy();
+  if (event.submitter === exportDownloadButton) localExport();
+}
+
+/** @type {(event: SubmitEvent) => Promise<void>} */
+async function onImportSubmit (event) {
+  event.preventDefault();
+
+  const importText = importValueTextarea.value;
 
   try {
-    localRestoreButton.disabled = true;
+    importSubmitButton.disabled = true;
 
     const parsedStorage = JSON.parse(importText);
 
-    localOverwriteWarning.dataset.forceHidden = localOverwriteWarning.dataset.hidden;
+    importWarningElement.dataset.forceHidden = importWarningElement.dataset.hidden;
 
     await browser.storage.local.clear();
     await browser.storage.local.set(parsedStorage);
 
-    localRestoreButton.classList.add('success');
-    localRestoreButton.textContent = 'Successfully restored!';
-    localImportTextarea.value = '';
+    importSubmitButton.classList.add('success');
+    importSubmitButton.textContent = 'Successfully restored!';
+    importValueTextarea.value = '';
     document.getElementById('configuration-tab').classList.add('outdated');
   } catch (exception) {
-    localRestoreButton.classList.add('failure');
-    localRestoreButton.textContent =
-      exception instanceof SyntaxError ? 'Failed to parse backup contents!' : 'Failed to restore!';
+    importSubmitButton.classList.add('failure');
+    importSubmitButton.textContent = exception instanceof SyntaxError
+      ? 'Failed to parse backup contents!'
+      : 'Failed to restore!';
     console.error(exception);
   } finally {
     await sleep(3000);
-    localRestoreButton.disabled = false;
-    localRestoreButton.classList.remove('success', 'failure');
-    localRestoreButton.textContent = '';
-    delete localOverwriteWarning.dataset.forceHidden;
+    importSubmitButton.disabled = false;
+    importSubmitButton.classList.remove('success', 'failure');
+    importSubmitButton.textContent = 'Restore';
+    delete importWarningElement.dataset.forceHidden;
   }
-};
+}
 
 const renderLocalBackup = async function () {
   onStorageChanged();
   browser.storage.local.onChanged.addListener(onStorageChanged);
 
-  localCopyButton.addEventListener('click', localCopy);
-  localDownloadButton.addEventListener('click', localExport);
-
-  localRestoreButton.addEventListener('click', localRestore);
+  exportForm.addEventListener('submit', onExportSubmit);
+  importForm.addEventListener('submit', onImportSubmit);
 };
 
 renderLocalBackup();
-
-document.querySelectorAll('#backup-panel details').forEach(details => details.addEventListener('toggle', ({ currentTarget }) => {
-  if (currentTarget.open) {
-    [...currentTarget.parentNode.children]
-      .filter(element => element !== currentTarget)
-      .forEach(sibling => { sibling.open = false; });
-  }
-}));

@@ -51,25 +51,25 @@
         <sponsor-progress></sponsor-progress>
       </section>
       <section id="backup-panel" role="tabpanel" aria-labelledby="backup-tab" tabindex="0" hidden>
-        <details id="export" open>
-          <summary><h4>Export</h4></summary>
-          <div class="content">
-            <pre id="local-storage-export"></pre>
-            <div class="buttons-container">
-              <button id="copy-local">Copy All</button>
-              <button id="download-local">Download</button>
-            </div>
-          </div>
-        </details>
-        <details id="import">
-          <summary><h4>Import</h4></summary>
-          <div class="content">
-            <label for="local-storage-import">Paste the contents of your saved backup here.</label>
-            <textarea id="local-storage-import" rows="10" spellcheck="false"></textarea>
-            <button id="restore-local"></button>
-            <div id="overwrite-warning">⚠️ Warning: Existing data will be overwritten!</div>
-          </div>
-        </details>
+        <section aria-labelledby="export-heading">
+          <h4 id="export-heading">Export</h4>
+          <form id="export" aria-labelledby="export-heading">
+            <textarea id="export-value" rows="10" spellcheck="false" readonly></textarea>
+            <fieldset>
+              <button id="export-copy" type="submit">Copy All</button>
+              <button id="export-download" type="submit">Download</button>
+            </fieldset>
+          </form>
+        </section>
+        <section aria-labelledby="import-heading">
+          <h4 id="import-heading">Import</h4>
+          <form id="import" aria-labelledby="import-heading">
+            <label for="import-value">Paste the contents of your saved backup here.</label>
+            <textarea id="import-value" rows="10" spellcheck="false"></textarea>
+            <button id="import-submit" type="submit">Restore</button>
+            <div id="import-warning">⚠️ Warning: Existing data will be overwritten!</div>
+          </form>
+        </section>
       </section>
       <section id="links-panel" role="tabpanel" aria-labelledby="links-tab" tabindex="0" hidden>
         <h4>Help & information</h4>

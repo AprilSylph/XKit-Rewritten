@@ -1,42 +1,25 @@
-#backup-panel details {
-  padding: 1ch;
+#backup-panel section {
+  padding: 8px;
 }
 
-#backup-panel details > .content {
-  margin-top: 0.5em;
+#backup-panel section:not(:last-child) {
+  border-bottom: 1px dotted rgb(var(--active-grey));
+}
 
+#backup-panel form {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
+  justify-content: flex-start;
+  align-items: stretch;
+  row-gap: 8px;
+  margin-block-start: 0;
+  margin-block-end: 8px;
 }
 
-#backup-panel details[open] ~ details summary ~ * {
-  display: none;
-}
-
-#backup-panel h4 {
-  display: inline-block;
-  margin: 0;
-}
-
-#backup-panel label {
-  margin: 0;
-}
-
-#backup-panel pre {
-  width: 0;
-  min-width: 100%;
-
-  -webkit-user-select: all;
-  user-select: all;
-}
-
-#backup-panel pre,
 #backup-panel textarea {
-  max-height: calc(10em + 2ch);
   overflow: auto;
   overflow-wrap: break-word;
-  padding: 1ch;
+  padding: 8px;
   border: none;
   margin: 0;
 
@@ -47,23 +30,16 @@
   white-space: pre;
 }
 
-#overwrite-warning[data-force-hidden="false"],
-#overwrite-warning:where([data-hidden="false"]) {
-  display: flex;
-  justify-content: center;
-}
-#overwrite-warning[data-force-hidden="true"],
-#overwrite-warning:where([data-hidden="true"]) {
-  display: none;
-}
-
-.buttons-container {
+#backup-panel fieldset {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding: 0;
+  border: none;
+  margin: 0;
 }
 
-.buttons-container button {
+#backup-panel fieldset button {
   padding: 0;
   border: none;
   margin: 0;
@@ -74,7 +50,7 @@
   font-weight: bold;
 }
 
-#copy-local.copied::after {
+#export-copy.copied::after {
   margin-left: 1ch;
 
   content: "Copied!";
@@ -85,37 +61,32 @@
   opacity: 1;
 }
 
-#copy-local.copied.fading::after {
+#export-copy.copied.fading::after {
   opacity: 0;
 }
 
-#import {
-  border-top: 1px dotted rgb(var(--active-grey));
-}
-
-#restore-local {
+#import-submit {
   display: block;
   width: 100%;
 
   text-align: center;
 }
 
-#restore-local:empty::before {
-  content: "Restore";
-}
-
-#restore-local.success {
-  border: none;
-
+#import-submit:is(.success, .failure) {
   background-color: transparent;
-  color: #00cf35;
+  border-color: transparent;
   font-weight: bold;
 }
 
-#restore-local.failure {
-  border: none;
+#import-submit.success { color: #00cf35; }
+#import-submit.failure { color: #cf0000; }
 
-  background-color: transparent;
-  color: #cf0000;
-  font-weight: bold;
+#import-warning[data-force-hidden="false"],
+#import-warning:where([data-hidden="false"]) {
+  display: flex;
+  justify-content: center;
+}
+#import-warning[data-force-hidden="true"],
+#import-warning:where([data-hidden="true"]) {
+  display: none;
 }

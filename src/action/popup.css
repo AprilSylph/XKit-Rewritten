@@ -152,13 +152,14 @@ select:focus {
   background-color: rgb(var(--active-grey));
 }
 
+h4 {
+  margin-block: 8px;
+}
+
 textarea {
   resize: none;
   width: 100%;
-}
 
-textarea,
-pre {
   scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
   scrollbar-width: thin;
 }

@@ -19,14 +19,19 @@
 #backup-panel textarea {
   overflow: auto;
   overflow-wrap: break-word;
+  width: 100%;
   padding: 8px;
   border: none;
+  border-radius: 3px;
+  resize: none;
   margin: 0;
 
   background-color: rgb(var(--passive-grey));
   color: rgb(var(--black));
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: smaller;
+  scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
+  scrollbar-width: thin;
   white-space: pre;
 }
 
@@ -39,7 +44,7 @@
   margin: 0;
 }
 
-#backup-panel fieldset button {
+#backup-panel form fieldset button {
   padding: 0;
   border: none;
   margin: 0;
@@ -48,6 +53,23 @@
   color: rgb(var(--accent));
   cursor: pointer;
   font-weight: bold;
+}
+
+#backup-panel dialog {
+  text-align: center;
+}
+
+#backup-panel dialog ul {
+  max-width: max-content;
+  padding-inline: 16px;
+  margin-inline: auto;
+
+  text-align: start;
+}
+
+#backup-panel dialog fieldset {
+  justify-content: center;
+  column-gap: 16px;
 }
 
 #export-copy.copied::after {

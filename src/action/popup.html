@@ -67,8 +67,19 @@
             <label for="import-value">Paste the contents of your saved backup here.</label>
             <textarea id="import-value" rows="10" spellcheck="false"></textarea>
             <button id="import-submit" type="submit">Restore</button>
-            <div id="import-warning">⚠️ Warning: Existing data will be overwritten!</div>
           </form>
+          <dialog id="import-confirmation">
+            <h4>⚠️ Delete existing configuration?</h4>
+            <p>Restoring this backup will overwrite your existing configuration.</p>
+            <ul>
+              <li>Existing configuration size: <span id="import-size-old">Calculating…</span></li>
+              <li>New configuration size: <span id="import-size-new">Calculating…</span></li>
+            </ul>
+            <fieldset>
+              <button id="import-cancel">Cancel</button>
+              <button id="import-confirm">Overwrite</button>
+            </fieldset>
+          </dialog>
         </section>
       </section>
       <section id="links-panel" role="tabpanel" aria-labelledby="links-tab" tabindex="0" hidden>

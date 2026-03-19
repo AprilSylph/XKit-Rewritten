@@ -21,27 +21,33 @@
 }
 
 html {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  overflow-y: scroll;
-
   font-size: 14px;
+  overflow-y: scroll;
   scrollbar-color: rgb(var(--active-grey)) rgb(var(--white));
 }
 
-html, main {
+html, body, main {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   width: 375px;
   min-width: 100%;
   max-width: 100%;
 }
 
 body {
+  min-height: 100vh;
+
   background-color: rgb(var(--white));
   color: rgb(var(--black));
   font: inherit;
   -webkit-user-select: none;
   user-select: none;
+}
+
+main {
+  flex-grow: 1;
+  flex-shrink: 0;
 }
 
 #permissions-banner,
@@ -77,6 +83,7 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  flex: 0;
   padding: 8px 4px;
   border-bottom: 1px solid rgb(var(--active-grey));
 }
@@ -107,6 +114,8 @@ body {
 
 [role="tabpanel"] {
   position: relative;
+  flex-grow: 1;
+  flex-shrink: 0;
 }
 
 [role="tabpanel"]:focus-visible {

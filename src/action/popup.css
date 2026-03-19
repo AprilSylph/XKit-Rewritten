@@ -163,3 +163,7 @@ textarea {
   scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
   scrollbar-width: thin;
 }
+
+.clr-picker {
+  width: 210px;
+}

@@ -250,7 +250,8 @@ h4 {
 }
 
 ul {
-  padding-inline: 16px;
+  padding-inline-start: 16px;
+  padding-inline-end: 0;
 }
 
 .clr-picker {

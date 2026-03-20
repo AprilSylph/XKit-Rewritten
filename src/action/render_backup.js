@@ -77,7 +77,7 @@ const unitFormat = new Intl.NumberFormat('en-GB', {
   maximumFractionDigits: 2,
 });
 
-const showoverwriteConfirmationDialog = (currentStorage, parsedStorage) => new Promise((resolve, reject) => {
+const showOverwriteConfirmationDialog = (currentStorage, parsedStorage) => new Promise((resolve, reject) => {
   overwriteConfirmationDialog.showModal();
 
   overwriteSizeOldSpan.textContent = unitFormat.format(getByteLength(currentStorage) / 1024);
@@ -107,7 +107,7 @@ async function onImportSubmit (event) {
     const parsedStorage = JSON.parse(importText);
 
     if (Object.keys(currentStorage).length !== 0) {
-      await showoverwriteConfirmationDialog(currentStorage, parsedStorage);
+      await showOverwriteConfirmationDialog(currentStorage, parsedStorage);
     }
 
     await browser.storage.local.clear();

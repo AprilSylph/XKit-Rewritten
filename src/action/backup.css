@@ -2,11 +2,11 @@
   padding: 8px;
 }
 
-#backup-panel section:not(:last-child) {
+#backup-panel section:first-child {
   border-bottom: 1px dotted rgb(var(--active-grey));
 }
 
-#backup-panel form {
+#backup-panel section form {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -16,7 +16,7 @@
   margin-block-end: 8px;
 }
 
-#backup-panel textarea {
+#backup-panel section textarea {
   overflow: auto;
   overflow-wrap: break-word;
   width: 100%;
@@ -35,7 +35,7 @@
   white-space: pre;
 }
 
-#backup-panel fieldset {
+#backup-panel section fieldset {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -44,7 +44,7 @@
   margin: 0;
 }
 
-#backup-panel form fieldset button {
+#backup-panel section fieldset button {
   padding: 0;
   border: none;
   margin: 0;
@@ -53,23 +53,6 @@
   color: rgb(var(--accent));
   cursor: pointer;
   font-weight: bold;
-}
-
-#backup-panel dialog {
-  text-align: center;
-}
-
-#backup-panel dialog ul {
-  max-width: max-content;
-  padding-inline: 16px;
-  margin-inline: auto;
-
-  text-align: start;
-}
-
-#backup-panel dialog fieldset {
-  justify-content: center;
-  column-gap: 16px;
 }
 
 #export-copy.copied::after {

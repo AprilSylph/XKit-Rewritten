@@ -4,8 +4,23 @@
   --accent: 10, 132, 255;
   --passive-grey: 223, 223, 229;
   --active-grey: 207, 207, 216;
-
   --search-highlight: 255, 233, 0;
+
+  /* Acorn Tokens */
+  --card-background-color: #ffffff;
+  --card-box-shadow:
+    0 0.25px 0.75px rgba(0, 0, 0, 0.05),
+    0 2px 6px rgba(0, 0, 0, 0.1);
+  --background-color-overlay: oklch(0 0 0 / 50%);
+  --button-background-color: #eeeeef;
+  --button-background-color-hover: #dededf;
+  --button-background-color-active: #cdcdcf;
+  --button-background-color-destructive: oklch(55% 0.21 15);
+  --button-background-color-destructive-hover: oklch(48% 0.2 15);
+  --button-background-color-destructive-active: oklch(41% 0.17 15);
+  --text-color: #15141a;
+  --button-text-color-destructive: #ffffff;
+  --focus-outline: 2px solid oklch(55% 0.24 260);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -15,8 +30,23 @@
     --accent: 54, 213, 255;
     --passive-grey: 83, 83, 94;
     --active-grey: 91, 91, 102;
-
     --search-highlight: 0, 62, 170;
+
+    /* Acorn Tokens */
+    --card-background-color: #23222b;
+    --card-box-shadow:
+      0 0.25px 0.75px rgba(0, 0, 0, 0.2),
+      0 2px 6px rgba(0, 0, 0, 0.4);
+    --background-color-overlay: oklch(0 0 0 / 50%);
+    --button-background-color: #2c2b31;
+    --button-background-color-hover: #3b3a41;
+    --button-background-color-active: #4b4a50;
+    --button-background-color-destructive: oklch(76% 0.17 15);
+    --button-background-color-destructive-hover: oklch(83% 0.14 15);
+    --button-background-color-destructive-active: oklch(90% 0.1 15);
+    --text-color: #fbfbfe;
+    --button-text-color-destructive: #15141a;
+    --focus-outline: 2px solid oklch(76% 0.14 205);
   }
 }
 
@@ -151,8 +181,76 @@ select:focus {
   background-color: rgb(var(--active-grey));
 }
 
+dialog {
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+
+  background-color: var(--card-background-color);
+  box-shadow: var(--card-box-shadow);
+  color: var(--text-color);
+  font-size: 15px;
+}
+
+::backdrop {
+  background-color: var(--background-color-overlay);
+}
+
+dialog fieldset {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  column-gap: 8px;
+  padding: 0;
+  border: none;
+  margin: 0;
+}
+
+dialog button {
+  display: inline-block;
+  min-height: 32px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 4px 16px;
+
+  background-color: var(--button-background-color);
+  color: var(--text-color);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+dialog button:hover {
+  background-color: var(--button-background-color-hover);
+}
+
+dialog button:hover:active {
+  background-color: var(--button-background-color-active);
+}
+
+dialog button:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
+dialog button.destructive {
+  background-color: var(--button-background-color-destructive);
+  color: var(--button-text-color-destructive);
+}
+
+dialog button.destructive:hover {
+  background-color: var(--button-background-color-destructive-hover);
+}
+
+dialog button.destructive:hover:active {
+  background-color: var(--button-background-color-destructive-active);
+}
+
 h4 {
   margin-block: 8px;
+}
+
+ul {
+  padding-inline: 16px;
 }
 
 .clr-picker {

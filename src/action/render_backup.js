@@ -6,11 +6,12 @@ const exportDownloadButton = document.getElementById('export-download');
 const importForm = document.getElementById('import');
 const importValueTextarea = document.getElementById('import-value');
 const importSubmitButton = document.getElementById('import-submit');
-const importConfirmationDialog = document.getElementById('import-confirmation');
-const importSizeOldSpan = document.getElementById('import-size-old');
-const importSizeNewSpan = document.getElementById('import-size-new');
-const importCancelButton = document.getElementById('import-cancel');
-const importConfirmButton = document.getElementById('import-confirm');
+
+const overwriteConfirmationDialog = document.getElementById('overwrite-confirmation');
+const overwriteSizeOldSpan = document.getElementById('overwrite-size-old');
+const overwriteSizeNewSpan = document.getElementById('overwrite-size-new');
+const overwriteCancelButton = document.getElementById('overwrite-cancel');
+const overwriteConfirmButton = document.getElementById('overwrite-confirm');
 
 const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
 
@@ -76,19 +77,19 @@ const unitFormat = new Intl.NumberFormat('en-GB', {
   maximumFractionDigits: 2,
 });
 
-const showImportConfirmationDialog = (currentStorage, parsedStorage) => new Promise((resolve, reject) => {
-  importConfirmationDialog.showModal();
+const showoverwriteConfirmationDialog = (currentStorage, parsedStorage) => new Promise((resolve, reject) => {
+  overwriteConfirmationDialog.showModal();
 
-  importSizeOldSpan.textContent = unitFormat.format(getByteLength(currentStorage) / 1024);
-  importSizeNewSpan.textContent = unitFormat.format(getByteLength(parsedStorage) / 1024);
+  overwriteSizeOldSpan.textContent = unitFormat.format(getByteLength(currentStorage) / 1024);
+  overwriteSizeNewSpan.textContent = unitFormat.format(getByteLength(parsedStorage) / 1024);
 
-  importCancelButton.addEventListener('click', () => {
-    importConfirmationDialog.close();
+  overwriteCancelButton.addEventListener('click', () => {
+    overwriteConfirmationDialog.close();
     reject(new Error('Cancelled'));
   });
 
-  importConfirmButton.addEventListener('click', () => {
-    importConfirmationDialog.close();
+  overwriteConfirmButton.addEventListener('click', () => {
+    overwriteConfirmationDialog.close();
     resolve();
   });
 });
@@ -106,7 +107,7 @@ async function onImportSubmit (event) {
     const parsedStorage = JSON.parse(importText);
 
     if (Object.keys(currentStorage).length !== 0) {
-      await showImportConfirmationDialog(currentStorage, parsedStorage);
+      await showoverwriteConfirmationDialog(currentStorage, parsedStorage);
     }
 
     await browser.storage.local.clear();

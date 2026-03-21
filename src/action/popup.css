@@ -11,7 +11,6 @@
   --card-box-shadow:
     0 0.25px 0.75px rgba(0, 0, 0, 0.05),
     0 2px 6px rgba(0, 0, 0, 0.1);
-  --background-color-overlay: #00000080;
   --button-background-color: #eeeeef;
   --button-background-color-hover: #dededf;
   --button-background-color-active: #cdcdcf;
@@ -37,7 +36,6 @@
     --card-box-shadow:
       0 0.25px 0.75px rgba(0, 0, 0, 0.2),
       0 2px 6px rgba(0, 0, 0, 0.4);
-    --background-color-overlay: #00000080;
     --button-background-color: #2c2b31;
     --button-background-color-hover: #3b3a41;
     --button-background-color-active: #4b4a50;
@@ -48,6 +46,10 @@
     --button-text-color-destructive: #15141a;
     --focus-outline: 2px solid #00cadb;
   }
+}
+
+::backdrop {
+  background-color: #00000080;
 }
 
 html {
@@ -190,10 +192,6 @@ dialog {
   box-shadow: var(--card-box-shadow);
   color: var(--text-color);
   font-size: 15px;
-}
-
-::backdrop {
-  background-color: var(--background-color-overlay);
 }
 
 dialog fieldset {

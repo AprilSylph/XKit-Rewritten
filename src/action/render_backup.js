@@ -15,6 +15,8 @@ const overwriteConfirmButton = document.getElementById('overwrite-confirm');
 
 const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
 
+class UserInterrupt extends Error { name = 'UserInterrupt'; }
+
 const onStorageChanged = async function () {
   const storageLocal = await browser.storage.local.get();
   exportValueTextarea.value = JSON.stringify(storageLocal, null, 2);
@@ -85,7 +87,7 @@ const showOverwriteConfirmationDialog = (currentStorage, parsedStorage) => new P
 
   overwriteCancelButton.addEventListener('click', () => {
     overwriteConfirmationDialog.close();
-    reject(new Error('Cancelled'));
+    reject(new UserInterrupt());
   });
 
   overwriteConfirmButton.addEventListener('click', () => {
@@ -120,7 +122,7 @@ async function onImportSubmit (event) {
 
     await sleep(3000);
   } catch (exception) {
-    if (exception.message !== 'Cancelled') {
+    if (!(exception instanceof UserInterrupt)) {
       console.error(exception);
 
       importSubmitButton.classList.add('failure');

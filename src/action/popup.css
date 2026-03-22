@@ -156,6 +156,7 @@ body {
   content: "";
   outline: inherit;
   outline-offset: inherit;
+  pointer-events: none;
 }
 
 input[type="text"],

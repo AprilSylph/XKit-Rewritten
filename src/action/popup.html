@@ -70,7 +70,15 @@
           </form>
         </section>
         <dialog id="overwrite-confirmation">
-          <h4>⚠️&ensp;Overwrite current configuration?</h4>
+          <h4>
+            <figure class="acorn-icons" aria-hidden="true">
+              <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/e326587/icons/desktop/16/svg/warning-fill-16.svg -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-warning)">
+                <path d="M15.245 12.028 9.713 2.081a1.98 1.98 0 0 0-1.747-1.028A1.98 1.98 0 0 0 6.213 2.09L.75 12.037C.018 13.37.982 15 2.503 15h10.994c1.525 0 2.489-1.639 1.748-2.972M8.75 12.5h-1.5V11h1.5zm0-3h-1.5v-4h1.5z" />
+              </svg>
+            </figure>
+            Overwrite current configuration?
+          </h4>
           <p>Restoring this backup will replace your existing data.</p>
           <ul>
             <li><span id="overwrite-size-old">…</span> of existing data will be deleted.</li>

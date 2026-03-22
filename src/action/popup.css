@@ -20,6 +20,7 @@
   --text-color: #15141a;
   --button-text-color-destructive: #ffffff;
   --focus-outline: 2px solid #0062f9;
+  --icon-color-warning: #b16a00;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -45,6 +46,7 @@
     --text-color: #fbfbfe;
     --button-text-color-destructive: #15141a;
     --focus-outline: 2px solid #00cadb;
+    --icon-color-warning: #f5cc58;
   }
 }
 
@@ -251,6 +253,17 @@ h4 {
 ul {
   padding-inline-start: 16px;
   padding-inline-end: 0;
+}
+
+.acorn-icons {
+  display: inline-flex;
+  vertical-align: bottom;
+  margin: 0;
+}
+
+.acorn-icons svg {
+  height: 1.15em;
+  width: 1.15em;
 }
 
 .clr-picker {

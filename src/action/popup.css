@@ -4,8 +4,23 @@
   --accent: 10, 132, 255;
   --passive-grey: 223, 223, 229;
   --active-grey: 207, 207, 216;
-
   --search-highlight: 255, 233, 0;
+
+  /* Acorn Tokens */
+  --card-background-color: #ffffff;
+  --card-box-shadow:
+    0 0.25px 0.75px rgba(0, 0, 0, 0.05),
+    0 2px 6px rgba(0, 0, 0, 0.1);
+  --button-background-color: #eeeeef;
+  --button-background-color-hover: #dededf;
+  --button-background-color-active: #cdcdcf;
+  --button-background-color-destructive: #cf1748;
+  --button-background-color-destructive-hover: #b20037;
+  --button-background-color-destructive-active: #90002b;
+  --text-color: #15141a;
+  --button-text-color-destructive: #ffffff;
+  --focus-outline: 2px solid #0062f9;
+  --icon-color-warning: #b16a00;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -15,9 +30,28 @@
     --accent: 54, 213, 255;
     --passive-grey: 83, 83, 94;
     --active-grey: 91, 91, 102;
-
     --search-highlight: 0, 62, 170;
+
+    /* Acorn Tokens */
+    --card-background-color: #23222b;
+    --card-box-shadow:
+      0 0.25px 0.75px rgba(0, 0, 0, 0.2),
+      0 2px 6px rgba(0, 0, 0, 0.4);
+    --button-background-color: #2c2b31;
+    --button-background-color-hover: #3b3a41;
+    --button-background-color-active: #4b4a50;
+    --button-background-color-destructive: #ff7e8e;
+    --button-background-color-destructive-hover: #ffa0aa;
+    --button-background-color-destructive-active: #ffc3c9;
+    --text-color: #fbfbfe;
+    --button-text-color-destructive: #15141a;
+    --focus-outline: 2px solid #00cadb;
+    --icon-color-warning: #f5cc58;
   }
+}
+
+::backdrop {
+  background-color: #00000080;
 }
 
 html {
@@ -133,11 +167,11 @@ main {
   content: "";
   outline: inherit;
   outline-offset: inherit;
+  pointer-events: none;
 }
 
 input[type="text"],
-select,
-textarea {
+select {
   padding: 4px;
   border: none;
   border-radius: 3px;
@@ -148,7 +182,7 @@ textarea {
 
 ::placeholder {
   color: inherit;
-  opacity: .55;
+  opacity: 0.55;
 }
 
 input[type="text"] {
@@ -161,16 +195,84 @@ select:focus {
   background-color: rgb(var(--active-grey));
 }
 
+dialog {
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+
+  background-color: var(--card-background-color);
+  box-shadow: var(--card-box-shadow);
+  color: var(--text-color);
+  font-size: 15px;
+}
+
+dialog fieldset {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  column-gap: 8px;
+  padding: 0;
+  border: none;
+  margin: 0;
+}
+
+dialog button {
+  display: inline-block;
+  min-height: 32px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 4px 16px;
+
+  background-color: var(--button-background-color);
+  color: var(--text-color);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+dialog button:hover {
+  background-color: var(--button-background-color-hover);
+}
+
+dialog button:hover:active {
+  background-color: var(--button-background-color-active);
+}
+
+dialog button:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
+dialog button.destructive {
+  background-color: var(--button-background-color-destructive);
+  color: var(--button-text-color-destructive);
+}
+
+dialog button.destructive:hover {
+  background-color: var(--button-background-color-destructive-hover);
+}
+
+dialog button.destructive:hover:active {
+  background-color: var(--button-background-color-destructive-active);
+}
+
 h4 {
   margin-block: 8px;
 }
 
-textarea {
-  resize: none;
-  width: 100%;
+ul {
+  padding-inline-start: 16px;
+  padding-inline-end: 0;
+}
 
-  scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
-  scrollbar-width: thin;
+.acorn-icons {
+  display: inline-flex;
+  vertical-align: bottom;
+  margin: 0;
+}
+
+.acorn-icons svg {
+  height: 1.15em;
+  width: 1.15em;
 }
 
 .clr-picker {

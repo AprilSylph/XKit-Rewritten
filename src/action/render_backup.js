@@ -6,16 +6,20 @@ const exportDownloadButton = document.getElementById('export-download');
 const importForm = document.getElementById('import');
 const importValueTextarea = document.getElementById('import-value');
 const importSubmitButton = document.getElementById('import-submit');
-const importWarningElement = document.getElementById('import-warning');
+
+const overwriteConfirmationDialog = document.getElementById('overwrite-confirmation');
+const overwriteSizeOldSpan = document.getElementById('overwrite-size-old');
+const overwriteSizeNewSpan = document.getElementById('overwrite-size-new');
+const overwriteCancelButton = document.getElementById('overwrite-cancel');
+const overwriteConfirmButton = document.getElementById('overwrite-confirm');
 
 const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
 
+class UserInterrupt extends Error { name = 'UserInterrupt'; }
+
 const onStorageChanged = async function () {
   const storageLocal = await browser.storage.local.get();
-  const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
-
-  exportValueTextarea.value = stringifiedStorage;
-  importWarningElement.dataset.hidden = Object.keys(storageLocal).length === 0;
+  exportValueTextarea.value = JSON.stringify(storageLocal, null, 2);
 };
 
 const localCopy = () => {
@@ -62,6 +66,36 @@ function onExportSubmit (event) {
   if (event.submitter === exportDownloadButton) localExport();
 }
 
+const getByteLength = (value) => {
+  const textEncoder = new TextEncoder();
+  const { byteLength } = textEncoder.encode(JSON.stringify(value, null, 2));
+  return byteLength;
+};
+
+const unitFormat = new Intl.NumberFormat('en-GB', {
+  style: 'unit',
+  unit: 'kilobyte',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+const showOverwriteConfirmationDialog = (currentStorage, parsedStorage) => new Promise((resolve, reject) => {
+  overwriteConfirmationDialog.showModal();
+
+  overwriteSizeOldSpan.textContent = unitFormat.format(getByteLength(currentStorage) / 1024);
+  overwriteSizeNewSpan.textContent = unitFormat.format(getByteLength(parsedStorage) / 1024);
+
+  overwriteCancelButton.addEventListener('click', () => {
+    overwriteConfirmationDialog.close();
+    reject(new UserInterrupt());
+  });
+
+  overwriteConfirmButton.addEventListener('click', () => {
+    overwriteConfirmationDialog.close();
+    resolve();
+  });
+});
+
 /** @type {(event: SubmitEvent) => Promise<void>} */
 async function onImportSubmit (event) {
   event.preventDefault();
@@ -71,9 +105,12 @@ async function onImportSubmit (event) {
   try {
     importSubmitButton.disabled = true;
 
+    const currentStorage = await browser.storage.local.get();
     const parsedStorage = JSON.parse(importText);
 
-    importWarningElement.dataset.forceHidden = importWarningElement.dataset.hidden;
+    if (Object.keys(currentStorage).length !== 0) {
+      await showOverwriteConfirmationDialog(currentStorage, parsedStorage);
+    }
 
     await browser.storage.local.clear();
     await browser.storage.local.set(parsedStorage);
@@ -82,18 +119,23 @@ async function onImportSubmit (event) {
     importSubmitButton.textContent = 'Successfully restored!';
     importValueTextarea.value = '';
     document.getElementById('configuration-tab').classList.add('outdated');
-  } catch (exception) {
-    importSubmitButton.classList.add('failure');
-    importSubmitButton.textContent = exception instanceof SyntaxError
-      ? 'Failed to parse backup contents!'
-      : 'Failed to restore!';
-    console.error(exception);
-  } finally {
+
     await sleep(3000);
+  } catch (exception) {
+    if (!(exception instanceof UserInterrupt)) {
+      console.error(exception);
+
+      importSubmitButton.classList.add('failure');
+      importSubmitButton.textContent = exception instanceof SyntaxError
+        ? 'Failed to parse backup contents!'
+        : 'Could not restore backup!';
+
+      await sleep(3000);
+    }
+  } finally {
     importSubmitButton.disabled = false;
     importSubmitButton.classList.remove('success', 'failure');
     importSubmitButton.textContent = 'Restore';
-    delete importWarningElement.dataset.forceHidden;
   }
 }
 

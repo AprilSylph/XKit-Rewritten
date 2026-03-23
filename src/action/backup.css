@@ -2,11 +2,11 @@
   padding: 8px;
 }
 
-#backup-panel section:not(:last-child) {
+#backup-panel section:first-child {
   border-bottom: 1px dotted rgb(var(--active-grey));
 }
 
-#backup-panel form {
+#backup-panel section form {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -16,21 +16,26 @@
   margin-block-end: 8px;
 }
 
-#backup-panel textarea {
+#backup-panel section textarea {
   overflow: auto;
   overflow-wrap: break-word;
+  width: 100%;
   padding: 8px;
   border: none;
+  border-radius: 3px;
+  resize: none;
   margin: 0;
 
   background-color: rgb(var(--passive-grey));
   color: rgb(var(--black));
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: smaller;
+  scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
+  scrollbar-width: thin;
   white-space: pre;
 }
 
-#backup-panel fieldset {
+#backup-panel section fieldset {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -39,7 +44,7 @@
   margin: 0;
 }
 
-#backup-panel fieldset button {
+#backup-panel section fieldset button {
   padding: 0;
   border: none;
   margin: 0;

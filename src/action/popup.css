@@ -119,9 +119,9 @@ main {
 [role="tablist"] {
   display: flex;
   flex-direction: row;
-  column-gap: 4px;
+  column-gap: 8px;
   flex: 0;
-  padding: 4px;
+  padding: 8px;
   border-bottom: 1px solid var(--border-color);
 
   background-color: var(--background-color-canvas);
@@ -130,13 +130,13 @@ main {
 [role="tablist"] [role="tab"] {
   min-height: 32px;
   min-width: 79px;
+  padding: 3.75px 15px;
   border: 1px solid transparent;
   border-radius: 8px;
-  padding: 6.75px 15px;
-  margin: 4px;
+  margin: 0;
 
-  background-color: var(--button-background-color);
-  color: var(--text-color);
+  background-color: transparent;
+  color: inherit;
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;

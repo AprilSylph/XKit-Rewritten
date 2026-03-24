@@ -1,7 +1,7 @@
 :root {
   --black: 21, 20, 26;
   --white: 255, 255, 255;
-  --light-grey: 223, 223, 229;
+  --light-grey: 240, 240, 244;
   --dark-grey: 207, 207, 216;
 }
 
@@ -9,7 +9,7 @@
   :root {
     --black: 251, 251, 254;
     --white: 28, 27, 34;
-    --light-grey: 83, 83, 94;
+    --light-grey: 35, 34, 43;
     --dark-grey: 91, 91, 102;
   }
 }

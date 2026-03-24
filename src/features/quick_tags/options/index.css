@@ -2,7 +2,7 @@
   --black: 21, 20, 26;
   --white: 255, 255, 255;
   --light-grey: 240, 240, 244;
-  --dark-grey: 207, 207, 216;
+  --dark-grey: 191, 191, 201;
 }
 
 @media (prefers-color-scheme: dark) {

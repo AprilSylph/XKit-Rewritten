@@ -2,7 +2,7 @@
   --black: 21, 20, 26;
   --white: 255, 255, 255;
   --grey: 207, 207, 216;
-  --accent: 10, 132, 255;
+  --accent: 0, 98, 249;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -10,7 +10,7 @@
     --black: 251, 251, 254;
     --white: 28, 27, 34;
     --grey: 91, 91, 102;
-    --accent: 54, 213, 255;
+    --accent: 0, 202, 219;
   }
 }
 

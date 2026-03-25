@@ -226,7 +226,7 @@ dialog {
   font-size: 15px;
 }
 
-dialog fieldset {
+fieldset {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;

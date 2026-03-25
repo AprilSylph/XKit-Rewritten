@@ -22,15 +22,6 @@
   resize: none;
 }
 
-#backup-panel section fieldset {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 0;
-  border: none;
-  margin: 0;
-}
-
 #backup-panel section fieldset button {
   padding: 0;
   border: none;
@@ -55,13 +46,6 @@
 
 #export-copy.copied.fading::after {
   opacity: 0;
-}
-
-#import-submit {
-  display: block;
-  width: 100%;
-
-  text-align: center;
 }
 
 #import-submit:is(.success, .failure) {

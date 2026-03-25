@@ -23,15 +23,19 @@ const onStorageChanged = async function () {
 };
 
 const localCopy = () => {
-  if (exportCopyButton.classList.contains('copied')) { return; }
+  exportCopyButton.disabled = true;
 
-  navigator.clipboard.writeText(exportValueTextarea.value).then(async () => {
-    exportCopyButton.classList.add('copied');
-    await sleep(2000);
-    exportCopyButton.classList.add('fading');
-    await sleep(1000);
-    exportCopyButton.classList.remove('copied', 'fading');
-  });
+  navigator.clipboard.writeText(exportValueTextarea.value)
+    .then(async () => {
+      const originalTextContent = exportCopyButton.textContent;
+      exportCopyButton.textContent = 'Copied!';
+
+      await sleep(3000);
+      exportCopyButton.textContent = originalTextContent;
+    })
+    .finally(() => {
+      exportCopyButton.disabled = false;
+    });
 };
 
 const localExport = async function () {
@@ -115,8 +119,7 @@ async function onImportSubmit (event) {
     await browser.storage.local.clear();
     await browser.storage.local.set(parsedStorage);
 
-    importSubmitButton.classList.add('success');
-    importSubmitButton.textContent = 'Successfully restored!';
+    importSubmitButton.textContent = 'Restored!';
     importValueTextarea.value = '';
     document.getElementById('configuration-tab').classList.add('outdated');
 
@@ -125,16 +128,16 @@ async function onImportSubmit (event) {
     if (!(exception instanceof UserInterrupt)) {
       console.error(exception);
 
-      importSubmitButton.classList.add('failure');
+      importSubmitButton.classList.add('error');
       importSubmitButton.textContent = exception instanceof SyntaxError
         ? 'Failed to parse backup contents!'
         : 'Could not restore backup!';
 
       await sleep(3000);
+      importSubmitButton.classList.remove('error');
     }
   } finally {
     importSubmitButton.disabled = false;
-    importSubmitButton.classList.remove('success', 'failure');
     importSubmitButton.textContent = 'Restore';
   }
 }

@@ -7,6 +7,9 @@
   --search-highlight: 226, 247, 255;
 
   /* Acorn Tokens */
+  --color-accent-primary: #0062f9;
+  --color-accent-primary-hover: #0053cb;
+  --color-accent-primary-active: #0041a4;
   --card-background-color: #ffffff;
   --card-box-shadow:
     0 0.25px 0.75px rgba(0, 0, 0, 0.05),
@@ -24,6 +27,8 @@
   --button-background-color-destructive-hover: #b20037;
   --button-background-color-destructive-active: #90002b;
   --text-color: #15141a;
+  --text-color-error: #b20037;
+  --button-text-color-primary: #ffffff;
   --button-text-color-destructive: #ffffff;
   --focus-outline: 2px solid #0062f9;
   --icon-color-warning: #b16a00;
@@ -39,6 +44,9 @@
     --search-highlight: 0, 49, 126;
 
     /* Acorn Tokens */
+    --color-accent-primary: #00cadb;
+    --color-accent-primary-hover: #62dce9;
+    --color-accent-primary-active: #a6ecf4;
     --card-background-color: #23222b;
     --card-box-shadow:
       0 0.25px 0.75px rgba(0, 0, 0, 0.2),
@@ -56,6 +64,8 @@
     --button-background-color-destructive-hover: #ffa0aa;
     --button-background-color-destructive-active: #ffc3c9;
     --text-color: #fbfbfe;
+    --text-color-error: #ffa0aa;
+    --button-text-color-primary: #15141a;
     --button-text-color-destructive: #15141a;
     --focus-outline: 2px solid #00cadb;
     --icon-color-warning: #f5cc58;
@@ -236,7 +246,7 @@ fieldset {
   margin: 0;
 }
 
-dialog button {
+button[type] {
   display: inline-block;
   min-height: 32px;
   border: 1px solid transparent;
@@ -249,29 +259,46 @@ dialog button {
   font-weight: 600;
 }
 
-dialog button:hover {
+button[type]:disabled {
+  opacity: 50%;
+}
+
+button[type]:enabled:hover {
   background-color: var(--button-background-color-hover);
 }
 
-dialog button:hover:active {
+button[type]:enabled:hover:active {
   background-color: var(--button-background-color-active);
 }
 
-dialog button:focus-visible {
+button[type]:focus-visible {
   outline: var(--focus-outline);
   outline-offset: 2px;
 }
 
-dialog button.destructive {
+button[type].primary {
+  background-color: var(--color-accent-primary);
+  color: var(--button-text-color-primary);
+}
+
+button[type].primary:enabled:hover {
+  background-color: var(--color-accent-primary-hover);
+}
+
+button[type].primary:enabled:hover:active {
+  background-color: var(--color-accent-primary-active);
+}
+
+button[type].destructive {
   background-color: var(--button-background-color-destructive);
   color: var(--button-text-color-destructive);
 }
 
-dialog button.destructive:hover {
+button[type].destructive:enabled:hover {
   background-color: var(--button-background-color-destructive-hover);
 }
 
-dialog button.destructive:hover:active {
+button[type].destructive:enabled:hover:active {
   background-color: var(--button-background-color-destructive-active);
 }
 

@@ -22,47 +22,11 @@
   resize: none;
 }
 
-#backup-panel section fieldset button {
-  padding: 0;
-  border: none;
-  margin: 0;
-
-  background-color: inherit;
-  color: rgb(var(--accent));
-  cursor: pointer;
-  font-weight: bold;
-}
-
-#export-copy.copied::after {
-  margin-left: 1ch;
-
-  content: "Copied!";
-  color: rgb(var(--black));
-  font-weight: normal;
-
-  transition: opacity 1s;
-  opacity: 1;
-}
-
-#export-copy.copied.fading::after {
-  opacity: 0;
-}
-
-#import-submit:is(.success, .failure) {
+#import-submit.error {
   background-color: transparent;
   border-color: transparent;
+  color: var(--text-color-error);
   font-weight: bold;
-}
-
-#import-submit.success { color: #00cf35; }
-#import-submit.failure { color: #cf0000; }
-
-#import-warning[data-force-hidden="false"],
-#import-warning:where([data-hidden="false"]) {
-  display: flex;
-  justify-content: center;
-}
-#import-warning[data-force-hidden="true"],
-#import-warning:where([data-hidden="true"]) {
-  display: none;
+  opacity: 100%;
+  padding-inline: 0;
 }

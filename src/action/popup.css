@@ -302,6 +302,20 @@ button[type].destructive:enabled:hover:active {
   background-color: var(--button-background-color-destructive-active);
 }
 
+h1, h2 {
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.467em;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 1.133em;
+  font-weight: 600;
+}
+
 h4 {
   margin-block: 8px;
 }

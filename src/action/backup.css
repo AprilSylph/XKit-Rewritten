@@ -1,25 +1,25 @@
-#backup-panel section {
+#backup-panel {
+  font-size: 15px;
   padding: 8px;
 }
 
-#backup-panel section:first-child {
-  border-bottom: 1px dotted rgb(var(--active-grey));
+#backup-panel section + section {
+  margin-top: 12px;
 }
 
-#backup-panel section form {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-  row-gap: 8px;
-  margin-block-start: 0;
-  margin-block-end: 8px;
+#backup-panel section label {
+  display: block;
+  margin-block: 4px;
 }
 
 #backup-panel section textarea {
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: smaller;
   resize: none;
+}
+
+#backup-panel section fieldset {
+  margin-top: 8px;
 }
 
 #import-submit.error {

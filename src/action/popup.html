@@ -51,9 +51,10 @@
       </section>
       <section id="backup-panel" role="tabpanel" aria-labelledby="backup-tab" tabindex="0" hidden>
         <section aria-labelledby="export-heading">
-          <h4 id="export-heading">Export</h4>
+          <h2 id="export-heading">Export</h2>
           <form id="export" aria-labelledby="export-heading">
-            <textarea id="export-value" rows="10" spellcheck="false" readonly></textarea>
+            <label for="export-value">This is your current configuration data.</label>
+            <textarea id="export-value" rows="8" spellcheck="false" readonly></textarea>
             <fieldset>
               <button id="export-copy" type="submit">Copy</button>
               <button id="export-download" type="submit" class="primary">Download</button>
@@ -61,10 +62,10 @@
           </form>
         </section>
         <section aria-labelledby="import-heading">
-          <h4 id="import-heading">Import</h4>
+          <h2 id="import-heading">Import</h2>
           <form id="import" aria-labelledby="import-heading">
             <label for="import-value">Paste the contents of your saved backup here.</label>
-            <textarea id="import-value" rows="10" spellcheck="false"></textarea>
+            <textarea id="import-value" rows="8" spellcheck="false"></textarea>
             <fieldset>
               <button id="import-submit" type="submit" class="primary">Restore</button>
             </fieldset>

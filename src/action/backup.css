@@ -17,22 +17,9 @@
 }
 
 #backup-panel section textarea {
-  overflow: auto;
-  overflow-wrap: break-word;
-  width: 100%;
-  padding: 8px;
-  border: none;
-  border-radius: 3px;
-  resize: none;
-  margin: 0;
-
-  background-color: rgb(var(--passive-grey));
-  color: rgb(var(--black));
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: smaller;
-  scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
-  scrollbar-width: thin;
-  white-space: pre;
+  resize: none;
 }
 
 #backup-panel section fieldset {

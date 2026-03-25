@@ -13,6 +13,10 @@
     0 2px 6px rgba(0, 0, 0, 0.1);
   --background-color-canvas: #ffffff;
   --border-color: #bfbfc9;
+  --border-color-deemphasized: #bac2ca;
+  --border-color-interactive: #8f8f9d;
+  --input-text-background-color: #ffffff;
+  --input-text-color: #000000;
   --button-background-color: #eeeeef;
   --button-background-color-hover: #dededf;
   --button-background-color-active: #cdcdcf;
@@ -41,6 +45,10 @@
       0 2px 6px rgba(0, 0, 0, 0.4);
     --background-color-canvas: #1c1b22;
     --border-color: #5b5b66;
+    --border-color-deemphasized: #5b5b66;
+    --border-color-interactive: #bfbfc9;
+    --input-text-background-color: #2b2a33;
+    --input-text-color: #fbfbfe;
     --button-background-color: #2c2b31;
     --button-background-color-hover: #3b3a41;
     --button-background-color-active: #4b4a50;
@@ -269,6 +277,26 @@ dialog button.destructive:hover:active {
 
 h4 {
   margin-block: 8px;
+}
+
+textarea {
+  min-height: 32px;
+  width: 100%;
+  padding: 7.5px 11.25px;
+  border: 1px solid var(--border-color-interactive);
+  border-radius: 8px;
+  margin-top: 3.75px;
+
+  background-color: var(--input-text-background-color);
+  color: var(--input-text-color);
+  overflow: auto;
+  scrollbar-color: var(--border-color-deemphasized) transparent;
+  scrollbar-width: thin;
+  white-space: pre;
+}
+
+textarea:focus-visible {
+  outline: var(--focus-outline);
 }
 
 ul {

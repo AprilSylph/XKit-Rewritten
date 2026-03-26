@@ -1,10 +1,9 @@
 #backup-panel {
   font-size: 15px;
-  padding: 8px;
 }
 
-#backup-panel section + section {
-  margin-top: 12px;
+#backup-panel section {
+  padding: 8px;
 }
 
 #backup-panel section label {

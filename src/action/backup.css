@@ -6,9 +6,12 @@
   padding: 8px;
 }
 
+#backup-panel section form {
+  margin-block-start: 7.5px;
+}
+
 #backup-panel section label {
   display: block;
-  margin-block: 4px;
 }
 
 #backup-panel section textarea {
@@ -19,5 +22,5 @@
 
 #backup-panel section fieldset,
 #backup-panel section [role="alert"] {
-  margin-top: 8px;
+  margin-block-start: 7.5px;
 }

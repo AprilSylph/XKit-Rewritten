@@ -6,10 +6,6 @@
   padding: 8px;
 }
 
-#backup-panel section form {
-  margin-block-start: 7.5px;
-}
-
 #backup-panel section label {
   display: block;
 }

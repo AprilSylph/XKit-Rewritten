@@ -281,6 +281,10 @@ dialog {
   background-color: var(--background-color-critical);
 }
 
+form {
+  margin-block-start: 7.5px;
+}
+
 fieldset {
   display: flex;
   flex-direction: row;
@@ -347,18 +351,22 @@ button[type].destructive:enabled:hover:active {
   background-color: var(--button-background-color-destructive-active);
 }
 
-h1, h2 {
+h1 {
+  font-size: 24px;
+  font-weight: 600;
   margin: 0;
 }
 
-h1 {
-  font-size: 1.467em;
+h2 {
+  font-size: 22px;
   font-weight: 600;
+  margin: 0;
 }
 
-h2 {
-  font-size: 1.133em;
+h3 {
+  font-size: 17px;
   font-weight: 600;
+  margin: 0;
 }
 
 h4 {

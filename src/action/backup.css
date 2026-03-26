@@ -18,15 +18,7 @@
   resize: none;
 }
 
-#backup-panel section fieldset {
+#backup-panel section fieldset,
+#backup-panel section [role="alert"] {
   margin-top: 8px;
-}
-
-#import-submit.error {
-  background-color: transparent;
-  border-color: transparent;
-  color: var(--text-color-error);
-  font-weight: bold;
-  opacity: 100%;
-  padding-inline: 0;
 }

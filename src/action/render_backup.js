@@ -6,6 +6,8 @@ const exportDownloadButton = document.getElementById('export-download');
 const importForm = document.getElementById('import');
 const importValueTextarea = document.getElementById('import-value');
 const importSubmitButton = document.getElementById('import-submit');
+const importErrorBar = document.getElementById('import-error');
+const importErrorMessage = document.getElementById('import-error-message');
 
 const overwriteConfirmationDialog = document.getElementById('overwrite-confirmation');
 const overwriteSizeOldSpan = document.getElementById('overwrite-size-old');
@@ -108,6 +110,7 @@ async function onImportSubmit (event) {
 
   try {
     importSubmitButton.disabled = true;
+    importErrorBar.hidden = true;
 
     const currentStorage = await browser.storage.local.get();
     const parsedStorage = JSON.parse(importText);
@@ -127,14 +130,8 @@ async function onImportSubmit (event) {
   } catch (exception) {
     if (!(exception instanceof UserInterrupt)) {
       console.error(exception);
-
-      importSubmitButton.classList.add('error');
-      importSubmitButton.textContent = exception instanceof SyntaxError
-        ? 'Failed to parse backup contents!'
-        : 'Could not restore backup!';
-
-      await sleep(3000);
-      importSubmitButton.classList.remove('error');
+      importErrorMessage.textContent = exception.message;
+      importErrorBar.hidden = false;
     }
   } finally {
     importSubmitButton.disabled = false;

@@ -240,7 +240,7 @@ select:focus {
 dialog {
   border: none;
   border-radius: 8px;
-  padding: 16px;
+  padding: 15px;
 
   background-color: var(--card-background-color);
   box-shadow: var(--card-box-shadow);
@@ -285,7 +285,7 @@ fieldset {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  column-gap: 8px;
+  column-gap: 7.5px;
   padding: 0;
   border: none;
   margin: 0;
@@ -296,7 +296,7 @@ button[type] {
   min-height: 32px;
   border: 1px solid transparent;
   border-radius: 8px;
-  padding: 4px 16px;
+  padding: 3.75px 15px;
 
   background-color: var(--button-background-color);
   color: var(--text-color);
@@ -372,7 +372,7 @@ textarea {
   padding: 7.5px 11.25px;
   border: 1px solid var(--border-color-interactive);
   border-radius: 8px;
-  margin-top: 3.75px;
+  margin-block-start: 3.75px;
 
   background-color: var(--input-text-background-color);
   color: var(--input-text-color);

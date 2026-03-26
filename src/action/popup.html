@@ -69,7 +69,16 @@
             <fieldset>
               <button id="import-submit" type="submit" class="primary">Restore</button>
             </fieldset>
-            <div id="import-error" role="alert" hidden>
+            <div id="import-success" role="alert" class="success" hidden>
+              <figure class="acorn-icons" aria-hidden="true">
+                <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/e326587/icons/desktop/16/svg/checkmark-circle-fill-16.svg -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-success)">
+                  <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0m-.751 8.784-2.188-2.19L4 7.656l2.719 2.72a.754.754 0 0 0 1.061.001L12 6.156l-1.06-1.061z" />
+                </svg>
+              </figure>
+              <span>Successfully restored!</span>
+            </div>
+            <div id="import-error" role="alert" class="error" hidden>
               <figure class="acorn-icons" aria-hidden="true">
                 <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/e326587/icons/desktop/16/svg/critical-fill-16.svg -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-critical)">

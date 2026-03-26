@@ -8,6 +8,7 @@ const importValueTextarea = document.getElementById('import-value');
 const importSubmitButton = document.getElementById('import-submit');
 const importErrorBar = document.getElementById('import-error');
 const importErrorMessage = document.getElementById('import-error-message');
+const importSuccessBar = document.getElementById('import-success');
 
 const overwriteConfirmationDialog = document.getElementById('overwrite-confirmation');
 const overwriteSizeOldSpan = document.getElementById('overwrite-size-old');
@@ -110,6 +111,7 @@ async function onImportSubmit (event) {
 
   try {
     importSubmitButton.disabled = true;
+    importSuccessBar.hidden = true;
     importErrorBar.hidden = true;
 
     const currentStorage = await browser.storage.local.get();
@@ -122,11 +124,9 @@ async function onImportSubmit (event) {
     await browser.storage.local.clear();
     await browser.storage.local.set(parsedStorage);
 
-    importSubmitButton.textContent = 'Restored!';
     importValueTextarea.value = '';
+    importSuccessBar.hidden = false;
     document.getElementById('configuration-tab').classList.add('outdated');
-
-    await sleep(3000);
   } catch (exception) {
     if (!(exception instanceof UserInterrupt)) {
       console.error(exception);
@@ -135,7 +135,6 @@ async function onImportSubmit (event) {
     }
   } finally {
     importSubmitButton.disabled = false;
-    importSubmitButton.textContent = 'Restore';
   }
 }
 

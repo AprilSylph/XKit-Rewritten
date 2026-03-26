@@ -16,10 +16,12 @@
     0 2px 6px rgba(0, 0, 0, 0.1);
   --background-color-canvas: #ffffff;
   --background-color-critical: #ffe8ea;
+  --background-color-success: #e1ffe1;
   --border-color: #bfbfc9;
   --border-color-deemphasized: #bac2ca;
   --border-color-interactive: #8f8f9d;
   --message-bar-border-color-error: #cf174833;
+  --message-bar-border-color-success: #008e0033;
   --input-text-background-color: #ffffff;
   --input-text-color: #000000;
   --button-background-color: #eeeeef;
@@ -33,6 +35,7 @@
   --button-text-color-primary: #ffffff;
   --button-text-color-destructive: #ffffff;
   --focus-outline: 2px solid #0062f9;
+  --icon-color-success: #008e00;
   --icon-color-warning: #b16a00;
   --icon-color-critical: #cf1748;
 }
@@ -56,10 +59,12 @@
       0 2px 6px rgba(0, 0, 0, 0.4);
     --background-color-canvas: #1c1b22;
     --background-color-critical: #6e001f;
+    --background-color-success: #004800;
     --border-color: #5b5b66;
     --border-color-deemphasized: #5b5b66;
     --border-color-interactive: #bfbfc9;
     --message-bar-border-color-error: #ffa0aa33;
+    --message-bar-border-color-success: #8adf8d33;
     --input-text-background-color: #2b2a33;
     --input-text-color: #fbfbfe;
     --button-background-color: #2c2b31;
@@ -73,6 +78,7 @@
     --button-text-color-primary: #15141a;
     --button-text-color-destructive: #15141a;
     --focus-outline: 2px solid #00cadb;
+    --icon-color-success: #8adf8d;
     --icon-color-warning: #f5cc58;
     --icon-color-critical: #ffa0aa;
   }
@@ -242,7 +248,7 @@ dialog {
   font-size: 15px;
 }
 
-div[role="alert"] {
+[role="alert"] {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -250,20 +256,29 @@ div[role="alert"] {
   column-gap: 7.5px;
   padding-block: 7.5px;
   padding-inline: 11.25px 7.5px;
-  border: 1px solid var(--message-bar-border-color-error);
+  border: 1px solid transparent;
   border-radius: 4px;
 
-  background-color: var(--background-color-critical);
   color: var(--text-color);
 }
 
-div[role="alert"][hidden] {
+[role="alert"][hidden] {
   display: none;
 }
 
-div[role="alert"] > * {
+[role="alert"] > * {
   min-height: 32px;
   padding-block: 6.75px;
+}
+
+[role="alert"].success {
+  border-color: var(--message-bar-border-color-success);
+  background-color: var(--background-color-success);
+}
+
+[role="alert"].error {
+  border-color: var(--message-bar-border-color-error);
+  background-color: var(--background-color-critical);
 }
 
 fieldset {

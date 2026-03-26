@@ -66,9 +66,6 @@
           <form id="import" aria-labelledby="import-heading">
             <label for="import-value">Paste the contents of your saved backup here.</label>
             <textarea id="import-value" rows="8" spellcheck="false"></textarea>
-            <fieldset>
-              <button id="import-submit" type="submit" class="primary">Restore</button>
-            </fieldset>
             <div id="import-success" role="alert" class="success" hidden>
               <figure class="acorn-icons" aria-hidden="true">
                 <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/e326587/icons/desktop/16/svg/checkmark-circle-fill-16.svg -->
@@ -87,6 +84,9 @@
               </figure>
               <span id="import-error-message"></span>
             </div>
+            <fieldset>
+              <button id="import-submit" type="submit" class="primary">Restore</button>
+            </fieldset>
           </form>
         </section>
         <dialog id="overwrite-confirmation">

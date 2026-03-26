@@ -18,5 +18,5 @@
 
 #backup-panel section fieldset,
 #backup-panel section [role="alert"] {
-  margin-block-start: 7.5px;
+  margin-block-start: 15px;
 }

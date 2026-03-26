@@ -321,6 +321,7 @@ h4 {
 }
 
 textarea {
+  display: block;
   min-height: 32px;
   width: 100%;
   padding: 7.5px 11.25px;

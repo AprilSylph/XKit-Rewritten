@@ -35,28 +35,41 @@ summary:focus {
   height: var(--toggle-height);
   width: var(--toggle-width);
   padding: 0;
-  border-color: rgb(var(--black));
+  border-color: var(--border-color-interactive);
   border-style: solid;
   border-width: var(--toggle-border-width);
   border-radius: 9999px;
 
-  background-color: rgb(var(--passive-grey));
-  color: rgb(var(--black));
+  background-color: var(--button-background-color);
+  color: var(--border-color-interactive);
 }
 
 [role="switch"]:hover {
-  background-color: rgb(var(--active-grey));
+  background-color: var(--button-background-color-hover);
+}
+
+[role="switch"]:hover:active {
+  background-color: var(--button-background-color-active);
 }
 
 [role="switch"]:focus-visible {
+  outline: var(--focus-outline);
   outline-offset: 2px;
 }
 
 [role="switch"]:checked {
   border-color: transparent;
 
-  background-color: rgb(var(--accent));
-  color: rgb(var(--white));
+  background-color: var(--color-accent-primary);
+  color: var(--background-color-canvas);
+}
+
+[role="switch"]:checked:hover {
+  background-color: var(--color-accent-primary-hover);
+}
+
+[role="switch"]:checked:hover:active {
+  background-color: var(--color-accent-primary-active);
 }
 
 [role="switch"]::before {

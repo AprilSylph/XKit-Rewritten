@@ -1,32 +1,10 @@
 #links-panel {
+  font-size: 15px;
   padding: 8px;
 }
 
-#links-panel ul {
-  margin-block-start: 0;
-  margin-block-end: 16px;
-}
-
-#links-panel ul:last-child {
-  margin-block-end: 8px;
-}
-
-#links-panel ul li {
-  margin-bottom: 8px;
-}
-
-#links-panel a {
-  font-weight: bold;
-  text-decoration: none;
-}
-
-#links-panel :link,
-#links-panel :visited {
-  color: rgb(var(--accent));
-}
-
 #version {
-  margin-left: 1ch;
+  margin-left: 7.5px;
   user-select: all;
 }
 

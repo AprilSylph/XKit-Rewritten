@@ -367,8 +367,31 @@ h3 {
   margin: 0;
 }
 
-h4 {
-  margin-block: 8px;
+:is(ol, ul) {
+  margin-block: 7.5px 22.5px;
+}
+
+:is(ol, ul) li {
+  margin-block: 7.5px;
+}
+
+:any-link {
+  color: var(--color-accent-primary);
+}
+
+:any-link:hover {
+  color: var(--color-accent-primary-hover);
+}
+
+:any-link:hover:active {
+  color: var(--color-accent-primary-active);
+  text-decoration: none;
+}
+
+:any-link:focus-visible {
+  border-radius: 4px;
+  outline: var(--focus-outline);
+  outline-offset: 1px;
 }
 
 textarea {

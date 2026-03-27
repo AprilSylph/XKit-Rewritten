@@ -4,7 +4,6 @@
   --accent: 0, 98, 249;
   --passive-grey: 240, 240, 244;
   --active-grey: 191, 191, 201;
-  --search-highlight: 226, 247, 255;
 
   /* Acorn Tokens */
   --color-accent-primary: #0062f9;
@@ -47,7 +46,6 @@
     --accent: 0, 202, 219;
     --passive-grey: 35, 34, 43;
     --active-grey: 91, 91, 102;
-    --search-highlight: 0, 49, 126;
 
     /* Acorn Tokens */
     --color-accent-primary: #00cadb;

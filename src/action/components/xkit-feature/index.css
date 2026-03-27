@@ -184,5 +184,11 @@ ul.preferences #empty {
 }
 
 ::slotted(.search-highlighted) {
-  background-color: rgb(var(--search-highlight));
+  background-color: #ffe900;
+}
+
+@media (prefers-color-scheme: dark) {
+  ::slotted(.search-highlighted) {
+    background-color: #003eaa;
+  }
 }

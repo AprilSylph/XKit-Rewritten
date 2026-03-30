@@ -21,13 +21,25 @@
     <script type="module" src="./render_features.js"></script>
   </head>
   <body>
-    <header id="permissions-banner" hidden>
-      &#x26A0;&#xFE0F; XKit Rewritten needs additional permissions in order to apply its enhancements automatically.
-      <button id="grant-host-permission">Always allow on www.tumblr.com</button>
-    </header>
-    <header id="embedded-banner" hidden>
-      &#x2139;&#xFE0F; XKit Rewritten can also be configured via the button in the browser toolbar.
-    </header>
+    <div id="permissions-banner" role="alert" class="warning" hidden>
+      <figure class="acorn-icons" aria-hidden="true">
+        <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/e326587/icons/desktop/16/svg/warning-fill-16.svg -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-warning)">
+          <path d="M15.245 12.028 9.713 2.081a1.98 1.98 0 0 0-1.747-1.028A1.98 1.98 0 0 0 6.213 2.09L.75 12.037C.018 13.37.982 15 2.503 15h10.994c1.525 0 2.489-1.639 1.748-2.972M8.75 12.5h-1.5V11h1.5zm0-3h-1.5v-4h1.5z" />
+        </svg>
+      </figure>
+      <span>XKit Rewritten needs additional permissions in order to apply its enhancements automatically.</span>
+      <button id="grant-host-permission" type="button">Allow</button>
+    </div>
+    <div id="embedded-banner" role="status" hidden>
+      <figure class="acorn-icons" aria-hidden="true">
+        <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/ba89f22/icons/desktop/16/svg/information-fill-16.svg -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-information)">
+          <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m.75 12h-1.5V7h1.5zm0-6.5h-1.5V4h1.5z" />
+        </svg>
+      </figure>
+      <span>XKit Rewritten can also be configured via the button in the browser toolbar.</span>
+    </div>
     <main>
       <div role="tablist" aria-label="Navigation">
         <button id="configuration-tab" role="tab" aria-controls="configuration-panel" aria-selected="true" tabindex="0">Configuration</button>

@@ -27,9 +27,9 @@
   --message-bar-border-color-warning: #b16a0033;
   --input-text-background-color: #ffffff;
   --input-text-color: #000000;
-  --button-background-color: #eeeeef;
-  --button-background-color-hover: #dededf;
-  --button-background-color-active: #cdcdcf;
+  --button-background-color: #15141a12;
+  --button-background-color-hover: #15141a24;
+  --button-background-color-active: #15141a36;
   --button-background-color-destructive: #cf1748;
   --button-background-color-destructive-hover: #b20037;
   --button-background-color-destructive-active: #90002b;
@@ -73,9 +73,9 @@
     --message-bar-border-color-warning: #f5cc5833;
     --input-text-background-color: #2b2a33;
     --input-text-color: #fbfbfe;
-    --button-background-color: #2c2b31;
-    --button-background-color-hover: #3b3a41;
-    --button-background-color-active: #4b4a50;
+    --button-background-color: #fbfbfe12;
+    --button-background-color-hover: #fbfbfe24;
+    --button-background-color-active: #fbfbfe36;
     --button-background-color-destructive: #ff7e8e;
     --button-background-color-destructive-hover: #ffa0aa;
     --button-background-color-destructive-active: #ffc3c9;

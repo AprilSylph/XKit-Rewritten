@@ -50,8 +50,3 @@
   font-weight: bold;
   outline-style: none;
 }
-
-xkit-feature.search-hidden,
-xkit-feature.filter-hidden {
-  display: none;
-}

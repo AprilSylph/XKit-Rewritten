@@ -2,6 +2,10 @@
   background-color: var(--background-color-canvas);
 }
 
+:host(:is(.search-hidden, .filter-hidden)) {
+  display: none;
+}
+
 details.disabled:not([open], :hover, :focus-within) summary {
   opacity: 50%;
 }

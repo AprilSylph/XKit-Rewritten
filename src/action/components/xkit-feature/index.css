@@ -53,7 +53,7 @@ summary:focus {
 }
 
 [role="switch"]:focus-visible {
-  outline: var(--focus-outline);
+  outline: 2px solid var(--color-accent-primary);
   outline-offset: 2px;
 }
 

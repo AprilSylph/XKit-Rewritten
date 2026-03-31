@@ -1,10 +1,13 @@
 const preferenceSelector = 'checkbox-preference, color-preference, select-preference, text-preference, textarea-preference';
 
 const checkForNoResults = function () {
-  const nothingFound = [...document.querySelectorAll('xkit-feature')].every(featureElement =>
-    featureElement.classList.contains('search-hidden') || featureElement.classList.contains('filter-hidden'),
-  );
+  /** @type {HTMLElement[]} */ const featureElements = [...document.querySelectorAll('xkit-feature')];
 
+  const visibleFeatureElements = featureElements.filter(featureElement => featureElement.matches('.search-hidden, .filter-hidden') === false);
+  visibleFeatureElements.forEach((featureElement, index) => featureElement.classList.toggle('search-first', index === 0));
+  visibleFeatureElements.forEach((featureElement, index, array) => featureElement.classList.toggle('search-last', index === (array.length - 1)));
+
+  const nothingFound = visibleFeatureElements.length === 0;
   document.querySelector('.no-results').style.display = nothingFound ? 'flex' : '';
   document.querySelector('.features').style.display = nothingFound ? 'none' : '';
 };

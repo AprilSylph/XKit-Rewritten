@@ -6,6 +6,18 @@
   display: none;
 }
 
+:host(:first-child) summary,
+:host(.search-first) summary {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+:host(:last-child) summary,
+:host(.search-last) summary {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
 details.disabled:not([open], :hover, :focus-within) summary {
   opacity: 50%;
 }

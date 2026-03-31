@@ -12,8 +12,8 @@
   border-top-right-radius: 8px;
 }
 
-:host(:last-child) summary,
-:host(.search-last) summary {
+:host(:last-child) details:not([open]) summary,
+:host(.search-last) details:not([open]) summary {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 }

@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  column-gap: 15px;
+  column-gap: 7.5px;
   padding: 8px;
   border-bottom: 1px solid var(--border-color);
 
@@ -17,10 +17,6 @@
   width: 0;
   flex-basis: 0;
   flex-grow: 1;
-}
-
-#filter {
-  margin-left: 1ch;
 }
 
 .no-results {

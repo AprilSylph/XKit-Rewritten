@@ -49,14 +49,11 @@
       <section id="configuration-panel" role="tabpanel" aria-labelledby="configuration-tab" tabindex="0">
         <div role="search">
           <input id="searchbox" type="search" placeholder="Search" aria-label="Search" autocomplete="off" spellcheck="false">
-          <div>
-            <label for="filter">Filter by</label>
-            <select id="filter">
-              <option value="all" selected>All</option>
-              <option value="enabled">Enabled</option>
-              <option value="disabled">Disabled</option>
-            </select>
-          </div>
+          <select id="filter" aria-label="Filter">
+            <option value="all" selected>All</option>
+            <option value="enabled">Enabled</option>
+            <option value="disabled">Disabled</option>
+          </select>
         </div>
         <div class="no-results">
           <p>No results found.</p>

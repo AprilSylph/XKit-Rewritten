@@ -50,9 +50,11 @@
         <div role="search">
           <input id="searchbox" type="search" placeholder="Search" aria-label="Search" autocomplete="off" spellcheck="false">
           <select id="filter" aria-label="Filter">
-            <option value="all" selected>All</option>
-            <option value="enabled">Enabled</option>
-            <option value="disabled">Disabled</option>
+            <optgroup label="Filter by…">
+              <option value="all" selected>All</option>
+              <option value="enabled">Enabled</option>
+              <option value="disabled">Disabled</option>
+            </optgroup>
           </select>
         </div>
         <div class="no-results">

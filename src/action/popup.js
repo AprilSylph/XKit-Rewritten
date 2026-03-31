@@ -5,7 +5,8 @@ const checkForNoResults = function () {
     featureElement.classList.contains('search-hidden') || featureElement.classList.contains('filter-hidden'),
   );
 
-  document.querySelector('.no-results').style.display = nothingFound ? 'flex' : 'none';
+  document.querySelector('.no-results').style.display = nothingFound ? 'flex' : '';
+  document.querySelector('.features').style.display = nothingFound ? 'none' : '';
 };
 
 document.querySelector('[role="tablist"]').addEventListener('keydown', (/** @type {KeyboardEvent} */ event) => {

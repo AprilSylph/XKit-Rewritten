@@ -35,6 +35,7 @@
   --button-background-color-destructive-hover: #b20037;
   --button-background-color-destructive-active: #90002b;
   --text-color: #15141a;
+  --text-color-deemphasized: #15141ab0;
   --text-color-error: #b20037;
   --button-text-color-primary: #ffffff;
   --button-text-color-destructive: #ffffff;
@@ -82,6 +83,7 @@
     --button-background-color-destructive-hover: #ffa0aa;
     --button-background-color-destructive-active: #ffc3c9;
     --text-color: #fbfbfe;
+    --text-color-deemphasized: #fbfbfeb0;
     --text-color-error: #ffa0aa;
     --button-text-color-primary: #15141a;
     --button-text-color-destructive: #15141a;

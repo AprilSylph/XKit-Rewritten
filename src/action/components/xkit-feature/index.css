@@ -1,5 +1,9 @@
-:host(:not(:last-child)) details {
-  border-bottom: 1px dotted rgb(var(--active-grey));
+:host {
+  background-color: var(--background-color-canvas);
+}
+
+details.disabled:not([open], :hover, :focus-within) summary {
+  opacity: 50%;
 }
 
 summary {
@@ -7,10 +11,11 @@ summary {
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  column-gap: 8px;
-  padding: 8px;
+  column-gap: 7.5px;
+  padding: 11.25px;
 
   cursor: pointer;
+  font-size: 15px;
 }
 
 summary::-webkit-details-marker {
@@ -18,11 +23,22 @@ summary::-webkit-details-marker {
 }
 
 summary:hover {
-  background-color: rgb(var(--passive-grey));
+  background-image: linear-gradient(
+    var(--button-background-color-hover),
+    var(--button-background-color-hover)
+  );
 }
 
-summary:focus {
-  background-color: rgb(var(--active-grey));
+summary:hover:active {
+  background-image: linear-gradient(
+    var(--button-background-color-active),
+    var(--button-background-color-active)
+  );
+}
+
+summary:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: -2px;
 }
 
 [role="switch"] {
@@ -152,7 +168,7 @@ summary:focus {
   padding: 2px 6px;
 
   background-color: #ff62ce;
-  color: rgb(var(--white));
+  color: var(--text-color);
 }
 
 .title,
@@ -160,32 +176,14 @@ summary:focus {
   margin: 0;
 }
 
-.title {
-  font-size: 15px;
-}
-
 .description {
   font-size: 13px;
-  opacity: 69%;
-}
-
-.disabled:not([open], :focus-within, :hover) :is(.icon, .meta, .buttons) {
-  opacity: 60%;
-}
-
-.disabled .title::after {
-  content: " (disabled)";
-  font-weight: normal;
-}
-
-[data-deprecated="true"]:not(.disabled) .title::after {
-  content: " (deprecated)";
-  font-weight: normal;
+  color: var(--text-color-deemphasized);
 }
 
 ul.preferences {
-  padding: 0 4px;
-  margin: 8px 0;
+  padding-inline: 7.5px;
+  margin-block: 11.25px;
 
   list-style-type: none;
 }

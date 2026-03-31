@@ -23,18 +23,32 @@
   display: none;
   justify-content: center;
   align-items: center;
+  height: 100vw;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1px;
+  border-radius: 8px;
+  margin: 8px;
+  overflow: hidden;
+
+  background-color: var(--border-color);
+  outline: 1px solid var(--border-color);
+  outline-offset: 0;
 }
 
 .features:empty::before {
-  display: flex;
   justify-content: center;
   align-items: center;
   height: 100vw;
 
-  color: rgb(var(--active-grey));
+  color: var(--text-color-deemphasized);
   content: "Loading…";
   font-size: 1.133rem;
   font-weight: bold;
+  outline-style: none;
 }
 
 xkit-feature.search-hidden,

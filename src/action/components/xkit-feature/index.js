@@ -84,7 +84,6 @@ class XKitFeatureElement extends CustomElement {
   };
 
   connectedCallback () {
-    this.#detailsElement.dataset.deprecated = this.deprecated;
     this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
     this.dataset.relatedTerms = this.relatedTerms;
   }

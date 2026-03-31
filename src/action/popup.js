@@ -42,7 +42,7 @@ document.querySelector('[role="tablist"]').addEventListener('keydown', (/** @typ
   }),
 );
 
-document.getElementById('search').addEventListener('input', ({ currentTarget }) => {
+document.getElementById('searchbox').addEventListener('input', ({ currentTarget }) => {
   const query = currentTarget.value.toLowerCase();
   const featureElements = [...document.querySelectorAll('xkit-feature')];
   const preferenceElements = featureElements.flatMap(featureElement => [...featureElement.querySelectorAll(preferenceSelector)]);

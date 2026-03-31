@@ -6,14 +6,12 @@
   display: none;
 }
 
-:host(:first-child) summary,
-:host(.search-first) summary {
+:host(:is(:first-child, .search-first)) summary {
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
 
-:host(:last-child) details:not([open]) summary,
-:host(.search-last) details:not([open]) summary {
+:host(:is(:last-child, .search-last)) details:not([open]) summary {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 }

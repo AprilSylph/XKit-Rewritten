@@ -1,3 +1,5 @@
+/* Global */
+
 :root {
   --black: 21, 20, 26;
   --white: 255, 255, 255;
@@ -68,4 +70,144 @@ main {
   outline: inherit;
   outline-offset: inherit;
   pointer-events: none;
+}
+
+/* Configuration */
+
+#configuration-panel [role="search"] {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 7.5px;
+  padding: 8px;
+  border-bottom: 1px solid var(--border-color);
+
+  background-color: var(--background-color-canvas);
+}
+
+#searchbox {
+  width: 0;
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
+.no-results {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  height: 100vw;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1px;
+  border-radius: 8px;
+  margin: 8px;
+  overflow: hidden;
+
+  background-color: var(--border-color);
+  outline: 1px solid var(--border-color);
+  outline-offset: 0;
+}
+
+.features:empty {
+  background-color: transparent;
+  margin: 0;
+  outline: none;
+}
+
+.features:empty::before {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vw;
+
+  color: var(--text-color-deemphasized);
+  content: "Loading…";
+  font-size: 17px;
+  font-weight: 600;
+}
+
+#clr-picker {
+  width: 225px;
+
+  background-color: var(--background-color-box);
+  box-shadow: var(--card-box-shadow);
+}
+
+#clr-picker > input[type="text"] {
+  min-height: 32px;
+  padding-block: 1px;
+  padding-inline: 11.25px;
+  border: 1px solid var(--input-text-border-color);
+  border-radius: 8px;
+
+  background-color: var(--input-text-background-color);
+  color: var(--input-text-color);
+  font-family: inherit;
+  font-size: 15px;
+}
+
+#clr-picker > input[type="text"]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 0;
+}
+
+#clr-picker > button {
+  min-height: 24px;
+  padding-block: 1.875px;
+
+  cursor: auto;
+  font-size: 13px;
+}
+
+#clr-swatches button {
+  min-height: 24px;
+  min-width: 24px;
+  border: none;
+  border-radius: 100%;
+  padding: initial;
+
+  cursor: pointer;
+}
+
+/* Backup */
+
+#backup-panel section {
+  padding: 7.5px;
+}
+
+#backup-panel section label {
+  display: block;
+}
+
+#backup-panel section textarea {
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: smaller;
+  resize: none;
+}
+
+#backup-panel section fieldset,
+#backup-panel section [role="alert"] {
+  margin-block-start: 15px;
+}
+
+/* Links */
+
+#links-panel {
+  padding: 7.5px;
+}
+
+#version {
+  margin-left: 7.5px;
+  user-select: all;
+}
+
+#version::before {
+  content: "v";
 }

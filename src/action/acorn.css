@@ -208,7 +208,7 @@ fieldset {
   margin: 0;
 }
 
-/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-select--with-aria-label */
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-select--default */
 
 select {
   min-height: 32px;
@@ -246,16 +246,21 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
+label + select {
+  margin-block-start: 3.75px;
+}
+
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-multiline-editor--default */
 
 textarea {
   display: block;
   min-height: 32px;
   width: 100%;
-  padding: 7.5px 11.25px;
+  padding-block: 7.5px;
+  padding-inline: 11.25px;
   border: 1px solid var(--border-color-interactive);
   border-radius: 8px;
-  margin-block-start: 3.75px;
+  margin: 0;
 
   background-color: var(--input-text-background-color);
   color: var(--input-text-color);
@@ -267,6 +272,10 @@ textarea {
 
 textarea:focus-visible {
   outline: 2px solid var(--color-accent-primary);
+}
+
+label + textarea {
+  margin-block-start: 3.75px;
 }
 
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-button--default */

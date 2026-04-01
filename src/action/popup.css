@@ -102,7 +102,6 @@
 html {
   font-size: 15px;
   overflow-y: scroll;
-  scrollbar-color: rgb(var(--active-grey)) rgb(var(--white));
 }
 
 html, body, main {

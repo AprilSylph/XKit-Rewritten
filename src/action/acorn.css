@@ -144,7 +144,7 @@
 
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/docs/docs-typography--docs */
 
-html {
+html, :host {
   font-size: 15px;
 }
 

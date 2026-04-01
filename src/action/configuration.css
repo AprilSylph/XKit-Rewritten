@@ -60,7 +60,7 @@
 #clr-picker {
   width: 225px;
 
-  background-color: var(--card-background-color);
+  background-color: var(--background-color-box);
   box-shadow: var(--card-box-shadow);
 }
 

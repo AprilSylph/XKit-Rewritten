@@ -15,8 +15,8 @@
     "chrome-webstore-upload-cli": "^3.5.0",
     "eslint": "^9.39.2",
     "eslint-plugin-jsdoc": "^52.0.4",
-    "neostandard": "^0.12.2",
-    "web-ext": "^10.0.0"
+    "neostandard": "^0.13.0",
+    "web-ext": "^10.1.0"
   },
   "dependencies": {
     "@melloware/coloris": "^0.25.0",

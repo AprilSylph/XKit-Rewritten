@@ -186,7 +186,8 @@ main {
 }
 
 [role="tabpanel"]:focus-visible {
-  outline-offset: -3px;
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: -2px;
 }
 
 [role="tabpanel"]:focus-visible::after {

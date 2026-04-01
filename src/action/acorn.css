@@ -1,0 +1,449 @@
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/docs-tokens-table--default */
+
+:root {
+  --color-accent-primary: #0062f9;
+  --color-accent-primary-hover: #0053cb;
+  --color-accent-primary-active: #0041a4;
+  --card-background-color: #ffffff;
+  --card-box-shadow:
+    0 0.25px 0.75px rgba(0, 0, 0, 0.05),
+    0 2px 6px rgba(0, 0, 0, 0.1);
+  --background-color-canvas: #ffffff;
+  --background-color-critical: #ffe8ea;
+  --background-color-information: #e2f7ff;
+  --background-color-success: #e1ffe1;
+  --background-color-warning: #fff4cf;
+  --border-color: #bfbfc9;
+  --border-color-deemphasized: #bac2ca;
+  --border-color-interactive: #8f8f9d;
+  --message-bar-border-color: #84c6ff33;
+  --message-bar-border-color-error: #cf174833;
+  --message-bar-border-color-success: #008e0033;
+  --message-bar-border-color-warning: #b16a0033;
+  --input-text-background-color: #ffffff;
+  --input-text-border-color: #8f8f9d;
+  --input-text-color: #000000;
+  --button-background-color: #15141a12;
+  --button-background-color-hover: #15141a24;
+  --button-background-color-active: #15141a36;
+  --button-background-color-destructive: #cf1748;
+  --button-background-color-destructive-hover: #b20037;
+  --button-background-color-destructive-active: #90002b;
+  --text-color: #15141a;
+  --text-color-deemphasized: #15141ab0;
+  --text-color-error: #b20037;
+  --button-text-color-primary: #ffffff;
+  --button-text-color-destructive: #ffffff;
+  --icon-color: #5b5b66;
+  --icon-color-information: #0062f9;
+  --icon-color-success: #008e00;
+  --icon-color-warning: #b16a00;
+  --icon-color-critical: #cf1748;
+  --badge-background-color-filled: #007700;
+  --badge-border-color-filled: #fbfbfe66;
+  --badge-text-color-filled: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-accent-primary: #00cadb;
+    --color-accent-primary-hover: #62dce9;
+    --color-accent-primary-active: #a6ecf4;
+    --card-background-color: #23222b;
+    --card-box-shadow:
+      0 0.25px 0.75px rgba(0, 0, 0, 0.2),
+      0 2px 6px rgba(0, 0, 0, 0.4);
+    --background-color-canvas: #1c1b22;
+    --background-color-critical: #6e001f;
+    --background-color-information: #00317e;
+    --background-color-success: #004800;
+    --background-color-warning: #592b00;
+    --border-color: #5b5b66;
+    --border-color-deemphasized: #5b5b66;
+    --border-color-interactive: #bfbfc9;
+    --message-bar-border-color-error: #ffa0aa33;
+    --message-bar-border-color-success: #8adf8d33;
+    --message-bar-border-color-warning: #f5cc5833;
+    --input-text-background-color: #2b2a33;
+    --input-text-border-color: #bfbfc9;
+    --input-text-color: #fbfbfe;
+    --button-background-color: #fbfbfe12;
+    --button-background-color-hover: #fbfbfe24;
+    --button-background-color-active: #fbfbfe36;
+    --button-background-color-destructive: #ff7e8e;
+    --button-background-color-destructive-hover: #ffa0aa;
+    --button-background-color-destructive-active: #ffc3c9;
+    --text-color: #fbfbfe;
+    --text-color-deemphasized: #fbfbfeb0;
+    --text-color-error: #ffa0aa;
+    --button-text-color-primary: #15141a;
+    --button-text-color-destructive: #15141a;
+    --icon-color: #fbfbfe;
+    --icon-color-information: #84c6ff;
+    --icon-color-success: #8adf8d;
+    --icon-color-warning: #f5cc58;
+    --icon-color-critical: #ffa0aa;
+    --badge-background-color-filled: #37b847;
+    --badge-border-color-filled: #15141a66;
+    --badge-text-color-filled: #15141a;
+  }
+}
+
+::backdrop {
+  background-color: #00000080;
+}
+
+::placeholder {
+  color: inherit;
+  opacity: 54%;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-support-link--primary */
+
+:any-link {
+  color: var(--color-accent-primary);
+}
+
+:any-link:hover {
+  color: var(--color-accent-primary-hover);
+}
+
+:any-link:hover:active {
+  color: var(--color-accent-primary-active);
+  text-decoration: none;
+}
+
+:any-link:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 1px;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/docs/docs-typography--docs */
+
+html {
+  font-size: 15px;
+}
+
+body {
+  background-color: var(--background-color-canvas);
+  color: var(--text-color);
+  font: inherit;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0;
+}
+
+:is(ol, ul) {
+  padding-inline-start: 15px;
+  padding-inline-end: 0;
+  margin-block: 7.5px 22.5px;
+}
+
+:is(ol, ul) li {
+  margin-block: 7.5px;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-button-group--default */
+
+dialog {
+  border: none;
+  border-radius: 8px;
+  padding: 15px;
+
+  background-color: var(--card-background-color);
+  box-shadow: var(--card-box-shadow);
+  color: var(--text-color);
+}
+
+form {
+  margin-block-start: 7.5px;
+}
+
+fieldset {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  column-gap: 7.5px;
+  padding: 0;
+  border: none;
+  margin: 0;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-select--with-aria-label */
+
+select {
+  min-height: 32px;
+  padding-block: 3.75px;
+  padding-inline-start: 15px;
+  padding-inline-end: 30px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  margin: 0;
+
+  appearance: none;
+  background-color: var(--button-background-color);
+  background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvY2hldnJvbi1kb3duLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMTUxNDFhIj4KICAgIDxwYXRoIGQ9Im0xNCA2LjMxLTUuNDcgNS40N2EuNzUuNzUgMCAwIDEtMS4wNiAwTDIgNi4zMWwxLjA2LTEuMDZMOCAxMC4xODhsNC45NC00LjkzOHoiIC8+Cjwvc3ZnPg==");
+  background-position-x: calc(100% - 11.25px);
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: 12px;
+  color: var(--text-color);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  select {
+    background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvY2hldnJvbi1kb3duLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjZmJmYmZlIj4KICAgIDxwYXRoIGQ9Im0xNCA2LjMxLTUuNDcgNS40N2EuNzUuNzUgMCAwIDEtMS4wNiAwTDIgNi4zMWwxLjA2LTEuMDZMOCAxMC4xODhsNC45NC00LjkzOHoiIC8+Cjwvc3ZnPg==");
+  }
+}
+
+select:hover {
+  background-color: var(--button-background-color-hover);
+}
+
+select:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-multiline-editor--default */
+
+textarea {
+  display: block;
+  min-height: 32px;
+  width: 100%;
+  padding: 7.5px 11.25px;
+  border: 1px solid var(--border-color-interactive);
+  border-radius: 8px;
+  margin-block-start: 3.75px;
+
+  background-color: var(--input-text-background-color);
+  color: var(--input-text-color);
+  overflow: auto;
+  scrollbar-color: var(--border-color-deemphasized) transparent;
+  scrollbar-width: thin;
+  white-space: pre;
+}
+
+textarea:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-button--default */
+
+button[type] {
+  display: inline-block;
+  min-height: 32px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 3.75px 15px;
+
+  background-color: var(--button-background-color);
+  color: var(--text-color);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+button[type]:disabled {
+  opacity: 50%;
+}
+
+button[type]:enabled:hover {
+  background-color: var(--button-background-color-hover);
+}
+
+button[type]:enabled:hover:active {
+  background-color: var(--button-background-color-active);
+}
+
+button[type]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-button--primary */
+
+button[type].primary {
+  background-color: var(--color-accent-primary);
+  color: var(--button-text-color-primary);
+}
+
+button[type].primary:enabled:hover {
+  background-color: var(--color-accent-primary-hover);
+}
+
+button[type].primary:enabled:hover:active {
+  background-color: var(--color-accent-primary-active);
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-button--destructive */
+
+button[type].destructive {
+  background-color: var(--button-background-color-destructive);
+  color: var(--button-text-color-destructive);
+}
+
+button[type].destructive:enabled:hover {
+  background-color: var(--button-background-color-destructive-hover);
+}
+
+button[type].destructive:enabled:hover:active {
+  background-color: var(--button-background-color-destructive-active);
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-input-search--default */
+
+input[type="search"] {
+  min-height: 32px;
+  padding-block: 1px;
+  padding-inline-start: 34.5px;
+  padding-inline-end: 1.875px;
+  border: 1px solid var(--input-text-border-color);
+  border-radius: 8px;
+
+  background-color: var(--input-text-background-color);
+  background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvc2VhcmNoLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjNWI1YjYiPgogIDxwYXRoIGQ9Ik02LjI1IDFhNS4yNSA1LjI1IDAgMCAxIDQuMjA0IDguMzk0TDE1IDEzLjkzOCAxMy45MzkgMTVsLTQuNTQ1LTQuNTQ1QTUuMjUgNS4yNSAwIDEgMSA2LjI1IDFtMCAxLjVhMy43NSAzLjc1IDAgMSAwIDAgNy41IDMuNzUgMy43NSAwIDAgMCAwLTcuNSIgLz4KPC9zdmc+");
+  background-position-x: 11.25px;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: 12px;
+  color: var(--input-text-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="search"] {
+    background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvc2VhcmNoLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjZmJmYmZlIj4KICA8cGF0aCBkPSJNNi4yNSAxYTUuMjUgNS4yNSAwIDAgMSA0LjIwNCA4LjM5NEwxNSAxMy45MzggMTMuOTM5IDE1bC00LjU0NS00LjU0NUE1LjI1IDUuMjUgMCAxIDEgNi4yNSAxbTAgMS41YTMuNzUgMy43NSAwIDEgMCAwIDcuNSAzLjc1IDMuNzUgMCAwIDAgMC03LjUiIC8+Cjwvc3ZnPg==");
+  }
+}
+
+input[type="search"]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 0;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-named-deck--focus-group */
+
+[role="tablist"] {
+  display: flex;
+  flex-direction: row;
+  column-gap: 7.5px;
+  flex: 0;
+  padding: 7.5px;
+  border-bottom: 1px solid var(--border-color);
+
+  background-color: var(--background-color-canvas);
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/docs/ui-widgets-button-readme--docs#ghost */
+
+[role="tablist"] [role="tab"] {
+  min-height: 32px;
+  min-width: 79px;
+  flex-grow: 1;
+  flex-shrink: 0;
+  padding: 3.75px 15px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  margin: 0;
+
+  background-color: transparent;
+  color: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+[role="tablist"] [role="tab"]:hover {
+  background-color: var(--button-background-color-hover);
+}
+
+[role="tablist"] [role="tab"]:hover:active,
+[role="tablist"] [role="tab"][aria-selected="true"] {
+  background-color: var(--button-background-color-active);
+}
+
+[role="tablist"] [role="tab"]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+[role="tabpanel"]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: -2px;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-message-bar--default */
+
+:is([role="alert"], [role="status"]) {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  column-gap: 7.5px;
+  padding-block: 7.5px;
+  padding-inline: 11.25px 7.5px;
+  border: 1px solid var(--message-bar-border-color);
+  border-radius: 4px;
+
+  background-color: var(--background-color-information);
+  color: var(--text-color);
+}
+
+:is([role="alert"], [role="status"])[hidden] {
+  display: none;
+}
+
+:is([role="alert"], [role="status"]).warning {
+  border-color: var(--message-bar-border-color-warning);
+  background-color: var(--background-color-warning);
+}
+
+:is([role="alert"], [role="status"]).success {
+  border-color: var(--message-bar-border-color-success);
+  background-color: var(--background-color-success);
+}
+
+:is([role="alert"], [role="status"]).error {
+  border-color: var(--message-bar-border-color-error);
+  background-color: var(--background-color-critical);
+}
+
+:is([role="alert"], [role="status"]) > * {
+  min-height: 32px;
+  padding-block: 6.75px;
+}
+
+:is([role="alert"], [role="status"]) > button[type] {
+  align-self: center;
+  margin-inline-start: auto;
+}
+
+/* Custom */
+
+.acorn-icons {
+  display: inline-flex;
+  vertical-align: bottom;
+  margin: 0;
+}
+
+.acorn-icons svg {
+  height: 1.15em;
+  width: 1.15em;
+}

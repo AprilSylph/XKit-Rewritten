@@ -36,7 +36,12 @@
   background-color: currentColor;
   height: 100%;
   width: 0;
-  transition: width 1s ease-in-out;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #progress-bar {
+    transition: width 1s ease-in-out;
+  }
 }
 
 #cover-link {

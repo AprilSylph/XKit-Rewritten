@@ -5,10 +5,6 @@
   font-size: 15px;
 }
 
-label {
-  display: block;
-}
-
 textarea {
   resize: none;
 }

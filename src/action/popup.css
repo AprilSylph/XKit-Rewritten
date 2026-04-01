@@ -182,10 +182,6 @@ main {
   padding: 7.5px;
 }
 
-#backup-panel section label {
-  display: block;
-}
-
 #backup-panel section textarea {
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: smaller;

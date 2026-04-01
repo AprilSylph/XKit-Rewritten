@@ -208,6 +208,10 @@ fieldset {
   margin: 0;
 }
 
+label {
+  display: block;
+}
+
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-select--default */
 
 select {

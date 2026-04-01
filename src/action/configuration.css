@@ -39,14 +39,20 @@
   outline-offset: 0;
 }
 
+.features:empty {
+  background-color: transparent;
+  margin: 0;
+  outline: none;
+}
+
 .features:empty::before {
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 100vw;
 
   color: var(--text-color-deemphasized);
   content: "Loading…";
-  font-size: 1.133rem;
-  font-weight: bold;
-  outline-style: none;
+  font-size: 17px;
+  font-weight: 600;
 }

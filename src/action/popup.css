@@ -100,7 +100,7 @@
 }
 
 html {
-  font-size: 14px;
+  font-size: 15px;
   overflow-y: scroll;
   scrollbar-color: rgb(var(--active-grey)) rgb(var(--white));
 }
@@ -224,7 +224,6 @@ input[type="search"] {
   background-repeat: no-repeat;
   background-size: 12px;
   color: var(--input-text-color);
-  font-size: 15px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -282,7 +281,6 @@ dialog {
   background-color: var(--card-background-color);
   box-shadow: var(--card-box-shadow);
   color: var(--text-color);
-  font-size: 15px;
 }
 
 :is([role="alert"], [role="status"]) {
@@ -298,7 +296,6 @@ dialog {
 
   background-color: var(--background-color-information);
   color: var(--text-color);
-  font-size: 15px;
 }
 
 :is([role="alert"], [role="status"])[hidden] {

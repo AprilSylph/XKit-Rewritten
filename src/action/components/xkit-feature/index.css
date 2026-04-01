@@ -29,7 +29,6 @@ summary {
   padding: 11.25px;
 
   cursor: pointer;
-  font-size: 15px;
 }
 
 summary::-webkit-details-marker {
@@ -199,6 +198,7 @@ ul.preferences {
   padding-inline: 7.5px;
   margin-block: 11.25px;
 
+  font-size: 14px;
   list-style-type: none;
 }
 

@@ -177,11 +177,16 @@ summary:focus-visible {
 }
 
 .badge ::slotted(span) {
-  padding: 2px 6px;
-  border-radius: 1em;
+  width: fit-content;
+  padding-inline: 3.75px;
+  border: 1px solid var(--badge-border-color-filled);
+  border-radius: 4px;
 
-  background-color: #ff62ce;
-  color: var(--text-color);
+  background-color: var(--badge-background-color-filled);
+  color: var(--badge-text-color-filled);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .title,

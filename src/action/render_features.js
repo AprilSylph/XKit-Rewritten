@@ -99,7 +99,8 @@ const renderFeatures = async function () {
     } else {
       const spanElement = document.createElement('span');
       spanElement.setAttribute('slot', 'badge');
-      spanElement.textContent = 'New!';
+      spanElement.setAttribute('role', 'note');
+      spanElement.textContent = 'New';
       featureElement.append(spanElement);
     }
 

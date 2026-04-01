@@ -44,6 +44,9 @@
   --icon-color-success: #008e00;
   --icon-color-warning: #b16a00;
   --icon-color-critical: #cf1748;
+  --badge-background-color-filled: #007700;
+  --badge-border-color-filled: #fbfbfe66;
+  --badge-text-color-filled: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -92,6 +95,9 @@
     --icon-color-success: #8adf8d;
     --icon-color-warning: #f5cc58;
     --icon-color-critical: #ffa0aa;
+    --badge-background-color-filled: #37b847;
+    --badge-border-color-filled: #15141a66;
+    --badge-text-color-filled: #15141a;
   }
 }
 

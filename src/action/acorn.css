@@ -251,6 +251,7 @@ select:focus-visible {
 }
 
 label + select {
+  width: 100%;
   margin-block-start: 3.75px;
 }
 

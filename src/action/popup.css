@@ -131,7 +131,7 @@ main {
 
 #permissions-banner,
 #embedded-banner {
-  margin: 8px;
+  margin: 7.5px;
 }
 
 #permissions-banner:not([hidden]) + #embedded-banner {
@@ -141,9 +141,9 @@ main {
 [role="tablist"] {
   display: flex;
   flex-direction: row;
-  column-gap: 8px;
+  column-gap: 7.5px;
   flex: 0;
-  padding: 8px;
+  padding: 7.5px;
   border-bottom: 1px solid var(--border-color);
 
   background-color: var(--background-color-canvas);
@@ -467,7 +467,7 @@ textarea:focus-visible {
 }
 
 ul {
-  padding-inline-start: 16px;
+  padding-inline-start: 15px;
   padding-inline-end: 0;
 }
 

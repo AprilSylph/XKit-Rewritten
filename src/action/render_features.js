@@ -13,6 +13,13 @@ const featuresDiv = configPanel.querySelector('.features');
 const enabledFeaturesKey = 'enabledScripts';
 const specialAccessKey = 'specialAccess';
 
+const helpIcon = new DOMParser().parseFromString(`
+  <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/d6ee428/icons/desktop/16/svg/help-fill-16.svg -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color)" aria-hidden="true">
+    <path d="M8 0c4.411 0 8 3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8m-.75 11.25v1.5h1.5v-1.5zM8 3.661a2.56 2.56 0 0 0-2.56 2.56h1.5a1.06 1.06 0 1 1 1.51.96l-.127.065c-.621.342-1.072.987-1.072 1.765v.74l1.501-.002-.001-.74c0-.176.109-.363.334-.468V8.54A2.562 2.562 0 0 0 8 3.661" />
+  </svg>
+`, 'image/svg+xml').firstElementChild;
+
 const getInstalledFeatures = async function () {
   const url = browser.runtime.getURL('/features/index.json');
   const file = await fetch(url);
@@ -84,14 +91,9 @@ const renderFeatures = async function () {
       anchorElement.setAttribute('aria-label', 'Help');
       anchorElement.setAttribute('href', help);
       anchorElement.setAttribute('target', '_blank');
+      anchorElement.setAttribute('title', 'Help');
+      anchorElement.append(helpIcon.cloneNode(true));
       featureElement.append(anchorElement);
-
-      const iconElement = document.createElement('i');
-      iconElement.setAttribute('aria-hidden', 'true');
-      iconElement.classList.add('ri-fw', 'ri-question-fill');
-      iconElement.style.color = 'rgb(var(--black))';
-      iconElement.style.fontSize = '1.25rem';
-      anchorElement.append(iconElement);
     } else {
       const spanElement = document.createElement('span');
       spanElement.setAttribute('slot', 'badge');

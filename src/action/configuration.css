@@ -73,6 +73,8 @@
 
   background-color: var(--input-text-background-color);
   color: var(--input-text-color);
+  font-family: inherit;
+  font-size: 15px;
 }
 
 #clr-picker > input[type="text"]:focus-visible {

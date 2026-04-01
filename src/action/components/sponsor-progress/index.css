@@ -7,11 +7,11 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  column-gap: 12px;
-  padding: 8px;
-  border-top: 1px solid rgb(var(--active-grey));
+  column-gap: 15px;
+  padding: 7.5px;
+  border-top: 1px solid var(--border-color);
 
-  background-color: rgb(var(--white));
+  background-color: var(--background-color-canvas);
 }
 
 #caption {
@@ -27,7 +27,7 @@
   border-radius: 6px;
   overflow: hidden;
 
-  background-color: rgb(var(--passive-grey));
+  background-color: var(--border-color);
   color: #ec6cb9;
 }
 
@@ -48,4 +48,9 @@
 
 #cover-link:not([href]) {
   display: none;
+}
+
+#cover-link:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: -2px;
 }

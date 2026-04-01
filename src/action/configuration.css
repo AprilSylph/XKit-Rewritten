@@ -56,3 +56,44 @@
   font-size: 17px;
   font-weight: 600;
 }
+
+#clr-picker {
+  width: 225px;
+
+  background-color: var(--card-background-color);
+  box-shadow: var(--card-box-shadow);
+}
+
+#clr-picker > input[type="text"] {
+  min-height: 32px;
+  padding-block: 1px;
+  padding-inline: 11.25px;
+  border: 1px solid var(--input-text-border-color);
+  border-radius: 8px;
+
+  background-color: var(--input-text-background-color);
+  color: var(--input-text-color);
+}
+
+#clr-picker > input[type="text"]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 0;
+}
+
+#clr-picker > button {
+  min-height: 24px;
+  padding-block: 1.875px;
+
+  cursor: auto;
+  font-size: 13px;
+}
+
+#clr-swatches button {
+  min-height: 24px;
+  min-width: 24px;
+  border: none;
+  border-radius: 100%;
+  padding: initial;
+
+  cursor: pointer;
+}

@@ -345,6 +345,90 @@ button[type].destructive:enabled:hover:active {
   background-color: var(--button-background-color-destructive-active);
 }
 
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-checkbox--default */
+/* This component does not make use of colour tokens for the unchecked state. */
+/* The hex codes found below were manually colour-picked from Firefox 149 on macOS 26. */
+
+input[type="checkbox"] {
+  vertical-align: top;
+
+  min-height: 16px;
+  min-width: 16px;
+  padding: 0;
+  border: 1px solid #8f8f9d;
+  border-radius: 2px;
+  margin-block: calc((1.15em - 16px) / 2);
+  margin-inline-end: 7.5px;
+
+  appearance: none;
+  background-color: #ffffff;
+  font-family: inherit;
+  line-height: inherit;
+}
+
+@supports (margin-block: 1lh) {
+  input[type="checkbox"] {
+    margin-block: calc((1lh - 16px) / 2);
+  }
+}
+
+input[type="checkbox"]:hover {
+  border-color: #676774;
+}
+
+input[type="checkbox"]:hover:active {
+  border-color: #484851;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="checkbox"] {
+    background-color: #2b2a33;
+  }
+
+  input[type="checkbox"]:hover {
+    border-color: #b1b1b1;
+  }
+
+  input[type="checkbox"]:hover:active {
+    border-color: #d0d0d7;
+  }
+}
+
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 1px;
+}
+
+input[type="checkbox"]:checked {
+  border-style: none;
+
+  background-color: var(--color-accent-primary);
+  background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL21vemlsbGEtZmlyZWZveC9maXJlZm94L2Jsb2IvMjRkNzMxNi9kZXZ0b29scy9jbGllbnQvdGhlbWVzL2ltYWdlcy9jaGVjay5zdmcgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0iI2ZmZmZmZiI+CiAgPHBhdGggc3Ryb2tlPSJjb250ZXh0LXN0cm9rZSBub25lIiBzdHJva2Utd2lkdGg9IjAuNSIgZD0iTTYuNTIsMTIuNWExLDEsMCwwLDEtLjcwNS0uMjkxbC0zLjUyLTMuNWExLDEsMCwxLDEsMS40MS0xLjQxOGwyLjgxMiwyLjgsNS43NzQtNS43OTNhMSwxLDAsMCwxLDEuNDE2LDEuNDEybC02LjQ3OSw2LjVBMSwxLDAsMCwxLDYuNTIsMTIuNVoiLz4KPC9zdmc+");
+  background-position: center;
+}
+
+input[type="checkbox"]:checked:hover {
+  background-color: #2477ff;
+}
+
+input[type="checkbox"]:checked:hover:active {
+  background-color: #3f94ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="checkbox"]:checked {
+    background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL21vemlsbGEtZmlyZWZveC9maXJlZm94L2Jsb2IvMjRkNzMxNi9kZXZ0b29scy9jbGllbnQvdGhlbWVzL2ltYWdlcy9jaGVjay5zdmcgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0iIzAwNDM0ZSI+CiAgPHBhdGggc3Ryb2tlPSJjb250ZXh0LXN0cm9rZSBub25lIiBzdHJva2Utd2lkdGg9IjAuNSIgZD0iTTYuNTIsMTIuNWExLDEsMCwwLDEtLjcwNS0uMjkxbC0zLjUyLTMuNWExLDEsMCwxLDEsMS40MS0xLjQxOGwyLjgxMiwyLjgsNS43NzQtNS43OTNhMSwxLDAsMCwxLDEuNDE2LDEuNDEybC02LjQ3OSw2LjVBMSwxLDAsMCwxLDYuNTIsMTIuNVoiLz4KPC9zdmc+");
+  }
+
+  input[type="checkbox"]:checked:hover {
+    background-color: #00abba;
+  }
+
+  input[type="checkbox"]:checked:hover:active {
+    background-color: #008c99;
+  }
+}
+
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-input-text--default */
 
 input:is([type="text"], [type="search"]) {

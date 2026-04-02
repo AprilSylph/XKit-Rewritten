@@ -345,34 +345,46 @@ button[type].destructive:enabled:hover:active {
   background-color: var(--button-background-color-destructive-active);
 }
 
-/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-input-search--default */
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-input-text--default */
 
-input[type="search"] {
+input:is([type="text"], [type="search"]) {
   min-height: 32px;
+  width: 100%;
   padding-block: 1px;
-  padding-inline-start: 34.5px;
-  padding-inline-end: 1.875px;
+  padding-inline: 11.25px;
   border: 1px solid var(--input-text-border-color);
   border-radius: 8px;
 
   background-color: var(--input-text-background-color);
+  color: var(--input-text-color);
+}
+
+input:is([type="text"], [type="search"]):focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 0;
+}
+
+label + input:is([type="text"], [type="search"]) {
+  margin-block-start: 3.75px;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-input-search--default */
+
+input[type="search"] {
+  padding-inline-start: 34.5px;
+  padding-inline-end: 1.875px;
+
   background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvc2VhcmNoLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjNWI1YjYiPgogIDxwYXRoIGQ9Ik02LjI1IDFhNS4yNSA1LjI1IDAgMCAxIDQuMjA0IDguMzk0TDE1IDEzLjkzOCAxMy45MzkgMTVsLTQuNTQ1LTQuNTQ1QTUuMjUgNS4yNSAwIDEgMSA2LjI1IDFtMCAxLjVhMy43NSAzLjc1IDAgMSAwIDAgNy41IDMuNzUgMy43NSAwIDAgMCAwLTcuNSIgLz4KPC9zdmc+");
   background-position-x: 11.25px;
   background-position-y: center;
   background-repeat: no-repeat;
   background-size: 12px;
-  color: var(--input-text-color);
 }
 
 @media (prefers-color-scheme: dark) {
   input[type="search"] {
     background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvc2VhcmNoLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjZmJmYmZlIj4KICA8cGF0aCBkPSJNNi4yNSAxYTUuMjUgNS4yNSAwIDAgMSA0LjIwNCA4LjM5NEwxNSAxMy45MzggMTMuOTM5IDE1bC00LjU0NS00LjU0NUE1LjI1IDUuMjUgMCAxIDEgNi4yNSAxbTAgMS41YTMuNzUgMy43NSAwIDEgMCAwIDcuNSAzLjc1IDMuNzUgMCAwIDAgMC03LjUiIC8+Cjwvc3ZnPg==");
   }
-}
-
-input[type="search"]:focus-visible {
-  outline: 2px solid var(--color-accent-primary);
-  outline-offset: 0;
 }
 
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-named-deck--focus-group */

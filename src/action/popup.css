@@ -142,6 +142,7 @@ main {
 
 #clr-picker > input[type="text"] {
   min-height: 32px;
+  width: calc(100% - 80px);
   padding-block: 1px;
   padding-inline: 11.25px;
   border: 1px solid var(--input-text-border-color);

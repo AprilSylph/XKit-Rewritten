@@ -1,34 +1,28 @@
 :host {
   display: flex;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  column-gap: 8px;
-  padding: 4px;
+  column-gap: 7.5px;
+  padding-block: 7.5px;
+  padding-inline: 3.75px;
 }
 
 span {
   display: contents;
 }
 
-label,
-.clr-field {
-  flex-shrink: 0;
+.clr-field button {
+  width: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+
+  background-clip: content-box;
+  color: inherit;
 }
 
-button {
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-}
-
-input {
-  padding: 4px;
-  border: none;
-  border-radius: 3px;
-
-  background-color: rgb(var(--passive-grey));
-  color: rgb(var(--black));
-}
-
-input:focus {
-  background-color: rgb(var(--active-grey));
+.clr-field button::after {
+  border-radius: 0;
 }

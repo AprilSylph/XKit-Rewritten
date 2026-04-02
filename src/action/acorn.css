@@ -209,7 +209,7 @@ fieldset {
 }
 
 label {
-  display: block;
+  display: inline-block;
 }
 
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-select--default */

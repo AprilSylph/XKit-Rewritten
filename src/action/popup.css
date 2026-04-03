@@ -1,10 +1,12 @@
 /* Global */
 
 :root {
+  --background-color-search-highlight: #ffe900;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --background-color-search-highlight: #003eaa;
   }
 }
 

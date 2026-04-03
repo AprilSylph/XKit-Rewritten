@@ -212,11 +212,5 @@ slot[name="preferences"] p {
 }
 
 ::slotted(.search-highlighted) {
-  background-color: #ffe900;
-}
-
-@media (prefers-color-scheme: dark) {
-  ::slotted(.search-highlighted) {
-    background-color: #003eaa;
-  }
+  background-color: var(--background-color-search-highlight);
 }

@@ -1,20 +1,10 @@
 /* Global */
 
 :root {
-  --black: 21, 20, 26;
-  --white: 255, 255, 255;
-  --accent: 0, 98, 249;
-  --passive-grey: 240, 240, 244;
-  --active-grey: 191, 191, 201;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --black: 251, 251, 254;
-    --white: 28, 27, 34;
-    --accent: 0, 202, 219;
-    --passive-grey: 35, 34, 43;
-    --active-grey: 91, 91, 102;
   }
 }
 

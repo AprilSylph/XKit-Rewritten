@@ -34,7 +34,14 @@
     </main>
     <template id="bundle-template">
       <li class="bundle">
-        <button class="drag-handle" title="Drag to rearrange"><i class="ri-draggable"></i></button>
+        <button class="drag-handle" title="Drag to rearrange">
+          <figure class="acorn-icons" aria-hidden="true">
+            <!-- https://mozilla.org/MPL/2.0/ | https://github.com/mozilla-firefox/firefox/blob/5151f62/toolkit/themes/shared/icons/move-16.svg -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M7 14H5v-2h2v2zM11 14H9v-2h2v2zM7 9H5V7h2v2zM11 9H9V7h2v2zM7 4H5V2h2v2zM11 2v2H9V2h2z"/>
+            </svg>
+          </figure>
+        </button>
         <div>
           <input class="title" type="text" disabled required>
           <input class="tags" type="text" disabled required>

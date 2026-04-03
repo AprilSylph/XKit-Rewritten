@@ -21,6 +21,8 @@ html {
 }
 
 body {
+  padding: 3.75px;
+
   background-color: rgb(var(--white));
   color: rgb(var(--black));
   font: inherit;

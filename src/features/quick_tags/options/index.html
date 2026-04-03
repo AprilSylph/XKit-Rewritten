@@ -7,6 +7,7 @@
     <title>XKit: Manage tag bundles</title>
     <link rel="stylesheet" href="/lib/modern-normalize.css">
     <link rel="stylesheet" href="/lib/remixicon/remixicon.css">
+    <link rel="stylesheet" href="/action/acorn.css">
     <link rel="stylesheet" href="index.css">
     <script defer src="/action/resize_frames.js"></script>
     <script defer src="/browser_polyfill.js"></script>
@@ -15,13 +16,15 @@
   <body>
     <main>
       <section>
-        <h3>Add new tag bundle</h3>
-        <form id="new-bundle">
+        <h3 id="new-bundle-heading">Add new tag bundle</h3>
+        <form id="new-bundle" aria-labelledby="new-bundle-heading">
           <label for="new-bundle-title">Title</label>
           <input id="new-bundle-title" name="title" type="text" autocomplete="off" placeholder="My tag bundle" required>
           <label for="new-bundle-tags">Tags</label>
           <input id="new-bundle-tags" name="tags" type="text" autocomplete="off" placeholder="tag1, tag2, tag3" required>
-          <button type="submit">Add bundle</button>
+          <fieldset>
+            <button type="submit" class="primary">Add bundle</button>
+          </fieldset>
         </form>
       </section>
       <section>
@@ -29,7 +32,6 @@
         <ul id="bundles"></ul>
       </section>
     </main>
-
     <template id="bundle-template">
       <li class="bundle">
         <button class="drag-handle" title="Drag to rearrange"><i class="ri-draggable"></i></button>

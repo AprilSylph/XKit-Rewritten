@@ -136,7 +136,7 @@ summary:focus-visible {
   transform: translateX(var(--toggle-dot-transform-x));
 }
 
-.icon {
+#icon {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -147,36 +147,42 @@ summary:focus-visible {
   overflow: hidden;
 }
 
-.icon ::slotted(i) {
+#icon ::slotted(i) {
   font-size: 26px;
   line-height: 32px;
 }
 
-.icon,
-.buttons {
-  flex-shrink: 0;
+#title,
+#description {
+  margin: 0;
 }
 
-.buttons {
+#description {
+  font-size: 13px;
+  color: var(--text-color-deemphasized);
+}
+
+#buttons {
   display: flex;
   flex-direction: row;
   align-items: center;
   column-gap: 8px;
+  flex-shrink: 0;
   height: 32px;
   margin-left: auto;
 }
 
-.badge ::slotted(*) {
+#badge ::slotted(*) {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.badge ::slotted(a) {
+#badge ::slotted(a) {
   text-decoration: none;
 }
 
-.badge ::slotted(span) {
+#badge ::slotted(span) {
   width: fit-content;
   padding-inline: 3.75px;
   border: 1px solid var(--badge-border-color-filled);
@@ -189,17 +195,7 @@ summary:focus-visible {
   text-transform: uppercase;
 }
 
-.title,
-.description {
-  margin: 0;
-}
-
-.description {
-  font-size: 13px;
-  color: var(--text-color-deemphasized);
-}
-
-ul.preferences {
+#preferences {
   padding-inline: 7.5px;
   margin-block: 7.5px;
 
@@ -207,7 +203,7 @@ ul.preferences {
   list-style-type: none;
 }
 
-ul.preferences #empty {
+#preferences #empty {
   display: flex;
   justify-content: center;
   align-items: center;

@@ -203,6 +203,9 @@ summary:focus-visible {
 }
 
 slot[name="preferences"] p {
+  margin-block-start: 7.5px;
+  margin-block-end: 11.25px;
+
   text-align: center;
 }
 

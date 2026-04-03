@@ -199,14 +199,11 @@ summary:focus-visible {
   padding-inline: 7.5px;
   margin-block: 7.5px;
 
-  font-size: 14px;
   list-style-type: none;
 }
 
-#preferences #empty {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+slot[name="preferences"] p {
+  text-align: center;
 }
 
 ::slotted(.search-highlighted) {

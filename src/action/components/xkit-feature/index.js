@@ -22,7 +22,7 @@ const templateDocument = new DOMParser().parseFromString(`
       </summary>
       <ul id="preferences">
         <slot name="preferences">
-          <span id="empty">No preferences available for this feature.</span>
+          <p>No preferences available for this feature.</p>
         </slot>
       </ul>
     </details>

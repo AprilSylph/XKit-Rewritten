@@ -213,4 +213,7 @@ slot[name="preferences"] p {
 
 ::slotted(.search-highlighted) {
   background-color: var(--background-color-search-highlight);
+  box-shadow:
+    0 -7.5px 0 var(--background-color-search-highlight),
+    0 7.5px 0 var(--background-color-search-highlight);
 }

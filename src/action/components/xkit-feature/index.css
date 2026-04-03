@@ -196,14 +196,19 @@ summary:focus-visible {
 }
 
 #preferences {
-  padding-inline: 7.5px;
-  margin-block: 7.5px;
+  padding: 0;
+  margin: 0;
 
   list-style-type: none;
 }
 
 slot[name="preferences"] p {
   text-align: center;
+}
+
+::slotted([slot="preferences"]) {
+  padding-inline: 11.25px;
+  margin-block: 15px;
 }
 
 ::slotted(.search-highlighted) {

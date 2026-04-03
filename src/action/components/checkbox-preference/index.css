@@ -4,8 +4,6 @@
   justify-content: flex-start;
   align-items: flex-start;
   column-gap: 7.5px;
-  padding-block: 7.5px;
-  padding-inline: 3.75px;
 }
 
 input[type="checkbox"] {

@@ -208,7 +208,8 @@ slot[name="preferences"] p {
 
 ::slotted([slot="preferences"]) {
   padding-inline: 11.25px;
-  margin-block: 15px;
+  margin-block-start: 7.5px;
+  margin-block-end: 15px;
 }
 
 ::slotted(.search-highlighted) {

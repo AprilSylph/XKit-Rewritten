@@ -26,7 +26,7 @@ summary {
   justify-content: flex-start;
   align-items: flex-start;
   column-gap: var(--space-small);
-  padding: 11.25px;
+  padding: var(--space-medium);
 
   cursor: pointer;
 }
@@ -204,13 +204,13 @@ summary:focus-visible {
 
 slot[name="preferences"] p {
   margin-block-start: var(--space-small);
-  margin-block-end: 11.25px;
+  margin-block-end: var(--space-medium);
 
   text-align: center;
 }
 
 ::slotted([slot="preferences"]) {
-  padding-inline: 11.25px;
+  padding-inline: var(--space-medium);
   margin-block-start: var(--space-small);
   margin-block-end: 15px;
 }

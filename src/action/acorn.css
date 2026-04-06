@@ -244,7 +244,7 @@ select {
   appearance: none;
   background-color: var(--button-background-color);
   background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvY2hldnJvbi1kb3duLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMTUxNDFhIj4KICAgIDxwYXRoIGQ9Im0xNCA2LjMxLTUuNDcgNS40N2EuNzUuNzUgMCAwIDEtMS4wNiAwTDIgNi4zMWwxLjA2LTEuMDZMOCAxMC4xODhsNC45NC00LjkzOHoiIC8+Cjwvc3ZnPg==");
-  background-position-x: calc(100% - 11.25px);
+  background-position-x: calc(100% - var(--space-medium));
   background-position-y: center;
   background-repeat: no-repeat;
   background-size: 12px;
@@ -280,7 +280,7 @@ textarea {
   min-height: 32px;
   width: 100%;
   padding-block: var(--space-small);
-  padding-inline: 11.25px;
+  padding-inline: var(--space-medium);
   border: 1px solid var(--border-color-interactive);
   border-radius: 8px;
   margin: 0;
@@ -453,7 +453,7 @@ input:is([type="text"], [type="search"]) {
   min-height: 32px;
   width: 100%;
   padding-block: 1px;
-  padding-inline: 11.25px;
+  padding-inline: var(--space-medium);
   border: 1px solid var(--input-text-border-color);
   border-radius: 8px;
 
@@ -477,7 +477,7 @@ input[type="search"] {
   padding-inline-end: var(--space-xxsmall);
 
   background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvc2VhcmNoLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjNWI1YjYiPgogIDxwYXRoIGQ9Ik02LjI1IDFhNS4yNSA1LjI1IDAgMCAxIDQuMjA0IDguMzk0TDE1IDEzLjkzOCAxMy45MzkgMTVsLTQuNTQ1LTQuNTQ1QTUuMjUgNS4yNSAwIDEgMSA2LjI1IDFtMCAxLjVhMy43NSAzLjc1IDAgMSAwIDAgNy41IDMuNzUgMy43NSAwIDAgMCAwLTcuNSIgLz4KPC9zdmc+");
-  background-position-x: 11.25px;
+  background-position-x: var(--space-medium);
   background-position-y: center;
   background-repeat: no-repeat;
   background-size: 12px;
@@ -549,7 +549,7 @@ input[type="search"] {
   align-items: flex-start;
   column-gap: var(--space-small);
   padding-block: var(--space-small);
-  padding-inline: 11.25px var(--space-small);
+  padding-inline: var(--space-medium) var(--space-small);
   border: 1px solid var(--message-bar-border-color);
   border-radius: 4px;
 

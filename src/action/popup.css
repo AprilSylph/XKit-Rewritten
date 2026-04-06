@@ -136,7 +136,7 @@ main {
   min-height: 32px;
   width: calc(100% - 80px);
   padding-block: 1px;
-  padding-inline: 11.25px;
+  padding-inline: var(--space-medium);
   border: 1px solid var(--input-text-border-color);
   border-radius: 8px;
 

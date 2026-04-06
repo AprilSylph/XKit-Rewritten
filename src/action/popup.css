@@ -122,7 +122,7 @@ main {
   color: var(--text-color-deemphasized);
   content: "Loading…";
   font-size: var(--font-size-large);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 #clr-picker {

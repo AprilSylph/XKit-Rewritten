@@ -47,6 +47,11 @@
   --font-size-xxlarge: 1.6rem;
   --font-size-xxxlarge: 2.2rem;
 
+  /* Font Weight */
+  --font-weight: normal;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
   /* Text Color */
   --text-color: #15141a;
   --text-color-deemphasized: #15141ab0;
@@ -166,7 +171,7 @@ body {
 :is(h1, h2, h3, h4, h5, h6) {
   margin: 0;
 
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 h1 { font-size: var(--font-size-xxlarge); }
@@ -236,7 +241,7 @@ select {
   background-size: 12px;
   color: var(--text-color);
   font-size: var(--font-size-root);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -299,7 +304,7 @@ button[type] {
   background-color: var(--button-background-color);
   color: var(--text-color);
   font-size: var(--font-size-root);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 button[type]:disabled {
@@ -503,7 +508,7 @@ input[type="search"] {
   background-color: transparent;
   color: inherit;
   font-size: var(--font-size-root);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   text-decoration: none;
 }
 

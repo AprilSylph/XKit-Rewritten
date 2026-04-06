@@ -191,7 +191,7 @@ summary:focus-visible {
   background-color: var(--badge-background-color-filled);
   color: var(--badge-text-color-filled);
   font-size: var(--font-size-small);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
 }
 

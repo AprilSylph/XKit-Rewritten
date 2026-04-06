@@ -121,7 +121,7 @@ main {
 
   color: var(--text-color-deemphasized);
   content: "Loading…";
-  font-size: 17px;
+  font-size: var(--font-size-large);
   font-weight: 600;
 }
 
@@ -143,7 +143,7 @@ main {
   background-color: var(--input-text-background-color);
   color: var(--input-text-color);
   font-family: inherit;
-  font-size: 15px;
+  font-size: var(--font-size-root);
 }
 
 #clr-picker > input[type="text"]:focus-visible {
@@ -156,7 +156,7 @@ main {
   padding-block: 1.875px;
 
   cursor: auto;
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 
 #clr-swatches button {

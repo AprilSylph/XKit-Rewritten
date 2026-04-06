@@ -38,6 +38,15 @@
   --color-accent-primary-hover: #0053cb;
   --color-accent-primary-active: #0041a4;
 
+  /* Font Size */
+  --font-size-root: 1rem;
+  --font-size-xsmall: 0.733rem;
+  --font-size-small: 0.867rem;
+  --font-size-large: 1.133rem;
+  --font-size-xlarge: 1.467rem;
+  --font-size-xxlarge: 1.6rem;
+  --font-size-xxxlarge: 2.2rem;
+
   /* Text Color */
   --text-color: #15141a;
   --text-color-deemphasized: #15141ab0;
@@ -145,7 +154,7 @@
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/docs/docs-typography--docs */
 
 html, :host {
-  font-size: 15px;
+  font-size: var(--font-size-root);
 }
 
 body {
@@ -154,23 +163,18 @@ body {
   font: inherit;
 }
 
-h1 {
-  font-size: 24px;
-  font-weight: 600;
+:is(h1, h2, h3, h4, h5, h6) {
   margin: 0;
+
+  font-weight: 600;
 }
 
-h2 {
-  font-size: 22px;
-  font-weight: 600;
-  margin: 0;
-}
-
-h3 {
-  font-size: 17px;
-  font-weight: 600;
-  margin: 0;
-}
+h1 { font-size: var(--font-size-xxlarge); }
+h2 { font-size: var(--font-size-xlarge); }
+h3 { font-size: var(--font-size-large); }
+h4 { font-size: var(--font-size-root); }
+h5 { font-size: var(--font-size-small); }
+h6 { font-size: var(--font-size-xsmall); }
 
 :is(ol, ul) {
   padding-inline-start: 15px;
@@ -231,7 +235,7 @@ select {
   background-repeat: no-repeat;
   background-size: 12px;
   color: var(--text-color);
-  font-size: 15px;
+  font-size: var(--font-size-root);
   font-weight: 600;
 }
 
@@ -294,7 +298,7 @@ button[type] {
 
   background-color: var(--button-background-color);
   color: var(--text-color);
-  font-size: 15px;
+  font-size: var(--font-size-root);
   font-weight: 600;
 }
 
@@ -498,7 +502,7 @@ input[type="search"] {
 
   background-color: transparent;
   color: inherit;
-  font-size: 15px;
+  font-size: var(--font-size-root);
   font-weight: 600;
   text-decoration: none;
 }

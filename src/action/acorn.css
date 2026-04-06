@@ -193,7 +193,7 @@ h6 { font-size: var(--font-size-xsmall); }
 :is(ol, ul) {
   padding-inline-start: var(--space-large);
   padding-inline-end: 0;
-  margin-block: var(--space-small) 22.5px;
+  margin-block: var(--space-small) var(--space-xlarge);
 }
 
 :is(ol, ul) li {

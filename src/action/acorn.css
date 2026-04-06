@@ -52,6 +52,15 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
+  /* Space */
+  --space-xxsmall: 0.125rem;
+  --space-xsmall: 0.25rem;
+  --space-small: 0.5rem;
+  --space-medium: 0.75rem;
+  --space-large: 1rem;
+  --space-xlarge: 1.5rem;
+  --space-xxlarge: 2rem;
+
   /* Text Color */
   --text-color: #15141a;
   --text-color-deemphasized: #15141ab0;

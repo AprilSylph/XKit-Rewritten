@@ -474,7 +474,7 @@ label + input:is([type="text"], [type="search"]) {
 
 input[type="search"] {
   padding-inline-start: 34.5px;
-  padding-inline-end: 1.875px;
+  padding-inline-end: var(--space-xxsmall);
 
   background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvc2VhcmNoLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjNWI1YjYiPgogIDxwYXRoIGQ9Ik02LjI1IDFhNS4yNSA1LjI1IDAgMCAxIDQuMjA0IDguMzk0TDE1IDEzLjkzOCAxMy45MzkgMTVsLTQuNTQ1LTQuNTQ1QTUuMjUgNS4yNSAwIDEgMSA2LjI1IDFtMCAxLjVhMy43NSAzLjc1IDAgMSAwIDAgNy41IDMuNzUgMy43NSAwIDAgMCAwLTcuNSIgLz4KPC9zdmc+");
   background-position-x: 11.25px;

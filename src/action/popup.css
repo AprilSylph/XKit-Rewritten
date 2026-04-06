@@ -153,7 +153,7 @@ main {
 
 #clr-picker > button {
   min-height: 24px;
-  padding-block: 1.875px;
+  padding-block: var(--space-xxsmall);
 
   cursor: auto;
   font-size: var(--font-size-small);

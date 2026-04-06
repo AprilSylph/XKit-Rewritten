@@ -236,7 +236,7 @@ select {
   min-height: 32px;
   padding-block: var(--space-xsmall);
   padding-inline-start: var(--space-large);
-  padding-inline-end: 30px;
+  padding-inline-end: var(--space-xxlarge);
   border: 1px solid transparent;
   border-radius: 8px;
   margin: 0;

@@ -166,7 +166,7 @@ summary:focus-visible {
   display: flex;
   flex-direction: row;
   align-items: center;
-  column-gap: 8px;
+  column-gap: var(--space-small);
   flex-shrink: 0;
   height: 32px;
   margin-left: auto;

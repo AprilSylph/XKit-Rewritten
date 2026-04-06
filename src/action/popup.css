@@ -75,7 +75,7 @@ main {
   flex-direction: row;
   align-items: center;
   column-gap: var(--space-small);
-  padding: 8px;
+  padding: var(--space-small);
   border-bottom: 1px solid var(--border-color);
 
   background-color: var(--background-color-canvas);
@@ -99,7 +99,7 @@ main {
   flex-direction: column;
   row-gap: 1px;
   border-radius: 8px;
-  margin: 8px;
+  margin: var(--space-small);
   overflow: hidden;
 
   background-color: var(--border-color);

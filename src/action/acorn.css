@@ -578,7 +578,13 @@ input[type="search"] {
 
 :is([role="alert"], [role="status"]) > * {
   min-height: 32px;
-  padding-block: 6.75px;
+  padding-block: calc((32px - 1.15em) / 2);
+}
+
+@supports (padding-block: 1lh) {
+  :is([role="alert"], [role="status"]) > * {
+    padding-block: calc((32px - 1lh) / 2);
+  }
 }
 
 :is([role="alert"], [role="status"]) > button[type] {

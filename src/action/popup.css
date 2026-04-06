@@ -37,7 +37,7 @@ main {
 
 #permissions-banner,
 #embedded-banner {
-  margin: 7.5px;
+  margin: var(--space-small);
 }
 
 #permissions-banner:not([hidden]) + #embedded-banner {
@@ -74,7 +74,7 @@ main {
   display: flex;
   flex-direction: row;
   align-items: center;
-  column-gap: 7.5px;
+  column-gap: var(--space-small);
   padding: 8px;
   border-bottom: 1px solid var(--border-color);
 
@@ -172,7 +172,7 @@ main {
 /* Backup */
 
 #backup-panel section {
-  padding: 7.5px;
+  padding: var(--space-small);
 }
 
 #backup-panel section textarea {
@@ -189,11 +189,11 @@ main {
 /* Links */
 
 #links-panel {
-  padding: 7.5px;
+  padding: var(--space-small);
 }
 
 #version {
-  margin-left: 7.5px;
+  margin-left: var(--space-small);
   user-select: all;
 }
 

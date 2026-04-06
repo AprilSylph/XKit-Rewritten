@@ -3,7 +3,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  column-gap: 7.5px;
+  column-gap: var(--space-small);
 }
 
 span {

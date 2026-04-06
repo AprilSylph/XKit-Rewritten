@@ -193,11 +193,11 @@ h6 { font-size: var(--font-size-xsmall); }
 :is(ol, ul) {
   padding-inline-start: 15px;
   padding-inline-end: 0;
-  margin-block: 7.5px 22.5px;
+  margin-block: var(--space-small) 22.5px;
 }
 
 :is(ol, ul) li {
-  margin-block: 7.5px;
+  margin-block: var(--space-small);
 }
 
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-button-group--default */
@@ -213,14 +213,14 @@ dialog {
 }
 
 form {
-  margin-block-start: 7.5px;
+  margin-block-start: var(--space-small);
 }
 
 fieldset {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  column-gap: 7.5px;
+  column-gap: var(--space-small);
   padding: 0;
   border: none;
   margin: 0;
@@ -279,7 +279,7 @@ textarea {
   display: block;
   min-height: 32px;
   width: 100%;
-  padding-block: 7.5px;
+  padding-block: var(--space-small);
   padding-inline: 11.25px;
   border: 1px solid var(--border-color-interactive);
   border-radius: 8px;
@@ -376,7 +376,7 @@ input[type="checkbox"] {
   border: 1px solid #8f8f9d;
   border-radius: 2px;
   margin-block: calc((1.15em - 16px) / 2);
-  margin-inline-end: 7.5px;
+  margin-inline-end: var(--space-small);
 
   appearance: none;
   background-color: #ffffff;
@@ -494,9 +494,9 @@ input[type="search"] {
 [role="tablist"] {
   display: flex;
   flex-direction: row;
-  column-gap: 7.5px;
+  column-gap: var(--space-small);
   flex: 0;
-  padding: 7.5px;
+  padding: var(--space-small);
   border-bottom: 1px solid var(--border-color);
 
   background-color: var(--background-color-canvas);
@@ -547,9 +547,9 @@ input[type="search"] {
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  column-gap: 7.5px;
-  padding-block: 7.5px;
-  padding-inline: 11.25px 7.5px;
+  column-gap: var(--space-small);
+  padding-block: var(--space-small);
+  padding-inline: 11.25px var(--space-small);
   border: 1px solid var(--message-bar-border-color);
   border-radius: 4px;
 

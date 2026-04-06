@@ -16,7 +16,7 @@ fieldset {
 }
 
 input + label {
-  margin-block-start: 7.5px;
+  margin-block-start: var(--space-small);
 }
 
 #bundles {

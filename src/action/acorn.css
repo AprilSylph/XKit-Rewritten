@@ -234,7 +234,7 @@ label {
 
 select {
   min-height: 32px;
-  padding-block: 3.75px;
+  padding-block: var(--space-xsmall);
   padding-inline-start: 15px;
   padding-inline-end: 30px;
   border: 1px solid transparent;
@@ -270,7 +270,7 @@ select:focus-visible {
 
 label + select {
   width: 100%;
-  margin-block-start: 3.75px;
+  margin-block-start: var(--space-xsmall);
 }
 
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-multiline-editor--default */
@@ -298,7 +298,7 @@ textarea:focus-visible {
 }
 
 label + textarea {
-  margin-block-start: 3.75px;
+  margin-block-start: var(--space-xsmall);
 }
 
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-button--default */
@@ -308,7 +308,7 @@ button[type] {
   min-height: 32px;
   border: 1px solid transparent;
   border-radius: 8px;
-  padding: 3.75px 15px;
+  padding: var(--space-xsmall) 15px;
 
   background-color: var(--button-background-color);
   color: var(--text-color);
@@ -467,7 +467,7 @@ input:is([type="text"], [type="search"]):focus-visible {
 }
 
 label + input:is([type="text"], [type="search"]) {
-  margin-block-start: 3.75px;
+  margin-block-start: var(--space-xsmall);
 }
 
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-input-search--default */
@@ -509,7 +509,7 @@ input[type="search"] {
   min-width: 79px;
   flex-grow: 1;
   flex-shrink: 0;
-  padding: 3.75px 15px;
+  padding: var(--space-xsmall) 15px;
   border: 1px solid transparent;
   border-radius: 8px;
   margin: 0;

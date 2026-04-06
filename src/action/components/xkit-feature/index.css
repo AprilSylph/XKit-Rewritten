@@ -184,7 +184,7 @@ summary:focus-visible {
 
 #badge ::slotted(span) {
   width: fit-content;
-  padding-inline: 3.75px;
+  padding-inline: var(--space-xsmall);
   border: 1px solid var(--badge-border-color-filled);
   border-radius: 4px;
 

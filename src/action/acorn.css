@@ -191,7 +191,7 @@ h5 { font-size: var(--font-size-small); }
 h6 { font-size: var(--font-size-xsmall); }
 
 :is(ol, ul) {
-  padding-inline-start: 15px;
+  padding-inline-start: var(--space-large);
   padding-inline-end: 0;
   margin-block: var(--space-small) 22.5px;
 }
@@ -205,7 +205,7 @@ h6 { font-size: var(--font-size-xsmall); }
 dialog {
   border: none;
   border-radius: 8px;
-  padding: 15px;
+  padding: var(--space-large);
 
   background-color: var(--background-color-box);
   box-shadow: var(--card-box-shadow);
@@ -235,7 +235,7 @@ label {
 select {
   min-height: 32px;
   padding-block: var(--space-xsmall);
-  padding-inline-start: 15px;
+  padding-inline-start: var(--space-large);
   padding-inline-end: 30px;
   border: 1px solid transparent;
   border-radius: 8px;
@@ -308,7 +308,7 @@ button[type] {
   min-height: 32px;
   border: 1px solid transparent;
   border-radius: 8px;
-  padding: var(--space-xsmall) 15px;
+  padding: var(--space-xsmall) var(--space-large);
 
   background-color: var(--button-background-color);
   color: var(--text-color);
@@ -509,7 +509,7 @@ input[type="search"] {
   min-width: 79px;
   flex-grow: 1;
   flex-shrink: 0;
-  padding: var(--space-xsmall) 15px;
+  padding: var(--space-xsmall) var(--space-large);
   border: 1px solid transparent;
   border-radius: 8px;
   margin: 0;

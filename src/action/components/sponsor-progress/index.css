@@ -7,7 +7,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  column-gap: 15px;
+  column-gap: var(--space-large);
   padding: var(--space-small);
   border-top: 1px solid var(--border-color);
 

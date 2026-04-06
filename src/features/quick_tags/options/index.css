@@ -12,7 +12,7 @@ body {
 
 section,
 fieldset {
-  margin-block-start: 15px;
+  margin-block-start: var(--space-large);
 }
 
 input + label {

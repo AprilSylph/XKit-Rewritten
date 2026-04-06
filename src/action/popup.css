@@ -183,7 +183,7 @@ main {
 
 #backup-panel section fieldset,
 #backup-panel section [role="alert"] {
-  margin-block-start: 15px;
+  margin-block-start: var(--space-large);
 }
 
 /* Links */

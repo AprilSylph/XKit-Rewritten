@@ -212,7 +212,7 @@ slot[name="preferences"] p {
 ::slotted([slot="preferences"]) {
   padding-inline: var(--space-medium);
   margin-block-start: var(--space-small);
-  margin-block-end: 15px;
+  margin-block-end: var(--space-large);
 }
 
 ::slotted(.search-highlighted) {

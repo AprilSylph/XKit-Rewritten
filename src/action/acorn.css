@@ -28,6 +28,13 @@
   --message-bar-border-color-warning: #b16a0033;
   --input-text-border-color: #8f8f9d;
 
+  /* Border Radius */
+  --border-radius-circle: 9999px;
+  --border-radius-xsmall: 2px;
+  --border-radius-small: 4px;
+  --border-radius-medium: 8px;
+  --border-radius-large: 16px;
+
   /* Box Shadow */
   --card-box-shadow:
     0 0.25px 0.75px rgba(0, 0, 0, 0.05),

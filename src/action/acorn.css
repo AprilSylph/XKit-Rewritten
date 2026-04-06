@@ -168,7 +168,7 @@
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/docs/docs-typography--docs */
 
 html, :host {
-  font-size: var(--font-size-root);
+  font-size: 15px;
 }
 
 body {

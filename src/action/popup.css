@@ -98,7 +98,7 @@ main {
   display: flex;
   flex-direction: column;
   row-gap: 1px;
-  border-radius: 8px;
+  border-radius: var(--border-radius-medium);
   margin: var(--space-small);
   overflow: hidden;
 
@@ -138,7 +138,7 @@ main {
   padding-block: 1px;
   padding-inline: var(--space-medium);
   border: 1px solid var(--input-text-border-color);
-  border-radius: 8px;
+  border-radius: var(--border-radius-medium);
 
   background-color: var(--input-text-background-color);
   color: var(--input-text-color);

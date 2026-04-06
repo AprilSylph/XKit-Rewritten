@@ -167,7 +167,7 @@
 }
 
 :any-link:focus-visible {
-  border-radius: 4px;
+  border-radius: var(--border-radius-small);
   outline: 2px solid var(--color-accent-primary);
   outline-offset: 1px;
 }
@@ -211,7 +211,7 @@ h6 { font-size: var(--font-size-xsmall); }
 
 dialog {
   border: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius-medium);
   padding: var(--space-large);
 
   background-color: var(--background-color-box);
@@ -245,7 +245,7 @@ select {
   padding-inline-start: var(--space-large);
   padding-inline-end: var(--space-xxlarge);
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: var(--border-radius-medium);
   margin: 0;
 
   appearance: none;
@@ -289,7 +289,7 @@ textarea {
   padding-block: var(--space-small);
   padding-inline: var(--space-medium);
   border: 1px solid var(--border-color-interactive);
-  border-radius: 8px;
+  border-radius: var(--border-radius-medium);
   margin: 0;
 
   background-color: var(--input-text-background-color);
@@ -314,7 +314,7 @@ button[type] {
   display: inline-block;
   min-height: 32px;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: var(--border-radius-medium);
   padding: var(--space-xsmall) var(--space-large);
 
   background-color: var(--button-background-color);
@@ -381,7 +381,7 @@ input[type="checkbox"] {
   min-width: 16px;
   padding: 0;
   border: 1px solid #8f8f9d;
-  border-radius: 2px;
+  border-radius: var(--border-radius-xsmall);
   margin-block: calc((1.15em - 16px) / 2);
   margin-inline-end: var(--space-small);
 
@@ -462,7 +462,7 @@ input:is([type="text"], [type="search"]) {
   padding-block: 1px;
   padding-inline: var(--space-medium);
   border: 1px solid var(--input-text-border-color);
-  border-radius: 8px;
+  border-radius: var(--border-radius-medium);
 
   background-color: var(--input-text-background-color);
   color: var(--input-text-color);
@@ -518,7 +518,7 @@ input[type="search"] {
   flex-shrink: 0;
   padding: var(--space-xsmall) var(--space-large);
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: var(--border-radius-medium);
   margin: 0;
 
   background-color: transparent;
@@ -558,7 +558,7 @@ input[type="search"] {
   padding-block: var(--space-small);
   padding-inline: var(--space-medium) var(--space-small);
   border: 1px solid var(--message-bar-border-color);
-  border-radius: 4px;
+  border-radius: var(--border-radius-medium);
 
   background-color: var(--background-color-information);
   color: var(--text-color);

@@ -7,13 +7,13 @@
 }
 
 :host(:is(:first-child, .search-first)) summary {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: var(--border-radius-medium);
+  border-top-right-radius: var(--border-radius-medium);
 }
 
 :host(:is(:last-child, .search-last)) details:not([open]) summary {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: var(--border-radius-medium);
+  border-bottom-right-radius: var(--border-radius-medium);
 }
 
 details.disabled:not([open], :hover, :focus-within) summary {
@@ -67,7 +67,7 @@ summary:focus-visible {
   border-color: var(--border-color-interactive);
   border-style: solid;
   border-width: var(--toggle-border-width);
-  border-radius: 9999px;
+  border-radius: var(--border-radius-circle);
 
   background-color: var(--button-background-color);
   color: var(--border-color-interactive);
@@ -186,7 +186,7 @@ summary:focus-visible {
   width: fit-content;
   padding-inline: var(--space-xsmall);
   border: 1px solid var(--badge-border-color-filled);
-  border-radius: 4px;
+  border-radius: var(--border-radius-small);
 
   background-color: var(--badge-background-color-filled);
   color: var(--badge-text-color-filled);

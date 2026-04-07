@@ -10,9 +10,7 @@ const storageKey = 'quick_tags.preferences.tagBundles';
 
 const bundlesList = document.getElementById('bundles');
 const bundleTemplate = document.getElementById('bundle-template');
-const editDialog = document.getElementById('edit-dialog');
-const editForm = document.getElementById('edit-form');
-const editCancelButton = document.getElementById('edit-cancel');
+const editTemplate = document.getElementById('edit-template');
 
 const saveNewBundle = async event => {
   event.preventDefault();
@@ -45,29 +43,21 @@ async function onEditButtonClick ({ currentTarget }) {
   const tagBundle = tagBundles[index];
   if (!tagBundle) return;
 
+  const editTemplateClone = editTemplate.content.cloneNode(true);
+
+  const editForm = editTemplateClone.getElementById('edit-form');
+  const editDialog = editTemplateClone.getElementById('edit-dialog');
+  const editCancelButton = editTemplateClone.getElementById('edit-cancel');
+
   Object.entries(tagBundle).forEach(([key, value]) => {
     const formControlElement = editForm.elements.namedItem(key);
     if (formControlElement) formControlElement.value = value;
   });
 
-  const onEditSubmit = getOnEditSubmit(tagBundles, tagBundle);
-  editForm.addEventListener('submit', onEditSubmit);
-
-  editCancelButton.addEventListener('click', () => {
-    editForm.removeEventListener('submit', onEditSubmit);
-    editDialog.close();
-  });
-
-  editDialog.showModal();
-}
-
-/** @type {(tagBundles: TagBundle[], tagBundle: TagBundle) => ((event: SubmitEvent) => void)} */
-function getOnEditSubmit (tagBundles, tagBundle) {
-  return async (event) => {
+  /** @type {(event: SubmitEvent) => Promise<void>} */
+  const onEditSubmit = async (event) => {
     event.preventDefault();
-    const { currentTarget } = event;
-
-    if (!currentTarget.reportValidity()) { return; }
+    if (!editForm.reportValidity()) return;
 
     const formData = new FormData(editForm);
     for (const [key, value] of formData.entries()) {
@@ -77,8 +67,14 @@ function getOnEditSubmit (tagBundles, tagBundle) {
     await browser.storage.local.set({ [storageKey]: tagBundles });
 
     editDialog.close();
-    currentTarget.reset();
   };
+
+  editForm.addEventListener('submit', onEditSubmit);
+  editDialog.addEventListener('close', () => editDialog.remove());
+  editCancelButton.addEventListener('click', () => editDialog.close());
+
+  document.body.append(editDialog);
+  editDialog.showModal();
 }
 
 const deleteBundle = async ({ currentTarget }) => {

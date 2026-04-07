@@ -30,19 +30,6 @@
         <h3>Your tag bundles</h3>
         <ul id="bundles"></ul>
       </section>
-      <dialog id="edit-dialog">
-        <h3 id="edit-heading">Edit tag bundle</h3>
-        <form id="edit-form" aria-labelledby="edit-heading">
-          <label for="edit-title">Title</label>
-          <input id="edit-title" name="title" type="text" autocomplete="off" placeholder="My tag bundle" required>
-          <label for="edit-tags">Tags</label>
-          <input id="edit-tags" name="tags" type="text" autocomplete="off" placeholder="tag1, tag2, tag3" required>
-          <fieldset>
-            <button type="button" id="edit-cancel">Cancel</button>
-            <button type="submit" class="primary">Save</button>
-          </fieldset>
-        </form>
-      </dialog>
     </main>
     <template id="bundle-template">
       <li class="bundle">
@@ -73,6 +60,21 @@
           </button>
         </span>
       </li>
+    </template>
+    <template id="edit-template">
+      <dialog id="edit-dialog">
+        <h3 id="edit-heading">Edit tag bundle</h3>
+        <form id="edit-form" aria-labelledby="edit-heading">
+          <label for="edit-title">Title</label>
+          <input id="edit-title" name="title" type="text" autocomplete="off" placeholder="My tag bundle" required>
+          <label for="edit-tags">Tags</label>
+          <input id="edit-tags" name="tags" type="text" autocomplete="off" placeholder="tag1, tag2, tag3" required>
+          <fieldset>
+            <button type="button" id="edit-cancel">Cancel</button>
+            <button type="submit" class="primary">Save</button>
+          </fieldset>
+        </form>
+      </dialog>
     </template>
   </body>
 </html>

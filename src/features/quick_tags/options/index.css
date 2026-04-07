@@ -4,7 +4,8 @@ html {
 }
 
 body {
-  padding: var(--space-xsmall);
+  padding-block: var(--space-small);
+  padding-inline: var(--space-medium);
 
   -webkit-user-select: none;
   user-select: none;

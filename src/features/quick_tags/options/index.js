@@ -83,8 +83,8 @@ const renderBundles = async function () {
 
     bundleTemplateClone.querySelector('.bundle').id = index;
 
-    bundleTemplateClone.querySelector('.title').value = title;
-    bundleTemplateClone.querySelector('.tags').value = tags;
+    bundleTemplateClone.querySelector('.label').textContent = title;
+    bundleTemplateClone.querySelector('.description').textContent = tags.split(',').map(tag => `#${tag.trim()}`).join(' ');
 
     bundleTemplateClone.querySelector('.edit').addEventListener('click', editTagBundle);
     bundleTemplateClone.querySelector('.delete').addEventListener('click', deleteBundle);
@@ -101,4 +101,4 @@ browser.storage.local.onChanged.addListener((changes) => {
 
 document.getElementById('new-bundle').addEventListener('submit', saveNewBundle);
 
-renderBundles();
+renderBundles().catch(console.error);

@@ -20,33 +20,57 @@ input + label {
 }
 
 #bundles {
-  padding: 0;
-  margin: 0;
+  --border-width: 1px;
 
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--border-width);
+  padding: 0;
+  border-radius: var(--border-radius-medium);
+  margin: 0;
+  overflow: hidden;
+
+  background-color: var(--border-color);
   list-style-type: none;
+  outline: var(--border-width) solid var(--border-color);
+  outline-offset: 0;
 }
 
 #bundles:empty::before {
   content: "No tag bundles are defined.";
 }
 
+h3 + #bundles {
+  margin-block-start: var(--space-medium);
+}
+
 .bundle {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-column-gap: 1ch;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
+  column-gap: var(--space-small);
+  padding: var(--space-medium);
+  margin: 0;
+
+  background-color: var(--background-color-canvas);
 }
 
-.bundle + .bundle {
-  border-top: 1px dotted var(--border-color-deemphasized);
+.bundle.sortable-ghost {
+  opacity: 0%;
 }
 
-.bundle button {
-  padding: 3px;
+.bundle.sortable-fallback {
+  border-radius: inherit;
+  opacity: 100% !important;
+}
+
+.bundle button:has(> i) {
+  padding: var(--space-xsmall);
   border: none;
 
-  cursor: pointer;
   background: none;
+  cursor: pointer;
 }
 
 .bundle button i {
@@ -55,6 +79,7 @@ input + label {
 }
 
 .bundle .drag-handle {
+  background-color: transparent !important;
   cursor: grab;
 }
 
@@ -62,42 +87,24 @@ input + label {
   cursor: grabbing;
 }
 
-.bundle div {
+.bundle .text-content {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: stretch;
-  padding: 1ch 0;
+  align-items: flex-start;
+  row-gap: var(--space-xsmall);
 }
 
-.bundle .title {
-  margin-bottom: 0.5ch;
+.bundle .description {
+  color: var(--text-color-deemphasized);
+  font-size: var(--font-size-small);
 }
 
-.bundle input {
-  width: 0;
-  min-width: 100%;
-}
-
-.bundle input:disabled {
-  min-height: min-content;
-  overflow-x: hidden;
-  padding: 0;
-  border: none;
-
-  color: inherit;
-  background: transparent;
-  text-overflow: ellipsis;
-}
-
-.bundle input.title:disabled {
-  font-weight: bold;
-}
-
-.bundle .controls {
+.bundle .actions {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  column-gap: var(--space-xsmall);
   align-items: center;
+  column-gap: var(--space-xsmall);
+  margin-left: auto;
 }

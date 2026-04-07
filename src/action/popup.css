@@ -174,7 +174,8 @@ main {
 /* Backup */
 
 #backup-panel section {
-  padding: var(--space-small);
+  padding-block: var(--space-medium);
+  padding-inline: var(--space-small);
 }
 
 #backup-panel section textarea {
@@ -191,7 +192,8 @@ main {
 /* Links */
 
 #links-panel {
-  padding: var(--space-small);
+  padding-block: var(--space-medium);
+  padding-inline: var(--space-small);
 }
 
 #version {

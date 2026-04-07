@@ -94,6 +94,17 @@ h3 + #bundles {
   justify-content: flex-start;
   align-items: flex-start;
   row-gap: var(--space-xsmall);
+  flex: 1;
+  min-width: 0;
+}
+
+.bundle :is(.label, .description) {
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .bundle .description {

@@ -611,3 +611,12 @@ input[type="search"] {
   height: 1.15em;
   width: 1.15em;
 }
+
+button[type]:is([aria-label], [title]):has(> .acorn-icons:only-child) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  padding: 0;
+}

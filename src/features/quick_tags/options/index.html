@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XKit: Manage tag bundles</title>
     <link rel="stylesheet" href="/lib/modern-normalize.css">
-    <link rel="stylesheet" href="/lib/remixicon/remixicon.css">
     <link rel="stylesheet" href="/action/acorn.css">
     <link rel="stylesheet" href="index.css">
     <script defer src="/action/resize_frames.js"></script>
@@ -68,7 +67,15 @@
               </svg>
             </figure>
           </button>
-          <button class="delete" title="Delete tag bundle"><i class="ri-delete-bin-line"></i></button>
+          <button type="button" class="delete" title="Delete tag bundle">
+            <figure class="acorn-icons" aria-hidden="true">
+              <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/a0be4e8/icons/desktop/16/svg/delete-16.svg -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-critical)">
+                <path d="M7 12.5H5.5v-6H7zm3.5 0H9v-6h1.5z" />
+                <path d="M9.5 0a2 2 0 0 1 2 2v1H15v1.5h-1V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4.5H1V3h3.5V2a2 2 0 0 1 2-2zm-6 14a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V4.5h-9zm3-12.5A.5.5 0 0 0 6 2v1h4V2a.5.5 0 0 0-.5-.5z" />
+              </svg>
+            </figure>
+          </button>
         </span>
       </li>
     </template>

@@ -37,8 +37,16 @@ input + label {
   outline-offset: 0;
 }
 
+#bundles:empty {
+  justify-content: center;
+  align-items: center;
+
+  background-color: transparent;
+}
+
 #bundles:empty::before {
   content: "No tag bundles are defined.";
+  margin-block: var(--space-large);
 }
 
 h3 + #bundles {

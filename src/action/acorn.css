@@ -323,6 +323,15 @@ button[type] {
   font-weight: var(--font-weight-semibold);
 }
 
+button[type]:is([aria-label], [title]):has(> svg:only-child) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  padding: 0;
+}
+
 button[type]:disabled {
   opacity: 50%;
 }
@@ -610,13 +619,4 @@ input[type="search"] {
 .acorn-icons svg {
   height: 1.15em;
   width: 1.15em;
-}
-
-button[type]:is([aria-label], [title]):has(> .acorn-icons:only-child) {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 32px;
-  width: 32px;
-  padding: 0;
 }

@@ -95,11 +95,15 @@ const renderBundles = async function () {
 
   bundlesList.replaceChildren(...tagBundles.map(({ title, tags }, index) => {
     const bundleTemplateClone = bundleTemplate.content.cloneNode(true);
-
     bundleTemplateClone.querySelector('.bundle').id = index;
 
-    bundleTemplateClone.querySelector('.label').textContent = title;
-    bundleTemplateClone.querySelector('.description').textContent = tags.split(',').map(tag => `#${tag.trim()}`).join(' ');
+    const bundleLabel = bundleTemplateClone.querySelector('.label');
+    bundleLabel.textContent = title;
+    bundleLabel.title = bundleLabel.textContent;
+
+    const bundleDescription = bundleTemplateClone.querySelector('.description');
+    bundleDescription.textContent = tags.split(',').map(tag => `#${tag.trim()}`).join(' ');
+    bundleDescription.title = bundleDescription.textContent;
 
     bundleTemplateClone.querySelector('.edit').addEventListener('click', onEditButtonClick);
     bundleTemplateClone.querySelector('.delete').addEventListener('click', deleteBundle);

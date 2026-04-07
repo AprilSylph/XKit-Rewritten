@@ -11,6 +11,7 @@ const storageKey = 'quick_tags.preferences.tagBundles';
 const bundlesList = document.getElementById('bundles');
 const bundleTemplate = document.getElementById('bundle-template');
 const editTemplate = document.getElementById('edit-template');
+const deleteTemplate = document.getElementById('delete-template');
 
 const saveNewBundle = async event => {
   event.preventDefault();
@@ -77,14 +78,40 @@ async function onEditButtonClick ({ currentTarget }) {
   editDialog.showModal();
 }
 
-const deleteBundle = async ({ currentTarget }) => {
-  const { parentNode: { parentNode } } = currentTarget;
+/** @type {(event: PointerEvent) => Promise<void>} */
+async function onDeleteButtonClick ({ currentTarget }) {
+  const bundleId = currentTarget.closest('[id]')?.id;
+  if (!bundleId) return;
 
+  /** @type {{ "quick_tags.preferences.tagBundles": TagBundle[] }} */
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-  const index = parseInt(parentNode.id, 10);
-  tagBundles.splice(index, 1);
-  browser.storage.local.set({ [storageKey]: tagBundles });
-};
+
+  const index = parseInt(bundleId, 10);
+  const tagBundle = tagBundles[index];
+  if (!tagBundle) return;
+
+  const deleteTemplateClone = deleteTemplate.content.cloneNode(true);
+
+  const deleteDialog = deleteTemplateClone.getElementById('delete-dialog');
+  const deleteTitleDisplay = deleteTemplateClone.getElementById('delete-title');
+  const deleteTagsDisplay = deleteTemplateClone.getElementById('delete-tags');
+  const deleteCancelButton = deleteTemplateClone.getElementById('delete-cancel');
+  const deleteConfirmButton = deleteTemplateClone.getElementById('delete-confirm');
+
+  deleteTitleDisplay.textContent = tagBundle.title;
+  deleteTagsDisplay.textContent = tagBundle.tags.split(',').map(tag => `#${tag.trim()}`).join(' ');
+
+  deleteDialog.addEventListener('close', () => deleteDialog.remove());
+  deleteCancelButton.addEventListener('click', () => deleteDialog.close());
+  deleteConfirmButton.addEventListener('click', async () => {
+    tagBundles.splice(index, 1);
+    await browser.storage.local.set({ [storageKey]: tagBundles });
+    deleteDialog.close();
+  });
+
+  document.body.append(deleteDialog);
+  deleteDialog.showModal();
+}
 
 const renderBundles = async function () {
   const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
@@ -102,7 +129,7 @@ const renderBundles = async function () {
     bundleDescription.title = bundleDescription.textContent;
 
     bundleTemplateClone.querySelector('.edit').addEventListener('click', onEditButtonClick);
-    bundleTemplateClone.querySelector('.delete').addEventListener('click', deleteBundle);
+    bundleTemplateClone.querySelector('.delete').addEventListener('click', onDeleteButtonClick);
 
     return bundleTemplateClone;
   }));

@@ -76,5 +76,19 @@
         </form>
       </dialog>
     </template>
+    <template id="delete-template">
+      <dialog id="delete-dialog">
+        <h3 id="delete-heading">Delete tag bundle?</h3>
+        <p>This tag bundle will be deleted:</p>
+        <ul>
+          <li><strong>Title</strong>: <span id="delete-title"></span></li>
+          <li><strong>Tags</strong>: <span id="delete-tags"></span></li>
+        </ul>
+        <fieldset>
+          <button type="button" id="delete-cancel">Cancel</button>
+          <button type="button" id="delete-confirm" class="destructive">Delete</button>
+        </fieldset>
+      </dialog>
+    </template>
   </body>
 </html>

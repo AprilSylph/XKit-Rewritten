@@ -95,15 +95,17 @@ main {
 }
 
 .features {
+  --border-width: 1px;
+
   display: flex;
   flex-direction: column;
-  row-gap: 1px;
+  row-gap: var(--border-width);
   border-radius: var(--border-radius-medium);
-  margin: var(--space-small);
+  margin: calc(var(--space-small) + var(--border-width));
   overflow: hidden;
 
   background-color: var(--border-color);
-  outline: 1px solid var(--border-color);
+  outline: var(--border-width) solid var(--border-color);
   outline-offset: 0;
 }
 

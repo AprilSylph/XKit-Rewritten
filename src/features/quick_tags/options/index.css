@@ -1,14 +1,5 @@
-html {
-  overflow-y: hidden;
-  scrollbar-width: thin;
-}
-
-body {
-  padding-block: var(--space-small);
-  padding-inline: var(--space-medium);
-
-  -webkit-user-select: none;
-  user-select: none;
+:host {
+  display: block;
 }
 
 section,

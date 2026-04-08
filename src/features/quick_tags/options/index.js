@@ -5,22 +5,22 @@ const localName = 'quick-tags-bundle-management';
 
 const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
-    <section>
-      <h3 id="new-bundle-heading">Add new tag bundle</h3>
+    <h3>Your tag bundles</h3>
+    <ul id="bundles"></ul>
+    <button type="button" id="new-bundle-button">New tag bundle…</button>
+    <dialog id="new-bundle-dialog">
+      <h3 id="new-bundle-heading">Create new tag bundle</h3>
       <form id="new-bundle" aria-labelledby="new-bundle-heading">
         <label for="new-bundle-title">Title</label>
         <input id="new-bundle-title" name="title" type="text" autocomplete="off" placeholder="My tag bundle" required>
         <label for="new-bundle-tags">Tags</label>
         <input id="new-bundle-tags" name="tags" type="text" autocomplete="off" placeholder="tag1, tag2, tag3" required>
         <fieldset>
-          <button type="submit" class="primary">Add bundle</button>
+          <button type="button" id="new-bundle-cancel">Cancel</button>
+          <button type="submit" class="primary">Create</button>
         </fieldset>
       </form>
-    </section>
-    <section>
-      <h3>Your tag bundles</h3>
-      <ul id="bundles"></ul>
-    </section>
+    </dialog>
     <template id="bundle-template">
       <li class="bundle">
         <button type="button" class="drag-handle" title="Drag to rearrange">
@@ -100,6 +100,12 @@ const storageKey = 'quick_tags.preferences.tagBundles';
 class QuickTagsBundleManagementElement extends CustomElement {
   /** @type {HTMLUListElement}    */ #bundlesList;
   /** @type {HTMLTemplateElement} */ #bundleTemplate;
+
+  /** @type {HTMLButtonElement}   */ #newBundleButton;
+  /** @type {HTMLButtonElement}   */ #newBundleCancelButton;
+  /** @type {HTMLDialogElement}   */ #newBundleDialog;
+  /** @type {HTMLFormElement}     */ #newBundleForm;
+
   /** @type {HTMLTemplateElement} */ #editTemplate;
   /** @type {HTMLTemplateElement} */ #deleteTemplate;
 
@@ -108,27 +114,32 @@ class QuickTagsBundleManagementElement extends CustomElement {
 
     this.#bundlesList = this.shadowRoot.getElementById('bundles');
     this.#bundleTemplate = this.shadowRoot.getElementById('bundle-template');
+
+    this.#newBundleButton = this.shadowRoot.getElementById('new-bundle-button');
+    this.#newBundleCancelButton = this.shadowRoot.getElementById('new-bundle-cancel');
+    this.#newBundleDialog = this.shadowRoot.getElementById('new-bundle-dialog');
+    this.#newBundleForm = this.shadowRoot.getElementById('new-bundle');
+
     this.#editTemplate = this.shadowRoot.getElementById('edit-template');
     this.#deleteTemplate = this.shadowRoot.getElementById('delete-template');
   }
 
-  saveNewBundle = async (event) => {
+  onNewBundleButtonClick = () => this.#newBundleDialog.showModal();
+  onNewBundleCancelButtonClick = () => this.#newBundleDialog.close();
+  onNewBundleDialogClose = () => this.#newBundleForm.reset();
+
+  /** @type {(event: SubmitEvent) => Promise<void>} */
+  onNewBundleFormSubmit = async (event) => {
     event.preventDefault();
-    const { currentTarget } = event;
+    if (!this.#newBundleForm.reportValidity()) return;
 
-    if (!currentTarget.reportValidity()) { return; }
-    const { title, tags } = currentTarget.elements;
-
-    const tagBundle = {
-      title: title.value,
-      tags: tags.value,
-    };
+    const { title, tags } = this.#newBundleForm.elements;
+    const tagBundle = { title: title.value, tags: tags.value };
 
     const { [storageKey]: tagBundles = [] } = await browser.storage.local.get(storageKey);
-    tagBundles.push(tagBundle);
-    await browser.storage.local.set({ [storageKey]: tagBundles });
+    await browser.storage.local.set({ [storageKey]: [...tagBundles, tagBundle] });
 
-    currentTarget.reset();
+    this.#newBundleDialog.close();
   };
 
   /** @type {(event: PointerEvent) => Promise<void>} */
@@ -245,7 +256,11 @@ class QuickTagsBundleManagementElement extends CustomElement {
     this.slot ||= 'preferences';
 
     browser.storage.local.onChanged.addListener(this.onStorageChanged);
-    this.shadowRoot.getElementById('new-bundle').addEventListener('submit', this.saveNewBundle);
+    this.#newBundleButton.addEventListener('click', this.onNewBundleButtonClick);
+    this.#newBundleCancelButton.addEventListener('click', this.onNewBundleCancelButtonClick);
+    this.#newBundleDialog.addEventListener('close', this.onNewBundleDialogClose);
+    this.#newBundleForm.addEventListener('submit', this.onNewBundleFormSubmit);
+
     this.renderBundles();
 
     Sortable.create(this.#bundlesList, {

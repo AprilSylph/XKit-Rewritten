@@ -2,7 +2,6 @@
   display: block;
 }
 
-section,
 fieldset {
   margin-block-start: var(--space-large);
 }
@@ -118,4 +117,8 @@ h3 + #bundles {
   align-items: center;
   column-gap: var(--space-xsmall);
   margin-left: auto;
+}
+
+#new-bundle-button {
+  margin-block-start: var(--space-medium);
 }

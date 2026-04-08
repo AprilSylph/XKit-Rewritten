@@ -125,7 +125,14 @@ const renderFeatures = async function () {
             break;
           case 'component':
             preferenceElements.push(
-              (await import(browser.runtime.getURL(src)))?.default?.(),
+              await import(browser.runtime.getURL(src))
+                .then(module => module.default())
+                .catch(reason =>
+                  Object.assign(document.createElement('p'), {
+                    slot: 'preferences',
+                    textContent: `${reason}`,
+                  }),
+                ),
             );
             break;
           case 'iframe':

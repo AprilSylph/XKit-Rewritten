@@ -123,6 +123,11 @@ const renderFeatures = async function () {
           case 'color':
             preferenceElements.push(ColorPreference({ featureName, preferenceName, label, value }));
             break;
+          case 'component':
+            preferenceElements.push(
+              (await import(browser.runtime.getURL(src)))?.default?.(),
+            );
+            break;
           case 'iframe':
             preferenceElements.push(IframePreference({ label, src }));
             break;

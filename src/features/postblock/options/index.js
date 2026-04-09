@@ -104,6 +104,7 @@ class PostBlockBlockedPostsElement extends CustomElement {
   };
 
   connectedCallback () {
+    this.ariaLabel ||= 'Manage blocked posts';
     this.role ||= 'listitem';
     this.slot ||= 'preferences';
 

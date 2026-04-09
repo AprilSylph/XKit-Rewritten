@@ -251,6 +251,7 @@ class QuickTagsBundleManagementElement extends CustomElement {
   };
 
   connectedCallback () {
+    this.ariaLabel ||= 'Manage tag bundles';
     this.role ||= 'listitem';
     this.slot ||= 'preferences';
 

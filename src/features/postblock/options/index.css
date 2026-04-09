@@ -24,7 +24,15 @@ code {
 }
 
 #blocked-posts:empty {
-  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background-color: transparent;
+}
+
+#blocked-posts:empty::before {
+  content: "You haven’t blocked any posts yet.";
+  margin-block: var(--space-large);
 }
 
 h3 + #blocked-posts {

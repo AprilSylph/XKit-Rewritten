@@ -180,7 +180,7 @@ main {
 
 #backup-panel section textarea {
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
-  font-size: smaller;
+  font-size: var(--font-size-small);
   resize: none;
 }
 

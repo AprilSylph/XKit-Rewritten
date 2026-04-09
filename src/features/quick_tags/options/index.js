@@ -46,7 +46,6 @@ const templateDocument = new DOMParser().parseFromString(`
               <path d="M7 12.5H5.5v-6H7zm3.5 0H9v-6h1.5z" />
               <path d="M9.5 0a2 2 0 0 1 2 2v1H15v1.5h-1V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4.5H1V3h3.5V2a2 2 0 0 1 2-2zm-6 14a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V4.5h-9zm3-12.5A.5.5 0 0 0 6 2v1h4V2a.5.5 0 0 0-.5-.5z" />
             </svg>
-            </figure>
           </button>
         </span>
       </li>

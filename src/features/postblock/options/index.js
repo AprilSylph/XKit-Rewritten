@@ -8,7 +8,7 @@ const templateDocument = new DOMParser().parseFromString(`
     <ul id="blocked-posts"></ul>
     <template id="blocked-post">
       <li class="blocked-post">
-        <span class="monospace"></span>
+        <code role="presentation"></code>
         <button type="button" data-post-id="" title="Unblock this post">
           <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/a0be4e8/icons/desktop/16/svg/delete-16.svg -->
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-critical)" aria-hidden="true">
@@ -21,7 +21,7 @@ const templateDocument = new DOMParser().parseFromString(`
     <template id="unblock-template">
       <dialog id="unblock-dialog">
         <h3>Unblock this post?</h3>
-        <p>All instances of post ID <span id="unblock-id" class="monospace"></span> (including reblogs) will become visible again.</p>
+        <p>All instances of post ID <code id="unblock-id" role="presentation"></code> (including reblogs) will become visible again.</p>
         <fieldset>
           <button type="button" id="unblock-cancel">Cancel</button>
           <button type="button" id="unblock-confirm" class="destructive">Unblock</button>
@@ -86,10 +86,10 @@ class PostBlockBlockedPostsElement extends CustomElement {
     this.#postsBlockedCount.textContent = `${blockedPostRootIDs.length} blocked ${blockedPostRootIDs.length === 1 ? 'post' : 'posts'}`;
     this.#blockedPostList.replaceChildren(...blockedPostRootIDs.map(blockedPostID => {
       const templateClone = this.#blockedPostTemplate.content.cloneNode(true);
-      const spanElement = templateClone.querySelector('span');
+      const codeElement = templateClone.querySelector('code');
       const unblockButton = templateClone.querySelector('button');
 
-      spanElement.textContent = blockedPostID;
+      codeElement.textContent = blockedPostID;
       unblockButton.dataset.postId = blockedPostID;
       unblockButton.addEventListener('click', this.unblockPost);
 

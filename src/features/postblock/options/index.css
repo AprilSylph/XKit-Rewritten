@@ -2,6 +2,10 @@
   display: block;
 }
 
+code {
+  font-size: var(--font-size-small);
+}
+
 #blocked-posts {
   --border-width: 1px;
 
@@ -39,9 +43,4 @@ h3 + #blocked-posts {
   margin: 0;
 
   background-color: var(--background-color-canvas);
-}
-
-.monospace {
-  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
-  font-size: var(--font-size-small);
 }

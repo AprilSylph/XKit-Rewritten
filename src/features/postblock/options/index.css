@@ -1,55 +1,30 @@
 :host {
-  --black: 21, 20, 26;
-  --white: 255, 255, 255;
-  --grey: 191, 191, 201;
-  --accent: 0, 98, 249;
-}
-
-@media (prefers-color-scheme: dark) {
-  :host {
-    --black: 251, 251, 254;
-    --white: 28, 27, 34;
-    --grey: 91, 91, 102;
-    --accent: 0, 202, 219;
-  }
-}
-
-:host {
   display: block;
-
-  background-color: rgb(var(--white));
-  color: rgb(var(--black));
-}
-
-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  column-gap: 6px;
-  flex-wrap: wrap;
-}
-
-#posts-blocked-count,
-#posts-blocked-info {
-  margin: 0;
-}
-
-#posts-blocked-count {
-  font-size: 15px;
-}
-
-#posts-blocked-info {
-  font-size: 11px;
 }
 
 #blocked-posts {
+  --border-width: 1px;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--border-width);
   padding: 0;
-  margin: 1em 0 0;
+  border-radius: var(--border-radius-medium);
+  margin: 0;
+  overflow: hidden;
+
+  background-color: var(--border-color);
+  list-style-type: none;
+  outline: var(--border-width) solid var(--border-color);
+  outline-offset: 0;
 }
 
 #blocked-posts:empty {
   display: none;
+}
+
+h3 + #blocked-posts {
+  margin-block-start: var(--space-medium);
 }
 
 .blocked-post {
@@ -57,17 +32,16 @@ header {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 1ch 0;
-  border-top: 1px solid rgb(var(--grey));
+  column-gap: var(--space-small);
+  padding-block: var(--space-small);
+  padding-inline-start: var(--space-medium);
+  padding-inline-end: var(--space-small);
+  margin: 0;
+
+  background-color: var(--background-color-canvas);
 }
 
-.blocked-post button {
-  padding: 0;
-  border: none;
-
-  appearance: none;
-  background-color: transparent;
-  color: rgb(var(--accent));
-  cursor: pointer;
-  font-weight: bold;
+.monospace {
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: var(--font-size-small);
 }

@@ -8,15 +8,32 @@ const templateDocument = new DOMParser().parseFromString(`
     <ul id="blocked-posts"></ul>
     <template id="blocked-post">
       <li class="blocked-post">
-        <span></span>
-        <button data-post-id="">Unblock</button>
+        <span class="monospace"></span>
+        <button type="button" data-post-id="" title="Unblock this post">
+          <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/a0be4e8/icons/desktop/16/svg/delete-16.svg -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-critical)" aria-hidden="true">
+            <path d="M7 12.5H5.5v-6H7zm3.5 0H9v-6h1.5z" />
+            <path d="M9.5 0a2 2 0 0 1 2 2v1H15v1.5h-1V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4.5H1V3h3.5V2a2 2 0 0 1 2-2zm-6 14a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V4.5h-9zm3-12.5A.5.5 0 0 0 6 2v1h4V2a.5.5 0 0 0-.5-.5z" />
+          </svg>
+        </button>
       </li>
+    </template>
+    <template id="unblock-template">
+      <dialog id="unblock-dialog">
+        <h3>Unblock this post?</h3>
+        <p>All instances of post ID <span id="unblock-id" class="monospace"></span> (including reblogs) will become visible again.</p>
+        <fieldset>
+          <button type="button" id="unblock-cancel">Cancel</button>
+          <button type="button" id="unblock-confirm" class="destructive">Unblock</button>
+        </fieldset>
+      </dialog>
     </template>
   </template>
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
   '/lib/modern-normalize.css',
+  '/action/acorn.css',
   './index.css',
 ].map(import.meta.resolve));
 
@@ -26,6 +43,7 @@ class PostBlockBlockedPostsElement extends CustomElement {
   /** @type {HTMLHeadingElement}  */ #postsBlockedCount;
   /** @type {HTMLUListElement}    */ #blockedPostList;
   /** @type {HTMLTemplateElement} */ #blockedPostTemplate;
+  /** @type {HTMLTemplateElement} */ #unblockTemplate;
 
   constructor () {
     super(templateDocument, adoptedStyleSheets);
@@ -33,12 +51,33 @@ class PostBlockBlockedPostsElement extends CustomElement {
     this.#postsBlockedCount = this.shadowRoot.getElementById('posts-blocked-count');
     this.#blockedPostList = this.shadowRoot.getElementById('blocked-posts');
     this.#blockedPostTemplate = this.shadowRoot.getElementById('blocked-post');
+    this.#unblockTemplate = this.shadowRoot.getElementById('unblock-template');
   }
 
   unblockPost = async ({ currentTarget }) => {
+    const { postId } = currentTarget.dataset;
+    if (!postId) return;
+
     const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
-    await browser.storage.local.set({ [storageKey]: blockedPostRootIDs.filter(id => id !== currentTarget.dataset.postId) });
-    currentTarget.remove();
+
+    const unblockTemplateClone = this.#unblockTemplate.content.cloneNode(true);
+
+    const unblockDialog = unblockTemplateClone.getElementById('unblock-dialog');
+    const unblockIdDisplay = unblockTemplateClone.getElementById('unblock-id');
+    const unblockCancelButton = unblockTemplateClone.getElementById('unblock-cancel');
+    const unblockConfirmButton = unblockTemplateClone.getElementById('unblock-confirm');
+
+    unblockIdDisplay.textContent = postId;
+
+    unblockDialog.addEventListener('close', () => unblockDialog.remove());
+    unblockCancelButton.addEventListener('click', () => unblockDialog.close());
+    unblockConfirmButton.addEventListener('click', async () => {
+      browser.storage.local.set({ [storageKey]: blockedPostRootIDs.filter(id => id !== postId) });
+      unblockDialog.close();
+    });
+
+    this.shadowRoot.append(unblockDialog);
+    unblockDialog.showModal();
   };
 
   renderBlockedPosts = async () => {

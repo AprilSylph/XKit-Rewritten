@@ -4,7 +4,7 @@ import { buildStyle, postSelector } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
-import { timelineObject } from '../../utils/react_props.js';
+import { timelineObject, trailItem } from '../../utils/react_props.js';
 
 const activeAttribute = 'data-classic-footer';
 const noteCountClass = 'xkit-classic-footer-note-count';
@@ -232,31 +232,42 @@ const onNoteCountClick = (event) => {
   const postElement = event.currentTarget.closest(postOrRadarSelector);
   if (!postElement) { return; }
 
+  // todo: improve reliablity by targeting close button in modal notes (i.e. if user switched to reblogs tab).
   const closeNotesButton = postElement.querySelector(closeNotesButtonSelector);
+  const replyButton = event.currentTarget.parentElement.querySelector(replyButtonSelector);
 
   closeNotesButton
     ? closeNotesButton.click()
-    : [...postElement.querySelectorAll(`[${activeAttribute}] ${replyButtonSelector}`)].at(-1)?.click();
+    : replyButton.click();
 };
 
 const processPosts = (postElements) => postElements.forEach(async postElement => {
-  postElement.querySelector(`.${noteCountClass}`)?.remove();
-  postElement.querySelector(`.${reblogLinkClass}`)?.remove();
+  [...postElement.querySelectorAll(`.${noteCountClass}, .${reblogLinkClass}`)]
+    .forEach(element => element.remove());
 
-  const { noteCount } = await timelineObject(postElement);
-  const noteCountButton = button({
-    'aria-hidden': noteCount === 0 && noZeroNotes,
-    class: `${noteCountClass} ${modernButtonStyle ? modernStyleClass : ''}`,
-    click: onNoteCountClick,
-  }, getButtonChildren(noteCount));
+  const timelineObjectData = await timelineObject(postElement);
 
-  const engagementControls = [...postElement.querySelectorAll(engagementControlsSelector)].at(-1);
-  engagementControls?.closest('footer').setAttribute(activeAttribute, '');
-  engagementControls?.before(noteCountButton);
+  [...postElement.querySelectorAll(engagementControlsSelector)]
+    .forEach(async engagementControls => {
+      const trailItemData = await trailItem(engagementControls);
 
-  if (noReblogMenu) {
-    processReblogButton(engagementControls?.querySelector(reblogButtonSelector));
-  }
+      const noteCount = trailItemData
+        ? trailItemData.post.noteCount ?? 0
+        : timelineObjectData.noteCount;
+
+      const noteCountButton = button({
+        'aria-hidden': noteCount === 0 && noZeroNotes,
+        class: `${noteCountClass} ${modernButtonStyle ? modernStyleClass : ''}`,
+        click: onNoteCountClick,
+      }, getButtonChildren(noteCount));
+
+      engagementControls.closest('footer').setAttribute(activeAttribute, '');
+      engagementControls.before(noteCountButton);
+
+      if (noReblogMenu) {
+        processReblogButton(engagementControls.querySelector(reblogButtonSelector), timelineObjectData, trailItemData);
+      }
+    });
 });
 
 const getReblogMenuItem = async (reblogButton, href) => {
@@ -296,10 +307,15 @@ const onReblogLinkClick = (event) => {
   getReblogMenuItem(reblogButton, href).then(reblogMenuItem => reblogMenuItem.click());
 };
 
-const processReblogButton = async reblogButton => {
+const processReblogButton = (reblogButton, timelineObjectData, trailItemData) => {
   if (!reblogButton) return;
 
-  const { blogName, canReblog, idString, reblogKey } = await timelineObject(reblogButton);
+  const { blog: { name } } = trailItemData ?? timelineObjectData;
+  const { canReblog, id } = trailItemData?.post ?? timelineObjectData;
+
+  // trail items have the same reblog key as their parent post
+  const { reblogKey } = timelineObjectData;
+
   if (!canReblog) return;
 
   const styleContent = `${reblogMenuPortalSelector}:has([aria-labelledby="${reblogButton.id}"]) { display: none; }`;
@@ -308,7 +324,7 @@ const processReblogButton = async reblogButton => {
     'aria-label': reblogButton.getAttribute('aria-label'),
     class: reblogLinkClass,
     click: onReblogLinkClick,
-    href: `/reblog/${blogName}/${idString}/${reblogKey}`,
+    href: `/reblog/${name}/${id}/${reblogKey}`,
   }, [
     link({ rel: 'stylesheet', class: 'xkit', href: `data:text/css,${encodeURIComponent(styleContent)}` }),
     reblogButton.firstElementChild.cloneNode(true)],

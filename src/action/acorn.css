@@ -1,0 +1,622 @@
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/docs-tokens-table--default */
+
+:root {
+  /* Background Color */
+  --background-color-box: #ffffff;
+  --background-color-canvas: #ffffff;
+  --background-color-critical: #ffe8ea;
+  --background-color-information: #e2f7ff;
+  --background-color-success: #e1ffe1;
+  --background-color-warning: #fff4cf;
+  --button-background-color: #15141a12;
+  --button-background-color-hover: #15141a24;
+  --button-background-color-active: #15141a36;
+  --button-background-color-destructive: #cf1748;
+  --button-background-color-destructive-active: #90002b;
+  --button-background-color-destructive-hover: #b20037;
+  --badge-background-color-filled: #007700;
+  --input-text-background-color: #ffffff;
+
+  /* Border Color */
+  --border-color: #bfbfc9;
+  --border-color-deemphasized: #bac2ca;
+  --border-color-interactive: #8f8f9d;
+  --badge-border-color-filled: #fbfbfe66;
+  --message-bar-border-color: #84c6ff33;
+  --message-bar-border-color-error: #cf174833;
+  --message-bar-border-color-success: #008e0033;
+  --message-bar-border-color-warning: #b16a0033;
+  --input-text-border-color: #8f8f9d;
+
+  /* Border Radius */
+  --border-radius-circle: 9999px;
+  --border-radius-xsmall: 2px;
+  --border-radius-small: 4px;
+  --border-radius-medium: 8px;
+  --border-radius-large: 16px;
+
+  /* Box Shadow */
+  --card-box-shadow:
+    0 0.25px 0.75px rgba(0, 0, 0, 0.05),
+    0 2px 6px rgba(0, 0, 0, 0.1);
+
+  /* Color */
+  --color-accent-primary: #0062f9;
+  --color-accent-primary-hover: #0053cb;
+  --color-accent-primary-active: #0041a4;
+
+  /* Font Size */
+  --font-size-root: 1rem;
+  --font-size-xsmall: 0.733rem;
+  --font-size-small: 0.867rem;
+  --font-size-large: 1.133rem;
+  --font-size-xlarge: 1.467rem;
+  --font-size-xxlarge: 1.6rem;
+  --font-size-xxxlarge: 2.2rem;
+
+  /* Font Weight */
+  --font-weight: normal;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Space */
+  --space-xxsmall: 0.125rem;
+  --space-xsmall: 0.25rem;
+  --space-small: 0.5rem;
+  --space-medium: 0.75rem;
+  --space-large: 1rem;
+  --space-xlarge: 1.5rem;
+  --space-xxlarge: 2rem;
+
+  /* Text Color */
+  --text-color: #15141a;
+  --text-color-deemphasized: #15141ab0;
+  --text-color-error: #b20037;
+  --button-text-color-destructive: #ffffff;
+  --button-text-color-primary: #ffffff;
+  --badge-text-color-filled: #ffffff;
+  --input-text-color: #000000;
+
+  /* Icon Color */
+  --icon-color: #5b5b66;
+  --icon-color-information: #0062f9;
+  --icon-color-success: #008e00;
+  --icon-color-warning: #b16a00;
+  --icon-color-critical: #cf1748;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Background Color */
+    --background-color-box: #23222b;
+    --background-color-canvas: #1c1b22;
+    --background-color-critical: #6e001f;
+    --background-color-information: #00317e;
+    --background-color-success: #004800;
+    --background-color-warning: #592b00;
+    --button-background-color: #fbfbfe12;
+    --button-background-color-hover: #fbfbfe24;
+    --button-background-color-active: #fbfbfe36;
+    --button-background-color-destructive: #ff7e8e;
+    --button-background-color-destructive-active: #ffc3c9;
+    --button-background-color-destructive-hover: #ffa0aa;
+    --badge-background-color-filled: #37b847;
+    --input-text-background-color: #2b2a33;
+
+    /* Border Color */
+    --border-color: #5b5b66;
+    --border-color-deemphasized: #5b5b66;
+    --border-color-interactive: #bfbfc9;
+    --badge-border-color-filled: #15141a66;
+    --message-bar-border-color: #84c6ff33;
+    --message-bar-border-color-error: #ffa0aa33;
+    --message-bar-border-color-success: #8adf8d33;
+    --message-bar-border-color-warning: #f5cc5833;
+    --input-text-border-color: #bfbfc9;
+
+    /* Box Shadow */
+    --card-box-shadow:
+      0 0.25px 0.75px rgba(0, 0, 0, 0.2),
+      0 2px 6px rgba(0, 0, 0, 0.4);
+
+    /* Color */
+    --color-accent-primary: #00cadb;
+    --color-accent-primary-hover: #62dce9;
+    --color-accent-primary-active: #a6ecf4;
+
+    /* Text Color */
+    --text-color: #fbfbfe;
+    --text-color-deemphasized: #fbfbfeb0;
+    --text-color-error: #ffa0aa;
+    --button-text-color-destructive: #15141a;
+    --button-text-color-primary: #15141a;
+    --badge-text-color-filled: #15141a;
+    --input-text-color: #fbfbfe;
+
+    /* Icon Color */
+    --icon-color: #fbfbfe;
+    --icon-color-information: #84c6ff;
+    --icon-color-success: #8adf8d;
+    --icon-color-warning: #f5cc58;
+    --icon-color-critical: #ffa0aa;
+  }
+}
+
+::backdrop {
+  background-color: #00000080;
+}
+
+::placeholder {
+  color: inherit;
+  opacity: 54%;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-support-link--primary */
+
+:any-link {
+  color: var(--color-accent-primary);
+}
+
+:any-link:hover {
+  color: var(--color-accent-primary-hover);
+}
+
+:any-link:hover:active {
+  color: var(--color-accent-primary-active);
+  text-decoration: none;
+}
+
+:any-link:focus-visible {
+  border-radius: var(--border-radius-small);
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 1px;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/docs/docs-typography--docs */
+
+html, :host {
+  font-size: 15px;
+}
+
+body {
+  background-color: var(--background-color-canvas);
+  color: var(--text-color);
+  font: inherit;
+}
+
+:is(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+
+  font-weight: var(--font-weight-semibold);
+}
+
+h1 { font-size: var(--font-size-xxlarge); }
+h2 { font-size: var(--font-size-xlarge); }
+h3 { font-size: var(--font-size-large); }
+h4 { font-size: var(--font-size-root); }
+h5 { font-size: var(--font-size-small); }
+h6 { font-size: var(--font-size-xsmall); }
+
+:is(ol, ul) {
+  padding-inline-start: var(--space-large);
+  padding-inline-end: 0;
+  margin-block: var(--space-small) var(--space-xlarge);
+}
+
+:is(ol, ul) li {
+  margin-block: var(--space-small);
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-button-group--default */
+
+dialog {
+  border: none;
+  border-radius: var(--border-radius-medium);
+  padding: var(--space-large);
+
+  background-color: var(--background-color-box);
+  box-shadow: var(--card-box-shadow);
+  color: var(--text-color);
+}
+
+form {
+  margin-block-start: var(--space-small);
+}
+
+fieldset {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  column-gap: var(--space-small);
+  padding: 0;
+  border: none;
+  margin: 0;
+}
+
+label {
+  display: inline-block;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-select--default */
+
+select {
+  min-height: 32px;
+  padding-block: var(--space-xsmall);
+  padding-inline-start: var(--space-large);
+  padding-inline-end: var(--space-xxlarge);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-medium);
+  margin: 0;
+
+  appearance: none;
+  background-color: var(--button-background-color);
+  background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvY2hldnJvbi1kb3duLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjMTUxNDFhIj4KICAgIDxwYXRoIGQ9Im0xNCA2LjMxLTUuNDcgNS40N2EuNzUuNzUgMCAwIDEtMS4wNiAwTDIgNi4zMWwxLjA2LTEuMDZMOCAxMC4xODhsNC45NC00LjkzOHoiIC8+Cjwvc3ZnPg==");
+  background-position-x: calc(100% - var(--space-medium));
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: 12px;
+  color: var(--text-color);
+  font-size: var(--font-size-root);
+  font-weight: var(--font-weight-semibold);
+}
+
+@media (prefers-color-scheme: dark) {
+  select {
+    background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvY2hldnJvbi1kb3duLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjZmJmYmZlIj4KICAgIDxwYXRoIGQ9Im0xNCA2LjMxLTUuNDcgNS40N2EuNzUuNzUgMCAwIDEtMS4wNiAwTDIgNi4zMWwxLjA2LTEuMDZMOCAxMC4xODhsNC45NC00LjkzOHoiIC8+Cjwvc3ZnPg==");
+  }
+}
+
+select:hover {
+  background-color: var(--button-background-color-hover);
+}
+
+select:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+label + select {
+  width: 100%;
+  margin-block-start: var(--space-xsmall);
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-multiline-editor--default */
+
+textarea {
+  display: block;
+  min-height: 32px;
+  width: 100%;
+  padding-block: var(--space-small);
+  padding-inline: var(--space-medium);
+  border: 1px solid var(--border-color-interactive);
+  border-radius: var(--border-radius-medium);
+  margin: 0;
+
+  background-color: var(--input-text-background-color);
+  color: var(--input-text-color);
+  overflow: auto;
+  scrollbar-color: var(--border-color-deemphasized) transparent;
+  scrollbar-width: thin;
+  white-space: pre;
+}
+
+textarea:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+}
+
+label + textarea {
+  margin-block-start: var(--space-xsmall);
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-button--default */
+
+button[type] {
+  display: inline-block;
+  min-height: 32px;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-medium);
+  padding: var(--space-xsmall) var(--space-large);
+
+  background-color: var(--button-background-color);
+  color: var(--text-color);
+  font-size: var(--font-size-root);
+  font-weight: var(--font-weight-semibold);
+}
+
+button[type]:is([aria-label], [title]):has(> svg:only-child) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  padding: 0;
+}
+
+button[type]:disabled {
+  opacity: 50%;
+}
+
+button[type]:enabled:hover {
+  background-color: var(--button-background-color-hover);
+}
+
+button[type]:enabled:hover:active {
+  background-color: var(--button-background-color-active);
+}
+
+button[type]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-button--primary */
+
+button[type].primary {
+  background-color: var(--color-accent-primary);
+  color: var(--button-text-color-primary);
+}
+
+button[type].primary:enabled:hover {
+  background-color: var(--color-accent-primary-hover);
+}
+
+button[type].primary:enabled:hover:active {
+  background-color: var(--color-accent-primary-active);
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-button--destructive */
+
+button[type].destructive {
+  background-color: var(--button-background-color-destructive);
+  color: var(--button-text-color-destructive);
+}
+
+button[type].destructive:enabled:hover {
+  background-color: var(--button-background-color-destructive-hover);
+}
+
+button[type].destructive:enabled:hover:active {
+  background-color: var(--button-background-color-destructive-active);
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-checkbox--default */
+/* This component does not make use of colour tokens for the unchecked state. */
+/* The hex codes found below were manually colour-picked from Firefox 149 on macOS 26. */
+
+input[type="checkbox"] {
+  vertical-align: top;
+
+  min-height: 16px;
+  min-width: 16px;
+  padding: 0;
+  border: 1px solid #8f8f9d;
+  border-radius: var(--border-radius-xsmall);
+  margin-block: calc((1.15em - 16px) / 2);
+  margin-inline-end: var(--space-small);
+
+  appearance: none;
+  background-color: #ffffff;
+  font-family: inherit;
+  line-height: inherit;
+}
+
+@supports (margin-block: 1lh) {
+  input[type="checkbox"] {
+    margin-block: calc((1lh - 16px) / 2);
+  }
+}
+
+input[type="checkbox"]:hover {
+  border-color: #676774;
+}
+
+input[type="checkbox"]:hover:active {
+  border-color: #484851;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="checkbox"] {
+    background-color: #2b2a33;
+  }
+
+  input[type="checkbox"]:hover {
+    border-color: #b1b1b1;
+  }
+
+  input[type="checkbox"]:hover:active {
+    border-color: #d0d0d7;
+  }
+}
+
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 1px;
+}
+
+input[type="checkbox"]:checked {
+  border-style: none;
+
+  background-color: var(--color-accent-primary);
+  background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL21vemlsbGEtZmlyZWZveC9maXJlZm94L2Jsb2IvMjRkNzMxNi9kZXZ0b29scy9jbGllbnQvdGhlbWVzL2ltYWdlcy9jaGVjay5zdmcgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0iI2ZmZmZmZiI+CiAgPHBhdGggc3Ryb2tlPSJjb250ZXh0LXN0cm9rZSBub25lIiBzdHJva2Utd2lkdGg9IjAuNSIgZD0iTTYuNTIsMTIuNWExLDEsMCwwLDEtLjcwNS0uMjkxbC0zLjUyLTMuNWExLDEsMCwxLDEsMS40MS0xLjQxOGwyLjgxMiwyLjgsNS43NzQtNS43OTNhMSwxLDAsMCwxLDEuNDE2LDEuNDEybC02LjQ3OSw2LjVBMSwxLDAsMCwxLDYuNTIsMTIuNVoiLz4KPC9zdmc+");
+  background-position: center;
+}
+
+input[type="checkbox"]:checked:hover {
+  background-color: #2477ff;
+}
+
+input[type="checkbox"]:checked:hover:active {
+  background-color: #3f94ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="checkbox"]:checked {
+    background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL21vemlsbGEtZmlyZWZveC9maXJlZm94L2Jsb2IvMjRkNzMxNi9kZXZ0b29scy9jbGllbnQvdGhlbWVzL2ltYWdlcy9jaGVjay5zdmcgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0iIzAwNDM0ZSI+CiAgPHBhdGggc3Ryb2tlPSJjb250ZXh0LXN0cm9rZSBub25lIiBzdHJva2Utd2lkdGg9IjAuNSIgZD0iTTYuNTIsMTIuNWExLDEsMCwwLDEtLjcwNS0uMjkxbC0zLjUyLTMuNWExLDEsMCwxLDEsMS40MS0xLjQxOGwyLjgxMiwyLjgsNS43NzQtNS43OTNhMSwxLDAsMCwxLDEuNDE2LDEuNDEybC02LjQ3OSw2LjVBMSwxLDAsMCwxLDYuNTIsMTIuNVoiLz4KPC9zdmc+");
+  }
+
+  input[type="checkbox"]:checked:hover {
+    background-color: #00abba;
+  }
+
+  input[type="checkbox"]:checked:hover:active {
+    background-color: #008c99;
+  }
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-input-text--default */
+
+input:is([type="text"], [type="search"]) {
+  min-height: 32px;
+  width: 100%;
+  padding-block: 1px;
+  padding-inline: var(--space-medium);
+  border: 1px solid var(--input-text-border-color);
+  border-radius: var(--border-radius-medium);
+
+  background-color: var(--input-text-background-color);
+  color: var(--input-text-color);
+}
+
+input:is([type="text"], [type="search"]):focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 0;
+}
+
+label + input:is([type="text"], [type="search"]) {
+  margin-block-start: var(--space-xsmall);
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-input-search--default */
+
+input[type="search"] {
+  padding-inline-start: 34.5px;
+  padding-inline-end: var(--space-xxsmall);
+
+  background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvc2VhcmNoLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjNWI1YjYiPgogIDxwYXRoIGQ9Ik02LjI1IDFhNS4yNSA1LjI1IDAgMCAxIDQuMjA0IDguMzk0TDE1IDEzLjkzOCAxMy45MzkgMTVsLTQuNTQ1LTQuNTQ1QTUuMjUgNS4yNSAwIDEgMSA2LjI1IDFtMCAxLjVhMy43NSAzLjc1IDAgMSAwIDAgNy41IDMuNzUgMy43NSAwIDAgMCAwLTcuNSIgLz4KPC9zdmc+");
+  background-position-x: var(--space-medium);
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="search"] {
+    background-image: url("data:image/svg+xml;base64,PCEtLSBodHRwczovL21vemlsbGEub3JnL01QTC8yLjAvIHwgaHR0cHM6Ly9naXRodWIuY29tL0ZpcmVmb3hVWC9hY29ybi1pY29ucy9ibG9iL2Q2ZWU0MjgvaWNvbnMvZGVza3RvcC8xNi9zdmcvc2VhcmNoLTE2LnN2ZyAtLT4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSIjZmJmYmZlIj4KICA8cGF0aCBkPSJNNi4yNSAxYTUuMjUgNS4yNSAwIDAgMSA0LjIwNCA4LjM5NEwxNSAxMy45MzggMTMuOTM5IDE1bC00LjU0NS00LjU0NUE1LjI1IDUuMjUgMCAxIDEgNi4yNSAxbTAgMS41YTMuNzUgMy43NSAwIDEgMCAwIDcuNSAzLjc1IDMuNzUgMCAwIDAgMC03LjUiIC8+Cjwvc3ZnPg==");
+  }
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-named-deck--focus-group */
+
+[role="tablist"] {
+  display: flex;
+  flex-direction: row;
+  column-gap: var(--space-small);
+  flex: 0;
+  padding: var(--space-small);
+  border-bottom: 1px solid var(--border-color);
+
+  background-color: var(--background-color-canvas);
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/docs/ui-widgets-button-readme--docs#ghost */
+
+[role="tablist"] [role="tab"] {
+  min-height: 32px;
+  min-width: 79px;
+  flex-grow: 1;
+  flex-shrink: 0;
+  padding: var(--space-xsmall) var(--space-large);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-medium);
+  margin: 0;
+
+  background-color: transparent;
+  color: inherit;
+  font-size: var(--font-size-root);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}
+
+[role="tablist"] [role="tab"]:hover {
+  background-color: var(--button-background-color-hover);
+}
+
+[role="tablist"] [role="tab"]:hover:active,
+[role="tablist"] [role="tab"][aria-selected="true"] {
+  background-color: var(--button-background-color-active);
+}
+
+[role="tablist"] [role="tab"]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+[role="tabpanel"]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: -2px;
+}
+
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-message-bar--default */
+
+:is([role="alert"], [role="status"]) {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  column-gap: var(--space-small);
+  padding-block: var(--space-small);
+  padding-inline: var(--space-medium) var(--space-small);
+  border: 1px solid var(--message-bar-border-color);
+  border-radius: var(--border-radius-medium);
+
+  background-color: var(--background-color-information);
+  color: var(--text-color);
+}
+
+:is([role="alert"], [role="status"])[hidden] {
+  display: none;
+}
+
+:is([role="alert"], [role="status"]).warning {
+  border-color: var(--message-bar-border-color-warning);
+  background-color: var(--background-color-warning);
+}
+
+:is([role="alert"], [role="status"]).success {
+  border-color: var(--message-bar-border-color-success);
+  background-color: var(--background-color-success);
+}
+
+:is([role="alert"], [role="status"]).error {
+  border-color: var(--message-bar-border-color-error);
+  background-color: var(--background-color-critical);
+}
+
+:is([role="alert"], [role="status"]) > * {
+  min-height: 32px;
+  padding-block: calc((32px - 1.15em) / 2);
+}
+
+@supports (padding-block: 1lh) {
+  :is([role="alert"], [role="status"]) > * {
+    padding-block: calc((32px - 1lh) / 2);
+  }
+}
+
+:is([role="alert"], [role="status"]) > button[type] {
+  align-self: center;
+  margin-inline-start: auto;
+}
+
+/* Custom */
+
+.acorn-icons {
+  display: inline-flex;
+  vertical-align: bottom;
+  margin: 0;
+}
+
+.acorn-icons svg {
+  height: 1.15em;
+  width: 1.15em;
+}

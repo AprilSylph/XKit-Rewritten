@@ -1,4 +1,4 @@
-:root {
+:host {
   --black: 21, 20, 26;
   --white: 255, 255, 255;
   --grey: 191, 191, 201;
@@ -6,7 +6,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :host {
     --black: 251, 251, 254;
     --white: 28, 27, 34;
     --grey: 91, 91, 102;
@@ -14,21 +14,11 @@
   }
 }
 
-html {
-  font-size: 14px;
-  overflow-y: hidden;
-  scrollbar-width: thin;
-}
-
-body {
-  padding-block: 7.5px;
-  padding-inline: 11.25px;
+:host {
+  display: block;
 
   background-color: rgb(var(--white));
   color: rgb(var(--black));
-  font: inherit;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 header {

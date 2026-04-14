@@ -14,8 +14,16 @@ const reblogLinkClass = 'xkit-classic-footer-reblog-link';
 const postOrRadarSelector = `:is(${postSelector}, aside ${keyToCss('radar')})`;
 const footerContentSelector = `${postOrRadarSelector} article footer ${keyToCss('footerContent')}`;
 const engagementControlsSelector = `${footerContentSelector} ${keyToCss('engagementControls')}`;
-const replyButtonSelector = 'button:has(svg use[href="#managed-icon__ds-reply-outline-24"])';
-const reblogButtonSelector = 'button:has(svg use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__ds-queue-add-24"]))';
+const replyButtonSelector = `button:has(svg use:is(
+  [href="#managed-icon__ds-reply-outline-20"],
+  [href="#managed-icon__ds-reply-outline-24"]
+))`;
+const reblogButtonSelector = `button:has(svg use:is(
+  [href="#managed-icon__ds-reblog-20"],
+  [href="#managed-icon__ds-reblog-24"],
+  [href="#managed-icon__ds-queue-add-20"],
+  [href="#managed-icon__ds-queue-add-24"]
+))`;
 const quickActionsSelector = 'svg[style="--icon-color-primary: var(--brand-blue);"], svg[style="--icon-color-primary: var(--brand-purple);"]';
 const closeNotesButtonSelector = `${postOrRadarSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
 const reblogMenuPortalSelector = ':is(div[id^="portal/"], #glass-container):has(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';
@@ -154,13 +162,22 @@ export const styleElement = buildStyle(`
     color: var(--brand-green);
   }
 
-  @container (width: 260px) {
-    .${noteCountClass}, .${reblogLinkClass} {
-      padding: 6px;
-    }
-    .${noteCountClass}.${modernStyleClass} {
-      margin-left: 6px;
-    }
+  [${activeAttribute}]:has(${keyToCss('engagementControlsNarrow')}) :is(.${noteCountClass}, .${reblogLinkClass}) {
+    padding: 4px;
+  }
+
+  [${activeAttribute}]:has(${keyToCss('engagementControlsNarrow')}) .${noteCountClass} {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+  }
+
+  [${activeAttribute}]:has(${keyToCss('engagementControlsNarrow')}) .${noteCountClass}.${modernStyleClass} {
+    padding-block: 6px;
+    padding-inline: 12px;
+    margin-left: 4px;
+
+    font-size: 0.75rem;
+    line-height: 1.125rem;
   }
 
   span:has(svg[style="--icon-color-primary: var(--brand-green);"]) > .${reblogLinkClass} {

@@ -281,15 +281,35 @@
 
 /* === AlreadyReblogged === */
 
-footer.published :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--green)); }
-footer.queue :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--purple)); }
-footer.draft :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) { color: rgb(var(--red)); }
+footer.published :is(a, button):has(svg use:is(
+  [href="#managed-icon__reblog"],
+  [href="#managed-icon__ds-reblog-20"],
+  [href="#managed-icon__ds-reblog-24"])
+) { color: rgb(var(--green)); }
+footer.queue :is(a, button):has(svg use:is(
+  [href="#managed-icon__reblog"],
+  [href="#managed-icon__ds-reblog-20"],
+  [href="#managed-icon__ds-reblog-24"])
+) { color: rgb(var(--purple)); }
+footer.draft :is(a, button):has(svg use:is(
+  [href="#managed-icon__reblog"],
+  [href="#managed-icon__ds-reblog-20"],
+  [href="#managed-icon__ds-reblog-24"]
+)) { color: rgb(var(--red)); }
 
-footer:is(.published, .queue, .draft) :is(a, button) svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"]) {
+footer:is(.published, .queue, .draft) :is(a, button) svg use:is(
+  [href="#managed-icon__reblog"],
+  [href="#managed-icon__ds-reblog-20"],
+  [href="#managed-icon__ds-reblog-24"]
+) {
   --icon-color-primary: currentColor; /* Ensure that colouration is applied to icon */
 }
 
-footer:is(.published, .queue, .draft) :is(a, button):has(svg use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"])) {
+footer:is(.published, .queue, .draft) :is(a, button):has(svg use:is(
+  [href="#managed-icon__reblog"],
+  [href="#managed-icon__ds-reblog-20"],
+  [href="#managed-icon__ds-reblog-24"]
+)) {
   position: relative; /* For absolute positioning of tick pseudo-element */
 }
 
@@ -307,8 +327,26 @@ footer:is(.published, .queue, .draft) :is(a, button) svg:has(use[href="#managed-
   );
 }
 
+/* Cut-out for tick in 2026 mini post footer */
+footer:is(.published, .queue, .draft) :is(a, button) svg:has(use[href="#managed-icon__ds-reblog-20"]) {
+  -webkit-mask-image: radial-gradient(
+    calc(12.4px / 2) calc(15px / 2) at bottom 4px left 18px,
+    transparent 99%,
+    white 100%
+  );
+  mask-image: radial-gradient(
+    calc(12.4px / 2) calc(15px / 2) at bottom 4px left 18px,
+    transparent 99%,
+    white 100%
+  );
+}
+
 /* Styles for tick pseudo-element */
-footer:is(.published, .queue, .draft) :is(a, button):has(use:is([href="#managed-icon__reblog"], [href="#managed-icon__ds-reblog-24"]))::after {
+footer:is(.published, .queue, .draft) :is(a, button):has(use:is(
+  [href="#managed-icon__reblog"],
+  [href="#managed-icon__ds-reblog-20"],
+  [href="#managed-icon__ds-reblog-24"]
+))::after {
   position: absolute;
 
   display: inline-block;
@@ -334,6 +372,14 @@ footer:is(.published, .queue, .draft) a:has(use[href="#managed-icon__reblog"])::
 footer:is(.published, .queue, .draft) :is(a, button):has(use[href="#managed-icon__ds-reblog-24"])::after {
   bottom: 4px;
   left: 21px;
+}
+
+/* 2026 mini post footer */
+footer:is(.published, .queue, .draft) :is(a, button):has(use[href="#managed-icon__ds-reblog-20"])::after {
+  bottom: 1px;
+  left: 15px;
+
+  font-size: 11px;
 }
 
 /* === XKit 7 override === */

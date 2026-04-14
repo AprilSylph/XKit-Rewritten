@@ -1,4 +1,6 @@
 #quick-reblog {
+  --origin-clearance: 4px;
+
   position: absolute;
   z-index: 97;
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.5);
@@ -21,24 +23,15 @@
   display: none !important;
 }
 
-#quick-reblog {
-  --icon-spacing: 12px;
-}
-@media not (min-width: 990px) {
-  #quick-reblog {
-    --icon-spacing: 0px;
-  }
-}
-
 #quick-reblog[data-position="below"] {
   inset: 100% 50% auto auto;
-  transform: translate(calc(50% + var(--horizontal-offset, 0%)), var(--icon-spacing));
+  transform: translate(calc(50% + var(--horizontal-offset, 0%)), var(--origin-clearance));
 }
 #quick-reblog[data-position="above"] {
   inset: auto 50% 100% auto;
   transform: translate(
     calc(50% + var(--horizontal-offset, 0%)),
-    calc(0px - var(--icon-spacing))
+    calc(0px - var(--origin-clearance))
   );
 }
 

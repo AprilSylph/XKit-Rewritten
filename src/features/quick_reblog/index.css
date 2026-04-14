@@ -1,5 +1,5 @@
 #quick-reblog {
-  --origin-clearance: 4px;
+  --origin-clearance: 6px;
 
   position: absolute;
   z-index: 97;

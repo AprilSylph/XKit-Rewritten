@@ -162,13 +162,22 @@ export const styleElement = buildStyle(`
     color: var(--brand-green);
   }
 
-  @container (width: 260px) {
-    .${noteCountClass}, .${reblogLinkClass} {
-      padding: 6px;
-    }
-    .${noteCountClass}.${modernStyleClass} {
-      margin-left: 6px;
-    }
+  [${activeAttribute}]:has(${keyToCss('engagementControlsNarrow')}) :is(.${noteCountClass}, .${reblogLinkClass}) {
+    padding: 4px;
+  }
+
+  [${activeAttribute}]:has(${keyToCss('engagementControlsNarrow')}) .${noteCountClass} {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+  }
+
+  [${activeAttribute}]:has(${keyToCss('engagementControlsNarrow')}) .${noteCountClass}.${modernStyleClass} {
+    padding-block: 6px;
+    padding-inline: 12px;
+    margin-left: 4px;
+
+    font-size: 0.75rem;
+    line-height: 1.125rem;
   }
 
   span:has(svg[style="--icon-color-primary: var(--brand-green);"]) > .${reblogLinkClass} {

@@ -6,10 +6,6 @@ code {
   font-size: var(--font-size-small);
 }
 
-a {
-  color: rgb(var(--accent));
-}
-
 #blocked-posts {
   --border-width: 1px;
 

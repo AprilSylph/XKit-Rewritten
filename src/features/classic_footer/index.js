@@ -18,7 +18,7 @@ const replyButtonSelector = 'button:has(svg use[href="#managed-icon__ds-reply-ou
 const reblogButtonSelector = 'button:has(svg use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__ds-queue-add-24"]))';
 const quickActionsSelector = 'svg[style="--icon-color-primary: var(--brand-blue);"], svg[style="--icon-color-primary: var(--brand-purple);"]';
 const closeNotesButtonSelector = `${postOrRadarSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
-const reblogMenuPortalSelector = 'div[id^="portal/"]:has(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';
+const reblogMenuPortalSelector = ':is(div[id^="portal/"], #glass-container):has(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';
 
 const { lang } = document.documentElement;
 const noteCountFormat = new Intl.NumberFormat(lang);
@@ -285,6 +285,7 @@ const getReblogMenuItem = async (reblogButton, href) => {
       }
     });
     mutationObserver.observe(document.body, { childList: true });
+    mutationObserver.observe(document.getElementById('glass-container'), { childList: true });
 
     // Open the reblog menu for the observer to find.
     reblogButton.click();
@@ -312,19 +313,18 @@ const processReblogButton = (reblogButton, timelineObjectData, trailItemData) =>
 
   const { blog: { name } } = trailItemData ?? timelineObjectData;
   const { canReblog, id } = trailItemData?.post ?? timelineObjectData;
-
-  // trail items have the same reblog key as their parent post
-  const { reblogKey } = timelineObjectData;
+  const { reblogKey } = timelineObjectData; // Trail items have the same reblog key as their parent post
 
   if (!canReblog) return;
 
-  const styleContent = `${reblogMenuPortalSelector}:has([aria-labelledby="${reblogButton.id}"]) { display: none; }`;
+  const reblogLinkPath = `/reblog/${name}/${id}/${reblogKey}`;
+  const styleContent = `${reblogMenuPortalSelector}:has([role="menuitem"][href^="${reblogLinkPath}"]) { display: none; }`;
 
   const reblogLink = a({
     'aria-label': reblogButton.getAttribute('aria-label'),
     class: reblogLinkClass,
     click: onReblogLinkClick,
-    href: `/reblog/${name}/${id}/${reblogKey}`,
+    href: reblogLinkPath,
   }, [
     link({ rel: 'stylesheet', class: 'xkit', href: `data:text/css,${encodeURIComponent(styleContent)}` }),
     reblogButton.firstElementChild.cloneNode(true)],

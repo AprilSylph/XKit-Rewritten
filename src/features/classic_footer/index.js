@@ -14,8 +14,16 @@ const reblogLinkClass = 'xkit-classic-footer-reblog-link';
 const postOrRadarSelector = `:is(${postSelector}, aside ${keyToCss('radar')})`;
 const footerContentSelector = `${postOrRadarSelector} article footer ${keyToCss('footerContent')}`;
 const engagementControlsSelector = `${footerContentSelector} ${keyToCss('engagementControls')}`;
-const replyButtonSelector = 'button:has(svg use[href="#managed-icon__ds-reply-outline-24"])';
-const reblogButtonSelector = 'button:has(svg use:is([href="#managed-icon__ds-reblog-24"], [href="#managed-icon__ds-queue-add-24"]))';
+const replyButtonSelector = `button:has(svg use:is(
+  [href="#managed-icon__ds-reply-outline-20"],
+  [href="#managed-icon__ds-reply-outline-24"]
+))`;
+const reblogButtonSelector = `button:has(svg use:is(
+  [href="#managed-icon__ds-reblog-20"],
+  [href="#managed-icon__ds-reblog-24"],
+  [href="#managed-icon__ds-queue-add-20"],
+  [href="#managed-icon__ds-queue-add-24"]
+))`;
 const quickActionsSelector = 'svg[style="--icon-color-primary: var(--brand-blue);"], svg[style="--icon-color-primary: var(--brand-purple);"]';
 const closeNotesButtonSelector = `${postOrRadarSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
 const reblogMenuPortalSelector = 'div[id^="portal/"]:has(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';

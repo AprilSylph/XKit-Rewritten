@@ -186,11 +186,7 @@ export const styleElement = buildStyle(`
   span:has(${quickActionsSelector}) > .${reblogLinkClass} {
     display: none;
   }
-
   .${reblogLinkClass} ~ ${reblogButtonSelector}:not(:has(${quickActionsSelector})) {
-    display: none;
-  }
-  body:has(.${reblogLinkClass}) > ${reblogMenuPortalSelector}:not(:has([role="menu"][aria-labelledby])) {
     display: none;
   }
 `);

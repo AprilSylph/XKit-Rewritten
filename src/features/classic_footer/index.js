@@ -26,7 +26,7 @@ const reblogButtonSelector = `button:has(svg use:is(
 ))`;
 const quickActionsSelector = 'svg[style="--icon-color-primary: var(--brand-blue);"], svg[style="--icon-color-primary: var(--brand-purple);"]';
 const closeNotesButtonSelector = `${postOrRadarSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
-const reblogMenuPortalSelector = ':is(div[id^="portal/"], #glass-container):has(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';
+const reblogMenuPortalSelector = ':is(div[id^="portal/"], #glass-container > div):has(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';
 
 const { lang } = document.documentElement;
 const noteCountFormat = new Intl.NumberFormat(lang);

@@ -1,4 +1,4 @@
-/** @see https://github.com/un-ts/eslint-plugin-import-x#readme */ import importx from 'eslint-plugin-import-x';
+/** @see https://github.com/un-ts/eslint-plugin-import-x#readme */ import { importX } from 'eslint-plugin-import-x';
 /** @see https://github.com/gajus/eslint-plugin-jsdoc#readme    */ import { jsdoc } from 'eslint-plugin-jsdoc';
 /** @see https://github.com/neostandard/neostandard#readme      */ import neostandard from 'neostandard';
 
@@ -29,7 +29,7 @@ export default [
    * Enable plugin `import-x` and use its recommended config.
    * @see https://github.com/un-ts/eslint-plugin-import-x/blob/master/src/config/flat/recommended.ts
    */
-  importx.configs['flat/recommended'], // eslint-disable-line import-x/no-named-as-default-member
+  importX.configs['flat/recommended'],
 
   /**
    * Prevent cyclical imports; enforce alphabetical imports.

@@ -12,7 +12,7 @@ export const getPreferences = async function (featureName) {
   const preferenceValues = {};
 
   for (const [key, preference] of Object.entries(preferences)) {
-    if (preference.type === 'iframe') { continue; }
+    if (preference.type === 'component') continue;
 
     const storageKey = `${featureName}.preferences.${key}`;
     const savedPreference = storage[storageKey];

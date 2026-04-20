@@ -67,7 +67,7 @@ It is recommended to use camelCase for each preference name, so that the feature
 - Type: String
 - Required: Yes
 
-Type of preference. Supported values: `"checkbox"`, `"text"`, `"color"`, `"select"`, `"textarea"`, `"iframe"`, `"component"`
+Type of preference. Supported values: `"checkbox"`, `"text"`, `"color"`, `"select"`, `"textarea"`, `"component"`
 
 #### `"preferences"`: \<preference name\>: `"label"`
 - Type: String
@@ -83,9 +83,7 @@ For `"select"`-type preferences, an array of objects each with `"value"` and `"l
 
 #### `"preferences"`: \<preference name\>: `"src"`
 - Type: String
-- Required: Yes, if `type` is `"iframe"` or `"component"`
-
-For `"iframe"`-type preferences, a URL relative to `src/` pointing to a webpage to be embedded in the feature's preference list.
+- Required: Yes, if `type` is `"component"`
 
 For `"component"`-type preferences, a URL relative to `src/` pointing to a module file for a Web Component to be rendered in the feature's preference list.
 This module file's default export must be a function which returns an instance of the Web Component via `document.createElement()`.
@@ -94,7 +92,7 @@ Unused for other preference types.
 
 #### `"preferences"`: \<preference name\>: `"default"`
 - Type: Any
-- Required: Yes, unless `type` is `"iframe"` or `"component"`
+- Required: Yes, unless `type` is `"component"`
 
 Default value of the preference to display to the user.
 

@@ -75,9 +75,9 @@ const processPosts = postElements =>
       }
     };
 
-    saveUuidPair(rebloggedRootId, rebloggedRootUuid);
     saveUuidPair(id, uuid);
     saveUuidPair(rebloggedFromId, rebloggedFromUuid);
+    saveUuidPair(rebloggedRootId, rebloggedRootUuid);
   });
 
 const onButtonClicked = ({ currentTarget }) => {

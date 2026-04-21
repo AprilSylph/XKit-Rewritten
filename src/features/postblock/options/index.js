@@ -38,7 +38,7 @@ const adoptedStyleSheets = await fetchStyleSheets([
 ].map(import.meta.resolve));
 
 const storageKey = 'postblock.blockedPostRootIDs';
-const uuidsStorageKey = 'postblock.uuids';
+const uuidsStorageKey = 'postblock.blockedPostBlogUUIDs';
 
 class PostBlockBlockedPostsElement extends CustomElement {
   /** @type {HTMLHeadingElement}  */ #postsBlockedCount;

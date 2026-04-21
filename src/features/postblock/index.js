@@ -13,7 +13,7 @@ const meatballButtonLabel = 'Block this post';
 const hiddenAttribute = 'data-postblock-hidden';
 const warningClass = 'xkit-postblock-warning';
 const storageKey = 'postblock.blockedPostRootIDs';
-const uuidsStorageKey = 'postblock.uuids';
+const uuidsStorageKey = 'postblock.blockedPostBlogUUIDs';
 
 let uuids = {};
 

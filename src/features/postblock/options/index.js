@@ -97,7 +97,7 @@ class PostBlockBlockedPostsElement extends CustomElement {
 
       if (uuids[blockedPostID]) {
         const a = document.createElement('a');
-        a.href = `https://www.tumblr.com/?xkit-postblock-open-post-id=${blockedPostID}`;
+        a.href = `https://www.tumblr.com/@${uuids[blockedPostID]}#${blockedPostID}`;
         a.target = '_blank';
         codeElement.replaceWith(a);
         a.append(codeElement);

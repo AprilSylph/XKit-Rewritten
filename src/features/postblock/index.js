@@ -129,10 +129,11 @@ export const main = async function () {
   registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
   onNewPosts.addListener(processPosts);
 
-  const blockedPostID = new URLSearchParams(location.search).get('xkit-postblock-open-post-id');
+  const blockedPostID = location.hash.match(/(?<=^#)\d+$/)?.[0];
+
   if (blockedPostID) {
     // remove search param now, so it doesn't persist if after we successfully
-    // navigate, the user dismisses peepr and returns to the dashboard
+    // navigate, the user presses the blog view back button once
     navigate(location.pathname);
 
     try {

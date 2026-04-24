@@ -1,6 +1,8 @@
 'use strict';
 
 {
+  const MAX_BOOT_ATTEMPTS = 3600; // 60 seconds on 60Hz displays; 10 seconds on 360Hz displays
+
   const enabledFeaturesKey = 'enabledScripts';
 
   const redpop = [...document.scripts].some(({ src }) => src.includes('/pop/'));
@@ -8,8 +10,7 @@
 
   const restartListeners = {};
 
-  // prevent referencing outdated resources after firefox extension update/restart
-  const timestamp = Date.now();
+  const timestamp = Date.now(); // Prevent referencing outdated resources after Firefox extension update/restart
 
   const runFeature = async function (name) {
     const {
@@ -121,7 +122,7 @@
     ]);
 
     /**
-     * fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
+     * Fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
      * @see https://github.com/sveltejs/kit/issues/7805#issuecomment-1330078207
      */
     await Promise.all(['css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
@@ -131,11 +132,29 @@
       .forEach(runFeature);
   };
 
-  const waitForReactLoaded = () => new Promise(resolve => {
-    window.requestAnimationFrame(() => isReactLoaded() ? resolve() : waitForReactLoaded().then(resolve));
+  const waitForReactLoaded = () => new Promise((resolve, reject) => {
+    let attempts = 0;
+
+    const checkForReactLoaded = () => {
+      if (isReactLoaded()) {
+        resolve();
+      } else if (++attempts >= MAX_BOOT_ATTEMPTS) {
+        reject(new Error('XKit Rewritten boot failed; React did not load after 10+ seconds.'));
+      } else {
+        window.requestAnimationFrame(checkForReactLoaded);
+      }
+    };
+
+    checkForReactLoaded();
   });
 
   if (redpop) {
-    isReactLoaded() ? init() : waitForReactLoaded().then(init);
+    if (isReactLoaded()) {
+      init();
+    } else {
+      waitForReactLoaded()
+        .then(init)
+        .catch(console.error);
+    }
   }
 }

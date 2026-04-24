@@ -35,7 +35,6 @@ export const getPreferences = async function (featureName) {
   }
 
   if (Object.keys(unsetPreferences).length !== 0) {
-    console.log(Math.random(), unsetPreferences);
     browser.storage.local.set(unsetPreferences);
   }
 

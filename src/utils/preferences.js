@@ -25,8 +25,10 @@ export const getPreferences = async function (featureName) {
         }
       }
 
-      Object.assign(unsetPreferences, { [storageKey]: preference.default });
-      preferenceValues[key] = preference.default;
+      if (preference.default !== undefined) {
+        Object.assign(unsetPreferences, { [storageKey]: preference.default });
+        preferenceValues[key] = preference.default;
+      }
     } else {
       preferenceValues[key] = savedPreference;
     }

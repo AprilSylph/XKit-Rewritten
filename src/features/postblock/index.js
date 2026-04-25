@@ -12,9 +12,9 @@ const meatballButtonLabel = 'Block this post';
 const hiddenAttribute = 'data-postblock-hidden';
 const warningClass = 'xkit-postblock-warning';
 const storageKey = 'postblock.blockedPostRootIDs';
-const uuidsStorageKey = 'postblock.blockedPostBlogUUIDs';
+const blogUuidsStorageKey = 'postblock.blockedPostBlogUUIDs';
 
-let uuids = {};
+let blogUuids = {};
 
 const addWarningElement = (postElement, rootID) => {
   const showButton = dom('button', null, {
@@ -43,10 +43,10 @@ const addWarningElement = (postElement, rootID) => {
 
 let blockedPostRootIDs = [];
 
-const saveUuidPair = (id, uuid) => {
-  if (blockedPostRootIDs.includes(id) && !uuids[id]) {
-    uuids[id] = uuid;
-    browser.storage.local.set({ [uuidsStorageKey]: uuids });
+const saveUuidPair = (postId, blogUuid) => {
+  if (blockedPostRootIDs.includes(postId) && !blogUuids[postId]) {
+    blogUuids[postId] = blogUuid;
+    browser.storage.local.set({ [blogUuidsStorageKey]: blogUuids });
   }
 };
 
@@ -109,10 +109,10 @@ const unblockPost = async rootID => {
 };
 
 export const onStorageChanged = async function (changes) {
-  const { [storageKey]: blockedPostChanges, [uuidsStorageKey]: uuidsChanges } = changes;
+  const { [storageKey]: blockedPostChanges, [blogUuidsStorageKey]: blogUuidsChanges } = changes;
 
-  if (uuidsChanges) {
-    ({ newValue: uuids } = uuidsChanges);
+  if (blogUuidsChanges) {
+    ({ newValue: blogUuids } = blogUuidsChanges);
   }
 
   if (blockedPostChanges) {
@@ -123,7 +123,7 @@ export const onStorageChanged = async function (changes) {
 
 export const main = async function () {
   ({ [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey));
-  ({ [uuidsStorageKey]: uuids = {} } = await browser.storage.local.get(uuidsStorageKey));
+  ({ [blogUuidsStorageKey]: blogUuids = {} } = await browser.storage.local.get(blogUuidsStorageKey));
 
   registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
   onNewPosts.addListener(processPosts);

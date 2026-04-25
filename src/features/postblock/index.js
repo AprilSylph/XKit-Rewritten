@@ -3,10 +3,9 @@ import { getTimelineItemWrapper, filterPostElements } from '../../utils/interfac
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
-import { notify } from '../../utils/notifications.js';
 import { timelineObject } from '../../utils/react_props.js';
 import { postPermalinkTimelineFilter, timelineSelector } from '../../utils/timeline_id.js';
-import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
+import { navigate } from '../../utils/tumblr_helpers.js';
 
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
@@ -136,12 +135,7 @@ export const main = async function () {
     // navigate, the user presses the blog view back button once
     navigate(location.pathname);
 
-    try {
-      const { response: { blog: { name } } } = await apiFetch(`/v2/blog/${uuids[blockedPostID]}/info`);
-      navigate(`/@${name}/${blockedPostID}`);
-    } catch (e) {
-      notify('Failed to open blocked post!');
-    }
+    navigate(`./${blockedPostID}`);
   }
 };
 

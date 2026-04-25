@@ -43,6 +43,13 @@ const addWarningElement = (postElement, rootID) => {
 
 let blockedPostRootIDs = [];
 
+const saveUuidPair = (id, uuid) => {
+  if (blockedPostRootIDs.includes(id) && !uuids[id]) {
+    uuids[id] = uuid;
+    browser.storage.local.set({ [uuidsStorageKey]: uuids });
+  }
+};
+
 const processPosts = postElements =>
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     const postID = postElement.dataset.id;
@@ -66,13 +73,6 @@ const processPosts = postElements =>
     } else {
       getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
     }
-
-    const saveUuidPair = (id, uuid) => {
-      if (blockedPostRootIDs.includes(id) && !uuids[id]) {
-        uuids[id] = uuid;
-        browser.storage.local.set({ [uuidsStorageKey]: uuids });
-      }
-    };
 
     saveUuidPair(id, uuid);
     saveUuidPair(rebloggedFromId, rebloggedFromUuid);

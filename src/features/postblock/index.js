@@ -129,7 +129,7 @@ export const main = async function () {
   registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
   onNewPosts.addListener(processPosts);
 
-  const blockedPostID = location.hash.match(/(?<=^#)\d+$/)?.[0];
+  const blockedPostID = location.hash.match(/(?<=^#postblock:)\d+$/)?.[0];
 
   if (blockedPostID) {
     // remove search param now, so it doesn't persist if after we successfully

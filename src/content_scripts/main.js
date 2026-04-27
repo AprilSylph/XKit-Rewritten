@@ -132,29 +132,19 @@
       .forEach(runFeature);
   };
 
-  const waitForReactLoaded = () => new Promise((resolve, reject) => {
-    let attempts = 0;
+  const waitForReactLoaded = async function () {
+    for (let attempts = 0; attempts < MAX_BOOT_ATTEMPTS; attempts++) {
+      if (isReactLoaded()) return;
 
-    const checkForReactLoaded = () => {
-      if (isReactLoaded()) {
-        resolve();
-      } else if (++attempts >= MAX_BOOT_ATTEMPTS) {
-        reject(new Error('XKit Rewritten boot failed; React did not load after 10+ seconds.'));
-      } else {
-        window.requestAnimationFrame(checkForReactLoaded);
-      }
-    };
+      await new Promise((resolve) => window.requestAnimationFrame(resolve));
+    }
 
-    checkForReactLoaded();
-  });
+    throw new Error('XKit Rewritten boot failed; React did not load after 10+ seconds.');
+  };
 
   if (redpop) {
-    if (isReactLoaded()) {
-      init();
-    } else {
-      waitForReactLoaded()
-        .then(init)
-        .catch(console.error);
-    }
+    waitForReactLoaded()
+      .then(init)
+      .catch(console.error);
   }
 }

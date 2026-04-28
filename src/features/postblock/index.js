@@ -131,10 +131,6 @@ export const main = async function () {
   const blockedPostID = location.hash.match(/(?<=^#postblock:)\d{1,20}$/)?.[0];
 
   if (blockedPostID) {
-    // remove search param now, so it doesn't persist if after we successfully
-    // navigate, the user presses the blog view back button once
-    navigate(location.pathname);
-
     navigate(`./${blockedPostID}`);
   }
 };

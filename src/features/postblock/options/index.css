@@ -1,63 +1,42 @@
-:root {
-  --black: 21, 20, 25;
-  --white: 255, 255, 255;
-  --grey: 207, 207, 216;
-  --accent: 10, 132, 255;
+:host {
+  display: block;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --black: 251, 251, 254;
-    --white: 66, 65, 77;
-    --grey: 91, 91, 102;
-    --accent: 54, 213, 255;
-  }
-}
-
-html {
-  font-size: 14px;
-  scrollbar-color: rgb(var(--grey)) transparent;
-  scrollbar-width: thin;
-  overflow-y: hidden;
-}
-
-body {
-  background-color: rgb(var(--white));
-  color: rgb(var(--black));
-  font: inherit;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  column-gap: 6px;
-  flex-wrap: wrap;
-}
-
-#posts-blocked-count,
-#posts-blocked-info {
-  margin: 0;
-}
-
-#posts-blocked-count {
-  font-size: 15px;
-}
-
-#posts-blocked-info {
-  font-size: 11px;
+code {
+  font-size: var(--font-size-small);
 }
 
 #blocked-posts {
+  --border-width: 1px;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--border-width);
   padding: 0;
-  margin: 1em 0 0;
+  border-radius: var(--border-radius-medium);
+  margin: 0;
+  overflow: hidden;
+
+  background-color: var(--border-color);
+  list-style-type: none;
+  outline: var(--border-width) solid var(--border-color);
+  outline-offset: 0;
 }
 
 #blocked-posts:empty {
-  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background-color: transparent;
+}
+
+#blocked-posts:empty::before {
+  content: "You haven’t blocked any posts yet.";
+  margin-block: var(--space-large);
+}
+
+h3 + #blocked-posts {
+  margin-block-start: var(--space-medium);
 }
 
 .blocked-post {
@@ -65,17 +44,11 @@ header {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 1ch 0;
-  border-top: 1px solid rgb(var(--grey));
-}
+  column-gap: var(--space-small);
+  padding-block: var(--space-small);
+  padding-inline-start: var(--space-medium);
+  padding-inline-end: var(--space-small);
+  margin: 0;
 
-.blocked-post button {
-  padding: 0;
-  border: none;
-
-  appearance: none;
-  background-color: transparent;
-  color: rgb(var(--accent));
-  cursor: pointer;
-  font-weight: bold;
+  background-color: var(--background-color-canvas);
 }

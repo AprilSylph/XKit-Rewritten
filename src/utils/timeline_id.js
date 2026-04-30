@@ -85,11 +85,15 @@ export const anyFlaggedReviewTimelineFilter = ({ dataset: { timeline, timelineId
 export const likesTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline === 'v2/user/likes' ||
   timelineId === 'likes' ||
+  timelineId === 'likes-asc' ||
+  timelineId === 'likes-desc' ||
   timelineId?.match(exactly(`likes-${uuidV4}`));
 
 export const peeprLikesTimelineFilter = blogName =>
   ({ dataset: { timeline, timelineId } }) =>
-    timelineId === `peepr-likes-${blogName}`;
+    timelineId === `peepr-likes-${blogName}` ||
+    timelineId === `peepr-likes-${blogName}-asc` ||
+    timelineId === `peepr-likes-${blogName}-desc`;
 
 export const inboxTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.startsWith('/v2/user/inbox');

@@ -215,7 +215,8 @@ const processGifs = function (gifElements) {
 const sourceUrlRegex = /url\(["'][^)]*?\.(?:gif|gifv|webp)["']\)/g;
 const processBackgroundGifs = function (gifBackgroundElements) {
   gifBackgroundElements.forEach(async gifBackgroundElement => {
-    const sourceValue = gifBackgroundElement.style.backgroundImage;
+    const sourceValue = getComputedStyle(gifBackgroundElement).backgroundImage;
+
     const sourceUrl = sourceValue.match(sourceUrlRegex)?.[0];
     if (!sourceUrl) return;
 

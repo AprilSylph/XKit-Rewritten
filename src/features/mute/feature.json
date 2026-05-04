@@ -9,9 +9,8 @@
   "relatedTerms": [ "Blacklist", "Filter", "Savior" ],
   "preferences": {
     "manageBlockedPosts": {
-      "type": "iframe",
-      "label": "Manage muted users",
-      "src": "/features/mute/options/index.html"
+      "type": "component",
+      "src": "/features/mute/options/index.js"
     },
     "checkTrail": {
       "type": "checkbox",

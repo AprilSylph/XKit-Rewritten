@@ -9,38 +9,50 @@
     <link rel="stylesheet" href="../lib/coloris.css">
     <link rel="stylesheet" href="../lib/modern-normalize.css">
     <link rel="stylesheet" href="../lib/remixicon/remixicon.css">
-    <link rel="stylesheet" href="./backup.css">
-    <link rel="stylesheet" href="./configuration.css">
-    <link rel="stylesheet" href="./links.css">
+    <link rel="stylesheet" href="./acorn.css">
     <link rel="stylesheet" href="./popup.css">
     <script defer src="../browser_polyfill.js"></script>
     <script defer src="../lib/jquery.slim.min.js"></script>
     <script defer src="./popup.js"></script>
     <script defer src="./render_backup.js"></script>
+    <script type="module" src="./components/sponsor-progress/index.js"></script>
     <script type="module" src="./render_features.js"></script>
   </head>
   <body>
-    <header id="permissions-banner" hidden>
-      &#x26A0;&#xFE0F; XKit Rewritten needs additional permissions in order to apply its enhancements automatically.
-      <button id="grant-host-permission">Always allow on www.tumblr.com</button>
-    </header>
-    <header id="embedded-banner" hidden>
-      &#x2139;&#xFE0F; XKit Rewritten can also be configured via the button in the browser toolbar.
-    </header>
+    <div id="permissions-banner" role="alert" class="warning" hidden>
+      <figure class="acorn-icons" aria-hidden="true">
+        <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/e326587/icons/desktop/16/svg/warning-fill-16.svg -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-warning)">
+          <path d="M15.245 12.028 9.713 2.081a1.98 1.98 0 0 0-1.747-1.028A1.98 1.98 0 0 0 6.213 2.09L.75 12.037C.018 13.37.982 15 2.503 15h10.994c1.525 0 2.489-1.639 1.748-2.972M8.75 12.5h-1.5V11h1.5zm0-3h-1.5v-4h1.5z" />
+        </svg>
+      </figure>
+      <span>XKit Rewritten needs additional permissions in order to apply its enhancements automatically.</span>
+      <button id="grant-host-permission" type="button">Allow</button>
+    </div>
+    <div id="embedded-banner" role="status" hidden>
+      <figure class="acorn-icons" aria-hidden="true">
+        <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/ba89f22/icons/desktop/16/svg/information-fill-16.svg -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-information)">
+          <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m.75 12h-1.5V7h1.5zm0-6.5h-1.5V4h1.5z" />
+        </svg>
+      </figure>
+      <span>XKit Rewritten can also be configured via the button in the browser toolbar.</span>
+    </div>
     <main>
-      <nav>
-        <a href="#configuration" role="button" class="selected">Configuration</a>
-        <a href="#backup" role="button">Backup</a>
-        <a href="#links" role="button">Links</a>
-      </nav>
-      <section id="configuration" class="open">
-        <div class="finder">
-          <input id="search" type="text" placeholder="Search" autocomplete="off" spellcheck="false">
-          <label for="filter">Filter by</label>
-          <select id="filter">
-            <option value="all" selected>All</option>
-            <option value="enabled">Enabled</option>
-            <option value="disabled">Disabled</option>
+      <div role="tablist" aria-label="Navigation">
+        <button id="configuration-tab" role="tab" aria-controls="configuration-panel" aria-selected="true" tabindex="0">Configuration</button>
+        <button id="backup-tab" role="tab" aria-controls="backup-panel" aria-selected="false" tabindex="-1">Backup</button>
+        <button id="links-tab" role="tab" aria-controls="links-panel" aria-selected="false" tabindex="-1">Links</button>
+      </div>
+      <section id="configuration-panel" role="tabpanel" aria-labelledby="configuration-tab" tabindex="0">
+        <div role="search">
+          <input id="searchbox" type="search" placeholder="Search" aria-label="Search" autocomplete="off" spellcheck="false">
+          <select id="filter" aria-label="Filter">
+            <optgroup label="Filter by…">
+              <option value="all" selected>All</option>
+              <option value="enabled">Enabled</option>
+              <option value="disabled">Disabled</option>
+            </optgroup>
           </select>
         </div>
         <div class="no-results">
@@ -48,53 +60,103 @@
         </div>
         <div class="features"></div>
       </section>
-      <section id="backup">
-        <details id="export" open>
-          <summary><h4>Export</h4></summary>
-          <div class="content">
-            <pre id="local-storage-export"></pre>
-            <div class="buttons-container">
-              <button id="copy-local">Copy All</button>
-              <button id="download-local">Download</button>
+      <section id="backup-panel" role="tabpanel" aria-labelledby="backup-tab" tabindex="0" hidden>
+        <section aria-labelledby="export-heading">
+          <h3 id="export-heading">Export</h3>
+          <form id="export" aria-labelledby="export-heading">
+            <label for="export-value">This is your current configuration data.</label>
+            <textarea id="export-value" rows="8" spellcheck="false" readonly></textarea>
+            <fieldset>
+              <button id="export-copy" type="submit">Copy</button>
+              <button id="export-download" type="submit" class="primary">Download</button>
+            </fieldset>
+          </form>
+        </section>
+        <section aria-labelledby="import-heading">
+          <h3 id="import-heading">Import</h3>
+          <form id="import" aria-labelledby="import-heading">
+            <label for="import-value">Paste the contents of your saved backup here.</label>
+            <textarea id="import-value" rows="8" spellcheck="false"></textarea>
+            <div id="import-success" role="alert" class="success" hidden>
+              <figure class="acorn-icons" aria-hidden="true">
+                <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/e326587/icons/desktop/16/svg/checkmark-circle-fill-16.svg -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-success)">
+                  <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0m-.751 8.784-2.188-2.19L4 7.656l2.719 2.72a.754.754 0 0 0 1.061.001L12 6.156l-1.06-1.061z" />
+                </svg>
+              </figure>
+              <span>Successfully restored!</span>
             </div>
-          </div>
-        </details>
-        <details id="import">
-          <summary><h4>Import</h4></summary>
-          <div class="content">
-            <label for="local-storage-import">Paste the contents of your saved backup here.</label>
-            <textarea id="local-storage-import" rows="10" spellcheck="false"></textarea>
-            <button id="restore-local"></button>
-          </div>
-        </details>
-      </section>
-      <section id="links">
-        <h4>Help & information</h4>
-        <ul>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/wiki" target="_blank">User guide</a></li>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/discussions" target="_blank">Support & discussion</a></li>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/releases" target="_blank">Changelog</a><small id="version"></small></li>
-        </ul>
-        <h4>Donate</h4>
-        <ul>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten?sponsor=1#readme" target="_blank">Sponsor the project</a></li>
-        </ul>
-        <h4>Get involved</h4>
-        <ul>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten" target="_blank">Source code</a></li>
-          <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues" target="_blank">Issue tracker</a></li>
+            <div id="import-error" role="alert" class="error" hidden>
+              <figure class="acorn-icons" aria-hidden="true">
+                <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/e326587/icons/desktop/16/svg/critical-fill-16.svg -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-critical)">
+                  <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0m-.75 10.5V12h1.5v-1.5zm0-6.5v5h1.5V4z" />
+                </svg>
+              </figure>
+              <span id="import-error-message"></span>
+            </div>
+            <fieldset>
+              <button id="import-submit" type="submit" class="primary">Restore</button>
+            </fieldset>
+          </form>
+        </section>
+        <dialog id="overwrite-confirmation">
+          <h4>
+            <figure class="acorn-icons" aria-hidden="true">
+              <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/e326587/icons/desktop/16/svg/warning-fill-16.svg -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="var(--icon-color-warning)">
+                <path d="M15.245 12.028 9.713 2.081a1.98 1.98 0 0 0-1.747-1.028A1.98 1.98 0 0 0 6.213 2.09L.75 12.037C.018 13.37.982 15 2.503 15h10.994c1.525 0 2.489-1.639 1.748-2.972M8.75 12.5h-1.5V11h1.5zm0-3h-1.5v-4h1.5z" />
+              </svg>
+            </figure>
+            Overwrite current configuration?
+          </h4>
+          <p>Restoring this backup will replace your existing data.</p>
           <ul>
-            <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues?q=is%3Aopen+is%3Aissue+label%3Abug" target="_blank">Known bugs</a></li>
-            <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement" target="_blank">Suggested features</a></li>
+            <li><span id="overwrite-size-old">…</span> of existing data will be deleted.</li>
+            <li><span id="overwrite-size-new">…</span> of backup data will be imported.</li>
           </ul>
-        </ul>
-        <h4>Related projects</h4>
-        <ul>
-          <li><a href="https://github.com/AprilSylph/Palettes-for-Tumblr#readme" target="_blank">Palettes for Tumblr</a></li>
-          <li><a href="https://github.com/AprilSylph/Outbox-for-Tumblr#readme" target="_blank">Outbox for Tumblr</a></li>
-          <li><a href="https://github.com/AprilSylph/Filtering-Plus#readme" target="_blank">Filtering+ for Tumblr</a></li>
-        </ul>
+          <fieldset>
+            <button id="overwrite-cancel" type="button">Cancel</button>
+            <button id="overwrite-confirm" type="button" class="destructive">Overwrite</button>
+          </fieldset>
+        </dialog>
+      </section>
+      <section id="links-panel" role="tabpanel" aria-labelledby="links-tab" tabindex="0" hidden>
+        <section>
+          <h3>Help & information</h3>
+          <ul>
+            <li><a href="https://github.com/AprilSylph/XKit-Rewritten/wiki" target="_blank">User guide</a></li>
+            <li><a href="https://github.com/AprilSylph/XKit-Rewritten/discussions" target="_blank">Support & discussion</a></li>
+            <li><a href="https://github.com/AprilSylph/XKit-Rewritten/releases" target="_blank">Changelog</a><small id="version"></small></li>
+          </ul>
+        </section>
+        <section>
+          <h3>Donate</h3>
+          <ul>
+            <li><a href="https://github.com/AprilSylph/XKit-Rewritten?sponsor=1#readme" target="_blank">Sponsor the project</a></li>
+          </ul>
+        </section>
+        <section>
+          <h3>Get involved</h3>
+          <ul>
+            <li><a href="https://github.com/AprilSylph/XKit-Rewritten" target="_blank">Source code</a></li>
+            <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues" target="_blank">Issue tracker</a></li>
+            <ul>
+              <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues?q=is%3Aopen+is%3Aissue+label%3Abug" target="_blank">Known bugs</a></li>
+              <li><a href="https://github.com/AprilSylph/XKit-Rewritten/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement" target="_blank">Suggested features</a></li>
+            </ul>
+          </ul>
+        </section>
+        <section>
+          <h3>Related projects</h3>
+          <ul>
+            <li><a href="https://github.com/AprilSylph/Palettes-for-Tumblr#readme" target="_blank">Palettes for Tumblr</a></li>
+            <li><a href="https://github.com/AprilSylph/Outbox-for-Tumblr#readme" target="_blank">Outbox for Tumblr</a></li>
+            <li><a href="https://github.com/AprilSylph/Filtering-Plus#readme" target="_blank">Filtering+ for Tumblr</a></li>
+          </ul>
+        </section>
       </section>
     </main>
+    <sponsor-progress role="contentinfo"></sponsor-progress>
   </body>
 </html>

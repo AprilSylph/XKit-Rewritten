@@ -67,17 +67,15 @@ const showInitialPrompt = async () => {
   });
 };
 
+const getTagsFromInput = (inputElement) => inputElement.value
+  .replace(/"|#/g, '')
+  .split(',')
+  .map(tag => tag.trim())
+  .filter(Boolean);
+
 const processTagInputs = (oldTagInput, newTagInput) => {
-  const oldTags = oldTagInput.value
-    .replace(/"|#/g, '')
-    .split(',')
-    .map(tag => tag.trim())
-    .filter(Boolean);
-  const newTags = newTagInput.value
-    .replace(/"|#/g, '')
-    .split(',')
-    .map(tag => tag.trim())
-    .filter(Boolean);
+  const oldTags = getTagsFromInput(oldTagInput);
+  const newTags = getTagsFromInput(newTagInput);
 
   if (oldTags.length === 1) {
     const oldTag = oldTags[0];

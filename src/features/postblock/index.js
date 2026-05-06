@@ -1,5 +1,5 @@
-import { createPostHideFunctions } from '../../main_world/hide_posts.js';
 import { dom } from '../../utils/dom.js';
+import { createPostHideFunctions } from '../../utils/hide_posts.js';
 import { filterPostElements } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';

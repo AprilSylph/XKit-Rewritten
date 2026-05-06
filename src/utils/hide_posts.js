@@ -1,6 +1,6 @@
-import { br, button, div } from '../utils/dom.js';
-import { buildStyle, getTimelineItemWrapper } from '../utils/interface.js';
-import { anyPostPermalinkTimelineFilter, timelineSelector } from '../utils/timeline_id.js';
+import { br, button, div } from './dom.js';
+import { buildStyle, getTimelineItemWrapper } from './interface.js';
+import { anyPostPermalinkTimelineFilter, timelineSelector } from './timeline_id.js';
 
 const controlsClass = 'xkit-hidden-post-controls';
 

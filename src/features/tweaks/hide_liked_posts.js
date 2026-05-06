@@ -1,4 +1,4 @@
-import { createPostHideFunctions } from '../../main_world/hide_posts.js';
+import { createPostHideFunctions } from '../../utils/hide_posts.js';
 import { filterPostElements } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { isMyPost, timelineObject } from '../../utils/react_props.js';

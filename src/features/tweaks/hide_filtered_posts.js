@@ -1,5 +1,5 @@
-import { createPostHideFunctions } from '../../main_world/hide_posts.js';
 import { keyToCss } from '../../utils/css_map.js';
+import { createPostHideFunctions } from '../../utils/hide_posts.js';
 import { getTimelineItemWrapper } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 

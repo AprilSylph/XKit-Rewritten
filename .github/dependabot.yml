@@ -3,6 +3,8 @@ updates:
   - package-ecosystem: "npm"
     commit-message:
       prefix: "build"
+    cooldown:
+      default-days: 3
     directory: "/"
     schedule:
       interval: "quarterly"

@@ -9,9 +9,8 @@
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#postblock",
   "preferences": {
     "manageBlockedPosts": {
-      "type": "iframe",
-      "label": "Manage blocked posts",
-      "src": "/features/postblock/options/index.html"
+      "type": "component",
+      "src": "/features/postblock/options/index.js"
     }
   }
 }

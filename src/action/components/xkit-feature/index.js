@@ -4,25 +4,25 @@ const localName = 'xkit-feature';
 
 const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
-    <details>
+    <details id="details">
       <summary>
-        <div aria-hidden="true" class="icon">
+        <div id="icon" aria-hidden="true">
           <slot name="icon"></slot>
         </div>
-        <div class="meta">
-          <h4 class="title"><slot name="title"></slot></h4>
-          <p class="description"><slot name="description"></slot></p>
+        <div id="meta">
+          <h4 id="title"><slot name="title"></slot></h4>
+          <p id="description"><slot name="description"></slot></p>
         </div>
-        <div class="buttons">
-          <div class="badge">
+        <div id="buttons">
+          <div id="badge">
             <slot name="badge"></slot>
           </div>
-          <input type="checkbox" checked class="toggle-button" aria-label="Enable this feature">
+          <input id="toggle" type="checkbox" checked role="switch" aria-label="Enable this feature">
         </div>
       </summary>
-      <ul class="preferences">
+      <ul id="preferences">
         <slot name="preferences">
-          <span id="empty">No preferences available for this feature.</span>
+          <p>No preferences available for this feature.</p>
         </slot>
       </ul>
     </details>
@@ -32,7 +32,6 @@ const templateDocument = new DOMParser().parseFromString(`
 const adoptedStyleSheets = await fetchStyleSheets([
   '/lib/modern-normalize.css',
   '/lib/remixicon/remixicon.css',
-  '/lib/toggle-button.css',
   './index.css',
 ].map(import.meta.resolve));
 
@@ -43,50 +42,48 @@ class XKitFeatureElement extends CustomElement {
   /** @type {HTMLDetailsElement}  */ #detailsElement;
   /** @type {HTMLInputElement}    */ #enabledToggle;
 
-  /** @type {boolean}     */ #disabled = false;
-  /** @type {boolean}     */ deprecated = false;
-  /** @type {string}      */ featureName = '';
-  /** @type {string[]}    */ relatedTerms = [];
+  /** @type {boolean}   */ #disabled = false;
+  /** @type {boolean}   */ deprecated = false;
+  /** @type {string}    */ featureName = '';
+  /** @type {string[]}  */ relatedTerms = [];
 
   constructor () {
     super(templateDocument, adoptedStyleSheets);
 
-    this.#detailsElement = this.shadowRoot.querySelector('details');
-    this.#enabledToggle = this.shadowRoot.querySelector('input[type="checkbox"]');
+    this.#detailsElement = this.shadowRoot.getElementById('details');
+    this.#enabledToggle = this.shadowRoot.getElementById('toggle');
   }
 
-  /** @param {InputEvent} event `input` event for the feature's "Enable this feature" toggle. */
-  #handleEnabledToggleInput = async ({ currentTarget }) => {
-    const { checked, id } = currentTarget;
-    let {
+  /** @param {InputEvent & { currentTarget: HTMLInputElement }} event `input` event for the feature's "Enable this feature" toggle. */
+  #handleEnabledToggleInput = async ({ currentTarget: { checked } }) => {
+    const {
       [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures = [],
       [XKitFeatureElement.#specialAccessKey]: specialAccess = [],
     } = await browser.storage.local.get();
 
-    const hasPreferences = this.querySelector('[slot="preferences"]') !== null;
-    if (hasPreferences) this.#detailsElement.open = checked;
+    /** @type {Set<string>} */ const enabledFeaturesSet = new Set(enabledFeatures);
+    /** @type {Set<string>} */ const specialAccessSet = new Set(specialAccess);
 
-    if (checked) {
-      enabledFeatures.push(id);
-    } else {
-      enabledFeatures = enabledFeatures.filter(x => x !== id);
+    checked
+      ? enabledFeaturesSet.add(this.featureName)
+      : enabledFeaturesSet.delete(this.featureName);
 
-      if (this.deprecated && !specialAccess.includes(id)) {
-        specialAccess.push(id);
-      }
-    }
+    this.deprecated
+      ? specialAccessSet.add(this.featureName)
+      : specialAccessSet.delete(this.featureName);
+
+    await browser.storage.local.set({
+      [XKitFeatureElement.#enabledFeaturesKey]: Array.from(enabledFeaturesSet),
+      [XKitFeatureElement.#specialAccessKey]: Array.from(specialAccessSet),
+    });
 
     this.disabled = !checked;
 
-    browser.storage.local.set({
-      [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures,
-      [XKitFeatureElement.#specialAccessKey]: specialAccess,
-    });
+    const hasPreferences = this.querySelector('[slot="preferences"]') !== null;
+    if (hasPreferences) this.#detailsElement.open = checked;
   };
 
   connectedCallback () {
-    this.#detailsElement.dataset.deprecated = this.deprecated;
-    this.#enabledToggle.id = this.featureName;
     this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
     this.dataset.relatedTerms = this.relatedTerms;
   }

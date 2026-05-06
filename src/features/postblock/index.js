@@ -7,8 +7,11 @@ import { timelineObject } from '../../utils/react_props.js';
 import { postPermalinkTimelineFilter, timelineSelector } from '../../utils/timeline_id.js';
 import { navigate } from '../../utils/tumblr_helpers.js';
 
-const meatballButtonId = 'postblock';
-const meatballButtonLabel = 'Block this post';
+const meatballButtonBlockId = 'postblock-block';
+const meatballButtonBlockLabel = 'Block this post';
+const meatballButtonUnblockId = 'postblock-unblock';
+const meatballButtonUnblockLabel = 'Unblock this post';
+
 const hiddenAttribute = 'data-postblock-hidden';
 const controlsClass = 'xkit-postblock-hidden-post-controls';
 const controlledHiddenAttribute = 'data-xkit-postblock-hidden-controlled';
@@ -69,24 +72,37 @@ const processPosts = postElements =>
 const onButtonClicked = ({ currentTarget }) => {
   const { id, rebloggedRootId } = currentTarget.__timelineObjectData;
   const rootID = rebloggedRootId || id;
+  const shouldBlockPost = blockedPostRootIDs.includes(rootID) === false;
+
+  const title = shouldBlockPost
+    ? 'Block this post?'
+    : 'Unblock this post?';
+  const message = shouldBlockPost
+    ? 'All instances of this post (including reblogs) will be hidden.'
+    : 'All instances of this post (including reblogs) will become visible again.';
+  const textContent = shouldBlockPost
+    ? 'Block this post'
+    : 'Unblock this post';
+  const className = shouldBlockPost
+    ? 'red'
+    : 'blue';
+  const saveNotificationPreference = shouldBlockPost
+    ? () => { blockedPostRootIDs.push(rootID); browser.storage.local.set({ [storageKey]: blockedPostRootIDs }); }
+    : () => browser.storage.local.set({ [storageKey]: blockedPostRootIDs.filter(blockedId => blockedId !== rootID) });
 
   showModal({
-    title: 'Block this post?',
-    message: [
-      'All instances of this post (including reblogs) will be hidden.',
-    ],
+    title,
+    message,
     buttons: [
       modalCancelButton,
-      dom('button', { class: 'red' }, { click: () => blockPost(rootID) }, ['Block this post']),
+      dom('button', { class: className }, {
+        click () {
+          hideModal();
+          saveNotificationPreference();
+        },
+      }, [textContent]),
     ],
   });
-};
-
-const blockPost = async rootID => {
-  hideModal();
-  const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
-  blockedPostRootIDs.push(rootID);
-  browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
 };
 
 export const onStorageChanged = async function (changes) {
@@ -102,11 +118,16 @@ export const onStorageChanged = async function (changes) {
   }
 };
 
+const blockPostFilter = ({ id, rebloggedRootId }) => blockedPostRootIDs.includes(rebloggedRootId || id) === false;
+const unblockPostFilter = ({ id, rebloggedRootId }) => blockedPostRootIDs.includes(rebloggedRootId || id);
+
 export const main = async function () {
   ({ [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey));
   ({ [blogUuidsStorageKey]: blogUuids = {} } = await browser.storage.local.get(blogUuidsStorageKey));
 
-  registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
+  registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
+  registerMeatballItem({ id: meatballButtonUnblockId, label: meatballButtonUnblockLabel, onclick: onButtonClicked, postFilter: unblockPostFilter });
+
   onNewPosts.addListener(processPosts);
 
   const blockedPostID = location.hash.match(/(?<=^#postblock:)\d{1,20}$/)?.[0];
@@ -117,7 +138,8 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  unregisterMeatballItem(meatballButtonId);
+  unregisterMeatballItem(meatballButtonBlockId);
+  unregisterMeatballItem(meatballButtonUnblockId);
   onNewPosts.removeListener(processPosts);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

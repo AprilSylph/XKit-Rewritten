@@ -280,6 +280,16 @@ label + select {
   margin-block-start: var(--space-xsmall);
 }
 
+optgroup {
+  background-color: var(--background-color-box);
+  color: var(--text-color-deemphasized);
+}
+
+option {
+  background-color: var(--background-color-box);
+  color: var(--text-color);
+}
+
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-multiline-editor--default */
 
 textarea {

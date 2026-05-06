@@ -1,9 +1,9 @@
-[data-postblock-hidden] {
+[data-postblock-hidden], .xkit-postblock-hidden-post-controls ~ div [data-xkit-postblock-hidden-controlled] {
   content: linear-gradient(transparent, transparent);
   height: 0;
 }
 
-.xkit-postblock-warning {
+.xkit-postblock-hidden-post-controls {
   padding: 25px 20px;
   border-radius: 3px;
   margin-bottom: var(--post-padding);
@@ -16,10 +16,10 @@
   line-height: 1.5em;
 }
 
-.xkit-postblock-warning button {
+.xkit-postblock-hidden-post-controls button {
   color: var(--blog-link-color);
 }
 
-.xkit-postblock-warning button:disabled {
+.xkit-postblock-hidden-post-controls button:disabled {
   color: var(--blog-link-color-40);
 }

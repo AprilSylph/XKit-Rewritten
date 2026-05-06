@@ -10,35 +10,20 @@ import { navigate } from '../../utils/tumblr_helpers.js';
 const meatballButtonId = 'postblock';
 const meatballButtonLabel = 'Block this post';
 const hiddenAttribute = 'data-postblock-hidden';
-const warningClass = 'xkit-postblock-warning';
+const controlsClass = 'xkit-postblock-hidden-post-controls';
+const controlledHiddenAttribute = 'data-xkit-postblock-hidden-controlled';
 const storageKey = 'postblock.blockedPostRootIDs';
 const blogUuidsStorageKey = 'postblock.blockedPostBlogUUIDs';
 
 let blogUuids = {};
 
-const addWarningElement = (postElement, rootID) => {
-  const showButton = dom('button', null, {
-    click: ({ currentTarget }) => {
-      getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
-      currentTarget.disabled = true;
-    },
-  }, 'show it');
-
-  const unblockButton = dom('button', null, {
-    click: () => {
-      unblockPost(rootID);
-      warningElement.remove();
-    },
-  }, 'unblock it');
-
-  const warningElement = dom('div', { class: warningClass }, null, [
-    'You have blocked this post!',
+const addPermalinkPageControls = timelineElement => {
+  const controlsElement = dom('div', { class: controlsClass }, null, [
+    'You have hidden this post with PostBlock!',
     dom('br'),
-    showButton,
-    ' / ',
-    unblockButton,
+    dom('button', null, { click: () => controlsElement.remove() }, 'show post anyway'),
   ]);
-  postElement.closest(timelineSelector).before(warningElement);
+  timelineElement.prepend(controlsElement);
 };
 
 let blockedPostRootIDs = [];
@@ -65,10 +50,12 @@ const processPosts = postElements =>
     const rootID = rebloggedRootId || postID;
 
     if (blockedPostRootIDs.includes(rootID)) {
-      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
-
-      if (postPermalinkTimelineFilter(postID)(postElement.closest(timelineSelector))) {
-        addWarningElement(postElement, rootID);
+      const timelineElement = postElement.closest(timelineSelector);
+      if (postPermalinkTimelineFilter(postID)(timelineElement)) {
+        getTimelineItemWrapper(postElement).setAttribute(controlledHiddenAttribute, '');
+        addPermalinkPageControls(timelineElement);
+      } else {
+        getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
       }
     } else {
       getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
@@ -140,7 +127,7 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
-  $(`.${warningClass}`).remove();
+  $(`.${controlsClass}`).remove();
 };
 
 export const stylesheet = true;

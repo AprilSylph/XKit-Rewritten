@@ -21,7 +21,7 @@ const showInitialPrompt = async () => {
       dom('input', { type: 'text', name: 'oldTag', required: true, placeholder: 'Required', autocomplete: 'off' }),
     ]),
     dom('label', null, null, [
-      'Add new tag/tags:',
+      'Add these new tag(s):',
       dom('input', { type: 'text', name: 'newTag', placeholder: 'Optional, comma-separated', autocomplete: 'off' }),
     ]),
   ]);

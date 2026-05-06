@@ -89,12 +89,6 @@ const blockPost = async rootID => {
   browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
 };
 
-const unblockPost = async rootID => {
-  let { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
-  blockedPostRootIDs = blockedPostRootIDs.filter(id => id !== rootID);
-  browser.storage.local.set({ [storageKey]: blockedPostRootIDs });
-};
-
 export const onStorageChanged = async function (changes) {
   const { [storageKey]: blockedPostChanges, [blogUuidsStorageKey]: blogUuidsChanges } = changes;
 

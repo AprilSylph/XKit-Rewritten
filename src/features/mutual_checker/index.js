@@ -5,6 +5,7 @@ import { translate } from '../../utils/language_data.js';
 import { onNewPosts, onNewNotifications, pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { blogData, notificationObject, timelineObject } from '../../utils/react_props.js';
+import { buildSvg } from '../../utils/remixicon.js';
 import { followingTimelineSelector } from '../../utils/timeline_id.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { primaryBlogName } from '../../utils/user.js';
@@ -168,7 +169,7 @@ const createIcon = (isMutual, blogName, color = 'rgb(var(--black))') =>
         dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
           translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName),
         ]),
-        dom('use', { xmlns: 'http://www.w3.org/2000/svg', href: '#ri-user-shared-line' }),
+        buildSvg('ri-user-shared-line').firstElementChild,
       ],
   );
 

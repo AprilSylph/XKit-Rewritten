@@ -169,7 +169,7 @@ const createIcon = (isMutual, blogName, color = 'rgb(var(--black))') =>
         dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
           translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName),
         ]),
-        buildSvg('ri-user-shared-line').firstElementChild,
+        buildSvg('ri-user-follow-line').firstElementChild,
       ],
   );
 

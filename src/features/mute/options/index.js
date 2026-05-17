@@ -28,6 +28,16 @@ const templateDocument = new DOMParser().parseFromString(`
         </button>
       </li>
     </template>
+    <template id="unmute-template">
+      <dialog id="unmute-dialog">
+        <h3 id="unmute-heading">Unmute <span id="unmute-blogname"></span>?</h3>
+        <p>Posts by this user will appear again.</p>
+        <fieldset>
+          <button type="button" id="unmute-cancel">Cancel</button>
+          <button type="button" id="unmute-confirm" class="destructive">Unmute</button>
+        </fieldset>
+      </dialog>
+    </template>
   </template>
 `, 'text/html');
 
@@ -43,12 +53,14 @@ const mutedBlogsEntriesStorageKey = 'mute.mutedBlogEntries';
 class MuteMutedUsersElement extends CustomElement {
   /** @type {HTMLUListElement}    */ #mutedBlogList;
   /** @type {HTMLTemplateElement} */ #mutedBlogTemplate;
+  /** @type {HTMLTemplateElement} */ #unmuteTemplate;
 
   constructor () {
     super(templateDocument, adoptedStyleSheets);
 
     this.#mutedBlogList = this.shadowRoot.getElementById('muted-blogs');
     this.#mutedBlogTemplate = this.shadowRoot.getElementById('muted-blog');
+    this.#unmuteTemplate = this.shadowRoot.getElementById('unmute-template');
   }
 
   getBlogNames = async () => {
@@ -64,13 +76,32 @@ class MuteMutedUsersElement extends CustomElement {
   setMutedBlogs = mutedBlogs =>
     browser.storage.local.set({ [mutedBlogsEntriesStorageKey]: Object.entries(mutedBlogs) });
 
-  unmuteUser = async ({ currentTarget }) => {
+  /** @type {(event: PointerEvent) => Promise<void>} */
+  onUnmuteButtonClick = async ({ currentTarget }) => {
     const mutedBlogs = await this.getMutedBlogs();
+    const blogNames = await this.getBlogNames();
 
     const { uuid } = currentTarget.closest('li').dataset;
 
-    delete mutedBlogs[uuid];
-    this.setMutedBlogs(mutedBlogs);
+    const unmuteTemplateClone = this.#unmuteTemplate.content.cloneNode(true);
+
+    const unmuteDialog = unmuteTemplateClone.getElementById('unmute-dialog');
+    const unmuteBlognameDisplay = unmuteTemplateClone.getElementById('unmute-blogname');
+    const unmuteCancelButton = unmuteTemplateClone.getElementById('unmute-cancel');
+    const unmuteConfirmButton = unmuteTemplateClone.getElementById('unmute-confirm');
+
+    unmuteBlognameDisplay.textContent = blogNames[uuid];
+
+    unmuteDialog.addEventListener('close', () => unmuteDialog.remove());
+    unmuteCancelButton.addEventListener('click', () => unmuteDialog.close());
+    unmuteConfirmButton.addEventListener('click', async () => {
+      delete mutedBlogs[uuid];
+      this.setMutedBlogs(mutedBlogs);
+      unmuteDialog.close();
+    });
+
+    this.shadowRoot.append(unmuteDialog);
+    unmuteDialog.showModal();
   };
 
   updateMode = async event => {
@@ -102,7 +133,7 @@ class MuteMutedUsersElement extends CustomElement {
       modeSelect.value = mode;
       modeSelect.addEventListener('change', this.updateMode);
 
-      unmuteButton.addEventListener('click', this.unmuteUser);
+      unmuteButton.addEventListener('click', this.onUnmuteButtonClick);
 
       return templateClone;
     }));

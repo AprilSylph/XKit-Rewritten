@@ -7,7 +7,8 @@ import { blogTimelineFilter, timelineSelector } from '../../utils/timeline_id.js
 const { hidePost, showPosts } = createPostHideFunctions({
   id: 'tweaks-hide-blocked-blogs',
 
-  // Only applies to posts hidden by a blocked blog in the trail (see isTimelineExempt below)
+  // Only applied to posts hidden by a blocked blog in the trail.
+  // Posts *authored by* blocked blogs aren't hidden with this util (see isTimelineExempt below).
   permalinkPageControls: {
     message: 'This post contains a blocked blog!',
     buttonText: 'show post anyway',

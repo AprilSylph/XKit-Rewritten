@@ -1,5 +1,6 @@
 import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
 import { div, input, label } from '../../utils/dom.js';
+import { inject } from '../../utils/inject.js';
 import { appendWithoutOverflow, filterPostElements, postSelector } from '../../utils/interface.js';
 import { bulkCommunityLabel } from '../../utils/mega_editor.js';
 import { showErrorModal } from '../../utils/modals.js';
@@ -96,6 +97,7 @@ const handlePopupClick = async (checkbox, category) => {
   }
 
   await updatePostOnPage(postElement, ['communityLabels', 'headerContext']);
+  await inject('/main_world/fix_community_label_state.js', [hasCommunityLabel], postElement);
 };
 
 popupData.forEach(({ category, checkbox }) => {

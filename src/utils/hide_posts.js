@@ -24,13 +24,33 @@ const styleElement = buildStyle(`
 `);
 document.documentElement.append(styleElement);
 
-export const createPostHideFunctions = ({ id, permalinkPageControls, hideAutomatically = true }) => {
+/**
+ * @typedef {object} PostHideFunctions
+ * @property {(postElement: Element) => void} hidePost Hides a post.
+ * @property {(postElement: Element) => void} showPost Shows a post that was previously hidden.
+ * @property {() => void} showPosts Shows all posts hidden by this post hiding instance.
+ */
+
+/**
+ * @typedef {object} PermalinkPageOptions
+ * @property {string} message Message to display in permalink page controls (e.g. "This post contains a blocked blog!")
+ * @property {string} buttonText Text for the button that permalink page controls dismiss button (e.g. "show post anyway")
+ */
+
+/**
+ * @param {object} options Destructured
+ * @param {string} options.id Identifier for this post hiding instance (must be unique)
+ * @param {PermalinkPageOptions} [options.permalinkPageControls] If specified, single posts on permalink pages are hidden with an informative, dismissable UI
+ * @param {boolean} [options.hideManually] Disables CSS injection for manual control over hidden post styling
+ * @returns {PostHideFunctions} Functions to hide/show posts
+ */
+export const createPostHideFunctions = ({ id, permalinkPageControls, hideManually = false }) => {
   const hiddenAttribute = `data-xkit-${id}-hidden`;
 
   const controlledHiddenAttribute = `data-xkit-${id}-hidden-controlled`;
   const controlsAttribute = `data-xkit-${id}-hidden-controls`;
 
-  if (hideAutomatically) {
+  if (!hideManually) {
     styleElement.textContent += `
       [${hiddenAttribute}], [${controlsAttribute}] ~ div [${controlledHiddenAttribute}] {
         content: linear-gradient(transparent, transparent);

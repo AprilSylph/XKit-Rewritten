@@ -30,8 +30,8 @@ const templateDocument = new DOMParser().parseFromString(`
     </template>
     <template id="unmute-template">
       <dialog id="unmute-dialog">
-        <h3 id="unmute-heading">Unmute <span id="unmute-blogname"></span>?</h3>
-        <p>Posts by this user will appear again.</p>
+        <h3 id="unmute-heading">Unmute user?</h3>
+        <p>Posts by <span id="unmute-blogname"></span> will no longer be hidden.</p>
         <fieldset>
           <button type="button" id="unmute-cancel">Cancel</button>
           <button type="button" id="unmute-confirm" class="destructive">Unmute</button>

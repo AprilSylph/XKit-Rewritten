@@ -90,14 +90,14 @@ const handlePopupClick = async (checkbox, category) => {
 
     notify('Updated content labels!');
     updateCheckboxes({ hasCommunityLabel, categories });
+
+    await updatePostOnPage(postElement, ['communityLabels', 'headerContext']);
+    await inject('/main_world/fix_community_label_state.js', [hasCommunityLabel], postElement);
   } catch (error) {
     console.log(error);
     notify(error.body?.errors?.[0]?.detail || 'Failed to update content labels!');
     updateCheckboxes({ hasCommunityLabel: currentHasCommunityLabel, categories: currentCategories });
   }
-
-  await updatePostOnPage(postElement, ['communityLabels', 'headerContext']);
-  await inject('/main_world/fix_community_label_state.js', [hasCommunityLabel], postElement);
 };
 
 popupData.forEach(({ category, checkbox }) => {

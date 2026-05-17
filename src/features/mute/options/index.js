@@ -104,11 +104,11 @@ class MuteMutedUsersElement extends CustomElement {
     unmuteDialog.showModal();
   };
 
-  updateMode = async event => {
+  updateMode = async ({ currentTarget }) => {
     const mutedBlogs = await this.getMutedBlogs();
 
-    const { uuid } = event.target.closest('li').dataset;
-    const { value } = event.target;
+    const { uuid } = currentTarget.closest('li').dataset;
+    const { value } = currentTarget;
 
     mutedBlogs[uuid] = value;
     this.setMutedBlogs(mutedBlogs);

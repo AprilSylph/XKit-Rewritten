@@ -236,7 +236,8 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
   const postIdsByCurrentValue = {};
 
   filteredPostsMap.forEach((postData, id) => {
-    // categories are probably in a stable order, but this will not cause problems if they aren't
+    // categories are probably in a stable order, but it will not cause problems if they aren't;
+    // grouping by current value is only a performance optimization
     const currentCategoriesJSON = JSON.stringify(postData.communityLabels.categories);
 
     postIdsByCurrentValue[currentCategoriesJSON] ??= [];

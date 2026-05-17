@@ -54,16 +54,18 @@ export const createPostHideFunctions = ({ id, permalinkPageControls, hideAutomat
   return {
     hidePost: postElement => {
       const timelineElement = postElement.closest(timelineSelector);
+      const onPermalinkPage = anyPostPermalinkTimelineFilter(timelineElement);
 
-      if (anyPostPermalinkTimelineFilter(timelineElement)) {
+      if (onPermalinkPage) {
         if (permalinkPageControls) {
           getTimelineItemWrapper(postElement).setAttribute(controlledHiddenAttribute, '');
           addPermalinkPageControls(timelineElement);
+        } else {
+          // do nothing; avoid hiding single post and making permalink page look broken
         }
-        return;
+      } else {
+        getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
       }
-
-      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
     },
     showPost: postElement => {
       getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);

@@ -16,11 +16,15 @@ const isolateErrors = callback => {
   }
 };
 
+/**
+ * Utilities to run specified code when a modification to the page results in
+ * the addition of elements matching a specified CSS selector.
+ */
 export const pageModifications = Object.freeze({
   /** @type {Map<(elements: Element[]) => void, string>} */ listeners: new Map(),
 
   /**
-   * Register a page modification
+   * Register a page modification callback
    * @param {string} selector CSS selector for elements to target
    * @param {(elements: Element[]) => void} modifierFunction Function to handle matching elements
    */
@@ -32,7 +36,7 @@ export const pageModifications = Object.freeze({
   },
 
   /**
-   * Unregister a page modification
+   * Unregister a page modification callback
    * @param {(elements: Element[]) => void} modifierFunction Previously-registered function to remove
    */
   unregister (modifierFunction) {
@@ -40,7 +44,7 @@ export const pageModifications = Object.freeze({
   },
 
   /**
-   * Run a page modification on all existing matching elements
+   * Run a page modification callback on all existing matching elements
    * @param {(elements: Element[]) => void} modifierFunction Previously-registered function to run
    */
   trigger (modifierFunction) {
@@ -64,11 +68,17 @@ export const pageModifications = Object.freeze({
   },
 });
 
+/**
+ * Utilities to run specified code when new posts are added to the page.
+ */
 export const onNewPosts = Object.freeze({
   addListener: callback => pageModifications.register(`${postSelector}:not(.sortable-fallback) article`, callback),
   removeListener: callback => pageModifications.unregister(callback),
 });
 
+/**
+ * Utilities to run specified code when new notification elements are added to the page.
+ */
 export const onNewNotifications = Object.freeze({
   addListener: callback => pageModifications.register(notificationSelector, callback),
   removeListener: callback => pageModifications.unregister(callback),

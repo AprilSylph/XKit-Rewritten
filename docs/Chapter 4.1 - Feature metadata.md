@@ -67,7 +67,7 @@ It is recommended to use camelCase for each preference name, so that the feature
 - Type: String
 - Required: Yes
 
-Type of preference. Supported values: `"checkbox"`, `"text"`, `"color"`, `"select"`, `"textarea"`, `"component"`
+Type of preference. Supported values: `"checkbox"`, `"text"`, `"color"`, `"select"`, `"textarea"`, `"component"`, `"percent"`
 
 #### `"preferences"`: \<preference name\>: `"label"`
 - Type: String
@@ -98,6 +98,7 @@ Default value of the preference to display to the user.
 
 If the preference `type` is `"checkbox"`, this value should be a boolean.  
 If the preference `type` is `"text"` or `"textarea"`, this value should be a string.  
+If the preference `type` is `"percent"`, this value should be a string representation of an integer between 0 and 100.  
 If the preference `type` is `"color"`, this value should either be a string representing a hexadecimal colour code (i.e. `"#1a2b3c"`) or an empty string.  
 If the preference `type` is `"select"`, this value should be a string that matches one of the `"options"` item's `"value"`.
 

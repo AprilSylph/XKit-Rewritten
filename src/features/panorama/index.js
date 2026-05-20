@@ -112,8 +112,8 @@ ${keyToCss('cell')}, ${postSelector}
   height: unset !important;
 }
 
-/* Fix ad containers */
-${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner')},
+/* Fix advertisement/miscellaneous containers */
+${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner', 'signpostCta')},
 ${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner')} header {
   max-width: unset !important;
 }

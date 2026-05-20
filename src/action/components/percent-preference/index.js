@@ -62,9 +62,9 @@ customElements.define(localName, PercentPreferenceElement);
 
 /**
  * @typedef PercentPreferenceProps
- * @property {string} featureName The feature's internal name (e.g. `"quick_tags"`).
- * @property {string} preferenceName The preference's internal name (e.g. `"originalPostTag"`).
- * @property {string} label The preference's label (e.g. `"Original post tag"`).
+ * @property {string} featureName The feature's internal name (e.g. `"vanilla_audio"`).
+ * @property {string} preferenceName The preference's internal name (e.g. `"defaultVolume"`).
+ * @property {string} label The preference's label (e.g. `"Default Volume"`).
  * @property {string} value The preference's current value (as set by the user, or the preference's default).
  */
 

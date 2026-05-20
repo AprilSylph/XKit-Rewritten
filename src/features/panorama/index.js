@@ -42,6 +42,9 @@ ${keyToCss('queueSettings')} {
   box-sizing: border-box;
   width: 100%;
 }
+${mainPostColumn} > ${keyToCss('tabsHeader')} + ${keyToCss('container')} {
+  max-width: unset;
+}
 `);
 mainStyleElement.media = `(min-width: ${widenDashMinWidth}px)`;
 

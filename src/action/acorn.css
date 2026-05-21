@@ -21,6 +21,7 @@
   --border-color: #bfbfc9;
   --border-color-deemphasized: #bac2ca;
   --border-color-interactive: #8f8f9d;
+  --border-color-error: #b20037;
   --badge-border-color-filled: #fbfbfe66;
   --message-bar-border-color: #84c6ff33;
   --message-bar-border-color-error: #cf174833;
@@ -107,6 +108,7 @@
     --border-color: #5b5b66;
     --border-color-deemphasized: #5b5b66;
     --border-color-interactive: #bfbfc9;
+    --border-color-error: #ffa0aa;
     --badge-border-color-filled: #15141a66;
     --message-bar-border-color: #84c6ff33;
     --message-bar-border-color-error: #ffa0aa33;

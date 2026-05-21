@@ -473,9 +473,10 @@ input[type="checkbox"]:checked:hover:active {
   }
 }
 
+/* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-input-number--default */
 /* https://firefoxux.github.io/firefox-desktop-components/?path=/story/ui-widgets-input-text--default */
 
-input:is([type="text"], [type="search"]) {
+input:is([type="number"], [type="search"], [type="text"]) {
   min-height: 32px;
   width: 100%;
   padding-block: 1px;
@@ -487,12 +488,12 @@ input:is([type="text"], [type="search"]) {
   color: var(--input-text-color);
 }
 
-input:is([type="text"], [type="search"]):focus-visible {
+input:is([type="number"], [type="search"], [type="text"]):focus-visible {
   outline: 2px solid var(--color-accent-primary);
   outline-offset: 0;
 }
 
-label + input:is([type="text"], [type="search"]) {
+label + input:is([type="number"], [type="search"], [type="text"]) {
   margin-block-start: var(--space-xsmall);
 }
 

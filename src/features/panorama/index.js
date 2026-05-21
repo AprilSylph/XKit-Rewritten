@@ -48,6 +48,19 @@ ${mainPostColumn} > ${keyToCss('tabsHeader')} + ${keyToCss('container')} {
 ${mainPostColumn} > ${keyToCss('postColumn')} {
   max-width: unset;
 }
+
+${mainContentWrapper}:has(> div > div > div > ${keyToCss('timeline')}) {
+  flex-grow: 1;
+}
+${mainContentWrapper} > div:has(> div > div > ${keyToCss('timeline')}) {
+  max-width: unset;
+}
+${mainContentWrapper} > div > div:has(> div > ${keyToCss('timeline')}) {
+  max-width: unset;
+}
+${mainContentWrapper} > div > div > div:has(> ${keyToCss('timeline')}) {
+  max-width: unset;
+}
 `);
 mainStyleElement.media = `(min-width: ${widenDashMinWidth}px)`;
 

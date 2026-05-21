@@ -5,7 +5,7 @@ const localName = 'percent-preference';
 const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
     <label for="percent"></label>
-    <input id="percent" type="text" size="28" spellcheck="false">
+    <input id="percent" type="number" min="0" max="100" required>
   </template>
 `, 'text/html');
 
@@ -21,7 +21,6 @@ class PercentPreferenceElement extends CustomElement {
 
   /** @type {HTMLInputElement} */ #inputElement;
   /** @type {HTMLLabelElement} */ #labelElement;
-  /** @type {ReturnType<Window['setTimeout']>} */ #timeoutID;
 
   constructor () {
     super(templateDocument, adoptedStyleSheets);
@@ -39,12 +38,10 @@ class PercentPreferenceElement extends CustomElement {
   get value () { return this.#inputElement.value; }
 
   /** @type {(event: InputEvent) => void} */ #onInput = () => {
-    const storageKey = `${this.featureName}.preferences.${this.preferenceName}`;
-    this.#inputElement.value = this.#inputElement.value.match(/\d+/) ? Math.min(this.#inputElement.value.match(/\d+/)[0], 100) : 0;
-    const storageValue = this.#inputElement.value;
+    if (this.#inputElement.reportValidity() === false) return;
 
-    clearTimeout(this.#timeoutID);
-    this.#timeoutID = setTimeout(() => browser.storage.local.set({ [storageKey]: storageValue }), 500);
+    const storageKey = `${this.featureName}.preferences.${this.preferenceName}`;
+    browser.storage.local.set({ [storageKey]: this.#inputElement.value });
   };
 
   connectedCallback () {

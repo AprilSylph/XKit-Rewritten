@@ -62,6 +62,13 @@ ${mainContentWrapper} > div > div:has(> div > ${keyToCss('timeline')}) {
 ${mainContentWrapper} > div > div > div:has(> ${keyToCss('timeline')}) {
   max-width: unset;
 }
+
+${keyToCss('grid')}:has(${keyToCss('layoutBody')}) {
+  grid-template-columns: 1fr auto;
+}
+${keyToCss('grid')} ${keyToCss('layoutBody')} {
+  max-width: var(${maxPostWidthVar});
+}
 `);
 mainStyleElement.media = `(min-width: ${widenDashMinWidth}px)`;
 

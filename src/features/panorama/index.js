@@ -21,7 +21,7 @@ const aspectRatioVar = '--xkit-panorama-aspect-ratio';
 
 const mainContentWrapper =
   `${keyToCss('mainContentWrapper')}:not(${keyToCss('mainContentIsMasonry', 'mainContentIsFullWidth')})`;
-const mainPostColumn = `main${keyToCss('postColumn', 'postsColumn')}`;
+const mainPostColumn = `main${keyToCss('postColumn', 'postsColumn', 'mainColumnContainer')}`;
 const patioPostColumn = `[id]${keyToCss('columnWide')}`;
 
 const mainStyleElement = buildStyle(`
@@ -43,6 +43,9 @@ ${keyToCss('queueSettings')} {
   width: 100%;
 }
 ${mainPostColumn} > ${keyToCss('tabsHeader')} + ${keyToCss('container')} {
+  max-width: unset;
+}
+${mainPostColumn} > ${keyToCss('postColumn')} {
   max-width: unset;
 }
 `);

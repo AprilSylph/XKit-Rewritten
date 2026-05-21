@@ -77,16 +77,19 @@ const addIcons = function (postElements) {
     if (alreadyProcessed(postElement)) return;
 
     const postAttribution = postElement.querySelector(postAttributionSelector);
-    if (postAttribution === null) { return; }
+    const blogName = postAttribution?.textContent.trim();
 
-    const blogName = postAttribution.textContent.trim();
-    if (!blogName) return;
+    if (postAttribution === null || !blogName) {
+      if (showOnlyMutuals) {
+        getTimelineItemWrapper(postElement)?.setAttribute(hiddenAttribute, '');
+      }
+      return;
+    }
 
     const followingBlog = await getIsFollowing(blogName, postElement);
-    if (!followingBlog) { return; }
-
     const isMutual = await getIsFollowingYou(blogName);
-    if (isMutual) {
+
+    if (followingBlog && isMutual) {
       postElement.classList.add(mutualsClass);
       const iconTarget = getPopoverWrapper(postAttribution) ?? postAttribution;
       iconTarget?.before(createIcon(isMutual, blogName));

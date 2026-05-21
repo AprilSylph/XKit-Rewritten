@@ -51,6 +51,7 @@ ${mainPostColumn} > ${keyToCss('postColumn')} {
 
 ${mainContentWrapper}:has(> div > div > div > ${keyToCss('timeline')}) {
   flex-grow: 1;
+  max-width: calc(var(${maxPostWidthVar}) + ${sidebarOffset}px);
 }
 ${mainContentWrapper} > div:has(> div > div > ${keyToCss('timeline')}) {
   max-width: unset;

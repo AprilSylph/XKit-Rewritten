@@ -63,7 +63,7 @@ ${mainContentWrapper} > div > div > div:has(> ${keyToCss('timeline')}) {
   max-width: unset;
 }
 
-${keyToCss('grid')}:has(${keyToCss('layoutBody')}) {
+${keyToCss('grid')}:has(> ${keyToCss('layoutBody')}) {
   grid-template-columns: 1fr auto;
 }
 ${keyToCss('grid')} ${keyToCss('layoutBody')} {

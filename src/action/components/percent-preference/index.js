@@ -5,7 +5,7 @@ const localName = 'percent-preference';
 const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
     <label for="percent"></label>
-    <input id="percent" type="number" min="0" max="100" required>
+    <input id="percent" type="number" inputmode="numeric" min="0" max="100" required>
   </template>
 `, 'text/html');
 

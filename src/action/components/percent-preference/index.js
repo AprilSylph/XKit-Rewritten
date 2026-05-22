@@ -34,9 +34,15 @@ class PercentPreferenceElement extends CustomElement {
   set label (label) { this.#labelElement.textContent = label; }
   get label () { return this.#labelElement.textContent; }
 
-  /** @param {string} value The saved or default value of this preference. */
-  set value (value = '') { this.#inputElement.value = value; }
-  get value () { return this.#inputElement.value; }
+  /** @param {string | number} value The saved or default value of this preference. */
+  set value (value = 0) {
+    typeof value === 'number'
+      ? this.#inputElement.valueAsNumber = value
+      : this.#inputElement.value = value;
+  }
+
+  /** @returns {number} The current value of this preference. */
+  get value () { return this.#inputElement.valueAsNumber; }
 
   /** @type {(event: InputEvent) => void} */ #onInput = () => {
     clearTimeout(this.#timeoutID);
@@ -44,7 +50,7 @@ class PercentPreferenceElement extends CustomElement {
       if (this.#inputElement.reportValidity() === false) return;
 
       const storageKey = `${this.featureName}.preferences.${this.preferenceName}`;
-      browser.storage.local.set({ [storageKey]: this.#inputElement.value });
+      browser.storage.local.set({ [storageKey]: this.#inputElement.valueAsNumber });
     }, 500);
   };
 

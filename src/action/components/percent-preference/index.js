@@ -21,6 +21,7 @@ class PercentPreferenceElement extends CustomElement {
 
   /** @type {HTMLInputElement} */ #inputElement;
   /** @type {HTMLLabelElement} */ #labelElement;
+  /** @type {ReturnType<Window['setTimeout']>} */ #timeoutID;
 
   constructor () {
     super(templateDocument, adoptedStyleSheets);
@@ -38,10 +39,13 @@ class PercentPreferenceElement extends CustomElement {
   get value () { return this.#inputElement.value; }
 
   /** @type {(event: InputEvent) => void} */ #onInput = () => {
-    if (this.#inputElement.reportValidity() === false) return;
+    clearTimeout(this.#timeoutID);
+    this.#timeoutID = setTimeout(() => {
+      if (this.#inputElement.reportValidity() === false) return;
 
-    const storageKey = `${this.featureName}.preferences.${this.preferenceName}`;
-    browser.storage.local.set({ [storageKey]: this.#inputElement.value });
+      const storageKey = `${this.featureName}.preferences.${this.preferenceName}`;
+      browser.storage.local.set({ [storageKey]: this.#inputElement.value });
+    }, 500);
   };
 
   connectedCallback () {

@@ -77,15 +77,15 @@ const addIcons = function (postElements) {
     if (alreadyProcessed(postElement)) return;
 
     const postAttribution = postElement.querySelector(postAttributionSelector);
-    if (postAttribution === null) { return; }
+    const blogName = postAttribution?.textContent.trim();
 
-    const blogName = postAttribution.textContent.trim();
-    if (!blogName) return;
+    const followingBlog = blogName
+      ? await getIsFollowing(blogName, postElement)
+      : false;
+    const isMutual = followingBlog
+      ? await getIsFollowingYou(blogName)
+      : false;
 
-    const followingBlog = await getIsFollowing(blogName, postElement);
-    if (!followingBlog) { return; }
-
-    const isMutual = await getIsFollowingYou(blogName);
     if (isMutual) {
       postElement.classList.add(mutualsClass);
       const iconTarget = getPopoverWrapper(postAttribution) ?? postAttribution;

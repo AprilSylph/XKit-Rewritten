@@ -79,17 +79,14 @@ const addIcons = function (postElements) {
     const postAttribution = postElement.querySelector(postAttributionSelector);
     const blogName = postAttribution?.textContent.trim();
 
-    if (postAttribution === null || !blogName) {
-      if (showOnlyMutuals) {
-        getTimelineItemWrapper(postElement)?.setAttribute(hiddenAttribute, '');
-      }
-      return;
-    }
+    const followingBlog = blogName
+      ? await getIsFollowing(blogName, postElement)
+      : false;
+    const isMutual = followingBlog
+      ? await getIsFollowingYou(blogName)
+      : false;
 
-    const followingBlog = await getIsFollowing(blogName, postElement);
-    const isMutual = await getIsFollowingYou(blogName);
-
-    if (followingBlog && isMutual) {
+    if (isMutual) {
       postElement.classList.add(mutualsClass);
       const iconTarget = getPopoverWrapper(postAttribution) ?? postAttribution;
       iconTarget?.before(createIcon(isMutual, blogName));

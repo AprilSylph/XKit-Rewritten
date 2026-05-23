@@ -63,11 +63,20 @@ ${mainContentWrapper} > div > div > div:has(> ${keyToCss('timeline')}) {
   max-width: unset;
 }
 
-${keyToCss('grid')}:has(${keyToCss('layoutBody')}) {
-  grid-template-columns: 1fr auto;
+${keyToCss('mainContentWrapper')}:has(> div > div > ${keyToCss('grid')}) {
+  flex-grow: 1;
+  max-width: calc(var(${maxPostWidthVar}) + ${sidebarOffset}px);
 }
-${keyToCss('grid')} ${keyToCss('layoutBody')} {
+${keyToCss('mainContentWrapper')} > div > div > ${keyToCss('grid')}:has(> ${keyToCss('layoutBody')}) {
+  display: flex;
+}
+${keyToCss('mainContentWrapper')} > div > div > ${keyToCss('grid')} > ${keyToCss('layoutBody')} {
   max-width: var(${maxPostWidthVar});
+}
+${keyToCss('mainContentWrapper')} > div > div > ${keyToCss('grid')} > ${keyToCss('sidebar')} {
+  width: auto;
+  min-width: 256px;
+  max-width: 320px;
 }
 `);
 mainStyleElement.media = `(min-width: ${widenDashMinWidth}px)`;

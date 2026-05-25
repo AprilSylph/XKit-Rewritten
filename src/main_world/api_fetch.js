@@ -5,6 +5,7 @@ export default function apiFetch (resource, init = {}) {
 
   // convert all keys in the body to snake_case
   if (init.body !== undefined) {
+    init.body = structuredClone(init.body);
     const objects = [init.body];
 
     while (objects.length !== 0) {

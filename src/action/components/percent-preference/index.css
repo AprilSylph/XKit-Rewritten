@@ -1,3 +1,11 @@
 :host {
   display: block;
 }
+
+input[type="number"]:invalid:focus-visible {
+  outline-color: var(--border-color-error);
+}
+
+input[type="number"]:invalid:not(:focus-visible) {
+  border-color: var(--border-color-error);
+}

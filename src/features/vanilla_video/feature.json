@@ -12,7 +12,7 @@
     "defaultVolume": {
       "type": "percent",
       "label": "Default Volume",
-      "default": "100"
+      "default": 100
     },
     "tumblrTvEnable": {
       "type": "checkbox",

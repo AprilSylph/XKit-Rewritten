@@ -18,6 +18,9 @@ const controlledHiddenAttribute = 'data-xkit-postblock-hidden-controlled';
 const storageKey = 'postblock.blockedPostRootIDs';
 const blogUuidsStorageKey = 'postblock.blockedPostBlogUUIDs';
 
+// Remove outdated elements when loading module
+$(`.${controlsClass}`).remove();
+
 let blogUuids = {};
 
 const addPermalinkPageControls = timelineElement => {

@@ -4,22 +4,52 @@
 }
 
 .xkit-postblock-hidden-post-controls {
-  padding: 25px 20px;
-  border-radius: 3px;
-  margin-bottom: var(--post-padding);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-m);
+  border-radius: 8px;
+  margin-bottom: var(--space-m);
 
-  background-color: var(--blog-title-color-15);
-  color: var(--blog-title-color);
+  background-color: var(--content-panel);
+  background-image: linear-gradient(var(--content-tint), var(--content-tint));
+  color: var(--content-fg-secondary);
 
-  font-weight: 700;
-  text-align: center;
-  line-height: 1.5em;
+  font-family: var(--font-family-modern);
+  font-size: 1rem;
+  font-weight: 350;
+  line-height: 1.5rem;
 }
 
 .xkit-postblock-hidden-post-controls button {
-  color: var(--blog-link-color);
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border-radius: 9999px;
+
+  font-family: var(--font-family-modern);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5rem;
 }
 
-.xkit-postblock-hidden-post-controls button:disabled {
-  color: var(--blog-link-color-40);
+.xkit-postblock-hidden-post-controls button:hover {
+  background-color: var(--content-tint);
+  color: var(--content-fg);
+}
+
+.xkit-postblock-hidden-post-controls button:active {
+  background-color: var(--content-tint-strong);
+}
+
+.xkit-postblock-hidden-post-controls button:focus-visible {
+  outline: 2px solid var(--content-ui-focus);
+  outline-offset: 2px;
+}
+
+:root[style*="--font-family-modern"] .xkit-postblock-hidden-post-controls {
+  font-weight: normal;
+}
+:root[style*="--font-family-modern"] .xkit-postblock-hidden-post-controls button {
+  font-weight: bold;
 }

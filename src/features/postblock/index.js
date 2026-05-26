@@ -22,9 +22,8 @@ let blogUuids = {};
 
 const addPermalinkPageControls = timelineElement => {
   const controlsElement = dom('div', { class: controlsClass }, null, [
-    'You have hidden this post with PostBlock!',
-    dom('br'),
-    dom('button', null, { click: () => controlsElement.remove() }, 'show post anyway'),
+    'This post is hidden by PostBlock.',
+    dom('button', null, { click: () => controlsElement.remove() }, 'View post'),
   ]);
   timelineElement.prepend(controlsElement);
 };

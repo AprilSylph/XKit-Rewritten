@@ -47,6 +47,7 @@
   outline-offset: 2px;
 }
 
+/* Palettes for Tumblr font override compatibility */
 :root[style*="--font-family-modern"] .xkit-postblock-hidden-post-controls {
   font-weight: normal;
 }

@@ -10,8 +10,7 @@ const { hidePost, showPosts } = createPostHideFunctions({
   // Only applied to posts hidden by a blocked blog in the trail.
   // Posts *authored by* blocked blogs aren't hidden with this util (see isTimelineExempt below).
   permalinkPageControls: {
-    message: 'This post contains a blocked blog!',
-    buttonText: 'show post anyway',
+    message: 'This post contains a blocked blog.',
   },
 });
 

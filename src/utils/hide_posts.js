@@ -4,22 +4,60 @@ import { anyPostPermalinkTimelineFilter, timelineSelector } from './timeline_id.
 
 const controlsClass = 'xkit-hidden-post-controls';
 
+// Remove outdated elements when loading module
+$(`.${controlsClass}`).remove();
+
 const styleElement = buildStyle(`
 .${controlsClass} {
-  padding: 25px 20px;
-  border-radius: 3px;
-  margin-bottom: var(--post-padding);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-m);
+  border-radius: 8px;
+  margin-bottom: var(--space-m);
 
-  background-color: var(--blog-title-color-15, rgba(var(--white-on-dark), 0.25));
-  color: var(--blog-title-color, rgba(var(--white-on-dark)));
+  background-color: var(--content-panel);
+  background-image: linear-gradient(var(--content-tint), var(--content-tint));
+  color: var(--content-fg-secondary);
 
-  font-weight: 700;
-  text-align: center;
-  line-height: 1.5em;
+  font-family: var(--font-family-modern);
+  font-size: 1rem;
+  font-weight: 350;
+  line-height: 1.5rem;
 }
 
 .${controlsClass} button {
-  color: var(--blog-link-color, rgb(var(--deprecated-accent)));
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border-radius: 9999px;
+
+  font-family: var(--font-family-modern);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+}
+
+.${controlsClass} button:hover {
+  background-color: var(--content-tint);
+  color: var(--content-fg);
+}
+
+.${controlsClass} button:active {
+  background-color: var(--content-tint-strong);
+}
+
+.${controlsClass} button:focus-visible {
+  outline: 2px solid var(--content-ui-focus);
+  outline-offset: 2px;
+}
+
+/* Palettes for Tumblr font override compatibility */
+:root[style*="--font-family-modern"] .${controlsClass} {
+  font-weight: normal;
+}
+:root[style*="--font-family-modern"] .${controlsClass} button {
+  font-weight: bold;
 }
 `);
 document.documentElement.append(styleElement);
@@ -34,7 +72,7 @@ document.documentElement.append(styleElement);
 /**
  * @typedef {object} PermalinkPageOptions
  * @property {string} message Message to display in permalink page controls (e.g. "This post contains a blocked blog!")
- * @property {string} buttonText Text for the button that permalink page controls dismiss button (e.g. "show post anyway")
+ * @property {string} [buttonText] Override text for the button that permalink page controls dismiss button (default: 'View post')
  */
 
 /**
@@ -61,7 +99,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls, hideManuall
 
   const addPermalinkPageControls = timelineElement => {
     if (timelineElement.querySelector(`[${controlsAttribute}]`) === null) {
-      const { message, buttonText } = permalinkPageControls;
+      const { message, buttonText = 'View post' } = permalinkPageControls;
       const controlsElement = div({ class: controlsClass, [controlsAttribute]: id }, [
         message,
         br(),

@@ -4,7 +4,7 @@ import { buildStyle, getTimelineItemWrapper, filterPostElements, getPopoverWrapp
 import { translate } from '../../utils/language_data.js';
 import { onNewPosts, onNewNotifications, pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
-import { blogData, notificationObject, timelineObject } from '../../utils/react_props.js';
+import { blogData, notificationObject, timelineObject, isMyPost } from '../../utils/react_props.js';
 import { buildSvg } from '../../utils/remixicon.js';
 import { followingTimelineSelector } from '../../utils/timeline_id.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
@@ -75,6 +75,9 @@ const alreadyProcessed = postElement =>
 const addIcons = function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (alreadyProcessed(postElement)) return;
+
+    const postIsMine = await isMyPost(postElement);
+    if (postIsMine) return;
 
     const postAttribution = postElement.querySelector(postAttributionSelector);
     const blogName = postAttribution?.textContent.trim();

@@ -5,7 +5,6 @@ export const timelineSelector = ':is([data-timeline], [data-timeline-id])';
 const startsWith = string => `^${string}`;
 const endsWith = string => `${string}$`;
 const exactly = string => `^${string}$`;
-
 const anyBlogName = '[a-z0-9-]{1,32}';
 const anyPostId = '[0-9]{1,20}';
 const uuidV4 = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}';

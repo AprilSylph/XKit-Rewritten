@@ -38,6 +38,7 @@ const adoptedStyleSheets = await fetchStyleSheets([
 ].map(import.meta.resolve));
 
 const storageKey = 'postblock.blockedPostRootIDs';
+const uuidsStorageKey = 'postblock.blockedPostBlogUUIDs';
 
 class PostBlockBlockedPostsElement extends CustomElement {
   /** @type {HTMLHeadingElement}  */ #postsBlockedCount;
@@ -82,6 +83,7 @@ class PostBlockBlockedPostsElement extends CustomElement {
 
   renderBlockedPosts = async () => {
     const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
+    const { [uuidsStorageKey]: uuids = {} } = await browser.storage.local.get(uuidsStorageKey);
 
     this.#postsBlockedCount.textContent = `${blockedPostRootIDs.length} blocked ${blockedPostRootIDs.length === 1 ? 'post' : 'posts'}`;
     this.#blockedPostList.replaceChildren(...blockedPostRootIDs.map(blockedPostID => {
@@ -93,12 +95,20 @@ class PostBlockBlockedPostsElement extends CustomElement {
       unblockButton.dataset.postId = blockedPostID;
       unblockButton.addEventListener('click', this.unblockPost);
 
+      if (uuids[blockedPostID]) {
+        const a = document.createElement('a');
+        a.href = `https://www.tumblr.com/@${uuids[blockedPostID]}#postblock:${blockedPostID}`;
+        a.target = '_blank';
+        codeElement.replaceWith(a);
+        a.append(codeElement);
+      }
+
       return templateClone;
     }));
   };
 
   onStorageChanged = (changes) => {
-    if (Object.keys(changes).includes(storageKey)) {
+    if (Object.keys(changes).includes(storageKey) || Object.keys(changes).includes(uuidsStorageKey)) {
       this.renderBlockedPosts();
     }
   };

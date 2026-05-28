@@ -4,11 +4,11 @@ import { buildStyle, getTimelineItemWrapper, filterPostElements, getPopoverWrapp
 import { translate } from '../../utils/language_data.js';
 import { onNewPosts, onNewNotifications, pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
-import { blogData, notificationObject, timelineObject, isMyPost } from '../../utils/react_props.js';
+import { blogData, notificationObject, timelineObject } from '../../utils/react_props.js';
 import { buildSvg } from '../../utils/remixicon.js';
 import { followingTimelineSelector } from '../../utils/timeline_id.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
-import { primaryBlogName } from '../../utils/user.js';
+import { primaryBlogName, userBlogNames } from '../../utils/user.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenAttribute = 'data-mutual-checker-hidden';
@@ -76,11 +76,9 @@ const addIcons = function (postElements) {
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (alreadyProcessed(postElement)) return;
 
-    const postIsMine = await isMyPost(postElement);
-    if (postIsMine) return;
-
     const postAttribution = postElement.querySelector(postAttributionSelector);
     const blogName = postAttribution?.textContent.trim();
+    if (userBlogNames.includes(blogName)) return;
 
     const followingBlog = blogName
       ? await getIsFollowing(blogName, postElement)
@@ -102,7 +100,7 @@ const addIcons = function (postElements) {
 const addBlogCardIcons = blogCardLinks =>
   blogCardLinks.forEach(async blogCardLink => {
     const blogName = blogCardLink.querySelector(keyToCss('blogLinkShort'))?.textContent || blogCardLink?.textContent;
-    if (!blogName) return;
+    if (!blogName || userBlogNames.includes(blogName)) return;
 
     const followingBlog = await getIsFollowing(blogName, blogCardLink);
     const isFollowingYou = await getIsFollowingYou(blogName);
@@ -122,7 +120,7 @@ const getIsFollowing = async (blogName, element) => {
     ].find((data) => blogName === data?.name);
 
     following[blogName] = blog
-      ? Promise.resolve(blog.followed && !blog.isMember)
+      ? Promise.resolve(blog.followed)
       : apiFetch(`/v2/blog/${blogName}/info`)
         .then(({ response: { blog: { followed } } }) => followed)
         .catch(() => Promise.resolve(false));
@@ -144,7 +142,6 @@ export const main = async function () {
   document.documentElement.append(styleElement);
 
   ({ showOnlyMutuals, showOnlyMutualNotifications } = await getPreferences('mutual_checker'));
-  following[primaryBlogName] = Promise.resolve(false);
 
   onNewPosts.addListener(addIcons);
   pageModifications.register(`${keyToCss('blogCard')} ${keyToCss('blogCardBlogLink')} > a`, addBlogCardIcons);

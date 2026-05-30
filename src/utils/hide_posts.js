@@ -72,38 +72,34 @@ document.documentElement.append(styleElement);
 /**
  * @typedef {object} PermalinkPageOptions
  * @property {string} message Message to display in permalink page controls (e.g. "This post contains a blocked blog!")
- * @property {string} [buttonText] Override text for the button that permalink page controls dismiss button (default: 'View post')
  */
 
 /**
  * @param {object} options Destructured
  * @param {string} options.id Identifier for this post hiding instance (must be unique)
  * @param {PermalinkPageOptions} [options.permalinkPageControls] If specified, single posts on permalink pages are hidden with an informative, dismissable UI
- * @param {boolean} [options.hideManually] Disables CSS injection for manual control over hidden post styling
  * @returns {PostHideFunctions} Functions to hide/show posts
  */
-export const createPostHideFunctions = ({ id, permalinkPageControls, hideManually = false }) => {
+export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
   const hiddenAttribute = `data-xkit-${id}-hidden`;
 
   const controlledHiddenAttribute = `data-xkit-${id}-hidden-controlled`;
   const controlsAttribute = `data-xkit-${id}-hidden-controls`;
 
-  if (!hideManually) {
-    styleElement.textContent += `
-      [${hiddenAttribute}], [${controlsAttribute}] ~ div [${controlledHiddenAttribute}] {
-        content: linear-gradient(transparent, transparent);
-        height: 0;
-      }
-    `;
-  }
+  styleElement.textContent += `
+    [${hiddenAttribute}], [${controlsAttribute}] ~ div [${controlledHiddenAttribute}] {
+      content: linear-gradient(transparent, transparent);
+      height: 0;
+    }
+  `;
 
   const addPermalinkPageControls = timelineElement => {
     if (timelineElement.querySelector(`[${controlsAttribute}]`) === null) {
-      const { message, buttonText = 'View post' } = permalinkPageControls;
+      const { message } = permalinkPageControls;
       const controlsElement = div({ class: controlsClass, [controlsAttribute]: id }, [
         message,
         br(),
-        button({ click: () => controlsElement.remove() }, [buttonText]),
+        button({ click: () => controlsElement.remove() }, ['View post']),
       ]);
       timelineElement.prepend(controlsElement);
     }
@@ -133,8 +129,5 @@ export const createPostHideFunctions = ({ id, permalinkPageControls, hideManuall
       $(`[${controlledHiddenAttribute}]`).removeAttr(controlledHiddenAttribute);
       $(`[${controlsAttribute}]`).remove();
     },
-    hiddenAttribute,
-    controlledHiddenAttribute,
-    controlsAttribute,
   };
 };

@@ -133,5 +133,3 @@ export const clean = async function () {
 
   showPosts();
 };
-
-export const stylesheet = true;

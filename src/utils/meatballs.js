@@ -4,6 +4,9 @@ import { displayBlockUnlessDisabledAttr, getClosestRenderedElement, postSelector
 import { pageModifications } from './mutations.js';
 import { blogData, timelineObject } from './react_props.js';
 
+const ariakitMenuSelector = '#glass-container [role="menu"][aria-orientation="vertical"]';
+const menuSelector = `${keyToCss('meatballMenu')}, ${ariakitMenuSelector}`;
+
 const postHeaderSelector = `${postSelector} :is(article > header, article > div > header)`;
 const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
 
@@ -50,6 +53,7 @@ export const unregisterBlogMeatballItem = id => {
 
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
   const closestHeader = await getClosestRenderedElement(meatballMenu, 'header');
+
   if (closestHeader?.matches(postHeaderSelector)) {
     addTypedMeatballItems({
       meatballMenu,
@@ -57,9 +61,7 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
       reactData: await timelineObject(meatballMenu),
       reactDataKey: '__timelineObjectData',
     });
-    return;
-  }
-  if (closestHeader?.matches(blogHeaderSelector)) {
+  } else if (closestHeader?.matches(blogHeaderSelector)) {
     addTypedMeatballItems({
       meatballMenu,
       type: 'blog',
@@ -76,7 +78,9 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
     const { label, onclick, filter } = meatballItems[type][id];
 
     const meatballItemButton = dom('button', {
-      class: 'xkit-meatball-button',
+      class: meatballMenu.matches(ariakitMenuSelector)
+        ? 'xkit-menu-item'
+        : 'xkit-meatball-button',
       [`data-xkit-${type}-meatball-button`]: id,
       [displayBlockUnlessDisabledAttr]: '',
       hidden: true,
@@ -114,4 +118,4 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
   });
 };
 
-pageModifications.register(keyToCss('meatballMenu'), addMeatballItems);
+pageModifications.register(menuSelector, addMeatballItems);

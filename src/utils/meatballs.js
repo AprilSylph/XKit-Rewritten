@@ -1,6 +1,6 @@
 import { keyToCss } from './css_map.js';
-import { dom } from './dom.js';
-import { displayBlockUnlessDisabledAttr, getClosestRenderedElement, postSelector } from './interface.js';
+import { button } from './dom.js';
+import { displayBlockUnlessDisabledAttr, displayFlexUnlessDisabledAttr, getClosestRenderedElement, postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { blogData, timelineObject } from './react_props.js';
 
@@ -75,20 +75,18 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
   $(meatballMenu).children(`[data-xkit-${type}-meatball-button]`).remove();
 
   Object.keys(meatballItems[type]).sort().forEach(id => {
+    const menuIsAriakit = meatballMenu.matches(ariakitMenuSelector);
     const { label, onclick, filter } = meatballItems[type][id];
 
-    const meatballItemButton = dom('button', {
-      class: meatballMenu.matches(ariakitMenuSelector)
-        ? 'xkit-menu-item'
-        : 'xkit-meatball-button',
+    const meatballItemButton = button({
       [`data-xkit-${type}-meatball-button`]: id,
-      [displayBlockUnlessDisabledAttr]: '',
-      hidden: true,
-    }, {
+      ...menuIsAriakit
+        ? { [displayFlexUnlessDisabledAttr]: '', class: 'xkit-menu-item' }
+        : { [displayBlockUnlessDisabledAttr]: '', class: 'xkit-meatball-button' },
       click: onclick,
-    }, [
-      '\u22EF',
-    ]);
+      hidden: true,
+      role: 'menuitem',
+    }, ['\u22EF']);
     meatballItemButton[reactDataKey] = reactData;
 
     if (label instanceof Function) {

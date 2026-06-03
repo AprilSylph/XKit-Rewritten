@@ -39,7 +39,6 @@
 /* === Modern menu item styling === */
 
 .xkit-menu-item {
-  display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;

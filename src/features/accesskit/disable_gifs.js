@@ -65,7 +65,8 @@ export const styleElement = buildStyle(`
 .${canvasClass}${parentHovered},
 [${labelAttribute}="after"]${hovered}::after,
 [${labelAttribute}="before"]${hovered}::before,
-[${pausedPosterAttribute}]:not(${hovered}) > div > ${keyToCss('knightRiderLoader')} {
+[${pausedPosterAttribute}]:not(${hovered}) > ${keyToCss('loader')} > ${keyToCss('knightRiderLoader')},
+[${labelAttribute}]:not(${hovered}) > ${keyToCss('loader')} > ${keyToCss('knightRiderLoader')} {
   display: none !important;
 }
 ${keyToCss('background')}[${labelAttribute}="after"]::after,
@@ -271,6 +272,8 @@ const onStorageChanged = async function (changes) {
   loadingMode = modeChanges.newValue;
 };
 
+const processNativeGifPlayButtons = buttons => buttons.forEach(button => button.click());
+
 export const main = async function () {
   loadEventController = new AbortController();
 
@@ -316,6 +319,8 @@ export const main = async function () {
     processRows,
   );
 
+  pageModifications.register(`${gifImage} ~ ${keyToCss('playButton')}`, processNativeGifPlayButtons);
+
   browser.storage.local.onChanged.addListener(onStorageChanged);
 };
 
@@ -327,6 +332,8 @@ export const clean = async function () {
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);
   pageModifications.unregister(processHoverableElements);
+
+  pageModifications.unregister(processNativeGifPlayButtons);
 
   [...document.querySelectorAll(`.${containerClass}`)].forEach(wrapper =>
     wrapper.replaceWith(...wrapper.children),

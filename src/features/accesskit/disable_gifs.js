@@ -290,6 +290,7 @@ export const main = async function () {
     ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
+  pageModifications.register(`${gifImage} ~ ${keyToCss('playButton')}`, processNativeGifPlayButtons);
 
   const gifBackgroundImage = `
     ${keyToCss(
@@ -311,8 +312,6 @@ export const main = async function () {
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
     processRows,
   );
-
-  pageModifications.register(`${gifImage} ~ ${keyToCss('playButton')}`, processNativeGifPlayButtons);
 
   browser.storage.local.onChanged.addListener(onStorageChanged);
 };

@@ -1,10 +1,13 @@
 import { keyToCss } from './css_map.js';
 import { button } from './dom.js';
+import { inject } from './inject.js';
 import { displayBlockUnlessDisabledAttr, displayFlexUnlessDisabledAttr, getClosestRenderedElement, postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { blogData, timelineObject } from './react_props.js';
 
 const ariakitMenuSelector = '#glass-container [role="menu"][aria-orientation="vertical"]';
+const ariakitBottomSheetContainerSelector = `[style*="transform"] > ${keyToCss('container')}`;
+
 const menuSelector = `${keyToCss('meatballMenu')}, ${ariakitMenuSelector}`;
 
 const postHeaderSelector = `${postSelector} :is(article > header, article > div > header)`;
@@ -113,6 +116,12 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
     }
 
     meatballMenu.append(meatballItemButton);
+
+    if (menuIsAriakit) {
+      // Bottom-of-viewport slide-up menu layout used in mobile viewport widths
+      const bottomSheetContainer = meatballMenu.closest(ariakitBottomSheetContainerSelector);
+      bottomSheetContainer && inject('/main_world/update_bottom_sheet_container_height.js', [], bottomSheetContainer);
+    }
   });
 };
 

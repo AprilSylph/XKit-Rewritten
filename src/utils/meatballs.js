@@ -118,6 +118,7 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
     meatballMenu.append(meatballItemButton);
 
     if (menuIsAriakit) {
+      // Bottom-of-viewport slide-up menu layout used in mobile viewport widths
       const bottomSheetContainer = meatballMenu.closest(ariakitBottomSheetContainerSelector);
       bottomSheetContainer && inject('/main_world/update_bottom_sheet_container_height.js', [], bottomSheetContainer);
     }

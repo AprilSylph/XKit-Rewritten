@@ -4,9 +4,10 @@ import { buildStyle, postSelector } from '../../utils/interface.js';
 import { memoize } from '../../utils/memoize.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
+import { posterImages } from '../../utils/react_props.js';
 
 const canvasClass = 'xkit-paused-gif-placeholder';
-const pausedPosterAttribute = 'data-paused-gif-use-poster';
+const downloadOnHoverAttribute = 'data-paused-gif-download-on-hover';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
@@ -61,10 +62,9 @@ export const styleElement = buildStyle(`
   background-color: rgb(var(--white));
 }
 
-.${canvasClass}${parentHovered},
+.${canvasClass}${parentHovered}:not(:has(~ ${keyToCss('loader')} > ${keyToCss('knightRiderLoader')})),
 [${labelAttribute}="after"]${hovered}::after,
 [${labelAttribute}="before"]${hovered}::before,
-[${pausedPosterAttribute}]:not(${hovered}) > ${keyToCss('loader')} > ${keyToCss('knightRiderLoader')},
 [${labelAttribute}]:not(${hovered}) > ${keyToCss('loader')} > ${keyToCss('knightRiderLoader')} {
   display: none !important;
 }
@@ -74,13 +74,7 @@ ${keyToCss('background')}[${labelAttribute}="before"]::before {
   display: none;
 }
 
-[${pausedPosterAttribute}]:not(${hovered}) > img${keyToCss('poster')} {
-  visibility: visible !important;
-}
-[${pausedPosterAttribute}="eager"]:not(${hovered}) > img:not(${keyToCss('poster')}) {
-  visibility: hidden !important;
-}
-[${pausedPosterAttribute}="lazy"]:not(${hovered}) > img:not(${keyToCss('poster')}) {
+[${downloadOnHoverAttribute}]:not(${hovered}) > img {
   display: none;
 }
 
@@ -167,11 +161,11 @@ const createPausedUrlIfAnimated = memoize(async sourceUrl => {
   return URL.createObjectURL(blob);
 });
 
-const pauseGif = async function (gifElement) {
-  if (gifElement.currentSrc.endsWith('.webp') && !(await isAnimated(gifElement.currentSrc))) return;
+const pauseGif = async function (gifElement, currentSrc = gifElement.currentSrc) {
+  if (currentSrc.endsWith('.webp') && !(await isAnimated(currentSrc))) return;
 
   const image = new Image();
-  image.src = gifElement.currentSrc;
+  image.src = currentSrc;
   image.onload = () => {
     if (gifElement.parentNode && gifElement.parentNode.querySelector(`.${canvasClass}`) === null) {
       const canvasElement = canvas({
@@ -188,7 +182,7 @@ const pauseGif = async function (gifElement) {
 };
 
 const processGifs = function (gifElements) {
-  gifElements.forEach(gifElement => {
+  gifElements.forEach(async gifElement => {
     if (gifElement.closest(`${keyToCss('avatarImage', 'subAvatarImage')}, .block-editor-writing-flow`)) return;
     const pausedGifElements = [...gifElement.parentNode.querySelectorAll(`.${canvasClass}`)];
     if (pausedGifElements.length) {
@@ -198,11 +192,20 @@ const processGifs = function (gifElements) {
 
     gifElement.decoding = 'sync';
 
-    const posterElement = gifElement.parentElement.querySelector(keyToCss('poster'));
-    if (posterElement) {
-      gifElement.parentElement.setAttribute(pausedPosterAttribute, loadingMode);
-      addLabel(posterElement);
-      return;
+    if (
+      loadingMode === 'lazy' &&
+      gifElement.loading === 'lazy' &&
+      gifElement.parentElement.matches(keyToCss('placeholder'))
+    ) {
+      const placeholderElement = gifElement.parentElement;
+      const posterImagesArray = await posterImages(placeholderElement);
+      const posterSrc = Array.isArray(posterImagesArray) && posterImagesArray.at(-1)?.url;
+
+      if (posterSrc && gifElement.isConnected) {
+        placeholderElement.setAttribute(downloadOnHoverAttribute, '');
+        pauseGif(gifElement, posterSrc);
+        return;
+      }
     }
 
     if (gifElement.complete && gifElement.currentSrc) {
@@ -333,7 +336,7 @@ export const clean = async function () {
   $(`.${canvasClass}`).remove();
   $(`[${labelAttribute}]`).removeAttr(labelAttribute);
   $(`[${labelSizeAttribute}]`).removeAttr(labelSizeAttribute);
-  $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
+  $(`[${downloadOnHoverAttribute}]`).removeAttr(downloadOnHoverAttribute);
   $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
   [...document.querySelectorAll(`[style*="${pausedBackgroundImageVar}"]`)]
     .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));

@@ -1,10 +1,10 @@
 import { dom } from '../../utils/dom.js';
-import { getTimelineItemWrapper, filterPostElements } from '../../utils/interface.js';
+import { createPostHideFunctions } from '../../utils/hide_posts.js';
+import { filterPostElements } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
 import { timelineObject } from '../../utils/react_props.js';
-import { postPermalinkTimelineFilter, timelineSelector } from '../../utils/timeline_id.js';
 import { navigate } from '../../utils/tumblr_helpers.js';
 
 const meatballButtonBlockId = 'postblock-block';
@@ -12,26 +12,19 @@ const meatballButtonBlockLabel = 'Block this post';
 const meatballButtonUnblockId = 'postblock-unblock';
 const meatballButtonUnblockLabel = 'Unblock this post';
 
-const hiddenAttribute = 'data-postblock-hidden';
-const controlsClass = 'xkit-postblock-hidden-post-controls';
-const controlledHiddenAttribute = 'data-xkit-postblock-hidden-controlled';
 const storageKey = 'postblock.blockedPostRootIDs';
 const blogUuidsStorageKey = 'postblock.blockedPostBlogUUIDs';
 
-// Remove outdated elements when loading module
-$(`.${controlsClass}`).remove();
-
 let blogUuids = {};
 
-const addPermalinkPageControls = timelineElement => {
-  const controlsElement = dom('div', { class: controlsClass }, null, [
-    'This post is hidden by PostBlock.',
-    dom('button', null, { click: () => controlsElement.remove() }, 'View post'),
-  ]);
-  timelineElement.prepend(controlsElement);
-};
-
 let blockedPostRootIDs = [];
+
+const { hidePost, showPost, showPosts } = createPostHideFunctions({
+  id: 'postblock',
+  permalinkPageControls: {
+    message: 'This post is hidden by PostBlock.',
+  },
+});
 
 const saveUuidPair = (postId, blogUuid) => {
   if (blockedPostRootIDs.includes(postId) && !blogUuids[postId]) {
@@ -55,15 +48,9 @@ const processPosts = postElements =>
     const rootID = rebloggedRootId || postID;
 
     if (blockedPostRootIDs.includes(rootID)) {
-      const timelineElement = postElement.closest(timelineSelector);
-      if (postPermalinkTimelineFilter(postID)(timelineElement)) {
-        getTimelineItemWrapper(postElement).setAttribute(controlledHiddenAttribute, '');
-        addPermalinkPageControls(timelineElement);
-      } else {
-        getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
-      }
+      hidePost(postElement);
     } else {
-      getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
+      showPost(postElement);
     }
 
     saveUuidPair(id, uuid);
@@ -144,8 +131,5 @@ export const clean = async function () {
   unregisterMeatballItem(meatballButtonUnblockId);
   onNewPosts.removeListener(processPosts);
 
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
-  $(`.${controlsClass}`).remove();
+  showPosts();
 };
-
-export const stylesheet = true;

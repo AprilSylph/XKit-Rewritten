@@ -126,7 +126,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
     showPost: postElement => {
       getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
       getTimelineItemWrapper(postElement).removeAttribute(controlledHiddenAttribute);
-      postElement.closest(timelineSelector).querySelector(`[${controlsAttribute}]`).remove();
+      postElement.closest(timelineSelector)?.querySelector(`[${controlsAttribute}]`)?.remove();
     },
     showPosts: () => {
       $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);

@@ -27,6 +27,10 @@ const styleElement = buildStyle(`
   line-height: 1.5rem;
 }
 
+.${controlsClass} + .${controlsClass} {
+  display: none;
+}
+
 .${controlsClass} button {
   flex-shrink: 0;
   padding: 10px 16px;

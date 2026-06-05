@@ -1,4 +1,4 @@
-import { br, button, div } from './dom.js';
+import { button, div } from './dom.js';
 import { buildStyle, getTimelineItemWrapper } from './interface.js';
 import { anyPostPermalinkTimelineFilter, timelineSelector } from './timeline_id.js';
 
@@ -105,7 +105,6 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
       const { message } = permalinkPageControls;
       const controlsElement = div({ class: controlsClass, [controlsAttribute]: id }, [
         message,
-        br(),
         button({ click: () => controlsElement.remove() }, ['View post']),
       ]);
       timelineElement.prepend(controlsElement);

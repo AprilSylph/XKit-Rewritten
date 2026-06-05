@@ -108,30 +108,31 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
     }
   };
 
-  return {
-    hidePost: postElement => {
-      const timelineElement = postElement.closest(timelineSelector);
-      const onPermalinkPage = anyPostPermalinkTimelineFilter(timelineElement);
+  const hidePost = postElement => {
+    const timelineElement = postElement.closest(timelineSelector);
+    const onPermalinkPage = anyPostPermalinkTimelineFilter(timelineElement);
 
-      if (onPermalinkPage) {
-        if (permalinkPageControls) {
-          addPermalinkPageControls(postElement, timelineElement);
-        } else {
-          // do nothing; avoid hiding single post and making permalink page look broken
-        }
+    if (onPermalinkPage) {
+      if (permalinkPageControls) {
+        addPermalinkPageControls(postElement, timelineElement);
       } else {
-        getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
+        // do nothing; avoid hiding single post and making permalink page look broken
       }
-    },
-    showPost: postElement => {
-      getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
-      getTimelineItemWrapper(postElement).removeAttribute(controlledHiddenAttribute);
-      postElement.closest(timelineSelector)?.querySelector(`[${controlsAttribute}]`)?.remove();
-    },
-    showPosts: () => {
-      $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
-      $(`[${controlledHiddenAttribute}]`).removeAttr(controlledHiddenAttribute);
-      $(`[${controlsAttribute}]`).remove();
-    },
+    } else {
+      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
+    }
   };
+  const showPost = postElement => {
+    getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
+    getTimelineItemWrapper(postElement).removeAttribute(controlledHiddenAttribute);
+    postElement.closest(timelineSelector)?.querySelector(`[${controlsAttribute}]`)?.remove();
+  };
+  const showPosts = () => {
+    $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+    $(`[${controlledHiddenAttribute}]`).removeAttr(controlledHiddenAttribute);
+    $(`[${controlsAttribute}]`).remove();
+  };
+  showPosts();
+
+  return { hidePost, showPost, showPosts };
 };

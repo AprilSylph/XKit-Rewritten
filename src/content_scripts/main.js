@@ -107,6 +107,27 @@
     document.documentElement.append(script);
   });
 
+  /**
+   * Shows an informative modal if the extension context is invalidated (e.g. after extension is autoupdated
+   * or manually disabled in Chromium). Should do nothing in Firefox, which stops running all extension
+   * context javascript immediately.
+   */
+  const warnOnExtensionContextInvalidated = async () => {
+    const { showUnloadedModal } = await import(browser.runtime.getURL('/utils/modals.js'));
+
+    const isExtensionContextValid = () => { try { browser.runtime.getURL(''); return true; } catch { return false; } };
+
+    let failures = 0;
+    while (true) {
+      failures = isExtensionContextValid() ? 0 : failures + 1;
+      if (failures >= 5 && !document.getElementById('xkit-modal')) {
+        showUnloadedModal();
+        break;
+      }
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  };
+
   const init = async function () {
     $('style.xkit, link.xkit').remove();
 
@@ -130,6 +151,8 @@
     installedFeatures
       .filter(featureName => enabledFeatures.includes(featureName))
       .forEach(runFeature);
+
+    warnOnExtensionContextInvalidated();
   };
 
   const waitForReactLoaded = async function () {

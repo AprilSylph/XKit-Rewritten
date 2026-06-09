@@ -113,7 +113,7 @@
    * context javascript immediately.
    */
   const warnOnExtensionContextInvalidated = async () => {
-    const { showUnloadedModal } = await import(browser.runtime.getURL('/utils/modals.js'));
+    const { warnOnExtensionContextInvalidated } = await import(browser.runtime.getURL('/utils/modals.js'));
 
     const isExtensionContextValid = () => { try { browser.runtime.getURL(''); return true; } catch { return false; } };
 
@@ -121,7 +121,7 @@
     while (true) {
       failures = isExtensionContextValid() ? 0 : failures + 1;
       if (failures >= 5 && !document.getElementById('xkit-modal')) {
-        showUnloadedModal();
+        warnOnExtensionContextInvalidated();
         break;
       }
       await new Promise(resolve => setTimeout(resolve, 1000));

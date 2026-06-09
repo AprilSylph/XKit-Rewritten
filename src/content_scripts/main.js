@@ -118,14 +118,13 @@
     const isExtensionContextValid = () => { try { browser.runtime.getURL(''); return true; } catch { return false; } };
 
     let failures = 0;
-    while (true) {
+    const intervalID = setInterval(() => {
       failures = isExtensionContextValid() ? 0 : failures + 1;
       if (failures >= 5 && !document.getElementById('xkit-modal')) {
         showContextInvalidatedModal();
-        break;
+        clearInterval(intervalID);
       }
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
+    }, 1000);
   };
 
   const init = async function () {

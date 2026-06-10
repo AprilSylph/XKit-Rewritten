@@ -168,7 +168,13 @@ const createPausedUrlIfAnimated = memoize(async sourceUrl => {
 });
 
 const pauseGif = async function (gifElement) {
-  if (gifElement.currentSrc.endsWith('.webp') && !(await isAnimated(gifElement.currentSrc))) return;
+  if (
+    gifElement.currentSrc.endsWith('.webp') &&
+    !gifElement.hasAttribute('data-assume-animated-webp') &&
+    !(await isAnimated(gifElement.currentSrc))
+  ) {
+    return;
+  }
 
   const image = new Image();
   image.src = gifElement.currentSrc;
@@ -267,7 +273,22 @@ const onStorageChanged = async function (changes) {
   loadingMode = modeChanges.newValue;
 };
 
-const processNativeGifPlayButtons = buttons => buttons.forEach(button => button.click());
+const processNativeGifPlayButtons = async buttons => {
+  buttons.forEach(button => button.click());
+
+  // Reprocess webp elements that may have been previously parsed as non-animated.
+  // Assume they are animated if Tumblr showed a play button; in practice this is not always accurate, but
+  // that's Tumblr's problem, and it's difficult to reliably query currentSrc after a click.
+  const webpElements = buttons
+    .map(button =>
+      button.parentElement.querySelector(
+        `img:is([srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})`,
+      ),
+    )
+    .filter(Boolean);
+  webpElements.forEach(webpElement => webpElement.setAttribute('data-assume-animated-webp', ''));
+  processGifs(webpElements);
+};
 
 export const main = async function () {
   ({ disable_gifs_loading_mode: loadingMode } = await getPreferences('accesskit'));

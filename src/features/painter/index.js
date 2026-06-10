@@ -16,17 +16,19 @@ let tagArray;
 
 const excludeClass = 'xkit-painter-done';
 
+const isValidColor = (colour) => CSS.supports('border-image-source', `linear-gradient(to right, ${colour} 0% 100%)`);
+
 const paint = postElements => filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
   const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, tags } = await timelineObject(postElement);
 
   const coloursToApply = [];
 
-  if (canDelete && ownColour) coloursToApply.push(ownColour);
-  if (liked && likedColour) coloursToApply.push(likedColour);
-  if (rebloggedFromId && reblogColour) coloursToApply.push(reblogColour);
-  if (!rebloggedFromId && originalColour) coloursToApply.push(originalColour);
+  if (canDelete && ownColour && isValidColor(ownColour)) coloursToApply.push(ownColour);
+  if (liked && likedColour && isValidColor(likedColour)) coloursToApply.push(likedColour);
+  if (rebloggedFromId && reblogColour && isValidColor(reblogColour)) coloursToApply.push(reblogColour);
+  if (!rebloggedFromId && originalColour && isValidColor(originalColour)) coloursToApply.push(originalColour);
 
-  if (tagColour) {
+  if (tagColour && isValidColor(tagColour)) {
     let tagColourFound = false;
 
     if (tags.some(tag => tagArray.includes(tag.toLowerCase()))) {

@@ -9,7 +9,7 @@ export const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`
 const hideModalRecommended = blogsLists =>
   blogsLists
     .filter(ul => ul.matches(blogViewSelector))
-    .forEach(ul => ul.parentNode.setAttribute(hiddenAttribute, ''));
+    .forEach(ul => ul.parentNode.toggleAttribute(hiddenAttribute, true));
 
 export const main = async function () {
   const blogsListSelector = `${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;

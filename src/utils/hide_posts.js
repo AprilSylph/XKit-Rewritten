@@ -100,7 +100,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
   const addPermalinkPageControls = (postElement, timelineElement) => {
     const timelineItemWrapper = getTimelineItemWrapper(postElement);
     if (timelineItemWrapper.hasAttribute(controlledHiddenAttribute) === false) {
-      timelineItemWrapper.setAttribute(controlledHiddenAttribute, '');
+      timelineItemWrapper.toggleAttribute(controlledHiddenAttribute, true);
 
       const { message } = permalinkPageControls;
       const controlsElement = div({ class: controlsClass, [controlsAttribute]: id }, [
@@ -122,7 +122,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
         // do nothing; avoid hiding single post and making permalink page look broken
       }
     } else {
-      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
+      getTimelineItemWrapper(postElement).toggleAttribute(hiddenAttribute, true);
     }
   };
   const showPost = postElement => {

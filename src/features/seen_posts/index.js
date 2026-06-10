@@ -62,12 +62,12 @@ const dimPosts = function (postElements, reprocessPosts = false) {
     const timelineItem = getTimelineItemWrapper(postElement);
 
     const isFirstRender = timelineItem.hasAttribute(excludeAttribute) === false;
-    timelineItem.setAttribute(excludeAttribute, '');
+    timelineItem.toggleAttribute(excludeAttribute, true);
 
     if (seenPosts.includes(id) === false) {
       observer.observe(postElement.querySelector('article header + *'));
     } else if (isFirstRender || reprocessPosts) {
-      timelineItem.setAttribute(dimAttribute, '');
+      timelineItem.toggleAttribute(dimAttribute, true);
     }
   }
 };

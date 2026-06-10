@@ -99,7 +99,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
 
   const addPermalinkPageControls = (postElement, timelineElement) => {
     const timelineItemWrapper = getTimelineItemWrapper(postElement);
-    if (timelineItemWrapper.getAttribute(controlledHiddenAttribute) !== '') {
+    if (timelineItemWrapper.hasAttribute(controlledHiddenAttribute) === false) {
       timelineItemWrapper.setAttribute(controlledHiddenAttribute, '');
 
       const { message } = permalinkPageControls;

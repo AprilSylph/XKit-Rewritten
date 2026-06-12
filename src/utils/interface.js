@@ -8,7 +8,6 @@ export const trailItemSelector = `${postSelector} ${keyToCss('reblog')}`;
 export const blogViewSelector = '[style*="--blog-title-color"] *';
 export const notificationSelector = `:is(${keyToCss('notification')}[role="listitem"], ${keyToCss('activityItem')})`;
 
-const listTimelineObjectSelector = keyToCss('listTimelineObject');
 const targetWrapperSelector = keyToCss(
   'targetWrapper',
   'targetWrapperBlock',
@@ -20,9 +19,7 @@ const targetWrapperSelector = keyToCss(
  * @param {Element} element Element within a timeline item
  * @returns {Element | null} The timeline item wrapper
  */
-export const getTimelineItemWrapper = element =>
-  element.closest('[data-timeline-id] > div > div') ||
-  element.closest(listTimelineObjectSelector);
+export const getTimelineItemWrapper = element => element.closest(`${timelineSelector} > div > div`);
 
 /**
  * @param {Element} element Element within a popover wrapper

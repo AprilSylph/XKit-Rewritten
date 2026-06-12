@@ -21,7 +21,7 @@ const targetWrapperSelector = keyToCss(
  * @returns {Element | null} The timeline item wrapper
  */
 export const getTimelineItemWrapper = element =>
-  (element.closest('[data-timeline-id] > div > div') ||
+  element.closest('[data-timeline-id] > div > div') ||
   element.closest(listTimelineObjectSelector);
 
 /**

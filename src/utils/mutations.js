@@ -1,5 +1,5 @@
 import { keyToCss } from './css_map.js';
-import { buildStyle, getTimelineItemWrapper, notificationSelector, postSelector } from './interface.js';
+import { notificationSelector, postSelector } from './interface.js';
 
 const rootNode = document.getElementById('root');
 const headNode = document.querySelector('head');
@@ -68,22 +68,6 @@ export const onNewPosts = Object.freeze({
   addListener: callback => pageModifications.register(`${postSelector}:not(.sortable-fallback) article`, callback),
   removeListener: callback => pageModifications.unregister(callback),
 });
-
-onNewPosts.addListener(postElements =>
-  postElements.forEach(postElement => {
-    try {
-      getTimelineItemWrapper(postElement).toggleAttribute('data-is-timeline-wrapper', true);
-    } catch (exception) {
-      console.error(postElement);
-      console.error(exception);
-    }
-  }));
-
-document.documentElement.append(buildStyle(`
-[data-is-timeline-wrapper] {
-  outline: 3px dashed red;
-}
-`));
 
 export const onNewNotifications = Object.freeze({
   addListener: callback => pageModifications.register(notificationSelector, callback),

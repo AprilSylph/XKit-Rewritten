@@ -7,7 +7,7 @@ const mobileBadgeSelector = `header ${keyToCss('hamburger')} + ${keyToCss('notif
 const hideBadgeClass = 'xkit-hide-mobile-menu-badge';
 const noTransitionClass = 'xkit-hide-mobile-menu-badge-no-transition';
 
-// load injected utility into module cache
+// Load injected utility into module cache
 inject('/main_world/unbury_mobile_badge_data.js');
 
 document.documentElement.append(

@@ -69,6 +69,8 @@ export const mobileMenuBadgeHide = Object.freeze({
   },
 });
 
+// Resolves after (at least) one browser repaint. A single requestAnimationFrame callback is fired just before
+// the currently pending frame repaint; a second will be scheduled to affect the following frame.
 const waitForRender = () =>
   new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 

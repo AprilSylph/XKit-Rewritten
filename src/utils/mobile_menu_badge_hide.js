@@ -74,14 +74,13 @@ export const mobileMenuBadgeHide = Object.freeze({
 const waitForRender = () =>
   new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-const onResizeIntoTabletLayout = () => {
+const onResizeIntoTabletLayout = async () => {
   document.documentElement.classList.add(noTransitionClass);
 
   mobileMenuBadgeHide.trigger();
 
-  waitForRender().then(() => {
-    document.documentElement.classList.remove(noTransitionClass);
-  });
+  await waitForRender();
+  document.documentElement.classList.remove(noTransitionClass);
 };
 
 pageModifications.register(mobileBadgeSelector, onResizeIntoTabletLayout);

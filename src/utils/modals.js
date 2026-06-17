@@ -63,5 +63,28 @@ export const showErrorModal = exception => {
   });
 };
 
+export const withModalOnError = func =>
+  async (...args) => {
+    try {
+      return await func(...args);
+    } catch (exception) {
+      showErrorModal(exception);
+    }
+  };
+
+export const showContextInvalidatedModal = () =>
+  showModal({
+    title: 'XKit Rewritten has become unloaded.',
+    message: [
+      'If this is unexpected, this is likely due to your browser automatically applying an XKit version update.',
+      '\n\n',
+      'Outdated XKit modifications will be updated/removed after you refresh this Tumblr tab.',
+    ],
+    buttons: [
+      dom('button', null, { click: hideModal }, ['Close']),
+      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh Now']),
+    ],
+  });
+
 export const createTagSpan = tag => dom('span', { class: 'xkit-modal-tag' }, null, [tag]);
 export const createBlogSpan = name => dom('span', { class: 'xkit-modal-blog' }, null, [name]);

@@ -50,11 +50,10 @@ const processNotifications = (notificationElements) => {
 
       const rootId = targetRootPostId || targetPostId || blockablePostId;
 
-      if (blockedPostTargetIDs.includes(rootId)) {
-        notificationElement.parentElement.setAttribute(hiddenAttribute, '');
-      } else {
-        notificationElement.parentElement.removeAttribute(hiddenAttribute);
-      }
+      notificationElement.parentElement.toggleAttribute(
+        hiddenAttribute,
+        blockedPostTargetIDs.includes(rootId),
+      );
     }
   });
 };
@@ -133,7 +132,7 @@ export const onStorageChanged = (changes) => {
 
 export const main = async function () {
   const { placeholders } = await getPreferences('notificationblock');
-  document.body.classList[placeholders ? 'add' : 'remove'](placeholdersClass);
+  document.body.classList.toggle(placeholdersClass, !!placeholders);
 
   ({ [storageKey]: blockedPostTargetIDs = [] } = await browser.storage.local.get(storageKey));
   onNewNotifications.addListener(processNotifications);

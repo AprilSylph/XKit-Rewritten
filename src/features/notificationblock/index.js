@@ -34,7 +34,7 @@ body.${placeholdersClass} :is(${firstHidden}, ${firstHiddenOfDay})::after {
 
   content: "(hidden notifications)";
   text-align: center;
-  color: rgba(var(--black), .65);
+  color: var(--content-fg-secondary);
   font-size: .875rem;
 }
 `);

@@ -16,7 +16,7 @@
     },
     "disable_gifs_loading_mode": {
       "type": "select",
-      "label": "Download paused GIFs:",
+      "label": "Download paused GIFs",
       "options": [
         { "value": "eager", "label": "immediately" },
         { "value": "lazy", "label": "when hovered" }

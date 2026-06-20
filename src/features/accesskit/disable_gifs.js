@@ -213,7 +213,7 @@ const processGifs = function (gifElements) {
 };
 
 const sourceUrlRegex = /url\(["'][^)]*?\.(?:gif|gifv|webp)["']\)/g;
-const processBackgroundGifs = function (gifBackgroundElements) {
+const processBackgroundGifs = gifBackgroundElements => requestAnimationFrame(() =>
   gifBackgroundElements.forEach(async gifBackgroundElement => {
     const sourceValue = getComputedStyle(gifBackgroundElement).backgroundImage;
 
@@ -237,8 +237,8 @@ const processBackgroundGifs = function (gifBackgroundElements) {
       sourceValue.replace(sourceUrlRegex, `url("${pausedUrl}")`),
     );
     addLabel(gifBackgroundElement, true);
-  });
-};
+  }),
+);
 
 const processRows = function (rowsElements) {
   rowsElements.forEach(rowsElement => {

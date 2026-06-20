@@ -94,6 +94,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
     [${hiddenAttribute}], [${controlsAttribute}] ~ div [${controlledHiddenAttribute}] {
       content: linear-gradient(transparent, transparent);
       height: 0;
+      margin: 0 !important;
     }
   `;
 

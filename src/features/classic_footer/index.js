@@ -26,7 +26,9 @@ const reblogButtonSelector = `button:has(svg use:is(
 ))`;
 const quickActionsSelector = 'svg[style="--icon-color-primary: var(--brand-blue);"], svg[style="--icon-color-primary: var(--brand-purple);"]';
 const closeNotesButtonSelector = `${postOrRadarSelector} ${keyToCss('postActivity')} [role="tablist"] button:has(svg use[href="#managed-icon__ds-ui-x-20"])`;
-const reblogMenuPortalSelector = ':is(div[id^="portal/"], #glass-container > div):has(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';
+const portalSelector = ':is(div[id^="portal/"], #glass-container > div)';
+const reblogMenuItemSelector = ':is(div[role="menu"] a[role="menuitem"][href^="/reblog/"])';
+const reblogMenuPortalSelector = `${portalSelector}:has(${reblogMenuItemSelector})`;
 
 const { lang } = document.documentElement;
 const noteCountFormat = new Intl.NumberFormat(lang);
@@ -140,6 +142,14 @@ export const styleElement = buildStyle(`
   }
   :root[style*="--font-family-modern"] .${noteCountClass}.${modernStyleClass} > span {
     font-weight: bold;
+  }
+
+  /* Move reblog modal to the left instead of the right */
+  ${portalSelector}:has(${reblogMenuItemSelector}, ${keyToCss('reblogsDisabledInfo')}) {
+    direction: rtl;
+  }
+  ${portalSelector} > [role="menu"]:has(${reblogMenuItemSelector}, ${keyToCss('reblogsDisabledInfo')}) {
+    direction: initial;
   }
 
   .${reblogLinkClass} {

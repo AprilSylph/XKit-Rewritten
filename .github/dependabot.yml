@@ -29,11 +29,5 @@ updates:
     directory: "/"
     schedule:
       interval: "quarterly"
-    groups:
-      ci-dependencies:
-        applies-to: "version-updates"
-        update-types:
-          - "minor"
-          - "patch"
     labels:
       - "bot"

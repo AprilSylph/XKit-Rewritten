@@ -1,8 +1,14 @@
 import { keyToCss } from './css_map.js';
-import { dom } from './dom.js';
-import { displayBlockUnlessDisabledAttr, getClosestRenderedElement, postSelector } from './interface.js';
+import { button } from './dom.js';
+import { inject } from './inject.js';
+import { displayBlockUnlessDisabledAttr, displayFlexUnlessDisabledAttr, getClosestRenderedElement, postSelector } from './interface.js';
 import { pageModifications } from './mutations.js';
 import { blogData, timelineObject } from './react_props.js';
+
+const ariakitMenuSelector = '#glass-container [role="menu"][aria-orientation="vertical"]';
+const ariakitBottomSheetContainerSelector = `[style*="transform"] > ${keyToCss('container')}`;
+
+const menuSelector = `${keyToCss('meatballMenu')}, ${ariakitMenuSelector}`;
 
 const postHeaderSelector = `${postSelector} :is(article > header, article > div > header)`;
 const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
@@ -50,6 +56,7 @@ export const unregisterBlogMeatballItem = id => {
 
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
   const closestHeader = await getClosestRenderedElement(meatballMenu, 'header');
+
   if (closestHeader?.matches(postHeaderSelector)) {
     addTypedMeatballItems({
       meatballMenu,
@@ -57,9 +64,7 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
       reactData: await timelineObject(meatballMenu),
       reactDataKey: '__timelineObjectData',
     });
-    return;
-  }
-  if (closestHeader?.matches(blogHeaderSelector)) {
+  } else if (closestHeader?.matches(blogHeaderSelector)) {
     addTypedMeatballItems({
       meatballMenu,
       type: 'blog',
@@ -73,18 +78,18 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
   $(meatballMenu).children(`[data-xkit-${type}-meatball-button]`).remove();
 
   Object.keys(meatballItems[type]).sort().forEach(id => {
+    const menuIsAriakit = meatballMenu.matches(ariakitMenuSelector);
     const { label, onclick, filter } = meatballItems[type][id];
 
-    const meatballItemButton = dom('button', {
-      class: 'xkit-meatball-button',
+    const meatballItemButton = button({
       [`data-xkit-${type}-meatball-button`]: id,
-      [displayBlockUnlessDisabledAttr]: '',
-      hidden: true,
-    }, {
+      ...menuIsAriakit
+        ? { [displayFlexUnlessDisabledAttr]: '', class: 'xkit-menu-item' }
+        : { [displayBlockUnlessDisabledAttr]: '', class: 'xkit-meatball-button' },
       click: onclick,
-    }, [
-      '\u22EF',
-    ]);
+      hidden: true,
+      role: 'menuitem',
+    }, ['\u22EF']);
     meatballItemButton[reactDataKey] = reactData;
 
     if (label instanceof Function) {
@@ -111,7 +116,13 @@ const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataK
     }
 
     meatballMenu.append(meatballItemButton);
+
+    if (menuIsAriakit) {
+      // Bottom-of-viewport slide-up menu layout used in mobile viewport widths
+      const bottomSheetContainer = meatballMenu.closest(ariakitBottomSheetContainerSelector);
+      bottomSheetContainer && inject('/main_world/update_bottom_sheet_container_height.js', [], bottomSheetContainer);
+    }
   });
 };
 
-pageModifications.register(keyToCss('meatballMenu'), addMeatballItems);
+pageModifications.register(menuSelector, addMeatballItems);

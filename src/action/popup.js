@@ -1,4 +1,4 @@
-const preferenceSelector = 'checkbox-preference, color-preference, select-preference, text-preference, textarea-preference';
+const preferenceSelector = 'checkbox-preference, color-preference, percent-preference, select-preference, text-preference, textarea-preference';
 
 const checkForNoResults = function () {
   /** @type {HTMLElement[]} */ const featureElements = [...document.querySelectorAll('xkit-feature')];

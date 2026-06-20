@@ -50,7 +50,7 @@ const buildSidebarRow = ({ label, onclick, href, count, carrot }) =>
  * @param {string} options.id Unique ID for the sidebar item
  * @param {string} options.title Human-readable sidebar item heading
  * @param {sidebarRowOptions[]} options.rows Row options objects to construct clickable links in the sidebar item
- * @param {Function} [options.visibility] Visibility condition function (called each time sidebar is added)
+ * @param {() => boolean} [options.visibility] Visibility condition function (called each time sidebar is added)
  * @returns {HTMLDivElement} The constructed sidebar item, for future referencing
  */
 export const addSidebarItem = function ({ id, title, rows, visibility }) {

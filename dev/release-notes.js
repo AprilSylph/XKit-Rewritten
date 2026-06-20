@@ -22,7 +22,12 @@ try {
   for (const commit of await response.json()) {
     commits.set(commit.sha, commit);
   }
-  if (!refs.isSubsetOf(commits)) { console.warn('⚠️ Could not find commit info for one or more commits!'); }
+
+  if (!refs.isSubsetOf(commits)) {
+    console.log('> [!WARNING]');
+    console.log('> The GitHub REST API did not return info for these commits:');
+    refs.difference(commits).forEach(ref => console.log(`> - \`${ref}\``));
+  }
 
   console.log('```md');
   for (const ref of refs.intersection(commits)) {

@@ -1,116 +1,53 @@
-:root {
-  --black: 21, 20, 25;
-  --white: 255, 255, 255;
-  --accent: 10, 132, 255;
-  --passive-grey: 223, 223, 229;
-  --active-grey: 207, 207, 216;
+/* Global */
 
-  --search-highlight: 255, 233, 0;
+:root {
+  --background-color-search-highlight: #ffe900;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --black: 251, 251, 254;
-    --white: 66, 65, 77;
-    --accent: 54, 213, 255;
-    --passive-grey: 83, 83, 94;
-    --active-grey: 91, 91, 102;
-
-    --search-highlight: 0, 62, 170;
+    --background-color-search-highlight: #003eaa;
   }
 }
 
 html {
+  overflow-y: scroll;
+}
+
+html, body, main {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  overflow-y: scroll;
-
-  font-size: 14px;
-  scrollbar-color: rgb(var(--active-grey)) rgb(var(--white));
-}
-
-html, main {
   width: 375px;
   min-width: 100%;
   max-width: 100%;
 }
 
 body {
-  background-color: rgb(var(--white));
-  color: rgb(var(--black));
-  font: inherit;
+  min-height: 100vh;
+
   -webkit-user-select: none;
   user-select: none;
 }
 
+main {
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
 #permissions-banner,
 #embedded-banner {
-  width: 375px;
-  min-width: 100%;
-  max-width: 100%;
-  padding: 8px 4px;
-  border-bottom: 1px solid rgb(var(--active-grey));
-
-  text-align: center;
-}
-
-#grant-host-permission {
-  display: block;
-  padding: 0.5ch 1ch;
-  border-radius: 0.5ch;
-  margin: 8px auto 0;
-
-  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
-}
-
-#grant-host-permission:focus {
-  outline: 2px solid rgb(var(--accent));
+  margin: var(--space-small);
 }
 
 #permissions-banner:not([hidden]) + #embedded-banner {
   display: none;
 }
 
-[role="tablist"] {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 4px;
-  border-bottom: 1px solid rgb(var(--active-grey));
-}
-
-[role="tablist"] [role="tab"] {
-  flex-grow: 1;
-  padding: 8px;
-  border: none;
-  border-radius: 5px;
-  margin: 0 4px;
-
-  background-color: transparent;
-  color: rgb(var(--black));
-  font-weight: bold;
-  text-align: center;
-  text-decoration: none;
-}
-
-[role="tablist"] [role="tab"]:hover {
-  background-color: rgb(var(--passive-grey));
-  cursor: pointer;
-}
-
-[role="tablist"] [role="tab"]:active,
-[role="tablist"] [role="tab"][aria-selected="true"] {
-  background-color: rgb(var(--active-grey));
-}
-
 [role="tabpanel"] {
   position: relative;
-}
-
-[role="tabpanel"]:focus-visible {
-  outline-offset: -3px;
+  flex-grow: 1;
+  flex-shrink: 0;
 }
 
 [role="tabpanel"]:focus-visible::after {
@@ -124,42 +61,146 @@ body {
   content: "";
   outline: inherit;
   outline-offset: inherit;
+  pointer-events: none;
 }
 
-input[type="text"],
-select,
-textarea {
-  padding: 4px;
+/* Configuration */
+
+#configuration-panel [role="search"] {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: var(--space-small);
+  padding: var(--space-small);
+  border-bottom: 1px solid var(--border-color);
+
+  background-color: var(--background-color-canvas);
+}
+
+#searchbox {
+  width: 0;
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
+.no-results {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  height: 100vw;
+}
+
+.features {
+  --border-width: 1px;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--border-width);
+  border-radius: var(--border-radius-medium);
+  margin: calc(var(--space-small) + var(--border-width));
+  overflow: hidden;
+
+  background-color: var(--border-color);
+  outline: var(--border-width) solid var(--border-color);
+  outline-offset: 0;
+}
+
+.features:empty {
+  background-color: transparent;
+  margin: 0;
+  outline: none;
+}
+
+.features:empty::before {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vw;
+
+  color: var(--text-color-deemphasized);
+  content: "Loading…";
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-semibold);
+}
+
+#clr-picker {
+  width: 225px;
+
+  background-color: var(--background-color-box);
+  box-shadow: var(--card-box-shadow);
+}
+
+#clr-picker > input[type="text"] {
+  min-height: 32px;
+  width: calc(100% - 80px);
+  padding-block: 1px;
+  padding-inline: var(--space-medium);
+  border: 1px solid var(--input-text-border-color);
+  border-radius: var(--border-radius-medium);
+
+  background-color: var(--input-text-background-color);
+  color: var(--input-text-color);
+  font-family: inherit;
+  font-size: var(--font-size-root);
+}
+
+#clr-picker > input[type="text"]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 0;
+}
+
+#clr-picker > button {
+  min-height: 24px;
+  padding-block: var(--space-xxsmall);
+
+  cursor: auto;
+  font-size: var(--font-size-small);
+}
+
+#clr-swatches button {
+  min-height: 24px;
+  min-width: 24px;
   border: none;
-  border-radius: 3px;
+  border-radius: 100%;
+  padding: initial;
 
-  background-color: rgb(var(--passive-grey));
-  color: rgb(var(--black));
+  cursor: pointer;
 }
 
-::placeholder {
-  color: inherit;
-  opacity: .55;
+/* Backup */
+
+#backup-panel section {
+  padding-block: var(--space-medium);
+  padding-inline: var(--space-small);
 }
 
-input[type="text"] {
-  padding-left: 8px;
-  padding-right: 8px;
-}
-
-input[type="text"]:focus,
-select:focus {
-  background-color: rgb(var(--active-grey));
-}
-
-h4 {
-  margin-block: 8px;
-}
-
-textarea {
+#backup-panel section textarea {
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: var(--font-size-small);
   resize: none;
-  width: 100%;
+}
 
-  scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
-  scrollbar-width: thin;
+#backup-panel section fieldset,
+#backup-panel section [role="alert"] {
+  margin-block-start: var(--space-large);
+}
+
+/* Links */
+
+#links-panel {
+  padding-block: var(--space-medium);
+  padding-inline: var(--space-small);
+}
+
+#version {
+  margin-left: var(--space-small);
+  user-select: all;
+}
+
+#version::before {
+  content: "v";
 }

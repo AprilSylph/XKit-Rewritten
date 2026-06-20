@@ -9,7 +9,7 @@
 
   background-color: rgba(var(--white-on-dark), 0.13);
   color: rgba(var(--white-on-dark), 0.6);
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
 
 #tag-tracking-plus ul:empty::after {

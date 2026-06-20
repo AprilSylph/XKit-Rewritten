@@ -23,4 +23,6 @@ jobs:
       - name: Generate release notes
         run: dev/release-notes.js >> $GITHUB_STEP_SUMMARY
         env:
+          GITHUB_API_URL: ${{ github.api_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

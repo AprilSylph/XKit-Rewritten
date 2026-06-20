@@ -50,6 +50,6 @@ export const registerPostOption = async function ({ id, symbolId, onclick, showI
  * @param {string} id Identifier for the previously registered post option
  */
 export const unregisterPostOption = id => {
-  postOptions[id]?.remove();
+  postOptions[id]?.element?.remove();
   delete postOptions[id];
 };

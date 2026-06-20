@@ -1,5 +1,23 @@
-:host(:not(:last-child)) details {
-  border-bottom: 1px dotted rgb(var(--active-grey));
+:host {
+  background-color: var(--background-color-canvas);
+}
+
+:host(:is(.search-hidden, .filter-hidden)) {
+  display: none;
+}
+
+:host(:is(:first-child, .search-first)) summary {
+  border-top-left-radius: var(--border-radius-medium);
+  border-top-right-radius: var(--border-radius-medium);
+}
+
+:host(:is(:last-child, .search-last)) details:not([open]) summary {
+  border-bottom-left-radius: var(--border-radius-medium);
+  border-bottom-right-radius: var(--border-radius-medium);
+}
+
+details.disabled:not([open], :hover, :focus-within) summary {
+  opacity: 50%;
 }
 
 summary {
@@ -7,8 +25,8 @@ summary {
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  column-gap: 8px;
-  padding: 8px;
+  column-gap: var(--space-small);
+  padding: var(--space-medium);
 
   cursor: pointer;
 }
@@ -18,11 +36,22 @@ summary::-webkit-details-marker {
 }
 
 summary:hover {
-  background-color: rgb(var(--passive-grey));
+  background-image: linear-gradient(
+    var(--button-background-color-hover),
+    var(--button-background-color-hover)
+  );
 }
 
-summary:focus {
-  background-color: rgb(var(--active-grey));
+summary:hover:active {
+  background-image: linear-gradient(
+    var(--button-background-color-active),
+    var(--button-background-color-active)
+  );
+}
+
+summary:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: -2px;
 }
 
 [role="switch"] {
@@ -35,28 +64,41 @@ summary:focus {
   height: var(--toggle-height);
   width: var(--toggle-width);
   padding: 0;
-  border-color: rgb(var(--black));
+  border-color: var(--border-color-interactive);
   border-style: solid;
   border-width: var(--toggle-border-width);
-  border-radius: 9999px;
+  border-radius: var(--border-radius-circle);
 
-  background-color: rgb(var(--passive-grey));
-  color: rgb(var(--black));
+  background-color: var(--button-background-color);
+  color: var(--border-color-interactive);
 }
 
 [role="switch"]:hover {
-  background-color: rgb(var(--active-grey));
+  background-color: var(--button-background-color-hover);
+}
+
+[role="switch"]:hover:active {
+  background-color: var(--button-background-color-active);
 }
 
 [role="switch"]:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
   outline-offset: 2px;
 }
 
 [role="switch"]:checked {
   border-color: transparent;
 
-  background-color: rgb(var(--accent));
-  color: rgb(var(--white));
+  background-color: var(--color-accent-primary);
+  color: var(--background-color-canvas);
+}
+
+[role="switch"]:checked:hover {
+  background-color: var(--color-accent-primary-hover);
+}
+
+[role="switch"]:checked:hover:active {
+  background-color: var(--color-accent-primary-active);
 }
 
 [role="switch"]::before {
@@ -94,7 +136,7 @@ summary:focus {
   transform: translateX(var(--toggle-dot-transform-x));
 }
 
-.icon {
+#icon {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -105,84 +147,77 @@ summary:focus {
   overflow: hidden;
 }
 
-.icon ::slotted(i) {
+#icon ::slotted(i) {
   font-size: 26px;
   line-height: 32px;
 }
 
-.icon,
-.buttons {
-  flex-shrink: 0;
+#title,
+#description {
+  margin: 0;
 }
 
-.buttons {
+#description {
+  font-size: var(--font-size-small);
+  color: var(--text-color-deemphasized);
+}
+
+#buttons {
   display: flex;
   flex-direction: row;
   align-items: center;
-  column-gap: 8px;
+  column-gap: var(--space-small);
+  flex-shrink: 0;
   height: 32px;
   margin-left: auto;
 }
 
-.badge ::slotted(*) {
+#badge ::slotted(*) {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 1em;
 }
 
-.badge ::slotted(a) {
+#badge ::slotted(a) {
   text-decoration: none;
 }
 
-.badge ::slotted(span) {
-  padding: 2px 6px;
+#badge ::slotted(span) {
+  width: fit-content;
+  padding-inline: var(--space-xsmall);
+  border: 1px solid var(--badge-border-color-filled);
+  border-radius: var(--border-radius-small);
 
-  background-color: #ff62ce;
-  color: rgb(var(--white));
+  background-color: var(--badge-background-color-filled);
+  color: var(--badge-text-color-filled);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
 }
 
-.title,
-.description {
+#preferences {
+  padding: 0;
   margin: 0;
-}
-
-.title {
-  font-size: 15px;
-}
-
-.description {
-  font-size: 13px;
-  opacity: 69%;
-}
-
-.disabled:not([open], :focus-within, :hover) :is(.icon, .meta, .buttons) {
-  opacity: 60%;
-}
-
-.disabled .title::after {
-  content: " (disabled)";
-  font-weight: normal;
-}
-
-[data-deprecated="true"]:not(.disabled) .title::after {
-  content: " (deprecated)";
-  font-weight: normal;
-}
-
-ul.preferences {
-  padding: 0 4px;
-  margin: 8px 0;
 
   list-style-type: none;
 }
 
-ul.preferences #empty {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+slot[name="preferences"] p {
+  margin-block-start: var(--space-small);
+  margin-block-end: var(--space-medium);
+
+  text-align: center;
+}
+
+::slotted([slot="preferences"]) {
+  padding-inline: var(--space-medium);
+  margin-block-start: var(--space-small);
+  margin-block-end: var(--space-large);
 }
 
 ::slotted(.search-highlighted) {
-  background-color: rgb(var(--search-highlight));
+  background-color: var(--background-color-search-highlight);
+  box-shadow:
+    0 calc(-1 * var(--space-small)) 0 var(--background-color-search-highlight),
+    0 var(--space-small) 0 var(--background-color-search-highlight);
 }

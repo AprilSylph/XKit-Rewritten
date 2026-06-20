@@ -12,7 +12,7 @@ export const getPreferences = async function (featureName) {
   const preferenceValues = {};
 
   for (const [key, preference] of Object.entries(preferences)) {
-    if (preference.type === 'iframe') { continue; }
+    if (preference.type === 'component') continue;
 
     const storageKey = `${featureName}.preferences.${key}`;
     const savedPreference = storage[storageKey];
@@ -25,8 +25,10 @@ export const getPreferences = async function (featureName) {
         }
       }
 
-      Object.assign(unsetPreferences, { [storageKey]: preference.default });
-      preferenceValues[key] = preference.default;
+      if (preference.default !== undefined) {
+        Object.assign(unsetPreferences, { [storageKey]: preference.default });
+        preferenceValues[key] = preference.default;
+      }
     } else {
       preferenceValues[key] = savedPreference;
     }

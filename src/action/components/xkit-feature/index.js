@@ -4,25 +4,25 @@ const localName = 'xkit-feature';
 
 const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
-    <details>
+    <details id="details">
       <summary>
-        <div aria-hidden="true" class="icon">
+        <div id="icon" aria-hidden="true">
           <slot name="icon"></slot>
         </div>
-        <div class="meta">
-          <h4 class="title"><slot name="title"></slot></h4>
-          <p class="description"><slot name="description"></slot></p>
+        <div id="meta">
+          <h4 id="title"><slot name="title"></slot></h4>
+          <p id="description"><slot name="description"></slot></p>
         </div>
-        <div class="buttons">
-          <div class="badge">
+        <div id="buttons">
+          <div id="badge">
             <slot name="badge"></slot>
           </div>
-          <input type="checkbox" checked role="switch" aria-label="Enable this feature">
+          <input id="toggle" type="checkbox" checked role="switch" aria-label="Enable this feature">
         </div>
       </summary>
-      <ul class="preferences">
+      <ul id="preferences">
         <slot name="preferences">
-          <span id="empty">No preferences available for this feature.</span>
+          <p>No preferences available for this feature.</p>
         </slot>
       </ul>
     </details>
@@ -50,8 +50,8 @@ class XKitFeatureElement extends CustomElement {
   constructor () {
     super(templateDocument, adoptedStyleSheets);
 
-    this.#detailsElement = this.shadowRoot.querySelector('details');
-    this.#enabledToggle = this.shadowRoot.querySelector('[role="switch"]');
+    this.#detailsElement = this.shadowRoot.getElementById('details');
+    this.#enabledToggle = this.shadowRoot.getElementById('toggle');
   }
 
   /** @param {InputEvent & { currentTarget: HTMLInputElement }} event `input` event for the feature's "Enable this feature" toggle. */
@@ -84,7 +84,6 @@ class XKitFeatureElement extends CustomElement {
   };
 
   connectedCallback () {
-    this.#detailsElement.dataset.deprecated = this.deprecated;
     this.#enabledToggle.addEventListener('input', this.#handleEnabledToggleInput);
     this.dataset.relatedTerms = this.relatedTerms;
   }

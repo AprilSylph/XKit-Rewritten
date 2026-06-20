@@ -6,6 +6,9 @@ const exportDownloadButton = document.getElementById('export-download');
 const importForm = document.getElementById('import');
 const importValueTextarea = document.getElementById('import-value');
 const importSubmitButton = document.getElementById('import-submit');
+const importErrorBar = document.getElementById('import-error');
+const importErrorMessage = document.getElementById('import-error-message');
+const importSuccessBar = document.getElementById('import-success');
 
 const overwriteConfirmationDialog = document.getElementById('overwrite-confirmation');
 const overwriteSizeOldSpan = document.getElementById('overwrite-size-old');
@@ -23,15 +26,19 @@ const onStorageChanged = async function () {
 };
 
 const localCopy = () => {
-  if (exportCopyButton.classList.contains('copied')) { return; }
+  exportCopyButton.disabled = true;
 
-  navigator.clipboard.writeText(exportValueTextarea.value).then(async () => {
-    exportCopyButton.classList.add('copied');
-    await sleep(2000);
-    exportCopyButton.classList.add('fading');
-    await sleep(1000);
-    exportCopyButton.classList.remove('copied', 'fading');
-  });
+  navigator.clipboard.writeText(exportValueTextarea.value)
+    .then(async () => {
+      const originalTextContent = exportCopyButton.textContent;
+      exportCopyButton.textContent = 'Copied!';
+
+      await sleep(3000);
+      exportCopyButton.textContent = originalTextContent;
+    })
+    .finally(() => {
+      exportCopyButton.disabled = false;
+    });
 };
 
 const localExport = async function () {
@@ -104,6 +111,8 @@ async function onImportSubmit (event) {
 
   try {
     importSubmitButton.disabled = true;
+    importSuccessBar.hidden = true;
+    importErrorBar.hidden = true;
 
     const currentStorage = await browser.storage.local.get();
     const parsedStorage = JSON.parse(importText);
@@ -115,27 +124,17 @@ async function onImportSubmit (event) {
     await browser.storage.local.clear();
     await browser.storage.local.set(parsedStorage);
 
-    importSubmitButton.classList.add('success');
-    importSubmitButton.textContent = 'Successfully restored!';
     importValueTextarea.value = '';
+    importSuccessBar.hidden = false;
     document.getElementById('configuration-tab').classList.add('outdated');
-
-    await sleep(3000);
   } catch (exception) {
     if (!(exception instanceof UserInterrupt)) {
       console.error(exception);
-
-      importSubmitButton.classList.add('failure');
-      importSubmitButton.textContent = exception instanceof SyntaxError
-        ? 'Failed to parse backup contents!'
-        : 'Could not restore backup!';
-
-      await sleep(3000);
+      importErrorMessage.textContent = exception.message;
+      importErrorBar.hidden = false;
     }
   } finally {
     importSubmitButton.disabled = false;
-    importSubmitButton.classList.remove('success', 'failure');
-    importSubmitButton.textContent = 'Restore';
   }
 }
 

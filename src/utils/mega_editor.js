@@ -17,7 +17,7 @@ const pathnames = {
   add: 'add_tags_to_posts',
   remove: 'remove_tags_from_posts',
   delete: 'delete_posts',
-  private: 'privatize_posts'
+  private: 'privatize_posts',
 };
 
 /**
@@ -39,7 +39,7 @@ export const megaEdit = async function (postIds, options) {
   const requestBody = {
     post_ids: postIds.join(','),
     form_key: formKey,
-    tags: options.tags ? options.tags.join(',') : ''
+    tags: options.tags ? options.tags.join(',') : '',
   };
 
   if (['delete', 'private'].includes(options.mode)) {
@@ -48,6 +48,6 @@ export const megaEdit = async function (postIds, options) {
 
   return inject(
     '/main_world/post_request.js',
-    [`https://www.tumblr.com/${pathname}`, $.param(requestBody)]
+    [`https://www.tumblr.com/${pathname}`, $.param(requestBody)],
   );
 };

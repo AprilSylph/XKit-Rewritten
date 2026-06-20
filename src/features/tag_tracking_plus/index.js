@@ -1,10 +1,10 @@
-import { apiFetch, onClickNavigate } from '../../utils/tumblr_helpers.js';
 import { filterPostElements } from '../../utils/interface.js';
-import { timelineObject } from '../../utils/react_props.js';
 import { onNewPosts } from '../../utils/mutations.js';
-import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { getPreferences } from '../../utils/preferences.js';
+import { timelineObject } from '../../utils/react_props.js';
+import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { tagTimelineFilter } from '../../utils/timeline_id.js';
+import { apiFetch, onClickNavigate } from '../../utils/tumblr_helpers.js';
 
 const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
 let timestamps;
@@ -28,18 +28,18 @@ const refreshCount = async function (tag) {
       response: {
         timeline: {
           elements = [],
-          links
-        }
-      }
+          links,
+        },
+      },
     } = await apiFetch(
       `/v2/hubs/${encodeURIComponent(tag)}/timeline`,
-      { queryParams: { limit: 20, sort: 'recent' } }
+      { queryParams: { limit: 20, sort: 'recent' } },
     );
 
     const posts = elements.filter(({ objectType, displayType, recommendedSource }) =>
       objectType === 'post' &&
       displayType === undefined &&
-      recommendedSource === null
+      recommendedSource === null,
     );
 
     let unreadCount = 0;
@@ -72,10 +72,10 @@ const refreshCount = async function (tag) {
 const updateSidebarStatus = () => {
   if (sidebarItem) {
     sidebarItem.dataset.loading = [...unreadCounts.values()].some(
-      unreadCountString => unreadCountString === undefined
+      unreadCountString => unreadCountString === undefined,
     );
     sidebarItem.dataset.hasNew = [...unreadCounts.values()].some(
-      unreadCountString => unreadCountString && unreadCountString !== '0'
+      unreadCountString => unreadCountString && unreadCountString !== '0',
     );
   }
 };
@@ -84,7 +84,7 @@ const refreshAllCounts = async (isFirstRun = false) => {
   for (const tag of trackedTags) {
     await Promise.all([
       refreshCount(tag),
-      new Promise(resolve => setTimeout(resolve, isFirstRun ? 0 : 30000))
+      new Promise(resolve => setTimeout(resolve, isFirstRun ? 0 : 30000)),
     ]);
   }
 };
@@ -133,7 +133,7 @@ const processPosts = async function (postElements) {
 export const onStorageChanged = async (changes) => {
   const {
     [storageKey]: timestampsChanges,
-    'tag_tracking_plus.preferences.onlyShowNew': onlyShowNewChanges
+    'tag_tracking_plus.preferences.onlyShowNew': onlyShowNewChanges,
   } = changes;
 
   if (timestampsChanges) {
@@ -161,8 +161,8 @@ export const main = async function () {
       label: `#${tag}`,
       href: `/tagged/${encodeURIComponent(tag)}?sort=recent`,
       onclick: onClickNavigate,
-      count: '\u22EF'
-    }))
+      count: '\u22EF',
+    })),
   });
   sidebarItem.dataset.onlyShowNew = onlyShowNew;
   updateSidebarStatus();

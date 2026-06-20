@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "dbaeumer.vscode-eslint",
+        "editorconfig.editorconfig",
+        "github.github-vscode-theme",
+        "github.vscode-github-actions",
+        "github.vscode-pull-request-github",
+        "mhutchie.git-graph"
+    ]
+}

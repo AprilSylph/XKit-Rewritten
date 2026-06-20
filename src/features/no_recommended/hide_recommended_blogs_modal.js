@@ -1,6 +1,6 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { pageModifications } from '../../utils/mutations.js';
 import { blogViewSelector, buildStyle } from '../../utils/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
 
 const hiddenAttribute = 'data-no-recommended-blogs-modal-hidden';
 

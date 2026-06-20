@@ -42,6 +42,9 @@ ${keyToCss('queueSettings')} {
   box-sizing: border-box;
   width: 100%;
 }
+${mainPostColumn} > ${keyToCss('tabsHeader')} + ${keyToCss('container')} {
+  max-width: unset;
+}
 `);
 mainStyleElement.media = `(min-width: ${widenDashMinWidth}px)`;
 
@@ -66,6 +69,8 @@ ${patioPostColumn} {
 }
 `);
 
+const expandableImage = `${keyToCss('imageBlockButton', 'imageBlockLink', 'imageBlockGifAttribution')}:not(${keyToCss('unstretched')})`;
+
 const styleElement = buildStyle(`
 /* Widen posts */
 ${keyToCss('cell')}, ${postSelector}
@@ -74,17 +79,23 @@ ${keyToCss('cell')}, ${postSelector}
     article > header,
     article ${keyToCss('reblog')}
   ) {
-  max-width: unset;
+  max-width: unset !important;
 }
 
 /* Center non-expanded content */
-:root:not(.${expandMediaClass}) ${postSelector}
-  :is(
-    ${keyToCss('videoBlock', 'audioBlock', 'link', 'pollBlock', 'imageBlockLink')},
-    figure${keyToCss('imageBlock')}:not(${keyToCss('unstretched')})
+:root:not(.${expandMediaClass}) ${postSelector} ${keyToCss('row')}:has(> ${expandableImage}) {
+  justify-content: center;
+}
+:root:not(.${expandMediaClass}) ${postSelector} ${expandableImage} {
+  max-width: 540px;
+}
+:root:not(.${expandMediaClass}) ${postSelector} ${keyToCss('rows')}
+  > :is(
+    div:has(${keyToCss('videoBlock', 'audioBlock')}),
+    ${keyToCss('link', 'pollBlock')}
   ) {
   margin: 0 auto;
-  max-width: 540px;
+  max-width: 556px;
 }
 
 /* Widen + lock aspect ratios of expanded content */
@@ -104,10 +115,10 @@ ${keyToCss('cell')}, ${postSelector}
   height: unset !important;
 }
 
-/* Fix ad containers */
-${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner')},
+/* Fix advertisement/miscellaneous containers */
+${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner', 'signpostCta')},
 ${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner')} header {
-  max-width: unset;
+  max-width: unset !important;
 }
 [data-is-resizable="true"][style="width: 540px;"],
 ${keyToCss('takeoverBanner')} {
@@ -120,7 +131,7 @@ const processVideoIframes = iframes => iframes.forEach(iframe => {
   if (maxWidth && height) {
     iframe.style.setProperty(
       aspectRatioVar,
-      `${maxWidth.replace('px', '')} / ${height.replace('px', '')}`
+      `${maxWidth.replace('px', '')} / ${height.replace('px', '')}`,
     );
   }
 });
@@ -142,7 +153,7 @@ export const main = async () => {
     expandPostMedia,
     mainEnable,
     communitiesEnable,
-    patioEnable
+    patioEnable,
   } = await getPreferences('panorama');
 
   document.documentElement.style.setProperty(maxPostWidthVar, maxPostWidth);
@@ -155,7 +166,7 @@ export const main = async () => {
 
   pageModifications.register(
     `${postSelector} ${keyToCss('videoBlock')} iframe[style*="max-width"][style*="height"]`,
-    processVideoIframes
+    processVideoIframes,
   );
   pageModifications.register('figure img', processPostImages);
 };
@@ -164,7 +175,7 @@ export const clean = async () => {
   pageModifications.unregister(processVideoIframes);
   pageModifications.unregister(processPostImages);
   [...document.querySelectorAll(`iframe[style*="${aspectRatioVar}"]`)].forEach(el =>
-    el.style.removeProperty(aspectRatioVar)
+    el.style.removeProperty(aspectRatioVar),
   );
   [...document.querySelectorAll(`[${modifiedSizesAttr}]`)].forEach(image => {
     image.sizes = image.getAttribute(modifiedSizesAttr);

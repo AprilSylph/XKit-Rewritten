@@ -22,10 +22,12 @@ All pull requests must be compatible with the repository license (GPL-3.0).
 
 ### Style guide
 
-[![js-semistandard-style](https://raw.githubusercontent.com/standard/semistandard/master/badge.svg)](https://github.com/standard/semistandard)
+[![neostandard javascript style](https://img.shields.io/badge/code_style-neostandard-F7DF1E?logo=javascript&style=for-the-badge)](https://github.com/neostandard/neostandard)
 
-This project follows JavaScript Semi-Standard Style via [`eslint-config-semistandard`](https://github.com/standard/eslint-config-semistandard).
+This project's JavaScript style is enforced by linting. Use **`npm run autofix`** to format your code prior to commit.
 
-Stylesheets should aim to follow Nicolas Gallagher's [Idiomatic CSS](https://github.com/necolas/idiomatic-css#readme) principles. Additionally, element classnames and IDs should be `kebab-case`, to fit with the automatic casing of [`data-*` attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/data-*).
+Stylesheets should preferably aim to follow Nicolas Gallagher's [Idiomatic CSS](https://github.com/necolas/idiomatic-css#readme) principles. Additionally, element classnames and IDs should be `kebab-case`, to fit with the automatic casing of [`data-*` attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/data-*).
 
-Filenames should be `snake_case` to fit with the casing of WebExtension manifest files. This does not apply to vendored files.
+Filenames should be `snake_case` to match the casing of WebExtension [`manifest.json`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json) keys.
+
+This style guide only applies to the `src/` directory. The style guide does not apply to vendored files.

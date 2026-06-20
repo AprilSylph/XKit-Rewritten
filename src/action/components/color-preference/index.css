@@ -1,0 +1,26 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: var(--space-small);
+}
+
+span {
+  display: contents;
+}
+
+.clr-field button {
+  width: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+
+  background-clip: content-box;
+  color: inherit;
+}
+
+.clr-field button::after {
+  border-radius: 0;
+}

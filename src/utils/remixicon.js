@@ -14,5 +14,5 @@ if (document.querySelector(`svg[data-src="${symbolsUrl}"]`) === null) {
 }
 
 export const buildSvg = symbolId => dom('svg', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
-  dom('use', { xmlns: 'http://www.w3.org/2000/svg', href: `#${symbolId}` })
+  dom('use', { xmlns: 'http://www.w3.org/2000/svg', href: `#${symbolId}` }),
 ]);

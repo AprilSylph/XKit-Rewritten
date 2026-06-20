@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    commit-message:
+      prefix: "build"
+    cooldown:
+      default-days: 3
+    directory: "/"
+    schedule:
+      interval: "quarterly"
+    groups:
+      dev-dependencies:
+        applies-to: "version-updates"
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+      vendored-dependencies:
+        applies-to: "version-updates"
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+    labels:
+      - "bot"
+  - package-ecosystem: "github-actions"
+    commit-message:
+      prefix: "ci"
+    directory: "/"
+    schedule:
+      interval: "quarterly"
+    labels:
+      - "bot"

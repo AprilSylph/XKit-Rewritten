@@ -1,6 +1,6 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { getPreferences } from '../../utils/preferences.js';
 import { pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 
 const trackInfoSelector = keyToCss('trackInfo');
 
@@ -26,7 +26,7 @@ const addAudioControls = nativePlayers => nativePlayers.forEach(nativePlayer => 
 
 export const onStorageChanged = async function (changes) {
   const {
-    'vanilla_audio.preferences.defaultVolume': defaultVolumeChanges
+    'vanilla_audio.preferences.defaultVolume': defaultVolumeChanges,
   } = changes;
 
   if (defaultVolumeChanges && defaultVolumeChanges.oldValue !== undefined) {

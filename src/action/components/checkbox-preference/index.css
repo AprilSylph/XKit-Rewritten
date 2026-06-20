@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  column-gap: var(--space-small);
+}
+
+input[type="checkbox"] {
+  margin-inline: 0;
+}

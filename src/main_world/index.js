@@ -16,9 +16,16 @@ document.documentElement.addEventListener('xkit-injection-request', async event 
     if (target.isConnected === false) return;
 
     const result = await func.apply(target, args);
-    target.dispatchEvent(
-      new CustomEvent('xkit-injection-response', { detail: JSON.stringify({ id, result }) })
-    );
+
+    if (result instanceof Element) {
+      result.dispatchEvent(
+        new CustomEvent('xkit-injection-element-response', { detail: JSON.stringify({ id }), bubbles: true }),
+      );
+    } else {
+      document.documentElement.dispatchEvent(
+        new CustomEvent('xkit-injection-response', { detail: JSON.stringify({ id, result }) }),
+      );
+    }
   } catch (exception) {
     target.dispatchEvent(
       new CustomEvent('xkit-injection-response', {
@@ -28,10 +35,10 @@ document.documentElement.addEventListener('xkit-injection-request', async event 
             message: exception.message,
             name: exception.name,
             stack: exception.stack,
-            ...exception
-          }
-        })
-      })
+            ...exception,
+          },
+        }),
+      }),
     );
   }
 }, { signal: controller.signal });

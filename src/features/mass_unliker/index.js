@@ -1,7 +1,7 @@
-import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
-import { showModal, modalCancelButton, modalCompleteButton, showErrorModal } from '../../utils/modals.js';
-import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { dom } from '../../utils/dom.js';
+import { showModal, modalCancelButton, modalCompleteButton, showErrorModal } from '../../utils/modals.js';
+import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -35,7 +35,7 @@ const unlikePosts = async function () {
     try {
       await Promise.all([
         apiFetch('/v2/user/unlike', { method: 'POST', body: { id, reblog_key: reblogKey } }),
-        sleep(1000)
+        sleep(1000),
       ]);
       unlikedCount++;
     } catch (exception) {
@@ -49,11 +49,11 @@ const unlikePosts = async function () {
     message: [
       `Unliked ${unlikedCount} posts.\n`,
       `Failed to unlike ${failureCount} posts.\n\n`,
-      dom('small', null, null, ['You may still have some likes due to quirks with the Tumblr API.'])
+      dom('small', null, null, ['You may still have some likes due to quirks with the Tumblr API.']),
     ],
     buttons: [
-      modalCompleteButton
-    ]
+      modalCompleteButton,
+    ],
   });
 };
 
@@ -63,8 +63,8 @@ const modalWorkingOptions = {
     dom('small', null, null, ['Do not navigate away from this page, or the process will be interrupted.\n\n']),
     gatherStatusElement,
     '\n',
-    unlikeStatusElement
-  ]
+    unlikeStatusElement,
+  ],
 };
 
 const modalConfirmButton = dom(
@@ -76,20 +76,20 @@ const modalConfirmButton = dom(
       unlikeStatusElement.textContent = '';
       showModal(modalWorkingOptions);
       unlikePosts().catch(showErrorModal);
-    }
+    },
   },
-  ['Clear my likes']
+  ['Clear my likes'],
 );
 
 const modalPromptOptions = {
   title: 'Clear your likes?',
   message: [
-    'This may take a while if you have a lot of likes.'
+    'This may take a while if you have a lot of likes.',
   ],
   buttons: [
     modalCancelButton,
-    modalConfirmButton
-  ]
+    modalConfirmButton,
+  ],
 };
 
 const sidebarOptions = {
@@ -99,10 +99,10 @@ const sidebarOptions = {
     {
       label: 'Clear likes',
       onclick: () => showModal(modalPromptOptions),
-      carrot: true
-    }
+      carrot: true,
+    },
   ],
-  visibility: () => /^\/likes/.test(location.pathname)
+  visibility: () => /^\/likes/.test(location.pathname),
 };
 
 export const main = async function () {

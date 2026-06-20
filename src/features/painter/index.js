@@ -1,8 +1,8 @@
 import { filterPostElements } from '../../utils/interface.js';
+import { onNewPosts } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject } from '../../utils/react_props.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
-import { getPreferences } from '../../utils/preferences.js';
-import { onNewPosts } from '../../utils/mutations.js';
 
 let ownColour;
 let originalColour;
@@ -76,7 +76,7 @@ export const main = async function () {
     likedColour,
     tagColour,
     colouredTags,
-    colourSourceTags
+    colourSourceTags,
   } = await getPreferences('painter'));
 
   tagArray = colouredTags
@@ -84,7 +84,7 @@ export const main = async function () {
     .map(tag => tag
       .trim()
       .replace(/#/g, '')
-      .toLowerCase()
+      .toLowerCase(),
     );
 
   onNewPosts.addListener(paint);

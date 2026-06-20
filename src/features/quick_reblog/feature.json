@@ -38,15 +38,15 @@
       "label": "Enable integration with Quick Tags",
       "default": true
     },
-    "showTagsInput": {
-      "type": "checkbox",
-      "label": "Show the tags field",
-      "default": true
-    },
     "showTagSuggestions": {
       "type": "checkbox",
       "label": "Suggest tags from the post being reblogged",
       "default": false
+    },
+    "showTagsInput": {
+      "type": "checkbox",
+      "label": "Show the tags field",
+      "default": true
     },
     "reblogTag": {
       "type": "text",
@@ -65,7 +65,7 @@
     },
     "alreadyRebloggedLimit": {
       "type": "select",
-      "label": "Remember the last ",
+      "label": "Remember the last",
       "options": [
         { "value": "100", "label": "100 posts" },
         { "value": "1000", "label": "1,000 posts" },

@@ -1,7 +1,7 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { pageModifications } from '../../utils/mutations.js';
-import { translate } from '../../utils/language_data.js';
 import { blogViewSelector, buildStyle } from '../../utils/interface.js';
+import { translate } from '../../utils/language_data.js';
+import { pageModifications } from '../../utils/mutations.js';
 
 const hiddenAttribute = 'data-no-recommended-blogs-hidden';
 

@@ -12,6 +12,16 @@
       "type": "checkbox",
       "label": "Turn reblog buttons back into links",
       "default": true
+    },
+    "modernButtonStyle": {
+      "type": "checkbox",
+      "label": "Use a modern look for the note count",
+      "default": false
+    },
+    "noZeroNotes": {
+      "type": "checkbox",
+      "label": "Hide the note count on posts with no notes",
+      "default": false
     }
   }
 }

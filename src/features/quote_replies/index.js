@@ -1,8 +1,8 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { inject } from '../../utils/inject.js';
+import { buildStyle, displayInlineFlexUnlessDisabledAttr, notificationSelector } from '../../utils/interface.js';
 import { showErrorModal } from '../../utils/modals.js';
-import { buildStyle, notificationSelector } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { getPreferences } from '../../utils/preferences.js';
@@ -14,13 +14,15 @@ const storageKey = 'quote_replies.draftLocation';
 const buttonClass = 'xkit-quote-replies';
 const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
+// Remove outdated elements when loading module
+$(`.${buttonClass}`).remove();
+
 export const styleElement = buildStyle(`
 button.xkit-quote-replies {
   position: relative;
   align-self: center;
   transform: translateY(-2px);
 
-  display: inline-flex;
   align-items: center;
   margin: 0 6px;
 
@@ -71,7 +73,7 @@ let newTab;
 const processNotifications = notifications => notifications.forEach(async notification => {
   const [notificationProps, tumblelogName] = await Promise.all([
     inject('/main_world/get_notification_props.js', [], notification),
-    inject('/main_world/get_tumblelogname_prop.js', [], notification)
+    inject('/main_world/get_tumblelogname_prop.js', [], notification),
   ]);
 
   if (!['reply', 'reply_to_comment', 'note_mention'].includes(notificationProps.type === 'generic' ? notificationProps.subtype : notificationProps.type)) return;
@@ -85,7 +87,8 @@ const processNotifications = notifications => notifications.forEach(async notifi
     'button',
     {
       class: `${buttonClass} ${notification.matches(dropdownSelector) ? dropdownButtonClass : ''}`,
-      title: 'Quote this reply'
+      [displayInlineFlexUnlessDisabledAttr]: '',
+      title: 'Quote this reply',
     },
     {
       click () {
@@ -93,19 +96,27 @@ const processNotifications = notifications => notifications.forEach(async notifi
         quoteReply(tumblelogName, notificationProps)
           .catch(showErrorModal)
           .finally(() => { this.disabled = false; });
-      }
+      },
     },
-    [buildSvg('ri-chat-quote-line')]
+    [buildSvg('ri-chat-quote-line')],
   ));
 });
 
-const processGenericReply = async (notificationProps) => {
+const quoteReply = async (tumblelogName, notificationProps) => {
+  const data = notificationProps.type === 'generic'
+    ? await createGenericReplyData(notificationProps)
+    : await createReplyData(notificationProps);
+
+  openPostDraft(tumblelogName, data);
+};
+
+const createGenericReplyData = async (notificationProps) => {
   const {
     subtype: type,
     timestamp,
     title: { textContent: titleContent },
     body: { content: [bodyDescriptionContent, bodyQuoteContent] },
-    actions
+    actions,
   } = notificationProps;
   const summaryFormatting = bodyDescriptionContent.formatting?.find(({ type }) => type === 'semantic_color');
 
@@ -117,7 +128,7 @@ const processGenericReply = async (notificationProps) => {
       ? bodyDescriptionContent.text.slice(summaryFormatting.start + 1, summaryFormatting.end - 1)
       : bodyDescriptionContent.text;
 
-    return await processReply({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary });
+    return await createReplyData({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary });
   } catch (exception) {
     console.error(exception);
     console.debug('[XKit] Falling back to generic quote content due to fetch/parse failure');
@@ -130,30 +141,30 @@ const processGenericReply = async (notificationProps) => {
       type: 'text',
       text: `@${replyingBlog.name}`,
       formatting: [
-        { start: 0, end: replyingBlog.name.length + 1, type: 'mention', blog: { uuid: replyingBlog.uuid } }]
+        { start: 0, end: replyingBlog.name.length + 1, type: 'mention', blog: { uuid: replyingBlog.uuid } }],
     },
     {
       type: 'text',
       text: bodyDescriptionContent.text,
       formatting: summaryFormatting
         ? [{ start: summaryFormatting.start, end: summaryFormatting.end, type: 'link', url: actions.tap.href }]
-        : []
+        : [],
     },
     bodyQuoteContent,
-    { type: 'text', text: '\u200B' }
+    { type: 'text', text: '\u200B' },
   ];
   const tags = [
     ...originalPostTag ? [originalPostTag] : [],
-    ...tagReplyingBlog ? [replyingBlog.name] : []
+    ...tagReplyingBlog ? [replyingBlog.name] : [],
   ].join(',');
 
   return { content, tags };
 };
 
-const processReply = async ({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary }) => {
+const createReplyData = async ({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary }) => {
   const { response } = await apiFetch(
     `/v2/blog/${targetTumblelogName}/post/${targetPostId}/notes/timeline`,
-    { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } }
+    { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } },
   );
 
   const reply = response?.timeline?.elements?.[0];
@@ -166,35 +177,31 @@ const processReply = async ({ type, timestamp, targetPostId, targetTumblelogName
   const verbiage = {
     reply: 'replied to your post',
     reply_to_comment: 'replied to you in a post',
-    note_mention: 'mentioned you on a post'
+    note_mention: 'mentioned you on a post',
   }[type];
   const text = `@${reply.blog.name} ${verbiage} \u201C${targetPostSummary.replace(/\n/g, ' ')}\u201D:`;
   const formatting = [
     { start: 0, end: reply.blog.name.length + 1, type: 'mention', blog: { uuid: reply.blog.uuid } },
-    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: `https://${targetTumblelogName}.tumblr.com/post/${targetPostId}` }
+    { start: text.indexOf('\u201C'), end: text.length - 1, type: 'link', url: `https://${targetTumblelogName}.tumblr.com/post/${targetPostId}` },
   ];
 
   const content = [
     { type: 'text', text, formatting },
     Object.assign(reply.content[0], { subtype: 'indented' }),
-    { type: 'text', text: '\u200B' }
+    { type: 'text', text: '\u200B' },
   ];
   const tags = [
     ...originalPostTag ? [originalPostTag] : [],
-    ...tagReplyingBlog ? [reply.blog.name] : []
+    ...tagReplyingBlog ? [reply.blog.name] : [],
   ].join(',');
 
   return { content, tags };
 };
 
-const quoteReply = async (tumblelogName, notificationProps) => {
+const openPostDraft = async (tumblelogName, data) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
 
-  const { content, tags } = notificationProps.type === 'generic'
-    ? await processGenericReply(notificationProps)
-    : await processReply(notificationProps);
-
-  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
+  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { state: 'draft', ...data } });
 
   const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;
 

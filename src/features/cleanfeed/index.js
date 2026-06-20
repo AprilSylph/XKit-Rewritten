@@ -1,9 +1,9 @@
-import { onNewPosts } from '../../utils/mutations.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle, filterPostElements } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
-import { timelineObject } from '../../utils/react_props.js';
+import { onNewPosts } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
+import { timelineObject } from '../../utils/react_props.js';
 
 export const styleElement = buildStyle();
 

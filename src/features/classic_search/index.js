@@ -1,5 +1,5 @@
-import { getPreferences } from '../../utils/preferences.js';
 import { pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
 import { navigate } from '../../utils/tumblr_helpers.js';
 
 let newTab;

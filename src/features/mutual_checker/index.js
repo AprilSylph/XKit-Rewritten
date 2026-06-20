@@ -1,13 +1,14 @@
-import { buildStyle, getTimelineItemWrapper, filterPostElements, getPopoverWrapper, notificationSelector } from '../../utils/interface.js';
-import { blogData, notificationObject, timelineObject } from '../../utils/react_props.js';
-import { apiFetch } from '../../utils/tumblr_helpers.js';
-import { primaryBlogName } from '../../utils/user.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { onNewPosts, onNewNotifications, pageModifications } from '../../utils/mutations.js';
 import { dom } from '../../utils/dom.js';
-import { getPreferences } from '../../utils/preferences.js';
+import { buildStyle, getTimelineItemWrapper, filterPostElements, getPopoverWrapper, notificationSelector } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
+import { onNewPosts, onNewNotifications, pageModifications } from '../../utils/mutations.js';
+import { getPreferences } from '../../utils/preferences.js';
+import { blogData, notificationObject, timelineObject } from '../../utils/react_props.js';
+import { buildSvg } from '../../utils/remixicon.js';
 import { followingTimelineSelector } from '../../utils/timeline_id.js';
+import { apiFetch } from '../../utils/tumblr_helpers.js';
+import { primaryBlogName, userBlogNames } from '../../utils/user.js';
 
 const mutualIconClass = 'xkit-mutual-icon';
 const hiddenAttribute = 'data-mutual-checker-hidden';
@@ -76,19 +77,20 @@ const addIcons = function (postElements) {
     if (alreadyProcessed(postElement)) return;
 
     const postAttribution = postElement.querySelector(postAttributionSelector);
-    if (postAttribution === null) { return; }
+    const blogName = postAttribution?.textContent.trim();
+    if (userBlogNames.includes(blogName)) return;
 
-    const blogName = postAttribution.textContent.trim();
-    if (!blogName) return;
+    const followingBlog = blogName
+      ? await getIsFollowing(blogName, postElement)
+      : false;
+    const isMutual = followingBlog
+      ? await getIsFollowingYou(blogName)
+      : false;
 
-    const followingBlog = await getIsFollowing(blogName, postElement);
-    if (!followingBlog) { return; }
-
-    const isMutual = await getIsFollowingYou(blogName);
     if (isMutual) {
       postElement.classList.add(mutualsClass);
       const iconTarget = getPopoverWrapper(postAttribution) ?? postAttribution;
-      iconTarget?.before(createIcon(blogName));
+      iconTarget?.before(createIcon(isMutual, blogName));
     } else if (showOnlyMutuals) {
       getTimelineItemWrapper(postElement)?.setAttribute(hiddenAttribute, '');
     }
@@ -98,14 +100,14 @@ const addIcons = function (postElements) {
 const addBlogCardIcons = blogCardLinks =>
   blogCardLinks.forEach(async blogCardLink => {
     const blogName = blogCardLink.querySelector(keyToCss('blogLinkShort'))?.textContent || blogCardLink?.textContent;
-    if (!blogName) return;
+    if (!blogName || userBlogNames.includes(blogName)) return;
 
     const followingBlog = await getIsFollowing(blogName, blogCardLink);
-    if (!followingBlog) return;
+    const isFollowingYou = await getIsFollowingYou(blogName);
+    const isMutual = followingBlog && isFollowingYou;
 
-    const isMutual = await getIsFollowingYou(blogName);
-    if (isMutual) {
-      blogCardLink.before(createIcon(blogName, getComputedStyle(blogCardLink).color));
+    if (isFollowingYou) {
+      blogCardLink.before(createIcon(isMutual, blogName, getComputedStyle(blogCardLink).color));
     }
   });
 
@@ -114,11 +116,11 @@ const getIsFollowing = async (blogName, element) => {
     const blog = [
       await blogData(element),
       (await timelineObject(element))?.blog,
-      (await timelineObject(element))?.authorBlog
+      (await timelineObject(element))?.authorBlog,
     ].find((data) => blogName === data?.name);
 
     following[blogName] = blog
-      ? Promise.resolve(blog.followed && !blog.isMember)
+      ? Promise.resolve(blog.followed)
       : apiFetch(`/v2/blog/${blogName}/info`)
         .then(({ response: { blog: { followed } } }) => followed)
         .catch(() => Promise.resolve(false));
@@ -140,7 +142,6 @@ export const main = async function () {
   document.documentElement.append(styleElement);
 
   ({ showOnlyMutuals, showOnlyMutualNotifications } = await getPreferences('mutual_checker'));
-  following[primaryBlogName] = Promise.resolve(false);
 
   onNewPosts.addListener(addIcons);
   pageModifications.register(`${keyToCss('blogCard')} ${keyToCss('blogCardBlogLink')} > a`, addBlogCardIcons);
@@ -151,18 +152,26 @@ export const main = async function () {
   }
 };
 
-const createIcon = (blogName, color = 'rgb(var(--black))') =>
+const createIcon = (isMutual, blogName, color = 'rgb(var(--black))') =>
   dom('svg', {
     xmlns: 'http://www.w3.org/2000/svg',
     class: mutualIconClass,
     viewBox: '0 0 1000 1000',
-    fill: color
-  }, null, [
-    dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
-      translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)
-    ]),
-    dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path })
-  ]);
+    fill: color,
+  }, null, isMutual
+    ? [
+        dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
+          translate('Mutuals'),
+        ]),
+        dom('path', { xmlns: 'http://www.w3.org/2000/svg', d: path }),
+      ]
+    : [
+        dom('title', { xmlns: 'http://www.w3.org/2000/svg' }, null, [
+          translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName),
+        ]),
+        buildSvg('ri-user-follow-line').firstElementChild,
+      ],
+  );
 
 export const clean = async function () {
   onNewPosts.removeListener(addIcons);

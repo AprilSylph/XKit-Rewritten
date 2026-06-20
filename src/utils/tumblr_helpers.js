@@ -1,9 +1,17 @@
 import { inject } from './inject.js';
 
 /**
- * @param {...any} args Arguments to pass to window.tumblr.apiFetch()
+ * @typedef {string | number | boolean | null | Json[] | { [key: string]: Json }} Json
+ * @see https://www.typescriptlang.org/play/3-7/types-and-code-flow/recursive-type-references.ts.html
+ */
+
+/** @typedef {Record<string, Json>} Dictionary */
+/** @typedef {Record<string, string>} QueryParams */
+
+/**
+ * @param {globalThis.RequestInit & { queryParams?: QueryParams, body?: (string | Dictionary) }} args Arguments to pass to `window.tumblr.apiFetch()`
  * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#apifetch}
- * @returns {Promise<Response|Error>} Resolves or rejects with result of window.tumblr.apiFetch()
+ * @returns {Promise<Response | Error>} Resolves or rejects with result of `window.tumblr.apiFetch()`
  */
 export const apiFetch = async (...args) => inject('/main_world/api_fetch.js', args);
 
@@ -30,8 +38,8 @@ export const createEditRequestBody = postData => {
     canBeTipped,
     communityLabels: {
       hasCommunityLabel,
-      categories: communityLabelCategories
-    }
+      categories: communityLabelCategories,
+    },
   } = postData;
 
   return {
@@ -47,7 +55,7 @@ export const createEditRequestBody = postData => {
 
     canBeTipped,
     hasCommunityLabel,
-    communityLabelCategories
+    communityLabelCategories,
   };
 };
 
@@ -63,10 +71,14 @@ export const isNpfCompatible = postData => {
 export const navigate = location => inject('/main_world/navigate.js', [location]);
 
 export const onClickNavigate = event => {
-  if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+  if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) {
+    event.stopImmediatePropagation();
+    return;
+  }
 
   const href = event.currentTarget.getAttribute('href');
   if (href) {
+    event.stopImmediatePropagation();
     event.preventDefault();
     navigate(href);
   }

@@ -5,7 +5,7 @@
   Any other context needed to understand the changes?
 
   Please properly link any issues that this PR aims to resolve:
-  https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue
+  https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue
 -->
 
 

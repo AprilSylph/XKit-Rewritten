@@ -1,5 +1,5 @@
 import { keyToCss } from './css_map.js';
-import { dom } from './dom.js';
+import { style } from './dom.js';
 import { inject } from './inject.js';
 import { timelineSelector } from './timeline_id.js';
 
@@ -95,7 +95,7 @@ export const getPostElements = postFilterOptions => filterPostElements([...docum
  * @param {string} [css] CSS rules to be included
  * @returns {HTMLStyleElement} Style element containing the provided CSS
  */
-export const buildStyle = (css = '') => dom('style', { class: 'xkit' }, null, [css]);
+export const buildStyle = (css = '') => style({ class: 'xkit' }, [css]);
 
 /**
  * Elements with these attributes will be immediately hidden when XKit Rewritten

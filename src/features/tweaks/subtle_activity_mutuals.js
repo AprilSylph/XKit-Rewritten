@@ -1,5 +1,5 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { span, svg, use } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 
@@ -58,21 +58,19 @@ const processLabels = labels => labels.forEach(label => {
     if (!document.querySelector(iconHref)) return;
 
     label.append(
-      dom(
-        'svg',
-        { class: iconClass, width: 14, height: 14, xmlns: 'http://www.w3.org/2000/svg' },
-        null,
-        [dom('use', { href: iconHref, xmlns: 'http://www.w3.org/2000/svg' })],
+      svg(
+        { class: iconClass, width: 14, height: 14 },
+        [use({ href: iconHref })],
       ),
     );
   }
 
-  const span = dom('span', null, null, [textNode.textContent]);
-  label.insertBefore(span, textNode);
+  const spanElement = span({}, [textNode.textContent]);
+  label.insertBefore(spanElement, textNode);
   textNode.textContent = '';
 
-  span.style.setProperty('--rendered-width', `${span.getBoundingClientRect().width}px`);
-  span.classList.add(spanClass);
+  spanElement.style.setProperty('--rendered-width', `${spanElement.getBoundingClientRect().width}px`);
+  spanElement.classList.add(spanClass);
 });
 
 const waitForRender = () =>

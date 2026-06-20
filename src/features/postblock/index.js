@@ -1,4 +1,4 @@
-import { dom } from '../../utils/dom.js';
+import { button } from '../../utils/dom.js';
 import { createPostHideFunctions } from '../../utils/hide_posts.js';
 import { filterPostElements } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
@@ -84,7 +84,8 @@ const onButtonClicked = ({ currentTarget }) => {
     message,
     buttons: [
       modalCancelButton,
-      dom('button', { class: className }, {
+      button({
+        class: className,
         click () {
           hideModal();
           saveNotificationPreference();

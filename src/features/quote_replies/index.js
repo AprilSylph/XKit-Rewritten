@@ -1,5 +1,5 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { button } from '../../utils/dom.js';
 import { inject } from '../../utils/inject.js';
 import { buildStyle, displayInlineFlexUnlessDisabledAttr, notificationSelector } from '../../utils/interface.js';
 import { showErrorModal } from '../../utils/modals.js';
@@ -83,14 +83,11 @@ const processNotifications = notifications => notifications.forEach(async notifi
   const activityElement = notification.querySelector(activitySelector);
   if (!activityElement) return;
 
-  activityElement.after(dom(
-    'button',
+  activityElement.after(button(
     {
       class: `${buttonClass} ${notification.matches(dropdownSelector) ? dropdownButtonClass : ''}`,
       [displayInlineFlexUnlessDisabledAttr]: '',
       title: 'Quote this reply',
-    },
-    {
       click () {
         this.disabled = true;
         quoteReply(tumblelogName, notificationProps)

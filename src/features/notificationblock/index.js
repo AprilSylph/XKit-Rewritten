@@ -1,4 +1,4 @@
-import { dom } from '../../utils/dom.js';
+import { button } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
@@ -74,12 +74,16 @@ const onButtonClicked = async function ({ currentTarget }) {
     message,
     buttons: [
       modalCancelButton,
-      dom('button', { class: className }, {
-        click () {
-          hideModal();
-          saveNotificationPreference();
+      button(
+        {
+          class: className,
+          click () {
+            hideModal();
+            saveNotificationPreference();
+          },
         },
-      }, [textContent]),
+        [textContent],
+      ),
     ],
   });
 };

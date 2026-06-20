@@ -65,7 +65,7 @@
     },
     "alreadyRebloggedLimit": {
       "type": "select",
-      "label": "Remember the last ",
+      "label": "Remember the last",
       "options": [
         { "value": "100", "label": "100 posts" },
         { "value": "1000", "label": "1,000 posts" },

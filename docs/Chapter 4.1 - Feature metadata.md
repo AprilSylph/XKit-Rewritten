@@ -67,11 +67,11 @@ It is recommended to use camelCase for each preference name, so that the feature
 - Type: String
 - Required: Yes
 
-Type of preference. Supported values: `"checkbox"`, `"text"`, `"color"`, `"select"`, `"textarea"`, `"iframe"`
+Type of preference. Supported values: `"checkbox"`, `"color"`, `"component"`, `"percent"`, `"select"`, `"text"`, `"textarea"`
 
 #### `"preferences"`: \<preference name\>: `"label"`
 - Type: String
-- Required: Yes
+- Required: Yes, unless `type` is `"component"`
 
 Label displayed to the user to describe the preference.
 
@@ -83,20 +83,24 @@ For `"select"`-type preferences, an array of objects each with `"value"` and `"l
 
 #### `"preferences"`: \<preference name\>: `"src"`
 - Type: String
-- Required: Yes, if `type` is `"iframe"`
+- Required: Yes, if `type` is `"component"`
 
-For `"iframe"`-type preferences, a relative address to be embedded in the feature's preference list. Unused for other preference types.
+For `"component"`-type preferences, a URL relative to `src/` pointing to a module file for a Web Component to be rendered in the feature's preference list.
+This module file's default export must be a function which returns an instance of the Web Component via `document.createElement()`.
+
+Unused for other preference types.
 
 #### `"preferences"`: \<preference name\>: `"default"`
 - Type: Any
-- Required: Yes, unless `type` is `"iframe"`
+- Required: Yes, unless `type` is `"component"`
 
 Default value of the preference to display to the user.
 
 If the preference `type` is `"checkbox"`, this value should be a boolean.  
-If the preference `type` is `"text"` or `"textarea"`, this value should be a string.  
 If the preference `type` is `"color"`, this value should either be a string representing a hexadecimal colour code (i.e. `"#1a2b3c"`) or an empty string.  
-If the preference `type` is `"select"`, this value should be a string that matches one of the `"options"` item's `"value"`.
+If the preference `type` is `"percent"`, this value should be an integer in the range of 0–100.  
+If the preference `type` is `"select"`, this value should be a string that matches one of the `"options"` item's `"value"`.  
+If the preference `type` is `"text"` or `"textarea"`, this value should be a string.
 
 #### `"preferences"`: \<preference name\>: `"inherit"`
 - Type: String

@@ -84,7 +84,13 @@ const blogHashes = new Map();
 const avatarUrls = new Map();
 
 const buttonSelector = `${postSelector} footer a, ${postSelector} footer button`;
-const reblogButtonSelector = `${postSelector} footer :is(a[href*="/reblog/"], button:has(use[href="#managed-icon__ds-reblog-24"])):not(${keyToCss('reblog')} *)`;
+const reblogButtonSelector = `${postSelector} footer :is(
+  a[href*="/reblog/"],
+  button:has(
+    use[href="#managed-icon__ds-reblog-20"],
+    use[href="#managed-icon__ds-reblog-24"]
+  )
+):not(${keyToCss('reblog')} *)`;
 const buttonDivSelector = `${keyToCss('controls', 'reblogsControl', 'engagementControls')} > *`;
 
 export const styleElement = buildStyle(`

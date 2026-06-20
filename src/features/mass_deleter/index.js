@@ -1,6 +1,6 @@
 import { button, form, input, label, small, span } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
-import { createBlogSpan, modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
+import { createBlogSpan, hideModal, modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { dateTimeFormat } from '../../utils/text_format.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
@@ -131,7 +131,8 @@ const deleteDrafts = async function ({ blogName, before }) {
       'Refresh the page to see the result.',
     ],
     buttons: [
-      button({ class: 'blue', click: () => location.reload() }, ['Refresh']),
+      button({ click: hideModal }, ['Close']),
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh Now']),
     ],
   });
 };
@@ -225,7 +226,8 @@ const clearQueue = async function ({ blogName }) {
       'Refresh the page to see the result.',
     ],
     buttons: [
-      button({ class: 'blue', click: () => location.reload() }, ['Refresh']),
+      button({ click: hideModal }, ['Close']),
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh Now']),
     ],
   });
 };

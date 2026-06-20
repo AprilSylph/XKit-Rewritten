@@ -1,6 +1,6 @@
 import { CheckboxPreference } from './components/checkbox-preference/index.js';
 import { ColorPreference } from './components/color-preference/index.js';
-import { IframePreference } from './components/iframe-preference/index.js';
+import { PercentPreference } from './components/percent-preference/index.js';
 import { SelectPreference } from './components/select-preference/index.js';
 import { TextPreference } from './components/text-preference/index.js';
 import { TextAreaPreference } from './components/textarea-preference/index.js';
@@ -135,8 +135,8 @@ const renderFeatures = async function () {
                 ),
             );
             break;
-          case 'iframe':
-            preferenceElements.push(IframePreference({ label, src }));
+          case 'percent':
+            preferenceElements.push(PercentPreference({ featureName, preferenceName, label, value }));
             break;
           case 'select':
             preferenceElements.push(SelectPreference({ featureName, preferenceName, label, options, value }));

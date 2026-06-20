@@ -236,7 +236,7 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
     ],
     buttons: [
       dom('button', null, { click: hideModal }, ['Close']),
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh']),
+      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh Now']),
     ],
   });
 };

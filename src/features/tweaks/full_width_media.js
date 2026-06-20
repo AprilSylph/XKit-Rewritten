@@ -60,7 +60,7 @@ const processVideoIframes = iframes => iframes.forEach(iframe => {
   if (maxWidth && height) {
     iframe.style.setProperty(
       aspectRatioVar,
-      `${maxWidth.replace('px', '')} / ${height.replace('px', '')}`
+      `${maxWidth.replace('px', '')} / ${height.replace('px', '')}`,
     );
   }
 });
@@ -72,6 +72,6 @@ export const main = async () => {
 export const clean = async () => {
   pageModifications.unregister(processVideoIframes);
   [...document.querySelectorAll(`iframe[style*="${aspectRatioVar}"]`)].forEach(el =>
-    el.style.removeProperty(aspectRatioVar)
+    el.style.removeProperty(aspectRatioVar),
   );
 };

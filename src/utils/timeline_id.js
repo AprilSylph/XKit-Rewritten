@@ -5,9 +5,10 @@ const createSelector = (...components) => `:is(${components.filter(Boolean).join
 export const timelineSelector = ':is([data-timeline], [data-timeline-id])';
 
 const startsWith = string => `^${string}`;
+const endsWith = string => `${string}$`;
 const exactly = string => `^${string}$`;
-
 const anyBlogName = '[a-z0-9-]{1,32}';
+const anyPostId = '[0-9]{1,20}';
 const uuidV4 = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[a-f0-9]{4}-[a-f0-9]{12}';
 
 const peeprPostsTimelineId = ({ blogName, postId, postRole, searchMode, searchTerm, postType, tag }) =>
@@ -55,10 +56,21 @@ export const blogPostsTimelineFilter = blogName =>
 // Matches any blog's main posts timeline, not including subpages such as drafts or in-blog searches.
 export const anyBlogPostsTimelineFilter = blogPostsTimelineFilter(anyBlogName);
 
+export const postPermalinkTimelineFilter = postId =>
+  ({ dataset: { timeline, timelineId } }) =>
+    timeline?.match(endsWith(`posts/${postId}/permalink`)) ||
+    timelineId?.match(exactly(peeprPostsTimelineId({ blogName: anyBlogName, postId })));
+
+export const anyPostPermalinkTimelineFilter = postPermalinkTimelineFilter(anyPostId);
+
 export const blogSubsTimelineFilter = ({ dataset: { timeline, which, timelineId } }) =>
   timeline === '/v2/timeline?which=blog_subscriptions' ||
   which === 'blog_subscriptions' ||
   timelineId === '/dashboard/blog_subs';
+
+export const blogpackTimelineFilter = ({ dataset: { timeline, which } }) =>
+  timeline?.includes('blogpack') ||
+  which === 'blogpack';
 
 export const anyDraftsTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.match(exactly(`/v2/blog/${anyBlogName}/posts/draft`)) ||
@@ -74,6 +86,10 @@ export const tagTimelineFilter = tag =>
     timeline === `/v2/hubs/${encodeURIComponent(tag)}/timeline` ||
     timelineId?.startsWith(`hubsTimeline-${tag}-recent-`) ||
     timelineId?.match(exactly(`tag-${uuidV4}-${tag}-recent`));
+
+export const searchPostsTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timelineId?.startsWith('searchTimeline-post-') ||
+  timelineId?.match(startsWith(`search-${uuidV4}-`));
 
 export const anyCommunityTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timelineId?.match(exactly(`communities-${anyBlogName}-recent`)) ||

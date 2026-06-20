@@ -23,7 +23,7 @@ let controlButtonTemplate;
 
 export const styleElement = buildStyle(popoverStackingContextFix);
 
-const popupElement = dom('div', { id: 'quick-tags' });
+const popupElement = dom('fieldset', { id: 'quick-tags' });
 const popupInput = dom(
   'input',
   {
@@ -53,7 +53,7 @@ const checkLength = ({ currentTarget }) => {
 popupInput.addEventListener('input', checkLength);
 const popupForm = dom('form', null, { submit: event => event.preventDefault() }, [popupInput]);
 
-const postOptionPopupElement = dom('div', { id: 'quick-tags-post-option' });
+const postOptionPopupElement = dom('fieldset', { id: 'quick-tags-post-option' });
 
 const storageKey = 'quick_tags.preferences.tagBundles';
 
@@ -147,40 +147,51 @@ const addTagsToPost = async function ({ postElement, inputTags = [] }) {
 
   tags.push(...tagsToAdd);
 
+  let displayText = '';
+
   if (isNpfCompatible(postData)) {
-    const { response: { displayText } } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
+    const { response } = await apiFetch(`/v2/blog/${uuid}/posts/${postId}`, {
       method: 'PUT',
       body: {
         ...createEditRequestBody(postData),
         tags: tags.join(','),
       },
     });
-
-    notify(displayText);
+    ({ displayText } = response);
   } else {
     await megaEdit([postId], { mode: 'add', tags: tagsToAdd });
-    notify(`Edited legacy post on ${blogName}`);
+    displayText = `Edited legacy post on ${blogName}`;
   }
 
   await updatePostOnPage(postElement, ['tags', 'tagsV2']);
+  notify(displayText);
 };
 
 const processFormSubmit = function ({ currentTarget }) {
+  popupElement.disabled = true;
+
   const postElement = currentTarget.closest(postSelector);
   const inputTags = popupInput.value.split(',').map(inputTag => inputTag.trim());
 
-  addTagsToPost({ postElement, inputTags }).catch(showErrorModal);
-  currentTarget.reset();
+  addTagsToPost({ postElement, inputTags })
+    .then(() => currentTarget.reset())
+    .catch(showErrorModal)
+    .finally(() => { popupElement.disabled = false; });
 };
 
 const processBundleClick = function ({ target }) {
   if (target.tagName !== 'BUTTON') { return; }
+  popupElement.disabled = true;
 
   const postElement = target.closest(postSelector);
   const inputTags = target.dataset.tags.split(',').map(inputTag => inputTag.trim());
 
-  addTagsToPost({ postElement, inputTags }).catch(showErrorModal);
-  popupElement.remove();
+  addTagsToPost({ postElement, inputTags })
+    .catch(showErrorModal)
+    .finally(() => {
+      popupElement.disabled = false;
+      popupElement.remove();
+    });
 };
 
 const processPostOptionBundleClick = function ({ target }) {
@@ -260,7 +271,7 @@ export const main = async function () {
   controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Quick Tags');
 
   onNewPosts.addListener(processPosts);
-  registerPostOption('quick-tags', { symbolId, onclick: togglePostOptionPopupDisplay });
+  registerPostOption({ id: 'quick-tags', symbolId, onclick: togglePostOptionPopupDisplay });
 
   populatePopups();
 

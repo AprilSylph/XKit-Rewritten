@@ -18,6 +18,11 @@
       "label": "Hide posts from non-joined communities in For You",
       "default": false
     },
+    "hide_search_community_posts": {
+      "type": "checkbox",
+      "label": "Hide posts from non-joined communities in search results",
+      "default": false
+    },
     "hide_answertime": {
       "type": "checkbox",
       "label": "Hide the answertime banner",

@@ -1,6 +1,8 @@
 'use strict';
 
 {
+  const MAX_BOOT_ATTEMPTS = 3600; // 60 seconds on 60Hz displays; 10 seconds on 360Hz displays
+
   const enabledFeaturesKey = 'enabledScripts';
 
   const redpop = [...document.scripts].some(({ src }) => src.includes('/pop/'));
@@ -8,8 +10,7 @@
 
   const restartListeners = {};
 
-  // prevent referencing outdated resources after firefox extension update/restart
-  const timestamp = Date.now();
+  const timestamp = Date.now(); // Prevent referencing outdated resources after Firefox extension update/restart
 
   const runFeature = async function (name) {
     const {
@@ -106,6 +107,26 @@
     document.documentElement.append(script);
   });
 
+  /**
+   * Shows an informative modal if the extension context is invalidated (e.g. after extension is autoupdated
+   * or manually disabled in Chromium). Should do nothing in Firefox, which stops running all extension
+   * context javascript immediately.
+   */
+  const warnOnExtensionContextInvalidated = async () => {
+    const { showContextInvalidatedModal } = await import(browser.runtime.getURL('/utils/modals.js'));
+
+    const isExtensionContextValid = () => { try { browser.runtime.getURL(''); return true; } catch { return false; } };
+
+    let failures = 0;
+    const intervalID = setInterval(() => {
+      failures = isExtensionContextValid() ? 0 : failures + 1;
+      if (failures >= 5 && !document.getElementById('xkit-modal')) {
+        showContextInvalidatedModal();
+        clearInterval(intervalID);
+      }
+    }, 1000);
+  };
+
   const init = async function () {
     $('style.xkit, link.xkit').remove();
 
@@ -121,7 +142,7 @@
     ]);
 
     /**
-     * fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
+     * Fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
      * @see https://github.com/sveltejs/kit/issues/7805#issuecomment-1330078207
      */
     await Promise.all(['css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
@@ -129,13 +150,23 @@
     installedFeatures
       .filter(featureName => enabledFeatures.includes(featureName))
       .forEach(runFeature);
+
+    warnOnExtensionContextInvalidated();
   };
 
-  const waitForReactLoaded = () => new Promise(resolve => {
-    window.requestAnimationFrame(() => isReactLoaded() ? resolve() : waitForReactLoaded().then(resolve));
-  });
+  const waitForReactLoaded = async function () {
+    for (let attempts = 0; attempts < MAX_BOOT_ATTEMPTS; attempts++) {
+      if (isReactLoaded()) return;
+
+      await new Promise((resolve) => window.requestAnimationFrame(resolve));
+    }
+
+    throw new Error('XKit Rewritten boot failed; React did not load after 10+ seconds.');
+  };
 
   if (redpop) {
-    isReactLoaded() ? init() : waitForReactLoaded().then(init);
+    waitForReactLoaded()
+      .then(init)
+      .catch(console.error);
   }
 }

@@ -1,4 +1,6 @@
 /**
+ * Get all of a feature's preference values that are automatically registered by
+ * the "preferences" field in its feature.json metadata file.
  * @param {string} featureName Internal name of feature
  * @returns {Promise<object>} The feature's preference values
  */

@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/require-jsdoc */
+
 const createSelector = (...components) => `:is(${components.filter(Boolean).join(', ')})`;
 
 export const timelineSelector = ':is([data-timeline], [data-timeline-id])';

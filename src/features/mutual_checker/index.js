@@ -6,7 +6,8 @@ import { onNewPosts, onNewNotifications, pageModifications } from '../../utils/m
 import { getPreferences } from '../../utils/preferences.js';
 import { blogData, notificationObject, timelineObject } from '../../utils/react_props.js';
 import { buildSvg } from '../../utils/remixicon.js';
-import { followingTimelineSelector } from '../../utils/timeline_id.js';
+import { followingTimelineFilter } from '../../utils/timeline_id.js';
+import { timelineTabs } from '../../utils/timeline_tabs.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { primaryBlogName, userBlogNames } from '../../utils/user.js';
 
@@ -38,7 +39,7 @@ const styleElement = buildStyle(`
     isolation: isolate;
   }
 
-  ${followingTimelineSelector} [${hiddenAttribute}] {
+  .xkit-timeline-controls[data-mode="mutual-checker-only-mutuals"] ~ div > [${hiddenAttribute}] {
     content: linear-gradient(transparent, transparent);
     height: 0;
   }
@@ -73,6 +74,8 @@ const alreadyProcessed = postElement =>
   postElement.querySelector(`.${mutualIconClass}`);
 
 const addIcons = function (postElements) {
+  timelineTabs.process();
+
   filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
     if (alreadyProcessed(postElement)) return;
 
@@ -146,6 +149,9 @@ export const main = async function () {
   onNewPosts.addListener(addIcons);
   pageModifications.register(`${keyToCss('blogCard')} ${keyToCss('blogCardBlogLink')} > a`, addBlogCardIcons);
 
+  if (showOnlyMutuals) {
+    timelineTabs.register({ id: 'mutual-checker-only-mutuals', label: 'From Mutuals', timelineFilter: followingTimelineFilter });
+  }
   if (showOnlyMutualNotifications) {
     document.documentElement.append(onlyMutualsStyleElement);
     onNewNotifications.addListener(processNotifications);
@@ -185,4 +191,6 @@ export const clean = async function () {
   $(`.${mutualsClass}`).removeClass(mutualsClass);
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`.${mutualIconClass}`).remove();
+
+  timelineTabs.unregister('mutual-checker-only-mutuals');
 };

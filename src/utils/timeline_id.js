@@ -79,6 +79,25 @@ export const anyQueueTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.match(exactly(`/v2/blog/${anyBlogName}/posts/queue`)) ||
   timelineId?.match(exactly(`queue-${uuidV4}-${anyBlogName}`));
 
+export const anyFlaggedReviewTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timeline?.match(exactly(`/v2/blog/${anyBlogName}/posts/review`));
+
+export const likesTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timeline === 'v2/user/likes' ||
+  timelineId === 'likes' ||
+  timelineId === 'likes-asc' ||
+  timelineId === 'likes-desc' ||
+  timelineId?.match(exactly(`likes-${uuidV4}`));
+
+export const peeprLikesTimelineFilter = blogName =>
+  ({ dataset: { timeline, timelineId } }) =>
+    timelineId === `peepr-likes-${blogName}` ||
+    timelineId === `peepr-likes-${blogName}-asc` ||
+    timelineId === `peepr-likes-${blogName}-desc`;
+
+export const inboxTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
+  timeline?.startsWith('/v2/user/inbox');
+
 export const tagTimelineFilter = tag =>
   ({ dataset: { timeline, timelineId } }) =>
     timeline === `/v2/hubs/${encodeURIComponent(tag)}/timeline` ||

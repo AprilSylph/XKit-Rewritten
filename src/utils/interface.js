@@ -9,22 +9,23 @@ export const blogViewSelector = '[style*="--blog-title-color"] *';
 export const notificationSelector = `:is(${keyToCss('notification')}[role="listitem"], ${keyToCss('activityItem')})`;
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
-const cellSelector = keyToCss('cell');
+const gridTimelineObjectSelector = keyToCss('gridTimelineObject');
+
+/**
+ * @param {Element} element An element that is contained within a timeline item.
+ * @returns {Element | null} The element that wraps the entire timeline item.
+ */
+export const getTimelineItemWrapper = element =>
+  element.closest(`.sortableContainer ${listTimelineObjectSelector}`) ??
+  element.closest(`:has(> ${listTimelineObjectSelector})`) ??
+  element.closest(gridTimelineObjectSelector);
+
 const targetWrapperSelector = keyToCss(
   'targetWrapper',
   'targetWrapperBlock',
   'targetWrapperFlex',
   'targetWrapperInline',
 );
-
-/**
- * @param {Element} element Element within a timeline item
- * @returns {Element | null} The timeline item wrapper
- */
-export const getTimelineItemWrapper = element =>
-  (element.closest('[data-timeline-id]') && element.closest(listTimelineObjectSelector)?.parentElement) ||
-  element.closest(cellSelector) ||
-  element.closest(listTimelineObjectSelector);
 
 /**
  * @param {Element} element Element within a popover wrapper

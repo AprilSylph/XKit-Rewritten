@@ -121,13 +121,13 @@ function onTabClick ({ currentTarget }) {
     previousSelectedTab.ariaSelected = 'false';
     previousSelectedTab.getAttribute('aria-controls').split(',')
       .map(elementId => document.getElementById(elementId))
-      .forEach(tabPanel => tabPanel.setAttribute('hidden', ''));
+      .forEach(tabPanel => tabPanel.toggleAttribute('hidden', true));
   }
 
   currentTarget.ariaSelected = 'true';
   currentTarget.getAttribute('aria-controls').split(',')
     .map(elementId => document.getElementById(elementId))
-    .forEach(tabPanel => tabPanel.removeAttribute('hidden'));
+    .forEach(tabPanel => tabPanel.toggleAttribute('hidden', false));
 }
 
 /** @param {KeyboardEvent} event commentInput/tagsInput keydown event object */

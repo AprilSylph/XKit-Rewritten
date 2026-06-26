@@ -257,7 +257,7 @@ const processRows = function (rowsElements) {
 };
 
 const processHoverableElements = elements =>
-  elements.forEach(element => element.setAttribute(hoverContainerAttribute, ''));
+  elements.forEach(element => element.toggleAttribute(hoverContainerAttribute, true));
 
 const onStorageChanged = async function (changes) {
   const { 'accesskit.preferences.disable_gifs_loading_mode': modeChanges } = changes;

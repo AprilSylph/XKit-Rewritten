@@ -22,8 +22,8 @@ const hideCommunityCarousels = carousels =>
         timelineItem.previousElementSibling.querySelector(keyToCss('titleObject')) ||
         timelineItem.previousElementSibling.dataset.cellId?.startsWith('timelineObject:title')
       ) {
-        timelineItem.setAttribute(hiddenAttribute, '');
-        timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
+        timelineItem.toggleAttribute(hiddenAttribute, true);
+        timelineItem.previousElementSibling.toggleAttribute(hiddenAttribute, true);
       }
     }
   });

@@ -115,7 +115,7 @@ const processPosts = async function (postElements) {
       const visibleBlogName = community ? postAuthor : blogName;
       if (whitelist.includes(visibleBlogName)) { return; }
 
-      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
+      getTimelineItemWrapper(postElement).toggleAttribute(hiddenAttribute, true);
     });
 };
 

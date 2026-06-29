@@ -5,6 +5,9 @@ import { memoize } from '../../utils/memoize.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 
+/** @type {AbortController}   */ let loadEventController;
+/** @type {"eager" | "lazy"}  */ let loadingMode;
+
 const canvasClass = 'xkit-paused-gif-placeholder';
 const pausedPosterAttribute = 'data-paused-gif-use-poster';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
@@ -12,8 +15,6 @@ const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
 const labelSizeAttribute = 'data-paused-gif-label-size';
 const containerClass = 'xkit-paused-gif-container';
-
-let loadingMode;
 
 const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
 const parentHovered = `:is(:hover > *, [${hoverContainerAttribute}]:hover *)`;
@@ -186,9 +187,11 @@ const pauseGif = async function (gifElement) {
   };
 };
 
+/** @type {(gifElements: HTMLImageElement[]) => void} */
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
     if (gifElement.closest(`${keyToCss('avatarImage', 'subAvatarImage')}, .block-editor-writing-flow`)) return;
+
     const pausedGifElements = [...gifElement.parentNode.querySelectorAll(`.${canvasClass}`)];
     if (pausedGifElements.length) {
       gifElement.after(...pausedGifElements);
@@ -207,7 +210,8 @@ const processGifs = function (gifElements) {
     if (gifElement.complete && gifElement.currentSrc) {
       pauseGif(gifElement);
     } else {
-      gifElement.onload = () => pauseGif(gifElement);
+      const { signal } = loadEventController;
+      gifElement.addEventListener('load', () => pauseGif(gifElement), { signal });
     }
   });
 };
@@ -267,6 +271,8 @@ const onStorageChanged = async function (changes) {
 };
 
 export const main = async function () {
+  loadEventController = new AbortController();
+
   ({ disable_gifs_loading_mode: loadingMode } = await getPreferences('accesskit'));
 
   const gifImage = `
@@ -313,6 +319,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
+  loadEventController.abort();
   browser.storage.local.onChanged.removeListener(onStorageChanged);
 
   pageModifications.unregister(processGifs);

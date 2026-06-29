@@ -210,8 +210,10 @@ const processGifs = function (gifElements) {
     if (gifElement.complete && gifElement.currentSrc) {
       pauseGif(gifElement);
     } else {
-      const { signal } = loadEventController;
-      gifElement.addEventListener('load', () => pauseGif(gifElement), { signal });
+      gifElement.addEventListener('load', () => pauseGif(gifElement), {
+        once: true,
+        signal: loadEventController.signal,
+      });
     }
   });
 };

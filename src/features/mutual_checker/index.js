@@ -92,7 +92,7 @@ const addIcons = function (postElements) {
       const iconTarget = getPopoverWrapper(postAttribution) ?? postAttribution;
       iconTarget?.before(createIcon(isMutual, blogName));
     } else if (showOnlyMutuals) {
-      getTimelineItemWrapper(postElement)?.setAttribute(hiddenAttribute, '');
+      getTimelineItemWrapper(postElement)?.toggleAttribute(hiddenAttribute, true);
     }
   });
 };

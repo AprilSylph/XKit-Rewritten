@@ -1,5 +1,6 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { br, button, div, form, input, label } from '../../utils/dom.js';
+import { createPostHideFunctions } from '../../utils/hide_posts.js';
 import { filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
 import { registerBlogMeatballItem, registerMeatballItem, unregisterBlogMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { hideModal, modalCancelButton, showModal } from '../../utils/modals.js';
@@ -22,9 +23,14 @@ import { controlsClass as showOriginalsControlsClass } from '../show_originals/i
 const meatballButtonId = 'mute';
 const meatballButtonLabel = data => `Mute options for ${data.name ?? getVisibleBlog(data).name}`;
 
-const hiddenAttribute = 'data-mute-hidden';
+const { hidePost, showPosts } = createPostHideFunctions({
+  id: 'mute',
+  permalinkPageControls: {
+    message: 'This post contains a muted blog.',
+  },
+});
+
 const mutedBlogControlsHiddenAttribute = 'data-muted-blog-controls-hidden';
-const activeAttribute = 'data-mute-active';
 const mutedBlogControlsClass = 'xkit-muted-blog-controls';
 const lengthenedClass = 'xkit-mute-lengthened';
 
@@ -80,9 +86,10 @@ const shouldDisable = timelineElement => Boolean(
   anyFlaggedReviewTimelineFilter(timelineElement) ||
   likesTimelineFilter(timelineElement) ||
   userBlogNames.some(name => peeprLikesTimelineFilter(name)(timelineElement)) ||
-  inboxTimelineFilter(timelineElement) ||
-  anyPostPermalinkTimelineFilter(timelineElement),
+  inboxTimelineFilter(timelineElement),
 );
+
+const timelineFilter = timelineElement => !shouldDisable(timelineElement);
 
 const processTimelines = async timelineElements => {
   for (const timelineElement of [...new Set(timelineElements)]) {
@@ -98,13 +105,11 @@ const processTimelines = async timelineElements => {
 
     [...timelineElement.querySelectorAll(`.${mutedBlogControlsClass}`)].forEach(el => el.remove());
     delete timelineElement.dataset.muteBlogUuid;
-    timelineElement.removeAttribute(activeAttribute);
 
-    if (shouldDisable(timelineElement) === false) {
-      timelineElement.setAttribute(activeAttribute, '');
+    if (timelineFilter(timelineElement)) {
       lengthenTimeline(timelineElement);
 
-      if (anyBlogTimelineFilter(timelineElement)) {
+      if (anyBlogTimelineFilter(timelineElement) && !anyPostPermalinkTimelineFilter(timelineElement)) {
         await processBlogTimelineElement(timelineElement).catch(console.log);
       }
     }
@@ -126,7 +131,7 @@ const getVisibleBlog = ({ blog, authorBlog, community }) => (community ? authorB
 const processPosts = async function (postElements) {
   await processTimelines(postElements.map(postElement => postElement.closest(timelineSelector)));
 
-  filterPostElements(postElements, { includeFiltered: true }).forEach(async postElement => {
+  filterPostElements(postElements, { timeline: timelineFilter, includeFiltered: true }).forEach(async postElement => {
     const timelineObjectData = await timelineObject(postElement);
     const { uuid, name } = getVisibleBlog(timelineObjectData);
     const { rebloggedRootUuid, content = [], trail = [] } = timelineObjectData;
@@ -137,15 +142,15 @@ const processPosts = async function (postElements) {
       updateStoredName(uuid, name);
     }
 
-    const hidePost = relevantBlogUuid =>
-      getTimelineItemWrapper(postElement).setAttribute(
+    const hidePostByBlogUuid = relevantBlogUuid => {
+      if (relevantBlogUuid === timelineBlogUuid) {
         // Posts hidden on blog timelines can be revealed by muted blog timeline controls
         // if and only if they are hidden because the current blog is muted.
-        relevantBlogUuid === timelineBlogUuid
-          ? mutedBlogControlsHiddenAttribute
-          : hiddenAttribute,
-        '',
-      );
+        getTimelineItemWrapper(postElement).toggleAttribute(mutedBlogControlsHiddenAttribute, true);
+      } else {
+        hidePost(postElement);
+      }
+    };
 
     const isRebloggedPost = contributedContentOriginal
       ? rebloggedRootUuid && !content.length
@@ -155,16 +160,16 @@ const processPosts = async function (postElements) {
     const reblogUuid = isRebloggedPost ? uuid : null;
 
     if (['all', 'original'].includes(mutedBlogs[originalUuid])) {
-      hidePost(originalUuid);
+      hidePostByBlogUuid(originalUuid);
     }
     if (['all', 'reblogged'].includes(mutedBlogs[reblogUuid])) {
-      hidePost(reblogUuid);
+      hidePostByBlogUuid(reblogUuid);
     }
 
     if (checkTrail) {
       for (const { blog } of trail) {
         if (['all'].includes(mutedBlogs[blog?.uuid])) {
-          hidePost(blog.uuid);
+          hidePostByBlogUuid(blog.uuid);
         }
       }
     }
@@ -284,9 +289,8 @@ export const main = async function () {
 };
 
 const unprocess = () => {
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  showPosts();
   $(`[${mutedBlogControlsHiddenAttribute}]`).removeAttr(mutedBlogControlsHiddenAttribute);
-  $(`[${activeAttribute}]`).removeAttr(activeAttribute);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
   $(`.${mutedBlogControlsClass}`).remove();
   $('[data-mute-processed-timeline]').removeAttr('data-mute-processed-timeline');

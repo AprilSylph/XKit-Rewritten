@@ -1,4 +1,3 @@
-[data-mute-active] [data-mute-hidden],
 [data-muted-blog-controls-mode='original'] ~ div [data-muted-blog-controls-hidden],
 [data-muted-blog-controls-mode='reblogged'] ~ div [data-muted-blog-controls-hidden] {
   content: linear-gradient(transparent, transparent);

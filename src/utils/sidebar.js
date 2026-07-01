@@ -46,6 +46,9 @@ const buildSidebarRow = ({ label, onclick, href, count, carrot }) =>
   ]);
 
 /**
+ * Add an interactable sidebar item control that will be visible in the page's
+ * right sidebar in the desktop Tumblr layout, or in the left mobile drawer in
+ * the tablet/mobile Tumblr layouts.
  * @param {object} options Sidebar item options
  * @param {string} options.id Unique ID for the sidebar item
  * @param {string} options.title Human-readable sidebar item heading

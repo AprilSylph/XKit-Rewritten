@@ -1,5 +1,9 @@
 import { inject } from './inject.js';
 
+/**
+ * @see https://github.com/tumblr/docs/blob/master/web-platform.md#getcssmap
+ * @type {Record<string, string[]>}
+ */
 export const cssMap = await inject('/main_world/css_map.js');
 
 /**

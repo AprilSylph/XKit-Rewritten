@@ -36,6 +36,10 @@ export const notificationObject = notificationElement => {
  */
 export const blogData = async (meatballMenu) => inject('/main_world/unbury_blog.js', [], meatballMenu);
 
+/**
+ * @param {Element} postElement An on-screen post element
+ * @returns {Promise<boolean>}
+ */
 export const isMyPost = async (postElement) => {
   const { blog, isSubmission, postAuthor, community } = await timelineObject(postElement);
   const userIsMember = userBlogNames.includes(blog.name);

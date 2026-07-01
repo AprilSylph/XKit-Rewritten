@@ -1,7 +1,7 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { button, div, form, input, label } from '../../utils/dom.js';
 import { controlsClass as hidePostsUtilControlsClass, createPostHideFunctions } from '../../utils/hide_posts.js';
-import { filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
+import { buildStyle, filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
 import { registerBlogMeatballItem, registerMeatballItem, unregisterBlogMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { hideModal, modalCancelButton, showModal } from '../../utils/modals.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
@@ -33,6 +33,24 @@ const { hidePost, showPosts } = createPostHideFunctions({
 const mutedBlogControlsHiddenAttribute = 'data-muted-blog-controls-hidden';
 const mutedBlogControlsAttribute = 'data-muted-blog-controls-mode';
 const lengthenedClass = 'xkit-mute-lengthened';
+
+export const styleElement = buildStyle(`
+[${mutedBlogControlsAttribute}='original'] ~ div [${mutedBlogControlsHiddenAttribute}],
+[${mutedBlogControlsAttribute}='reblogged'] ~ div [${mutedBlogControlsHiddenAttribute}] {
+  content: linear-gradient(transparent, transparent);
+  height: 0;
+}
+
+/* Prevent endless post loading on timelines with all posts hidden by preserving post height */
+[${mutedBlogControlsAttribute}='all'] ~ div article,
+[${mutedBlogControlsAttribute}='all'] ~ div article :is(img, video, canvas) {
+  visibility: hidden !important;
+}
+
+.${lengthenedClass} {
+  min-height: 100vh;
+}
+`);
 
 const blogNamesStorageKey = 'mute.blogNames';
 const mutedBlogEntriesStorageKey = 'mute.mutedBlogEntries';
@@ -303,5 +321,3 @@ export const clean = async function () {
   unregisterBlogMeatballItem(meatballButtonId);
   onNewPosts.removeListener(processPosts);
 };
-
-export const stylesheet = true;

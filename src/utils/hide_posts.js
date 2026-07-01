@@ -2,7 +2,7 @@ import { button, div } from './dom.js';
 import { buildStyle, getTimelineItemWrapper } from './interface.js';
 import { anyPostPermalinkTimelineFilter, timelineSelector } from './timeline_id.js';
 
-const controlsClass = 'xkit-hidden-post-controls';
+export const controlsClass = 'xkit-hidden-post-controls';
 
 // Remove outdated elements when loading module
 $(`.${controlsClass}`).remove();

@@ -15,6 +15,7 @@ import {
   inboxTimelineFilter,
   likesTimelineFilter,
   peeprLikesTimelineFilter,
+  peeprRepliesTimelineFilter,
   timelineSelector,
 } from '../../utils/timeline_id.js';
 import { userBlogNames } from '../../utils/user.js';
@@ -103,6 +104,7 @@ const shouldDisable = timelineElement => Boolean(
   anyFlaggedReviewTimelineFilter(timelineElement) ||
   likesTimelineFilter(timelineElement) ||
   userBlogNames.some(name => peeprLikesTimelineFilter(name)(timelineElement)) ||
+  userBlogNames.some(name => peeprRepliesTimelineFilter(name)(timelineElement)) ||
   inboxTimelineFilter(timelineElement),
 );
 

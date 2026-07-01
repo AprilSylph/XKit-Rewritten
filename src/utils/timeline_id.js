@@ -95,6 +95,10 @@ export const peeprLikesTimelineFilter = blogName =>
     timelineId === `peepr-likes-${blogName}-asc` ||
     timelineId === `peepr-likes-${blogName}-desc`;
 
+export const peeprRepliesTimelineFilter = blogName =>
+  ({ dataset: { timeline, timelineId } }) =>
+    timelineId === `peepr-replies-${blogName}`;
+
 export const inboxTimelineFilter = ({ dataset: { timeline, timelineId } }) =>
   timeline?.startsWith('/v2/user/inbox');
 

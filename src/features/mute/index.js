@@ -1,6 +1,6 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { br, button, div, form, input, label } from '../../utils/dom.js';
-import { createPostHideFunctions } from '../../utils/hide_posts.js';
+import { button, div, form, input, label } from '../../utils/dom.js';
+import { controlsClass as hidePostsUtilControlsClass, createPostHideFunctions } from '../../utils/hide_posts.js';
 import { filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
 import { registerBlogMeatballItem, registerMeatballItem, unregisterBlogMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { hideModal, modalCancelButton, showModal } from '../../utils/modals.js';
@@ -31,7 +31,7 @@ const { hidePost, showPosts } = createPostHideFunctions({
 });
 
 const mutedBlogControlsHiddenAttribute = 'data-muted-blog-controls-hidden';
-const mutedBlogControlsClass = 'xkit-muted-blog-controls';
+const mutedBlogControlsAttribute = 'data-muted-blog-controls-mode';
 const lengthenedClass = 'xkit-mute-lengthened';
 
 const blogNamesStorageKey = 'mute.blogNames';
@@ -71,10 +71,9 @@ const processBlogTimelineElement = async timelineElement => {
   if (mutedBlogMode) {
     timelineElement.dataset.muteBlogUuid = uuid;
 
-    const mutedBlogControls = div({ class: mutedBlogControlsClass, 'data-muted-blog-controls-mode': mutedBlogMode }, [
+    const mutedBlogControls = div({ class: hidePostsUtilControlsClass, [mutedBlogControlsAttribute]: mutedBlogMode }, [
       `You have muted ${mutedBlogMode} posts from ${name}!`,
-      br(),
-      button({ click: () => mutedBlogControls.remove() }, ['show posts anyway']),
+      button({ click: () => mutedBlogControls.remove() }, [mutedBlogMode === 'all' ? 'Show posts' : 'Show all posts']),
     ]);
     timelineElement.prepend(mutedBlogControls);
     timelineElement.querySelector(`.${showOriginalsControlsClass}`)?.after(mutedBlogControls);
@@ -103,7 +102,7 @@ const processTimelines = async timelineElements => {
     timelineElement.dataset.muteProcessedTimeline = timeline;
     timelineElement.dataset.muteProcessedTimelineId = timelineId;
 
-    [...timelineElement.querySelectorAll(`.${mutedBlogControlsClass}`)].forEach(el => el.remove());
+    [...timelineElement.querySelectorAll(`[${mutedBlogControlsAttribute}]`)].forEach(el => el.remove());
     delete timelineElement.dataset.muteBlogUuid;
 
     if (timelineFilter(timelineElement)) {
@@ -292,7 +291,7 @@ const unprocess = () => {
   showPosts();
   $(`[${mutedBlogControlsHiddenAttribute}]`).removeAttr(mutedBlogControlsHiddenAttribute);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
-  $(`.${mutedBlogControlsClass}`).remove();
+  $(`[${mutedBlogControlsAttribute}]`).remove();
   $('[data-mute-processed-timeline]').removeAttr('data-mute-processed-timeline');
   $('[data-mute-processed-timeline-id]').removeAttr('data-mute-processed-timeline-id');
   $('[data-mute-blog-uuid]').removeAttr('data-mute-blog-uuid');

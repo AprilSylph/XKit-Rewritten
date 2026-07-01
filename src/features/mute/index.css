@@ -13,20 +13,3 @@
 .xkit-mute-lengthened {
   min-height: 100vh;
 }
-
-.xkit-muted-blog-controls {
-  padding: 25px 20px;
-  border-radius: 3px;
-  margin-bottom: var(--post-padding);
-
-  background-color: var(--blog-title-color-15, rgba(var(--white-on-dark), 0.25));
-  color: var(--blog-title-color, rgba(var(--white-on-dark)));
-
-  font-weight: 700;
-  text-align: center;
-  line-height: 1.5em;
-}
-
-.xkit-muted-blog-controls button {
-  color: var(--blog-link-color, rgb(var(--deprecated-accent)));
-}

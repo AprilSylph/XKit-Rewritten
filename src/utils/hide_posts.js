@@ -104,7 +104,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
       timelineItemWrapper.toggleAttribute(controlledHiddenAttribute, true);
 
       const { message } = permalinkPageControls;
-      const controlsElement = div({ class: controlsClass, [controlsAttribute]: id }, [
+      const controlsElement = div({ class: controlsClass, [controlsAttribute]: '' }, [
         message,
         button({ click: () => controlsElement.remove() }, ['View post']),
       ]);

@@ -72,7 +72,7 @@ export const isNpfCompatible = postData => {
  * Performs a "soft" navigation within Tumblr's single-page-application.
  * @see https://github.com/tumblr/docs/blob/master/web-platform.md#navigate
  * @param {string} location Path to navigate to
- * @returns {void}
+ * @returns {Promise<void>} Resolves when the navigation has been requested; does _not_ wait for the target route chunk to load
  */
 export const navigate = location => inject('/main_world/navigate.js', [location]);
 

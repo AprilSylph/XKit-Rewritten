@@ -9,22 +9,23 @@ export const blogViewSelector = '[style*="--blog-title-color"] *';
 export const notificationSelector = `:is(${keyToCss('notification')}[role="listitem"], ${keyToCss('activityItem')})`;
 
 const listTimelineObjectSelector = keyToCss('listTimelineObject');
-const cellSelector = keyToCss('cell');
+const gridTimelineObjectSelector = keyToCss('gridTimelineObject');
+
+/**
+ * @param {Element} element An element that is contained within a timeline item.
+ * @returns {Element | null} The element that wraps the entire timeline item.
+ */
+export const getTimelineItemWrapper = element =>
+  element.closest(`.sortableContainer ${listTimelineObjectSelector}`) ??
+  element.closest(`:has(> ${listTimelineObjectSelector})`) ??
+  element.closest(gridTimelineObjectSelector);
+
 const targetWrapperSelector = keyToCss(
   'targetWrapper',
   'targetWrapperBlock',
   'targetWrapperFlex',
   'targetWrapperInline',
 );
-
-/**
- * @param {Element} element Element within a timeline item
- * @returns {Element | null} The timeline item wrapper
- */
-export const getTimelineItemWrapper = element =>
-  (element.closest('[data-timeline-id]') && element.closest(listTimelineObjectSelector)?.parentElement) ||
-  element.closest(cellSelector) ||
-  element.closest(listTimelineObjectSelector);
 
 /**
  * @param {Element} element Element within a popover wrapper
@@ -48,6 +49,8 @@ export const getPopoverWrapper = element => {
  */
 
 /**
+ * Filter an array of post elements (or descendants) to determine which to process.
+ * Usually used inside an onNewPosts listener callback function.
  * @param {Element[]} postElements Post elements (or descendants) to filter
  * @param {PostFilterOptions} [postFilterOptions] Post filter options
  * @returns {HTMLDivElement[]} Matching post elements
@@ -181,6 +184,13 @@ const isVerticallyOverflowing = element => {
   return elementRect.bottom > document.documentElement.clientHeight || elementRect.top < 0;
 };
 
+/**
+ * Append a DOM element to a target container, attempting to position it so it
+ * is fully visible rather than overflowing into a hidden area.
+ * @param {Element} element Element to append
+ * @param {Element} target Target container
+ * @param {'below'|'above'} defaultPosition Above/below position to use if both are valid
+ */
 export const appendWithoutOverflow = (element, target, defaultPosition = 'below') => {
   element.dataset.position = defaultPosition;
   element.style.removeProperty('--horizontal-offset');
@@ -205,5 +215,12 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
   }
 };
 
+/**
+ * Navigate up the React component tree to find an element's closest rendered
+ * parent matching a given selector. Follows React "portals".
+ * @param {Element} element A target element, such as a portalled menu
+ * @param {string} selector CSS selector
+ * @returns {element?} An element matching the selector and "containing" the target element
+ */
 export const getClosestRenderedElement = (element, selector) =>
   inject('/main_world/closest_rendered_element.js', [selector], element);

@@ -284,7 +284,7 @@ const processPosts = (postElements) => postElements.forEach(async postElement =>
         click: onNoteCountClick,
       }, getButtonChildren(noteCount));
 
-      engagementControls.closest('footer').setAttribute(activeAttribute, '');
+      engagementControls.closest('footer').toggleAttribute(activeAttribute, true);
       engagementControls.before(noteCountButton);
 
       if (noReblogMenu) {

@@ -9,6 +9,10 @@ const thresholds = [
 ];
 
 const relativeTimeFormat = new Intl.RelativeTimeFormat(document.documentElement.lang, { style: 'long' });
+/**
+ * @param {number} unixTime Second-resolution unix time value (as used in Tumblr post timestamps)
+ * @returns {string} e.g. "13 minutes ago"
+ */
 export const constructRelativeTimeString = function (unixTime) {
   const now = Math.trunc(Date.now() / 1000);
   const unixDiff = unixTime - now;
@@ -24,6 +28,9 @@ export const constructRelativeTimeString = function (unixTime) {
   return relativeTimeFormat.format(-0, 'second');
 };
 
+/**
+ * Produces e.g. "July 11, 2020 at 9:58 PM EDT"
+ */
 export const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
   year: 'numeric',
   month: 'long',

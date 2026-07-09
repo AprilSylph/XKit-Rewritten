@@ -72,9 +72,9 @@ export const showErrorModal = exception => {
 
 /**
  * Create a version of a function that shows a takeover prompt to the user if it throws.
- * @template T, R
- * @param {function(...T): R} func A function
- * @returns {function(...T): R} A version of the function with explicit error handling
+ * @template {function (...T): R} Callback, T, R
+ * @param {Callback} func A function
+ * @returns {Callback} A version of the function with explicit error handling
  */
 export const withModalOnError = func =>
   async (...args) => {

@@ -68,8 +68,18 @@ export const isNpfCompatible = postData => {
   return isBlocksPostFormat || shouldOpenInLegacy === false;
 };
 
+/**
+ * Performs a "soft" navigation within Tumblr's single-page-application.
+ * @see https://github.com/tumblr/docs/blob/master/web-platform.md#navigate
+ * @param {string} location Path to navigate to
+ * @returns {Promise<void>} Resolves when the navigation has been requested; does _not_ wait for the target route chunk to load
+ */
 export const navigate = location => inject('/main_world/navigate.js', [location]);
 
+/**
+ * A click event handler that can be applied to anchor elements to automate soft navigation.
+ * @param {PointerEvent} event Click event object
+ */
 export const onClickNavigate = event => {
   if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) {
     event.stopImmediatePropagation();

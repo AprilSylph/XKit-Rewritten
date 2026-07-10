@@ -23,6 +23,10 @@ document.documentElement.append(
 
 /** @typedef {'home' | 'communities' | 'activity' | 'messages' | 'inbox' | 'account'} NotificationType */
 
+/**
+ * Utilities to hide the notification badge on the menu button in the top left corner of the mobile page layout
+ * if and only if it is caused by a specific type of notification.
+ */
 export const mobileMenuBadgeHide = Object.freeze({
   excludedTypes: new Set(),
 

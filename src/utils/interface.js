@@ -12,6 +12,8 @@ const listTimelineObjectSelector = keyToCss('listTimelineObject');
 const gridTimelineObjectSelector = keyToCss('gridTimelineObject');
 
 /**
+ * Get the outermost element containing an item in a timeline. This is often the best element to apply
+ * modifying attributes/classes to because it persists when the user scrolls away.
  * @param {Element} element An element that is contained within a timeline item.
  * @returns {Element | null} The element that wraps the entire timeline item.
  */

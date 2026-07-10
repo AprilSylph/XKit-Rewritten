@@ -1,5 +1,5 @@
 /**
- * Runs a function in the page's "main" execution environment and returns
+ * Run a function in the page's "main" execution environment and return
  * its result. This permits access to variables exposed by the Tumblr web
  * platform that are normally inaccessible in the content script sandbox.
  * @see [src/main_world/index.js](../main_world/index.js) and named scripts in the same directory

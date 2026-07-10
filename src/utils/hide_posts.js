@@ -79,6 +79,7 @@ document.documentElement.append(styleElement);
  */
 
 /**
+ * Create functions to hide a post element, handling lifecycle and edge case concerns.
  * @param {object} options Destructured
  * @param {string} options.id Identifier for this post hiding instance (must be unique)
  * @param {PermalinkPageOptions} [options.permalinkPageControls] If specified, single posts on permalink pages are hidden with an informative, dismissable UI
@@ -90,6 +91,11 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
   const controlledHiddenAttribute = `data-xkit-${id}-hidden-controlled`;
   const controlsAttribute = `data-xkit-${id}-hidden-controls`;
 
+  /**
+   * CSS content replacement removes the target timeline item element from the DOM (including excluding it
+   * from control/command-F page search) without entirely removing the timeline item bounding box, which would
+   * break Tumblr's J/K scroll shortcuts.
+   */
   styleElement.textContent += `
     [${hiddenAttribute}], [${controlsAttribute}] ~ div [${controlledHiddenAttribute}] {
       content: linear-gradient(transparent, transparent);

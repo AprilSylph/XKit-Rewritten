@@ -17,8 +17,11 @@ let blockedPostTargetIDs;
 
 export const styleElement = buildStyle();
 
-const buildCss = () => `:is(${blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')
-  }) { display: none !important; }`;
+const buildCss = () => `
+:is(${blockedPostTargetIDs.map(rootId => `[data-target-root-post-id="${rootId}"]`).join(', ')}) {
+  display: none !important;
+}
+`;
 
 const processNotifications = (notificationElements) => {
   notificationElements.forEach(async notificationElement => {
@@ -29,7 +32,8 @@ const processNotifications = (notificationElements) => {
       // available on "replied to your post" notifications, which appear to always target the root post
       const blockablePostId = notification.actions?.longTap?.meta?.postId;
 
-      notificationElement.dataset.targetRootPostId = targetRootPostId || targetPostId || blockablePostId || '';
+      notificationElement.dataset.targetRootPostId =
+        targetRootPostId || targetPostId || blockablePostId || '';
     }
   });
 };

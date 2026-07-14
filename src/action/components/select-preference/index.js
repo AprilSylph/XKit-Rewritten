@@ -18,7 +18,8 @@ const adoptedStyleSheets = await fetchStyleSheets([
 /** @typedef {{ label: string, value: string }} Option */
 
 /** @type {(option: Option) => HTMLOptionElement} */
-const createOptionElement = ({ label, value }) => Object.assign(document.createElement('option'), { textContent: label, value });
+const createOptionElement = ({ label, value }) =>
+  Object.assign(document.createElement('option'), { textContent: label, value });
 
 /** @type {(optionElement: HTMLOptionElement) => Option} */
 const getOptionObject = ({ textContent, value }) => ({ label: textContent, value });

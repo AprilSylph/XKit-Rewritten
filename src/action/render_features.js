@@ -45,8 +45,12 @@ const renderFeatures = async function () {
     [specialAccessKey]: specialAccess = [],
   } = await browser.storage.local.get();
 
-  const orderedEnabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName));
-  const disabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName) === false);
+  const orderedEnabledFeatures = installedFeatures.filter(featureName =>
+    enabledFeatures.includes(featureName),
+  );
+  const disabledFeatures = installedFeatures.filter(featureName =>
+    enabledFeatures.includes(featureName) === false,
+  );
 
   for (const featureName of [...orderedEnabledFeatures, ...disabledFeatures]) {
     const url = browser.runtime.getURL(`/features/${featureName}/feature.json`);

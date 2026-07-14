@@ -90,7 +90,9 @@ const refreshAllCounts = async (isFirstRun = false) => {
 };
 
 let intervalID = 0;
-const startRefreshInterval = () => { intervalID = setInterval(refreshAllCounts, 30000 * trackedTags.length); };
+const startRefreshInterval = () => {
+  intervalID = setInterval(refreshAllCounts, 30000 * trackedTags.length);
+};
 const stopRefreshInterval = () => clearInterval(intervalID);
 
 const processPosts = async function (postElements) {

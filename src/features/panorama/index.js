@@ -69,7 +69,8 @@ ${patioPostColumn} {
 }
 `);
 
-const expandableImage = `${keyToCss('imageBlockButton', 'imageBlockLink', 'imageBlockGifAttribution')}:not(${keyToCss('unstretched')})`;
+const expandableImage =
+  `${keyToCss('imageBlockButton', 'imageBlockLink', 'imageBlockGifAttribution')}:not(${keyToCss('unstretched')})`;
 
 const styleElement = buildStyle(`
 /* Widen posts */

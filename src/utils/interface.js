@@ -94,7 +94,8 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
  * @param {PostFilterOptions} postFilterOptions Post filter options
  * @returns {HTMLDivElement[]} Matching post elements on the page
  */
-export const getPostElements = postFilterOptions => filterPostElements([...document.querySelectorAll(postSelector)], postFilterOptions);
+export const getPostElements = postFilterOptions =>
+  filterPostElements([...document.querySelectorAll(postSelector)], postFilterOptions);
 
 /**
  * @param {string} [css] CSS rules to be included
@@ -207,9 +208,15 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
   const elementRect = element.getBoundingClientRect();
 
   if (elementRect.right > preventOverflowTargetRect.right - 15) {
-    element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.right - 15 - elementRect.right}px`);
+    element.style.setProperty(
+      '--horizontal-offset',
+      `${preventOverflowTargetRect.right - 15 - elementRect.right}px`,
+    );
   } else if (elementRect.left < preventOverflowTargetRect.left + 15) {
-    element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.left + 15 - elementRect.left}px`);
+    element.style.setProperty(
+      '--horizontal-offset',
+      `${preventOverflowTargetRect.left + 15 - elementRect.left}px`,
+    );
   }
 };
 

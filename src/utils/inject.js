@@ -1,7 +1,6 @@
 /**
- * Run a function in the page's "main" execution environment and return
- * its result. This permits access to variables exposed by the Tumblr web
- * platform that are normally inaccessible in the content script sandbox.
+ * Run a function in the page's "main" execution environment and return its result.
+ * This permits access to variables exposed by the Tumblr web platform that are normally inaccessible in the content script sandbox.
  * @see [src/main_world/index.js](../main_world/index.js) and named scripts in the same directory
  * @param {string} path Absolute path of script file to inject; will be fed to {@linkcode https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getURL|browser.runtime.getURL()}
  * @param {Array} [args] Array of arguments to pass to the injected function

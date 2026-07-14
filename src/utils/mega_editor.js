@@ -21,8 +21,7 @@ const pathnames = {
 };
 
 /**
- * Edit many posts at once, efficiently but with a limited set of edit modes, using the API endpoints used
- * by the Tumblr mass post editor.
+ * Edit many posts at once, efficiently but with a limited set of edit modes, using the API endpoints used by the Tumblr mass post editor.
  * @param {string[]} postIds Array of post IDs to edit (must not exceed 100 items)
  * @param {object} options Configuration object
  * @param {string} options.mode Post editing method; valid modes are:

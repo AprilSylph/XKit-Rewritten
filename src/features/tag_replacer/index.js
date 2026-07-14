@@ -108,7 +108,8 @@ const confirmReplaceTag = async event => {
 
   const { oldTag, toAdd, toRemove, mode } = processTagInputs(elements.oldTag, elements.newTag);
 
-  const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag: oldTag } });
+  const { response: { totalPosts } } =
+    await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag: oldTag } });
   if (!totalPosts) {
     showTagNotFound({ tag: oldTag, name });
     return;

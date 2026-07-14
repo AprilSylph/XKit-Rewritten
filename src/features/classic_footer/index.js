@@ -243,7 +243,9 @@ const getButtonChildren = (noteCount) => {
   const formattedNoteCount = span({}, [noteCountFormat.format(noteCount)]);
 
   try {
-    const { prefix, suffix } = getTranslationTemplate(noteCount).match(/^(?<prefix>.*)(%2\$s)(?<suffix>.*)$/).groups;
+    const { prefix, suffix } = getTranslationTemplate(noteCount)
+      .match(/^(?<prefix>.*)(%2\$s)(?<suffix>.*)$/)
+      .groups;
     return [prefix, formattedNoteCount, suffix];
   } catch {
     return [formattedNoteCount, ` ${noteCount === 1 ? 'note' : 'notes'}`];
@@ -288,7 +290,11 @@ const processPosts = (postElements) => postElements.forEach(async postElement =>
       engagementControls.before(noteCountButton);
 
       if (noReblogMenu) {
-        processReblogButton(engagementControls.querySelector(reblogButtonSelector), timelineObjectData, trailItemData);
+        processReblogButton(
+          engagementControls.querySelector(reblogButtonSelector),
+          timelineObjectData,
+          trailItemData,
+        );
       }
     });
 });

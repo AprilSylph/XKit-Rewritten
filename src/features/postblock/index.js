@@ -107,8 +107,10 @@ export const onStorageChanged = async function (changes) {
   }
 };
 
-const blockPostFilter = ({ id, rebloggedRootId }) => blockedPostRootIDs.includes(rebloggedRootId || id) === false;
-const unblockPostFilter = ({ id, rebloggedRootId }) => blockedPostRootIDs.includes(rebloggedRootId || id);
+const blockPostFilter = ({ id, rebloggedRootId }) =>
+  blockedPostRootIDs.includes(rebloggedRootId || id) === false;
+const unblockPostFilter = ({ id, rebloggedRootId }) =>
+  blockedPostRootIDs.includes(rebloggedRootId || id);
 
 export const main = async function () {
   ({ [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey));

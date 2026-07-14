@@ -58,5 +58,9 @@ async function onButtonClicked ({ currentTarget }) {
   waybackMachineForm.requestSubmit();
 }
 
-export const main = async () => registerMeatballItem({ id: meatballButtonId, label: meatballButtonLabel, onclick: onButtonClicked });
+export const main = async () => registerMeatballItem({
+  id: meatballButtonId,
+  label: meatballButtonLabel,
+  onclick: onButtonClicked,
+});
 export const clean = async () => unregisterMeatballItem(meatballButtonId);

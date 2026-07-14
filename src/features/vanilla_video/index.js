@@ -52,7 +52,10 @@ export const main = async function () {
   ({ defaultVolume, tumblrTvEnable } = await getPreferences('vanilla_video'));
 
   const notOnTumblrTv = `:not(${keyToCss('slide')} ${keyToCss('take')} *)`;
-  pageModifications.register(`${keyToCss('videoPlayer')} video:not(.${vanillaVideoClass})${tumblrTvEnable ? '' : notOnTumblrTv}`, cloneVideoElements);
+  pageModifications.register(
+    `${keyToCss('videoPlayer')} video:not(.${vanillaVideoClass})${tumblrTvEnable ? '' : notOnTumblrTv}`,
+    cloneVideoElements,
+  );
 };
 
 export const clean = async function () {

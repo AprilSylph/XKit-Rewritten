@@ -17,7 +17,8 @@ let tagArray;
 const excludeClass = 'xkit-painter-done';
 
 const paint = postElements => filterPostElements(postElements, { excludeClass }).forEach(async postElement => {
-  const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, tags } = await timelineObject(postElement);
+  const { canDelete, liked, rebloggedFromId, rebloggedRootId, rebloggedRootUuid, tags } =
+    await timelineObject(postElement);
 
   const coloursToApply = [];
 
@@ -36,7 +37,8 @@ const paint = postElements => filterPostElements(postElements, { excludeClass })
 
     if (!tagColourFound && colourSourceTags && rebloggedRootId && rebloggedRootUuid) {
       try {
-        const { response: { tags: sourceTags } } = await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
+        const { response: { tags: sourceTags } } =
+          await apiFetch(`/v2/blog/${rebloggedRootUuid}/posts/${rebloggedRootId}`);
         if (sourceTags.some(tag => tagArray.includes(tag.toLowerCase()))) coloursToApply.push(tagColour);
       } catch {
         // The source post can't be found, so we can't extract tags from it either.

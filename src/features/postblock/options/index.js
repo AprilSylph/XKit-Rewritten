@@ -85,7 +85,8 @@ class PostBlockBlockedPostsElement extends CustomElement {
     const { [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey);
     const { [uuidsStorageKey]: uuids = {} } = await browser.storage.local.get(uuidsStorageKey);
 
-    this.#postsBlockedCount.textContent = `${blockedPostRootIDs.length} blocked ${blockedPostRootIDs.length === 1 ? 'post' : 'posts'}`;
+    this.#postsBlockedCount.textContent =
+      `${blockedPostRootIDs.length} blocked ${blockedPostRootIDs.length === 1 ? 'post' : 'posts'}`;
     this.#blockedPostList.replaceChildren(...blockedPostRootIDs.map(blockedPostID => {
       const templateClone = this.#blockedPostTemplate.content.cloneNode(true);
       const codeElement = templateClone.querySelector('code');

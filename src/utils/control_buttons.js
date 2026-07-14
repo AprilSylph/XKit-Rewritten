@@ -68,8 +68,12 @@ export const insertControlButton = async (postElement, clonedControlButton, butt
   if (existingButton !== null) { return; }
 
   const { community } = await timelineObject(postElement);
-  const legacyEditControlIcon = postElement.querySelector(`${keyToCss('controlIcon')}:has(a[href*="/edit/"] use[href="#managed-icon__edit"])`);
-  const newEditControlIcon = postElement.querySelector('a[href*="/edit/"]:has(use[href="#managed-icon__ds-pencil-outline-24"])');
+  const legacyEditControlIcon = postElement.querySelector(
+    `${keyToCss('controlIcon')}:has(a[href*="/edit/"] use[href="#managed-icon__edit"])`,
+  );
+  const newEditControlIcon = postElement.querySelector(
+    'a[href*="/edit/"]:has(use[href="#managed-icon__ds-pencil-outline-24"])',
+  );
 
   if (community) {
     clonedControlButton.classList.add('in-community');

@@ -3,7 +3,10 @@ import { modalCompleteButton, showErrorModal, showModal } from '../../utils/moda
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 
-const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, { dateStyle: 'short', timeStyle: 'short' });
+const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.lang, {
+  dateStyle: 'short',
+  timeStyle: 'short',
+});
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const tableHeadingsRow = dom('tr', null, null, [
@@ -14,7 +17,9 @@ const tableHeadingsRow = dom('tr', null, null, [
 ]);
 
 const buildLimitRow = ([type, { description, limit, remaining, resetAt }]) => dom('tr', null, null, [
-  dom('td', { title: description, style: 'text-transform:capitalize' }, null, [type.replace(/[A-Z]/g, match => ` ${match}`)]),
+  dom('td', { title: description, style: 'text-transform:capitalize' }, null, [
+    type.replace(/[A-Z]/g, match => ` ${match}`),
+  ]),
   dom('td', { style: remaining === 0 ? 'color:rgb(var(--red))' : '' }, null, [remaining]),
   dom('td', null, null, [`/ ${limit}`]),
   dom('td', null, null, [dateTimeFormat.format(new Date(resetAt * 1000))]),

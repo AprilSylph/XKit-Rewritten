@@ -1,4 +1,3 @@
-import eslintPluginCommentLength from 'eslint-plugin-comment-length';
 /** @see https://github.com/un-ts/eslint-plugin-import-x#readme */ import { importX } from 'eslint-plugin-import-x';
 /** @see https://github.com/gajus/eslint-plugin-jsdoc#readme    */ import { jsdoc } from 'eslint-plugin-jsdoc';
 /** @see https://github.com/neostandard/neostandard#readme      */ import neostandard from 'neostandard';
@@ -59,25 +58,4 @@ export default [
    * @see https://github.com/AprilSylph/XKit-Rewritten/blob/master/src/utils/inject.js
    */
   { files: ['src/main_world/**'], rules: { 'jsdoc/require-jsdoc': 'off' } },
-
-  eslintPluginCommentLength.configs['flat/recommended'],
-
-  {
-    rules: {
-      'comment-length/limit-single-line-comments': [
-        'error',
-        {
-          mode: 'compact',
-          maxLength: 100000,
-        },
-      ],
-      'comment-length/limit-multi-line-comments': [
-        'error',
-        {
-          mode: 'compact',
-          maxLength: 100000,
-        },
-      ],
-    },
-  },
 ];

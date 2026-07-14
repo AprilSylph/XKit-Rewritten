@@ -62,7 +62,8 @@ button.xkit-quote-replies-dropdown {
 
 const originalPostTagStorageKey = 'quick_tags.preferences.originalPostTag';
 
-const activitySelector = `:is(${keyToCss('notification')} > ${keyToCss('activity')}, ${keyToCss('activityContent')})`;
+const activitySelector =
+  `:is(${keyToCss('notification')} > ${keyToCss('activity')}, ${keyToCss('activityContent')})`;
 
 const dropdownSelector = '[role="tabpanel"] *';
 
@@ -201,7 +202,8 @@ const createReplyData = async ({ type, timestamp, targetPostId, targetTumblelogN
 const openPostDraft = async (tumblelogName, data) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
 
-  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { state: 'draft', ...data } });
+  const { response: { id: responseId, displayText } } =
+    await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { state: 'draft', ...data } });
 
   const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;
 

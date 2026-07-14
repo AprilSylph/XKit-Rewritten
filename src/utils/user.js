@@ -62,7 +62,8 @@ const getOrder = community => {
 /**
  * {object?} joinedCommunities - An array of community objects the current user has joined
  */
-export const joinedCommunities = [...fetchedCommunitiesInfo.response].sort((a, b) => getOrder(a) - getOrder(b));
+export const joinedCommunities = [...fetchedCommunitiesInfo.response]
+  .sort((a, b) => getOrder(a) - getOrder(b));
 
 /**
  * {string[]} joinedCommunityUuids - An array of community uuids the current user has joined

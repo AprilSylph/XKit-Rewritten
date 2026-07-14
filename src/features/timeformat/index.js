@@ -86,7 +86,9 @@ const updateRelativeTime = timeElement => {
 };
 
 const observer = new MutationObserver(mutations =>
-  mutations.forEach(({ target: { parentElement: timeElement } }) => timeElement?.unixTime && updateRelativeTime(timeElement)),
+  mutations.forEach(({ target: { parentElement: timeElement } }) =>
+    timeElement?.unixTime && updateRelativeTime(timeElement),
+  ),
 );
 
 const formatTimeElements = function (timeElements) {
@@ -104,7 +106,10 @@ const formatTimeElements = function (timeElements) {
 
 export const main = async function () {
   ({ format, displayRelative } = await getPreferences('timeformat'));
-  pageModifications.register(`${keyToCss('timestamp')}[datetime], ${keyToCss('timestamp')} > [datetime]`, formatTimeElements);
+  pageModifications.register(
+    `${keyToCss('timestamp')}[datetime], ${keyToCss('timestamp')} > [datetime]`,
+    formatTimeElements,
+  );
 };
 
 export const clean = async function () {

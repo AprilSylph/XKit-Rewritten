@@ -75,8 +75,7 @@ const processLabels = labels => labels.forEach(label => {
   span.classList.add(spanClass);
 });
 
-// Resolves after (at least) one browser repaint. A single requestAnimationFrame callback is fired just before
-// the currently pending frame repaint; a second will be scheduled to affect the following frame.
+// Resolves after (at least) one browser repaint. A single requestAnimationFrame callback is fired just before the currently pending frame repaint; a second will be scheduled to affect the following frame.
 const waitForRender = () =>
   new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 

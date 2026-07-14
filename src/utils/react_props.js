@@ -26,7 +26,8 @@ export const trailItem = trailItemElement => {
  * @returns {Promise<object>} The notification's buried notification property
  */
 export const notificationObject = notificationElement => {
-  notificationElement.notificationObjectPromise ??= inject('/main_world/unbury_notification.js', [], notificationElement);
+  notificationElement.notificationObjectPromise ??=
+    inject('/main_world/unbury_notification.js', [], notificationElement);
   return notificationElement.notificationObjectPromise;
 };
 
@@ -80,7 +81,8 @@ export const editPostFormTags = async ({ add = [], remove = [] }) =>
  */
 export const updatePostOnPage = async (postElement, keys) => {
   const currentTimelineObject = await timelineObject(postElement);
-  const { response: newTimelineObject } = await apiFetch(`/v2/blog/${currentTimelineObject.blog.uuid}/posts/${currentTimelineObject.id}`);
+  const { response: newTimelineObject } =
+    await apiFetch(`/v2/blog/${currentTimelineObject.blog.uuid}/posts/${currentTimelineObject.id}`);
 
   const changeEntries = Object.entries(newTimelineObject).filter(([key]) => keys.includes(key));
 

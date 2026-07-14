@@ -31,7 +31,10 @@ const showDeleteDraftsPrompt = () => {
   showModal({
     title: 'Mass Deleter',
     message: [formElement],
-    buttons: [modalCancelButton, input({ type: 'submit', form: formElement.id, class: 'blue', value: 'Next' })],
+    buttons: [
+      modalCancelButton,
+      input({ type: 'submit', form: formElement.id, class: 'blue', value: 'Next' }),
+    ],
   });
 };
 
@@ -49,7 +52,9 @@ const confirmDeleteDrafts = event => {
 
   showModal({
     title: 'Delete drafts?',
-    message: ['Every draft on ', createBlogSpan(blogName), ' dated before ', beforeElement, ' will be deleted.'],
+    message: [
+      'Every draft on ', createBlogSpan(blogName), ' dated before ', beforeElement, ' will be deleted.',
+    ],
     buttons: [
       modalCancelButton,
       button(
@@ -93,7 +98,8 @@ const deleteDrafts = async function ({ blogName, before }) {
 
         resource = response.links?.next?.href;
 
-        foundPostsElement.textContent = `Found ${drafts.length} drafts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
+        foundPostsElement.textContent =
+          `Found ${drafts.length} drafts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
       }),
       sleep(1000),
     ]);
@@ -118,7 +124,8 @@ const deleteDrafts = async function ({ blogName, before }) {
       }).catch(() => {
         failCount += postIds.length;
       }).finally(() => {
-        deleteCountElement.textContent = `Deleted ${deleteCount} drafts... ${failCount ? `(failed: ${failCount})` : ''}`;
+        deleteCountElement.textContent =
+          `Deleted ${deleteCount} drafts... ${failCount ? `(failed: ${failCount})` : ''}`;
       }),
       sleep(1000),
     ]);
@@ -213,7 +220,8 @@ const clearQueue = async function ({ blogName }) {
       }).catch(() => {
         failCount += postIds.length;
       }).finally(() => {
-        deleteCountElement.textContent = `Deleted ${deleteCount} queued posts... ${failCount ? `(failed: ${failCount})` : ''}`;
+        deleteCountElement.textContent =
+          `Deleted ${deleteCount} queued posts... ${failCount ? `(failed: ${failCount})` : ''}`;
       }),
       sleep(1000),
     ]);

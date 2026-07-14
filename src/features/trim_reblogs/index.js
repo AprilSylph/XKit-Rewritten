@@ -160,7 +160,11 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const items = trail.length + (content.length ? 1 : 0);
 
   if (canEdit && ['ask', 'submission'].includes(state) === false) {
-    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: withModalOnError(onButtonClicked) }, items < 2);
+    const clonedControlButton = cloneControlButton(
+      controlButtonTemplate,
+      { click: withModalOnError(onButtonClicked) },
+      items < 2,
+    );
     insertControlButton(postElement, clonedControlButton, buttonClass);
   }
 });

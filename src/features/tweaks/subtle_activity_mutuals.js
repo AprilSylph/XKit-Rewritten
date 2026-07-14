@@ -3,7 +3,8 @@ import { dom } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 
-const labelSelector = `${keyToCss('activity', 'activityItem')} ${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')}`;
+const labelSelector =
+  `${keyToCss('activity', 'activityItem')} ${keyToCss('followingBadgeContainer', 'mutualsBadgeContainer')}`;
 
 const spanClass = 'xkit-tweaks-subtle-activity-span';
 const iconClass = 'xkit-tweaks-subtle-activity-icon';

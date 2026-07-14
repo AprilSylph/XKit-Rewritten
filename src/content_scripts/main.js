@@ -1,7 +1,8 @@
 'use strict';
 
 {
-  const MAX_BOOT_ATTEMPTS = 3600; // 60 seconds on 60Hz displays; 10 seconds on 360Hz displays
+  // 60 seconds on 60Hz displays; 10 seconds on 360Hz displays
+  const MAX_BOOT_ATTEMPTS = 3600;
 
   const enabledFeaturesKey = 'enabledScripts';
 
@@ -10,7 +11,8 @@
 
   const restartListeners = {};
 
-  const timestamp = Date.now(); // Prevent referencing outdated resources after Firefox extension update/restart
+  // Prevent referencing outdated resources after Firefox extension update/restart
+  const timestamp = Date.now();
 
   const runFeature = async function (name) {
     const {
@@ -43,7 +45,11 @@
 
       if (onStorageChanged instanceof Function) {
         onStorageChanged(changes);
-      } else if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
+      } else if (
+        Object.keys(changes).some(
+          key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined,
+        )
+      ) {
         await clean?.();
         await main?.();
       }
@@ -63,7 +69,9 @@
       clean().catch(console.error);
     }
     if (stylesheet) {
-      document.querySelector(`link[href^="${browser.runtime.getURL(`/features/${name}/index.css`)}"]`)?.remove();
+      document
+        .querySelector(`link[href^="${browser.runtime.getURL(`/features/${name}/index.css`)}"]`)
+        ?.remove();
     }
     if (styleElement) {
       styleElement.remove();
@@ -143,7 +151,9 @@
      * Fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
      * @see https://github.com/sveltejs/kit/issues/7805#issuecomment-1330078207
      */
-    await Promise.all(['css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
+    await Promise.all(['css_map', 'language_data', 'user'].map(
+      name => import(browser.runtime.getURL(`/utils/${name}.js`)),
+    ));
 
     installedFeatures
       .filter(featureName => enabledFeatures.includes(featureName))

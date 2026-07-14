@@ -1,6 +1,5 @@
 /**
- * This module is run in the page's "main" execution environment. It receives function call request events
- * from the inject utility, loads and executes the requested functions, and sends back the results.
+ * This module is run in the page's "main" execution environment. It receives function call request events from the inject utility, loads and executes the requested functions, and sends back the results.
  */
 
 const moduleCache = {};

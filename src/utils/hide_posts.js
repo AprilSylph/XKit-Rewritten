@@ -92,9 +92,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
   const controlsAttribute = `data-xkit-${id}-hidden-controls`;
 
   /**
-   * CSS content replacement removes the target timeline item element from the DOM (including excluding it
-   * from control/command-F page search) without entirely removing the timeline item bounding box, which would
-   * break Tumblr's J/K scroll shortcuts.
+   * CSS content replacement removes the target timeline item element from the DOM (including excluding it from control/command-F page search) without entirely removing the timeline item bounding box, which would break Tumblr's J/K scroll shortcuts.
    */
   styleElement.textContent += `
     [${hiddenAttribute}], [${controlsAttribute}] ~ div [${controlledHiddenAttribute}] {

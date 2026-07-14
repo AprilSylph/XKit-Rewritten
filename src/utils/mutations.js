@@ -17,8 +17,7 @@ const isolateErrors = callback => {
 };
 
 /**
- * Utilities to run specified code when a modification to the page results in
- * the addition of elements matching a specified CSS selector.
+ * Utilities to run specified code when a modification to the page results in the addition of elements matching a specified CSS selector.
  */
 export const pageModifications = Object.freeze({
   /** @type {Map<(elements: Element[]) => void, string>} */ listeners: new Map(),

@@ -313,9 +313,7 @@ const getReblogMenuItem = async (reblogButton, href) => {
     // Open the reblog menu for the observer to find.
     reblogButton.click();
 
-    // Disconnect the observer after 5 seconds. If we've gone this long without
-    // finding the menu item, anything we do cannot be considered to have been
-    // triggered by user input, so we should give up and do nothing at all.
+    // Disconnect the observer after 5 seconds. If we've gone this long without finding the menu item, anything we do cannot be considered to have been triggered by user input, so we should give up and do nothing at all.
     setTimeout(() => mutationObserver.disconnect(), 5000);
   });
 };

@@ -41,7 +41,7 @@ export const dateTimeFormat = new Intl.DateTimeFormat(document.documentElement.l
 });
 
 /**
- * Adds string elements between an array's items to format it as an English prose list.
+ * Add string elements between an array's items to format it as an English prose list.
  * The Oxford comma is included.
  * @param {(string | Node)[]} array Input array of any number of items
  * @param {string} andOr String 'and' or 'or', used before the last item

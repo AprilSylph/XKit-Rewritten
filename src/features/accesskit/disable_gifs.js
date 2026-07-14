@@ -108,8 +108,8 @@ const addLabel = (element, inside = false) => {
 };
 
 /**
- * Fetches the selected image and tests if it is animated. On older browsers without ImageDecoder
- * support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
+ * Fetches the selected image and tests if it is animated.
+ * On older browsers without ImageDecoder support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
  */
 const isAnimated = memoize(async sourceUrl => {
   const response = await fetch(sourceUrl, { headers: { Accept: 'image/webp,*/*' } });
@@ -129,10 +129,9 @@ const isAnimated = memoize(async sourceUrl => {
 });
 
 /**
- * Fetches the selected image, tests if it is animated, and returns a blob URL with the paused image
- * if it is. This may be a small memory or storage leak, as the resulting blob URL will be valid until
- * the page is refreshed/closed; avoid using this where practical. On older browsers without ImageDecoder
- * support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
+ * Fetches the selected image, tests if it is animated, and returns a blob URL with the paused image if it is.
+ * This may be a small memory or storage leak, as the resulting blob URL will be valid until the page is refreshed/closed; avoid using this where practical.
+ * On older browsers without ImageDecoder support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
  */
 const createPausedUrlIfAnimated = memoize(async sourceUrl => {
   const response = await fetch(sourceUrl, { headers: { Accept: 'image/webp,*/*' } });

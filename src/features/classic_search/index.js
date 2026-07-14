@@ -34,7 +34,10 @@ const replaceSearchForm = function ([searchFormElement]) {
 export const main = async function () {
   ({ newTab } = await getPreferences('classic_search'));
 
-  pageModifications.register('form[role="search"][action="/search"]:not(.classic-search):not(.xkit-classic-search-done)', replaceSearchForm);
+  pageModifications.register(
+    'form[role="search"][action="/search"]:not(.classic-search):not(.xkit-classic-search-done)',
+    replaceSearchForm,
+  );
 };
 
 export const clean = async function () {

@@ -71,8 +71,10 @@ export const pageModifications = Object.freeze({
  * Utilities to run specified code when new posts are added to the page.
  */
 export const onNewPosts = Object.freeze({
-  addListener: callback => pageModifications.register(`${postSelector}:not(.sortable-fallback) article`, callback),
-  removeListener: callback => pageModifications.unregister(callback),
+  addListener: callback =>
+    pageModifications.register(`${postSelector}:not(.sortable-fallback) article`, callback),
+  removeListener: callback =>
+    pageModifications.unregister(callback),
 });
 
 /**
@@ -94,7 +96,9 @@ const onBeforeRepaint = () => {
 
   for (const [modifierFunction, selector] of pageModifications.listeners) {
     if (modifierFunction.length === 0) {
-      const shouldRun = addedNodes.some(addedNode => addedNode.matches(selector) || addedNode.querySelector(selector) !== null);
+      const shouldRun = addedNodes.some(addedNode =>
+        addedNode.matches(selector) || addedNode.querySelector(selector) !== null,
+      );
       if (shouldRun) isolateErrors(() => modifierFunction());
       continue;
     }

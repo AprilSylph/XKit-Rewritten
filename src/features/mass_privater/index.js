@@ -78,7 +78,8 @@ const confirmInitialPrompt = async event => {
 
   if (tags.length) {
     const getTagCount = async tag => {
-      const { response: { totalPosts } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag } });
+      const { response: { totalPosts } } =
+        await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'GET', queryParams: { tag } });
       return totalPosts ?? 0;
     };
     const counts = await Promise.all(tags.map(getTagCount));
@@ -93,7 +94,12 @@ const confirmInitialPrompt = async event => {
   const beforeMs = elements.before.valueAsNumber + timezoneOffsetMs;
 
   const beforeString = dateTimeFormat.format(new Date(beforeMs));
-  const beforeElement = dom('span', { style: 'white-space: nowrap; font-weight: bold;' }, null, [beforeString]);
+  const beforeElement = dom(
+    'span',
+    { style: 'white-space: nowrap; font-weight: bold;' },
+    null,
+    [beforeString],
+  );
 
   const before = beforeMs / 1000;
 
@@ -185,7 +191,8 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
 
           resource = response.links?.next?.href;
 
-          gatherStatus.textContent = `Found ${filteredPostIdsSet.size} posts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
+          gatherStatus.textContent =
+            `Found ${filteredPostIdsSet.size} posts (checked ${fetchedPosts})${resource ? '...' : '.'}`;
         }),
         sleep(1000),
       ]);
@@ -220,7 +227,8 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
       }).catch(() => {
         privatedFailCount += postIds.length;
       }).finally(() => {
-        privateStatus.textContent = `\nPrivated ${privatedCount} posts... ${privatedFailCount ? `(failed: ${privatedFailCount})` : ''}`;
+        privateStatus.textContent =
+          `\nPrivated ${privatedCount} posts... ${privatedFailCount ? `(failed: ${privatedFailCount})` : ''}`;
       }),
       sleep(1000),
     ]);

@@ -251,7 +251,8 @@ async function reblogPost ({ currentTarget }) {
     ...reblogTag ? [reblogTag] : [],
     ...(state === 'queue' && queueTag) ? [queueTag] : [],
   ].join(',');
-  const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } = await timelineObject(postElement);
+  const { blog: { uuid: parentTumblelogUUID }, reblogKey, rebloggedRootId } =
+    await timelineObject(postElement);
 
   const requestPath = `/v2/blog/${blog}/posts`;
 
@@ -279,7 +280,8 @@ async function reblogPost ({ currentTarget }) {
       notify(response.displayText);
 
       if (alreadyRebloggedEnabled) {
-        const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(alreadyRebloggedStorageKey);
+        const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } =
+          await browser.storage.local.get(alreadyRebloggedStorageKey);
         const rootID = rebloggedRootId || postID;
 
         if (alreadyRebloggedList.includes(rootID) === false) {
@@ -297,7 +299,8 @@ async function reblogPost ({ currentTarget }) {
 }
 
 const processPosts = async function (postElements) {
-  const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } = await browser.storage.local.get(alreadyRebloggedStorageKey);
+  const { [alreadyRebloggedStorageKey]: alreadyRebloggedList = [] } =
+    await browser.storage.local.get(alreadyRebloggedStorageKey);
   filterPostElements(postElements).forEach(async postElement => {
     const { id } = postElement.dataset;
     const { rebloggedRootId } = await timelineObject(postElement);
@@ -419,7 +422,9 @@ export const main = async function () {
   blogSelector.replaceChildren(
     ...userBlogs.map(({ name, uuid }) => option({ value: uuid }, [name])),
     ...joinedCommunities.length ? [hr()] : [],
-    ...joinedCommunities.map(({ title, uuid, blog: { name } }) => option({ value: uuid }, [`${title} (${name})`])),
+    ...joinedCommunities.map(({ title, uuid, blog: { name } }) =>
+      option({ value: uuid }, [`${title} (${name})`]),
+    ),
   );
 
   [...userBlogs, ...joinedCommunities].forEach((data) => {

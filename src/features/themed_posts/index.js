@@ -73,8 +73,12 @@ const processPosts = async function (postElements) {
         } = theme;
 
         const backgroundColorRGB = hexToRGB(backgroundColor);
-        const titleColorRGB = colorsAreSimilar(titleColor, backgroundColor) ? createContrastingColor(titleColor) : hexToRGB(titleColor);
-        const linkColorRGB = colorsAreSimilar(linkColor, backgroundColor) ? createContrastingColor(linkColor) : hexToRGB(linkColor);
+        const titleColorRGB = colorsAreSimilar(titleColor, backgroundColor)
+          ? createContrastingColor(titleColor)
+          : hexToRGB(titleColor);
+        const linkColorRGB = colorsAreSimilar(linkColor, backgroundColor)
+          ? createContrastingColor(linkColor)
+          : hexToRGB(linkColor);
 
         styleElement.textContent += `
           [data-xkit-themed="${name}"] {
@@ -110,7 +114,8 @@ const processPosts = async function (postElements) {
 };
 
 export const main = async function () {
-  ({ reblogTrailTheming, enableOnPeepr, blacklistedUsernames, missingPostMode } = await getPreferences('themed_posts'));
+  ({ reblogTrailTheming, enableOnPeepr, blacklistedUsernames, missingPostMode } =
+    await getPreferences('themed_posts'));
   blacklist = blacklistedUsernames.split(',').map(username => username.trim());
 
   if (reblogTrailTheming) {

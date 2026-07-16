@@ -27,6 +27,9 @@
     "remixicon": "^4.9.1",
     "sortablejs": "^1.15.7"
   },
+  "allowScripts": {
+    "unrs-resolver": false
+  },
   "webExt": {
     "sourceDir": "src/",
     "build": {

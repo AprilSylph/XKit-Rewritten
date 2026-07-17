@@ -1,0 +1,47 @@
+:host {
+  display: block;
+}
+
+#muted-blogs {
+  --border-width: 1px;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--border-width);
+  padding: 0;
+  border-radius: var(--border-radius-medium);
+  margin: 0;
+  overflow: hidden;
+
+  background-color: var(--border-color);
+  list-style-type: none;
+  outline: var(--border-width) solid var(--border-color);
+  outline-offset: 0;
+}
+
+#muted-blogs:empty, #muted-blogs:not(:empty) + #no-muted-blogs {
+  display: none;
+}
+
+h3 + #muted-blogs {
+  margin-block-start: var(--space-medium);
+}
+
+.muted-blog {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: var(--space-small);
+  padding-block: var(--space-small);
+  padding-inline-start: var(--space-medium);
+  padding-inline-end: var(--space-small);
+  margin: 0;
+
+  background-color: var(--background-color-canvas);
+}
+
+.muted-blog > a {
+  margin-inline-end: auto;
+  min-width: 0;
+}

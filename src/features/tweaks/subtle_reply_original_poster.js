@@ -1,0 +1,64 @@
+import { keyToCss } from '../../utils/css_map.js';
+import { span } from '../../utils/dom.js';
+import { buildStyle } from '../../utils/interface.js';
+import { pageModifications } from '../../utils/mutations.js';
+
+const labelSelector = `footer ${keyToCss('blogLinkWrapper')} ~ ${keyToCss('isOriginalPoster')}`;
+
+const spanClass = 'xkit-tweaks-subtle-reply-span';
+
+export const styleElement = buildStyle(`
+.${spanClass} {
+  display: inline-block;
+  overflow-x: clip;
+
+  width: var(--rendered-width);
+}
+
+${labelSelector}:not(:hover) .${spanClass} {
+  width: 0;
+}
+
+${labelSelector}:not(:hover) > svg {
+  margin-left: 0;
+}
+`);
+
+const transitionStyleElement = buildStyle(`
+.${spanClass} {
+  transition: width 0.2s ease;
+}
+${labelSelector} > svg {
+  transition: margin 0.2s ease;
+}
+`);
+
+const processLabels = labels => labels.forEach(label => {
+  const textNode = label.firstChild;
+  if (textNode.nodeName !== '#text') return;
+
+  const spanElement = span({}, [textNode.textContent]);
+  label.insertBefore(spanElement, textNode);
+  textNode.textContent = '';
+
+  spanElement.style.setProperty('--rendered-width', `${spanElement.getBoundingClientRect().width}px`);
+  spanElement.classList.add(spanClass);
+});
+
+const waitForRender = () =>
+  new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+export const main = async function () {
+  pageModifications.register(labelSelector, processLabels);
+  waitForRender().then(() => document.documentElement.append(transitionStyleElement));
+};
+
+export const clean = async function () {
+  pageModifications.unregister(processLabels);
+  transitionStyleElement.remove();
+
+  [...document.querySelectorAll(`.${spanClass}`)].forEach(span => {
+    const textNode = document.createTextNode(span.textContent);
+    span.parentNode.replaceChild(textNode, span);
+  });
+};

@@ -5,6 +5,9 @@ import { memoize } from '../../utils/memoize.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 
+/** @type {AbortController}   */ let loadEventController;
+/** @type {"eager" | "lazy"}  */ let loadingMode;
+
 const canvasClass = 'xkit-paused-gif-placeholder';
 const pausedPosterAttribute = 'data-paused-gif-use-poster';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
@@ -13,8 +16,6 @@ const labelAttribute = 'data-paused-gif-label';
 const labelSizeAttribute = 'data-paused-gif-label-size';
 const hoverFixAttribute = 'data-paused-gif-hover-fix';
 const containerClass = 'xkit-paused-gif-container';
-
-let loadingMode;
 
 const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
 const parentHovered = `:is(:hover > *, [${hoverContainerAttribute}]:hover *)`;
@@ -113,8 +114,8 @@ const addLabel = (element, inside = false) => {
 };
 
 /**
- * Fetches the selected image and tests if it is animated. On older browsers without ImageDecoder
- * support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
+ * Fetches the selected image and tests if it is animated.
+ * On older browsers without ImageDecoder support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
  */
 const isAnimated = memoize(async sourceUrl => {
   const response = await fetch(sourceUrl, { headers: { Accept: 'image/webp,*/*' } });
@@ -134,10 +135,9 @@ const isAnimated = memoize(async sourceUrl => {
 });
 
 /**
- * Fetches the selected image, tests if it is animated, and returns a blob URL with the paused image
- * if it is. This may be a small memory or storage leak, as the resulting blob URL will be valid until
- * the page is refreshed/closed; avoid using this where practical. On older browsers without ImageDecoder
- * support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
+ * Fetches the selected image, tests if it is animated, and returns a blob URL with the paused image if it is.
+ * This may be a small memory or storage leak, as the resulting blob URL will be valid until the page is refreshed/closed; avoid using this where practical.
+ * On older browsers without ImageDecoder support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
  */
 const createPausedUrlIfAnimated = memoize(async sourceUrl => {
   const response = await fetch(sourceUrl, { headers: { Accept: 'image/webp,*/*' } });
@@ -196,9 +196,11 @@ const pauseGif = async function (gifElement) {
   };
 };
 
+/** @type {(gifElements: HTMLImageElement[]) => void} */
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
     if (gifElement.closest(`${keyToCss('avatarImage', 'subAvatarImage')}, .block-editor-writing-flow`)) return;
+
     const pausedGifElements = [...gifElement.parentNode.querySelectorAll(`.${canvasClass}`)];
     if (pausedGifElements.length) {
       gifElement.after(...pausedGifElements);
@@ -217,7 +219,10 @@ const processGifs = function (gifElements) {
     if (gifElement.complete && gifElement.currentSrc) {
       pauseGif(gifElement);
     } else {
-      gifElement.onload = () => pauseGif(gifElement);
+      gifElement.addEventListener('load', () => pauseGif(gifElement), {
+        once: true,
+        signal: loadEventController.signal,
+      });
     }
   });
 };
@@ -272,7 +277,7 @@ const processRows = function (rowsElements) {
 };
 
 const processHoverableElements = elements =>
-  elements.forEach(element => element.setAttribute(hoverContainerAttribute, ''));
+  elements.forEach(element => element.toggleAttribute(hoverContainerAttribute, true));
 
 const onStorageChanged = async function (changes) {
   const { 'accesskit.preferences.disable_gifs_loading_mode': modeChanges } = changes;
@@ -282,6 +287,8 @@ const onStorageChanged = async function (changes) {
 };
 
 export const main = async function () {
+  loadEventController = new AbortController();
+
   ({ disable_gifs_loading_mode: loadingMode } = await getPreferences('accesskit'));
 
   const gifImage = `
@@ -332,6 +339,7 @@ export const main = async function () {
 };
 
 export const clean = async function () {
+  loadEventController.abort();
   browser.storage.local.onChanged.removeListener(onStorageChanged);
 
   pageModifications.unregister(processGifs);

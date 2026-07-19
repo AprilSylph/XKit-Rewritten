@@ -1,3 +1,7 @@
+/**
+ * TimelineFilter functions exported from this module can be run on a timeline DOM element to identify its type from its data attributes. These attributes are not part of the official Tumblr API, which provides no clean way to do this.
+ */
+
 const createSelector = (...components) => `:is(${components.filter(Boolean).join(', ')})`;
 
 export const timelineSelector = ':is([data-timeline], [data-timeline-id])';

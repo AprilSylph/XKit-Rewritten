@@ -41,7 +41,6 @@ const quickTagsPanel = div({ 'aria-labelledby': quickTagsTabId, id: quickTagsPan
 const suggestedTagsPanel = div({ 'aria-labelledby': suggestedTagsTabId, id: suggestedTagsPanelId, role: 'tabpanel' });
 const tagsInput = input({
   autocomplete: 'off',
-  list: 'quick-reblog-tag-suggestions',
   placeholder: 'Tags (comma separated)',
   input: onTagsInput,
   keydown: onTextFieldKeyDown,

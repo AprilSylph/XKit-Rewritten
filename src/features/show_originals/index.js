@@ -123,7 +123,7 @@ const processPosts = async function (postElements) {
 
       if ((showOwnReblogs && myPost)) { return; }
 
-      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
+      getTimelineItemWrapper(postElement).toggleAttribute(hiddenAttribute, true);
     });
 };
 

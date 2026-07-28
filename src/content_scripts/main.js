@@ -108,9 +108,7 @@
   });
 
   /**
-   * Shows an informative modal if the extension context is invalidated (e.g. after extension is autoupdated
-   * or manually disabled in Chromium). Should do nothing in Firefox, which stops running all extension
-   * context javascript immediately.
+   * Shows an informative modal if the extension context is invalidated (e.g. after extension is autoupdated or manually disabled in Chromium). Should do nothing in Firefox, which stops running all extension context javascript immediately.
    */
   const warnOnExtensionContextInvalidated = async () => {
     const { showContextInvalidatedModal } = await import(browser.runtime.getURL('/utils/modals.js'));

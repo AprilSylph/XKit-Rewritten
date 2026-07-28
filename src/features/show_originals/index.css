@@ -1,4 +1,5 @@
 [data-show-originals="on"] ~ div > [data-show-originals-hidden],
+[data-show-originals="on"] ~ div > div > [data-show-originals-hidden],
 [data-show-originals="on"][data-location="exemptBlogTimeline"] ~ div > [data-show-originals-hidden-on-exempt-blog-timeline] {
   content: linear-gradient(transparent, transparent);
   height: 0;

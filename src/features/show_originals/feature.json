@@ -18,6 +18,11 @@
       "label": "Always show reblogs with contributed content",
       "default": false
     },
+    "showReblogsWithTags": {
+      "type": "checkbox",
+      "label": "Always show reblogs with tags",
+      "default": false
+    },
     "showReblogsOfNotFollowing": {
       "type": "checkbox",
       "label": "Always show reblogs of blogs I don't follow",

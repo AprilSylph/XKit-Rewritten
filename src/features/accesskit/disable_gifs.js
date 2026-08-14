@@ -191,6 +191,7 @@ const pauseGif = async function (gifElement) {
 
       gifElement.closest(keyToCss(
         'imgLink', // trending tag: https://www.tumblr.com/explore/trending
+        'adContainer', // sidebar advertisement
       ))?.setAttribute(positionHoverFixAttribute, '');
     }
   };
@@ -305,7 +306,7 @@ export const main = async function () {
         'topPost', // activity page top post
         'colorfulListItemWrapper', // trending tag: https://www.tumblr.com/explore/trending
         'takeoverBanner', // advertisement
-        'mrecContainer', // advertisement
+        'mrecContainer', // sidebar advertisement
       )}
     ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
   `;

@@ -328,7 +328,7 @@ export const main = async function () {
     `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`, // recommended blog carousel entry
     `div:has(> a${keyToCss('cover')}):has(${keyToCss('communityCategoryImage')})`, // tumblr communities browse page entry: https://www.tumblr.com/communities/browse
     `${keyToCss('gridTimelineObject')}`, // likes page or patio grid view post: https://www.tumblr.com/likes
-    `${keyToCss('fixedHeightTile')} ${keyToCss('contentWrapper')}`, // trending tag preview card: https://www.tumblr.com/explore/trending
+    `${keyToCss('fixedHeightTile')} ${keyToCss('contentWrapper')}`, // trending tag preview card, post-redesign: https://www.tumblr.com/explore/trending
   ].join(', ');
   pageModifications.register(hoverableElement, processHoverableElements);
 

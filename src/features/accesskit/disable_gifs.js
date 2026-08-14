@@ -14,7 +14,7 @@ const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
 const labelSizeAttribute = 'data-paused-gif-label-size';
-const hoverFixAttribute = 'data-paused-gif-hover-fix';
+const positionHoverFixAttribute = 'data-paused-gif-position-hover-fix';
 const containerClass = 'xkit-paused-gif-container';
 
 const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
@@ -89,7 +89,7 @@ ${keyToCss('background')}[${labelAttribute}="before"]::before {
   background-image: var(${pausedBackgroundImageVar}) !important;
 }
 
-[${hoverFixAttribute}] {
+[${positionHoverFixAttribute}] {
   position: relative;
   pointer-events: auto !important;
 }
@@ -191,7 +191,7 @@ const pauseGif = async function (gifElement) {
 
       gifElement.closest(keyToCss(
         'imgLink', // trending tag: https://www.tumblr.com/explore/trending
-      ))?.setAttribute(hoverFixAttribute, '');
+      ))?.setAttribute(positionHoverFixAttribute, '');
     }
   };
 };
@@ -256,7 +256,7 @@ const processBackgroundGifs = function (gifBackgroundElements) {
     gifBackgroundElement.closest(keyToCss(
       'media', // old activity item: "liked your post", "reblogged your post", "mentioned you in a post"
       'activityMedia', // new activity item: "replied to your post", "replied to you in a post"
-    ))?.setAttribute(hoverFixAttribute, '');
+    ))?.setAttribute(positionHoverFixAttribute, '');
   });
 };
 
@@ -357,7 +357,7 @@ export const clean = async function () {
   $(`[${labelSizeAttribute}]`).removeAttr(labelSizeAttribute);
   $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
   $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
-  $(`[${hoverFixAttribute}]`).removeAttr(hoverFixAttribute);
+  $(`[${positionHoverFixAttribute}]`).removeAttr(positionHoverFixAttribute);
   [...document.querySelectorAll(`[style*="${pausedBackgroundImageVar}"]`)]
     .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
 };

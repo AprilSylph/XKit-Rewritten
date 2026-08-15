@@ -8,7 +8,7 @@ import { buildSvg } from './remixicon.js';
 $('.xkit-control-button-container').remove();
 
 /**
- * Create a button template that can be cloned with cloneControlButton() for inserting into the controls of a post.
+ * Create a button template that can be cloned with cloneControlButton() for inserting into the controls in a post's footer.
  * @param {string} symbolId The name of the RemixIcon to use
  * @param {string} buttonClass An extra class to identify the extension that added the button
  * @param {string} label Descriptive text to be set as the button aria-label property and tooltip
@@ -25,7 +25,7 @@ export const createControlButtonTemplate = function (symbolId, buttonClass, labe
 };
 
 /**
- * Create a deep-level clone of a button template that is ready to add to the page
+ * Create a deep-level clone of a button template that is ready to add to the page.
  * @param {HTMLDivElement} template A button template as returned by createControlButtonTemplate()
  * @param {object} events An object of DOM Event names and handler functions,
  *                          e.g. { click: () => { alert('Hello!'); } }
@@ -43,7 +43,7 @@ export const cloneControlButton = function (template, events, disabled = false) 
 const secondaryFooterRowClass = 'xkit-controls-row';
 
 /**
- * Adds a secondary footer row above the footer control buttons, similar to the one in the pre-2025 footer layout on editable posts.
+ * Add a fallback secondary footer row above the footer control buttons, similar to the one on most editable posts.
  * @param {HTMLElement} postElement The target post element
  * @returns {HTMLDivElement} The inserted element
  */
@@ -57,7 +57,7 @@ const addSecondaryFooterRow = postElement => {
 };
 
 /**
- * Inserts a control button into the post footer.
+ * Insert a control button into the post footer.
  * @param {HTMLElement} postElement The target post element
  * @param {HTMLDivElement} clonedControlButton Control button element to insert
  * @param {string} buttonClass Button HTML class

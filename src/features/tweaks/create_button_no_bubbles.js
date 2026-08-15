@@ -12,7 +12,7 @@ const processCreateButtons = (createButtons) => {
   createButtons.forEach(createButton => {
     createButton.dataset.originalHref ??= createButton.getAttribute('href');
 
-    createButton.setAttribute(modifiedAttribute, '');
+    createButton.toggleAttribute(modifiedAttribute, true);
     createButton.setAttribute('href', createButton.dataset.originalHref.replace(/\/new$/, '/new/text'));
     createButton.addEventListener('click', onClickNavigate);
   });

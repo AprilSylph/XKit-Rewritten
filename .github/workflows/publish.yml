@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
@@ -51,7 +51,8 @@ jobs:
       - name: Upload to Web Store
         run: npx chrome-webstore-upload
         env:
-          EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
+          PUBLISHER_ID: ${{ secrets.PUBLISHER_ID }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}

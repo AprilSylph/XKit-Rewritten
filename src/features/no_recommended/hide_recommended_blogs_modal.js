@@ -6,17 +6,20 @@ const hiddenAttribute = 'data-no-recommended-blogs-modal-hidden';
 
 export const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`);
 
-const hideModalRecommended = blogsLists =>
-  blogsLists
-    .filter(ul => ul.matches(blogViewSelector))
-    .forEach(ul => ul.parentNode.setAttribute(hiddenAttribute, ''));
+const desktopContainerSelector = keyToCss('desktopContainer');
+const recommendedBlogsSelector = keyToCss('recommendedBlogs');
+const sidebarSectionSelector = `${desktopContainerSelector}:is(${blogViewSelector}):has(${recommendedBlogsSelector})`;
+
+/** @type {(sidebarSections: HTMLElement[]) => void} */
+const hideSidebarSections = sidebarSections => sidebarSections.forEach(
+  sidebarSection => sidebarSection.toggleAttribute(hiddenAttribute, true),
+);
 
 export const main = async function () {
-  const blogsListSelector = `${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
-  pageModifications.register(blogsListSelector, hideModalRecommended);
+  pageModifications.register(sidebarSectionSelector, hideSidebarSections);
 };
 
 export const clean = async function () {
-  pageModifications.unregister(hideModalRecommended);
+  pageModifications.unregister(hideSidebarSections);
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
 };

@@ -21,6 +21,11 @@
       "type": "checkbox",
       "label": "Treat reblogs with contributed content as original",
       "default": false
+    },
+    "tagsOriginal": {
+      "type": "checkbox",
+      "label": "Treat reblogs with tags as original",
+      "default": false
     }
   }
 }

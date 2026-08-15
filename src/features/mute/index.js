@@ -58,6 +58,7 @@ const mutedBlogEntriesStorageKey = 'mute.mutedBlogEntries';
 
 let checkTrail;
 let contributedContentOriginal;
+let tagsOriginal;
 
 let blogNames = {};
 let mutedBlogs = {};
@@ -153,7 +154,7 @@ const processPosts = async function (postElements) {
   filterPostElements(postElements, { timeline: timelineFilter, includeFiltered: true }).forEach(async postElement => {
     const timelineObjectData = await timelineObject(postElement);
     const { uuid, name } = getVisibleBlog(timelineObjectData);
-    const { rebloggedRootUuid, content = [], trail = [] } = timelineObjectData;
+    const { rebloggedRootUuid, content = [], tags = [], trail = [] } = timelineObjectData;
 
     const { muteBlogUuid: timelineBlogUuid } = postElement.closest(timelineSelector).dataset;
 
@@ -171,9 +172,10 @@ const processPosts = async function (postElements) {
       }
     };
 
-    const isRebloggedPost = contributedContentOriginal
-      ? rebloggedRootUuid && !content.length
-      : rebloggedRootUuid;
+    const isRebloggedPost =
+      rebloggedRootUuid &&
+      (!contributedContentOriginal || content.length === 0) &&
+      (!tagsOriginal || tags.length === 0);
 
     const originalUuid = isRebloggedPost ? rebloggedRootUuid : uuid;
     const reblogUuid = isRebloggedPost ? uuid : null;
@@ -289,7 +291,7 @@ export const onStorageChanged = async function (changes, areaName) {
 };
 
 export const main = async function () {
-  ({ checkTrail, contributedContentOriginal } = await getPreferences('mute'));
+  ({ checkTrail, contributedContentOriginal, tagsOriginal } = await getPreferences('mute'));
   ({ [blogNamesStorageKey]: blogNames = {} } = await browser.storage.local.get(blogNamesStorageKey));
   const { [mutedBlogEntriesStorageKey]: mutedBlogsEntries } = await browser.storage.local.get(mutedBlogEntriesStorageKey);
   mutedBlogs = Object.fromEntries(mutedBlogsEntries ?? []);

@@ -2,7 +2,6 @@
   "title": "Tag Tracking+",
   "description": "Unread counts for followed tags",
   "icon": {
-    "class_name": "ri-hashtag",
     "color": "white",
     "background_color": "#c538ff"
   },

@@ -2,7 +2,6 @@
   "title": "PostBlock",
   "description": "Disappear all instances of a post",
   "icon": {
-    "class_name": "ri-file-forbid-line",
     "color": "white",
     "background_color": "#686868"
   },

@@ -3,7 +3,7 @@
   "description": "Clear your likes",
   "icon": {
     "color": "white",
-    "background_color": "#9d318b",
+    "background_color": "#9d318b"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#mass-unliker",
   "relatedTerms": [ "delete likes" ]

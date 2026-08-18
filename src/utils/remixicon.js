@@ -1,6 +1,6 @@
 import { dom } from './dom.js';
 
-const symbolsUrl = browser.runtime.getURL('/lib/remixicon/remixicon.symbol.svg');
+const symbolsUrl = browser.runtime.getURL('/lib/remixicon.symbol.svg');
 
 if (document.querySelector(`svg[data-src="${symbolsUrl}"]`) === null) {
   fetch(symbolsUrl)

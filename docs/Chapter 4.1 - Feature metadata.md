@@ -20,7 +20,7 @@ Human-readable description for this feature. Defaults to an empty string if not 
 - Type: Object
 - Required: No
 
-Object with two supported keys:
+Object with two supported keys. This property is ignored if the feature does not have an accompanying `icon.svg` file.
 
 #### `"icon"`: `"color"`
 - Type: String[\<color\>](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value)

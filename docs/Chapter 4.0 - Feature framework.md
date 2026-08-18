@@ -25,7 +25,6 @@ The stylesheet file is a normal CSS file which, assuming the module file correct
   "title": "Example Feature",
   "description": "This doesn't do anything useful.",
   "icon": {
-    "class_name": "ri-terminal-line",
     "color": "#33ff00",
     "background_color": "#000000"
   },

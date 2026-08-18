@@ -78,7 +78,7 @@ const addButtonToPage = async function ([scrollToTopButton]) {
     scrollToBottomButton.style.transform = 'rotate(180deg)';
     scrollToBottomButton.addEventListener('click', onclick);
     scrollToBottomButton.id = scrollToBottomButtonId;
-    scrollToBottomButton.setAttribute(displayBlockUnlessDisabledAttr, '');
+    scrollToBottomButton.toggleAttribute(displayBlockUnlessDisabledAttr, true);
 
     scrollToBottomButton.classList.toggle(activeClass, active);
   }

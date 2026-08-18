@@ -1,5 +1,10 @@
+/**
+ * This module is run in the page's "main" execution environment. It receives function call request events from the inject utility, loads and executes the requested functions, and sends back the results.
+ */
+
 const moduleCache = {};
 
+// Remove outdated event listeners when loading module
 window.removeXKitListener?.();
 
 const controller = new AbortController();

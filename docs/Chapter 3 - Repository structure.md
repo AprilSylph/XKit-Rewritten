@@ -41,6 +41,7 @@ features/
 ├── index.json            Index of feature names
 ├── <feature_name>/       Feature folders
 │   ├── feature.json      The feature's metadata
+│   ├── icon.svg          The feature's control panel icon
 │   ├── index.css         The feature's stylesheet
 │   ├── index.js          The feature's module script
 │   ├── options/          Files for rendering the feature's preferences

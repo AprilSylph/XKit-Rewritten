@@ -2,7 +2,6 @@
   "title": "Mass Privater",
   "description": "Unpublish posts by time range or tag",
   "icon": {
-    "class_name": "ri-lock-2-line",
     "color": "white",
     "background_color": "#9d318b"
   },

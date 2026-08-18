@@ -74,13 +74,20 @@ const renderFeatures = async function () {
       featureElement.append(descriptionElement);
     }
 
-    if (icon.class_name) {
-      const iconElement = document.createElement('i');
-      iconElement.setAttribute('slot', 'icon');
-      iconElement.classList.add('ri-fw', icon.class_name);
-      iconElement.style.backgroundColor = icon.background_color ?? '#ffffff';
-      iconElement.style.color = icon.color ?? '#000000';
-      featureElement.append(iconElement);
+    if (icon) {
+      try {
+        const iconUrl = browser.runtime.getURL(`/features/${featureName}/icon.svg`);
+        const iconResponse = await fetch(iconUrl);
+        const iconText = await iconResponse.text();
+
+        const iconElement = new DOMParser().parseFromString(iconText, 'image/svg+xml').firstElementChild;
+        iconElement.setAttribute('slot', 'icon');
+        iconElement.style.backgroundColor = icon.background_color ?? '#ffffff';
+        iconElement.style.color = icon.color ?? '#000000';
+        featureElement.append(iconElement);
+      } catch (exception) {
+        console.error(`Could not render icon for ${featureName}:`, exception);
+      }
     }
 
     if (metadata.deprecated) {

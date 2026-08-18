@@ -20,13 +20,7 @@ Human-readable description for this feature. Defaults to an empty string if not 
 - Type: Object
 - Required: No
 
-Object with three supported keys:
-
-#### `"icon"`: `"class_name"`
-- Type: String
-- Required: Yes
-
-[Remix Icon](https://remixicon.com/) class of the icon for the feature. If not provided, an icon is not generated.
+Object with two supported keys. This property is ignored if the feature does not have an accompanying `icon.svg` file.
 
 #### `"icon"`: `"color"`
 - Type: String[\<color\>](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value)

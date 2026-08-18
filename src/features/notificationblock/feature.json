@@ -2,7 +2,6 @@
   "title": "NotificationBlock",
   "description": "Hide activity about a post",
   "icon": {
-    "class_name": "ri-notification-off-line",
     "color": "white",
     "background_color": "#f5223c"
   },

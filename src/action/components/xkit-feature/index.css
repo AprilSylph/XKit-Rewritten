@@ -147,9 +147,8 @@ summary:focus-visible {
   overflow: hidden;
 }
 
-#icon ::slotted(i) {
-  font-size: 26px;
-  line-height: 32px;
+#icon ::slotted(svg) {
+  padding: 3px;
 }
 
 #title,

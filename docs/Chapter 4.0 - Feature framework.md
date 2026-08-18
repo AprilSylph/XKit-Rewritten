@@ -2,6 +2,7 @@
 
 Each feature is comprised of a subfolder in `src/features/`, containing:
 - `feature.json` metadata file (required)
+- `icon.svg` icon file (optional)
 - `index.js` module file (required)
 - `index.css` stylesheet file (optional)
 
@@ -10,6 +11,8 @@ For a feature to be visible to the user, its subfolder name must also be added t
 ---
 
 The metadata file defines information the user needs to decide whether to enable the feature, and may contain preference definitions to allow the user to configure the feature.
+
+The icon file is a scalable vector graphic to be shown in the control panel to represent the feature, alongside its metadata. Features currently use [Remix Icon](https://remixicon.com/) for all icons. Every icon must include a comment including the icon's license, and a link to where the icon originated from.
 
 The module file is a [JavaScript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) which is run in the [content script](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts) context of each Tumblr tab where the extension is installed (assuming the feature is enabled). They are expected to export certain named constants by the main content script, which lives in `src/content_scripts/main.js`.
 
@@ -55,6 +58,12 @@ The stylesheet file is a normal CSS file which, assuming the module file correct
     }
   }
 }
+```
+
+`/src/features/example/icon.svg`
+```html
+<!-- https://github.com/Remix-Design/remixicon/blob/master/License | https://remixicon.com/icon/terminal-line -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.9999 12L3.92886 19.0711L2.51465 17.6569L8.1715 12L2.51465 6.34317L3.92886 4.92896L10.9999 12ZM10.9999 19H20.9999V21H10.9999V19Z"></path></svg>
 ```
 
 `/src/features/example/index.js`

@@ -24,6 +24,7 @@
           "default": "#ffffff"
         }
       },
+      "minProperties": 1,
       "additionalProperties": false
     },
     "help": {
@@ -36,6 +37,7 @@
       "items": {
         "type": "string"
       },
+      "minItems": 1,
       "unevaluatedItems": false,
       "uniqueItems": true
     },

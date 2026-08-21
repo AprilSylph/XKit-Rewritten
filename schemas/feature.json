@@ -42,6 +42,7 @@
     "preferences": {
       "type": "object",
       "description": "Preferences for this feature, keyed by internal preference name.",
+      "minProperties": 1,
       "additionalProperties": {
         "anyOf": [
           { "$ref": "#/$defs/checkboxPreference" },
@@ -107,7 +108,11 @@
         },
         "default": {
           "type": "string",
-          "description": "The default value of this preference."
+          "description": "The default value of this preference.",
+          "anyOf": [
+            { "const": "" },
+            { "pattern": "^#[0-9a-fA-F]{6}$" }
+          ]
         },
         "inherit": {
           "$ref": "#/$defs/inherit"
@@ -129,7 +134,8 @@
         },
         "src": {
           "type": "string",
-          "description": "The URI, relative to `src/`, for this preference's web component."
+          "description": "The URL, relative to `src/`, for this preference's web component.",
+          "pattern": "^/features/.+/.+\\.js$"
         }
       },
       "required": [
@@ -196,6 +202,7 @@
             ],
             "additionalProperties": false
           },
+          "minItems": 1,
           "unevaluatedItems": false,
           "uniqueItems": true
         },

@@ -1,0 +1,268 @@
+{
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "The feature's title to be displayed in the control panel."
+    },
+    "description": {
+      "type": "string",
+      "description": "The feature's description to be displayed in the control panel."
+    },
+    "icon": {
+      "type": "object",
+      "description": "Properties for customising how the feature's `icon.svg` renders in the control panel.",
+      "properties": {
+        "color": {
+          "type": "string",
+          "description": "Foreground colour for the feature icon.",
+          "default": "#000000"
+        },
+        "background_color": {
+          "type": "string",
+          "description": "Background colour for the feature icon.",
+          "default": "#ffffff"
+        }
+      },
+      "additionalProperties": false
+    },
+    "help": {
+      "type": "string",
+      "description": "Wiki link for this feature. If omitted, the feature is marked as \"New\"."
+    },
+    "relatedTerms": {
+      "type": "array",
+      "description": "Search terms that should match this feature.",
+      "items": {
+        "type": "string"
+      },
+      "unevaluatedItems": false,
+      "uniqueItems": true
+    },
+    "preferences": {
+      "type": "object",
+      "description": "Preferences for this feature, keyed by internal preference name.",
+      "additionalProperties": {
+        "anyOf": [
+          { "$ref": "#/$defs/checkboxPreference" },
+          { "$ref": "#/$defs/colorPreference" },
+          { "$ref": "#/$defs/componentPreference" },
+          { "$ref": "#/$defs/percentPreference" },
+          { "$ref": "#/$defs/selectPreference" },
+          { "$ref": "#/$defs/textPreference" },
+          { "$ref": "#/$defs/textareaPreference" }
+        ]
+      }
+    },
+    "deprecated": {
+      "type": "boolean",
+      "description": "Whether or not this feature is deprecated.",
+      "default": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "label": {
+      "type": "string",
+      "description": "The preference's label to be displayed in the control panel."
+    },
+    "inherit": {
+      "type": "string",
+      "description": "The storage key to inherit the value of."
+    },
+    "checkboxPreference": {
+      "type": "object",
+      "description": "A checkbox-type preference.",
+      "properties": {
+        "type": {
+          "const": "checkbox"
+        },
+        "label": {
+          "$ref": "#/$defs/label"
+        },
+        "default": {
+          "type": "boolean",
+          "description": "The default value of this preference."
+        },
+        "inherit": {
+          "$ref": "#/$defs/inherit"
+        }
+      },
+      "required": [
+        "type",
+        "label",
+        "default"
+      ],
+      "additionalProperties": false
+    },
+    "colorPreference": {
+      "type": "object",
+      "description": "A color-type preference.",
+      "properties": {
+        "type": {
+          "const": "color"
+        },
+        "label": {
+          "$ref": "#/$defs/label"
+        },
+        "default": {
+          "type": "string",
+          "description": "The default value of this preference."
+        },
+        "inherit": {
+          "$ref": "#/$defs/inherit"
+        }
+      },
+      "required": [
+        "type",
+        "label",
+        "default"
+      ],
+      "additionalProperties": false
+    },
+    "componentPreference": {
+      "type": "object",
+      "description": "A component-type preference.",
+      "properties": {
+        "type": {
+          "const": "component"
+        },
+        "src": {
+          "type": "string",
+          "description": "The URI, relative to `src/`, for this preference's web component."
+        }
+      },
+      "required": [
+        "type",
+        "src"
+      ],
+      "additionalProperties": false
+    },
+    "percentPreference": {
+      "type": "object",
+      "description": "A percent-type preference.",
+      "properties": {
+        "type": {
+          "const": "percent"
+        },
+        "label": {
+          "$ref": "#/$defs/label"
+        },
+        "default": {
+          "type": "number",
+          "description": "The default value of this preference.",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "inherit": {
+          "$ref": "#/$defs/inherit"
+        }
+      },
+      "required": [
+        "type",
+        "label",
+        "default"
+      ],
+      "additionalProperties": false
+    },
+    "selectPreference": {
+      "type": "object",
+      "description": "A select-type preference.",
+      "properties": {
+        "type": {
+          "const": "select"
+        },
+        "label": {
+          "$ref": "#/$defs/label"
+        },
+        "options": {
+          "type": "array",
+          "description": "The available options for this preference.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "The label shown to the user for this option."
+              },
+              "value": {
+                "type": "string",
+                "description": "The value stored for this option."
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "default": {
+          "type": "string",
+          "description": "The default value of this preference."
+        },
+        "inherit": {
+          "$ref": "#/$defs/inherit"
+        }
+      },
+      "required": [
+        "type",
+        "label",
+        "options",
+        "default"
+      ],
+      "additionalProperties": false
+    },
+    "textPreference": {
+      "type": "object",
+      "description": "A text-type preference.",
+      "properties": {
+        "type": {
+          "const": "text"
+        },
+        "label": {
+          "$ref": "#/$defs/label"
+        },
+        "default": {
+          "type": "string",
+          "description": "The default value of this preference."
+        },
+        "inherit": {
+          "$ref": "#/$defs/inherit"
+        }
+      },
+      "required": [
+        "type",
+        "label",
+        "default"
+      ],
+      "additionalProperties": false
+    },
+    "textareaPreference": {
+      "type": "object",
+      "description": "A textarea-type preference.",
+      "properties": {
+        "type": {
+          "const": "textarea"
+        },
+        "label": {
+          "$ref": "#/$defs/label"
+        },
+        "default": {
+          "type": "string",
+          "description": "The default value of this preference."
+        },
+        "inherit": {
+          "$ref": "#/$defs/inherit"
+        }
+      },
+      "required": [
+        "type",
+        "label",
+        "default"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

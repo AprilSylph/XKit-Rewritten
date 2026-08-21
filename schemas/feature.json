@@ -195,7 +195,9 @@
               "value"
             ],
             "additionalProperties": false
-          }
+          },
+          "unevaluatedItems": false,
+          "uniqueItems": true
         },
         "default": {
           "type": "string",

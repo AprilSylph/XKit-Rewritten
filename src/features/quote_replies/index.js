@@ -1,4 +1,5 @@
 import { keyToCss } from '../../utils/css_map.js';
+import { disableWhileProcessing } from '../../utils/disable_while_processing.js';
 import { dom } from '../../utils/dom.js';
 import { inject } from '../../utils/inject.js';
 import { buildStyle, displayInlineFlexUnlessDisabledAttr, notificationSelector } from '../../utils/interface.js';
@@ -92,10 +93,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
     },
     {
       click () {
-        this.disabled = true;
-        quoteReply(tumblelogName, notificationProps)
-          .catch(showErrorModal)
-          .finally(() => { this.disabled = false; });
+        disableWhileProcessing(this, quoteReply(tumblelogName, notificationProps).catch(showErrorModal));
       },
     },
     [buildSvg('ri-chat-quote-line')],

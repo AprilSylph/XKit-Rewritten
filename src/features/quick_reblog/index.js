@@ -1,5 +1,6 @@
 import { sha256 } from '../../utils/crypto.js';
 import { keyToCss } from '../../utils/css_map.js';
+import { disableWhileProcessing } from '../../utils/disable_while_processing.js';
 import { div, select, input, fieldset, button, option, hr, span } from '../../utils/dom.js';
 import { postSelector, filterPostElements, postType, appendWithoutOverflow, buildStyle } from '../../utils/interface.js';
 import { showErrorModal } from '../../utils/modals.js';
@@ -238,7 +239,6 @@ async function reblogPost ({ currentTarget }) {
   const footer = popupElement.closest('footer');
 
   currentTarget.blur();
-  actionButtons.disabled = true;
 
   const postElement = currentTarget.closest(postSelector);
   const postID = postElement.dataset.id;
@@ -263,7 +263,7 @@ async function reblogPost ({ currentTarget }) {
     state,
   };
 
-  try {
+  disableWhileProcessing(actionButtons, async () => {
     const { meta, response } = await apiFetch(requestPath, { method: 'POST', body: requestBody });
     if (meta.status === 201) {
       markPostReblogged({ footer, state });
@@ -288,11 +288,7 @@ async function reblogPost ({ currentTarget }) {
         }
       }
     }
-  } catch (exception) {
-    showErrorModal(exception);
-  } finally {
-    actionButtons.disabled = false;
-  }
+  }).catch(showErrorModal);
 }
 
 const processPosts = async function (postElements) {

@@ -1,11 +1,10 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { path, svg, title } from '../../utils/dom.js';
+import { path, svg, title, use } from '../../utils/dom.js';
 import { buildStyle, getTimelineItemWrapper, filterPostElements, getPopoverWrapper, notificationSelector } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { onNewPosts, onNewNotifications, pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { blogData, notificationObject, timelineObject } from '../../utils/react_props.js';
-import { buildSvg } from '../../utils/remixicon.js';
 import { followingTimelineSelector } from '../../utils/timeline_id.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { primaryBlogName, userBlogNames } from '../../utils/user.js';
@@ -155,8 +154,9 @@ export const main = async function () {
 const createIcon = (isMutual, blogName, color = 'rgb(var(--black))') =>
   svg({
     class: mutualIconClass,
+    fill: 'currentColor',
+    style: `color: ${color}`,
     viewBox: '0 0 1000 1000',
-    fill: color,
   }, isMutual
     ? [
         title({}, [translate('Mutuals')]),
@@ -164,7 +164,7 @@ const createIcon = (isMutual, blogName, color = 'rgb(var(--black))') =>
       ]
     : [
         title({}, [translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)]),
-        buildSvg('ri-user-follow-line').firstElementChild,
+        use({ href: '#managed-icon__ds-user-following-outline' }),
       ],
   );
 

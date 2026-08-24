@@ -151,7 +151,7 @@ export const main = async function () {
   }
 };
 
-const createIcon = (isMutual, blogName, color = 'rgb(var(--black))') =>
+const createIcon = (isMutual, blogName, color = 'var(--content-fg)') =>
   isMutual
     ? (svg({ class: mutualIconClass, fill: color, viewBox: '0 0 1000 1000' }, [
         title({}, [translate('Mutuals')]),

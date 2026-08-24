@@ -152,21 +152,15 @@ export const main = async function () {
 };
 
 const createIcon = (isMutual, blogName, color = 'rgb(var(--black))') =>
-  svg({
-    class: mutualIconClass,
-    fill: 'currentColor',
-    style: `color: ${color}`,
-    viewBox: '0 0 1000 1000',
-  }, isMutual
-    ? [
+  isMutual
+    ? (svg({ class: mutualIconClass, fill: color, viewBox: '0 0 1000 1000' }, [
         title({}, [translate('Mutuals')]),
         path({ d: drawPathMutuals }),
-      ]
-    : [
+      ]))
+    : (svg({ class: mutualIconClass, style: `color: ${color}`, viewBox: '0 0 24 24' }, [
         title({}, [translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)]),
         use({ href: '#managed-icon__ds-user-following-outline' }),
-      ],
-  );
+      ]));
 
 export const clean = async function () {
   onNewPosts.removeListener(addIcons);

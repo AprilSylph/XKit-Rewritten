@@ -154,17 +154,16 @@ export const main = async function () {
 
 const createIcon = (isMutual, blogName, color = 'rgb(var(--black))') =>
   svg({
-    xmlns: 'http://www.w3.org/2000/svg',
     class: mutualIconClass,
     viewBox: '0 0 1000 1000',
     fill: color,
   }, isMutual
     ? [
-        title({ xmlns: 'http://www.w3.org/2000/svg' }, [translate('Mutuals')]),
-        path({ xmlns: 'http://www.w3.org/2000/svg', d: drawPathMutuals }),
+        title({}, [translate('Mutuals')]),
+        path({ d: drawPathMutuals }),
       ]
     : [
-        title({ xmlns: 'http://www.w3.org/2000/svg' }, [translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)]),
+        title({}, [translate('{{blogNameLink /}} follows you!').replace('{{blogNameLink /}}', blogName)]),
         buildSvg('ri-user-follow-line').firstElementChild,
       ],
   );

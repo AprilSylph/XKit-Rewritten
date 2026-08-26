@@ -1,109 +1,361 @@
 # Feature metadata
 
-Each feature requires a metadata file in order to be displayed in the configuration panel. Since none of the top-level keys are technically required, you can leave the file as essentially empty (simply `{}`), but it must exist and must be valid JSON.
+Each feature requires a valid `feature.json` metadata file to be present in order for it to be displayed in the configuration panel.
 
-## Supported keys
+The metadata file defines information the user needs to decide whether to enable the feature, and may contain preference definitions to allow the user to configure the feature.
+
+None of the top-level keys for this file are technically required, so it is possible to leave it empty while you write the feature code. However, it must exist, and must be valid JSON.
+
+## Properties
 
 ### `"title"`
-- Type: String
-- Required: No
 
-Human-readable title for this feature. Defaults to the feature's subfolder name if not provided.
+|                 |                                                           |
+| --------------- | --------------------------------------------------------- |
+| **Type**        | `string`                                                  |
+| **Mandatory**   | No                                                        |
+| **Description** | The feature's title to be displayed in the control panel. |
+| **Example**     | <pre lang="json">"title": "Vanilla Audio"</pre>           |
+
+If this property is omitted, no title is displayed for the feature.
 
 ### `"description"`
-- Type: String
-- Required: No
 
-Human-readable description for this feature. Defaults to an empty string if not provided.
+|                 |                                                                               |
+| --------------- | ----------------------------------------------------------------------------- |
+| **Type**        | `string`                                                                      |
+| **Mandatory**   | No                                                                            |
+| **Description** | The feature's description to be displayed in the control panel.               |
+| **Example**     | <pre lang="json">"description": "Use the browser's controls for audio"</pre>  |
+
+If this property is omitted, no description is displayed for the feature.
 
 ### `"icon"`
-- Type: Object
-- Required: No
 
-Object with two supported keys. This property is ignored if the feature does not have an accompanying `icon.svg` file.
+|                 |                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------- |
+| **Type**        | `{ color: string; background_color: string; }`                                        |
+| **Mandatory**   | No                                                                                    |
+| **Description** | Properties for customising how the feature's `icon.svg` renders in the control panel. |
+| **Example**     | See [§ Properties → `"icon"` → Example](#example).                                    |
 
-#### `"icon"`: `"color"`
-- Type: String[\<color\>](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value)
-- Required: No
+This property is ignored if the feature does not have an `icon.svg` file.
 
-The foreground colour of the feature icon. Defaults to pure black (`#000000`) if not provided.
+If this property is omitted, no icon is rendered for the feature.
 
-#### `"icon"`: `"background_color"`
-- Type: String[\<color\>](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value)
-- Required: No
+#### `"color"`
 
-The background colour of the feature icon. Defaults to pure white (`#ffffff`) if not provided.
+The CSS [`<color>`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value) to use as the icon's foreground colour.
+
+Default value: `#000000`
+
+#### `"background_color"`
+
+The CSS [`<color>`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value) to use as the icon's background colour.
+
+Default value: `#ffffff`
+
+#### Example
+
+```json
+"icon": {
+  "color": "white",
+  "background_color": "#7c5cff"
+}
+```
 
 ### `"help"`
-- Type: String
-- Required: No
 
-URL which points to a usage guide or extended description for the feature.
+|                 |                                                                                                           |
+| --------------- | --------------------------------------------------------------------------------------------------------- |
+| **Type**        | `string`                                                                                                  |
+| **Mandatory**   | No                                                                                                        |
+| **Description** | URL pointing to the usage guide or extended description for this feature.                                 |
+| **Example**     | <pre lang="json">"help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#vanilla-audio"</pre> |
+
+If this property is omitted, the feature is marked as "New".
 
 ### `"relatedTerms"`
-- Type: Array
-- Required: No
 
-An optional array of strings related to this feature that a user might search for. Case insensitive.
+|                 |                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------- |
+| **Type**        | `string[]`                                                                            |
+| **Mandatory**   | No                                                                                    |
+| **Description** | Array of search terms that should match this feature. Case insensitive.               |
+| **Example**     | <pre lang="json">"relatedTerms": [ "Audio Downloader", "Audio Plus", "Audio+" ]</pre> |
 
 ### `"preferences"`
-- Type: Object
-- Required: No
 
-Object with 1 or more custom keys; each key is used internally as a preference's name.
+|                 |                                                                                                       |
+| --------------- | ----------------------------------------------------------------------------------------------------- |
+| **Type**        | `Record<string, Preference>`                                                                          |
+| **Mandatory**   | No                                                                                                    |
+| **Description** | An object consisting of one or more preference definition objects, keyed by internal preference name. |
+| **Example**     | See [§ Properties → `"preferences"` → Example](#example-1).                                           |
 
-It is recommended to use camelCase for each preference name, so that the feature can destructure each preference without renaming it.
+It is recommended to use camelCase for preference names in most cases. This allows the feature code to use destructuring assignments when fetching preference values from storage, without needing to perform renames to obey the project's JavaScript style guide.
 
-#### `"preferences"`: \<preference name\>
-- Type: Object
+See [§ Types](#types) for details on how to write preference definition objects.
 
-#### `"preferences"`: \<preference name\>: `"type"`
-- Type: String
-- Required: Yes
+#### Example
 
-Type of preference. Supported values: `"checkbox"`, `"color"`, `"component"`, `"percent"`, `"select"`, `"text"`, `"textarea"`
-
-#### `"preferences"`: \<preference name\>: `"label"`
-- Type: String
-- Required: Yes, unless `type` is `"component"`
-
-Label displayed to the user to describe the preference.
-
-#### `"preferences"`: \<preference name\>: `"options"`
-- Type: Array
-- Required: Yes, if `type` is `"select"`
-
-For `"select"`-type preferences, an array of objects each with `"value"` and `"label"` properties. Unused for other preference types.
-
-#### `"preferences"`: \<preference name\>: `"src"`
-- Type: String
-- Required: Yes, if `type` is `"component"`
-
-For `"component"`-type preferences, a URL relative to `src/` pointing to a module file for a Web Component to be rendered in the feature's preference list.
-This module file's default export must be a function which returns an instance of the Web Component via `document.createElement()`.
-
-Unused for other preference types.
-
-#### `"preferences"`: \<preference name\>: `"default"`
-- Type: Any
-- Required: Yes, unless `type` is `"component"`
-
-Default value of the preference to display to the user.
-
-If the preference `type` is `"checkbox"`, this value should be a boolean.  
-If the preference `type` is `"color"`, this value should either be a string representing a hexadecimal colour code (i.e. `"#1a2b3c"`) or an empty string.  
-If the preference `type` is `"percent"`, this value should be an integer in the range of 0–100.  
-If the preference `type` is `"select"`, this value should be a string that matches one of the `"options"` item's `"value"`.  
-If the preference `type` is `"text"` or `"textarea"`, this value should be a string.
-
-#### `"preferences"`: \<preference name\>: `"inherit"`
-- Type: String
-- Required: No
-
-The storage key to inherit the value of, if the preference has not been set.
+```json
+"preferences": {
+  "defaultVolume": {
+    "type": "percent",
+    "label": "Default Volume",
+    "default": 100
+  }
+}
+```
 
 ### `"deprecated"`
-- Type: Boolean
-- Required: No
 
-Whether to hide the feature on installations on which it was not enabled at the time of deprecation.
+|                 |                                             |
+| --------------- | ------------------------------------------- |
+| **Type**        | `boolean`                                   |
+| **Mandatory**   | No                                          |
+| **Description** | Whether or not this feature is deprecated.  |
+| **Example**     | <pre lang="json">"deprecated": true</pre>   |
+
+Deprecated features are hidden on all installations by default, allowing it to be discontinued without being outright removed.
+
+Only installations with "special access" to a given deprecated feature will continue to be able to enable and run it.
+
+#### Special access
+
+If an installation has a feature enabled, and that feature then becomes deprecated, that installation gains special access to the feature.
+
+Installations with special access to a deprecated feature will continue to see that feature in the control panel, and will be permanently allowed to toggle its enabled status, without ever losing access to the feature for as long as the feature still exists.
+
+Special access is stored as part of an installation's saved preferences, so restoring a preference backup from an installation with access to deprecated features will also restore that access on the new installation.
+
+## Types
+
+### `Label`
+
+|                 |                                                                                   |
+| --------------- | --------------------------------------------------------------------------------- |
+| **Type**        | `string`                                                                          |
+| **Description** | The preference's label to be displayed in the control panel.                      |
+| **Example**     | <pre lang="json">"label": "Hide recommended blogs in the blog view sidebar"</pre> |
+
+Most preference types require a label.
+
+This value always a string; this documentation defines a `Label` type to avoid re-describing the `"label"` property on each preference type.
+
+### `Inherit`
+
+|                 |                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------- |
+| **Type**        | `string \| undefined`                                                                  |
+| **Description** | The storage key to inherit the value of, if the preference has not been set.          |
+| **Example**     | <pre lang="json">"inherit": "no_recommended.preferences.hide_recommended_blogs"</pre> |
+
+Most preference types support inheriting their value from another storage key if both of the following are true:
+- The inheriting preference, where `"inherit"` is defined, does not have any value saved in storage
+- The inherited preference, which `"inherit"` points to, does have a value saved in storage
+
+This is useful for splitting one option into multiple options with finer granularity, or moving preferences from one feature to another, without requiring user action if it can be avoided.
+
+The value type for each preference type is different, so it is not automatically possible for a preference to inherit from any preference. If a preference wants to inherit a stored value that is not compatible with its preference type, the feature code must account for this on a per-case basis.
+
+`"inherit"` is optional on every preference type that supports it.
+
+### `Preference`
+
+|                 |                                                                                                                                                 |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**        | `CheckboxPreference \| ColorPreference \| ComponentPreference \| PercentPreference \| SelectPreference \| TextPreference \| TextareaPreference` |
+| **Description** | Union type of all preference types. See definitions for each preference type below.                                                             |
+
+Most preference types require a `"default"` property, which is used as the preference's default value for most intents and purposes:
+
+- In the control panel, installations which do not have a value saved for a preference display the preference's default value.
+- When a feature runs with any unset preferences, the default value for each of those preferences is used instead of `undefined`.
+  - When this happens, the default value is then stored in the user's config, as if it had been set to that value manually.
+
+The value type of `"default"` varies; keep reading for definitions of each preference type.
+
+### `CheckboxPreference`
+
+|                 |                                                                           |
+| --------------- | ------------------------------------------------------------------------- |
+| **Type**        | `{ type: "checkbox"; label: Label; default: boolean; inherit: Inherit; }` |
+| **Description** | A checkbox-type preference.                                               |
+| **Example**     | See [§ Types → `CheckboxPreference` → Example](#example-2).               |
+
+#### `"default"`
+
+Must be a boolean. Omitting this property is not allowed.
+
+#### Example
+
+```json
+"showTagSuggestions": {
+  "type": "checkbox",
+  "label": "Suggest tags from the post being reblogged",
+  "default": false
+}
+```
+
+### `ColorPreference`
+
+|                 |                                                                       |
+| --------------- | --------------------------------------------------------------------- |
+| **Type**        | `{ type: "color"; label: Label; default: string; inherit: Inherit; }` |
+| **Description** | A color-type preference.                                              |
+| **Example**     | See [§ Types → `ColorPreference` → Example](#example-3).              |
+
+#### `"default"`
+
+Must be a six-value syntax [`<hex-color>`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/hex-color) string, or an empty string.
+Omitting this property is not allowed.
+
+#### Example
+
+```json
+"reblogColour": {
+  "type": "color",
+  "label": "Reblogged post colour",
+  "default": ""
+}
+```
+
+### `ComponentPreference`
+
+|                 |                                                               |
+| --------------- | ------------------------------------------------------------- |
+| **Type**        | `{ type: "component"; src: string; }`                         |
+| **Description** | A component-type preference.                                  |
+| **Example**     | See [§ Types → `ComponentPreference` → Example](#example-4).  |
+
+This is the only preference type which does not support `"default"` or `"inherit"`.
+
+#### `"src"`
+
+A URL, relative to the `src/` directory, pointing to a module file for a Web Component to be rendered in the feature's preference list.
+
+This module file's default export must be a function which returns an instance of the Web Component via `document.createElement()`.
+
+#### Example
+
+```json
+"manageBlockedPosts": {
+  "type": "component",
+  "src": "/features/postblock/options/index.js"
+}
+```
+
+For an example of a component preference module file, see [`src/features/postblock/options/index.js`](../src/features/postblock/options/index.js).
+
+### `PercentPreference`
+
+|                 |                                                                         |
+| --------------- | ----------------------------------------------------------------------- |
+| **Type**        | `{ type: "percent"; label: Label; default: number; inherit: Inherit; }` |
+| **Description** | A percent-type preference.                                              |
+| **Example**     | See [§ Types → `PercentPreference` → Example](#example-5).              |
+
+#### `"default"`
+
+Must be an integer ranging from 0 to 100. Omitting this property is not allowed.
+
+#### Example
+
+```json
+"defaultVolume": {
+  "type": "percent",
+  "label": "Default Volume",
+  "default": 100
+}
+```
+
+### `SelectPreference`
+
+|                 |                                                                                                                       |
+| --------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Type**        | `{ type: "select"; label: Label; options: { label: string; value: string; }[]; default: string; inherit: Inherit; }`  |
+| **Description** | A select-type preference.                                                                                             |
+| **Example**     | See [§ Types → `SelectPreference` → Example](#example-6).                                                             |
+
+#### `"options"`
+
+An array of objects, each with a `"label"` and `"value"` property.
+
+- `"label"` (`string`) is the label shown to the user for this option.
+- `"value"` (`string`) is the value stored for this option.
+
+#### `"default"`
+
+Must be a string that matches the `"value"` of one of the defined options. Omitting this property is not allowed.
+
+#### Example
+
+```json
+"popupPosition": {
+  "type": "select",
+  "label": "Popup position",
+  "options": [
+    { "value": "above", "label": "Above reblog button" },
+    { "value": "below", "label": "Below reblog button" }
+  ],
+  "default": "below"
+}
+```
+
+### `TextPreference`
+
+|                 |                                                                       |
+| --------------- | --------------------------------------------------------------------- |
+| **Type**        | `{ type: "text"; label: Label; default: string; inherit: Inherit; }`  |
+| **Description** | A text-type preference.                                               |
+| **Example**     | See [§ Types → `TextPreference` → Example](#example-7).               |
+
+Text-type preferences render as single-line text fields in the control panel.
+
+If a multi-line text field is desired, use a textarea-type preference instead.
+
+#### `"default"`
+
+Must be a string. Omitting this property is not allowed.
+
+#### Example
+
+```json
+"originalPostTag": {
+  "type": "text",
+  "label": "Original post tag",
+  "default": ""
+}
+```
+
+### `TextareaPreference`
+
+|                 |                                                                           |
+| --------------- | ------------------------------------------------------------------------- |
+| **Type**        | `{ type: "textarea"; label: Label; default: string; inherit: Inherit; }`  |
+| **Description** | A textarea-type preference.                                               |
+| **Example**     | See [§ Types → `TextareaPreference` → Example](#example-8).               |
+
+Textarea-type preferences render as multi-line text fields in the control panel.
+
+If a single-line text field is desired, use a text-type preference instead.
+
+#### `"default"`
+
+Must be a string. Omitting this property is not allowed.
+
+#### Example
+
+```json
+"whitelistedUsernames": {
+  "type": "textarea",
+  "label": "Always show reblogs from these blogs (comma-separated)",
+  "default": ""
+}
+```
+
+## Schema
+
+[`schemas/feature.json`](../schemas/feature.json)

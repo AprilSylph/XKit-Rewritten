@@ -47,13 +47,13 @@
       "minProperties": 1,
       "additionalProperties": {
         "anyOf": [
-          { "$ref": "#/$defs/checkboxPreference" },
-          { "$ref": "#/$defs/colorPreference" },
-          { "$ref": "#/$defs/componentPreference" },
-          { "$ref": "#/$defs/percentPreference" },
-          { "$ref": "#/$defs/selectPreference" },
-          { "$ref": "#/$defs/textPreference" },
-          { "$ref": "#/$defs/textareaPreference" }
+          { "$ref": "#/$defs/CheckboxPreference" },
+          { "$ref": "#/$defs/ColorPreference" },
+          { "$ref": "#/$defs/ComponentPreference" },
+          { "$ref": "#/$defs/PercentPreference" },
+          { "$ref": "#/$defs/SelectPreference" },
+          { "$ref": "#/$defs/TextPreference" },
+          { "$ref": "#/$defs/TextareaPreference" }
         ]
       }
     },
@@ -65,15 +65,15 @@
   },
   "additionalProperties": false,
   "$defs": {
-    "label": {
+    "Label": {
       "type": "string",
       "description": "The preference's label to be displayed in the control panel."
     },
-    "inherit": {
+    "Inherit": {
       "type": "string",
       "description": "The storage key to inherit the value of."
     },
-    "checkboxPreference": {
+    "CheckboxPreference": {
       "type": "object",
       "description": "A checkbox-type preference.",
       "properties": {
@@ -81,14 +81,14 @@
           "const": "checkbox"
         },
         "label": {
-          "$ref": "#/$defs/label"
+          "$ref": "#/$defs/Label"
         },
         "default": {
           "type": "boolean",
           "description": "The default value of this preference."
         },
         "inherit": {
-          "$ref": "#/$defs/inherit"
+          "$ref": "#/$defs/Inherit"
         }
       },
       "required": [
@@ -98,7 +98,7 @@
       ],
       "additionalProperties": false
     },
-    "colorPreference": {
+    "ColorPreference": {
       "type": "object",
       "description": "A color-type preference.",
       "properties": {
@@ -106,7 +106,7 @@
           "const": "color"
         },
         "label": {
-          "$ref": "#/$defs/label"
+          "$ref": "#/$defs/Label"
         },
         "default": {
           "type": "string",
@@ -117,7 +117,7 @@
           ]
         },
         "inherit": {
-          "$ref": "#/$defs/inherit"
+          "$ref": "#/$defs/Inherit"
         }
       },
       "required": [
@@ -127,7 +127,7 @@
       ],
       "additionalProperties": false
     },
-    "componentPreference": {
+    "ComponentPreference": {
       "type": "object",
       "description": "A component-type preference.",
       "properties": {
@@ -146,7 +146,7 @@
       ],
       "additionalProperties": false
     },
-    "percentPreference": {
+    "PercentPreference": {
       "type": "object",
       "description": "A percent-type preference.",
       "properties": {
@@ -154,7 +154,7 @@
           "const": "percent"
         },
         "label": {
-          "$ref": "#/$defs/label"
+          "$ref": "#/$defs/Label"
         },
         "default": {
           "type": "number",
@@ -163,7 +163,7 @@
           "maximum": 100
         },
         "inherit": {
-          "$ref": "#/$defs/inherit"
+          "$ref": "#/$defs/Inherit"
         }
       },
       "required": [
@@ -173,7 +173,7 @@
       ],
       "additionalProperties": false
     },
-    "selectPreference": {
+    "SelectPreference": {
       "type": "object",
       "description": "A select-type preference.",
       "properties": {
@@ -181,7 +181,7 @@
           "const": "select"
         },
         "label": {
-          "$ref": "#/$defs/label"
+          "$ref": "#/$defs/Label"
         },
         "options": {
           "type": "array",
@@ -213,7 +213,7 @@
           "description": "The default value of this preference."
         },
         "inherit": {
-          "$ref": "#/$defs/inherit"
+          "$ref": "#/$defs/Inherit"
         }
       },
       "required": [
@@ -224,7 +224,7 @@
       ],
       "additionalProperties": false
     },
-    "textPreference": {
+    "TextPreference": {
       "type": "object",
       "description": "A text-type preference.",
       "properties": {
@@ -232,14 +232,14 @@
           "const": "text"
         },
         "label": {
-          "$ref": "#/$defs/label"
+          "$ref": "#/$defs/Label"
         },
         "default": {
           "type": "string",
           "description": "The default value of this preference."
         },
         "inherit": {
-          "$ref": "#/$defs/inherit"
+          "$ref": "#/$defs/Inherit"
         }
       },
       "required": [
@@ -249,7 +249,7 @@
       ],
       "additionalProperties": false
     },
-    "textareaPreference": {
+    "TextareaPreference": {
       "type": "object",
       "description": "A textarea-type preference.",
       "properties": {
@@ -257,14 +257,14 @@
           "const": "textarea"
         },
         "label": {
-          "$ref": "#/$defs/label"
+          "$ref": "#/$defs/Label"
         },
         "default": {
           "type": "string",
           "description": "The default value of this preference."
         },
         "inherit": {
-          "$ref": "#/$defs/inherit"
+          "$ref": "#/$defs/Inherit"
         }
       },
       "required": [

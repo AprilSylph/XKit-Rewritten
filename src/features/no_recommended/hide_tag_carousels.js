@@ -1,6 +1,7 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
+import { timelineObject } from '../../utils/react_props.js';
 
 const hiddenAttribute = 'data-no-recommended-tag-carousels-hidden';
 
@@ -10,20 +11,25 @@ export const styleElement = buildStyle(`
   [${hiddenAttribute}] > div img, [${hiddenAttribute}] > div canvas { visibility: hidden; }
 `);
 
-const tagCardSelector = keyToCss('tagCard');
-const listTimelineObjectSelector = keyToCss('listTimelineObject');
-const carouselWrapperSelector = `${listTimelineObjectSelector} ${keyToCss('carouselWrapper')}`;
+const carouselSelector = `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')}`;
 
-const hideTagCarousels = carouselWrappers => carouselWrappers
-  .filter(carouselWrapper => carouselWrapper.querySelector(tagCardSelector) !== null)
-  .map(getTimelineItemWrapper)
-  .forEach(timelineItem => {
-    timelineItem.toggleAttribute(hiddenAttribute, true);
-    timelineItem.previousElementSibling.toggleAttribute(hiddenAttribute, true);
+const hideTagCarousels = carousels =>
+  carousels.forEach(async carousel => {
+    const { elements } = await timelineObject(carousel);
+    if (elements.some(({ objectType }) => objectType === 'tag_carousel_card')) {
+      const timelineItem = getTimelineItemWrapper(carousel);
+      if (
+        timelineItem.previousElementSibling.querySelector(keyToCss('titleObject')) ||
+        timelineItem.previousElementSibling.dataset.cellId?.startsWith('timelineObject:title')
+      ) {
+        timelineItem.toggleAttribute(hiddenAttribute, true);
+        timelineItem.previousElementSibling.toggleAttribute(hiddenAttribute, true);
+      }
+    }
   });
 
 export const main = async function () {
-  pageModifications.register(carouselWrapperSelector, hideTagCarousels);
+  pageModifications.register(carouselSelector, hideTagCarousels);
 };
 
 export const clean = async function () {

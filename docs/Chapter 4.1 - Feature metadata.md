@@ -6,6 +6,8 @@ The metadata file defines information the user needs to decide whether to enable
 
 None of the top-level keys for this file are technically required, so it is possible to leave it empty while you write the feature code. However, it must exist, and must be valid JSON.
 
+<br>
+
 ## Properties
 
 ### `"title"`
@@ -19,6 +21,8 @@ None of the top-level keys for this file are technically required, so it is poss
 
 If this property is omitted, no title is displayed for the feature.
 
+<br>
+
 ### `"description"`
 
 |                 |                                                                               |
@@ -29,6 +33,8 @@ If this property is omitted, no title is displayed for the feature.
 | **Example**     | <pre lang="json">"description": "Use the browser's controls for audio"</pre>  |
 
 If this property is omitted, no description is displayed for the feature.
+
+<br>
 
 ### `"icon"`
 
@@ -64,6 +70,8 @@ Default value: `#ffffff`
 }
 ```
 
+<br>
+
 ### `"help"`
 
 |                 |                                                                                                           |
@@ -75,6 +83,8 @@ Default value: `#ffffff`
 
 If this property is omitted, the feature is marked as "New".
 
+<br>
+
 ### `"relatedTerms"`
 
 |                 |                                                                                       |
@@ -83,6 +93,8 @@ If this property is omitted, the feature is marked as "New".
 | **Mandatory**   | No                                                                                    |
 | **Description** | Array of search terms that should match this feature. Case insensitive.               |
 | **Example**     | <pre lang="json">"relatedTerms": [ "Audio Downloader", "Audio Plus", "Audio+" ]</pre> |
+
+<br>
 
 ### `"preferences"`
 
@@ -109,6 +121,8 @@ See [§ Types](#types) for details on how to write preference definition objects
 }
 ```
 
+<br>
+
 ### `"deprecated"`
 
 |                 |                                             |
@@ -130,6 +144,8 @@ Installations with special access to a deprecated feature will continue to see t
 
 Special access is stored as part of an installation's saved preferences, so restoring a preference backup from an installation with access to deprecated features will also restore that access on the new installation.
 
+<br>
+
 ## Types
 
 ### `Label`
@@ -143,6 +159,8 @@ Special access is stored as part of an installation's saved preferences, so rest
 Most preference types require a label.
 
 This value always a string; this documentation defines a `Label` type to avoid re-describing the `"label"` property on each preference type.
+
+<br>
 
 ### `Inherit`
 
@@ -162,6 +180,8 @@ The value type for each preference type is different, so it is not automatically
 
 `"inherit"` is optional on every preference type that supports it.
 
+<br>
+
 ### `Preference`
 
 |                 |                                                                                                                                                 |
@@ -176,6 +196,8 @@ Most preference types require a `"default"` property, which is used as the prefe
   - When this happens, the default value is then stored in the user's config, as if it had been set to that value manually.
 
 The value type of `"default"` varies; keep reading for definitions of each preference type.
+
+<br>
 
 ### `CheckboxPreference`
 
@@ -199,6 +221,8 @@ Must be a boolean. Omitting this property is not allowed.
 }
 ```
 
+<br>
+
 ### `ColorPreference`
 
 |                 |                                                                       |
@@ -221,6 +245,8 @@ Omitting this property is not allowed.
   "default": ""
 }
 ```
+
+<br>
 
 ### `ComponentPreference`
 
@@ -249,6 +275,8 @@ This module file's default export must be a function which returns an instance o
 
 For an example of a component preference module file, see [`src/features/postblock/options/index.js`](../src/features/postblock/options/index.js).
 
+<br>
+
 ### `PercentPreference`
 
 |                 |                                                                         |
@@ -270,6 +298,8 @@ Must be an integer ranging from 0 to 100. Omitting this property is not allowed.
   "default": 100
 }
 ```
+
+<br>
 
 ### `SelectPreference`
 
@@ -304,6 +334,8 @@ Must be a string that matches the `"value"` of one of the defined options. Omitt
 }
 ```
 
+<br>
+
 ### `TextPreference`
 
 |                 |                                                                       |
@@ -330,6 +362,8 @@ Must be a string. Omitting this property is not allowed.
 }
 ```
 
+<br>
+
 ### `TextareaPreference`
 
 |                 |                                                                           |
@@ -355,6 +389,8 @@ Must be a string. Omitting this property is not allowed.
   "default": ""
 }
 ```
+
+<br>
 
 ## Schema
 

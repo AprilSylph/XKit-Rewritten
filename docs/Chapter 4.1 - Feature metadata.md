@@ -175,7 +175,7 @@ Most preference types support inheriting their value from another storage key, i
 
 This is useful for splitting one option into multiple options with finer granularity, or moving preferences from one feature to another, without requiring user action if it can be avoided.
 
-The value type for each preference type is different, so it is not automatically possible for a preference to inherit from any preference. If a preference wants to inherit a stored value that is not compatible with its preference type, the feature code must account for this on a per-case basis.
+The storage value type for each preference type is different, and no type conversion occurs when inheriting a storage value. If a preference wants to inherit a stored value that is not usually compatible with its preference type, the feature code must permanently expect and properly handle storage values corresponding to the inherited preference type _and_ the inheriting preference type.
 
 `"inherit"` is optional on every preference type that supports it.
 

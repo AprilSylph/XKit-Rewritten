@@ -132,13 +132,13 @@ See [§ Types](#types) for details on how to write preference definition objects
 
 Deprecated features are hidden on all installations by default, allowing features to be discontinued without being outright removed.
 
-Only installations with "special access" to a given deprecated feature will continue to be able to enable and run it.
-
 #### Special access
 
-If an installation has a feature enabled, and that feature then becomes deprecated, that installation gains special access to the feature.
+Only the installations granted "special access" to a deprecated feature will continue to be able to see, configure, and run it.
 
-Installations with special access to a deprecated feature will continue to see that feature in the control panel, and will be permanently allowed to toggle its enabled status, without ever losing access to the feature for as long as the feature still exists.
+If an installation has a feature enabled, and that feature then becomes deprecated, that installation gains special access to that feature.
+
+Installations with special access to a deprecated feature will continue to see that feature in the control panel, and will be allowed to run the feature, for as long as the feature still exists. Disabling a deprecated feature does not remove special access.
 
 Special access is stored as part of an installation's saved preferences, so restoring a preference backup from an installation with access to deprecated features will also restore that access on the new installation.
 

@@ -202,7 +202,7 @@ The value type of `"default"` varies; keep reading for definitions of each prefe
 |                 |                                                                                                             |
 | --------------- | ----------------------------------------------------------------------------------------------------------- |
 | **Type**        | <code>{ type: "checkbox"; label: [Label](#label); default: boolean; inherit?: [Inherit](#inherit); }</code> |
-| **Description** | A checkbox-type preference.                                                                                 |
+| **Description** | A checkbox-type preference. Renders in the control panel as a checkbox input followed by a text label.      |
 
 #### `"default"`
 
@@ -225,7 +225,7 @@ Must be a boolean. Omitting this property is not allowed.
 |                 |                                                                                                         |
 | --------------- | ------------------------------------------------------------------------------------------------------- |
 | **Type**        | <code>{ type: "color"; label: [Label](#label); default: string; inherit?: [Inherit](#inherit); }</code> |
-| **Description** | A color-type preference.                                                                                |
+| **Description** | A color-type preference. Renders in the control panel as a colour picker followed by a text label.      |
 
 #### `"default"`
 
@@ -246,16 +246,18 @@ Omitting this property is not allowed.
 
 ### `ComponentPreference`
 
-|                 |                                       |
-| --------------- | ------------------------------------- |
-| **Type**        | `{ type: "component"; src: string; }` |
-| **Description** | A component-type preference.          |
+|                 |                                                             |
+| --------------- | ----------------------------------------------------------- |
+| **Type**        | `{ type: "component"; src: string; }`                       |
+| **Description** | A component-type preference. Allows rendering of custom UI. |
 
 This is the only preference type which does not support `"default"` or `"inherit"`.
 
 #### `"src"`
 
 A URL, relative to the `src/` directory, pointing to a module file for a Web Component to be rendered in the feature's preference list.
+
+Using a custom Web Component instead of any of the other provided preference types (or in conjunction with them) allows for complex management of that feature's data, such as creating tag bundles or listing blocked posts.
 
 This module file's default export must be a function which returns an instance of the Web Component via `document.createElement()`.
 
@@ -277,7 +279,7 @@ For an example of a component preference module file, see [`src/features/postblo
 |                 |                                                                                                           |
 | --------------- | --------------------------------------------------------------------------------------------------------- |
 | **Type**        | <code>{ type: "percent"; label: [Label](#label); default: number; inherit?: [Inherit](#inherit); }</code> |
-| **Description** | A percent-type preference.                                                                                |
+| **Description** | A percent-type preference. Renders in the control panel as a number input headed by a text label.         |
 
 #### `"default"`
 
@@ -300,7 +302,7 @@ Must be an integer ranging from 0 to 100. Omitting this property is not allowed.
 |                 |                                                                                                                                                         |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**        | <code>{ type: "select"; label: [Label](#label); options: { label: string; value: string; }[]; default: string; inherit?: [Inherit](#inherit); }</code>  |
-| **Description** | A select-type preference.                                                                                                                               |
+| **Description** | A select-type preference. Renders in the control panel as a dropdown menu headed by a text label.                                                       |
 
 #### `"options"`
 
@@ -331,14 +333,10 @@ Must be a string that matches the `"value"` of one of the defined options. Omitt
 
 ### `TextPreference`
 
-|                 |                                                                                                         |
-| --------------- | ------------------------------------------------------------------------------------------------------- |
-| **Type**        | <code>{ type: "text"; label: [Label](#label); default: string; inherit?: [Inherit](#inherit); }</code>  |
-| **Description** | A text-type preference.                                                                                 |
-
-Text-type preferences render as single-line text fields in the control panel.
-
-If a multi-line text field is desired, use a textarea-type preference instead.
+|                 |                                                                                                           |
+| --------------- | --------------------------------------------------------------------------------------------------------- |
+| **Type**        | <code>{ type: "text"; label: [Label](#label); default: string; inherit?: [Inherit](#inherit); }</code>    |
+| **Description** | A text-type preference. Renders in the control panel as a single-line text field headed by a text label.  |
 
 #### `"default"`
 
@@ -361,11 +359,7 @@ Must be a string. Omitting this property is not allowed.
 |                 |                                                                                                             |
 | --------------- | ----------------------------------------------------------------------------------------------------------- |
 | **Type**        | <code>{ type: "textarea"; label: [Label](#label); default: string; inherit?: [Inherit](#inherit); }</code>  |
-| **Description** | A textarea-type preference.                                                                                 |
-
-Textarea-type preferences render as multi-line text fields in the control panel.
-
-If a single-line text field is desired, use a text-type preference instead.
+| **Description** | A textarea-type preference. Renders in the control panel as a multi-line text field headed by a text label. |
 
 #### `"default"`
 

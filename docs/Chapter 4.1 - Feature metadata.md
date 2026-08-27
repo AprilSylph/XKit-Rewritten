@@ -40,7 +40,7 @@ If this property is omitted, no description is displayed for the feature.
 
 |                 |                                                                                       |
 | --------------- | ------------------------------------------------------------------------------------- |
-| **Type**        | `{ color: string; background_color: string; }`                                        |
+| **Type**        | `{ color?: string; background_color?: string; }`                                      |
 | **Mandatory**   | No                                                                                    |
 | **Description** | Properties for customising how the feature's `icon.svg` renders in the control panel. |
 | **Example**     | See [§ Properties → `"icon"` → Example](#example).                                    |
@@ -166,7 +166,7 @@ This value always a string; this documentation defines a `Label` type to avoid r
 
 |                 |                                                                                       |
 | --------------- | ------------------------------------------------------------------------------------- |
-| **Type**        | `string \| undefined`                                                                  |
+| **Type**        | `string`                                                                  |
 | **Description** | The storage key to inherit the value of, if the preference has not been set.          |
 | **Example**     | <pre lang="json">"inherit": "no_recommended.preferences.hide_recommended_blogs"</pre> |
 
@@ -201,11 +201,11 @@ The value type of `"default"` varies; keep reading for definitions of each prefe
 
 ### `CheckboxPreference`
 
-|                 |                                                                           |
-| --------------- | ------------------------------------------------------------------------- |
-| **Type**        | `{ type: "checkbox"; label: Label; default: boolean; inherit: Inherit; }` |
-| **Description** | A checkbox-type preference.                                               |
-| **Example**     | See [§ Types → `CheckboxPreference` → Example](#example-2).               |
+|                 |                                                                             |
+| --------------- | --------------------------------------------------------------------------- |
+| **Type**        | `{ type: "checkbox"; label: Label; default: boolean; inherit?: Inherit; }`  |
+| **Description** | A checkbox-type preference.                                                 |
+| **Example**     | See [§ Types → `CheckboxPreference` → Example](#example-2).                 |
 
 #### `"default"`
 
@@ -225,11 +225,11 @@ Must be a boolean. Omitting this property is not allowed.
 
 ### `ColorPreference`
 
-|                 |                                                                       |
-| --------------- | --------------------------------------------------------------------- |
-| **Type**        | `{ type: "color"; label: Label; default: string; inherit: Inherit; }` |
-| **Description** | A color-type preference.                                              |
-| **Example**     | See [§ Types → `ColorPreference` → Example](#example-3).              |
+|                 |                                                                         |
+| --------------- | ----------------------------------------------------------------------- |
+| **Type**        | `{ type: "color"; label: Label; default: string; inherit?: Inherit; }`  |
+| **Description** | A color-type preference.                                                |
+| **Example**     | See [§ Types → `ColorPreference` → Example](#example-3).                |
 
 #### `"default"`
 
@@ -279,11 +279,11 @@ For an example of a component preference module file, see [`src/features/postblo
 
 ### `PercentPreference`
 
-|                 |                                                                         |
-| --------------- | ----------------------------------------------------------------------- |
-| **Type**        | `{ type: "percent"; label: Label; default: number; inherit: Inherit; }` |
-| **Description** | A percent-type preference.                                              |
-| **Example**     | See [§ Types → `PercentPreference` → Example](#example-5).              |
+|                 |                                                                           |
+| --------------- | ------------------------------------------------------------------------- |
+| **Type**        | `{ type: "percent"; label: Label; default: number; inherit?: Inherit; }`  |
+| **Description** | A percent-type preference.                                                |
+| **Example**     | See [§ Types → `PercentPreference` → Example](#example-5).                |
 
 #### `"default"`
 
@@ -305,7 +305,7 @@ Must be an integer ranging from 0 to 100. Omitting this property is not allowed.
 
 |                 |                                                                                                                       |
 | --------------- | --------------------------------------------------------------------------------------------------------------------- |
-| **Type**        | `{ type: "select"; label: Label; options: { label: string; value: string; }[]; default: string; inherit: Inherit; }`  |
+| **Type**        | `{ type: "select"; label: Label; options: { label: string; value: string; }[]; default: string; inherit?: Inherit; }` |
 | **Description** | A select-type preference.                                                                                             |
 | **Example**     | See [§ Types → `SelectPreference` → Example](#example-6).                                                             |
 
@@ -340,7 +340,7 @@ Must be a string that matches the `"value"` of one of the defined options. Omitt
 
 |                 |                                                                       |
 | --------------- | --------------------------------------------------------------------- |
-| **Type**        | `{ type: "text"; label: Label; default: string; inherit: Inherit; }`  |
+| **Type**        | `{ type: "text"; label: Label; default: string; inherit?: Inherit; }` |
 | **Description** | A text-type preference.                                               |
 | **Example**     | See [§ Types → `TextPreference` → Example](#example-7).               |
 
@@ -368,7 +368,7 @@ Must be a string. Omitting this property is not allowed.
 
 |                 |                                                                           |
 | --------------- | ------------------------------------------------------------------------- |
-| **Type**        | `{ type: "textarea"; label: Label; default: string; inherit: Inherit; }`  |
+| **Type**        | `{ type: "textarea"; label: Label; default: string; inherit?: Inherit; }` |
 | **Description** | A textarea-type preference.                                               |
 | **Example**     | See [§ Types → `TextareaPreference` → Example](#example-8).               |
 

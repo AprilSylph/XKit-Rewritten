@@ -130,7 +130,7 @@ See [§ Types](#types) for details on how to write preference definition objects
 | **Description** | Whether or not this feature is deprecated.  |
 | **Example**     | <pre lang="json">"deprecated": true</pre>   |
 
-Deprecated features are hidden on all installations by default, allowing it to be discontinued without being outright removed.
+Deprecated features are hidden on all installations by default, allowing features to be discontinued without being outright removed.
 
 Only installations with "special access" to a given deprecated feature will continue to be able to enable and run it.
 

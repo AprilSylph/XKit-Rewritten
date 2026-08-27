@@ -33,12 +33,12 @@ button.xkit-quote-replies svg {
   width: 21.5px;
   height: 21.5px;
 
-  fill: rgb(var(--blue));
+  color: rgb(var(--blue));
   transition: all .25s ease-out .4s;
 }
 
 button.xkit-quote-replies:disabled svg {
-  fill: rgba(var(--black), 0.65);
+  color: rgba(var(--black), 0.65);
   transition-property: none;
 }
 

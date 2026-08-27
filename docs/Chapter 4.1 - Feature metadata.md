@@ -99,7 +99,7 @@ If this property is omitted, the feature is marked as "New".
 
 |                 |                                                                                                       |
 | --------------- | ----------------------------------------------------------------------------------------------------- |
-| **Type**        | `Record<string, Preference>`                                                                          |
+| **Type**        | <code>Record\<string, [Preference](#preference)\></code>                                              |
 | **Mandatory**   | No                                                                                                    |
 | **Description** | An object consisting of one or more preference definition objects, keyed by internal preference name. |
 
@@ -164,7 +164,7 @@ This value always a string; this documentation defines a `Label` type to avoid r
 
 |                 |                                                                                       |
 | --------------- | ------------------------------------------------------------------------------------- |
-| **Type**        | `string`                                                                  |
+| **Type**        | `string`                                                                              |
 | **Description** | The storage key to inherit the value of, if the preference has not been set.          |
 | **Example**     | <pre lang="json">"inherit": "no_recommended.preferences.hide_recommended_blogs"</pre> |
 
@@ -182,10 +182,10 @@ The value type for each preference type is different, so it is not automatically
 
 ### `Preference`
 
-|                 |                                                                                                                                                 |
-| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**        | `CheckboxPreference \| ColorPreference \| ComponentPreference \| PercentPreference \| SelectPreference \| TextPreference \| TextareaPreference` |
-| **Description** | Union type of all preference types. See definitions for each preference type below.                                                             |
+|                 |                                                                                         |
+| --------------- | --------------------------------------------------------------------------------------- |
+| **Type**        | <code>[CheckboxPreference](#checkboxpreference) \| [ColorPreference](#colorpreference) \| [ComponentPreference](#componentpreference) \| [PercentPreference](#percentpreference) \| [SelectPreference](#selectpreference) \| [TextPreference](#textpreference) \| [TextareaPreference](#textareapreference)</code> |
+| **Description** | Union type of all preference types. See separate definitions for each preference type.  |
 
 Most preference types require a `"default"` property, which is used as the preference's default value for most intents and purposes:
 
@@ -199,10 +199,10 @@ The value type of `"default"` varies; keep reading for definitions of each prefe
 
 ### `CheckboxPreference`
 
-|                 |                                                                             |
-| --------------- | --------------------------------------------------------------------------- |
-| **Type**        | `{ type: "checkbox"; label: Label; default: boolean; inherit?: Inherit; }`  |
-| **Description** | A checkbox-type preference.                                                 |
+|                 |                                                                                                             |
+| --------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Type**        | <code>{ type: "checkbox"; label: [Label](#label); default: boolean; inherit?: [Inherit](#inherit); }</code> |
+| **Description** | A checkbox-type preference.                                                                                 |
 
 #### `"default"`
 
@@ -222,10 +222,10 @@ Must be a boolean. Omitting this property is not allowed.
 
 ### `ColorPreference`
 
-|                 |                                                                         |
-| --------------- | ----------------------------------------------------------------------- |
-| **Type**        | `{ type: "color"; label: Label; default: string; inherit?: Inherit; }`  |
-| **Description** | A color-type preference.                                                |
+|                 |                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------- |
+| **Type**        | <code>{ type: "color"; label: [Label](#label); default: string; inherit?: [Inherit](#inherit); }</code> |
+| **Description** | A color-type preference.                                                                                |
 
 #### `"default"`
 
@@ -246,10 +246,10 @@ Omitting this property is not allowed.
 
 ### `ComponentPreference`
 
-|                 |                                                               |
-| --------------- | ------------------------------------------------------------- |
-| **Type**        | `{ type: "component"; src: string; }`                         |
-| **Description** | A component-type preference.                                  |
+|                 |                                       |
+| --------------- | ------------------------------------- |
+| **Type**        | `{ type: "component"; src: string; }` |
+| **Description** | A component-type preference.          |
 
 This is the only preference type which does not support `"default"` or `"inherit"`.
 
@@ -274,10 +274,10 @@ For an example of a component preference module file, see [`src/features/postblo
 
 ### `PercentPreference`
 
-|                 |                                                                           |
-| --------------- | ------------------------------------------------------------------------- |
-| **Type**        | `{ type: "percent"; label: Label; default: number; inherit?: Inherit; }`  |
-| **Description** | A percent-type preference.                                                |
+|                 |                                                                                                           |
+| --------------- | --------------------------------------------------------------------------------------------------------- |
+| **Type**        | <code>{ type: "percent"; label: [Label](#label); default: number; inherit?: [Inherit](#inherit); }</code> |
+| **Description** | A percent-type preference.                                                                                |
 
 #### `"default"`
 
@@ -297,10 +297,10 @@ Must be an integer ranging from 0 to 100. Omitting this property is not allowed.
 
 ### `SelectPreference`
 
-|                 |                                                                                                                       |
-| --------------- | --------------------------------------------------------------------------------------------------------------------- |
-| **Type**        | `{ type: "select"; label: Label; options: { label: string; value: string; }[]; default: string; inherit?: Inherit; }` |
-| **Description** | A select-type preference.                                                                                             |
+|                 |                                                                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**        | <code>{ type: "select"; label: [Label](#label); options: { label: string; value: string; }[]; default: string; inherit?: [Inherit](#inherit); }</code>  |
+| **Description** | A select-type preference.                                                                                                                               |
 
 #### `"options"`
 
@@ -331,10 +331,10 @@ Must be a string that matches the `"value"` of one of the defined options. Omitt
 
 ### `TextPreference`
 
-|                 |                                                                       |
-| --------------- | --------------------------------------------------------------------- |
-| **Type**        | `{ type: "text"; label: Label; default: string; inherit?: Inherit; }` |
-| **Description** | A text-type preference.                                               |
+|                 |                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------- |
+| **Type**        | <code>{ type: "text"; label: [Label](#label); default: string; inherit?: [Inherit](#inherit); }</code>  |
+| **Description** | A text-type preference.                                                                                 |
 
 Text-type preferences render as single-line text fields in the control panel.
 
@@ -358,10 +358,10 @@ Must be a string. Omitting this property is not allowed.
 
 ### `TextareaPreference`
 
-|                 |                                                                           |
-| --------------- | ------------------------------------------------------------------------- |
-| **Type**        | `{ type: "textarea"; label: Label; default: string; inherit?: Inherit; }` |
-| **Description** | A textarea-type preference.                                               |
+|                 |                                                                                                             |
+| --------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Type**        | <code>{ type: "textarea"; label: [Label](#label); default: string; inherit?: [Inherit](#inherit); }</code>  |
+| **Description** | A textarea-type preference.                                                                                 |
 
 Textarea-type preferences render as multi-line text fields in the control panel.
 

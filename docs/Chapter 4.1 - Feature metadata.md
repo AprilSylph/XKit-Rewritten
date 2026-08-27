@@ -260,7 +260,7 @@ A URL, relative to the `src/` directory, pointing to a module file for a Web Com
 
 Using a custom Web Component instead of any of the other provided preference types (or in conjunction with them) allows for complex management of a feature's data, such as creating tag bundles or listing blocked posts.
 
-This module file's default export must be a function which returns an instance of the Web Component via `document.createElement()`.
+The module file's default export must be a function which returns an instance of the Web Component via `document.createElement()`.
 
 #### Example
 

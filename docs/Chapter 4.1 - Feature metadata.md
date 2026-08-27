@@ -258,7 +258,7 @@ This is the only preference type which does not support `"default"` or `"inherit
 
 A URL, relative to the `src/` directory, pointing to a module file for a Web Component to be rendered in the feature's preference list.
 
-Using a custom Web Component instead of any of the other provided preference types (or in conjunction with them) allows for complex management of that feature's data, such as creating tag bundles or listing blocked posts.
+Using a custom Web Component instead of any of the other provided preference types (or in conjunction with them) allows for complex management of a feature's data, such as creating tag bundles or listing blocked posts.
 
 This module file's default export must be a function which returns an instance of the Web Component via `document.createElement()`.
 

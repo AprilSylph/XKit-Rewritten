@@ -80,7 +80,9 @@ Default value: `#ffffff`
 | **Description** | URL pointing to the usage guide or extended description for this feature.                                 |
 | **Example**     | <pre lang="json">"help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#vanilla-audio"</pre> |
 
-If this property is omitted, the feature is marked as "New".
+If this property is present, a help link will render on the feature in the control panel, using the value of this property as the link target.
+
+If this property is omitted, a "New" badge is rendered on the feature instead of a help link.
 
 <br>
 

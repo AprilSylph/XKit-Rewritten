@@ -151,12 +151,12 @@ Special access is stored as part of an installation's saved preferences, so rest
 |                 |                                                                                   |
 | --------------- | --------------------------------------------------------------------------------- |
 | **Type**        | `string`                                                                          |
-| **Description** | The preference's label to be displayed in the control panel.                      |
+| **Description** | The preference's text label to be displayed in the control panel.                 |
 | **Example**     | <pre lang="json">"label": "Hide recommended blogs in the blog view sidebar"</pre> |
 
-Most preference types require a label.
+Most preference types require a label, to describe what the preference is for.
 
-This value always a string; this documentation defines a `Label` type to avoid re-describing the `"label"` property on each preference type.
+This property is always a string; this documentation defines a `Label` type to avoid re-describing the `"label"` property on each preference type that supports it.
 
 <br>
 
@@ -168,9 +168,10 @@ This value always a string; this documentation defines a `Label` type to avoid r
 | **Description** | The storage key to inherit the value of, if the preference has not been set.          |
 | **Example**     | <pre lang="json">"inherit": "no_recommended.preferences.hide_recommended_blogs"</pre> |
 
-Most preference types support inheriting their value from another storage key if both of the following are true:
-- The inheriting preference, where `"inherit"` is defined, does not have any value saved in storage
-- The inherited preference, which `"inherit"` points to, does have a value saved in storage
+Most preference types support inheriting their value from another storage key, if both of the following are true:
+
+- The inheriting preference (where `"inherit"` is defined) does not have any value saved in storage.
+- The inherited preference (which `"inherit"` points to) does have a value saved in storage.
 
 This is useful for splitting one option into multiple options with finer granularity, or moving preferences from one feature to another, without requiring user action if it can be avoided.
 

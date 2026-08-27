@@ -105,7 +105,7 @@ If this property is omitted, a "New" badge is rendered on the feature instead of
 | **Mandatory**   | No                                                                                                    |
 | **Description** | An object consisting of one or more preference definition objects, keyed by internal preference name. |
 
-It is recommended to use camelCase for preference names in most cases. This allows the feature code to use destructuring assignments when fetching preference values from storage, without needing to perform renames to obey the project's JavaScript style guide.
+It is recommended to use camelCase for preference names in most cases. This allows the feature code to use object destructuring assignment when fetching preference values from storage, without needing to perform renames to obey the project's JavaScript style guide.
 
 See [§ Types](#types) for details on how to write preference definition objects.
 

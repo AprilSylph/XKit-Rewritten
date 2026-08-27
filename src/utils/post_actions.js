@@ -30,13 +30,12 @@ pageModifications.register(keyToCss('postFormButton'), addPostOptions);
 /**
  * Create and register a button to add to the new post form
  * @param {object} options Destructured
- * @param {string} options.id Identifier for this post option (must be unique)
  * @param {string} options.featureName The internal name of a feature calling this utility (e.g. `"quick_tags"`)
  * @param {(event: PointerEvent) => void} options.onclick Click handler function for this button
  * @param {boolean} [options.showInAskForm] Whether to show the button in the ask form
  */
-export const registerPostOption = async function ({ id, featureName, onclick, showInAskForm = false }) {
-  postOptions[id] = {
+export const registerPostOption = async function ({ featureName, onclick, showInAskForm = false }) {
+  postOptions[featureName] = {
     element: label({ class: 'xkit-post-option', [displayBlockUnlessDisabledAttr]: '' }, [
       button({ click: onclick }, [getIcon(featureName)]),
     ]),
@@ -47,9 +46,9 @@ export const registerPostOption = async function ({ id, featureName, onclick, sh
 };
 
 /**
- * @param {string} id Identifier for the previously registered post option
+ * @param {string} featureName The internal name of a feature which previously called `registerPostOption` (e.g. `"quick_tags"`)
  */
-export const unregisterPostOption = id => {
-  postOptions[id]?.element?.remove();
-  delete postOptions[id];
+export const unregisterPostOption = featureName => {
+  postOptions[featureName]?.element?.remove();
+  delete postOptions[featureName];
 };

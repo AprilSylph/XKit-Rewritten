@@ -270,7 +270,7 @@ export const main = async function () {
   controlButtonTemplate = createControlButtonTemplate('quick_tags', buttonClass, 'Quick Tags');
 
   onNewPosts.addListener(processPosts);
-  registerPostOption({ id: 'quick_tags', featureName: 'quick_tags', onclick: togglePostOptionPopupDisplay });
+  registerPostOption({ featureName: 'quick_tags', onclick: togglePostOptionPopupDisplay });
 
   populatePopups();
 

@@ -1,12 +1,12 @@
 import { keyToCss } from '../../utils/css_map.js';
 import { button } from '../../utils/dom.js';
+import { getIcon } from '../../utils/icons.js';
 import { inject } from '../../utils/inject.js';
 import { buildStyle, displayInlineFlexUnlessDisabledAttr, notificationSelector } from '../../utils/interface.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { getPreferences } from '../../utils/preferences.js';
-import { buildSvg } from '../../utils/remixicon.js';
 import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
 import { userBlogs } from '../../utils/user.js';
 
@@ -93,7 +93,7 @@ const processNotifications = notifications => notifications.forEach(async notifi
         .catch(showErrorModal)
         .finally(() => { this.disabled = false; });
     },
-  }, [buildSvg('ri-chat-quote-line')]));
+  }, [getIcon('quote_replies')]));
 });
 
 const quoteReply = async (tumblelogName, notificationProps) => {

@@ -18,5 +18,5 @@
   width: 22px;
   height: 22px;
 
-  fill: rgba(var(--black), 0.4);
+  color: var(--content-fg-secondary);
 }

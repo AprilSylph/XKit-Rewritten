@@ -60,6 +60,7 @@ export function element (tagName, properties = {}, children = []) {
  */
 
 /** @type {E<HTMLAnchorElement>}    */ export const a = (props = {}, children = []) => element('a', props, children);
+/** @type {E<HTMLElement>}          */ export const aside = (props = {}, children = []) => element('aside', props, children);
 /** @type {E<HTMLButtonElement>}    */ export const button = (props = {}, children = []) => element('button', props, children);
 /** @type {E<HTMLCanvasElement>}    */ export const canvas = (props = {}, children = []) => element('canvas', props, children);
 /** @type {E<HTMLDataListElement>}  */ export const datalist = (props = {}, children = []) => element('datalist', props, children);

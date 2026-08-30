@@ -1,24 +1,24 @@
 import { keyToCss } from './css_map.js';
-import { dom } from './dom.js';
+import { button, div, span } from './dom.js';
+import { getIcon } from './icons.js';
 import { displayInlineBlockUnlessDisabledAttr } from './interface.js';
 import { timelineObject } from './react_props.js';
-import { buildSvg } from './remixicon.js';
 
 // Remove outdated buttons when loading module
 $('.xkit-control-button-container').remove();
 
 /**
  * Create a button template that can be cloned with cloneControlButton() for inserting into the controls in a post's footer.
- * @param {string} symbolId The name of the RemixIcon to use
+ * @param {string} featureName The internal name of a feature calling this utility (e.g. `"quick_tags"`)
  * @param {string} buttonClass An extra class to identify the extension that added the button
  * @param {string} label Descriptive text to be set as the button aria-label property and tooltip
  * @returns {HTMLDivElement} A button that can be cloned with cloneControlButton()
  */
-export const createControlButtonTemplate = function (symbolId, buttonClass, label = '') {
-  return dom('span', { class: `xkit-control-button-container ${buttonClass}`, [displayInlineBlockUnlessDisabledAttr]: '' }, null, [
-    dom('button', { class: 'xkit-control-button', 'aria-label': label, title: label }, null, [
-      dom('span', { class: 'xkit-control-button-inner', tabindex: '-1' }, null, [
-        buildSvg(symbolId),
+export const createControlButtonTemplate = function (featureName, buttonClass, label = '') {
+  return span({ class: `xkit-control-button-container ${buttonClass}`, [displayInlineBlockUnlessDisabledAttr]: '' }, [
+    button({ class: 'xkit-control-button', 'aria-label': label, title: label }, [
+      span({ class: 'xkit-control-button-inner', tabindex: '-1' }, [
+        getIcon(featureName),
       ]),
     ]),
   ]);
@@ -50,7 +50,7 @@ const secondaryFooterRowClass = 'xkit-controls-row';
 const addSecondaryFooterRow = postElement => {
   const element =
     postElement.querySelector(`.${secondaryFooterRowClass}`) ||
-    dom('div', { class: secondaryFooterRowClass });
+    div({ class: secondaryFooterRowClass });
 
   element.isConnected || postElement.querySelector('footer').before(element);
   return element;

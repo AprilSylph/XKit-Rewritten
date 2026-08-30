@@ -19,8 +19,6 @@ const data = [
 const buttonClass = 'xkit-quick-flags-button';
 const excludeClass = 'xkit-quick-flags-done';
 
-const symbolId = 'ri-flag-2-line';
-
 let controlButtonTemplate;
 
 const popupData = data.map(entry => ({ ...entry, checkbox: input({ type: 'checkbox' }) }));
@@ -118,7 +116,7 @@ const processPosts = postElements =>
   });
 
 export const main = async function () {
-  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Quick Flags');
+  controlButtonTemplate = createControlButtonTemplate('quick_flags', buttonClass, 'Quick Flags');
   onNewPosts.addListener(processPosts);
 };
 

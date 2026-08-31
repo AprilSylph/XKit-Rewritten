@@ -41,9 +41,12 @@ const renderFeatures = async function () {
 
   const installedFeatures = await getInstalledFeatures();
   const {
-    [enabledFeaturesKey]: enabledFeatures = [],
-    [specialAccessKey]: specialAccess = [],
-  } = await browser.storage.local.get([enabledFeaturesKey, specialAccessKey]);
+    [enabledFeaturesKey]: enabledFeatures,
+    [specialAccessKey]: specialAccess,
+  } = await browser.storage.local.get({
+    [enabledFeaturesKey]: [],
+    [specialAccessKey]: [],
+  });
 
   const orderedEnabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName));
   const disabledFeatures = installedFeatures.filter(featureName => enabledFeatures.includes(featureName) === false);

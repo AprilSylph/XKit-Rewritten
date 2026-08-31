@@ -13,7 +13,6 @@ const getSymbolId = memoize(featureName => {
   const symbolId = `${symbolsClassName}__${featureName}`;
 
   fetch(browser.runtime.getURL(`/features/${featureName}/icon.svg`))
-    .then(result => new Promise(resolve => setTimeout(() => resolve(result), 2000)))
     .then(iconResponse => iconResponse.text())
     .then(iconText => new DOMParser().parseFromString(iconText, 'image/svg+xml').firstElementChild)
     .then(iconElement => {

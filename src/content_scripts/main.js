@@ -12,6 +12,9 @@
 
   const timestamp = Date.now(); // Prevent referencing outdated resources after Firefox extension update/restart
 
+  const importFeature = name => import(browser.runtime.getURL(`/features/${name}/index.js`));
+  const importUtil = name => import(browser.runtime.getURL(`/utils/${name}.js`));
+
   const runFeature = async function (name) {
     const {
       main,
@@ -19,7 +22,7 @@
       stylesheet,
       styleElement,
       onStorageChanged,
-    } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
+    } = await importFeature(name);
 
     if (main) {
       main().catch(console.error);
@@ -57,7 +60,7 @@
       clean,
       stylesheet,
       styleElement,
-    } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
+    } = await importFeature(name);
 
     if (clean) {
       clean().catch(console.error);
@@ -139,15 +142,20 @@
       initMainWorld(),
     ]);
 
+    const orderedEnabledFeatures = installedFeatures.filter(name => enabledFeatures.includes(name));
+
     /**
      * Fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
      * @see https://github.com/sveltejs/kit/issues/7805#issuecomment-1330078207
      */
-    await Promise.all(['css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
+    await Promise.all(['css_map', 'language_data', 'user'].map(importUtil));
 
-    installedFeatures
-      .filter(featureName => enabledFeatures.includes(featureName))
-      .forEach(runFeature);
+    /**
+     * Populates the module cache, ensuring that feature run order is unaffected by module resolution.
+     */
+    await Promise.all(orderedEnabledFeatures.map(importFeature));
+
+    orderedEnabledFeatures.forEach(runFeature);
 
     warnOnExtensionContextInvalidated();
   };

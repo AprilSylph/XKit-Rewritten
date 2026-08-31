@@ -21,15 +21,12 @@
 
   const timestamp = Date.now(); // Prevent referencing outdated resources after Firefox extension update/restart
 
-  /** @type {(name: string) => Promise<FeatureModule>} */
-  const getFeature = name => import(browser.runtime.getURL(`/features/${name}/index.js`));
-
   /**
    * @param {string[]} names Internal feature names to resolve modules for.
    * @returns {Promise<[string, FeatureModule][]>} Entries of feature modules, keyed by name.
    */
   const getFeatures = names => Promise.all(
-    names.map(async (name) => [name, await getFeature(name)]),
+    names.map(async (name) => [name, await import(browser.runtime.getURL(`/features/${name}/index.js`))]),
   );
 
   const runFeatures = async function (names) {

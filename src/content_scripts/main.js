@@ -12,20 +12,21 @@
 
   const timestamp = Date.now(); // Prevent referencing outdated resources after Firefox extension update/restart
 
-  const getFeature = name => import(browser.runtime.getURL(`/features/${name}/index.js`));
-  const getUtil = name => import(browser.runtime.getURL(`/utils/${name}.js`));
+  const importFeature = name => import(browser.runtime.getURL(`/features/${name}/index.js`));
+  const importUtil = name => import(browser.runtime.getURL(`/utils/${name}.js`));
 
-  const runFeature = async function ({
-    main,
-    clean,
-    stylesheet,
-    styleElement,
-    onStorageChanged,
-  }) {
+  const runFeature = async function (name) {
+    const {
+      main,
+      clean,
+      stylesheet,
+      styleElement,
+      onStorageChanged,
+    } = await importFeature(name);
+
     if (main) {
       main().catch(console.error);
     }
-
     if (stylesheet) {
       const link = Object.assign(document.createElement('link'), {
         rel: 'stylesheet',
@@ -34,7 +35,6 @@
       });
       document.documentElement.appendChild(link);
     }
-
     if (styleElement) {
       styleElement.dataset.xkitFeature = name;
       document.documentElement.append(styleElement);
@@ -55,19 +55,19 @@
     browser.storage.local.onChanged.addListener(restartListeners[name]);
   };
 
-  const destroyFeature = async function ({
-    clean,
-    stylesheet,
-    styleElement,
-  }) {
+  const destroyFeature = async function (name) {
+    const {
+      clean,
+      stylesheet,
+      styleElement,
+    } = await importFeature(name);
+
     if (clean) {
       clean().catch(console.error);
     }
-
     if (stylesheet) {
       document.querySelector(`link[href^="${browser.runtime.getURL(`/features/${name}/index.css`)}"]`)?.remove();
     }
-
     if (styleElement) {
       styleElement.remove();
     }
@@ -85,8 +85,8 @@
       const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
       const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
 
-      (await Promise.all(newlyDisabled.map(getFeature))).forEach(destroyFeature);
-      (await Promise.all(newlyEnabled.map(getFeature))).forEach(runFeature);
+      newlyDisabled.forEach(destroyFeature);
+      newlyEnabled.forEach(runFeature);
     }
   };
 
@@ -148,14 +148,15 @@
      * Fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await.
      * @see https://bugs.webkit.org/show_bug.cgi?id=242740
      */
-    await Promise.all(['css_map', 'language_data', 'user'].map(getUtil));
+    await Promise.all(['css_map', 'language_data', 'user'].map(importUtil));
 
     /**
-     * Populates the module cache and then runs features in order.
-     * This ensures that feature run order is unaffected by module resolution timing.
+     * Populates the module cache, ensuring that feature run order is unaffected by module resolution.
      * @see https://github.com/AprilSylph/XKit-Rewritten/discussions/2357
      */
-    (await Promise.all(orderedEnabledFeatures.map(getFeature))).forEach(runFeature);
+    await Promise.all(orderedEnabledFeatures.map(importFeature));
+
+    orderedEnabledFeatures.forEach(runFeature);
 
     warnOnExtensionContextInvalidated();
   };

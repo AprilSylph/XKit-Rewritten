@@ -56,9 +56,12 @@ class XKitFeatureElement extends CustomElement {
   /** @param {InputEvent & { currentTarget: HTMLInputElement }} event `input` event for the feature's "Enable this feature" toggle. */
   #handleEnabledToggleInput = async ({ currentTarget: { checked } }) => {
     const {
-      [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures = [],
-      [XKitFeatureElement.#specialAccessKey]: specialAccess = [],
-    } = await browser.storage.local.get([XKitFeatureElement.#enabledFeaturesKey, XKitFeatureElement.#specialAccessKey]);
+      [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures,
+      [XKitFeatureElement.#specialAccessKey]: specialAccess,
+    } = await browser.storage.local.get({
+      [XKitFeatureElement.#enabledFeaturesKey]: [],
+      [XKitFeatureElement.#specialAccessKey]: [],
+    });
 
     /** @type {Set<string>} */ const enabledFeaturesSet = new Set(enabledFeatures);
     /** @type {Set<string>} */ const specialAccessSet = new Set(specialAccess);

@@ -1,8 +1,8 @@
 import { keyToCss } from './css_map.js';
 import { button, label } from './dom.js';
+import { getIcon } from './icons.js';
 import { displayBlockUnlessDisabledAttr } from './interface.js';
 import { pageModifications } from './mutations.js';
-import { buildSvg } from './remixicon.js';
 
 // Remove outdated post options when loading module
 $('.xkit-post-option').remove();
@@ -30,15 +30,14 @@ pageModifications.register(keyToCss('postFormButton'), addPostOptions);
 /**
  * Create and register a button to add to the new post form
  * @param {object} options Destructured
- * @param {string} options.id Identifier for this post option (must be unique)
- * @param {string} options.symbolId RemixIcon symbol to use
+ * @param {string} options.featureName The internal name of a feature calling this utility (e.g. `"quick_tags"`)
  * @param {(event: PointerEvent) => void} options.onclick Click handler function for this button
  * @param {boolean} [options.showInAskForm] Whether to show the button in the ask form
  */
-export const registerPostOption = async function ({ id, symbolId, onclick, showInAskForm = false }) {
-  postOptions[id] = {
+export const registerPostOption = async function ({ featureName, onclick, showInAskForm = false }) {
+  postOptions[featureName] = {
     element: label({ class: 'xkit-post-option', [displayBlockUnlessDisabledAttr]: '' }, [
-      button({ click: onclick }, [buildSvg(symbolId)]),
+      button({ click: onclick }, [getIcon(featureName)]),
     ]),
     showInAskForm,
   };
@@ -47,9 +46,9 @@ export const registerPostOption = async function ({ id, symbolId, onclick, showI
 };
 
 /**
- * @param {string} id Identifier for the previously registered post option
+ * @param {string} featureName The internal name of a feature which previously called `registerPostOption` (e.g. `"quick_tags"`)
  */
-export const unregisterPostOption = id => {
-  postOptions[id]?.element?.remove();
-  delete postOptions[id];
+export const unregisterPostOption = featureName => {
+  postOptions[featureName]?.element?.remove();
+  delete postOptions[featureName];
 };

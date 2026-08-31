@@ -9,6 +9,8 @@ import { inject } from './inject.js';
 /** @typedef {Record<string, string>} QueryParams */
 
 /**
+ * Perform a Tumblr API request, using the helper supplied by the Tumblr web platform API for third-party extensions.
+ * Note: when accessed through the web platform, the Tumblr API occasionally differs slightly from the documentation.
  * @param {globalThis.RequestInit & { queryParams?: QueryParams, body?: (string | Dictionary) }} args Arguments to pass to `window.tumblr.apiFetch()`
  * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#apifetch}
  * @returns {Promise<Response | Error>} Resolves or rejects with result of `window.tumblr.apiFetch()`
@@ -68,8 +70,18 @@ export const isNpfCompatible = postData => {
   return isBlocksPostFormat || shouldOpenInLegacy === false;
 };
 
+/**
+ * Perform a "soft" navigation within Tumblr's single-page-application.
+ * @see https://github.com/tumblr/docs/blob/master/web-platform.md#navigate
+ * @param {string} location Path to navigate to
+ * @returns {Promise<void>} Resolves when the navigation has been requested; does _not_ wait for the target route chunk to load
+ */
 export const navigate = location => inject('/main_world/navigate.js', [location]);
 
+/**
+ * A click event handler that can be applied to anchor elements to automate soft navigation.
+ * @param {PointerEvent} event Click event object
+ */
 export const onClickNavigate = event => {
   if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) {
     event.stopImmediatePropagation();

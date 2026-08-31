@@ -60,6 +60,7 @@ export function element (tagName, properties = {}, children = []) {
  */
 
 /** @type {E<HTMLAnchorElement>}    */ export const a = (props = {}, children = []) => element('a', props, children);
+/** @type {E<HTMLElement>}          */ export const aside = (props = {}, children = []) => element('aside', props, children);
 /** @type {E<HTMLButtonElement>}    */ export const button = (props = {}, children = []) => element('button', props, children);
 /** @type {E<HTMLCanvasElement>}    */ export const canvas = (props = {}, children = []) => element('canvas', props, children);
 /** @type {E<HTMLDataListElement>}  */ export const datalist = (props = {}, children = []) => element('datalist', props, children);
@@ -90,6 +91,7 @@ export function element (tagName, properties = {}, children = []) {
 /** @type {V<HTMLInputElement>}     */ export const input = (props = {}) => element('input', props);
 /** @type {V<HTMLLinkElement>}      */ export const link = (props = {}) => element('link', props);
 
-/** @type {E<SVGPathElement>} */ export const path = (props = {}, children = []) => element('path', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);
-/** @type {E<SVGSVGElement>}  */ export const svg = (props = {}, children = []) => element('svg', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);
-/** @type {E<SVGUseElement>}  */ export const use = (props = {}, children = []) => element('use', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);
+/** @type {E<SVGPathElement>}   */ export const path = (props = {}, children = []) => element('path', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);
+/** @type {E<SVGSVGElement>}    */ export const svg = (props = {}, children = []) => element('svg', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);
+/** @type {E<SVGTitleElement>}  */ export const title = (props = {}, children = []) => element('title', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);
+/** @type {E<SVGUseElement>}    */ export const use = (props = {}, children = []) => element('use', { xmlns: 'http://www.w3.org/2000/svg', ...props }, children);

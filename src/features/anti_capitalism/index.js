@@ -12,7 +12,7 @@ export const styleElement = buildStyle();
 const processVideoCTAs = videoCTAs => videoCTAs
   .map(getTimelineItemWrapper)
   .filter(Boolean)
-  .forEach(timelineItem => timelineItem.setAttribute(hiddenAttribute, ''));
+  .forEach(timelineItem => timelineItem.toggleAttribute(hiddenAttribute, true));
 
 export const main = async () => {
   const { includeBlazed } = await getPreferences('anti_capitalism');

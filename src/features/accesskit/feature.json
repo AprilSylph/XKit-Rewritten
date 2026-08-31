@@ -2,7 +2,6 @@
   "title": "AccessKit",
   "description": "Accessibility options for Tumblr",
   "icon": {
-    "class_name": "ri-open-arm-line",
     "color": "white",
     "background_color": "#df46f6"
   },

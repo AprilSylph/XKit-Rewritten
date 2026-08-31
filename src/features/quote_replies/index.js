@@ -1,5 +1,6 @@
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { button } from '../../utils/dom.js';
+import { getIcon } from '../../utils/icons.js';
 import { inject } from '../../utils/inject.js';
 import { buildStyle, displayInlineFlexUnlessDisabledAttr, notificationSelector } from '../../utils/interface.js';
 import { showErrorModal } from '../../utils/modals.js';
@@ -7,7 +8,6 @@ import { pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { noteObject, timelineObject } from '../../utils/react_props.js';
-import { buildSvg } from '../../utils/remixicon.js';
 import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
 import { userBlogNames, userBlogs } from '../../utils/user.js';
 
@@ -34,12 +34,12 @@ button.xkit-quote-replies svg {
   width: 21.5px;
   height: 21.5px;
 
-  fill: rgb(var(--blue));
+  color: rgb(var(--blue));
   transition: all .25s ease-out .4s;
 }
 
 button.xkit-quote-replies:disabled svg {
-  fill: rgba(var(--black), 0.65);
+  color: rgba(var(--black), 0.65);
   transition-property: none;
 }
 
@@ -84,23 +84,17 @@ const processNotifications = notifications => notifications.forEach(async notifi
   const activityElement = notification.querySelector(activitySelector);
   if (!activityElement) return;
 
-  activityElement.after(dom(
-    'button',
-    {
-      class: `${buttonClass} in-notification ${notification.matches(dropdownSelector) ? 'in-notification-dropdown' : ''}`,
-      [displayInlineFlexUnlessDisabledAttr]: '',
-      title: 'Quote this reply',
+  activityElement.after(button({
+    class: `${buttonClass} in-notification ${notification.matches(dropdownSelector) ? 'in-notification-dropdown' : ''}`,
+    [displayInlineFlexUnlessDisabledAttr]: '',
+    title: 'Quote this reply',
+    click () {
+      this.disabled = true;
+      quoteNotificationReply(tumblelogName, notificationProps)
+        .catch(showErrorModal)
+        .finally(() => { this.disabled = false; });
     },
-    {
-      click () {
-        this.disabled = true;
-        quoteNotificationReply(tumblelogName, notificationProps)
-          .catch(showErrorModal)
-          .finally(() => { this.disabled = false; });
-      },
-    },
-    [buildSvg('ri-chat-quote-line')],
-  ));
+  }, [getIcon('quote_replies')]));
 });
 
 const quoteNotificationReply = async (tumblelogName, notificationProps) => {
@@ -121,23 +115,17 @@ const processNoteReplyButtons = noteReplyButtons => noteReplyButtons.forEach(asy
   const noteReplyType = determineNoteReplyType({ noteData, parentNoteData, timelineObjectData });
   if (!noteReplyType) return;
 
-  noteReplyButton.parentElement.append(dom(
-    'button',
-    {
-      class: buttonClass,
-      [displayInlineFlexUnlessDisabledAttr]: '',
-      title: 'Quote this reply',
+  noteReplyButton.parentElement.append(button({
+    class: buttonClass,
+    [displayInlineFlexUnlessDisabledAttr]: '',
+    title: 'Quote this reply',
+    click () {
+      this.disabled = true;
+      quoteNoteReply({ noteData, noteReplyType, timelineObjectData })
+        .catch(showErrorModal)
+        .finally(() => { this.disabled = false; });
     },
-    {
-      click () {
-        this.disabled = true;
-        quoteNoteReply({ noteData, noteReplyType, timelineObjectData })
-          .catch(showErrorModal)
-          .finally(() => { this.disabled = false; });
-      },
-    },
-    [buildSvg('ri-chat-quote-line')],
-  ));
+  }, [getIcon('quote_replies')]));
 });
 
 const determineNoteReplyType = ({ noteData, parentNoteData, timelineObjectData }) => {

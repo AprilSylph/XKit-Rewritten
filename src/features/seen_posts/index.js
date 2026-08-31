@@ -61,13 +61,13 @@ const dimPosts = function (postElements, reprocessPosts = false) {
     const { id } = postElement.dataset;
     const timelineItem = getTimelineItemWrapper(postElement);
 
-    const isFirstRender = timelineItem.getAttribute(excludeAttribute) === null;
-    timelineItem.setAttribute(excludeAttribute, '');
+    const isFirstRender = timelineItem.hasAttribute(excludeAttribute) === false;
+    timelineItem.toggleAttribute(excludeAttribute, true);
 
     if (seenPosts.includes(id) === false) {
       observer.observe(postElement.querySelector('article header + *'));
     } else if (isFirstRender || reprocessPosts) {
-      timelineItem.setAttribute(dimAttribute, '');
+      timelineItem.toggleAttribute(dimAttribute, true);
     }
   }
 };

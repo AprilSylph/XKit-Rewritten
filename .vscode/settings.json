@@ -1,8 +1,14 @@
 {
   "editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" },
   "eslint.validate": ["javascript"],
-  "javascript.preferences.autoImportFileExcludePatterns": ["node_modules/**/*"],
-  "javascript.preferences.importModuleSpecifier": "relative",
-  "javascript.preferences.importModuleSpecifierEnding": "js",
-  "javascript.suggest.paths": true
+  "js/ts.preferences.autoImportFileExcludePatterns": ["node_modules/**/*"],
+  "js/ts.preferences.importModuleSpecifier": "relative",
+  "js/ts.preferences.importModuleSpecifierEnding": "js",
+  "js/ts.suggest.paths": true,
+  "json.schemas": [
+    {
+      "fileMatch": ["src/features/**/feature.json"],
+      "url": "./schemas/feature.json"
+    }
+  ]
 }

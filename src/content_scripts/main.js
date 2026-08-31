@@ -145,13 +145,14 @@
     const orderedEnabledFeatures = installedFeatures.filter(name => enabledFeatures.includes(name));
 
     /**
-     * Fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
-     * @see https://github.com/sveltejs/kit/issues/7805#issuecomment-1330078207
+     * Fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await.
+     * @see https://bugs.webkit.org/show_bug.cgi?id=242740
      */
     await Promise.all(['css_map', 'language_data', 'user'].map(importUtil));
 
     /**
      * Populates the module cache, ensuring that feature run order is unaffected by module resolution.
+     * @see https://github.com/AprilSylph/XKit-Rewritten/discussions/2357
      */
     await Promise.all(orderedEnabledFeatures.map(importFeature));
 

@@ -82,11 +82,11 @@
     if (enabledFeatures) {
       const { oldValue = [], newValue = [] } = enabledFeatures;
 
-      const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
       const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
+      const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
 
-      (await Promise.all(newlyEnabled.map(getFeature))).forEach(runFeature);
       (await Promise.all(newlyDisabled.map(getFeature))).forEach(destroyFeature);
+      (await Promise.all(newlyEnabled.map(getFeature))).forEach(runFeature);
     }
   };
 

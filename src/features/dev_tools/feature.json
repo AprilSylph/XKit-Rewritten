@@ -1,0 +1,17 @@
+{
+  "title": "Dev Tools",
+  "description": "",
+  "icon": {
+    "class_name": "ri-github-fill",
+    "color": "white",
+    "background_color": "#000000"
+  },
+  "preferences": {
+    "css_map": {
+      "type": "checkbox",
+      "label": "Translate CSS Map",
+      "default": false
+    }
+  },
+  "deprecated": true
+}

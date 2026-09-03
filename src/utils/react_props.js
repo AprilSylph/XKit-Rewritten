@@ -31,6 +31,15 @@ export const notificationObject = notificationElement => {
 };
 
 /**
+ * @param {Element} noteElement An on-screen post note element
+ * @returns {Promise<object>} The element's buried note property
+ */
+export const noteObject = noteElement => {
+  noteElement.noteObjectPromise ??= inject('/main_world/unbury_note.js', [], noteElement);
+  return noteElement.noteObjectPromise;
+};
+
+/**
  * @param {Element} meatballMenu An on-screen meatball menu element in a blog modal header or blog card
  * @returns {Promise<object>} The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
  */

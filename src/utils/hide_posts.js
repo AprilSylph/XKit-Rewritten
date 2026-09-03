@@ -1,3 +1,4 @@
+import { removeAttributeFromElements, removeElementsByAttribute, removeElementsByClassName } from './cleanup.js';
 import { button, div } from './dom.js';
 import { buildStyle, getTimelineItemWrapper } from './interface.js';
 import { anyPostPermalinkTimelineFilter, timelineSelector } from './timeline_id.js';
@@ -5,7 +6,7 @@ import { anyPostPermalinkTimelineFilter, timelineSelector } from './timeline_id.
 const controlsClass = 'xkit-hidden-post-controls';
 
 // Remove outdated elements when loading module
-$(`.${controlsClass}`).remove();
+removeElementsByClassName(controlsClass);
 
 const styleElement = buildStyle(`
 .${controlsClass} {
@@ -130,16 +131,19 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
       getTimelineItemWrapper(postElement).toggleAttribute(hiddenAttribute, true);
     }
   };
+
   const showPost = postElement => {
     getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
     getTimelineItemWrapper(postElement).removeAttribute(controlledHiddenAttribute);
     postElement.closest(timelineSelector)?.querySelector(`[${controlsAttribute}]`)?.remove();
   };
+
   const showPosts = () => {
-    $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
-    $(`[${controlledHiddenAttribute}]`).removeAttr(controlledHiddenAttribute);
-    $(`[${controlsAttribute}]`).remove();
+    removeAttributeFromElements(hiddenAttribute);
+    removeAttributeFromElements(controlledHiddenAttribute);
+    removeElementsByAttribute(controlsAttribute);
   };
+
   showPosts();
 
   return { hidePost, showPost, showPosts };

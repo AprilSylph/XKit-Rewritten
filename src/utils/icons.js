@@ -1,10 +1,11 @@
+import { removeElementsByClassName } from './cleanup.js';
 import { aside, svg, use } from './dom.js';
 import { memoize } from './memoize.js';
 
 const symbolsClassName = 'xkit-symbols';
 
 // Remove outdated symbols on module load
-$(`.${symbolsClassName}`).remove();
+removeElementsByClassName(symbolsClassName);
 
 const symbols = aside({ class: symbolsClassName });
 document.head.append(symbols);

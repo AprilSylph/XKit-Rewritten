@@ -20,8 +20,14 @@ const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
 
 class UserInterrupt extends Error { name = 'UserInterrupt'; }
 
+const getCurrentStorage = () => browser.storage.local.get()
+  .then(storageLocal => {
+    const entries = Object.entries(storageLocal);
+    return Object.fromEntries(entries.filter(([key]) => !key.startsWith('_caches.')));
+  });
+
 const onStorageChanged = async function () {
-  const storageLocal = await browser.storage.local.get();
+  const storageLocal = await getCurrentStorage();
   exportValueTextarea.value = JSON.stringify(storageLocal, null, 2);
 };
 
@@ -42,7 +48,7 @@ const localCopy = () => {
 };
 
 const localExport = async function () {
-  const storageLocal = await browser.storage.local.get();
+  const storageLocal = await getCurrentStorage();
   const stringifiedStorage = JSON.stringify(storageLocal, null, 2);
   const storageBlob = new Blob([stringifiedStorage], { type: 'application/json' });
   const blobUrl = URL.createObjectURL(storageBlob);
@@ -114,7 +120,7 @@ async function onImportSubmit (event) {
     importSuccessBar.hidden = true;
     importErrorBar.hidden = true;
 
-    const currentStorage = await browser.storage.local.get();
+    const currentStorage = await getCurrentStorage();
     const parsedStorage = JSON.parse(importText);
 
     if (Object.keys(currentStorage).length !== 0) {

@@ -6,19 +6,59 @@ import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { tagTimelineFilter } from '../../utils/timeline_id.js';
 import { apiFetch, onClickNavigate } from '../../utils/tumblr_helpers.js';
 
-const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
+const timestampsStorageKey = 'tag_tracking_plus.trackedTagTimestamps';
+/** @type {Record<string, number>} */
 let timestamps;
+
+/**
+ * @typedef {object} UnreadCount
+ * @property {string} unreadCountString String representing a tag's unread post count.
+ * @property {number} updated Unix time value of the last time this entry was fetched.
+ * @property {boolean} loaded If `false`, this stored value is not used to render the sidebar yet. Used to create a visually consistent "waterfall" sidebar load sequence even when using some cached data.
+ */
+
+const unreadCountsStorageKey = '_caches.tag_tracking_plus.unreadCounts';
+/** @type {Record<string, UnreadCount>} */
+let unreadCounts;
 
 const excludeClass = 'xkit-tag-tracking-plus-done';
 const includeFiltered = true;
 
-let trackedTags;
-const unreadCounts = new Map();
+let trackedTags = [];
+let trackedTagsString;
 
 let sidebarItem;
 
+const BACKGROUND_REFRESH_INTERVAL = 10_000; // Minimum time between background refresh fetches (of any tag).
+const PER_TAG_BACKGROUND_REFRESH_INTERVAL = 120_000; // Minimum time between background refresh fetches of a specific tag.
+const INTIIAL_LOAD_INTERVAL = 500; // Minimum time between initial load fetches.
+
+const INITIAL_LOAD_STORED_COUNT_MAX_AGE = 30_000; // During initial load (i.e. reloading the page), load stored counts up to this age instead of fetching.
+
+const countIsStale = (tag, ttl) => unreadCounts[tag] && Date.now() - unreadCounts[tag].updated > ttl;
+
+// If multiple browser tabs are currently refreshing the same set of tracked tag(s), only allow one to refresh.
+let lastRefreshInAnotherTab = 0;
+const otherTabRefreshChannel = new BroadcastChannel('xkit-tag-tracking-plus-refresh-sync');
+otherTabRefreshChannel.addEventListener('message', event => {
+  if (event.data.trackedTagsString === trackedTagsString) {
+    lastRefreshInAnotherTab = Date.now();
+  }
+});
+const thisTabShouldRefresh = interval => {
+  const timeSinceRefresh = Date.now() - lastRefreshInAnotherTab;
+  if (timeSinceRefresh < interval * 1.5) {
+    console.info(`Tag Tracking+: skipping refresh; another tab refreshed ${timeSinceRefresh}ms ago`);
+    return false;
+  }
+  otherTabRefreshChannel.postMessage({ trackedTagsString });
+  return true;
+};
+
 const refreshCount = async function (tag) {
   if (!trackedTags.includes(tag)) return;
+
+  console.info(`Tag Tracking+: REFRESHING ${tag}`);
 
   let unreadCountString = '⚠️';
 
@@ -58,40 +98,72 @@ const refreshCount = async function (tag) {
     console.error(exception);
   }
 
-  const unreadCountElement = sidebarItem.querySelector(`[data-count-for="#${tag}"]`);
-
-  unreadCountElement.textContent = unreadCountString;
-  if (unreadCountElement.closest('li')) {
-    unreadCountElement.closest('li').dataset.new = unreadCountString !== '0';
-  }
-
-  unreadCounts.set(tag, unreadCountString);
-  updateSidebarStatus();
+  unreadCounts[tag] = { unreadCountString, updated: Date.now(), loaded: true };
+  await browser.storage.local.set({ [unreadCountsStorageKey]: unreadCounts });
 };
 
-const updateSidebarStatus = () => {
-  if (sidebarItem) {
-    sidebarItem.dataset.loading = [...unreadCounts.values()].some(
-      unreadCountString => unreadCountString === undefined,
-    );
-    sidebarItem.dataset.hasNew = [...unreadCounts.values()].some(
-      unreadCountString => unreadCountString && unreadCountString !== '0',
-    );
+const loadStoredCount = async tag => {
+  console.info(`Tag Tracking+: loading ${tag} from storage!`);
+  unreadCounts[tag].loaded = true;
+  await browser.storage.local.set({ [unreadCountsStorageKey]: unreadCounts });
+};
+
+const updateSidebar = () => {
+  const loadedTrackedTags = trackedTags.filter(tag => unreadCounts[tag]?.loaded);
+  loadedTrackedTags.forEach(tag => {
+    const { unreadCountString } = unreadCounts[tag];
+    const unreadCountElement = sidebarItem.querySelector(`[data-count-for="#${tag}"]`);
+    unreadCountElement.textContent = unreadCountString;
+    if (unreadCountElement.closest('li')) {
+      unreadCountElement.closest('li').dataset.new = unreadCountString !== '0';
+    }
+  });
+  if (loadedTrackedTags.length === trackedTags.length) {
+    sidebarItem.dataset.loading = false;
+  }
+  sidebarItem.dataset.hasNew = loadedTrackedTags.some(tag => unreadCounts[tag].unreadCountString !== '0');
+};
+
+const refreshNextCount = async () => {
+  const nonLoadedTag = trackedTags.find(tag => !unreadCounts[tag]?.loaded);
+  const erroredTag = trackedTags.find(tag => unreadCounts[tag]?.unreadCountString === '⚠️');
+
+  if (nonLoadedTag) {
+    unreadCounts[nonLoadedTag]
+      ? await loadStoredCount(nonLoadedTag)
+      : await refreshCount(nonLoadedTag);
+  } else if (erroredTag) {
+    await refreshCount(erroredTag);
+  } else {
+    const oldestTag = [...trackedTags]
+      .sort((a, b) => unreadCounts[a].updated - unreadCounts[b].updated)
+      .at(0);
+    if (countIsStale(oldestTag, PER_TAG_BACKGROUND_REFRESH_INTERVAL)) {
+      await refreshCount(oldestTag);
+    } else {
+      console.info(`Tag Tracking+: no need to refresh; oldest tag ${oldestTag} is fresh!`);
+    }
   }
 };
 
-const refreshAllCounts = async (isFirstRun = false) => {
-  for (const tag of trackedTags) {
+let currentRefreshLoop;
+const startRefreshLoop = async () => {
+  const thisRefreshLoop = Date.now();
+  currentRefreshLoop = thisRefreshLoop;
+
+  // eslint-disable-next-line no-unmodified-loop-condition
+  while (currentRefreshLoop === thisRefreshLoop) {
+    const interval = trackedTags.every(tag => unreadCounts[tag]?.loaded)
+      ? BACKGROUND_REFRESH_INTERVAL
+      : INTIIAL_LOAD_INTERVAL;
+
     await Promise.all([
-      refreshCount(tag),
-      new Promise(resolve => setTimeout(resolve, isFirstRun ? 0 : 30000)),
+      thisTabShouldRefresh(interval) && refreshNextCount(),
+      new Promise(resolve => setTimeout(resolve, interval)),
     ]);
   }
 };
-
-let intervalID = 0;
-const startRefreshInterval = () => { intervalID = setInterval(refreshAllCounts, 30000 * trackedTags.length); };
-const stopRefreshInterval = () => clearInterval(intervalID);
+const stopRefreshLoop = () => { currentRefreshLoop = undefined; };
 
 const processPosts = async function (postElements) {
   const { pathname, searchParams } = new URL(location);
@@ -125,19 +197,24 @@ const processPosts = async function (postElements) {
   }
 
   if (updated) {
-    await browser.storage.local.set({ [storageKey]: timestamps });
+    await browser.storage.local.set({ [timestampsStorageKey]: timestamps });
     refreshCount(currentTag);
   }
 };
 
 export const onStorageChanged = async (changes) => {
   const {
-    [storageKey]: timestampsChanges,
+    [timestampsStorageKey]: timestampsChanges,
+    [unreadCountsStorageKey]: unreadCountsChanges,
     'tag_tracking_plus.preferences.onlyShowNew': onlyShowNewChanges,
   } = changes;
 
   if (timestampsChanges) {
     timestamps = timestampsChanges.newValue;
+  }
+  if (unreadCountsChanges) {
+    unreadCounts = unreadCountsChanges.newValue;
+    updateSidebar();
   }
   if (onlyShowNewChanges) {
     sidebarItem.dataset.onlyShowNew = onlyShowNewChanges.newValue;
@@ -147,12 +224,7 @@ export const onStorageChanged = async (changes) => {
 export const main = async function () {
   const trackedTagsData = (await apiFetch('/v2/user/tags')) ?? {};
   trackedTags = trackedTagsData.response?.tags?.map(({ name }) => name) ?? [];
-
-  trackedTags.forEach(tag => unreadCounts.set(tag, undefined));
-
-  ({ [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey));
-
-  const { onlyShowNew } = await getPreferences('tag_tracking_plus');
+  trackedTagsString = JSON.stringify(trackedTags);
 
   sidebarItem = addSidebarItem({
     id: 'tag-tracking-plus',
@@ -164,20 +236,49 @@ export const main = async function () {
       count: '\u22EF',
     })),
   });
+
+  if (!trackedTags.length) return;
+
+  const { onlyShowNew } = await getPreferences('tag_tracking_plus');
+
   sidebarItem.dataset.onlyShowNew = onlyShowNew;
-  updateSidebarStatus();
+  sidebarItem.dataset.loading = true;
+
+  ({
+    [timestampsStorageKey]: timestamps = {},
+    [unreadCountsStorageKey]: unreadCounts = {},
+  } = await browser.storage.local.get([timestampsStorageKey, unreadCountsStorageKey]));
+
+  // Discard stale stored counts.
+  for (const tag of Object.keys(unreadCounts)) {
+    if (countIsStale(tag, INITIAL_LOAD_STORED_COUNT_MAX_AGE)) {
+      delete unreadCounts[tag];
+    }
+  }
+  if (onlyShowNew === false) {
+    // Mark (fresh) tracked stored counts as not loaded until `loadStoredCount` is called on them.
+    // Creates a visually consistent "waterfall" sidebar load sequence.
+    for (const tag of Object.keys(unreadCounts)) {
+      if (trackedTags.includes(tag)) {
+        unreadCounts[tag].loaded = false;
+      }
+    }
+  }
+  await browser.storage.local.set({ [unreadCountsStorageKey]: unreadCounts });
 
   onNewPosts.addListener(processPosts);
-  refreshAllCounts(true).then(startRefreshInterval);
+  startRefreshLoop();
 };
 
 export const clean = async function () {
-  stopRefreshInterval();
+  stopRefreshLoop();
   onNewPosts.removeListener(processPosts);
 
   removeSidebarItem('tag-tracking-plus');
 
-  unreadCounts.clear();
+  trackedTags = [];
+  trackedTagsString = undefined;
+  lastRefreshInAnotherTab = 0;
 };
 
 export const stylesheet = true;

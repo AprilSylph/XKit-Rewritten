@@ -10,8 +10,15 @@ const timestampsStorageKey = 'tag_tracking_plus.trackedTagTimestamps';
 /** @type {Record<string, number>} */
 let timestamps;
 
+/**
+ * @typedef {object} UnreadCount
+ * @property {string} unreadCountString String representing a tag's unread post count.
+ * @property {number} updated Unix time value of the last time this entry was fetched.
+ * @property {boolean} loaded If `false`, this stored value is not used to render the sidebar yet. Used to create a visually consistent "waterfall" sidebar load sequence even when using some cached data.
+ */
+
 const unreadCountsStorageKey = '_caches.tag_tracking_plus.unreadCounts';
-/** @type {Record<string, { unreadCountString: string, updated: number }>} */
+/** @type {Record<string, UnreadCount>} */
 let unreadCounts;
 
 const excludeClass = 'xkit-tag-tracking-plus-done';
@@ -91,12 +98,18 @@ const refreshCount = async function (tag) {
     console.error(exception);
   }
 
-  unreadCounts[tag] = { unreadCountString, updated: Date.now() };
+  unreadCounts[tag] = { unreadCountString, updated: Date.now(), loaded: true };
+  await browser.storage.local.set({ [unreadCountsStorageKey]: unreadCounts });
+};
+
+const loadStoredCount = async tag => {
+  console.info(`Tag Tracking+: loading ${tag} from storage!`);
+  unreadCounts[tag].loaded = true;
   await browser.storage.local.set({ [unreadCountsStorageKey]: unreadCounts });
 };
 
 const updateSidebar = () => {
-  const loadedTrackedTags = trackedTags.filter(tag => unreadCounts[tag]);
+  const loadedTrackedTags = trackedTags.filter(tag => unreadCounts[tag]?.loaded);
   loadedTrackedTags.forEach(tag => {
     const { unreadCountString } = unreadCounts[tag];
     const unreadCountElement = sidebarItem.querySelector(`[data-count-for="#${tag}"]`);
@@ -112,11 +125,13 @@ const updateSidebar = () => {
 };
 
 const refreshNextCount = async () => {
-  const nonLoadedTag = trackedTags.find(tag => !unreadCounts[tag]);
+  const nonLoadedTag = trackedTags.find(tag => !unreadCounts[tag]?.loaded);
   const erroredTag = trackedTags.find(tag => unreadCounts[tag]?.unreadCountString === '⚠️');
 
   if (nonLoadedTag) {
-    await refreshCount(nonLoadedTag);
+    unreadCounts[nonLoadedTag]
+      ? await loadStoredCount(nonLoadedTag)
+      : await refreshCount(nonLoadedTag);
   } else if (erroredTag) {
     await refreshCount(erroredTag);
   } else {
@@ -138,7 +153,7 @@ const startRefreshLoop = async () => {
 
   // eslint-disable-next-line no-unmodified-loop-condition
   while (currentRefreshLoop === thisRefreshLoop) {
-    const interval = trackedTags.every(tag => unreadCounts[tag])
+    const interval = trackedTags.every(tag => unreadCounts[tag]?.loaded)
       ? BACKGROUND_REFRESH_INTERVAL
       : INTIIAL_LOAD_INTERVAL;
 
@@ -238,6 +253,15 @@ export const main = async function () {
   for (const tag of Object.keys(unreadCounts)) {
     if (countIsStale(tag, INITIAL_LOAD_STORED_COUNT_MAX_AGE)) {
       delete unreadCounts[tag];
+    }
+  }
+  if (onlyShowNew === false) {
+    // Mark (fresh) tracked stored counts as not loaded until `loadStoredCount` is called on them.
+    // Creates a visually consistent "waterfall" sidebar load sequence.
+    for (const tag of Object.keys(unreadCounts)) {
+      if (trackedTags.includes(tag)) {
+        unreadCounts[tag].loaded = false;
+      }
     }
   }
   await browser.storage.local.set({ [unreadCountsStorageKey]: unreadCounts });

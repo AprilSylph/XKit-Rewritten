@@ -1,3 +1,4 @@
+import { removeChildrenByAttribute, removeElementsBySelector } from './cleanup.js';
 import { keyToCss } from './css_map.js';
 import { button } from './dom.js';
 import { inject } from './inject.js';
@@ -34,7 +35,7 @@ export const registerMeatballItem = function ({ id, label, onclick, postFilter }
 
 export const unregisterMeatballItem = id => {
   delete meatballItems.post[id];
-  $(`[data-xkit-post-meatball-button="${id}"]`).remove();
+  removeElementsBySelector(`[data-xkit-post-meatball-button="${id}"]`);
 };
 
 /**
@@ -53,7 +54,7 @@ export const registerBlogMeatballItem = function ({ id, label, onclick, blogFilt
 
 export const unregisterBlogMeatballItem = id => {
   delete meatballItems.blog[id];
-  $(`[data-xkit-blog-meatball-button="${id}"]`).remove();
+  removeElementsBySelector(`[data-xkit-blog-meatball-button="${id}"]`);
 };
 
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
@@ -77,7 +78,7 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
 });
 
 const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataKey }) => {
-  $(meatballMenu).children(`[data-xkit-${type}-meatball-button]`).remove();
+  removeChildrenByAttribute(meatballMenu, `data-xkit-${type}-meatball-button`);
 
   Object.keys(meatballItems[type]).sort().forEach(id => {
     const menuIsAriakit = meatballMenu.matches(ariakitMenuSelector);

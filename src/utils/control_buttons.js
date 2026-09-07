@@ -1,3 +1,4 @@
+import { removeElementsByClassName } from './cleanup.js';
 import { keyToCss } from './css_map.js';
 import { button, div, span } from './dom.js';
 import { getIcon } from './icons.js';
@@ -5,7 +6,7 @@ import { displayInlineBlockUnlessDisabledAttr } from './interface.js';
 import { timelineObject } from './react_props.js';
 
 // Remove outdated buttons when loading module
-$('.xkit-control-button-container').remove();
+removeElementsByClassName('xkit-control-button-container');
 
 /**
  * Create a button template that can be cloned with cloneControlButton() for inserting into the controls in a post's footer.

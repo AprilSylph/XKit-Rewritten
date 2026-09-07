@@ -1,3 +1,4 @@
+import { removeAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { postSelector, buildStyle } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
@@ -33,4 +34,4 @@ export const main = async () =>
     }),
   );
 
-export const clean = () => $(`[${tagsAttribute}]`).removeAttr(tagsAttribute);
+export const clean = () => removeAttribute(tagsAttribute);

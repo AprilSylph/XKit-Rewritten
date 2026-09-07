@@ -1,9 +1,10 @@
+import { removeElementsById } from './cleanup.js';
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 import { blogViewSelector, displayBlockUnlessDisabledAttr } from './interface.js';
 import { pageModifications } from './mutations.js';
 
-$('#xkit-sidebar').remove();
+removeElementsById('xkit-sidebar');
 
 const sidebarItems = dom('div', { id: 'xkit-sidebar', [displayBlockUnlessDisabledAttr]: '' });
 const conditions = new Map();

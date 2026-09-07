@@ -52,7 +52,7 @@ features/
 
 These scripts run in the context of the webpage, rather than the extension sandbox.
 
-See [src/utils/inject.js](../src/utils/inject.js) for how to run these scripts as part of feature code.
+See [`src/utils/inject.js`](../src/utils/inject.js) for how to run these scripts as part of feature code.
 
 ```
 main_world/

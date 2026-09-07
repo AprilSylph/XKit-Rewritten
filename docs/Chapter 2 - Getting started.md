@@ -8,7 +8,7 @@
 
 ## CLI commands
 
-- **`npm start`**: Run your local copy of the addon (see [`web-ext run`](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run)).
+- **`npm start`**: Run your local copy of the addon (see [**`web-ext run`**](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-run)).
 - **`npm test`**: Runs all linters. Will report any syntax or style errors.
 - **`npm test --ignore-scripts`**: Runs only the addon linter. Only reports syntax and WebExtension API errors.
 - **`npm run autofix`**: Automatically fixes any style errors.

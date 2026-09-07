@@ -15,6 +15,7 @@ export default [
    */
   ...neostandard({
     env: ['browser', 'jquery', 'webextensions'],
+    globals: { name: 'off' },
     ignores: ['src/lib/**'],
     semi: true,
   }),

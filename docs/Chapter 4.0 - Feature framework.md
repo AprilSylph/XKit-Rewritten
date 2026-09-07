@@ -6,7 +6,7 @@ Each feature is comprised of a subfolder in `src/features/`, containing:
 - `index.js` module file (required)
 - `index.css` stylesheet file (optional)
 
-For a feature to be visible to the user, its subfolder name must also be added to `/src/features/index.json`.
+For a feature to be visible to the user, its subfolder name must also be added to [`/src/features/index.json`](../src/features/index.json).
 
 ---
 

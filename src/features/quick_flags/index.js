@@ -1,3 +1,4 @@
+import { removeClassName, removeElementsByClassName } from '../../utils/cleanup.js';
 import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
 import { div, input, label } from '../../utils/dom.js';
 import { inject } from '../../utils/inject.js';
@@ -124,8 +125,8 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
   popupElement.remove();
-  $(`.${buttonClass}`).remove();
-  $(`.${excludeClass}`).removeClass(excludeClass);
+  removeElementsByClassName(buttonClass);
+  removeClassName(excludeClass);
 };
 
 export const stylesheet = true;

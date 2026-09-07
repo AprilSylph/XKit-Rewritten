@@ -43,7 +43,7 @@ export function removeChildrenByAttribute (parentNode, attribute) {
  * Remove the specified class name from all elements in the document.
  * @param {string} className A string representing the class name to remove.
  */
-export function removeClassNameFromElements (className) {
+export function removeClassName (className) {
   [...document.querySelectorAll(`.${CSS.escape(className)}`)].forEach(element => element.classList.remove(className));
 }
 
@@ -51,6 +51,6 @@ export function removeClassNameFromElements (className) {
  * Remove the specified attribute from all elements in the document.
  * @param {string} attribute A string representing the name of the attribute to remove.
  */
-export function removeAttributeFromElements (attribute) {
+export function removeAttribute (attribute) {
   [...document.querySelectorAll(`[${CSS.escape(attribute)}]`)].forEach(element => element.removeAttribute(attribute));
 }

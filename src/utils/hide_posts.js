@@ -1,4 +1,4 @@
-import { removeAttributeFromElements, removeElementsByAttribute, removeElementsByClassName } from './cleanup.js';
+import { removeAttribute, removeElementsByAttribute, removeElementsByClassName } from './cleanup.js';
 import { button, div } from './dom.js';
 import { buildStyle, getTimelineItemWrapper } from './interface.js';
 import { anyPostPermalinkTimelineFilter, timelineSelector } from './timeline_id.js';
@@ -139,8 +139,8 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
   };
 
   const showPosts = () => {
-    removeAttributeFromElements(hiddenAttribute);
-    removeAttributeFromElements(controlledHiddenAttribute);
+    removeAttribute(hiddenAttribute);
+    removeAttribute(controlledHiddenAttribute);
     removeElementsByAttribute(controlsAttribute);
   };
 

@@ -266,7 +266,7 @@ const unmuteUser = uuid => {
   hideModal();
 };
 
-export const onStorageChanged = async function (changes, areaName) {
+export const onStorageChanged = async function (changes) {
   const {
     [blogNamesStorageKey]: blogNamesChanges,
     [mutedBlogEntriesStorageKey]: mutedBlogsEntriesChanges,

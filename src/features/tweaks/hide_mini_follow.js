@@ -11,7 +11,7 @@ article ${keyToCss('followButton')}:not(${keyToCss('postMeatballsContainer')} *)
 
 const processButtons = buttons => buttons.forEach(button => {
   if (button.textContent === translate('Follow')) {
-    button.setAttribute(hiddenAttribute, '');
+    button.toggleAttribute(hiddenAttribute, true);
   }
 });
 

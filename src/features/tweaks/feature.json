@@ -2,7 +2,6 @@
   "title": "Tweaks",
   "description": "Miscellaneous dashboard options",
   "icon": {
-    "class_name": "ri-settings-5-line",
     "color": "white",
     "background_color": "#ecc84b"
   },

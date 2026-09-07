@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - if: ${{ github.event_name == 'pull_request' }}
         name: Upload artifact (pull_request)
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v6

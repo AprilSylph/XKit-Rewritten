@@ -2,7 +2,6 @@
   "title": "Themed Posts",
   "description": "Use users' theme colours for posts",
   "icon": {
-    "class_name": "ri-palette-line",
     "color": "white",
     "background_color": "peru"
   },

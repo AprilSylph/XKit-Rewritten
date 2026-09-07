@@ -41,7 +41,6 @@ const quickTagsPanel = div({ 'aria-labelledby': quickTagsTabId, id: quickTagsPan
 const suggestedTagsPanel = div({ 'aria-labelledby': suggestedTagsTabId, id: suggestedTagsPanelId, role: 'tabpanel' });
 const tagsInput = input({
   autocomplete: 'off',
-  list: 'quick-reblog-tag-suggestions',
   placeholder: 'Tags (comma separated)',
   input: onTagsInput,
   keydown: onTextFieldKeyDown,
@@ -121,13 +120,13 @@ function onTabClick ({ currentTarget }) {
     previousSelectedTab.ariaSelected = 'false';
     previousSelectedTab.getAttribute('aria-controls').split(',')
       .map(elementId => document.getElementById(elementId))
-      .forEach(tabPanel => tabPanel.setAttribute('hidden', ''));
+      .forEach(tabPanel => tabPanel.toggleAttribute('hidden', true));
   }
 
   currentTarget.ariaSelected = 'true';
   currentTarget.getAttribute('aria-controls').split(',')
     .map(elementId => document.getElementById(elementId))
-    .forEach(tabPanel => tabPanel.removeAttribute('hidden'));
+    .forEach(tabPanel => tabPanel.toggleAttribute('hidden', false));
 }
 
 /** @param {KeyboardEvent} event commentInput/tagsInput keydown event object */

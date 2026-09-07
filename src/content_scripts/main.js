@@ -1,5 +1,14 @@
 'use strict';
 
+/**
+ * @typedef FeatureModule
+ * @property {() => Promise<void>}  main The function for running the feature when it is enabled.
+ * @property {() => Promise<void>}  clean The function for cleaning up the feature when it is disabled.
+ * @property {() => Promise<void>}  [onStorageChanged] Preference handling for the feature. If not provided, the feature is restarted when its preferences change.
+ * @property {boolean}              [stylesheet] Whether or not the feature has a static stylesheet at `index.css`. Optional.
+ * @property {HTMLStyleElement}     [styleElement] A style element constructed by the `buildStyle()` utility. Optional.
+ */
+
 {
   const MAX_BOOT_ATTEMPTS = 3600; // 60 seconds on 60Hz displays; 10 seconds on 360Hz displays
 
@@ -12,65 +21,81 @@
 
   const timestamp = Date.now(); // Prevent referencing outdated resources after Firefox extension update/restart
 
-  const runFeature = async function (name) {
-    const {
-      main,
-      clean,
-      stylesheet,
-      styleElement,
-      onStorageChanged,
-    } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
+  /**
+   * @param {string[]} names Internal feature names to resolve modules for.
+   * @returns {Promise<[string, FeatureModule][]>} Entries of feature modules, keyed by name.
+   */
+  const getFeatures = names => Promise.all(
+    names.map(async (name) => [name, await import(browser.runtime.getURL(`/features/${name}/index.js`))]),
+  );
 
-    if (main) {
-      main().catch(console.error);
-    }
-    if (stylesheet) {
-      const link = Object.assign(document.createElement('link'), {
-        rel: 'stylesheet',
-        href: browser.runtime.getURL(`/features/${name}/index.css?t=${timestamp}`),
-        className: 'xkit',
-      });
-      document.documentElement.appendChild(link);
-    }
-    if (styleElement) {
-      styleElement.dataset.xkitFeature = name;
-      document.documentElement.append(styleElement);
-    }
+  const runFeatures = async function (names) {
+    (await getFeatures(names)).forEach(([name, module]) => {
+      const {
+        main,
+        clean,
+        stylesheet,
+        styleElement,
+        onStorageChanged,
+      } = module;
 
-    restartListeners[name] = async (changes) => {
-      const { [enabledFeaturesKey]: enabledFeatures } = changes;
-      if (enabledFeatures && !enabledFeatures.newValue.includes(name)) return;
-
-      if (onStorageChanged instanceof Function) {
-        onStorageChanged(changes);
-      } else if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
-        await clean?.();
-        await main?.();
+      if (main) {
+        main().catch(console.error);
       }
-    };
 
-    browser.storage.local.onChanged.addListener(restartListeners[name]);
+      if (stylesheet) {
+        const link = Object.assign(document.createElement('link'), {
+          rel: 'stylesheet',
+          href: browser.runtime.getURL(`/features/${name}/index.css?t=${timestamp}`),
+          className: 'xkit',
+        });
+        document.documentElement.appendChild(link);
+      }
+
+      if (styleElement) {
+        styleElement.dataset.xkitFeature = name;
+        document.documentElement.append(styleElement);
+      }
+
+      restartListeners[name] = async (changes) => {
+        const { [enabledFeaturesKey]: enabledFeatures } = changes;
+        if (enabledFeatures && !enabledFeatures.newValue.includes(name)) return;
+
+        if (onStorageChanged instanceof Function) {
+          onStorageChanged(changes);
+        } else if (Object.keys(changes).some(key => key.startsWith(`${name}.preferences`) && changes[key].oldValue !== undefined)) {
+          await clean?.();
+          await main?.();
+        }
+      };
+
+      browser.storage.local.onChanged.addListener(restartListeners[name]);
+    });
   };
 
-  const destroyFeature = async function (name) {
-    const {
-      clean,
-      stylesheet,
-      styleElement,
-    } = await import(browser.runtime.getURL(`/features/${name}/index.js`));
+  const destroyFeatures = async function (names) {
+    (await getFeatures(names)).forEach(([name, module]) => {
+      const {
+        clean,
+        stylesheet,
+        styleElement,
+      } = module;
 
-    if (clean) {
-      clean().catch(console.error);
-    }
-    if (stylesheet) {
-      document.querySelector(`link[href^="${browser.runtime.getURL(`/features/${name}/index.css`)}"]`)?.remove();
-    }
-    if (styleElement) {
-      styleElement.remove();
-    }
+      if (clean) {
+        clean().catch(console.error);
+      }
 
-    browser.storage.local.onChanged.removeListener(restartListeners[name]);
-    delete restartListeners[name];
+      if (stylesheet) {
+        document.querySelector(`link[href^="${browser.runtime.getURL(`/features/${name}/index.css`)}"]`)?.remove();
+      }
+
+      if (styleElement) {
+        styleElement.remove();
+      }
+
+      browser.storage.local.onChanged.removeListener(restartListeners[name]);
+      delete restartListeners[name];
+    });
   };
 
   const onStorageChanged = async function (changes) {
@@ -79,11 +104,11 @@
     if (enabledFeatures) {
       const { oldValue = [], newValue = [] } = enabledFeatures;
 
-      const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
       const newlyDisabled = oldValue.filter(x => newValue.includes(x) === false);
+      const newlyEnabled = newValue.filter(x => oldValue.includes(x) === false);
 
-      newlyEnabled.forEach(runFeature);
-      newlyDisabled.forEach(destroyFeature);
+      destroyFeatures(newlyDisabled);
+      runFeatures(newlyEnabled);
     }
   };
 
@@ -108,9 +133,7 @@
   });
 
   /**
-   * Shows an informative modal if the extension context is invalidated (e.g. after extension is autoupdated
-   * or manually disabled in Chromium). Should do nothing in Firefox, which stops running all extension
-   * context javascript immediately.
+   * Shows an informative modal if the extension context is invalidated (e.g. after extension is autoupdated or manually disabled in Chromium). Should do nothing in Firefox, which stops running all extension context javascript immediately.
    */
   const warnOnExtensionContextInvalidated = async () => {
     const { showContextInvalidatedModal } = await import(browser.runtime.getURL('/utils/modals.js'));
@@ -142,14 +165,12 @@
     ]);
 
     /**
-     * Fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await
-     * @see https://github.com/sveltejs/kit/issues/7805#issuecomment-1330078207
+     * Fixes WebKit (Chromium, Safari) simultaneous import failure of files with unresolved top level await.
+     * @see https://bugs.webkit.org/show_bug.cgi?id=242740
      */
     await Promise.all(['css_map', 'language_data', 'user'].map(name => import(browser.runtime.getURL(`/utils/${name}.js`))));
 
-    installedFeatures
-      .filter(featureName => enabledFeatures.includes(featureName))
-      .forEach(runFeature);
+    runFeatures(installedFeatures.filter(name => enabledFeatures.includes(name)));
 
     warnOnExtensionContextInvalidated();
   };

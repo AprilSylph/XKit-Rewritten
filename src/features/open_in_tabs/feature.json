@@ -2,7 +2,6 @@
   "title": "Open In Tabs",
   "description": "Open blogs in new tabs",
   "icon": {
-    "class_name": "ri-add-box-line",
     "color": "white",
     "background_color": "#5b8896"
   },

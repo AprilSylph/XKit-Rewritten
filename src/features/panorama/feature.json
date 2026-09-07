@@ -2,7 +2,6 @@
   "title": "Panorama",
   "description": "Widescreen dashboard",
   "icon": {
-    "class_name": "ri-align-justify",
     "color": "white",
     "background_color": "#1a2735"
   },

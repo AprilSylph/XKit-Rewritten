@@ -1,3 +1,4 @@
+import { removeAttribute, removeClassName, removeElementsByAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { button, div, form, input, label } from '../../utils/dom.js';
 import { controlsClass as hidePostsUtilControlsClass, createPostHideFunctions } from '../../utils/hide_posts.js';
@@ -311,12 +312,12 @@ export const main = async function () {
 
 const unprocess = () => {
   showPosts();
-  $(`[${mutedBlogControlsHiddenAttribute}]`).removeAttr(mutedBlogControlsHiddenAttribute);
-  $(`.${lengthenedClass}`).removeClass(lengthenedClass);
-  $(`[${mutedBlogControlsAttribute}]`).remove();
-  $('[data-mute-processed-timeline]').removeAttr('data-mute-processed-timeline');
-  $('[data-mute-processed-timeline-id]').removeAttr('data-mute-processed-timeline-id');
-  $('[data-mute-blog-uuid]').removeAttr('data-mute-blog-uuid');
+  removeAttribute(mutedBlogControlsHiddenAttribute);
+  removeClassName(lengthenedClass);
+  removeElementsByAttribute(mutedBlogControlsAttribute);
+  removeAttribute('data-mute-processed-timeline');
+  removeAttribute('data-mute-processed-timeline-id');
+  removeAttribute('data-mute-blog-uuid');
 };
 
 export const clean = async function () {

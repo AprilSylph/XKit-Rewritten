@@ -111,18 +111,10 @@
 
   display: flex;
   justify-content: flex-end;
-  column-gap: 4px;
-  padding: 12px 8px;
-}
+  gap: 8px;
+  padding: 8px;
 
-.xkit-controls-row::after {
-  position: absolute;
-  bottom: 0;
-  left: 12px;
-  right: 12px;
-
-  border-bottom: 1px solid rgba(var(--black), .13);
-  content: '';
+  border-bottom: 1px solid var(--content-tint-strong);
 }
 
 @media (max-width: 540px) {

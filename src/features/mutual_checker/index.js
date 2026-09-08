@@ -153,7 +153,7 @@ const getIsFollowingYou = async (blogName, element) => {
     followingYou[blogName] = blog
       ? Promise.resolve(blog.isFollowingYou)
       : apiFetch(`/v2/blog/${primaryBlogName}/followed_by`, { queryParams: { query: blogName } })
-        .then(({ response: { followedBy } }) => followedBy)
+        .then(({ response: { followedBy } }) => true)
         .catch(() => Promise.resolve(false));
   }
   return followingYou[blogName];

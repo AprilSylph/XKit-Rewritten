@@ -1,11 +1,15 @@
 .xkit-sidebar-item {
   width: 100%;
-  margin-bottom: 38px;
+  margin-block: 38px;
 
   font-family: var(--font-family);
   font-size: 1.125rem;
   font-weight: 400;
   line-height: 1.333;
+}
+
+.in-flex-container > .xkit-sidebar-item {
+  margin-block: 5px;
 }
 
 .xkit-sidebar-item > h1 {
@@ -81,7 +85,7 @@
 }
 
 nav .xkit-sidebar-item {
-  margin-bottom: 0.75em;
+  margin-block: 0.75em;
 }
 
 nav .xkit-sidebar-item > h1 {

@@ -110,6 +110,7 @@ export const displayBlockUnlessDisabledAttr = 'data-xkit-display-block';
 export const displayInlineBlockUnlessDisabledAttr = 'data-xkit-display-inline-block';
 export const displayFlexUnlessDisabledAttr = 'data-xkit-display-flex';
 export const displayInlineFlexUnlessDisabledAttr = 'data-xkit-display-inline-flex';
+export const displayContentsUnlessDisabledAttr = 'data-xkit-display-contents';
 
 /**
  * This variable is set to "unset" in the src/content_scripts/interface.css static stylesheet.
@@ -140,6 +141,9 @@ document.documentElement.append(
     }
     [${displayInlineFlexUnlessDisabledAttr}] {
       display: var(--none-if-xkit-disabled, inline-flex);
+    }
+    [${displayContentsUnlessDisabledAttr}] {
+      display: var(--none-if-xkit-disabled, contents);
     }
   `),
 );

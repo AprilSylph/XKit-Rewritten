@@ -6,7 +6,8 @@ import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { tagTimelineFilter } from '../../utils/timeline_id.js';
 import { apiFetch, onClickNavigate } from '../../utils/tumblr_helpers.js';
 
-const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
+const timestampsStorageKey = 'tag_tracking_plus.trackedTagTimestamps';
+/** @type {Record<string, number>} */
 let timestamps;
 
 const excludeClass = 'xkit-tag-tracking-plus-done';
@@ -125,14 +126,14 @@ const processPosts = async function (postElements) {
   }
 
   if (updated) {
-    await browser.storage.local.set({ [storageKey]: timestamps });
+    await browser.storage.local.set({ [timestampsStorageKey]: timestamps });
     refreshCount(currentTag);
   }
 };
 
 export const onStorageChanged = async (changes) => {
   const {
-    [storageKey]: timestampsChanges,
+    [timestampsStorageKey]: timestampsChanges,
     'tag_tracking_plus.preferences.onlyShowNew': onlyShowNewChanges,
   } = changes;
 
@@ -150,7 +151,7 @@ export const main = async function () {
 
   trackedTags.forEach(tag => unreadCounts.set(tag, undefined));
 
-  ({ [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey));
+  ({ [timestampsStorageKey]: timestamps = {} } = await browser.storage.local.get(timestampsStorageKey));
 
   const { onlyShowNew } = await getPreferences('tag_tracking_plus');
 

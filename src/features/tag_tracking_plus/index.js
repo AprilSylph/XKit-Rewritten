@@ -81,18 +81,26 @@ const updateSidebarStatus = () => {
   }
 };
 
-const refreshAllCounts = async (isFirstRun = false) => {
+let currentRefreshLoop;
+const startRefreshLoop = async () => {
+  const thisRefreshLoop = Date.now();
+  currentRefreshLoop = thisRefreshLoop;
+
   for (const tag of trackedTags) {
-    await Promise.all([
-      refreshCount(tag),
-      new Promise(resolve => setTimeout(resolve, isFirstRun ? 0 : 30000)),
-    ]);
+    if (currentRefreshLoop !== thisRefreshLoop) return;
+    await refreshCount(tag);
+  }
+  while (true) {
+    for (const tag of trackedTags) {
+      if (currentRefreshLoop !== thisRefreshLoop) return;
+      await Promise.all([
+        refreshCount(tag),
+        new Promise(resolve => setTimeout(resolve, 30000)),
+      ]);
+    }
   }
 };
-
-let intervalID = 0;
-const startRefreshInterval = () => { intervalID = setInterval(refreshAllCounts, 30000 * trackedTags.length); };
-const stopRefreshInterval = () => clearInterval(intervalID);
+const stopRefreshLoop = () => { currentRefreshLoop = undefined; };
 
 const processPosts = async function (postElements) {
   const { pathname, searchParams } = new URL(location);
@@ -165,15 +173,18 @@ export const main = async function () {
       count: '\u22EF',
     })),
   });
+
+  if (!trackedTags.length) return;
+
   sidebarItem.dataset.onlyShowNew = onlyShowNew;
   updateSidebarStatus();
 
   onNewPosts.addListener(processPosts);
-  refreshAllCounts(true).then(startRefreshInterval);
+  startRefreshLoop();
 };
 
 export const clean = async function () {
-  stopRefreshInterval();
+  stopRefreshLoop();
   onNewPosts.removeListener(processPosts);
 
   removeSidebarItem('tag-tracking-plus');

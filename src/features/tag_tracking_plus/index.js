@@ -21,6 +21,8 @@ let sidebarItem;
 const refreshCount = async function (tag) {
   if (!trackedTags.includes(tag)) return;
 
+  console.info(`Tag Tracking+: REFRESHING ${tag}`);
+
   let unreadCountString = '⚠️';
 
   try {
@@ -95,7 +97,7 @@ const startRefreshLoop = async () => {
       if (currentRefreshLoop !== thisRefreshLoop) return;
       await Promise.all([
         refreshCount(tag),
-        new Promise(resolve => setTimeout(resolve, 30000)),
+        new Promise(resolve => setTimeout(resolve, 5000)),
       ]);
     }
   }

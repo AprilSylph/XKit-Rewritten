@@ -58,7 +58,7 @@ class XKitFeatureElement extends CustomElement {
     const {
       [XKitFeatureElement.#enabledFeaturesKey]: enabledFeatures = [],
       [XKitFeatureElement.#specialAccessKey]: specialAccess = [],
-    } = await browser.storage.local.get();
+    } = await browser.storage.local.get([XKitFeatureElement.#enabledFeaturesKey, XKitFeatureElement.#specialAccessKey]);
 
     /** @type {Set<string>} */ const enabledFeaturesSet = new Set(enabledFeatures);
     /** @type {Set<string>} */ const specialAccessSet = new Set(specialAccess);

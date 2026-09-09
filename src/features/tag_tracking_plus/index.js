@@ -83,7 +83,7 @@ const updateSidebarStatus = () => {
 
 let currentRefreshLoop;
 const startRefreshLoop = async () => {
-  const thisRefreshLoop = Date.now();
+  const thisRefreshLoop = Symbol('loop identifier');
   currentRefreshLoop = thisRefreshLoop;
 
   for (const tag of trackedTags) {

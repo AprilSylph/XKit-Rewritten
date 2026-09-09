@@ -1,0 +1,9 @@
+{
+  "title": "Mass Labeler",
+  "description": "Content label posts in bulk",
+  "icon": {
+    "color": "white",
+    "background_color": "#9d318b"
+  },
+  "relatedTerms": [ "Mature", "NSFW", "NSFT", "Flag", "Community Label" ]
+}

@@ -1,0 +1,54 @@
+:host {
+  display: block;
+}
+
+code {
+  font-size: var(--font-size-small);
+}
+
+#blocked-posts {
+  --border-width: 1px;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--border-width);
+  padding: 0;
+  border-radius: var(--border-radius-medium);
+  margin: 0;
+  overflow: hidden;
+
+  background-color: var(--border-color);
+  list-style-type: none;
+  outline: var(--border-width) solid var(--border-color);
+  outline-offset: 0;
+}
+
+#blocked-posts:empty {
+  justify-content: center;
+  align-items: center;
+
+  background-color: transparent;
+}
+
+#blocked-posts:empty::before {
+  content: "You haven’t blocked notifications for any posts yet.";
+  margin: var(--space-large);
+}
+
+h3 + #blocked-posts {
+  margin-block-start: var(--space-medium);
+}
+
+.blocked-post {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: var(--space-small);
+  padding-block: var(--space-small);
+  padding-inline-start: var(--space-medium);
+  padding-inline-end: var(--space-small);
+  margin: 0;
+
+  background-color: var(--background-color-canvas);
+}

@@ -65,7 +65,8 @@ export const styleElement = buildStyle(`
 .${canvasClass}${parentHovered},
 [${labelAttribute}="after"]${hovered}::after,
 [${labelAttribute}="before"]${hovered}::before,
-[${pausedPosterAttribute}]:not(${hovered}) > div > ${keyToCss('knightRiderLoader')} {
+[${pausedPosterAttribute}]:not(${hovered}) > ${keyToCss('loader')} > ${keyToCss('knightRiderLoader')},
+[${labelAttribute}]:not(${hovered}) > ${keyToCss('loader')} > ${keyToCss('knightRiderLoader')} {
   display: none !important;
 }
 ${keyToCss('background')}[${labelAttribute}="after"]::after,
@@ -167,7 +168,13 @@ const createPausedUrlIfAnimated = memoize(async sourceUrl => {
 });
 
 const pauseGif = async function (gifElement) {
-  if (gifElement.currentSrc.endsWith('.webp') && !(await isAnimated(gifElement.currentSrc))) return;
+  if (
+    gifElement.currentSrc.endsWith('.webp') &&
+    !gifElement.hasAttribute('data-assume-animated-webp') &&
+    !(await isAnimated(gifElement.currentSrc))
+  ) {
+    return;
+  }
 
   const image = new Image();
   image.src = gifElement.currentSrc;
@@ -271,6 +278,23 @@ const onStorageChanged = async function (changes) {
   loadingMode = modeChanges.newValue;
 };
 
+const processNativeGifPlayButtons = async buttons => {
+  buttons.forEach(button => button.click());
+
+  // Reprocess webp elements that may have been previously parsed as non-animated.
+  // Assume they are animated if Tumblr showed a play button; in practice this is not always accurate, but
+  // that's Tumblr's problem, and it's difficult to reliably query currentSrc after a click.
+  const webpElements = buttons
+    .map(button =>
+      button.parentElement.querySelector(
+        `img:is([srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})`,
+      ),
+    )
+    .filter(Boolean);
+  webpElements.forEach(webpElement => webpElement.setAttribute('data-assume-animated-webp', ''));
+  processGifs(webpElements);
+};
+
 export const main = async function () {
   loadEventController = new AbortController();
 
@@ -294,6 +318,7 @@ export const main = async function () {
     ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
+  pageModifications.register(`${gifImage} ~ ${keyToCss('playButton')}`, processNativeGifPlayButtons);
 
   const gifBackgroundImage = `
     ${keyToCss(
@@ -327,6 +352,8 @@ export const clean = async function () {
   pageModifications.unregister(processBackgroundGifs);
   pageModifications.unregister(processRows);
   pageModifications.unregister(processHoverableElements);
+
+  pageModifications.unregister(processNativeGifPlayButtons);
 
   [...document.querySelectorAll(`.${containerClass}`)].forEach(wrapper =>
     wrapper.replaceWith(...wrapper.children),

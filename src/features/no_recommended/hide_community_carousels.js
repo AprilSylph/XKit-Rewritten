@@ -2,6 +2,7 @@ import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { timelineObject } from '../../utils/react_props.js';
+import { timelineSelector } from '../../utils/timeline_id.js';
 
 const hiddenAttribute = 'data-no-recommended-community-carousels-hidden';
 
@@ -12,6 +13,7 @@ export const styleElement = buildStyle(`
 `);
 
 const carouselSelector = `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')}`;
+const masonryCarouselSelector = keyToCss('communityRows');
 
 const hideCommunityCarousels = carousels =>
   carousels.forEach(async carousel => {
@@ -19,17 +21,24 @@ const hideCommunityCarousels = carousels =>
     if (elements.some(({ objectType }) => objectType === 'community_card')) {
       const timelineItem = getTimelineItemWrapper(carousel);
       if (
-        timelineItem.previousElementSibling.querySelector(keyToCss('titleObject')) ||
-        timelineItem.previousElementSibling.dataset.cellId?.startsWith('timelineObject:title')
+        timelineItem.previousElementSibling?.querySelector(keyToCss('titleObject')) ||
+        timelineItem.previousElementSibling?.dataset.cellId?.startsWith('timelineObject:title')
       ) {
         timelineItem.toggleAttribute(hiddenAttribute, true);
         timelineItem.previousElementSibling.toggleAttribute(hiddenAttribute, true);
+      } else if (
+        timelineItem.querySelector(keyToCss('titleObject'))
+      ) {
+        timelineItem.toggleAttribute(hiddenAttribute, true);
       }
     }
   });
 
 export const main = async function () {
-  pageModifications.register(carouselSelector, hideCommunityCarousels);
+  pageModifications.register(
+    `${timelineSelector} :is(${carouselSelector}, ${masonryCarouselSelector})`,
+    hideCommunityCarousels,
+  );
 };
 
 export const clean = async function () {

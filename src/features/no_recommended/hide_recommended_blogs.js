@@ -21,7 +21,7 @@ const hideTagPageRecommended = blogsLists =>
 export const main = async function () {
   pageModifications.register('aside h1', hideDashboardRecommended);
 
-  const blogsListSelector = `${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
+  const blogsListSelector = `aside ${keyToCss('desktopContainer')} > ${keyToCss('recommendedBlogs')}`;
   pageModifications.register(blogsListSelector, hideTagPageRecommended);
 };
 

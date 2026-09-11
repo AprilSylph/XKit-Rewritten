@@ -116,6 +116,10 @@ const addSidebarToPage = (siblingCandidates) => {
     'in-flex-container',
     getComputedStyle(target.parentElement).display === 'flex',
   );
+  sidebarItems.classList.toggle(
+    'with-top-margin',
+    target.matches(`section + *, ${keyToCss('summaryInfo')} ~ *`),
+  );
 
   target[insertAbove ? 'before' : 'after'](sidebarItems);
 };

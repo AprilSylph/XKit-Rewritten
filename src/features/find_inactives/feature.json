@@ -1,0 +1,9 @@
+{
+  "title": "Find Inactives",
+  "description": "Clean up your followed blogs",
+  "icon": {
+    "color": "white",
+    "background_color": "#f42c60"
+  },
+  "relatedTerms": [ "Unfollow" ]
+}

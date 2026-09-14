@@ -6,7 +6,8 @@ import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { tagTimelineFilter } from '../../utils/timeline_id.js';
 import { apiFetch, onClickNavigate } from '../../utils/tumblr_helpers.js';
 
-const storageKey = 'tag_tracking_plus.trackedTagTimestamps';
+const timestampsStorageKey = 'tag_tracking_plus.trackedTagTimestamps';
+/** @type {Record<string, number>} */
 let timestamps;
 
 const excludeClass = 'xkit-tag-tracking-plus-done';
@@ -80,18 +81,26 @@ const updateSidebarStatus = () => {
   }
 };
 
-const refreshAllCounts = async (isFirstRun = false) => {
+let currentRefreshLoop;
+const startRefreshLoop = async () => {
+  const thisRefreshLoop = Symbol('loop identifier');
+  currentRefreshLoop = thisRefreshLoop;
+
   for (const tag of trackedTags) {
-    await Promise.all([
-      refreshCount(tag),
-      new Promise(resolve => setTimeout(resolve, isFirstRun ? 0 : 30000)),
-    ]);
+    if (currentRefreshLoop !== thisRefreshLoop) return;
+    await refreshCount(tag);
+  }
+  while (true) {
+    for (const tag of trackedTags) {
+      if (currentRefreshLoop !== thisRefreshLoop) return;
+      await Promise.all([
+        refreshCount(tag),
+        new Promise(resolve => setTimeout(resolve, 30000)),
+      ]);
+    }
   }
 };
-
-let intervalID = 0;
-const startRefreshInterval = () => { intervalID = setInterval(refreshAllCounts, 30000 * trackedTags.length); };
-const stopRefreshInterval = () => clearInterval(intervalID);
+const stopRefreshLoop = () => { currentRefreshLoop = undefined; };
 
 const processPosts = async function (postElements) {
   const { pathname, searchParams } = new URL(location);
@@ -125,14 +134,14 @@ const processPosts = async function (postElements) {
   }
 
   if (updated) {
-    await browser.storage.local.set({ [storageKey]: timestamps });
+    await browser.storage.local.set({ [timestampsStorageKey]: timestamps });
     refreshCount(currentTag);
   }
 };
 
 export const onStorageChanged = async (changes) => {
   const {
-    [storageKey]: timestampsChanges,
+    [timestampsStorageKey]: timestampsChanges,
     'tag_tracking_plus.preferences.onlyShowNew': onlyShowNewChanges,
   } = changes;
 
@@ -150,7 +159,7 @@ export const main = async function () {
 
   trackedTags.forEach(tag => unreadCounts.set(tag, undefined));
 
-  ({ [storageKey]: timestamps = {} } = await browser.storage.local.get(storageKey));
+  ({ [timestampsStorageKey]: timestamps = {} } = await browser.storage.local.get(timestampsStorageKey));
 
   const { onlyShowNew } = await getPreferences('tag_tracking_plus');
 
@@ -164,15 +173,18 @@ export const main = async function () {
       count: '\u22EF',
     })),
   });
+
+  if (!trackedTags.length) return;
+
   sidebarItem.dataset.onlyShowNew = onlyShowNew;
   updateSidebarStatus();
 
   onNewPosts.addListener(processPosts);
-  refreshAllCounts(true).then(startRefreshInterval);
+  startRefreshLoop();
 };
 
 export const clean = async function () {
-  stopRefreshInterval();
+  stopRefreshLoop();
   onNewPosts.removeListener(processPosts);
 
   removeSidebarItem('tag-tracking-plus');

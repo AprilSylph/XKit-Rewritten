@@ -53,12 +53,12 @@ let modernButtonStyle;
 let noZeroNotes;
 
 export const styleElement = buildStyle(`
-  [${activeAttribute}] ${keyToCss('postOwnerControls')} {
+  :is([${activeAttribute}] ${keyToCss('postOwnerControls')}, .xkit-controls-row) {
     position: relative;
     gap: 0;
     border-bottom-color: transparent;
   }
-  [${activeAttribute}] ${keyToCss('postOwnerControls')}::after {
+  :is([${activeAttribute}] ${keyToCss('postOwnerControls')}, .xkit-controls-row)::after {
     position: absolute;
     bottom: -1px;
     left: 16px;

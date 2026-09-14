@@ -28,6 +28,7 @@ const replaceSearchForm = function ([searchFormElement]) {
   });
   searchFormElementClone.classList.add('classic-search');
   searchFormElementClone.querySelector('input').replaceWith(searchInputElement);
+  searchFormElementClone.querySelector('div:has(> [role="progressbar"])')?.remove();
   searchFormElement.parentNode.prepend(searchFormElementClone);
 };
 

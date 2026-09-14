@@ -1,7 +1,3 @@
 form.classic-search + form {
   display: none;
 }
-
-form.classic-search div:has(> [role="progressbar"]) {
-  display: none;
-}

@@ -40,18 +40,18 @@ When a user disables an XKit Rewritten feature, the feature's `clean()` function
 
 ### `onStorageChanged()`
 
-|                 |                                                                                                                                 |
-|-----------------|---------------------------------------------------------------------------------------------------------------------------------|
+|                 |                                                                                                                                       |
+|-----------------|---------------------------------------------------------------------------------------------------------------------------------------|
 | **Type**        | <code>(changes: Record\<string, <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageChange">StorageChange</a>\>) => Promise\<void\></code>  |
-| **Mandatory**   | No                                                                                                                              |
-| **Description** | The preference-handling code of the feature. If not specified, the feature will be restarted when its preferences are changed.  |
+| **Mandatory**   | No                                                                                                                                    |
+| **Description** | The preference change-handling code of the feature. If not specified, the feature will be restarted when its preferences are changed. |
 | **Example**     | <pre lang="js">export const onStorageChanged = async (changes) => Object.keys(changes).some(key => key.startsWith('panorama')) && main();</pre> |
 
 If provided, this function is added as a [`storage.StorageArea.onChanged`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea/onChanged) listener on [`browser.storage.local`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/local).
 
-This listener fires on _all_ changes to `browser.storage.local`, even if the changes are to a different feature's preferences or to storage values that are not preferences at all. This is useful for reacting to changes in another feature's data (e.g.: Quick Reblog displaying new Quick Tags bundles as they are created), or applying changes made to the feature's own custom storage key across all open Tumblr tabs (e.g.: PostBlock hiding newly-hidden posts).
+By default, whenever a feature's preferences are changed, the feature is restarted (i.e., its `clean()` and `main()` functions are called sequentially). This is usually inefficient, and may cause undesirable results such as UI flickering. Providing `onStorageChanged()` replaces this behaviour, allowing the feature to handle preference changes without triggering a restart.
 
-If not provided, the feature's `clean()` and `main()` functions will be called sequentially whenever its preferences are changed.
+This listener fires on _all_ changes to `browser.storage.local`, even if the changes are to a different feature's preferences or to storage values that are not preferences at all. This can be useful for reacting to changes in another feature's data (e.g.: Quick Reblog displaying new Quick Tags bundles as they are created), or applying changes made to the feature's own custom storage key across all open Tumblr tabs (e.g.: PostBlock hiding newly-hidden posts).
 
 <br>
 

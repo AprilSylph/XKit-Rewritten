@@ -74,17 +74,17 @@ When the same feature is disabled, its static stylesheet is also removed from th
 
 ### `styleElement`
 
-|                 |                                                                                               |
-|-----------------|-----------------------------------------------------------------------------------------------|
-| **Type**        | `HTMLStyleElement`                                                                            |
-| **Mandatory**   | No                                                                                            |
-| **Description** | A JavaScript pointer to a `<style class="xkit">` element created by the `buildStyle` utility. |
-| **Example**     | <pre lang="js">export const styleElement = buildStyle();</pre>                                |
+|                 |                                                                       |
+|-----------------|-----------------------------------------------------------------------|
+| **Type**        | `HTMLStyleElement`                                                    |
+| **Mandatory**   | No                                                                    |
+| **Description** | A `<style class="xkit">` element created by the `buildStyle` utility. |
+| **Example**     | <pre lang="js">export const styleElement = buildStyle();</pre>        |
 
 When a feature is run (i.e., its `main()` function is called), and that feature exports this constant, the exported `<style>` element is also added to the document root.
 
-When the same feature is disabled, its `<style>` element is also removed from the document.
+When the same feature is disabled, this `<style>` element is also removed from the document.
 
 The benefit of using a `styleElement` over a static `stylesheet` is the ability to include CSS constructed at runtime, including (but not limited to) using the output of the [`keyToCss()`](../src/utils/css_map.js) utility to target Tumblr's own elements. This is necessary for both robustness and readability because [Tumblr uses compiled class names](https://github.com/tumblr/docs/blob/master/web-platform.md#getcssmap).
 
-This element is never cloned, nor does it ever expire within XKit Rewritten's running lifecycle. Therefore, it is possible to create and export the pointer first, and then construct the CSS later. This is a useful pattern when the CSS the feature wants to construct varies based on the user's preferences.
+This element is never cloned, nor does it ever expire within XKit Rewritten's running lifecycle. Therefore, it is possible to create and export an empty `<style>` element first, and then construct the CSS later. This is a useful pattern when the CSS the feature wants to construct varies based on the user's preferences.

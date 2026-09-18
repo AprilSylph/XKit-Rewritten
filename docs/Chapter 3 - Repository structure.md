@@ -7,13 +7,13 @@ XKit-Rewritten/
 ├── assets/               Source files for original images
 ├── dev/                  Developer scripts
 ├── docs/                 Technical documentation
+├── schemas/              Schema definitions
 ├── src/                  Extension source code
 ├── CONTRIBUTING.md
 ├── LICENSE
 ├── package-lock.json
 ├── package.json
-├── README.md
-└── SECURITY.md
+└── README.md
 ```
 
 ### `src/`
@@ -25,10 +25,11 @@ src/
 ├── action/               Files for extension popup
 ├── content_scripts/      Main boot script and static CSS
 ├── features/             User-facing features
-├── icons/                Extension icons
+├── icons/                XKit Rewritten icon files
 ├── lib/                  External libraries
 ├── main_world/           Scripts to execute in the webpage context
 ├── utils/                Helpers for writing features
+├── browser_polyfill.js
 └── manifest.json
 ```
 

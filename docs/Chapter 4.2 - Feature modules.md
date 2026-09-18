@@ -1,8 +1,10 @@
 # Feature modules
 
-Every feature must have a module file to define its behaviour.
+Every feature must have a module file to define what it is supposed to do when run on a Tumblr webpage.
 
-Feature module files are expected to export certain named constants by the main content script:
+Feature module files are expected to export any of the named constants outlined in this document, as necessary to achieve the feature's intended behaviour.
+
+While none of these constants are technically required, a feature is not complete without exporting at least one of `main()`, `stylesheet`, or `styleElement`.
 
 <br>
 

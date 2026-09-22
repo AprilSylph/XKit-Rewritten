@@ -25,7 +25,7 @@ src/
 ├── action/               Files for extension popup
 ├── content_scripts/      Main boot script and static CSS
 ├── features/             User-facing features
-├── icons/                XKit Rewritten icon files
+├── icons/                Extension icon sizes
 ├── lib/                  External libraries
 ├── main_world/           Scripts to execute in the webpage context
 ├── utils/                Helpers for writing features

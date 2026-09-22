@@ -1,6 +1,6 @@
 # Feature modules
 
-Every feature must have a module file to define what it is supposed to do when run on a Tumblr webpage.
+Every feature must have a JavaScript module file to define what modifications it should apply to a given Tumblr webpage.
 
 Feature module files are expected to export any of the named constants outlined in this document, as necessary to achieve the feature's intended behaviour.
 
@@ -49,9 +49,11 @@ When a user disables an XKit Rewritten feature, the feature's `clean()` function
 | **Description** | The preference change-handling code of the feature. If not specified, the feature will be restarted when its preferences are changed. |
 | **Example**     | <pre lang="js">export const onStorageChanged = async (changes) => Object.keys(changes).some(key => key.startsWith('panorama')) && main();</pre> |
 
-If provided, this function is added as a [`storage.StorageArea.onChanged`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea/onChanged) listener on [`browser.storage.local`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/local).
+When a feature is run (i.e., its `main()` function is called), and that feature exports this function, the exported function is added as a [`storage.StorageArea.onChanged`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea/onChanged) listener on [`browser.storage.local`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/local).
 
-By default, whenever a feature's preferences are changed, the feature is restarted (i.e., its `clean()` and `main()` functions are called sequentially). This is usually inefficient, and may cause undesirable results such as UI flickering. Providing `onStorageChanged()` replaces this behaviour, allowing the feature to handle preference changes without triggering a restart.
+When the same feature is disabled, this listener is removed.
+
+By default, whenever an enabled feature's preferences are changed, the feature is restarted (i.e., its `clean()` and `main()` functions are called sequentially). This is usually inefficient, and may cause undesirable results such as UI flickering. Providing `onStorageChanged()` replaces this behaviour, allowing the feature to handle preference changes without triggering a restart.
 
 This listener fires on _all_ changes to `browser.storage.local`, even if the changes are to a different feature's preferences or to storage values that are not preferences at all. This can be useful for reacting to changes in another feature's data (e.g.: Quick Reblog displaying new Quick Tags bundles as they are created), or applying changes made to the feature's own custom storage key across all open Tumblr tabs (e.g.: PostBlock hiding newly-hidden posts).
 
@@ -89,4 +91,4 @@ When the same feature is disabled, this `<style>` element is also removed from t
 
 The benefit of using a `styleElement` over a static `stylesheet` is the ability to include CSS constructed at runtime, including (but not limited to) using the output of the [`keyToCss()`](../src/utils/css_map.js) utility to target Tumblr's own elements. This is necessary for both robustness and readability because [Tumblr uses compiled class names](https://github.com/tumblr/docs/blob/master/web-platform.md#getcssmap).
 
-This element is never cloned, nor does it ever expire within XKit Rewritten's running lifecycle. Therefore, it is possible to create and export an empty `<style>` element first, and then construct the CSS later. This is a useful pattern when the CSS the feature wants to construct varies based on the user's preferences.
+This element is never cloned, nor does it ever expire within XKit Rewritten's running lifecycle. Therefore, it is possible to create and export an empty `<style>` element first, and then set its `textContent` property to a constructed CSS value later. This is a useful pattern when the CSS the feature wants to construct varies based on the user's preferences.

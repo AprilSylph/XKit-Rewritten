@@ -2,7 +2,6 @@
   "title": "Timestamps",
   "description": "See when a post was made",
   "icon": {
-    "color": "#ffffff",
     "background_color": "#d2196d"
   },
   "preferences": {

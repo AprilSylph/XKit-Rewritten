@@ -2,7 +2,6 @@
   "title": "Show Originals",
   "description": "Add an “Original Posts” tab to your timelines",
   "icon": {
-    "color": "#ffffff",
     "background_color": "#598c75"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#show-originals",

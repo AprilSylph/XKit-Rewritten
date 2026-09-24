@@ -2,7 +2,6 @@
   "title": "Themed Posts",
   "description": "Use users' theme colours for posts",
   "icon": {
-    "color": "#ffffff",
     "background_color": "#cd853f"
   },
   "relatedTerms": [ "colors" ],

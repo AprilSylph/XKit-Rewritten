@@ -2,7 +2,6 @@
   "title": "Seen Posts",
   "description": "Dim the posts you've seen already",
   "icon": {
-    "color": "#ffffff",
     "background_color": "#849baf"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#seen-posts",

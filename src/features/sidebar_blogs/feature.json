@@ -2,7 +2,6 @@
   "title": "Sidebar Blogs",
   "description": "Always show your blogs in the sidebar",
   "icon": {
-    "color": "#ffffff",
     "background_color": "#5a96c5"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#sidebar-blogs",

@@ -2,7 +2,6 @@
   "title": "Tweaks",
   "description": "Miscellaneous dashboard options",
   "icon": {
-    "color": "#ffffff",
     "background_color": "#ecc84b"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks",

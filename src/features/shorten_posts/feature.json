@@ -2,7 +2,6 @@
   "title": "Shorten Posts",
   "description": "Limit the length of posts on your dash",
   "icon": {
-    "color": "#ffffff",
     "background_color": "#4d6a86"
   },
   "preferences": {

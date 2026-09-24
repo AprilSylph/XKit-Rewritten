@@ -17,13 +17,13 @@
           "type": "string",
           "description": "Foreground colour for the feature icon.",
           "pattern": "^#[0-9a-f]{6}$",
-          "default": "#000000"
+          "default": "#ffffff"
         },
         "background_color": {
           "type": "string",
           "description": "Background colour for the feature icon.",
           "pattern": "^#[0-9a-f]{6}$",
-          "default": "#ffffff"
+          "default": "#000000"
         }
       },
       "minProperties": 1,

@@ -1,9 +1,7 @@
 {
   "title": "Timestamps",
   "description": "See when a post was made",
-  "icon": {
-    "background_color": "#d2196d"
-  },
+  "icon": { "background_color": "#d2196d" },
   "preferences": {
     "alwaysShowYear": {
       "type": "checkbox",

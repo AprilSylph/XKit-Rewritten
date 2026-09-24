@@ -1,9 +1,7 @@
 {
   "title": "Mutual Checker",
   "description": "See who follows you back",
-  "icon": {
-    "background_color": "#777777"
-  },
+  "icon": { "background_color": "#777777" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#mutual-checker",
   "preferences": {
     "showOnlyMutuals": {

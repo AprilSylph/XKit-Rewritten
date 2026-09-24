@@ -1,9 +1,7 @@
 {
   "title": "Painter",
   "description": "Add colour to your dashboard posts",
-  "icon": {
-    "background_color": "#4bb51b"
-  },
+  "icon": { "background_color": "#4bb51b" },
   "relatedTerms": [ "color" ],
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#painter",
   "preferences": {

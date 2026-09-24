@@ -1,9 +1,7 @@
 {
   "title": "Quick Reblog",
   "description": "Reblog posts with a single click",
-  "icon": {
-    "background_color": "#acd53a"
-  },
+  "icon": { "background_color": "#acd53a" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quick-reblog",
   "relatedTerms": [ "One-Click Postage", "One Click Postage", "Auto Tagger", "AutoTagger" ],
   "preferences": {

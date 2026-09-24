@@ -1,9 +1,7 @@
 {
   "title": "CleanFeed",
   "description": "Browse safely in public",
-  "icon": {
-    "background_color": "#ff567e"
-  },
+  "icon": { "background_color": "#ff567e" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#cleanfeed",
   "relatedTerms": [ "NSFW", "Mature", "Adult", "Sensitive", "Community Label", "Content Label" ],
   "preferences": {

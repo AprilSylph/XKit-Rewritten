@@ -1,8 +1,6 @@
 {
   "title": "Limit Checker",
   "description": "Check post limit and more",
-  "icon": {
-    "background_color": "#ff4930"
-  },
+  "icon": { "background_color": "#ff4930" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#limit-checker"
 }

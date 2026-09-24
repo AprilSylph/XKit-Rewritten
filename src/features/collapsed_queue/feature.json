@@ -1,9 +1,7 @@
 {
   "title": "Collapsed Queue",
   "description": "Shorten posts in your queue or drafts",
-  "icon": {
-    "background_color": "#f1615f"
-  },
+  "icon": { "background_color": "#f1615f" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#collapsed-queue",
   "relatedTerms": [ "Drafts Plus", "Drafts+", "Enhanced Queue" ],
   "preferences": {

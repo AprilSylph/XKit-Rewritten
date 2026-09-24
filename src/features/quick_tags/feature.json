@@ -1,9 +1,7 @@
 {
   "title": "Quick Tags",
   "description": "Add tags to posts more easily",
-  "icon": {
-    "background_color": "#eeb92b"
-  },
+  "icon": { "background_color": "#eeb92b" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quick-tags",
   "relatedTerms": [ "Auto Tagger", "AutoTagger", "XInbox" ],
   "preferences": {

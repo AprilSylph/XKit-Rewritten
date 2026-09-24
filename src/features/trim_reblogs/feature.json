@@ -1,9 +1,7 @@
 {
   "title": "Trim Reblogs",
   "description": "Trim threads after posting or drafting",
-  "icon": {
-    "background_color": "#56bc8a"
-  },
+  "icon": { "background_color": "#56bc8a" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#trim-reblogs",
   "relatedTerms": [ "Condensed Reblogs", "Editable Reblogs", "Cut Posts", "RP Format", "Beta Editor" ]
 }

@@ -1,9 +1,7 @@
 {
   "title": "Themed Posts",
   "description": "Use users' theme colours for posts",
-  "icon": {
-    "background_color": "#cd853f"
-  },
+  "icon": { "background_color": "#cd853f" },
   "relatedTerms": [ "colors" ],
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#themed-posts",
   "preferences": {

@@ -43,6 +43,7 @@ If this property is omitted, no description is displayed for the feature.
 | **Type**        | `{ color?: string; background_color?: string; }`                                      |
 | **Mandatory**   | No                                                                                    |
 | **Description** | Properties for customising how the feature's `icon.svg` renders in the control panel. |
+| **Example**     | <pre lang="json">"icon": { "background_color": "#7c5cff" }</pre>                    |
 
 This property is ignored if the feature does not have an `icon.svg` file.
 
@@ -50,24 +51,15 @@ If this property is omitted, no icon is rendered for the feature.
 
 #### `"color"`
 
-The CSS [`<color>`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value) to use as the icon's foreground colour.
+A CSS [`<hex-color>`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/hex-color) to use as the icon's foreground colour.
 
-Default value: `#000000`
+Default value: `"#ffffff"`
 
 #### `"background_color"`
 
-The CSS [`<color>`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value) to use as the icon's background colour.
+A CSS [`<hex-color>`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/hex-color) to use as the icon's background colour.
 
-Default value: `#ffffff`
-
-#### Example
-
-```json
-"icon": {
-  "color": "white",
-  "background_color": "#7c5cff"
-}
-```
+Default value: `"#000000"`
 
 <br>
 

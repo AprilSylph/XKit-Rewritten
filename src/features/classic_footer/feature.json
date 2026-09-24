@@ -2,7 +2,7 @@
   "title": "Classic Footer",
   "description": "See the total note count on posts",
   "icon": {
-    "color": "white",
+    "color": "#ffffff",
     "background_color": "#395875"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#classic-footer",

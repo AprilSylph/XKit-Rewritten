@@ -2,7 +2,7 @@
   "title": "Vanilla Audio",
   "description": "Use the browser's controls for audio",
   "icon": {
-    "color": "white",
+    "color": "#ffffff",
     "background_color": "#7c5cff"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#vanilla-audio",

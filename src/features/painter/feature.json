@@ -2,7 +2,7 @@
   "title": "Painter",
   "description": "Add colour to your dashboard posts",
   "icon": {
-    "color": "white",
+    "color": "#ffffff",
     "background_color": "#4bb51b"
   },
   "relatedTerms": [ "color" ],

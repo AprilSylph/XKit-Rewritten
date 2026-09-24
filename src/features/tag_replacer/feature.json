@@ -2,7 +2,7 @@
   "title": "Tag Replacer",
   "description": "Replace old tags in bulk",
   "icon": {
-    "color": "white",
+    "color": "#ffffff",
     "background_color": "#fc4070"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tag-replacer"

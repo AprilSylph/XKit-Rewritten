@@ -2,7 +2,7 @@
   "title": "Quote Replies",
   "description": "Reply to reply notifications",
   "icon": {
-    "color": "white",
+    "color": "#ffffff",
     "background_color": "#00b8ff"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quote-replies",

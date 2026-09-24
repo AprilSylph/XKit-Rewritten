@@ -2,7 +2,7 @@
   "title": "Vanilla Video",
   "description": "Use the browser's controls for video",
   "icon": {
-    "color": "white",
+    "color": "#ffffff",
     "background_color": "#ff62ce"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#vanilla-video",

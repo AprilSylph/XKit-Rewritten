@@ -2,7 +2,7 @@
   "title": "Panorama",
   "description": "Widescreen dashboard",
   "icon": {
-    "color": "white",
+    "color": "#ffffff",
     "background_color": "#1a2735"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#panorama",

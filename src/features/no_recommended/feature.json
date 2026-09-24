@@ -2,7 +2,7 @@
   "title": "No Recommended",
   "description": "Focus only on what you follow",
   "icon": {
-    "color": "white",
+    "color": "#ffffff",
     "background_color": "#00cf35"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#no-recommended",

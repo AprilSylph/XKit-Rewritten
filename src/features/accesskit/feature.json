@@ -2,7 +2,7 @@
   "title": "AccessKit",
   "description": "Accessibility options for Tumblr",
   "icon": {
-    "color": "white",
+    "color": "#ffffff",
     "background_color": "#df46f6"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#accesskit",

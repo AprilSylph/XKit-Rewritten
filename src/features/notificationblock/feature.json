@@ -2,7 +2,7 @@
   "title": "NotificationBlock",
   "description": "Hide activity about a post",
   "icon": {
-    "color": "white",
+    "color": "#ffffff",
     "background_color": "#f5223c"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#notificationblock",

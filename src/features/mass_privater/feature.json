@@ -2,7 +2,7 @@
   "title": "Mass Privater",
   "description": "Unpublish posts by time range or tag",
   "icon": {
-    "color": "white",
+    "color": "#ffffff",
     "background_color": "#9d318b"
   },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#mass-privater",

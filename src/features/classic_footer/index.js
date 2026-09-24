@@ -7,6 +7,7 @@ import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject, trailItem } from '../../utils/react_props.js';
 
 const activeAttribute = 'data-classic-footer';
+const forceDisableReblogAttribute = 'data-classic-footer-force-disable-reblog';
 const noteCountClass = 'xkit-classic-footer-note-count';
 const modernStyleClass = 'xkit-classic-footer-ds-look';
 const reblogLinkClass = 'xkit-classic-footer-reblog-link';
@@ -199,6 +200,13 @@ export const styleElement = buildStyle(`
   .${reblogLinkClass} ~ ${reblogButtonSelector}:not(:has(${quickActionsSelector})) {
     display: none;
   }
+
+  [${forceDisableReblogAttribute}] ${reblogButtonSelector} {
+    cursor: not-allowed;
+    opacity: 0.5;
+    color: var(--content-fg-secondary) !important;
+    background-color: transparent !important;
+  }
 `);
 
 const getTranslationTemplate = (noteCount) => {
@@ -287,9 +295,7 @@ const processPosts = (postElements) => postElements.forEach(async postElement =>
       engagementControls.closest('footer').toggleAttribute(activeAttribute, true);
       engagementControls.before(noteCountButton);
 
-      if (noReblogMenu) {
-        processReblogButton(engagementControls.querySelector(reblogButtonSelector), timelineObjectData, trailItemData);
-      }
+      processReblogButton(engagementControls.querySelector(reblogButtonSelector), timelineObjectData, trailItemData);
     });
 });
 
@@ -336,22 +342,27 @@ const processReblogButton = (reblogButton, timelineObjectData, trailItemData) =>
   const { canReblog, id } = trailItemData?.post ?? timelineObjectData;
   const { reblogKey } = timelineObjectData; // Trail items have the same reblog key as their parent post
 
-  if (!canReblog) return;
+  if (!canReblog) {
+    reblogButton.closest('footer').toggleAttribute(
+      forceDisableReblogAttribute,
+      reblogButton.getAttribute('aria-disabled') !== 'true',
+    );
+  } else if (noReblogMenu) {
+    const reblogLinkPath = `/reblog/${name}/${id}/${reblogKey}`;
+    const styleContent = `${reblogMenuPortalSelector}:has([role="menuitem"][href^="${reblogLinkPath}"]) { display: none; }`;
 
-  const reblogLinkPath = `/reblog/${name}/${id}/${reblogKey}`;
-  const styleContent = `${reblogMenuPortalSelector}:has([role="menuitem"][href^="${reblogLinkPath}"]) { display: none; }`;
+    const reblogLink = a({
+      'aria-label': reblogButton.getAttribute('aria-label'),
+      class: reblogLinkClass,
+      click: onReblogLinkClick,
+      href: reblogLinkPath,
+    }, [
+      link({ rel: 'stylesheet', class: 'xkit', href: `data:text/css,${encodeURIComponent(styleContent)}` }),
+      reblogButton.firstElementChild.cloneNode(true)],
+    );
 
-  const reblogLink = a({
-    'aria-label': reblogButton.getAttribute('aria-label'),
-    class: reblogLinkClass,
-    click: onReblogLinkClick,
-    href: reblogLinkPath,
-  }, [
-    link({ rel: 'stylesheet', class: 'xkit', href: `data:text/css,${encodeURIComponent(styleContent)}` }),
-    reblogButton.firstElementChild.cloneNode(true)],
-  );
-
-  reblogButton.before(reblogLink);
+    reblogButton.before(reblogLink);
+  }
 };
 
 export const onStorageChanged = async function (changes) {
@@ -369,6 +380,7 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(processPosts);
   $(`[${activeAttribute}]`).removeAttr(activeAttribute);
+  $(`[${forceDisableReblogAttribute}]`).removeAttr(forceDisableReblogAttribute);
   $(`.${noteCountClass}`).remove();
   $(`.${reblogLinkClass}`).remove();
 };

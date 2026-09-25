@@ -151,7 +151,7 @@
   };
 
   const init = async function () {
-    $('style.xkit, link.xkit').remove();
+    [...document.querySelectorAll('style.xkit, link.xkit')].forEach(element => element.remove());
 
     browser.storage.local.onChanged.addListener(onStorageChanged);
 

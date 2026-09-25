@@ -8,6 +8,13 @@
   line-height: 1.333;
 }
 
+.with-top-margin > .xkit-sidebar-item {
+  margin-top: 38px;
+}
+.in-flex-container > .xkit-sidebar-item {
+  margin-block: 5px;
+}
+
 .xkit-sidebar-item > h1 {
   display: flex;
   flex-direction: row;
@@ -81,7 +88,7 @@
 }
 
 nav .xkit-sidebar-item {
-  margin-bottom: 0.75em;
+  margin-block: 0.75em;
 }
 
 nav .xkit-sidebar-item > h1 {

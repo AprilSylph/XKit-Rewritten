@@ -1,12 +1,12 @@
 import { removeElementsById } from './cleanup.js';
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
-import { blogViewSelector, displayBlockUnlessDisabledAttr } from './interface.js';
+import { blogViewSelector, displayContentsUnlessDisabledAttr } from './interface.js';
 import { pageModifications } from './mutations.js';
 
 removeElementsById('xkit-sidebar');
 
-const sidebarItems = dom('div', { id: 'xkit-sidebar', [displayBlockUnlessDisabledAttr]: '' });
+const sidebarItems = dom('div', { id: 'xkit-sidebar', [displayContentsUnlessDisabledAttr]: '' });
 const conditions = new Map();
 
 const carrotSvg = dom('svg', {
@@ -111,6 +111,15 @@ const addSidebarToPage = (siblingCandidates) => {
   const insertAbove = getComputedStyle(target).position === 'sticky' ||
     target.matches(desktopContainerSelector) ||
     target.matches(aboutFooterSelector);
+
+  sidebarItems.classList.toggle(
+    'in-flex-container',
+    getComputedStyle(target.parentElement).display === 'flex',
+  );
+  sidebarItems.classList.toggle(
+    'with-top-margin',
+    target.matches(`section + *, ${keyToCss('summaryInfo')} ~ *`),
+  );
 
   target[insertAbove ? 'before' : 'after'](sidebarItems);
 };

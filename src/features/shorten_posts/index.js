@@ -1,3 +1,4 @@
+import { removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle, filterPostElements, postSelector } from '../../utils/interface.js';
@@ -69,7 +70,8 @@ export const clean = async function () {
 
   $(`.${excludeClass}`).removeClass(excludeClass);
   $(`.${shortenClass}`).removeClass(shortenClass);
-  $(`.${tagsClass}, .${buttonClass}`).remove();
+  removeElementsByClassName(tagsClass);
+  removeElementsByClassName(buttonClass);
 };
 
 export const stylesheet = true;

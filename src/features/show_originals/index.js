@@ -1,3 +1,4 @@
+import { removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { a, div } from '../../utils/dom.js';
 import { filterPostElements, getTimelineItemWrapper } from '../../utils/interface.js';
@@ -145,7 +146,7 @@ export const clean = async function () {
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
-  $(`.${controlsClass}`).remove();
+  removeElementsByClassName(controlsClass);
 };
 
 export const stylesheet = true;

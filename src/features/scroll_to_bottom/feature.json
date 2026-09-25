@@ -1,8 +1,6 @@
 {
   "title": "Scroll to Bottom",
   "description": "Load ALL the posts!",
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#scroll-to-bottom",
-  "icon": {
-    "color": "#e8d738"
-  }
+  "icon": { "color": "#e8d738" },
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#scroll-to-bottom"
 }

@@ -13,7 +13,7 @@ ${filteredScreenSelector} {
   padding-bottom: var(--post-header-vertical-padding);
 }
 
-${filteredScreenSelector} > p {
+${filteredScreenSelector} > ${keyToCss('message')} {
   flex-shrink: 0;
 }
 

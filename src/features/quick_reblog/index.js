@@ -1,3 +1,4 @@
+import { removeElementsById } from '../../utils/cleanup.js';
 import { sha256 } from '../../utils/crypto.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { div, select, input, fieldset, button, option, hr, span } from '../../utils/dom.js';
@@ -12,7 +13,7 @@ import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../../utils/user.js';
 
 // Clean up previous instance after addon reload
-document.getElementById('quick-reblog')?.remove();
+removeElementsById('quick-reblog');
 
 const quickTagsTabId = 'xkit-quick-reblog-quick-tags-tab';
 const quickTagsPanelId = 'xkit-quick-reblog-quick-tags-panel';
@@ -41,7 +42,6 @@ const quickTagsPanel = div({ 'aria-labelledby': quickTagsTabId, id: quickTagsPan
 const suggestedTagsPanel = div({ 'aria-labelledby': suggestedTagsTabId, id: suggestedTagsPanelId, role: 'tabpanel' });
 const tagsInput = input({
   autocomplete: 'off',
-  list: 'quick-reblog-tag-suggestions',
   placeholder: 'Tags (comma separated)',
   input: onTagsInput,
   keydown: onTextFieldKeyDown,
@@ -84,7 +84,13 @@ const blogHashes = new Map();
 const avatarUrls = new Map();
 
 const buttonSelector = `${postSelector} footer a, ${postSelector} footer button`;
-const reblogButtonSelector = `${postSelector} footer :is(a[href*="/reblog/"], button:has(use[href="#managed-icon__ds-reblog-24"])):not(${keyToCss('reblog')} *)`;
+const reblogButtonSelector = `${postSelector} footer :is(
+  a[href*="/reblog/"],
+  button:has(
+    use[href="#managed-icon__ds-reblog-20"],
+    use[href="#managed-icon__ds-reblog-24"]
+  )
+):not(${keyToCss('reblog')} *)`;
 const buttonDivSelector = `${keyToCss('controls', 'reblogsControl', 'engagementControls')} > *`;
 
 export const styleElement = buildStyle(`
@@ -115,13 +121,13 @@ function onTabClick ({ currentTarget }) {
     previousSelectedTab.ariaSelected = 'false';
     previousSelectedTab.getAttribute('aria-controls').split(',')
       .map(elementId => document.getElementById(elementId))
-      .forEach(tabPanel => tabPanel.setAttribute('hidden', ''));
+      .forEach(tabPanel => tabPanel.toggleAttribute('hidden', true));
   }
 
   currentTarget.ariaSelected = 'true';
   currentTarget.getAttribute('aria-controls').split(',')
     .map(elementId => document.getElementById(elementId))
-    .forEach(tabPanel => tabPanel.removeAttribute('hidden'));
+    .forEach(tabPanel => tabPanel.toggleAttribute('hidden', false));
 }
 
 /** @param {KeyboardEvent} event commentInput/tagsInput keydown event object */

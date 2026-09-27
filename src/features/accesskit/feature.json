@@ -1,11 +1,7 @@
 {
   "title": "AccessKit",
   "description": "Accessibility options for Tumblr",
-  "icon": {
-    "class_name": "ri-open-arm-line",
-    "color": "white",
-    "background_color": "#df46f6"
-  },
+  "icon": { "background_color": "#df46f6" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#accesskit",
   "relatedTerms": [ "Disable GIFs", "colors" ],
   "preferences": {
@@ -16,7 +12,7 @@
     },
     "disable_gifs_loading_mode": {
       "type": "select",
-      "label": "Download paused GIFs:",
+      "label": "Download paused GIFs",
       "options": [
         { "value": "eager", "label": "immediately" },
         { "value": "lazy", "label": "when hovered" }

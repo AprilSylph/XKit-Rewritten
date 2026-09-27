@@ -57,10 +57,10 @@ const processPosts = async function (postElements) {
 
     const timelineItem = getTimelineItemWrapper(postElement);
 
-    timelineItem.setAttribute(hiddenAttribute, '');
+    timelineItem.toggleAttribute(hiddenAttribute, true);
 
     if (precedingHiddenPosts(timelineItem) >= 10) {
-      timelineItem.setAttribute(unHiddenAttribute, '');
+      timelineItem.toggleAttribute(unHiddenAttribute, true);
     }
   });
 };

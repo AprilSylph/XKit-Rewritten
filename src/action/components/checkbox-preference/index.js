@@ -11,6 +11,7 @@ const templateDocument = new DOMParser().parseFromString(`
 
 const adoptedStyleSheets = await fetchStyleSheets([
   '/lib/modern-normalize.css',
+  '/action/acorn.css',
   './index.css',
 ].map(import.meta.resolve));
 

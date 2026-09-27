@@ -1,12 +1,13 @@
+import { removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { button } from '../../utils/dom.js';
+import { getIcon } from '../../utils/icons.js';
 import { inject } from '../../utils/inject.js';
 import { buildStyle, displayInlineFlexUnlessDisabledAttr, notificationSelector } from '../../utils/interface.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { getPreferences } from '../../utils/preferences.js';
-import { buildSvg } from '../../utils/remixicon.js';
 import { apiFetch, navigate } from '../../utils/tumblr_helpers.js';
 import { userBlogs } from '../../utils/user.js';
 
@@ -15,7 +16,7 @@ const buttonClass = 'xkit-quote-replies';
 const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
 // Remove outdated elements when loading module
-$(`.${buttonClass}`).remove();
+removeElementsByClassName(buttonClass);
 
 export const styleElement = buildStyle(`
 button.xkit-quote-replies {
@@ -33,12 +34,12 @@ button.xkit-quote-replies svg {
   width: 21.5px;
   height: 21.5px;
 
-  fill: rgb(var(--blue));
+  color: rgb(var(--blue));
   transition: all .25s ease-out .4s;
 }
 
 button.xkit-quote-replies:disabled svg {
-  fill: rgba(var(--black), 0.65);
+  color: rgba(var(--black), 0.65);
   transition-property: none;
 }
 
@@ -83,26 +84,28 @@ const processNotifications = notifications => notifications.forEach(async notifi
   const activityElement = notification.querySelector(activitySelector);
   if (!activityElement) return;
 
-  activityElement.after(dom(
-    'button',
-    {
-      class: `${buttonClass} ${notification.matches(dropdownSelector) ? dropdownButtonClass : ''}`,
-      [displayInlineFlexUnlessDisabledAttr]: '',
-      title: 'Quote this reply',
+  activityElement.after(button({
+    class: `${buttonClass} ${notification.matches(dropdownSelector) ? dropdownButtonClass : ''}`,
+    [displayInlineFlexUnlessDisabledAttr]: '',
+    title: 'Quote this reply',
+    click () {
+      this.disabled = true;
+      quoteReply(tumblelogName, notificationProps)
+        .catch(showErrorModal)
+        .finally(() => { this.disabled = false; });
     },
-    {
-      click () {
-        this.disabled = true;
-        quoteReply(tumblelogName, notificationProps)
-          .catch(showErrorModal)
-          .finally(() => { this.disabled = false; });
-      },
-    },
-    [buildSvg('ri-chat-quote-line')],
-  ));
+  }, [getIcon('quote_replies')]));
 });
 
-const processGenericReply = async (notificationProps) => {
+const quoteReply = async (tumblelogName, notificationProps) => {
+  const data = notificationProps.type === 'generic'
+    ? await createGenericReplyData(notificationProps)
+    : await createReplyData(notificationProps);
+
+  openPostDraft(tumblelogName, data);
+};
+
+const createGenericReplyData = async (notificationProps) => {
   const {
     subtype: type,
     timestamp,
@@ -120,7 +123,7 @@ const processGenericReply = async (notificationProps) => {
       ? bodyDescriptionContent.text.slice(summaryFormatting.start + 1, summaryFormatting.end - 1)
       : bodyDescriptionContent.text;
 
-    return await processReply({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary });
+    return await createReplyData({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary });
   } catch (exception) {
     console.error(exception);
     console.debug('[XKit] Falling back to generic quote content due to fetch/parse failure');
@@ -153,7 +156,7 @@ const processGenericReply = async (notificationProps) => {
   return { content, tags };
 };
 
-const processReply = async ({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary }) => {
+const createReplyData = async ({ type, timestamp, targetPostId, targetTumblelogName, targetPostSummary }) => {
   const { response } = await apiFetch(
     `/v2/blog/${targetTumblelogName}/post/${targetPostId}/notes/timeline`,
     { queryParams: { mode: 'replies', before_timestamp: `${timestamp + 1}000000` } },
@@ -190,14 +193,10 @@ const processReply = async ({ type, timestamp, targetPostId, targetTumblelogName
   return { content, tags };
 };
 
-const quoteReply = async (tumblelogName, notificationProps) => {
+const openPostDraft = async (tumblelogName, data) => {
   const uuid = userBlogs.find(({ name }) => name === tumblelogName).uuid;
 
-  const { content, tags } = notificationProps.type === 'generic'
-    ? await processGenericReply(notificationProps)
-    : await processReply(notificationProps);
-
-  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { content, state: 'draft', tags } });
+  const { response: { id: responseId, displayText } } = await apiFetch(`/v2/blog/${uuid}/posts`, { method: 'POST', body: { state: 'draft', ...data } });
 
   const currentDraftLocation = `/edit/${tumblelogName}/${responseId}`;
 
@@ -230,7 +229,7 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(processNotifications);
-  $(`.${buttonClass}`).remove();
+  removeElementsByClassName(buttonClass);
 };
 
 export const onStorageChanged = async function (changes) {

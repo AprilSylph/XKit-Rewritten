@@ -1,14 +1,14 @@
+import { removeElementsByClassName } from '../../utils/cleanup.js';
 import { createControlButtonTemplate, cloneControlButton, insertControlButton } from '../../utils/control_buttons.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { filterPostElements, postSelector } from '../../utils/interface.js';
-import { showModal, hideModal, modalCancelButton, showErrorModal } from '../../utils/modals.js';
+import { showModal, hideModal, modalCancelButton, showErrorModal, withModalOnError } from '../../utils/modals.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { notify } from '../../utils/notifications.js';
 import { timelineObject } from '../../utils/react_props.js';
 import { apiFetch, createEditRequestBody } from '../../utils/tumblr_helpers.js';
 
-const symbolId = 'ri-scissors-cut-line';
 const buttonClass = 'xkit-trim-reblogs-button';
 const reblogPreviewClass = 'xkit-trim-reblogs-preview';
 const avatarPreviewClass = 'xkit-trim-reblogs-avatar-preview';
@@ -160,19 +160,19 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
   const items = trail.length + (content.length ? 1 : 0);
 
   if (canEdit && ['ask', 'submission'].includes(state) === false) {
-    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: event => onButtonClicked(event).catch(showErrorModal) }, items < 2);
+    const clonedControlButton = cloneControlButton(controlButtonTemplate, { click: withModalOnError(onButtonClicked) }, items < 2);
     insertControlButton(postElement, clonedControlButton, buttonClass);
   }
 });
 
 export const main = async function () {
-  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Trim Reblogs');
+  controlButtonTemplate = createControlButtonTemplate('trim_reblogs', buttonClass, 'Trim Reblogs');
   onNewPosts.addListener(processPosts);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  $(`.${buttonClass}`).remove();
+  removeElementsByClassName(buttonClass);
 };
 
 export const stylesheet = true;

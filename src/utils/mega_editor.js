@@ -21,6 +21,7 @@ const pathnames = {
 };
 
 /**
+ * Edit many posts at once, efficiently but with a limited set of edit modes, using the API endpoints used by the Tumblr mass post editor.
  * @param {string[]} postIds Array of post IDs to edit (must not exceed 100 items)
  * @param {object} options Configuration object
  * @param {string} options.mode Post editing method; valid modes are:
@@ -48,6 +49,6 @@ export const megaEdit = async function (postIds, options) {
 
   return inject(
     '/main_world/post_request.js',
-    [`https://www.tumblr.com/${pathname}`, $.param(requestBody)],
+    [`https://www.tumblr.com/${pathname}`, (new URLSearchParams(requestBody)).toString()],
   );
 };

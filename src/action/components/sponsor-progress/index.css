@@ -1,0 +1,62 @@
+:host {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: var(--space-large);
+  padding: var(--space-small);
+  border-top: 1px solid var(--border-color);
+
+  background-color: var(--background-color-canvas);
+  box-shadow: 0 1px 0 var(--background-color-canvas);
+}
+
+#caption {
+  flex-basis: max-content;
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+#progress {
+  flex: 1;
+  height: 8px;
+  border-radius: 6px;
+  overflow: hidden;
+
+  background-color: var(--border-color);
+  color: #ec6cb9;
+}
+
+#progress-bar {
+  background-color: currentColor;
+  height: 100%;
+  width: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #progress-bar {
+    transition: width 0.5s ease-in;
+  }
+}
+
+#cover-link {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+#cover-link:not([href]) {
+  display: none;
+}
+
+#cover-link:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: -2px;
+}

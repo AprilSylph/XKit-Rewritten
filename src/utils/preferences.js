@@ -1,4 +1,5 @@
 /**
+ * Get all of a feature's preference values that are automatically registered by the "preferences" field in its feature.json metadata file.
  * @param {string} featureName Internal name of feature
  * @returns {Promise<object>} The feature's preference values
  */
@@ -12,7 +13,7 @@ export const getPreferences = async function (featureName) {
   const preferenceValues = {};
 
   for (const [key, preference] of Object.entries(preferences)) {
-    if (preference.type === 'iframe') { continue; }
+    if (preference.type === 'component') continue;
 
     const storageKey = `${featureName}.preferences.${key}`;
     const savedPreference = storage[storageKey];
@@ -25,8 +26,10 @@ export const getPreferences = async function (featureName) {
         }
       }
 
-      Object.assign(unsetPreferences, { [storageKey]: preference.default });
-      preferenceValues[key] = preference.default;
+      if (preference.default !== undefined) {
+        Object.assign(unsetPreferences, { [storageKey]: preference.default });
+        preferenceValues[key] = preference.default;
+      }
     } else {
       preferenceValues[key] = savedPreference;
     }

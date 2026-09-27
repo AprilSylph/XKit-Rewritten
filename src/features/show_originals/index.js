@@ -1,3 +1,4 @@
+import { removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { a, div } from '../../utils/dom.js';
 import { filterPostElements, getTimelineItemWrapper } from '../../utils/interface.js';
@@ -13,6 +14,7 @@ import {
   timelineSelector,
   anyCommunityTimelineFilter,
   communitiesTimelineFilter,
+  blogpackTimelineFilter,
 } from '../../utils/timeline_id.js';
 import { userBlogs } from '../../utils/user.js';
 
@@ -27,6 +29,7 @@ const includeFiltered = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
+let showReblogsWithTags;
 let showReblogsOfNotFollowing;
 let whitelist;
 let disabledBlogs;
@@ -80,6 +83,7 @@ const getLocation = timelineElement => {
     peepr: isBlog,
     blogSubscriptions: blogSubsTimelineFilter(timelineElement),
     community: anyCommunityTimelineFilter(timelineElement) || communitiesTimelineFilter(timelineElement),
+    blogpack: blogpackTimelineFilter(timelineElement),
   };
   return Object.keys(on).find(location => on[location]);
 };
@@ -103,17 +107,18 @@ const processPosts = async function (postElements) {
 
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {
-      const { rebloggedRootId, content, blogName, community, postAuthor, rebloggedFromFollowing, trail } = await timelineObject(postElement);
+      const { rebloggedRootId, content, tags, blogName, community, postAuthor, rebloggedFromFollowing, trail } = await timelineObject(postElement);
       const myPost = await isMyPost(postElement);
 
       if (!rebloggedRootId) { return; }
       if (showOwnReblogs && myPost) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
+      if (showReblogsWithTags && tags.length > 0) { return; }
       if (showReblogsOfNotFollowing && !(rebloggedFromFollowing || trail.at(-1)?.blog?.followed)) { return; }
       const visibleBlogName = community ? postAuthor : blogName;
       if (whitelist.includes(visibleBlogName)) { return; }
 
-      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
+      getTimelineItemWrapper(postElement).toggleAttribute(hiddenAttribute, true);
     });
 };
 
@@ -122,6 +127,7 @@ export const main = async function () {
   ({
     showOwnReblogs,
     showReblogsWithContributedContent,
+    showReblogsWithTags,
     showReblogsOfNotFollowing,
     whitelistedUsernames,
   } = await getPreferences('show_originals'));
@@ -140,7 +146,7 @@ export const clean = async function () {
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`.${lengthenedClass}`).removeClass(lengthenedClass);
-  $(`.${controlsClass}`).remove();
+  removeElementsByClassName(controlsClass);
 };
 
 export const stylesheet = true;

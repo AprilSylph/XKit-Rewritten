@@ -12,7 +12,7 @@
 
   background-color: rgb(var(--navy));
   border-radius: 8px;
-  box-shadow: 0 0 1px rgba(var(--white-on-dark), .13);
+  box-shadow: 0 0 1px rgba(var(--white-on-dark), 0.13);
 }
 
 .xkit-trim-reblogs-preview label {

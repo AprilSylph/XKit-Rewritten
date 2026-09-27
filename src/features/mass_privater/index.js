@@ -1,6 +1,6 @@
 import { dom } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
-import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal, createTagSpan, createBlogSpan } from '../../utils/modals.js';
+import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal, createTagSpan, createBlogSpan, withModalOnError } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { dateTimeFormat, elementsAsList } from '../../utils/text_format.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
@@ -26,7 +26,7 @@ const createNowString = () => {
 };
 
 const showInitialPrompt = async () => {
-  const initialForm = dom('form', { id: getPostsFormId }, { submit: event => confirmInitialPrompt(event).catch(showErrorModal) }, [
+  const initialForm = dom('form', { id: getPostsFormId }, { submit: withModalOnError(confirmInitialPrompt) }, [
     dom('label', null, null, [
       'Posts on blog:',
       dom('select', { name: 'blog', required: true }, null, userBlogs.map(createBlogOption)),
@@ -154,6 +154,7 @@ const showPostsNotFound = ({ name }) =>
     buttons: [modalCompleteButton],
   });
 
+/** @type {(params: { uuid: string; name: string; tags: string[]; before: number; }) => Promise<void>} */
 const privatePosts = async ({ uuid, name, tags, before }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const privateStatus = dom('span');
@@ -194,10 +195,10 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
 
   if (tags.length) {
     for (const tag of tags) {
-      await collect(`/v2/blog/${uuid}/posts?${$.param({ tag, before, limit: 50 })}`);
+      await collect(`/v2/blog/${uuid}/posts?${new URLSearchParams({ tag, before, limit: 50 })}`);
     }
   } else {
-    await collect(`/v2/blog/${uuid}/posts?${$.param({ before, limit: 50 })}`);
+    await collect(`/v2/blog/${uuid}/posts?${new URLSearchParams({ before, limit: 50 })}`);
   }
   const filteredPostIds = [...filteredPostIdsSet];
 
@@ -236,7 +237,7 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
     ],
     buttons: [
       dom('button', null, { click: hideModal }, ['Close']),
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh']),
+      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh Now']),
     ],
   });
 };

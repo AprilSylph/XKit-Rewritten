@@ -33,17 +33,17 @@
   width: 24px;
   height: 24px;
 
-  fill: var(--content-fg-secondary);
+  color: var(--content-fg-secondary);
 }
 
 
 .xkit-control-button-container.in-legacy-footer .xkit-control-button-inner svg {
-  fill: rgba(var(--black), 0.65);
+  color: rgba(var(--black), 0.65);
 }
 
 .xkit-control-button-container.in-legacy-footer .xkit-control-button:disabled svg {
   opacity: unset;
-  fill: rgba(var(--black), 0.4);
+  color: rgba(var(--black), 0.4);
 }
 
 @media not (min-width: 990px) {
@@ -102,7 +102,7 @@
 }
 
 .xkit-control-button-container.in-community .xkit-control-button:disabled svg {
-  fill: var(--content-fg-tertiary);
+  color: var(--content-fg-tertiary);
 }
 
 

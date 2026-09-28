@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { copyFile, open, readFile } from 'node:fs/promises';
+import { basename } from 'node:path';
 
 /** @type {(props: { packageName: string; fileNames: string[]; includeHeader: boolean; }) => Promise<void>} */
 const copyLibrary = async ({ packageName, fileNames = [], includeHeader = false }) => {
@@ -10,7 +11,7 @@ const copyLibrary = async ({ packageName, fileNames = [], includeHeader = false 
 
   fileNames.forEach(async fileName => {
     const sourcePath = `node_modules/${packageName}/${fileName}`;
-    const destinationPath = `src/lib/${sourcePath.split('/').at(-1)}`;
+    const destinationPath = `src/lib/${basename(fileName)}`;
 
     if (includeHeader) {
       const destinationHandle = await open(destinationPath, 'w');

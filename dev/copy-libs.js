@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 
 import { copyFile, open, readFile } from 'node:fs/promises';
-import { basename } from 'node:path';
+import { basename, join } from 'node:path';
 
 /** @type {(props: { packageName: string; fileNames: string[]; includeHeader: boolean; }) => Promise<void>} */
 const copyLibrary = async ({ packageName, fileNames = [], includeHeader = false }) => {
-  const packageBuffer = await readFile(`node_modules/${packageName}/package.json`);
+  const packagePath = join('node_modules', packageName, 'package.json');
+  const packageBuffer = await readFile(packagePath);
   const packageString = packageBuffer.toString();
   const { version, license } = JSON.parse(packageString);
 
   fileNames.forEach(async fileName => {
-    const sourcePath = `node_modules/${packageName}/${fileName}`;
-    const destinationPath = `src/lib/${basename(fileName)}`;
+    const sourcePath = join('node_modules', packageName, fileName);
+    const destinationPath = join('src', 'lib', basename(fileName));
 
     if (includeHeader) {
       const destinationHandle = await open(destinationPath, 'w');

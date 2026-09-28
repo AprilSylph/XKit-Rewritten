@@ -19,6 +19,7 @@ const copyLibrary = async ({ packageName, fileNames = [], includeHeader = false 
 
       const sourceBuffer = await readFile(sourcePath);
       await destinationHandle.writeFile(sourceBuffer);
+      await destinationHandle.close();
     } else {
       await copyFile(sourcePath, destinationPath);
     }

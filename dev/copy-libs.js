@@ -1,29 +1,26 @@
 #!/usr/bin/env node
 
-import { copyFile, open, readFile } from 'node:fs/promises';
+import { createReadStream, createWriteStream } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
+import { pipeline } from 'node:stream/promises';
 
 /** @type {(props: { packageName: string; fileNames: string[]; includeHeader: boolean; }) => Promise<void>} */
 const copyLibrary = async ({ packageName, fileNames, includeHeader = false }) => {
   const packagePath = join('node_modules', packageName, 'package.json');
-  const packageString = await readFile(packagePath, 'utf-8');
+  const packageString = await readFile(packagePath, { encoding: 'utf-8' });
   const { version, license } = JSON.parse(packageString);
 
-  fileNames.forEach(async fileName => {
-    const sourcePath = join('node_modules', packageName, fileName);
-    const destinationPath = join('src', 'lib', basename(fileName));
+  for (const fileName of fileNames) {
+    const source = createReadStream(join('node_modules', packageName, fileName), { encoding: 'utf-8' });
+    const destination = createWriteStream(join('src', 'lib', basename(fileName)), { encoding: 'utf-8' });
 
     if (includeHeader) {
-      const destinationHandle = await open(destinationPath, 'w');
-      destinationHandle.writeFile(`/* https://www.npmjs.com/package/${packageName}/v/${version} | License: ${license} */` + '\n');
-
-      const sourceBuffer = await readFile(sourcePath);
-      await destinationHandle.writeFile(sourceBuffer);
-      await destinationHandle.close();
-    } else {
-      await copyFile(sourcePath, destinationPath);
+      destination.write(`/* https://www.npmjs.com/package/${packageName}/v/${version} | License: ${license} */` + '\n');
     }
-  });
+
+    await pipeline(source, destination);
+  }
 };
 
 [

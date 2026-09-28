@@ -4,7 +4,7 @@ import { copyFile, open, readFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 
 /** @type {(props: { packageName: string; fileNames: string[]; includeHeader: boolean; }) => Promise<void>} */
-const copyLibrary = async ({ packageName, fileNames = [], includeHeader = false }) => {
+const copyLibrary = async ({ packageName, fileNames, includeHeader = false }) => {
   const packagePath = join('node_modules', packageName, 'package.json');
   const packageString = await readFile(packagePath, 'utf-8');
   const { version, license } = JSON.parse(packageString);

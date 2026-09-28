@@ -7,15 +7,15 @@ import { pipeline } from 'node:stream/promises';
 
 /** @type {(props: { packageName: string; fileNames: string[]; includeHeader: boolean; }) => Promise<void>} */
 const copyLibrary = async ({ packageName, fileNames, includeHeader = false }) => {
-  const packagePath = join('node_modules', packageName, 'package.json');
-  const packageString = await readFile(packagePath, { encoding: 'utf-8' });
-  const { version, license } = JSON.parse(packageString);
-
   for (const fileName of fileNames) {
     const source = createReadStream(join('node_modules', packageName, fileName), { encoding: 'utf-8' });
     const destination = createWriteStream(join('src', 'lib', basename(fileName)), { encoding: 'utf-8' });
 
     if (includeHeader) {
+      const { version, license } = JSON.parse(
+        await readFile(join('node_modules', packageName, 'package.json'), { encoding: 'utf-8' }),
+      );
+
       destination.write(`/* https://www.npmjs.com/package/${packageName}/v/${version} | License: ${license} */` + '\n');
     }
 

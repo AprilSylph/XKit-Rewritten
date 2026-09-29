@@ -105,6 +105,7 @@ ${keyToCss('cell')}, ${postSelector}
     ${keyToCss('videoBlock')} iframe
   ) {
   max-width: unset !important;
+  width: unset;
 }
 :root.${expandMediaClass} ${postSelector} ${keyToCss('videoBlock')} iframe[style*="${aspectRatioVar}"] {
   aspect-ratio: var(${aspectRatioVar});

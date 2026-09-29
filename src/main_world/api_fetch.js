@@ -31,7 +31,7 @@ export default function apiFetch (resource, init = {}) {
     }
   }
 
-  const result = new Promise(resolve => setTimeout(resolve, 5000)).then(() => window.tumblr.apiFetch(resource, init));
+  const result = window.tumblr.apiFetch(resource, init);
 
   const requestTime = Date.now();
   const showWarning = succeeded =>

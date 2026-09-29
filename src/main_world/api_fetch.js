@@ -31,5 +31,19 @@ export default function apiFetch (resource, init = {}) {
     }
   }
 
-  return window.tumblr.apiFetch(resource, init);
+  const result = window.tumblr.apiFetch(resource, init);
+
+  const requestTime = Date.now();
+  const showWarning = succeeded =>
+    console.log(`XKit Rewritten: API fetch of ${resource} ${succeeded ? 'took' : 'failed after'} ${Date.now() - requestTime} seconds!`);
+  const timeoutId = setTimeout(
+    () => console.log(`XKit Rewritten: API fetch of ${resource} is still pending after 5 seconds!`),
+    5000,
+  );
+  result
+    .then(() => clearTimeout(timeoutId))
+    .then(() => Date.now() - requestTime > 1500 && showWarning(true))
+    .catch(() => showWarning(false));
+
+  return result;
 }

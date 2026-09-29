@@ -21,7 +21,7 @@ const aspectRatioVar = '--xkit-panorama-aspect-ratio';
 
 const mainContentWrapper =
   `${keyToCss('mainContentWrapper')}:not(${keyToCss('mainContentIsMasonry', 'mainContentIsFullWidth')})`;
-const mainPostColumn = `main${keyToCss('postColumn', 'postsColumn')}`;
+const mainPostColumn = `main${keyToCss('postColumn', 'postsColumn', 'mainColumnContainer')}`;
 const patioPostColumn = `[id]${keyToCss('columnWide')}`;
 
 const mainStyleElement = buildStyle(`
@@ -44,6 +44,39 @@ ${keyToCss('queueSettings')} {
 }
 ${mainPostColumn} > ${keyToCss('tabsHeader')} + ${keyToCss('container')} {
   max-width: unset;
+}
+${mainPostColumn} > ${keyToCss('postColumn')} {
+  max-width: unset;
+}
+
+${mainContentWrapper}:has(> div > div > div > ${keyToCss('timeline')}) {
+  flex-grow: 1;
+  max-width: calc(var(${maxPostWidthVar}) + ${sidebarOffset}px);
+}
+${mainContentWrapper} > div:has(> div > div > ${keyToCss('timeline')}) {
+  max-width: unset;
+}
+${mainContentWrapper} > div > div:has(> div > ${keyToCss('timeline')}) {
+  max-width: unset;
+}
+${mainContentWrapper} > div > div > div:has(> ${keyToCss('timeline')}) {
+  max-width: unset;
+}
+
+${keyToCss('mainContentWrapper')}:has(> div > div > ${keyToCss('grid')}) {
+  flex-grow: 1;
+  max-width: calc(var(${maxPostWidthVar}) + ${sidebarOffset}px);
+}
+${keyToCss('mainContentWrapper')} > div > div > ${keyToCss('grid')}:has(> ${keyToCss('layoutBody')}) {
+  display: flex;
+}
+${keyToCss('mainContentWrapper')} > div > div > ${keyToCss('grid')} > ${keyToCss('layoutBody')} {
+  max-width: var(${maxPostWidthVar});
+}
+${keyToCss('mainContentWrapper')} > div > div > ${keyToCss('grid')} > ${keyToCss('sidebar')} {
+  width: auto;
+  min-width: 256px;
+  max-width: 320px;
 }
 `);
 mainStyleElement.media = `(min-width: ${widenDashMinWidth}px)`;

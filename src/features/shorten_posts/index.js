@@ -1,4 +1,4 @@
-import { removeElementsByClassName } from '../../utils/cleanup.js';
+import { removeClassName, removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle, filterPostElements, postSelector } from '../../utils/interface.js';
@@ -68,8 +68,8 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(shortenPosts);
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
-  $(`.${shortenClass}`).removeClass(shortenClass);
+  removeClassName(excludeClass);
+  removeClassName(shortenClass);
   removeElementsByClassName(tagsClass);
   removeElementsByClassName(buttonClass);
 };

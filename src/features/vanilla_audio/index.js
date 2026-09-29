@@ -1,4 +1,4 @@
-import { removeElementsBySelector } from '../../utils/cleanup.js';
+import { removeClassName, removeElementsBySelector } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
@@ -43,7 +43,7 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(addAudioControls);
   removeElementsBySelector(`.${excludeClass} + audio[controls]`);
-  $(`.${excludeClass}`).removeClass(excludeClass);
+  removeClassName(excludeClass);
 };
 
 export const stylesheet = true;

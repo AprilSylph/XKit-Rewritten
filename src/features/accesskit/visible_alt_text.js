@@ -1,4 +1,4 @@
-import { removeElementsBySelector } from '../../utils/cleanup.js';
+import { removeClassName, removeElementsBySelector } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { figcaption } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
@@ -58,7 +58,7 @@ const onStorageChanged = async function (changes) {
 
   mode = modeChanges.newValue;
   removeElementsBySelector(`.${processedClass} figcaption`);
-  $(`.${processedClass}`).removeClass(processedClass);
+  removeClassName(processedClass);
   pageModifications.trigger(processImages);
 };
 
@@ -74,5 +74,5 @@ export const clean = async function () {
   browser.storage.local.onChanged.removeListener(onStorageChanged);
 
   removeElementsBySelector(`.${processedClass} figcaption`);
-  $(`.${processedClass}`).removeClass(processedClass);
+  removeClassName(processedClass);
 };

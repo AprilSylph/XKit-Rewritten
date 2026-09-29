@@ -1,4 +1,4 @@
-import { removeElementsByClassName } from '../../utils/cleanup.js';
+import { removeClassName, removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { a, div } from '../../utils/dom.js';
 import { filterPostElements, getTimelineItemWrapper } from '../../utils/interface.js';
@@ -145,7 +145,7 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
-  $(`.${lengthenedClass}`).removeClass(lengthenedClass);
+  removeClassName(lengthenedClass);
   removeElementsByClassName(controlsClass);
 };
 

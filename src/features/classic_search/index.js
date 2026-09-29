@@ -1,4 +1,4 @@
-import { removeElementsByClassName } from '../../utils/cleanup.js';
+import { removeClassName, removeElementsByClassName } from '../../utils/cleanup.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { navigate } from '../../utils/tumblr_helpers.js';
@@ -44,7 +44,7 @@ export const clean = async function () {
 
   searchInputParent.appendChild(searchInputElement);
   removeElementsByClassName('classic-search');
-  $('.xkit-classic-search-done').removeClass('xkit-classic-search-done');
+  removeClassName('xkit-classic-search-done');
 };
 
 export const stylesheet = true;

@@ -1,3 +1,4 @@
+import { removeElementsById } from '../../utils/cleanup.js';
 import { sha256 } from '../../utils/crypto.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { div, select, input, fieldset, button, option, hr, span } from '../../utils/dom.js';
@@ -12,7 +13,7 @@ import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { joinedCommunities, joinedCommunityUuids, primaryBlog, userBlogs } from '../../utils/user.js';
 
 // Clean up previous instance after addon reload
-document.getElementById('quick-reblog')?.remove();
+removeElementsById('quick-reblog');
 
 const quickTagsTabId = 'xkit-quick-reblog-quick-tags-tab';
 const quickTagsPanelId = 'xkit-quick-reblog-quick-tags-panel';

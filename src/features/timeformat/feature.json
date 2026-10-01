@@ -2,10 +2,7 @@
   "title": "TimeFormat",
   "description": "Reformat Tumblr's timestamps",
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#timeformat",
-  "icon": {
-    "color": "white",
-    "background_color": "#625282"
-  },
+  "icon": { "background_color": "#625282" },
   "preferences": {
     "format": {
       "type": "text",

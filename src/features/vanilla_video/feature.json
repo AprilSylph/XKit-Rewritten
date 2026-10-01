@@ -1,10 +1,7 @@
 {
   "title": "Vanilla Video",
   "description": "Use the browser's controls for video",
-  "icon": {
-    "color": "white",
-    "background_color": "#ff62ce"
-  },
+  "icon": { "background_color": "#ff62ce" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#vanilla-video",
   "relatedTerms": [ "Video Downloader", "autoplay" ],
   "preferences": {

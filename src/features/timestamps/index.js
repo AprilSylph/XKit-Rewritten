@@ -1,3 +1,4 @@
+import { removeClassName, removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { getPostElements } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
@@ -113,9 +114,9 @@ const addPostTimestamps = async function () {
 };
 
 const removePostTimestamps = function () {
-  $('.xkit-timestamp').remove();
-  $('.xkit-long-timestamp').remove();
-  $('.xkit-timestamps-done').removeClass('xkit-timestamps-done');
+  removeElementsByClassName('xkit-timestamp');
+  removeElementsByClassName('xkit-long-timestamp');
+  removeClassName('xkit-timestamps-done');
 };
 
 const addReblogTimestamps = async function () {
@@ -158,8 +159,8 @@ const addReblogTimestamps = async function () {
 };
 
 const removeReblogTimestamps = function () {
-  $('.xkit-reblog-timestamp').remove();
-  $('.xkit-reblog-timestamps-done').removeClass('xkit-reblog-timestamps-done');
+  removeElementsByClassName('xkit-reblog-timestamp');
+  removeClassName('xkit-reblog-timestamps-done');
 };
 
 const preferenceHandlers = {

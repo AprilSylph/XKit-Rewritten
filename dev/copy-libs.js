@@ -16,7 +16,14 @@ const copyLibrary = async ({ packageName, fileNames, includeHeader = false }) =>
         await readFile(join('node_modules', packageName, 'package.json'), { encoding: 'utf-8' }),
       );
 
-      destination.write(`/* https://www.npmjs.com/package/${packageName}/v/${version} | License: ${license} */` + '\n');
+      destination.write([
+        '/**',
+        ` * https://www.npmjs.com/package/${packageName}`,
+        ` * @version ${version}`,
+        ` * @license ${license}`,
+        ' */',
+        '\n',
+      ].join('\n'));
     }
 
     await pipeline(source, destination);

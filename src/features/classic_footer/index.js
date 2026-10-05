@@ -1,4 +1,4 @@
-import { removeElementsByClassName } from '../../utils/cleanup.js';
+import { removeAttribute, removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { a, button, span, link } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
@@ -369,7 +369,7 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(processPosts);
-  $(`[${activeAttribute}]`).removeAttr(activeAttribute);
+  removeAttribute(activeAttribute);
   removeElementsByClassName(noteCountClass);
   removeElementsByClassName(reblogLinkClass);
 };

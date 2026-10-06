@@ -1,4 +1,4 @@
-import { apiFetch } from './tumblr_helpers.js';
+import { apiFetchWithRetry } from './tumblr_helpers.js';
 
 // These paths have the same parameters as Tumblr's fetches for these resources,
 // allowing browser cache hits when combined with the correct request headers.
@@ -15,11 +15,11 @@ const [
   fetchedUserInfo,
   fetchedCommunitiesInfo,
 ] = await Promise.all([
-  apiFetch(userInfoResource, options).catch((error) => {
+  apiFetchWithRetry(userInfoResource, options).catch((error) => {
     console.error(error);
     return { response: {} };
   }),
-  apiFetch(communitiesResource, options).catch((error) => {
+  apiFetchWithRetry(communitiesResource, options).catch((error) => {
     console.error(error);
     return { response: [] };
   }),

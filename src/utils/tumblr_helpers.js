@@ -19,7 +19,6 @@ import { inject } from './inject.js';
 export const apiFetch = async (resource, init = {}) => inject('/main_world/api_fetch.js', [resource, init]);
 
 const timeoutMs = 5000;
-class TimeoutError extends Error {}
 
 /**
  * Perform a Tumblr API request, using the helper supplied by the Tumblr web platform API for third-party extensions. Retries once if the request fails or takes more than 5 seconds.
@@ -29,18 +28,17 @@ class TimeoutError extends Error {}
  * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#apifetch}
  * @returns {Promise<Response | Error>} Resolves or rejects with result of `window.tumblr.apiFetch()`
  */
-export const apiFetchWithRetry = (resource, init = {}) => Promise.race([
-  apiFetch(resource, init),
-  new Promise((resolve, reject) => setTimeout(() => reject(new TimeoutError()), timeoutMs)),
-]).catch(exception => {
-  if (exception instanceof TimeoutError) {
-    console.log(`XKit Rewritten: API fetch of ${resource} took more than ${timeoutMs}ms. Retrying...`);
-  } else {
-    console.log(exception);
-    console.log(`XKit Rewritten: API fetch of ${resource} failed. Retrying...`);
-  }
-  return apiFetch(resource, init);
-});
+export const apiFetchWithRetry = (resource, init = {}) =>
+  inject('/main_world/api_fetch.js', [resource, init, { timeout: timeoutMs }])
+    .catch(exception => {
+      if (exception.name === 'AbortError') {
+        console.log(`XKit Rewritten: API fetch of ${resource} was aborted, possibly for taking more than ${timeoutMs}ms. Retrying...`);
+      } else {
+        console.log(exception);
+        console.log(`XKit Rewritten: API fetch of ${resource} failed. Retrying...`);
+      }
+      return apiFetch(resource, init);
+    });
 
 /**
  * Create an NPF edit request body.

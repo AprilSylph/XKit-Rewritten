@@ -20,7 +20,7 @@ export const apiFetch = async (resource, init = {}) => {
   const result = inject('/main_world/api_fetch.js', [resource, init]);
 
   const requestTime = Date.now();
-  const showWarning = succeeded =>
+  const logWarning = succeeded =>
     console.log(`XKit Rewritten: API fetch of ${resource} ${succeeded ? 'took' : 'failed after'} ${Date.now() - requestTime}ms!`);
   const timeoutId = setTimeout(
     () => console.log(`XKit Rewritten: API fetch of ${resource} is still pending after 5 seconds!`),
@@ -28,8 +28,8 @@ export const apiFetch = async (resource, init = {}) => {
   );
   result
     .then(() => clearTimeout(timeoutId))
-    .then(() => Date.now() - requestTime > 1500 && showWarning(true))
-    .catch(() => showWarning(false));
+    .then(() => Date.now() - requestTime > 1500 && logWarning(true))
+    .catch(() => logWarning(false));
 
   return result;
 };

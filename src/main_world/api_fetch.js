@@ -35,7 +35,7 @@ export default function apiFetch (resource, init = {}) {
 
   const requestTime = Date.now();
   const showWarning = succeeded =>
-    console.log(`XKit Rewritten: API fetch of ${resource} ${succeeded ? 'took' : 'failed after'} ${Date.now() - requestTime} seconds!`);
+    console.log(`XKit Rewritten: API fetch of ${resource} ${succeeded ? 'took' : 'failed after'} ${Date.now() - requestTime}ms!`);
   const timeoutId = setTimeout(
     () => console.log(`XKit Rewritten: API fetch of ${resource} is still pending after 5 seconds!`),
     5000,

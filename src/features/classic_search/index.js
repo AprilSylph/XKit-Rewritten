@@ -42,7 +42,7 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(replaceSearchForm);
 
-  searchInputParent.appendChild(searchInputElement);
+  if (searchInputParent && searchInputElement) searchInputParent.appendChild(searchInputElement);
   removeElementsByClassName('classic-search');
   removeClassName('xkit-classic-search-done');
 };

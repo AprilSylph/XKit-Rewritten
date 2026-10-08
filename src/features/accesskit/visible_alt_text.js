@@ -2,11 +2,7 @@ import { removeClassName, removeElementsBySelector } from '../../utils/cleanup.j
 import { keyToCss } from '../../utils/css_map.js';
 import { figcaption } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
-import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
-import { getPreferences } from '../../utils/preferences.js';
-
-let mode;
 
 const processedClass = 'accesskit-visible-alt-text';
 
@@ -38,10 +34,6 @@ const processImages = function (imageElements) {
     if (imageBlock.classList.contains(processedClass)) continue;
     imageBlock.classList.add(processedClass);
 
-    const isDefaultAltText = [translate('Image'), translate('Image').toLowerCase(), 'image'].includes(alt);
-    const shouldShowCaption = mode === 'show' || !isDefaultAltText;
-    if (!shouldShowCaption) continue;
-
     const caption = figcaption({
       click: event => {
         event.preventDefault();
@@ -52,26 +44,12 @@ const processImages = function (imageElements) {
   }
 };
 
-const onStorageChanged = async function (changes) {
-  const { 'accesskit.preferences.visible_alt_text_mode': modeChanges } = changes;
-  if (modeChanges?.oldValue === undefined) return;
-
-  mode = modeChanges.newValue;
-  removeElementsBySelector(`.${processedClass} figcaption`);
-  removeClassName(processedClass);
-  pageModifications.trigger(processImages);
-};
-
 export const main = async function () {
-  ({ visible_alt_text_mode: mode } = await getPreferences('accesskit'));
-
   pageModifications.register(`article ${imageBlockSelector} img[alt]`, processImages);
-  browser.storage.local.onChanged.addListener(onStorageChanged);
 };
 
 export const clean = async function () {
   pageModifications.unregister(processImages);
-  browser.storage.local.onChanged.removeListener(onStorageChanged);
 
   removeElementsBySelector(`.${processedClass} figcaption`);
   removeClassName(processedClass);

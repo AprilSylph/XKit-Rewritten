@@ -1,4 +1,4 @@
-import { removeElementsByClassName } from '../../utils/cleanup.js';
+import { removeAttribute, removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { canvas, div } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
@@ -334,10 +334,10 @@ export const clean = async function () {
   );
 
   removeElementsByClassName(canvasClass);
-  $(`[${labelAttribute}]`).removeAttr(labelAttribute);
-  $(`[${labelSizeAttribute}]`).removeAttr(labelSizeAttribute);
-  $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
-  $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
+  removeAttribute(labelAttribute);
+  removeAttribute(labelSizeAttribute);
+  removeAttribute(pausedPosterAttribute);
+  removeAttribute(hoverContainerAttribute);
   [...document.querySelectorAll(`[style*="${pausedBackgroundImageVar}"]`)]
     .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
 };

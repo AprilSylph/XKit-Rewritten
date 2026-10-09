@@ -1,4 +1,4 @@
-import { removeClassName } from '../../utils/cleanup.js';
+import { removeAttribute, removeClassName } from '../../utils/cleanup.js';
 import { buildStyle, getTimelineItemWrapper, filterPostElements, postSelector } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { timelineObject } from '../../utils/react_props.js';
@@ -74,6 +74,6 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
   removeClassName(excludeClass);
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
-  $(`[${unHiddenAttribute}]`).removeAttr(unHiddenAttribute);
+  removeAttribute(hiddenAttribute);
+  removeAttribute(unHiddenAttribute);
 };

@@ -1,3 +1,4 @@
+import { removeAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { blogViewSelector, buildStyle } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
@@ -28,5 +29,5 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(hideDashboardRecommended);
   pageModifications.unregister(hideTagPageRecommended);
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  removeAttribute(hiddenAttribute);
 };

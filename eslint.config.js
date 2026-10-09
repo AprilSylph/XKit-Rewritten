@@ -4,7 +4,7 @@
 
 export default [
   /**
-   * Global ignores.
+   * Ignore vendored files completely.
    * @see https://eslint.org/docs/latest/use/configure/configuration-files#globally-ignore-files-with-ignores
    */
   { ignores: ['src/lib/**'] },

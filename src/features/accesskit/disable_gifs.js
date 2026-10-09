@@ -9,6 +9,7 @@ import { getPreferences } from '../../utils/preferences.js';
 /** @type {AbortController}   */ let loadEventController;
 /** @type {"eager" | "lazy"}  */ let loadingMode;
 
+const pausedAttribute = 'data-paused-gif';
 const canvasClass = 'xkit-paused-gif-placeholder';
 const pausedPosterAttribute = 'data-paused-gif-use-poster';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
@@ -170,6 +171,9 @@ const createPausedUrlIfAnimated = memoize(async sourceUrl => {
 const pauseGif = async function (gifElement) {
   if (gifElement.currentSrc.endsWith('.webp') && !(await isAnimated(gifElement.currentSrc))) return;
 
+  if (gifElement.hasAttribute(pausedAttribute)) return;
+  gifElement.toggleAttribute(pausedAttribute, true);
+
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
@@ -209,12 +213,10 @@ const processGifs = function (gifElements) {
 
     if (gifElement.complete && gifElement.currentSrc) {
       pauseGif(gifElement);
-    } else {
-      gifElement.addEventListener('load', () => pauseGif(gifElement), {
-        once: true,
-        signal: loadEventController.signal,
-      });
     }
+    gifElement.addEventListener('load', () => pauseGif(gifElement), {
+      signal: loadEventController.signal,
+    });
   });
 };
 
@@ -333,6 +335,7 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children),
   );
 
+  $(`[${pausedAttribute}]`).removeAttr(pausedAttribute);
   removeElementsByClassName(canvasClass);
   $(`[${labelAttribute}]`).removeAttr(labelAttribute);
   $(`[${labelSizeAttribute}]`).removeAttr(labelSizeAttribute);

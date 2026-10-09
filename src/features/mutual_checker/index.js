@@ -128,7 +128,22 @@ const getIsFollowing = async (blogName, element) => {
   return following[blogName];
 };
 
+const waitForIntersection = (element, rootMargin) =>
+  new Promise(resolve => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries.some(({ isIntersecting }) => isIntersecting)) {
+          resolve();
+          observer.disconnect();
+        }
+      },
+      { rootMargin },
+    );
+    observer.observe(element);
+  });
+
 const getIsFollowingYou = async (blogName, element) => {
+  followingYou[blogName] || await waitForIntersection(element, '100% 0px');
   if (followingYou[blogName] === undefined) {
     const blog = [
       await blogData(element),
@@ -139,7 +154,7 @@ const getIsFollowingYou = async (blogName, element) => {
     followingYou[blogName] = blog
       ? Promise.resolve(blog.isFollowingYou)
       : apiFetch(`/v2/blog/${primaryBlogName}/followed_by`, { queryParams: { query: blogName } })
-        .then(({ response: { followedBy } }) => followedBy)
+        .then(({ response: { followedBy } }) => true)
         .catch(() => Promise.resolve(false));
   }
   return followingYou[blogName];

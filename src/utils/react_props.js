@@ -31,6 +31,15 @@ export const notificationObject = notificationElement => {
 };
 
 /**
+ * @param {Element} imagePlaceholderElement An on-screen image placeholder
+ * @returns {Promise<object>} The image placeholder's buried posterImages property
+ */
+export const posterImages = imagePlaceholderElement => {
+  imagePlaceholderElement.posterImagesPromise ??= inject('/main_world/unbury_poster_images.js', [], imagePlaceholderElement);
+  return imagePlaceholderElement.posterImagesPromise;
+};
+
+/**
  * @param {Element} meatballMenu An on-screen meatball menu element in a blog modal header or blog card
  * @returns {Promise<object>} The post's buried blog or blogSettings property. Some blog data fields, such as "followed," are not available in blog cards.
  */

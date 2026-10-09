@@ -1,6 +1,6 @@
 /** @see https://github.com/un-ts/eslint-plugin-import-x#readme */ import { importX } from 'eslint-plugin-import-x';
 /** @see https://github.com/gajus/eslint-plugin-jsdoc#readme    */ import { jsdoc } from 'eslint-plugin-jsdoc';
-/** @see https://github.com/neostandard/neostandard#readme      */ import neostandard from 'neostandard';
+/** @see https://github.com/neostandard/neostandard#readme      */ import { neostandard } from 'neostandard';
 
 export default [
   /**

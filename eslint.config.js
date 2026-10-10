@@ -4,10 +4,10 @@
 
 export default [
   /**
-   * Ignore vendored files completely.
+   * Ignore vendored and gitignored files completely.
    * @see https://eslint.org/docs/latest/use/configure/configuration-files#globally-ignore-files-with-ignores
    */
-  { ignores: ['src/lib/**'] },
+  { ignores: ['src/lib/**', ...neostandard.resolveIgnoresFromGitignore()] },
 
   /**
    * Semistandard style guide.

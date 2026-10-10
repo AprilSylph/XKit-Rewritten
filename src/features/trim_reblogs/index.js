@@ -1,3 +1,4 @@
+import { removeElementsByClassName } from '../../utils/cleanup.js';
 import { createControlButtonTemplate, cloneControlButton, insertControlButton } from '../../utils/control_buttons.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
@@ -8,7 +9,6 @@ import { notify } from '../../utils/notifications.js';
 import { timelineObject } from '../../utils/react_props.js';
 import { apiFetch, createEditRequestBody } from '../../utils/tumblr_helpers.js';
 
-const symbolId = 'ri-scissors-cut-line';
 const buttonClass = 'xkit-trim-reblogs-button';
 const reblogPreviewClass = 'xkit-trim-reblogs-preview';
 const avatarPreviewClass = 'xkit-trim-reblogs-avatar-preview';
@@ -166,13 +166,13 @@ const processPosts = postElements => filterPostElements(postElements).forEach(as
 });
 
 export const main = async function () {
-  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Trim Reblogs');
+  controlButtonTemplate = createControlButtonTemplate('trim_reblogs', buttonClass, 'Trim Reblogs');
   onNewPosts.addListener(processPosts);
 };
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  $(`.${buttonClass}`).remove();
+  removeElementsByClassName(buttonClass);
 };
 
 export const stylesheet = true;

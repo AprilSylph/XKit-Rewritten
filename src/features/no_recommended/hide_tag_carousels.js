@@ -18,8 +18,8 @@ const hideTagCarousels = carouselWrappers => carouselWrappers
   .filter(carouselWrapper => carouselWrapper.querySelector(tagCardSelector) !== null)
   .map(getTimelineItemWrapper)
   .forEach(timelineItem => {
-    timelineItem.setAttribute(hiddenAttribute, '');
-    timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
+    timelineItem.toggleAttribute(hiddenAttribute, true);
+    timelineItem.previousElementSibling.toggleAttribute(hiddenAttribute, true);
   });
 
 export const main = async function () {

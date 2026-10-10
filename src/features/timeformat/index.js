@@ -1,12 +1,15 @@
 import moment from '../../lib/moment.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle } from '../../utils/interface.js';
+import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { constructRelativeTimeString } from '../../utils/text_format.js';
 
 let format;
 let displayRelative;
+
+const excludeSelector = `${keyToCss('chatListItem')}, ul[aria-label="${translate('Conversations')}"]`;
 
 export const styleElement = buildStyle(`
 [data-formatted-time] {
@@ -91,6 +94,7 @@ const observer = new MutationObserver(mutations =>
 
 const formatTimeElements = function (timeElements) {
   timeElements.forEach(timeElement => {
+    if (timeElement.closest(excludeSelector)) return;
     const momentDate = moment(timeElement.dateTime, moment.ISO_8601);
     timeElement.dataset.formattedTime = momentDate.format(format);
     if (displayRelative) {

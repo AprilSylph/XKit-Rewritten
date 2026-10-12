@@ -30,9 +30,7 @@ removeElementsByAttribute(noteButtonAttribute);
 
 export const styleElement = buildStyle(`
 [${hiddenAttribute}] {
-  /* display: none; */
-  outline: 2px dotted red;
-  outline-offset: -3px;
+  display: none;
 }
 [${noteButtonAttribute}] {
   align-items: center;
@@ -62,15 +60,11 @@ const processReplyNotificationUrl = url => {
 const getReplyParentId = memoize(async url => {
   const { inCommunity, targetTumblelogName, targetPostId, targetReplyId } = processReplyNotificationUrl(url);
 
-  console.log({ targetTumblelogName, targetPostId, targetReplyId });
-
   const { response } = await apiFetch(
     inCommunity
       ? `/v2/communities/${targetTumblelogName}/posts/${targetPostId}/replies/${targetReplyId}/permalink`
       : `/v2/blog/${targetTumblelogName}/post/${targetPostId}/replies/${targetReplyId}/permalink`,
   );
-
-  console.log('response.timeline', response.timeline);
 
   for (const parent of response.timeline?.elements ?? []) {
     for (const child of parent.children?.elements ?? []) {
@@ -83,22 +77,16 @@ const getReplyParentId = memoize(async url => {
 });
 
 const isAboutBlockedReply = async notification => {
-  console.log('notification.subtype', notification.subtype);
-
   if (['reply_to_comment', 'reply_like'].includes(notification.subtype)) {
     const url = notification.actions?.tap?.href;
     if (!url) throw new Error('todo: write error 2');
 
     const { targetPostId, targetReplyId } = processReplyNotificationUrl(url);
 
-    console.log('targetPostId', targetPostId);
-    console.log('!!blockedReplyIDs[targetPostId]', !!blockedReplyIDs[targetPostId]);
-
     if (blockedReplyIDs[targetPostId]) {
       const relevantReplyId = notification.subtype === 'reply_to_comment'
         ? await getReplyParentId(url)
         : targetReplyId;
-      console.log('relevantReplyId', relevantReplyId);
 
       return blockedReplyIDs[targetPostId].includes(relevantReplyId);
     }
@@ -114,30 +102,14 @@ const isAboutBlockedPost = notification => {
   return blockedPostTargetIDs.includes(targetRootPostId || targetPostId || blockablePostId);
 };
 
-// const processNotifications = notificationElements =>
-//   notificationElements.forEach(async notificationElement => {
-//     console.log('--- processNotifications ---');
-//     console.log(notificationElement);
-
-//     const notification = await notificationObject(notificationElement);
-//     if (!notification) throw new Error('todo: write error 3');
-
-//     const isBlocked = isAboutBlockedPost(notification) || await isAboutBlockedReply(notification);
-//     notificationElement.toggleAttribute(hiddenAttribute, !!isBlocked);
-//   });
-
-const processNotifications = async notificationElements => {
-  for (const notificationElement of notificationElements) {
-    console.log('--- processNotifications ---');
-    console.log(notificationElement);
-
+const processNotifications = notificationElements =>
+  notificationElements.forEach(async notificationElement => {
     const notification = await notificationObject(notificationElement);
     if (!notification) throw new Error('todo: write error 3');
 
     const isBlocked = isAboutBlockedPost(notification) || await isAboutBlockedReply(notification);
     notificationElement.toggleAttribute(hiddenAttribute, !!isBlocked);
-  }
-};
+  });
 
 const onNoteButtonClicked = ({ postId, noteData }) => {
   const shouldBlockNotifications = !blockedReplyIDs[postId]?.includes(noteData.replyId);

@@ -154,6 +154,7 @@ const showPostsNotFound = ({ name }) =>
     buttons: [modalCompleteButton],
   });
 
+/** @type {(params: { uuid: string; name: string; tags: string[]; before: number; }) => Promise<void>} */
 const privatePosts = async ({ uuid, name, tags, before }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const privateStatus = dom('span');
@@ -194,10 +195,10 @@ const privatePosts = async ({ uuid, name, tags, before }) => {
 
   if (tags.length) {
     for (const tag of tags) {
-      await collect(`/v2/blog/${uuid}/posts?${$.param({ tag, before, limit: 50 })}`);
+      await collect(`/v2/blog/${uuid}/posts?${new URLSearchParams({ tag, before, limit: 50 })}`);
     }
   } else {
-    await collect(`/v2/blog/${uuid}/posts?${$.param({ before, limit: 50 })}`);
+    await collect(`/v2/blog/${uuid}/posts?${new URLSearchParams({ before, limit: 50 })}`);
   }
   const filteredPostIds = [...filteredPostIdsSet];
 

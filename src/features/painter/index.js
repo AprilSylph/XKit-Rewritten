@@ -1,3 +1,4 @@
+import { removeClassName } from '../../utils/cleanup.js';
 import { filterPostElements } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
@@ -65,7 +66,7 @@ const strip = function () {
     .css('border-top', '')
     .css('border-image-source', '')
     .css('border-image-slice', '');
-  $(`.${excludeClass}`).removeClass(excludeClass);
+  removeClassName(excludeClass);
 };
 
 export const main = async function () {

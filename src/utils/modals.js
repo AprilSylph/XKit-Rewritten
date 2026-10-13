@@ -1,7 +1,8 @@
+import { removeElementsById } from './cleanup.js';
 import { dom } from './dom.js';
 
 // Remove any outdated modal when loading module
-document.getElementById('xkit-modal')?.remove();
+removeElementsById('xkit-modal');
 
 let lastFocusedElement;
 
@@ -35,8 +36,11 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
   modalElement.focus();
 };
 
+/**
+ * Hide the current takeover prompt.
+ */
 export const hideModal = () => {
-  document.getElementById('xkit-modal')?.remove();
+  removeElementsById('xkit-modal');
   lastFocusedElement?.focus();
   lastFocusedElement = null;
 };
@@ -44,6 +48,10 @@ export const hideModal = () => {
 export const modalCancelButton = dom('button', null, { click: hideModal }, ['Cancel']);
 export const modalCompleteButton = dom('button', { class: 'blue' }, { click: hideModal }, ['OK']);
 
+/**
+ * Show a takeover prompt to the user with details about a thrown exception.
+ * @param {Error} exception Thrown exception to describe
+ */
 export const showErrorModal = exception => {
   console.error('XKit Rewritten error:', exception);
 
@@ -63,6 +71,12 @@ export const showErrorModal = exception => {
   });
 };
 
+/**
+ * Create a version of a function that shows a takeover prompt to the user if it throws.
+ * @template {function (...T): R} Callback, T, R
+ * @param {Callback} func A function
+ * @returns {Callback} A version of the function with explicit error handling
+ */
 export const withModalOnError = func =>
   async (...args) => {
     try {

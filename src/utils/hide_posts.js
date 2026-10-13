@@ -1,3 +1,4 @@
+import { removeAttribute, removeElementsByAttribute, removeElementsByClassName } from './cleanup.js';
 import { button, div } from './dom.js';
 import { buildStyle, getTimelineItemWrapper } from './interface.js';
 import { anyPostPermalinkTimelineFilter, timelineSelector } from './timeline_id.js';
@@ -5,7 +6,7 @@ import { anyPostPermalinkTimelineFilter, timelineSelector } from './timeline_id.
 const controlsClass = 'xkit-hidden-post-controls';
 
 // Remove outdated elements when loading module
-$(`.${controlsClass}`).remove();
+removeElementsByClassName(controlsClass);
 
 const styleElement = buildStyle(`
 .${controlsClass} {
@@ -79,6 +80,7 @@ document.documentElement.append(styleElement);
  */
 
 /**
+ * Create functions to hide a post element, handling lifecycle and edge case concerns.
  * @param {object} options Destructured
  * @param {string} options.id Identifier for this post hiding instance (must be unique)
  * @param {PermalinkPageOptions} [options.permalinkPageControls] If specified, single posts on permalink pages are hidden with an informative, dismissable UI
@@ -90,6 +92,9 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
   const controlledHiddenAttribute = `data-xkit-${id}-hidden-controlled`;
   const controlsAttribute = `data-xkit-${id}-hidden-controls`;
 
+  /**
+   * CSS content replacement removes the target timeline item element from the DOM (including excluding it from control/command-F page search) without entirely removing the timeline item bounding box, which would break Tumblr's J/K scroll shortcuts.
+   */
   styleElement.textContent += `
     [${hiddenAttribute}], [${controlsAttribute}] ~ div [${controlledHiddenAttribute}] {
       content: linear-gradient(transparent, transparent);
@@ -104,7 +109,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
       timelineItemWrapper.toggleAttribute(controlledHiddenAttribute, true);
 
       const { message } = permalinkPageControls;
-      const controlsElement = div({ class: controlsClass, [controlsAttribute]: id }, [
+      const controlsElement = div({ class: controlsClass, [controlsAttribute]: '' }, [
         message,
         button({ click: () => controlsElement.remove() }, ['View post']),
       ]);
@@ -126,16 +131,19 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
       getTimelineItemWrapper(postElement).toggleAttribute(hiddenAttribute, true);
     }
   };
+
   const showPost = postElement => {
     getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
     getTimelineItemWrapper(postElement).removeAttribute(controlledHiddenAttribute);
     postElement.closest(timelineSelector)?.querySelector(`[${controlsAttribute}]`)?.remove();
   };
+
   const showPosts = () => {
-    $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
-    $(`[${controlledHiddenAttribute}]`).removeAttr(controlledHiddenAttribute);
-    $(`[${controlsAttribute}]`).remove();
+    removeAttribute(hiddenAttribute);
+    removeAttribute(controlledHiddenAttribute);
+    removeElementsByAttribute(controlsAttribute);
   };
+
   showPosts();
 
   return { hidePost, showPost, showPosts };

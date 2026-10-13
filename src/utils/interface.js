@@ -12,6 +12,8 @@ const listTimelineObjectSelector = keyToCss('listTimelineObject');
 const gridTimelineObjectSelector = keyToCss('gridTimelineObject');
 
 /**
+ * Get the outermost element containing an item in a timeline.
+ * This is often the best element to apply modifying attributes/classes to because it persists when the user scrolls away.
  * @param {Element} element An element that is contained within a timeline item.
  * @returns {Element | null} The element that wraps the entire timeline item.
  */
@@ -49,6 +51,8 @@ export const getPopoverWrapper = element => {
  */
 
 /**
+ * Filter an array of post elements (or descendants) to determine which to process.
+ * Usually used inside an onNewPosts listener callback function.
  * @param {Element[]} postElements Post elements (or descendants) to filter
  * @param {PostFilterOptions} [postFilterOptions] Post filter options
  * @returns {HTMLDivElement[]} Matching post elements
@@ -99,9 +103,8 @@ export const getPostElements = postFilterOptions => filterPostElements([...docum
 export const buildStyle = (css = '') => dom('style', { class: 'xkit' }, null, [css]);
 
 /**
- * Elements with these attributes will be immediately hidden when XKit Rewritten
- * is disabled in Firefox. Be sure that CSS that sets display: none on them for
- * other reasons has higher than 0-1-0 specificity.
+ * Elements with these attributes will be immediately hidden when XKit Rewritten is disabled in Firefox.
+ * Be sure that CSS that sets display: none on them for other reasons has higher than 0-1-0 specificity.
  */
 export const displayBlockUnlessDisabledAttr = 'data-xkit-display-block';
 export const displayInlineBlockUnlessDisabledAttr = 'data-xkit-display-inline-block';
@@ -109,13 +112,11 @@ export const displayFlexUnlessDisabledAttr = 'data-xkit-display-flex';
 export const displayInlineFlexUnlessDisabledAttr = 'data-xkit-display-inline-flex';
 
 /**
- * This variable is set to "unset" in the src/content_scripts/interface.css
- * static stylesheet. A CSS variable set to any global keyword is treated in
- * var() expressions as if it were undefined.
+ * This variable is set to "unset" in the src/content_scripts/interface.css static stylesheet.
+ * A CSS variable set to any global keyword is treated in var() expressions as if it were undefined.
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/var
  *
- * Don't reference this to try to create on-disable behavior in rules in other
- * src/content_scripts/*.css files: the rules themselves will be invalidated!
+ * Don't reference this to try to create on-disable behavior in rules in other src/content_scripts/*.css files: the rules themselves will be invalidated!
  */
 export const noneIfXkitDisabledVar = '--none-if-xkit-disabled';
 
@@ -182,6 +183,12 @@ const isVerticallyOverflowing = element => {
   return elementRect.bottom > document.documentElement.clientHeight || elementRect.top < 0;
 };
 
+/**
+ * Append a DOM element to a target container, attempting to position it so it is fully visible rather than overflowing into a hidden area.
+ * @param {Element} element Element to append
+ * @param {Element} target Target container
+ * @param {'below'|'above'} defaultPosition Above/below position to use if both are valid
+ */
 export const appendWithoutOverflow = (element, target, defaultPosition = 'below') => {
   element.dataset.position = defaultPosition;
   element.style.removeProperty('--horizontal-offset');
@@ -206,5 +213,11 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
   }
 };
 
+/**
+ * Navigate up the React component tree to find an element's closest rendered parent matching a given selector. Follows React "portals".
+ * @param {Element} element A target element, such as a portalled menu
+ * @param {string} selector CSS selector
+ * @returns {element?} An element matching the selector and "containing" the target element
+ */
 export const getClosestRenderedElement = (element, selector) =>
   inject('/main_world/closest_rendered_element.js', [selector], element);

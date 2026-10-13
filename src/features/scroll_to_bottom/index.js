@@ -1,10 +1,12 @@
+import { removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToClasses, keyToCss } from '../../utils/css_map.js';
 import { buildStyle, displayBlockUnlessDisabledAttr } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
 
 const buttonClass = 'xkit-scroll-to-bottom-button';
-$(`.${buttonClass}`).remove();
+removeElementsByClassName(buttonClass); // Clean up previous instance after addon reload
+
 const activeClass = 'xkit-scroll-to-bottom-active';
 
 const loaderSelector = `

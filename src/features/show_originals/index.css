@@ -1,4 +1,5 @@
-[data-show-originals="on"] ~ div > [data-show-originals-hidden] {
+[data-show-originals="on"] ~ div > [data-show-originals-hidden],
+[data-show-originals="on"] ~ div > div > [data-show-originals-hidden] {
   content: linear-gradient(transparent, transparent);
   height: 0;
 }

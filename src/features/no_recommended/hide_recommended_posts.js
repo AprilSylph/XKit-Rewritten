@@ -1,3 +1,4 @@
+import { removeClassName } from '../../utils/cleanup.js';
 import { buildStyle, getTimelineItemWrapper, filterPostElements, postSelector } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { timelineObject } from '../../utils/react_props.js';
@@ -57,10 +58,10 @@ const processPosts = async function (postElements) {
 
     const timelineItem = getTimelineItemWrapper(postElement);
 
-    timelineItem.setAttribute(hiddenAttribute, '');
+    timelineItem.toggleAttribute(hiddenAttribute, true);
 
     if (precedingHiddenPosts(timelineItem) >= 10) {
-      timelineItem.setAttribute(unHiddenAttribute, '');
+      timelineItem.toggleAttribute(unHiddenAttribute, true);
     }
   });
 };
@@ -72,7 +73,7 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  $(`.${excludeClass}`).removeClass(excludeClass);
+  removeClassName(excludeClass);
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
   $(`[${unHiddenAttribute}]`).removeAttr(unHiddenAttribute);
 };

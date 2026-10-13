@@ -34,8 +34,8 @@ const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
   .map(getTimelineItemWrapper)
   .filter((element, index, array) => array.indexOf(element) === index)
   .forEach(timelineItem => {
-    timelineItem.setAttribute(borderAttribute, '');
-    timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
+    timelineItem.toggleAttribute(borderAttribute, true);
+    timelineItem.previousElementSibling.toggleAttribute(hiddenAttribute, true);
   });
 
 export const main = async function () {

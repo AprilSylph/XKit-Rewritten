@@ -1,3 +1,4 @@
+import { removeClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
@@ -61,13 +62,13 @@ const dimPosts = function (postElements, reprocessPosts = false) {
     const { id } = postElement.dataset;
     const timelineItem = getTimelineItemWrapper(postElement);
 
-    const isFirstRender = timelineItem.getAttribute(excludeAttribute) === null;
-    timelineItem.setAttribute(excludeAttribute, '');
+    const isFirstRender = timelineItem.hasAttribute(excludeAttribute) === false;
+    timelineItem.toggleAttribute(excludeAttribute, true);
 
     if (seenPosts.includes(id) === false) {
       observer.observe(postElement.querySelector('article header + *'));
     } else if (isFirstRender || reprocessPosts) {
-      timelineItem.setAttribute(dimAttribute, '');
+      timelineItem.toggleAttribute(dimAttribute, true);
     }
   }
 };
@@ -126,9 +127,9 @@ export const clean = async function () {
 
   $(`[${excludeAttribute}]`).removeAttr(excludeAttribute);
   $(`[${dimAttribute}]`).removeAttr(dimAttribute);
-  $(`.${hideClass}`).removeClass(hideClass);
-  $(`.${onlyDimAvatarsClass}`).removeClass(onlyDimAvatarsClass);
-  $(`.${lengthenedClass}`).removeClass(lengthenedClass);
+  removeClassName(hideClass);
+  removeClassName(onlyDimAvatarsClass);
+  removeClassName(lengthenedClass);
 };
 
 export const stylesheet = true;

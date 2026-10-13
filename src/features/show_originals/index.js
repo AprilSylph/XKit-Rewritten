@@ -1,3 +1,4 @@
+import { removeClassName, removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { a, div } from '../../utils/dom.js';
 import { filterPostElements, getTimelineItemWrapper } from '../../utils/interface.js';
@@ -28,6 +29,7 @@ const includeFiltered = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
+let showReblogsWithTags;
 let showReblogsOfNotFollowing;
 let whitelist;
 let disabledBlogs;
@@ -105,17 +107,18 @@ const processPosts = async function (postElements) {
 
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {
-      const { rebloggedRootId, content, blogName, community, postAuthor, rebloggedFromFollowing, trail } = await timelineObject(postElement);
+      const { rebloggedRootId, content, tags, blogName, community, postAuthor, rebloggedFromFollowing, trail } = await timelineObject(postElement);
       const myPost = await isMyPost(postElement);
 
       if (!rebloggedRootId) { return; }
       if (showOwnReblogs && myPost) { return; }
       if (showReblogsWithContributedContent && content.length > 0) { return; }
+      if (showReblogsWithTags && tags.length > 0) { return; }
       if (showReblogsOfNotFollowing && !(rebloggedFromFollowing || trail.at(-1)?.blog?.followed)) { return; }
       const visibleBlogName = community ? postAuthor : blogName;
       if (whitelist.includes(visibleBlogName)) { return; }
 
-      getTimelineItemWrapper(postElement).setAttribute(hiddenAttribute, '');
+      getTimelineItemWrapper(postElement).toggleAttribute(hiddenAttribute, true);
     });
 };
 
@@ -124,6 +127,7 @@ export const main = async function () {
   ({
     showOwnReblogs,
     showReblogsWithContributedContent,
+    showReblogsWithTags,
     showReblogsOfNotFollowing,
     whitelistedUsernames,
   } = await getPreferences('show_originals'));
@@ -141,8 +145,8 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
   $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
-  $(`.${lengthenedClass}`).removeClass(lengthenedClass);
-  $(`.${controlsClass}`).remove();
+  removeClassName(lengthenedClass);
+  removeElementsByClassName(controlsClass);
 };
 
 export const stylesheet = true;

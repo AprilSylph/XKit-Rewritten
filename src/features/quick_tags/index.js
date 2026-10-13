@@ -1,3 +1,4 @@
+import { removeClassName, removeElementsByClassName, removeElementsBySelector } from '../../utils/cleanup.js';
 import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
@@ -12,7 +13,6 @@ import { getPreferences } from '../../utils/preferences.js';
 import { timelineObject, editPostFormTags, updatePostOnPage } from '../../utils/react_props.js';
 import { apiFetch, createEditRequestBody, isNpfCompatible } from '../../utils/tumblr_helpers.js';
 
-const symbolId = 'ri-price-tag-3-line';
 const buttonClass = 'xkit-quick-tags-button';
 const excludeClass = 'xkit-quick-tags-done';
 
@@ -315,10 +315,10 @@ const migrateTags = async ({ detail }) => {
 };
 
 export const main = async function () {
-  controlButtonTemplate = createControlButtonTemplate(symbolId, buttonClass, 'Quick Tags');
+  controlButtonTemplate = createControlButtonTemplate('quick_tags', buttonClass, 'Quick Tags');
 
   onNewPosts.addListener(processPosts);
-  registerPostOption({ id: 'quick-tags', symbolId, onclick: togglePostOptionPopupDisplay });
+  registerPostOption({ featureName: 'quick_tags', onclick: togglePostOptionPopupDisplay });
 
   populatePopups();
 
@@ -339,12 +339,12 @@ export const clean = async function () {
   pageModifications.unregister(addRemoveTagButtons);
   popupElement.remove();
 
-  unregisterPostOption('quick-tags');
+  unregisterPostOption('quick_tags');
 
-  $(`.${buttonClass}`).remove();
-  $(`.${excludeClass}`).removeClass(excludeClass);
-  $('.xkit-removable-tag > button').remove();
-  $('.xkit-removable-tag').removeClass('xkit-removable-tag');
+  removeElementsByClassName(buttonClass);
+  removeClassName(excludeClass);
+  removeElementsBySelector('.xkit-removable-tag > button');
+  removeClassName('xkit-removable-tag');
 
   window.removeEventListener('xkit-quick-tags-migration', migrateTags);
 };

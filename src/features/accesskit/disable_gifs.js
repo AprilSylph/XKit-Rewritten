@@ -335,7 +335,7 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children),
   );
 
-  $(`[${pausedAttribute}]`).removeAttr(pausedAttribute);
+  removeAttribute(pausedAttribute);
   removeElementsByClassName(canvasClass);
   removeAttribute(labelAttribute);
   removeAttribute(labelSizeAttribute);

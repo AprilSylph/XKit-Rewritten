@@ -1,32 +1,35 @@
 import { keyToCss } from '../../utils/css_map.js';
 
-const linkSelector = 'a[role="link"][target="_blank"]';
+const newTabLinkSelector = 'a[role="link"][target="_blank"]';
+const columnOptionsSelector = keyToCss('columnOptions');
+const blogViewLinkSelector = 'a[href^="/blog/view/"]';
 
+/** @type {(event: PointerEvent) => void} */
 const onDocumentClick = event => {
   if (
-    event.target.matches(`${linkSelector}, ${linkSelector} *`) &&
-    !event.target.closest(keyToCss('columnOptions'))
+    event.target.closest(newTabLinkSelector) !== null &&
+    event.target.closest(columnOptionsSelector) === null &&
+    event.target.closest(blogViewLinkSelector) === null
   ) {
     event.stopPropagation();
+    return; // Allow default behaviour
   }
-};
 
-const onClickBlogViewLink = event => {
-  event.stopPropagation();
-  event.preventDefault();
+  if (event.target.closest(blogViewLinkSelector) !== null) {
+    event.stopPropagation();
+    event.preventDefault();
 
-  const { pathname } = new URL(event.target.href);
-  const [blogName, postId] = pathname.split('/').slice(3);
+    const { pathname } = new URL(event.target.href);
+    const [blogName, postId] = pathname.split('/').slice(3);
 
-  window.open(`https://${blogName}.tumblr.com/${postId ? `post/${postId}` : ''}`);
+    window.open(`https://${blogName}.tumblr.com/${postId ? `post/${postId}` : ''}`);
+  }
 };
 
 export const main = async function () {
   document.documentElement.addEventListener('click', onDocumentClick, { capture: true });
-  $('#base-container').on('click', 'a[href^="/blog/view/"]', onClickBlogViewLink);
 };
 
 export const clean = async function () {
   document.documentElement.removeEventListener('click', onDocumentClick, { capture: true });
-  $('#base-container').off('click', 'a[href^="/blog/view/"]', onClickBlogViewLink);
 };

@@ -1,3 +1,4 @@
+import { removeAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
@@ -34,8 +35,8 @@ const createCaughtUpLine = tagChicletCarouselItems => tagChicletCarouselItems
   .map(getTimelineItemWrapper)
   .filter((element, index, array) => array.indexOf(element) === index)
   .forEach(timelineItem => {
-    timelineItem.setAttribute(borderAttribute, '');
-    timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
+    timelineItem.toggleAttribute(borderAttribute, true);
+    timelineItem.previousElementSibling.toggleAttribute(hiddenAttribute, true);
   });
 
 export const main = async function () {
@@ -45,6 +46,6 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(createCaughtUpLine);
 
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
-  $(`[${borderAttribute}]`).removeAttr(borderAttribute);
+  removeAttribute(hiddenAttribute);
+  removeAttribute(borderAttribute);
 };

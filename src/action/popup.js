@@ -81,7 +81,7 @@ document.getElementById('filter').addEventListener('input', event => {
 
   switch (event.currentTarget.value) {
     case 'all':
-      $('.filter-hidden').removeClass('filter-hidden');
+      featureElements.forEach(featureElement => featureElement.classList.remove('filter-hidden'));
       break;
     case 'enabled':
       featureElements.forEach(featureElement => featureElement.classList.toggle('filter-hidden', featureElement.disabled));

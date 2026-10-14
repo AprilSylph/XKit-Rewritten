@@ -135,6 +135,7 @@
   );
   margin-bottom: var(--vertical-margin);
   overflow-y: auto;
+  scroll-snap-type: y mandatory;
 
   font-size: 0.875rem;
   line-height: var(--line-height);
@@ -170,6 +171,7 @@
   flex-shrink: 0;
   padding: var(--vertical-padding) 10px;
   margin-bottom: var(--vertical-margin);
+  scroll-snap-align: start;
 
   background-color: rgba(var(--white), 0.65);
   color: rgba(var(--black), 0.65);

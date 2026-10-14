@@ -1,9 +1,10 @@
+import { removeElementsById } from './cleanup.js';
 import { keyToCss } from './css_map.js';
 import { dom } from './dom.js';
 import { blogViewSelector, displayBlockUnlessDisabledAttr } from './interface.js';
 import { pageModifications } from './mutations.js';
 
-$('#xkit-sidebar').remove();
+removeElementsById('xkit-sidebar');
 
 const sidebarItems = dom('div', { id: 'xkit-sidebar', [displayBlockUnlessDisabledAttr]: '' });
 const conditions = new Map();
@@ -46,6 +47,7 @@ const buildSidebarRow = ({ label, onclick, href, count, carrot }) =>
   ]);
 
 /**
+ * Add an interactable sidebar item control that will be visible in the page's right sidebar in the desktop Tumblr layout, or in the left mobile drawer in the tablet/mobile Tumblr layouts.
  * @param {object} options Sidebar item options
  * @param {string} options.id Unique ID for the sidebar item
  * @param {string} options.title Human-readable sidebar item heading

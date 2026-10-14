@@ -1,3 +1,4 @@
+import { removeElementsById } from '../../utils/cleanup.js';
 import { keyToClasses, keyToCss } from '../../utils/css_map.js';
 import { debounce } from '../../utils/debounce.js';
 import { buildStyle, displayBlockUnlessDisabledAttr } from '../../utils/interface.js';
@@ -7,7 +8,8 @@ import { getPreferences } from '../../utils/preferences.js';
 import { cellItem } from '../../utils/react_props.js';
 
 const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
-$(`[id="${scrollToBottomButtonId}"]`).remove();
+removeElementsById(scrollToBottomButtonId); // Clean up previous instance after addon reload
+
 const activeClass = 'xkit-scroll-to-bottom-active';
 
 const loaderSelector = `
@@ -84,7 +86,7 @@ const addButtonToPage = async function ([scrollToTopButton]) {
     scrollToBottomButton.style.transform = 'rotate(180deg)';
     scrollToBottomButton.addEventListener('click', onclick);
     scrollToBottomButton.id = scrollToBottomButtonId;
-    scrollToBottomButton.setAttribute(displayBlockUnlessDisabledAttr, '');
+    scrollToBottomButton.toggleAttribute(displayBlockUnlessDisabledAttr, true);
 
     scrollToBottomButton.classList.toggle(activeClass, active);
   }

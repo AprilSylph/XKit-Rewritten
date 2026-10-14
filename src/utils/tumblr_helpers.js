@@ -11,11 +11,12 @@ import { inject } from './inject.js';
 /**
  * Perform a Tumblr API request, using the helper supplied by the Tumblr web platform API for third-party extensions.
  * Note: when accessed through the web platform, the Tumblr API occasionally differs slightly from the documentation.
- * @param {globalThis.RequestInit & { queryParams?: QueryParams, body?: (string | Dictionary) }} args Arguments to pass to `window.tumblr.apiFetch()`
+ * @param {string | URL} resource Path argument to pass to `window.tumblr.apiFetch()`
+ * @param {globalThis.RequestInit & { queryParams?: QueryParams, body?: (string | Dictionary) }} [init] Options argument to pass to `window.tumblr.apiFetch()`
  * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#apifetch}
  * @returns {Promise<Response | Error>} Resolves or rejects with result of `window.tumblr.apiFetch()`
  */
-export const apiFetch = async (...args) => inject('/main_world/api_fetch.js', args);
+export const apiFetch = async (resource, init = {}) => inject('/main_world/api_fetch.js', [resource, init]);
 
 /**
  * Create an NPF edit request body.

@@ -1,3 +1,4 @@
+import { removeClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle, filterPostElements } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
@@ -91,5 +92,5 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  $(`.${hiddenClass}`).removeClass(hiddenClass);
+  removeClassName(hiddenClass);
 };

@@ -1,3 +1,4 @@
+import { removeElementsById } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { a, div, img } from '../../utils/dom.js';
 import { buildStyle, displayBlockUnlessDisabledAttr } from '../../utils/interface.js';
@@ -6,7 +7,7 @@ import { onClickNavigate } from '../../utils/tumblr_helpers.js';
 import { userBlogs } from '../../utils/user.js';
 
 // Remove outdated elements when loading module
-$('#narrow-sidebar-avatars').remove();
+removeElementsById('narrow-sidebar-avatars');
 
 export const styleElement = buildStyle(`
 :root {

@@ -1,3 +1,4 @@
+import { removeElementsByClassName } from '../../utils/cleanup.js';
 import { createControlButtonTemplate, cloneControlButton, insertControlButton } from '../../utils/control_buttons.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
@@ -171,7 +172,7 @@ export const main = async function () {
 
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
-  $(`.${buttonClass}`).remove();
+  removeElementsByClassName(buttonClass);
 };
 
 export const stylesheet = true;

@@ -1,3 +1,4 @@
+import { removeElementsByClassName } from './cleanup.js';
 import { keyToCss } from './css_map.js';
 import { button, label } from './dom.js';
 import { getIcon } from './icons.js';
@@ -5,7 +6,7 @@ import { displayBlockUnlessDisabledAttr } from './interface.js';
 import { pageModifications } from './mutations.js';
 
 // Remove outdated post options when loading module
-$('.xkit-post-option').remove();
+removeElementsByClassName('xkit-post-option');
 
 const postOptions = {};
 

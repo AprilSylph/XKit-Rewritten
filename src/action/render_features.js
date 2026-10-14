@@ -82,8 +82,8 @@ const renderFeatures = async function () {
 
         const iconElement = new DOMParser().parseFromString(iconText, 'image/svg+xml').firstElementChild;
         iconElement.setAttribute('slot', 'icon');
-        iconElement.style.backgroundColor = icon.background_color ?? '#ffffff';
-        iconElement.style.color = icon.color ?? '#000000';
+        iconElement.style.backgroundColor = icon.background_color ?? '#000000';
+        iconElement.style.color = icon.color ?? '#ffffff';
         featureElement.append(iconElement);
       } catch (exception) {
         console.error(`Could not render icon for ${featureName}:`, exception);

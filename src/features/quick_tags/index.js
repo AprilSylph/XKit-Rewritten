@@ -1,3 +1,4 @@
+import { removeClassName, removeElementsByClassName } from '../../utils/cleanup.js';
 import { cloneControlButton, createControlButtonTemplate, insertControlButton } from '../../utils/control_buttons.js';
 import { dom } from '../../utils/dom.js';
 import { appendWithoutOverflow, buildStyle, filterPostElements, postSelector } from '../../utils/interface.js';
@@ -289,8 +290,8 @@ export const clean = async function () {
 
   unregisterPostOption('quick_tags');
 
-  $(`.${buttonClass}`).remove();
-  $(`.${excludeClass}`).removeClass(excludeClass);
+  removeElementsByClassName(buttonClass);
+  removeClassName(excludeClass);
 
   window.removeEventListener('xkit-quick-tags-migration', migrateTags);
 };

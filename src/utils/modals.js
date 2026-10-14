@@ -1,7 +1,8 @@
+import { removeElementsById } from './cleanup.js';
 import { dom } from './dom.js';
 
 // Remove any outdated modal when loading module
-document.getElementById('xkit-modal')?.remove();
+removeElementsById('xkit-modal');
 
 let lastFocusedElement;
 
@@ -39,7 +40,7 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
  * Hide the current takeover prompt.
  */
 export const hideModal = () => {
-  document.getElementById('xkit-modal')?.remove();
+  removeElementsById('xkit-modal');
   lastFocusedElement?.focus();
   lastFocusedElement = null;
 };

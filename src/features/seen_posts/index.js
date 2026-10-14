@@ -1,3 +1,4 @@
+import { removeAttribute, removeClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { filterPostElements, getTimelineItemWrapper, postSelector } from '../../utils/interface.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
@@ -124,11 +125,11 @@ export const clean = async function () {
   timers.forEach((timerId) => clearTimeout(timerId));
   timers.clear();
 
-  $(`[${excludeAttribute}]`).removeAttr(excludeAttribute);
-  $(`[${dimAttribute}]`).removeAttr(dimAttribute);
-  $(`.${hideClass}`).removeClass(hideClass);
-  $(`.${onlyDimAvatarsClass}`).removeClass(onlyDimAvatarsClass);
-  $(`.${lengthenedClass}`).removeClass(lengthenedClass);
+  removeAttribute(excludeAttribute);
+  removeAttribute(dimAttribute);
+  removeClassName(hideClass);
+  removeClassName(onlyDimAvatarsClass);
+  removeClassName(lengthenedClass);
 };
 
 export const stylesheet = true;

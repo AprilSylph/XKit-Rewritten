@@ -13,11 +13,9 @@ const browserIsOld =
   typeof AudioDecoder === 'undefined';
 
 /**
- * In older browsers (Chromium <129, Firefox <133, Safari <18.4), `container-type` creates a
- * stacking context, so the popup z-index does not apply outside of the footer.
+ * In older browsers (Chromium <129, Firefox <133, Safari <18.4), `container-type` creates a stacking context, so the container query that Tumblr applies to a post footer can cause the z-index of an XKit popup originating within it not apply outside of the footer, resulting in the popup appearing to be underneath the next post.
  *
- * Removing the container fixes this, but causes a minor regression: disabling Tumblr's
- * breakpoint-specific styling (smaller text in footer buttons in masonry view in peepr).
+ * Removing the container fixes this, but causes a minor regression: disabling Tumblr's breakpoint-specific styling (smaller text in footer buttons in masonry view in peepr).
  * @see https://github.com/w3c/csswg-drafts/issues/10544
  * @see https://github.com/AprilSylph/XKit-Rewritten/issues/1876
  */

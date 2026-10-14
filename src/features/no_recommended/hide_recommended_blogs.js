@@ -1,3 +1,4 @@
+import { removeAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { blogViewSelector, buildStyle } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
@@ -10,13 +11,13 @@ export const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`
 const hideDashboardRecommended = function (sidebarTitles) {
   sidebarTitles
     .filter(h1 => h1.textContent === translate('Check out these blogs'))
-    .forEach(h1 => h1.closest('aside > *').setAttribute(hiddenAttribute, ''));
+    .forEach(h1 => h1.closest('aside > *').toggleAttribute(hiddenAttribute, true));
 };
 
 const hideTagPageRecommended = blogsLists =>
   blogsLists
     .filter(ul => !ul.matches(blogViewSelector))
-    .forEach(ul => ul.parentNode.setAttribute(hiddenAttribute, ''));
+    .forEach(ul => ul.parentNode.toggleAttribute(hiddenAttribute, true));
 
 export const main = async function () {
   pageModifications.register('aside h1', hideDashboardRecommended);
@@ -28,5 +29,5 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(hideDashboardRecommended);
   pageModifications.unregister(hideTagPageRecommended);
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  removeAttribute(hiddenAttribute);
 };

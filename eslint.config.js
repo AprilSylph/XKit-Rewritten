@@ -4,6 +4,13 @@
 
 export default [
   /**
+   * Ignore vendored and gitignored files completely.
+   * @see https://eslint.org/docs/latest/use/configure/configuration-files#globally-ignore-files-with-ignores
+   * @see https://github.com/neostandard/neostandard#resolveignoresfromgitignore
+   */
+  { ignores: ['src/lib/**', ...neostandard.resolveIgnoresFromGitignore()] },
+
+  /**
    * Semistandard style guide.
    *
    * Includes the following plugins and makes them available for use:
@@ -15,7 +22,7 @@ export default [
    */
   ...neostandard({
     env: ['browser', 'jquery', 'webextensions'],
-    ignores: ['src/lib/**'],
+    globals: { name: 'off' },
     semi: true,
   }),
 

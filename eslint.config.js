@@ -1,6 +1,6 @@
 /** @see https://github.com/un-ts/eslint-plugin-import-x#readme */ import { importX } from 'eslint-plugin-import-x';
 /** @see https://github.com/gajus/eslint-plugin-jsdoc#readme    */ import { jsdoc } from 'eslint-plugin-jsdoc';
-/** @see https://github.com/neostandard/neostandard#readme      */ import { neostandard } from 'neostandard';
+/** @see https://github.com/neostandard/neostandard#readme      */ import { neostandard, resolveIgnoresFromGitignore } from 'neostandard';
 
 export default [
   /**
@@ -8,7 +8,7 @@ export default [
    * @see https://eslint.org/docs/latest/use/configure/configuration-files#globally-ignore-files-with-ignores
    * @see https://github.com/neostandard/neostandard#resolveignoresfromgitignore
    */
-  { ignores: ['src/lib/**', ...neostandard.resolveIgnoresFromGitignore()] },
+  { ignores: ['src/lib/**', ...resolveIgnoresFromGitignore()] },
 
   /**
    * Semistandard style guide.

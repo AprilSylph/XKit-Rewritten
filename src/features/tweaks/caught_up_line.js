@@ -1,3 +1,4 @@
+import { removeAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
@@ -45,6 +46,6 @@ export const main = async function () {
 export const clean = async function () {
   pageModifications.unregister(createCaughtUpLine);
 
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
-  $(`[${borderAttribute}]`).removeAttr(borderAttribute);
+  removeAttribute(hiddenAttribute);
+  removeAttribute(borderAttribute);
 };

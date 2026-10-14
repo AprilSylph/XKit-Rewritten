@@ -1,3 +1,4 @@
+import { removeAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle, notificationSelector } from '../../utils/interface.js';
@@ -146,6 +147,6 @@ export const clean = async function () {
   unregisterMeatballItem(meatballButtonBlockId);
   unregisterMeatballItem(meatballButtonUnblockId);
 
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  removeAttribute(hiddenAttribute);
   document.body.classList.remove(placeholdersClass);
 };

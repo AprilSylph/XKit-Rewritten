@@ -1,28 +1,7 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  row-gap: 6px;
-  padding: 4px;
-}
-
-label {
-  align-self: flex-start;
+  display: block;
 }
 
 textarea {
-  align-self: stretch;
-
-  padding: 4px;
-  border: none;
-  border-radius: 3px;
   resize: none;
-
-  background-color: rgb(var(--passive-grey));
-  color: rgb(var(--black));
-  scrollbar-color: rgba(var(--black), 0.5) rgb(var(--passive-grey));
-  scrollbar-width: thin;
-}
-
-textarea:focus {
-  background-color: rgb(var(--active-grey));
 }

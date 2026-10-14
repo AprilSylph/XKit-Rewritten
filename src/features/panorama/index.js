@@ -42,6 +42,9 @@ ${keyToCss('queueSettings')} {
   box-sizing: border-box;
   width: 100%;
 }
+${mainPostColumn} > ${keyToCss('tabsHeader')} + ${keyToCss('container')} {
+  max-width: unset;
+}
 `);
 mainStyleElement.media = `(min-width: ${widenDashMinWidth}px)`;
 
@@ -112,8 +115,8 @@ ${keyToCss('cell')}, ${postSelector}
   height: unset !important;
 }
 
-/* Fix ad containers */
-${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner')},
+/* Fix advertisement/miscellaneous containers */
+${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner', 'signpostCta')},
 ${keyToCss('adTimelineObject', 'instreamAd', 'nativeIponWebAd', 'takeoverBanner')} header {
   max-width: unset !important;
 }

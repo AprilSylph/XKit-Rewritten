@@ -1,11 +1,7 @@
 {
   "title": "Quick Tags",
   "description": "Add tags to posts more easily",
-  "icon": {
-    "class_name": "ri-price-tag-3-line",
-    "color": "white",
-    "background_color": "#eeb92b"
-  },
+  "icon": { "background_color": "#eeb92b" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#quick-tags",
   "relatedTerms": [ "Auto Tagger", "AutoTagger", "XInbox" ],
   "preferences": {
@@ -25,10 +21,8 @@
       "default": false
     },
     "tagBundles": {
-      "type": "iframe",
-      "label": "Manage tag bundles",
-      "src": "/features/quick_tags/options/index.html",
-      "default": []
+      "type": "component",
+      "src": "/features/quick_tags/options/index.js"
     }
   }
 }

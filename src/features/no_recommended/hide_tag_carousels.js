@@ -1,3 +1,4 @@
+import { removeAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
@@ -18,8 +19,8 @@ const hideTagCarousels = carouselWrappers => carouselWrappers
   .filter(carouselWrapper => carouselWrapper.querySelector(tagCardSelector) !== null)
   .map(getTimelineItemWrapper)
   .forEach(timelineItem => {
-    timelineItem.setAttribute(hiddenAttribute, '');
-    timelineItem.previousElementSibling.setAttribute(hiddenAttribute, '');
+    timelineItem.toggleAttribute(hiddenAttribute, true);
+    timelineItem.previousElementSibling.toggleAttribute(hiddenAttribute, true);
   });
 
 export const main = async function () {
@@ -28,6 +29,5 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(hideTagCarousels);
-
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  removeAttribute(hiddenAttribute);
 };

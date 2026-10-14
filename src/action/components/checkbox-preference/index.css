@@ -1,16 +1,11 @@
 :host {
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: flex-start;
-  column-gap: 8px;
-  padding: 4px;
+  column-gap: var(--space-small);
 }
 
-input {
-  height: 1.15em;
-}
-
-@supports (height: 1lh) {
-  input {
-    height: 1lh;
-  }
+input[type="checkbox"] {
+  margin-inline: 0;
 }

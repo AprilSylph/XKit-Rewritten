@@ -1,114 +1,84 @@
-:root {
-  --black: 21, 20, 25;
-  --white: 255, 255, 255;
-  --light-grey: 223, 223, 229;
-  --dark-grey: 207, 207, 216;
+:host {
+  display: block;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --black: 251, 251, 254;
-    --white: 66, 65, 77;
-    --light-grey: 83, 83, 94;
-    --dark-grey: 91, 91, 102;
-  }
+fieldset {
+  margin-block-start: var(--space-large);
 }
 
-html {
-  font-size: 14px;
-  scrollbar-color: rgb(var(--dark-grey)) transparent;
-  scrollbar-width: thin;
-  overflow-y: hidden;
-}
-
-body {
-  background-color: rgb(var(--white));
-  color: rgb(var(--black));
-  font: inherit;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-section:not(:last-child) {
-  margin-bottom: 16px;
-}
-
-h3 {
-  margin-block: 8px;
-}
-
-input[type="text"] {
-  padding: 4px 8px;
-  border: none;
-  border-radius: 3px;
-
-  background-color: rgb(var(--light-grey));
-  color: rgb(var(--black));
-}
-
-#new-bundle {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-column-gap: 8px;
-  grid-row-gap: 8px;
-  align-items: center;
-  padding-inline-end: 4px;
-  margin: 0;
-}
-
-#new-bundle label {
-  grid-column: 1;
-}
-
-#new-bundle input {
-  grid-column: 2;
-}
-
-#new-bundle input:focus {
-  background-color: rgb(var(--dark-grey));
-}
-
-#new-bundle button {
-  grid-column: 1 / 3;
+input + label {
+  margin-block-start: var(--space-small);
 }
 
 #bundles {
-  padding: 0;
-  margin: 0;
+  --border-width: 1px;
 
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--border-width);
+  padding: 0;
+  border-radius: var(--border-radius-medium);
+  margin: 0;
+  overflow: hidden;
+
+  background-color: var(--border-color);
   list-style-type: none;
+  outline: var(--border-width) solid var(--border-color);
+  outline-offset: 0;
+}
+
+#bundles:empty {
+  justify-content: center;
+  align-items: center;
+
+  background-color: transparent;
 }
 
 #bundles:empty::before {
   content: "No tag bundles are defined.";
+  margin-block: var(--space-large);
+}
+
+h3 + #bundles {
+  margin-block-start: var(--space-medium);
 }
 
 .bundle {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-column-gap: 1ch;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
-  border-top: 1px solid rgb(var(--light-grey));
+  column-gap: var(--space-small);
+  padding: var(--space-medium);
+  margin: 0;
+
+  background-color: var(--background-color-canvas);
 }
 
-.bundle:last-child {
-  border-bottom: 1px solid rgb(var(--light-grey));
+.bundle.sortable-ghost {
+  opacity: 0%;
 }
 
-.bundle button {
-  padding: 3px;
+.bundle.sortable-fallback {
+  border-radius: inherit;
+  opacity: 100% !important;
+}
+
+.bundle button:has(> i) {
+  padding: var(--space-xsmall);
   border: none;
 
-  cursor: pointer;
   background: none;
+  cursor: pointer;
 }
 
 .bundle button i {
-  color: rgb(var(--black));
+  color: var(--text-color);
   font-size: 21px;
 }
 
 .bundle .drag-handle {
+  background-color: transparent !important;
   cursor: grab;
 }
 
@@ -116,44 +86,39 @@ input[type="text"] {
   cursor: grabbing;
 }
 
-.bundle div {
+.bundle .text-content {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: stretch;
-  padding: 1ch 0;
+  align-items: flex-start;
+  row-gap: var(--space-xsmall);
+  flex: 1;
+  min-width: 0;
 }
 
-.bundle .title {
-  margin-bottom: 0.5ch;
-}
+.bundle :is(.label, .description) {
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
 
-.bundle input {
-  box-sizing: border-box;
-  width: 0;
-  min-width: 100%;
-}
-
-.bundle input:disabled {
-  overflow-x: hidden;
-  border: none;
-
-  color: rgb(var(--black));
-  background: transparent;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.bundle input.title:disabled {
-  font-weight: bold;
+.bundle .description {
+  color: var(--text-color-deemphasized);
+  font-size: var(--font-size-small);
 }
 
-.bundle .controls {
+.bundle .actions {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  column-gap: var(--space-xsmall);
+  margin-left: auto;
 }
 
-.bundle .controls > :not(:first-child) {
-  margin-left: 1ch;
+#new-bundle-button {
+  margin-block-start: var(--space-medium);
 }

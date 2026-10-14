@@ -6,15 +6,16 @@ const localName = 'color-preference';
 const templateDocument = new DOMParser().parseFromString(`
   <template id="${localName}">
     <span>
-      <input id="color" type="text" size="10" spellcheck="false">
+      <input id="color" type="text" size="8" spellcheck="false">
     </span>
     <label for="color"></label>
   </template>
 `, 'text/html');
 
 const adoptedStyleSheets = await fetchStyleSheets([
-  '/lib/coloris.css',
   '/lib/modern-normalize.css',
+  '/lib/coloris.css',
+  '/action/acorn.css',
   './index.css',
 ].map(import.meta.resolve));
 

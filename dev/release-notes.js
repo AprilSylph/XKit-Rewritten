@@ -14,7 +14,7 @@ try {
 
   const response = await fetch(
     `${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/commits?per_page=100`,
-    { headers: { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', ...GITHUB_TOKEN && { Authorization: `Bearer ${GITHUB_TOKEN}` } } },
+    { headers: { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2026-03-10', ...GITHUB_TOKEN && { Authorization: `Bearer ${GITHUB_TOKEN}` } } },
   );
   if (!response.ok) { throw new Error(`🛑 HTTP ${response.status} (${response.statusText})`); }
 
@@ -22,7 +22,12 @@ try {
   for (const commit of await response.json()) {
     commits.set(commit.sha, commit);
   }
-  if (!refs.isSubsetOf(commits)) { console.warn('⚠️ Could not find commit info for one or more commits!'); }
+
+  if (!refs.isSubsetOf(commits)) {
+    console.log('> [!WARNING]');
+    console.log('> The GitHub REST API did not return info for these commits:');
+    refs.difference(commits).forEach(ref => console.log(`> - \`${ref}\``));
+  }
 
   console.log('```md');
   for (const ref of refs.intersection(commits)) {

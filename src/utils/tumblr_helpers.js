@@ -8,6 +8,9 @@ import { inject } from './inject.js';
 /** @typedef {Record<string, Json>} Dictionary */
 /** @typedef {Record<string, string>} QueryParams */
 
+const slowRequestWarningMs = 1500;
+const stillPendingWarningMs = 5000;
+
 /**
  * Perform a Tumblr API request, using the helper supplied by the Tumblr web platform API for third-party extensions.
  * Note: when accessed through the web platform, the Tumblr API occasionally differs slightly from the documentation.
@@ -24,11 +27,11 @@ export const apiFetch = async (resource, init = {}) => {
     console.log(`XKit Rewritten: API fetch of ${resource} ${succeeded ? 'took' : 'failed after'} ${Date.now() - requestTime}ms!`);
   const timeoutId = setTimeout(
     () => console.log(`XKit Rewritten: API fetch of ${resource} is still pending after 5 seconds!`),
-    5000,
+    stillPendingWarningMs,
   );
   result
     .then(() => clearTimeout(timeoutId))
-    .then(() => Date.now() - requestTime > 1500 && logWarning(true))
+    .then(() => Date.now() - requestTime > slowRequestWarningMs && logWarning(true))
     .catch(() => logWarning(false));
 
   return result;

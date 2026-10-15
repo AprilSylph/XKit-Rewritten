@@ -26,7 +26,7 @@ export const apiFetch = async (resource, init = {}) => {
   const logWarning = succeeded =>
     console.log(`XKit Rewritten: API fetch of ${resource} ${succeeded ? 'took' : 'failed after'} ${Date.now() - requestTime}ms!`);
   const timeoutId = setTimeout(
-    () => console.log(`XKit Rewritten: API fetch of ${resource} is still pending after 5 seconds!`),
+    () => console.log(`XKit Rewritten: API fetch of ${resource} is still pending after ${stillPendingWarningMs / 1000} seconds!`),
     stillPendingWarningMs,
   );
   result

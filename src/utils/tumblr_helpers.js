@@ -30,12 +30,13 @@ const timeoutMs = 5000;
  */
 export const apiFetchWithRetry = (resource, init = {}) =>
   inject('/main_world/api_fetch.js', [resource, init, { timeout: timeoutMs }])
-    .catch(exception => {
+    .catch(async exception => {
       if (exception.name === 'AbortError') {
         console.log(`XKit Rewritten: API fetch of ${resource} was aborted, possibly for taking more than ${timeoutMs}ms. Retrying...`);
       } else {
         console.log(exception);
-        console.log(`XKit Rewritten: API fetch of ${resource} failed. Retrying...`);
+        console.log(`XKit Rewritten: API fetch of ${resource} failed. Retrying in 1 second...`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
       return apiFetch(resource, init);
     });

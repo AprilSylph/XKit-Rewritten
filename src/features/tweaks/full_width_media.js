@@ -16,10 +16,10 @@ ${rowWithImages} {
 ${rowWithImages} ${keyToCss('imageBlock')}${keyToCss('unstretched')} {
   padding-inline: 12px;
 }
-${rowWithImages} :is(${keyToCss('imageBlockButton')}, ${keyToCss('imageBlockButton')} img) {
+${rowWithImages} :is(${keyToCss('imageBlock')}, ${keyToCss('imageBlockButton')}, ${keyToCss('imageBlockButton')} img) {
   border-radius: unset !important;
 }
-${rowWithImages} ${keyToCss('imageBlockButton')}:after {
+${rowWithImages} ${keyToCss('imageBlock')}:after {
   border: none !important;
 }
 
@@ -29,7 +29,7 @@ ${imageWithoutRows} {
 ${imageWithoutRows} img {
   border-radius: unset !important;
 }
-${imageWithoutRows} > div:after {
+${imageWithoutRows}:after {
   border: none !important;
 }
 

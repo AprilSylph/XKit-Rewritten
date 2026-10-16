@@ -1,3 +1,4 @@
+import { removeAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle, getTimelineItemWrapper } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
@@ -12,7 +13,7 @@ export const styleElement = buildStyle();
 const processVideoCTAs = videoCTAs => videoCTAs
   .map(getTimelineItemWrapper)
   .filter(Boolean)
-  .forEach(timelineItem => timelineItem.setAttribute(hiddenAttribute, ''));
+  .forEach(timelineItem => timelineItem.toggleAttribute(hiddenAttribute, true));
 
 export const main = async () => {
   const { includeBlazed } = await getPreferences('anti_capitalism');
@@ -38,6 +39,5 @@ export const main = async () => {
 
 export const clean = async () => {
   pageModifications.unregister(processVideoCTAs);
-
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  removeAttribute(hiddenAttribute);
 };

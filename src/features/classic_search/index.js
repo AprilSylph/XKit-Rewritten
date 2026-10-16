@@ -1,3 +1,4 @@
+import { removeClassName, removeElementsByClassName } from '../../utils/cleanup.js';
 import { pageModifications } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
 import { navigate } from '../../utils/tumblr_helpers.js';
@@ -18,16 +19,17 @@ const replaceSearchForm = function ([searchFormElement]) {
     event.preventDefault();
 
     const query = event.target.querySelector('input').value;
-    const address = `//www.tumblr.com/tagged/${query}?sort=recent`;
+    const pathname = `/tagged/${encodeURIComponent(query)}?sort=recent`;
 
     if (newTab) {
-      window.open(address);
+      window.open(`${location.origin}${pathname}`);
     } else {
-      navigate(address);
+      navigate(pathname);
     }
   });
   searchFormElementClone.classList.add('classic-search');
   searchFormElementClone.querySelector('input').replaceWith(searchInputElement);
+  searchFormElementClone.querySelector('div:has(> [role="progressbar"])')?.remove();
   searchFormElement.parentNode.prepend(searchFormElementClone);
 };
 
@@ -41,8 +43,8 @@ export const clean = async function () {
   pageModifications.unregister(replaceSearchForm);
 
   searchInputParent.appendChild(searchInputElement);
-  $('.classic-search').remove();
-  $('.xkit-classic-search-done').removeClass('xkit-classic-search-done');
+  removeElementsByClassName('classic-search');
+  removeClassName('xkit-classic-search-done');
 };
 
 export const stylesheet = true;

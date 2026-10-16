@@ -64,6 +64,12 @@ export const styleElement = buildStyle(`
   background-color: rgb(var(--white));
 }
 
+:has(> ${keyToCss('playButton')}) > .${canvasClass},
+:has(> ${keyToCss('playButton')})[${labelAttribute}="after"]::after,
+:has(> ${keyToCss('playButton')})[${labelAttribute}="before"]::before {
+  display: none;
+}
+
 .${canvasClass}${parentHovered},
 [${labelAttribute}="after"]${hovered}::after,
 [${labelAttribute}="before"]${hovered}::before,

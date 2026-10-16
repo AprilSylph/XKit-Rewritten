@@ -182,6 +182,7 @@ main {
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: var(--font-size-small);
   resize: none;
+  white-space: pre;
 }
 
 #backup-panel section fieldset,

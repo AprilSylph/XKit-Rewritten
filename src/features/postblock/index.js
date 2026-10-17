@@ -111,8 +111,10 @@ const blockPostFilter = ({ id, rebloggedRootId }) => blockedPostRootIDs.includes
 const unblockPostFilter = ({ id, rebloggedRootId }) => blockedPostRootIDs.includes(rebloggedRootId || id);
 
 export const main = async function () {
-  ({ [storageKey]: blockedPostRootIDs = [] } = await browser.storage.local.get(storageKey));
-  ({ [blogUuidsStorageKey]: blogUuids = {} } = await browser.storage.local.get(blogUuidsStorageKey));
+  ({
+    [storageKey]: blockedPostRootIDs = [],
+    [blogUuidsStorageKey]: blogUuids = {},
+  } = await browser.storage.local.get([storageKey, blogUuidsStorageKey]));
 
   registerMeatballItem({ id: meatballButtonBlockId, label: meatballButtonBlockLabel, onclick: onButtonClicked, postFilter: blockPostFilter });
   registerMeatballItem({ id: meatballButtonUnblockId, label: meatballButtonUnblockLabel, onclick: onButtonClicked, postFilter: unblockPostFilter });

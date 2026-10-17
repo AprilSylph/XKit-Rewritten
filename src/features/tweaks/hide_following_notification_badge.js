@@ -22,9 +22,16 @@ const onTitleChanged = () => {
   const newTitle = rawTitle.replace(/^\(\d{1,2}\+?\) /, '');
   customTitleElement.textContent = newTitle;
 
+  clearAppBadge();
   observer.observe(titleElement, { characterData: true, subtree: true });
 };
 const observer = new MutationObserver(onTitleChanged);
+
+const clearAppBadge = () => {
+  try {
+    navigator.clearAppBadge?.();
+  } catch {}
+};
 
 export const main = async () => {
   mobileMenuBadgeHide.register('home');
@@ -34,6 +41,7 @@ export const main = async () => {
 };
 
 export const clean = async () => {
+  observer.disconnect();
   mobileMenuBadgeHide.unregister('home');
 
   customTitleElement.remove();

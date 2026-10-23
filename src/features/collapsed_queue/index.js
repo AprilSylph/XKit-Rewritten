@@ -17,6 +17,7 @@ const processPosts = async function (postElements) {
 
     const headerElement = postElement.querySelector('header');
     const footerElement = postElement.querySelector(footerSelector);
+    if (!footerElement) return;
 
     const container = div({ class: containerClass });
     const wrapper = div({ class: wrapperClass }, [container]);

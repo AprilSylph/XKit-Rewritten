@@ -53,6 +53,11 @@
       "type": "checkbox",
       "label": "Move alt text to captions below images",
       "default": false
+    },
+    "alt_text_reminder": {
+      "type": "checkbox",
+      "label": "Remind me to add alt text to images",
+      "default": false
     }
   }
 }

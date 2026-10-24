@@ -15,9 +15,9 @@ const templateDocument = new DOMParser().parseFromString(`
       <li class="muted-blog">
         <a target="_blank"></a>
         <select>
-          <option value="all">All Posts</option>
-          <option value="original">Original Posts</option>
-          <option value="reblogged">Reblogged Posts</option>
+          <option value="all">All</option>
+          <option value="original">Original</option>
+          <option value="reblogged">Reblogs</option>
         </select>
         <button type="button" data-post-id="" title="Unmute">
           <!-- https://mozilla.org/MPL/2.0/ | https://github.com/FirefoxUX/acorn-icons/blob/a0be4e8/icons/desktop/16/svg/delete-16.svg -->

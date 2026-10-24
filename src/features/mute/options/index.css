@@ -41,7 +41,12 @@ h3 + #muted-blogs {
   background-color: var(--background-color-canvas);
 }
 
+.muted-blog > :is(button, select) {
+  flex: none;
+}
+
 .muted-blog > a {
   margin-inline-end: auto;
-  min-width: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }

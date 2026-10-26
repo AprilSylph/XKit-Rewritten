@@ -1,3 +1,4 @@
+import { removeClassName } from '../../utils/cleanup.js';
 import { filterPostElements } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
@@ -61,11 +62,16 @@ const paint = postElements => filterPostElements(postElements, { excludeClass })
 });
 
 const strip = function () {
-  $(`.${excludeClass} article`)
-    .css('border-top', '')
-    .css('border-image-source', '')
-    .css('border-image-slice', '');
-  $(`.${excludeClass}`).removeClass(excludeClass);
+  /** @type {HTMLElement[]} */
+  const articleElements = [...document.querySelectorAll(`.${excludeClass} article`)];
+
+  articleElements.forEach(element => {
+    element.style.removeProperty('border-top');
+    element.style.removeProperty('border-image-source');
+    element.style.removeProperty('border-image-slice');
+  });
+
+  removeClassName(excludeClass);
 };
 
 export const main = async function () {

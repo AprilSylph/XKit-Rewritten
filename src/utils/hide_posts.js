@@ -118,6 +118,15 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
   };
 
   const hidePost = postElement => {
+    const menuButtons = [...postElement.querySelectorAll('[aria-controls]')];
+    const menuElements = menuButtons
+      .map(menuButton => document.getElementById(menuButton.getAttribute('aria-controls')))
+      .filter(menuButton => menuButton !== null);
+
+    menuElements.forEach(menuElement => menuElement.dispatchEvent(
+      new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }),
+    ));
+
     const timelineElement = postElement.closest(timelineSelector);
     const onPermalinkPage = anyPostPermalinkTimelineFilter(timelineElement);
 
@@ -125,7 +134,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
       if (permalinkPageControls) {
         addPermalinkPageControls(postElement, timelineElement);
       } else {
-        // do nothing; avoid hiding single post and making permalink page look broken
+        // Do nothing; avoid hiding single post and making permalink page look broken
       }
     } else {
       getTimelineItemWrapper(postElement).toggleAttribute(hiddenAttribute, true);

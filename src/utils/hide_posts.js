@@ -123,7 +123,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
     const menuButtons = [...postElement.querySelectorAll('[aria-controls]')];
     const menuElements = menuButtons
       .map(menuButton => document.getElementById(menuButton.getAttribute('aria-controls')))
-      .filter(menuButton => menuButton !== null);
+      .filter(menuElement => menuElement !== null);
 
     menuElements.forEach(menuElement => menuElement.dispatchEvent(
       new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }),

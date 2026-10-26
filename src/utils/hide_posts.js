@@ -69,8 +69,8 @@ document.documentElement.append(styleElement);
 
 /**
  * @typedef {object} PostHideFunctions
- * @property {(postElement: Element) => void} hidePost Hides a post.
- * @property {(postElement: Element) => void} showPost Shows a post that was previously hidden.
+ * @property {(postElement: HTMLElement) => void} hidePost Hides a post.
+ * @property {(postElement: HTMLElement) => void} showPost Shows a post that was previously hidden.
  * @property {() => void} showPosts Shows all posts hidden by this post hiding instance.
  */
 
@@ -103,6 +103,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
     }
   `;
 
+  /** @type {(postElement: HTMLElement, timelineElement: HTMLElement) => void} */
   const addPermalinkPageControls = (postElement, timelineElement) => {
     const timelineItemWrapper = getTimelineItemWrapper(postElement);
     if (timelineItemWrapper.hasAttribute(controlledHiddenAttribute) === false) {
@@ -117,6 +118,7 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
     }
   };
 
+  /** @type {PostHideFunctions["hidePost"]} */
   const hidePost = postElement => {
     const menuButtons = [...postElement.querySelectorAll('[aria-controls]')];
     const menuElements = menuButtons
@@ -141,12 +143,14 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
     }
   };
 
+  /** @type {PostHideFunctions["showPost"]} */
   const showPost = postElement => {
     getTimelineItemWrapper(postElement).removeAttribute(hiddenAttribute);
     getTimelineItemWrapper(postElement).removeAttribute(controlledHiddenAttribute);
     postElement.closest(timelineSelector)?.querySelector(`[${controlsAttribute}]`)?.remove();
   };
 
+  /** @type {PostHideFunctions["showPosts"]} */
   const showPosts = () => {
     removeAttribute(hiddenAttribute);
     removeAttribute(controlledHiddenAttribute);

@@ -7,6 +7,7 @@ import { pageModifications } from '../../utils/mutations.js';
 
 /** @type {AbortController}   */ let loadEventController;
 
+const pausedAttribute = 'data-paused-gif';
 const canvasClass = 'xkit-paused-gif-placeholder';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
@@ -58,6 +59,12 @@ export const styleElement = buildStyle(`
   left: 0;
 
   background-color: rgb(var(--white));
+}
+
+:has(> ${keyToCss('playButton')}) > .${canvasClass},
+:has(> ${keyToCss('playButton')})[${labelAttribute}="after"]::after,
+:has(> ${keyToCss('playButton')})[${labelAttribute}="before"]::before {
+  display: none;
 }
 
 .${canvasClass}${parentHovered},
@@ -156,6 +163,9 @@ const createPausedUrlIfAnimated = memoize(async sourceUrl => {
 const pauseGif = async function (gifElement) {
   if (gifElement.currentSrc.endsWith('.webp') && !(await isAnimated(gifElement.currentSrc))) return;
 
+  if (gifElement.hasAttribute(pausedAttribute)) return;
+  gifElement.toggleAttribute(pausedAttribute, true);
+
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
@@ -188,12 +198,10 @@ const processGifs = function (gifElements) {
 
     if (gifElement.complete && gifElement.currentSrc) {
       pauseGif(gifElement);
-    } else {
-      gifElement.addEventListener('load', () => pauseGif(gifElement), {
-        once: true,
-        signal: loadEventController.signal,
-      });
     }
+    gifElement.addEventListener('load', () => pauseGif(gifElement), {
+      signal: loadEventController.signal,
+    });
   });
 };
 
@@ -300,6 +308,7 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children),
   );
 
+  removeAttribute(pausedAttribute);
   removeElementsByClassName(canvasClass);
   removeAttribute(labelAttribute);
   removeAttribute(labelSizeAttribute);

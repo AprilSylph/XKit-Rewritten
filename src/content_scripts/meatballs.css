@@ -41,7 +41,7 @@
 .xkit-menu-item {
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   column-gap: 10px;
 
   box-sizing: border-box;
@@ -52,6 +52,7 @@
   color: var(--content-fg);
   cursor: pointer;
   outline: none;
+  text-align: start;
   text-decoration: none;
 }
 
@@ -82,12 +83,8 @@
 }
 
 .xkit-menu-item::before {
-  height: 24px;
-  width: 24px;
-
-  content: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22none%22%20viewBox%3D%220%200%20128%20128%22%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22%237c5cff%22%20rx%3D%2229%22%2F%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M81.403%20108a228%20228%200%200%200-7.85-14.35q-4.17-7.36-9.69-14.965-1.717%202.208-4.416%206.133a307%20307%200%200%200-5.274%208.34%201722%201722%200%200%200-4.906%208.464q-2.331%204.047-3.434%206.378H24q5.397-9.935%2012.51-20.851%207.237-10.917%2016.069-23.182L25.227%2023h23.181l16.559%2026.493L81.157%2023h21.833L76.006%2064.212Q86.308%2077.582%2093.3%2088.99q6.992%2011.283%2011.039%2019.011z%22%2F%3E%3C%2Fsvg%3E") / "XKit";
-  transform: scale(calc(24 / 128));
-  transform-origin: top left;
+  display: flex;
+  content: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20viewBox%3D%220%200%20128%20128%22%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22%237c5cff%22%20rx%3D%2229%22%2F%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M81.403%20108a228%20228%200%200%200-7.85-14.35q-4.17-7.36-9.69-14.965-1.717%202.208-4.416%206.133a307%20307%200%200%200-5.274%208.34%201722%201722%200%200%200-4.906%208.464q-2.331%204.047-3.434%206.378H24q5.397-9.935%2012.51-20.851%207.237-10.917%2016.069-23.182L25.227%2023h23.181l16.559%2026.493L81.157%2023h21.833L76.006%2064.212Q86.308%2077.582%2093.3%2088.99q6.992%2011.283%2011.039%2019.011z%22%2F%3E%3C%2Fsvg%3E") / "XKit";
 }
 
 .xkit-menu-item:disabled::before {

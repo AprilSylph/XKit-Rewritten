@@ -1,4 +1,4 @@
-import { dom } from '../../utils/dom.js';
+import { button } from '../../utils/dom.js';
 import { createPostHideFunctions } from '../../utils/hide_posts.js';
 import { filterPostElements } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
@@ -75,21 +75,17 @@ const onButtonClicked = ({ currentTarget }) => {
   const className = shouldBlockPost
     ? 'red'
     : 'blue';
-  const saveNotificationPreference = shouldBlockPost
+  const saveBlockPreference = shouldBlockPost
     ? () => { blockedPostRootIDs.push(rootID); browser.storage.local.set({ [storageKey]: blockedPostRootIDs }); }
     : () => browser.storage.local.set({ [storageKey]: blockedPostRootIDs.filter(blockedId => blockedId !== rootID) });
+  const click = () => { hideModal(); saveBlockPreference(); };
 
   showModal({
     title,
     message,
     buttons: [
       modalCancelButton,
-      dom('button', { class: className }, {
-        click () {
-          hideModal();
-          saveNotificationPreference();
-        },
-      }, [textContent]),
+      button({ class: className, click }, [textContent]),
     ],
   });
 };

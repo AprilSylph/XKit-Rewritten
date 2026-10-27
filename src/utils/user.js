@@ -15,37 +15,44 @@ const [
 ]);
 
 /**
- * {object?} userInfo - The contents of the /v2/user/info API endpoint
+ * The contents of the `/v2/user/info` API endpoint
+ * @type {object | undefined}
  */
 export const userInfo = fetchedUserInfo.response.user;
 
 /**
- * {object[]} userBlogs - An array of blog objects the current user has post access to
+ * An array of blog objects the current user is a member of
+ * @type {object[]}
  */
 export const userBlogs = userInfo?.blogs ?? [];
 
 /**
- * {string[]} userBlogNames - An array of blog names the current user has post access to
+ * An array of blog names the current user is a member of
+ * @type {string[]}
  */
 export const userBlogNames = userBlogs.map(blog => blog.name);
 
 /**
- * {object?} primaryBlog - The primary ("main") blog for the user
+ * The primary ("main") blog for the user
+ * @type {object?}
  */
 export const primaryBlog = userBlogs.find(blog => blog.primary === true);
 
 /**
- * {string?} primaryBlogName - The name of the user's primary blog
+ * The name of the user's primary ("main") blog
+ * @type {string | undefined}
  */
 export const primaryBlogName = primaryBlog?.name;
 
 /**
- * {object[]} adminBlogs - An array of blog objects the current user is admin of
+ * An array of blog objects the current user is an admin of
+ * @type {object[]}
  */
-export const adminBlogs = userInfo?.blogs?.filter(blog => blog.admin) ?? [];
+export const adminBlogs = userBlogs?.filter(blog => blog.admin) ?? [];
 
 /**
- * {string[]} adminBlogNames - An array of blog names the current user is admin of
+ * An array of blog names the current user is admin of
+ * @type {string[]}
  */
 export const adminBlogNames = adminBlogs.map(blog => blog.name);
 
@@ -60,11 +67,13 @@ const getOrder = community => {
 };
 
 /**
- * {object?} joinedCommunities - An array of community objects the current user has joined
+ * An array of community objects the current user has joined
+ * @type {object[]}
  */
 export const joinedCommunities = [...fetchedCommunitiesInfo.response].sort((a, b) => getOrder(a) - getOrder(b));
 
 /**
- * {string[]} joinedCommunityUuids - An array of community uuids the current user has joined
+ * An array of community UUIDs the current user has joined
+ * @type {string[]}
  */
 export const joinedCommunityUuids = joinedCommunities.map(community => community.uuid);

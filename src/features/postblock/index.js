@@ -1,6 +1,6 @@
 import { button } from '../../utils/dom.js';
 import { createPostHideFunctions } from '../../utils/hide_posts.js';
-import { filterPostElements } from '../../utils/interface.js';
+import { closeAssociatedMenus, filterPostElements } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { showModal, hideModal, modalCancelButton } from '../../utils/modals.js';
 import { onNewPosts, pageModifications } from '../../utils/mutations.js';
@@ -78,7 +78,12 @@ const onButtonClicked = ({ currentTarget }) => {
   const saveBlockPreference = shouldBlockPost
     ? () => { blockedPostRootIDs.push(rootID); browser.storage.local.set({ [storageKey]: blockedPostRootIDs }); }
     : () => browser.storage.local.set({ [storageKey]: blockedPostRootIDs.filter(blockedId => blockedId !== rootID) });
-  const click = () => { hideModal(); saveBlockPreference(); };
+
+  const click = () => {
+    hideModal();
+    closeAssociatedMenus(currentTarget);
+    saveBlockPreference();
+  };
 
   showModal({
     title,

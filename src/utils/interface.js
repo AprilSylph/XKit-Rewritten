@@ -217,7 +217,7 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
  * Navigate up the React component tree to find an element's closest rendered parent matching a given selector. Follows React "portals".
  * @param {Element} element A target element, such as a portalled menu
  * @param {string} selector CSS selector
- * @returns {element?} An element matching the selector and "containing" the target element
+ * @returns {Promise<Element?>} An element matching the selector and "containing" the target element
  */
 export const getClosestRenderedElement = (element, selector) =>
   inject('/main_world/closest_rendered_element.js', [selector], element);

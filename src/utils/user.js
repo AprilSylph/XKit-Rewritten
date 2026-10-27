@@ -34,7 +34,6 @@ export const userBlogNames = userBlogs.map(blog => blog.name);
 
 /**
  * The primary ("main") blog for the user
- * @type {object?}
  */
 export const primaryBlog = userBlogs.find(blog => blog.primary === true);
 
@@ -46,7 +45,6 @@ export const primaryBlogName = primaryBlog?.name;
 
 /**
  * An array of blog objects the current user is an admin of
- * @type {object[]}
  */
 export const adminBlogs = userBlogs?.filter(blog => blog.admin) ?? [];
 

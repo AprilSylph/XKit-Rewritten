@@ -1,6 +1,6 @@
 import { removeAttribute, removeElementsByAttribute, removeElementsByClassName } from './cleanup.js';
 import { button, div } from './dom.js';
-import { buildStyle, closeAssociatedMenus, getTimelineItemWrapper } from './interface.js';
+import { buildStyle, getTimelineItemWrapper } from './interface.js';
 import { anyPostPermalinkTimelineFilter, timelineSelector } from './timeline_id.js';
 
 const controlsClass = 'xkit-hidden-post-controls';
@@ -120,7 +120,14 @@ export const createPostHideFunctions = ({ id, permalinkPageControls }) => {
 
   /** @type {PostHideFunctions["hidePost"]} */
   const hidePost = postElement => {
-    closeAssociatedMenus(postElement);
+    const menuButtons = [...postElement.querySelectorAll('[aria-controls]')];
+    const menuElements = menuButtons
+      .map(menuButton => document.getElementById(menuButton.getAttribute('aria-controls')))
+      .filter(menuElement => menuElement !== null);
+
+    menuElements.forEach(menuElement => menuElement.dispatchEvent(
+      new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }),
+    ));
 
     const timelineElement = postElement.closest(timelineSelector);
     const onPermalinkPage = anyPostPermalinkTimelineFilter(timelineElement);

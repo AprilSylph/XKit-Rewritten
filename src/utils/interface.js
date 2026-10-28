@@ -221,18 +221,3 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
  */
 export const getClosestRenderedElement = (element, selector) =>
   inject('/main_world/closest_rendered_element.js', [selector], element);
-
-/**
- * Close all ARIA-compliant menus controlled by a descendant of the given element.
- * @param {Element} element The element to query for associated menus
- */
-export const closeAssociatedMenus = (element) => {
-  const menuButtons = [...element.querySelectorAll('[aria-controls]')];
-  const menuElements = menuButtons
-    .map(menuButton => document.getElementById(menuButton.getAttribute('aria-controls')))
-    .filter(menuElement => menuElement !== null);
-
-  menuElements.forEach(menuElement => menuElement.dispatchEvent(
-    new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }),
-  ));
-};

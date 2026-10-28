@@ -58,6 +58,7 @@ const processPosts = postElements =>
     saveUuidPair(rebloggedRootId, rebloggedRootUuid);
   });
 
+/** @param {PointerEvent & { currentTarget: HTMLButtonElement }} event `click` event for the "Block this post"/"Unblock this post" menu item */
 const onButtonClicked = ({ currentTarget }) => {
   const { id, rebloggedRootId } = currentTarget.__timelineObjectData;
   const rootID = rebloggedRootId || id;
@@ -78,7 +79,14 @@ const onButtonClicked = ({ currentTarget }) => {
   const saveBlockPreference = shouldBlockPost
     ? () => { blockedPostRootIDs.push(rootID); browser.storage.local.set({ [storageKey]: blockedPostRootIDs }); }
     : () => browser.storage.local.set({ [storageKey]: blockedPostRootIDs.filter(blockedId => blockedId !== rootID) });
-  const click = () => { hideModal(); saveBlockPreference(); };
+
+  const click = () => {
+    hideModal();
+    currentTarget.closest('[role="menu"]')?.dispatchEvent(
+      new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }),
+    );
+    saveBlockPreference();
+  };
 
   showModal({
     title,

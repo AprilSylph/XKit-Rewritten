@@ -87,7 +87,7 @@ const mrecContainerSelector = `${keyToCss('mrecContainer')} *`;
 // Sidebar on explore/search/hubs
 const desktopContainerSelector = `aside ${keyToCss('desktopContainer', 'summary')}`;
 // Sidebar on most other desktop pages
-const sidebarItemSelector = keyToCss('sidebarItem', 'sidebarContent');
+const sidebarItemSelector = keyToCss('sidebarItem', 'sidebarContent', 'sidebarScrollableContent');
 // Footer beneath sidebar area
 const aboutFooterSelector = `${keyToCss('about')}${keyToCss('inSidebar')}`;
 // Mobile drawer

@@ -76,15 +76,16 @@ const onButtonClicked = ({ currentTarget }) => {
   const className = shouldBlockPost
     ? 'red'
     : 'blue';
+  const closeMeatballMenu = shouldBlockPost
+    ? () => { /* Not necessary; handled by `hidePost` utility. */ }
+    : () => currentTarget.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
   const saveBlockPreference = shouldBlockPost
     ? () => { blockedPostRootIDs.push(rootID); browser.storage.local.set({ [storageKey]: blockedPostRootIDs }); }
     : () => browser.storage.local.set({ [storageKey]: blockedPostRootIDs.filter(blockedId => blockedId !== rootID) });
 
   const click = () => {
     hideModal();
-    currentTarget.closest('[role="menu"]')?.dispatchEvent(
-      new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }),
-    );
+    closeMeatballMenu();
     saveBlockPreference();
   };
 

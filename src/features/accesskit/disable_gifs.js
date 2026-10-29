@@ -186,7 +186,7 @@ const pauseGif = async function (gifElement) {
 /** @type {(gifElements: HTMLImageElement[]) => void} */
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
-    if (gifElement.closest(`${keyToCss('avatarImage', 'subAvatarImage')}, .block-editor-writing-flow`)) return;
+    if (gifElement.closest('.block-editor-writing-flow')) return;
 
     const pausedGifElements = [...gifElement.parentNode.querySelectorAll(`.${canvasClass}`)];
     if (pausedGifElements.length) {

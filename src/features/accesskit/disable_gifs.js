@@ -281,7 +281,7 @@ export const main = async function () {
         'takeoverBanner', // advertisement
         'mrecContainer', // advertisement
       )}
-    ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
+    ) img:not(${keyToCss('poster')})
   `;
   pageModifications.register(gifImage, processGifs);
 

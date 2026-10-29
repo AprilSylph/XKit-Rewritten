@@ -119,7 +119,7 @@ const getIsFollowing = async (blogName, element) => {
       (await timelineObject(element))?.authorBlog,
     ].find((data) => blogName === data?.name && data.followed !== undefined);
 
-    following[blogName] = blog
+    following[blogName] ??= blog
       ? Promise.resolve(blog.followed)
       : apiFetch(`/v2/blog/${blogName}/info`)
         .then(({ response: { blog: { followed } } }) => followed)
@@ -153,7 +153,7 @@ const getIsFollowingYou = async (blogName, element) => {
       (await timelineObject(element))?.authorBlog,
     ].find((data) => blogName === data?.name && data.isFollowingYou !== undefined);
 
-    followingYou[blogName] = blog
+    followingYou[blogName] ??= blog
       ? Promise.resolve(blog.isFollowingYou)
       : apiFetch(`/v2/blog/${primaryBlogName}/followed_by`, { queryParams: { query: blogName } })
         .then(({ response: { followedBy } }) => followedBy)

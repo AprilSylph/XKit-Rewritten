@@ -144,6 +144,7 @@ const waitForIntersection = (element, rootMargin) =>
 
 const getIsFollowingYou = async (blogName, element) => {
   if (followingYou[blogName] === undefined) {
+    // Naturally throttle API requests (to an extent) by waiting for scroll
     await waitForIntersection(element, '100% 0px');
 
     const blog = [

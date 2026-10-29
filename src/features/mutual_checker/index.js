@@ -143,8 +143,9 @@ const waitForIntersection = (element, rootMargin) =>
   });
 
 const getIsFollowingYou = async (blogName, element) => {
-  followingYou[blogName] || await waitForIntersection(element, '100% 0px');
   if (followingYou[blogName] === undefined) {
+    await waitForIntersection(element, '100% 0px');
+
     const blog = [
       await blogData(element),
       (await timelineObject(element))?.blog,

@@ -19,7 +19,7 @@ document.documentElement.append(waybackMachineForm);
 
 const modalProps = { title: 'Can’t mirror this post!', buttons: [modalCompleteButton] };
 
-/** @type {(event: PointerEvent) => void} */
+/** @param {PointerEvent & { currentTarget: HTMLButtonElement }} event `click` event for the "Mirror this post" menu item */
 async function onButtonClicked ({ currentTarget }) {
   const { blog, community, postUrl } = currentTarget.__timelineObjectData;
 
@@ -54,6 +54,7 @@ async function onButtonClicked ({ currentTarget }) {
     }
   }
 
+  currentTarget.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
   waybackMachineForm.elements.url_preload.value = postUrl;
   waybackMachineForm.requestSubmit();
 }

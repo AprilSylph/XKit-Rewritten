@@ -110,6 +110,7 @@ export const displayBlockUnlessDisabledAttr = 'data-xkit-display-block';
 export const displayInlineBlockUnlessDisabledAttr = 'data-xkit-display-inline-block';
 export const displayFlexUnlessDisabledAttr = 'data-xkit-display-flex';
 export const displayInlineFlexUnlessDisabledAttr = 'data-xkit-display-inline-flex';
+export const displayContentsUnlessDisabledAttr = 'data-xkit-display-contents';
 
 /**
  * This variable is set to "unset" in the src/content_scripts/interface.css static stylesheet.
@@ -140,6 +141,9 @@ document.documentElement.append(
     }
     [${displayInlineFlexUnlessDisabledAttr}] {
       display: var(--none-if-xkit-disabled, inline-flex);
+    }
+    [${displayContentsUnlessDisabledAttr}] {
+      display: var(--none-if-xkit-disabled, contents);
     }
   `),
 );
@@ -217,7 +221,7 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
  * Navigate up the React component tree to find an element's closest rendered parent matching a given selector. Follows React "portals".
  * @param {Element} element A target element, such as a portalled menu
  * @param {string} selector CSS selector
- * @returns {element?} An element matching the selector and "containing" the target element
+ * @returns {Promise<Element?>} An element matching the selector and "containing" the target element
  */
 export const getClosestRenderedElement = (element, selector) =>
   inject('/main_world/closest_rendered_element.js', [selector], element);

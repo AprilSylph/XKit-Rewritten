@@ -1,6 +1,6 @@
 import { removeAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { dom } from '../../utils/dom.js';
+import { button } from '../../utils/dom.js';
 import { buildStyle, notificationSelector } from '../../utils/interface.js';
 import { registerMeatballItem, unregisterMeatballItem } from '../../utils/meatballs.js';
 import { hideModal, modalCancelButton, showModal } from '../../utils/modals.js';
@@ -67,6 +67,7 @@ const muteNotificationsMessage = [
   'It will completely prevent the post from generating notifications while it is enabled, and can be applied temporarily or permanently.',
 ];
 
+/** @param {PointerEvent & { currentTarget: HTMLButtonElement }} event `click` event for the "Block notifications"/"Unblock notifications" menu item */
 const onButtonClicked = async function ({ currentTarget }) {
   const { id, rebloggedRootId, blog: { uuid } } = currentTarget.__timelineObjectData;
   const { response: { muted } } = await apiFetch(`/v2/blog/${uuid}/posts/${id}`);
@@ -90,21 +91,24 @@ const onButtonClicked = async function ({ currentTarget }) {
   const className = shouldBlockNotifications
     ? 'red'
     : 'blue';
+  const closeMeatballMenu = () =>
+    currentTarget.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
   const saveNotificationPreference = shouldBlockNotifications
     ? () => { blockedPostTargetIDs.push(rootId); browser.storage.local.set({ [storageKey]: blockedPostTargetIDs }); }
     : () => browser.storage.local.set({ [storageKey]: blockedPostTargetIDs.filter(blockedId => blockedId !== rootId) });
+
+  const click = () => {
+    hideModal();
+    closeMeatballMenu();
+    saveNotificationPreference();
+  };
 
   showModal({
     title,
     message,
     buttons: [
       modalCancelButton,
-      dom('button', { class: className }, {
-        click () {
-          hideModal();
-          saveNotificationPreference();
-        },
-      }, [textContent]),
+      button({ class: className, click }, [textContent]),
     ],
   });
 };

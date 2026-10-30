@@ -4,13 +4,11 @@ import { canvas, div } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
 import { memoize } from '../../utils/memoize.js';
 import { pageModifications } from '../../utils/mutations.js';
-import { getPreferences } from '../../utils/preferences.js';
 
 /** @type {AbortController}   */ let loadEventController;
-/** @type {"eager" | "lazy"}  */ let loadingMode;
 
+const pausedAttribute = 'data-paused-gif';
 const canvasClass = 'xkit-paused-gif-placeholder';
-const pausedPosterAttribute = 'data-paused-gif-use-poster';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
@@ -63,25 +61,20 @@ export const styleElement = buildStyle(`
   background-color: rgb(var(--white));
 }
 
+:has(> ${keyToCss('playButton')}) > .${canvasClass},
+:has(> ${keyToCss('playButton')})[${labelAttribute}="after"]::after,
+:has(> ${keyToCss('playButton')})[${labelAttribute}="before"]::before {
+  display: none;
+}
+
 .${canvasClass}${parentHovered},
 [${labelAttribute}="after"]${hovered}::after,
-[${labelAttribute}="before"]${hovered}::before,
-[${pausedPosterAttribute}]:not(${hovered}) > div > ${keyToCss('knightRiderLoader')} {
+[${labelAttribute}="before"]${hovered}::before {
   display: none !important;
 }
 ${keyToCss('background')}[${labelAttribute}="after"]::after,
 ${keyToCss('background')}[${labelAttribute}="before"]::before {
   /* prevent double labels in recommended post cards */
-  display: none;
-}
-
-[${pausedPosterAttribute}]:not(${hovered}) > img${keyToCss('poster')} {
-  visibility: visible !important;
-}
-[${pausedPosterAttribute}="eager"]:not(${hovered}) > img:not(${keyToCss('poster')}) {
-  visibility: hidden !important;
-}
-[${pausedPosterAttribute}="lazy"]:not(${hovered}) > img:not(${keyToCss('poster')}) {
   display: none;
 }
 
@@ -170,6 +163,9 @@ const createPausedUrlIfAnimated = memoize(async sourceUrl => {
 const pauseGif = async function (gifElement) {
   if (gifElement.currentSrc.endsWith('.webp') && !(await isAnimated(gifElement.currentSrc))) return;
 
+  if (gifElement.hasAttribute(pausedAttribute)) return;
+  gifElement.toggleAttribute(pausedAttribute, true);
+
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
@@ -200,21 +196,12 @@ const processGifs = function (gifElements) {
 
     gifElement.decoding = 'sync';
 
-    const posterElement = gifElement.parentElement.querySelector(keyToCss('poster'));
-    if (posterElement) {
-      gifElement.parentElement.setAttribute(pausedPosterAttribute, loadingMode);
-      addLabel(posterElement);
-      return;
-    }
-
     if (gifElement.complete && gifElement.currentSrc) {
       pauseGif(gifElement);
-    } else {
-      gifElement.addEventListener('load', () => pauseGif(gifElement), {
-        once: true,
-        signal: loadEventController.signal,
-      });
     }
+    gifElement.addEventListener('load', () => pauseGif(gifElement), {
+      signal: loadEventController.signal,
+    });
   });
 };
 
@@ -265,17 +252,8 @@ const processRows = function (rowsElements) {
 const processHoverableElements = elements =>
   elements.forEach(element => element.toggleAttribute(hoverContainerAttribute, true));
 
-const onStorageChanged = async function (changes) {
-  const { 'accesskit.preferences.disable_gifs_loading_mode': modeChanges } = changes;
-  if (modeChanges?.oldValue === undefined) return;
-
-  loadingMode = modeChanges.newValue;
-};
-
 export const main = async function () {
   loadEventController = new AbortController();
-
-  ({ disable_gifs_loading_mode: loadingMode } = await getPreferences('accesskit'));
 
   const gifImage = `
     :is(
@@ -316,13 +294,10 @@ export const main = async function () {
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
     processRows,
   );
-
-  browser.storage.local.onChanged.addListener(onStorageChanged);
 };
 
 export const clean = async function () {
   loadEventController.abort();
-  browser.storage.local.onChanged.removeListener(onStorageChanged);
 
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
@@ -333,10 +308,10 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children),
   );
 
+  removeAttribute(pausedAttribute);
   removeElementsByClassName(canvasClass);
   removeAttribute(labelAttribute);
   removeAttribute(labelSizeAttribute);
-  removeAttribute(pausedPosterAttribute);
   removeAttribute(hoverContainerAttribute);
   [...document.querySelectorAll(`[style*="${pausedBackgroundImageVar}"]`)]
     .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));

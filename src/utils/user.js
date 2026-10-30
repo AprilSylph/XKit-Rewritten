@@ -1,14 +1,14 @@
-import { apiFetch } from './tumblr_helpers.js';
+import { apiFetchWithRetry } from './tumblr_helpers.js';
 
 const [
   fetchedUserInfo,
   fetchedCommunitiesInfo,
 ] = await Promise.all([
-  apiFetch('/v2/user/info').catch((error) => {
+  apiFetchWithRetry('/v2/user/info').catch((error) => {
     console.error(error);
     return { response: {} };
   }),
-  apiFetch('/v2/communities').catch((error) => {
+  apiFetchWithRetry('/v2/communities').catch((error) => {
     console.error(error);
     return { response: [] };
   }),

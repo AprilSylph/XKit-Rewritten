@@ -1,4 +1,4 @@
-export default function apiFetch (resource, init = {}) {
+export default function apiFetch (resource, init, options = {}) {
   // add XKit header to all API requests
   init.headers ??= {};
   init.headers['X-XKit'] = '1';
@@ -29,6 +29,13 @@ export default function apiFetch (resource, init = {}) {
           .filter(value => value instanceof Object),
       );
     }
+  }
+
+  if (options.timeout) {
+  // Note: do not use AbortSignal.timeout() or a named abort reason here. window.tumblr.apiFetch passes through AbortError, but converts other error types into generic network errors.
+    const controller = new AbortController();
+    init.signal ??= controller.signal;
+    setTimeout(() => controller.abort(), options.timeout);
   }
 
   return window.tumblr.apiFetch(resource, init);

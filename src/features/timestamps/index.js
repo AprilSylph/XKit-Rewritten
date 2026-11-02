@@ -101,14 +101,14 @@ const addPostTimestamps = async function () {
     timestampElement.textContent = constructTimeString(timestamp);
     timestampElement.title = relativeTimeString;
 
-    $(noteCountElement).after(timestampElement);
+    noteCountElement?.after(timestampElement);
 
     if (headerTimestamps) {
       const longTimestampElement = document.createElement('div');
       longTimestampElement.className = 'xkit-long-timestamp';
       longTimestampElement.textContent = `${isoFormat ? constructISOString(timestamp) : constructLongTimeString(timestamp)} ・ ${relativeTimeString}`;
 
-      $(postElement.querySelector('header')).after(longTimestampElement);
+      postElement.querySelector('header')?.after(longTimestampElement);
     }
   });
 };

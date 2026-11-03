@@ -191,13 +191,15 @@ const isVerticallyOverflowing = element => {
  * Append a DOM element to a target container, attempting to position it so it is fully visible rather than overflowing into a hidden area.
  * @param {Element} element Element to append
  * @param {Element} target Target container
- * @param {'below'|'above'} defaultPosition Above/below position to use if both are valid
+ * @param {"below" | "above"} defaultPosition Above/below position to use if both are valid
  */
 export const appendWithoutOverflow = (element, target, defaultPosition = 'below') => {
   element.dataset.position = defaultPosition;
   element.style.removeProperty('--horizontal-offset');
 
-  target.appendChild(element);
+  if (target.lastChild !== element) {
+    target.append(element);
+  }
 
   if (isVerticallyOverflowing(element)) {
     element.dataset.position = defaultPosition === 'below' ? 'above' : 'below';

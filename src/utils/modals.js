@@ -1,5 +1,5 @@
 import { removeElementsById } from './cleanup.js';
-import { button, div, h3, span, style } from './dom.js';
+import { button, dialog, div, h1, span, style } from './dom.js';
 
 // Remove any outdated modal when loading module
 removeElementsById('xkit-modal');
@@ -10,21 +10,18 @@ let lastFocusedElement;
  * Show a takeover prompt to the user
  * @param {object} options Destructured
  * @param {string} [options.title] Prompt title
- * @param {(string|Node)[]} [options.message] Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
- * @param {(HTMLElement)[]} [options.buttons] Array of buttons to be displayed in the modal
+ * @param {(string | Node)[]} [options.message] Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
+ * @param {HTMLElement[]} [options.buttons] Array of buttons to be displayed in the modal
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {
-  const modalElement = div({
+  const modalElement = dialog({
     id: 'xkit-modal',
-    tabindex: '-1',
-    role: 'dialog',
-    'aria-modal': 'true',
-    'data-skip-glass-focus-trap': '', // Prevents Tumblr's trapFocusInsideGlass function from stealing focus when opened from mobile drawer
+    'data-skip-glass-focus-trap': '', // Prevents Tumblr's `trapFocusInsideGlass()` from stealing focus when opened from mobile drawer
   }, [
     style({}, ['body { overflow: hidden; }']),
     ...(
       title
-        ? [h3({ class: 'title' }, [title])]
+        ? [h1({ class: 'title' }, [title])]
         : []
     ),
     div({ class: 'message' }, message),
@@ -32,10 +29,10 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
   ]);
 
   hideModal();
-  document.getElementById('base-container')?.appendChild(modalElement);
-
   lastFocusedElement = document.activeElement;
-  modalElement.focus();
+
+  document.getElementById('base-container')?.appendChild(modalElement);
+  modalElement.showModal();
 };
 
 /**

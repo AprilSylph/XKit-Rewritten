@@ -4,8 +4,6 @@ import { button, dialog, div, h1, span, style } from './dom.js';
 // Remove any outdated modal when loading module
 removeElementsById('xkit-modal');
 
-let lastFocusedElement;
-
 /**
  * Show a takeover prompt to the user
  * @param {object} options Destructured
@@ -14,6 +12,8 @@ let lastFocusedElement;
  * @param {HTMLElement[]} [options.buttons] Array of buttons to be displayed in the modal
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {
+  hideModal();
+
   const modalElement = dialog({
     id: 'xkit-modal',
     'data-skip-glass-focus-trap': '', // Prevents Tumblr's `trapFocusInsideGlass()` from stealing focus when opened from mobile drawer
@@ -28,21 +28,19 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
     div({ class: 'buttons' }, buttons),
   ]);
 
-  hideModal();
-  lastFocusedElement = document.activeElement;
-
-  document.getElementById('base-container')?.appendChild(modalElement);
+  document.body.append(modalElement);
   modalElement.showModal();
 };
 
 /**
  * Hide the current takeover prompt.
  */
-export const hideModal = () => {
-  removeElementsById('xkit-modal');
-  lastFocusedElement?.focus();
-  lastFocusedElement = null;
-};
+export function hideModal () {
+  [...document.querySelectorAll('dialog[open]#xkit-modal')].forEach(modalElement => {
+    modalElement.close();
+    modalElement.remove();
+  });
+}
 
 export const modalCancelButton = button({ click: hideModal }, ['Cancel']);
 export const modalCompleteButton = button({ class: 'blue', click: hideModal }, ['OK']);

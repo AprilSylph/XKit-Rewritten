@@ -1,5 +1,5 @@
 import { removeElementsById } from './cleanup.js';
-import { dom } from './dom.js';
+import { button, div, h3, span, style } from './dom.js';
 
 // Remove any outdated modal when loading module
 removeElementsById('xkit-modal');
@@ -14,19 +14,21 @@ let lastFocusedElement;
  * @param {(HTMLElement)[]} [options.buttons] Array of buttons to be displayed in the modal
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {
-  const modalElement = dom('div', {
+  const modalElement = div({
     id: 'xkit-modal',
     tabindex: '-1',
     role: 'dialog',
     'aria-modal': 'true',
-
-    // prevents Tumblr's trapFocusInsideGlass function from stealing focus when opened from mobile drawer
-    'data-skip-glass-focus-trap': '',
-  }, null, [
-    dom('style', null, null, ['body { overflow: hidden; }']),
-    title ? dom('h3', { class: 'title' }, null, [title]) : '',
-    dom('div', { class: 'message' }, null, message),
-    dom('div', { class: 'buttons' }, null, buttons),
+    'data-skip-glass-focus-trap': '', // Prevents Tumblr's trapFocusInsideGlass function from stealing focus when opened from mobile drawer
+  }, [
+    style({}, ['body { overflow: hidden; }']),
+    ...(
+      title
+        ? [h3({ class: 'title' }, [title])]
+        : []
+    ),
+    div({ class: 'message' }, message),
+    div({ class: 'buttons' }, buttons),
   ]);
 
   hideModal();
@@ -45,8 +47,8 @@ export const hideModal = () => {
   lastFocusedElement = null;
 };
 
-export const modalCancelButton = dom('button', null, { click: hideModal }, ['Cancel']);
-export const modalCompleteButton = dom('button', { class: 'blue' }, { click: hideModal }, ['OK']);
+export const modalCancelButton = button({ click: hideModal }, ['Cancel']);
+export const modalCompleteButton = button({ class: 'blue', click: hideModal }, ['OK']);
 
 /**
  * Show a takeover prompt to the user with details about a thrown exception.
@@ -95,10 +97,10 @@ export const showContextInvalidatedModal = () =>
       'Outdated XKit modifications will be updated/removed after you refresh this Tumblr tab.',
     ],
     buttons: [
-      dom('button', null, { click: hideModal }, ['Close']),
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh Now']),
+      button({ click: hideModal }, ['Close']),
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh Now']),
     ],
   });
 
-export const createTagSpan = tag => dom('span', { class: 'xkit-modal-tag' }, null, [tag]);
-export const createBlogSpan = name => dom('span', { class: 'xkit-modal-blog' }, null, [name]);
+export const createTagSpan = tag => span({ class: 'xkit-modal-tag' }, [tag]);
+export const createBlogSpan = name => span({ class: 'xkit-modal-blog' }, [name]);

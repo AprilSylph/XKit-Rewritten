@@ -1,10 +1,6 @@
 {
   "title": "Open In Tabs",
   "description": "Open blogs in new tabs",
-  "icon": {
-    "class_name": "ri-add-box-line",
-    "color": "white",
-    "background_color": "#5b8896"
-  },
+  "icon": { "background_color": "#5b8896" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#open-in-tabs"
 }

@@ -1,19 +1,19 @@
+import { removeAttribute, removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { canvas, div } from '../../utils/dom.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
 import { memoize } from '../../utils/memoize.js';
 import { pageModifications } from '../../utils/mutations.js';
-import { getPreferences } from '../../utils/preferences.js';
 
+/** @type {AbortController}   */ let loadEventController;
+
+const pausedAttribute = 'data-paused-gif';
 const canvasClass = 'xkit-paused-gif-placeholder';
-const pausedPosterAttribute = 'data-paused-gif-use-poster';
 const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
 const labelSizeAttribute = 'data-paused-gif-label-size';
 const containerClass = 'xkit-paused-gif-container';
-
-let loadingMode;
 
 const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
 const parentHovered = `:is(:hover > *, [${hoverContainerAttribute}]:hover *)`;
@@ -61,25 +61,20 @@ export const styleElement = buildStyle(`
   background-color: rgb(var(--white));
 }
 
+:has(> ${keyToCss('playButton')}) > .${canvasClass},
+:has(> ${keyToCss('playButton')})[${labelAttribute}="after"]::after,
+:has(> ${keyToCss('playButton')})[${labelAttribute}="before"]::before {
+  display: none;
+}
+
 .${canvasClass}${parentHovered},
 [${labelAttribute}="after"]${hovered}::after,
-[${labelAttribute}="before"]${hovered}::before,
-[${pausedPosterAttribute}]:not(${hovered}) > div > ${keyToCss('knightRiderLoader')} {
+[${labelAttribute}="before"]${hovered}::before {
   display: none !important;
 }
 ${keyToCss('background')}[${labelAttribute}="after"]::after,
 ${keyToCss('background')}[${labelAttribute}="before"]::before {
   /* prevent double labels in recommended post cards */
-  display: none;
-}
-
-[${pausedPosterAttribute}]:not(${hovered}) > img${keyToCss('poster')} {
-  visibility: visible !important;
-}
-[${pausedPosterAttribute}="eager"]:not(${hovered}) > img:not(${keyToCss('poster')}) {
-  visibility: hidden !important;
-}
-[${pausedPosterAttribute}="lazy"]:not(${hovered}) > img:not(${keyToCss('poster')}) {
   display: none;
 }
 
@@ -107,8 +102,8 @@ const addLabel = (element, inside = false) => {
 };
 
 /**
- * Fetches the selected image and tests if it is animated. On older browsers without ImageDecoder
- * support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
+ * Fetches the selected image and tests if it is animated.
+ * On older browsers without ImageDecoder support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
  */
 const isAnimated = memoize(async sourceUrl => {
   const response = await fetch(sourceUrl, { headers: { Accept: 'image/webp,*/*' } });
@@ -128,10 +123,9 @@ const isAnimated = memoize(async sourceUrl => {
 });
 
 /**
- * Fetches the selected image, tests if it is animated, and returns a blob URL with the paused image
- * if it is. This may be a small memory or storage leak, as the resulting blob URL will be valid until
- * the page is refreshed/closed; avoid using this where practical. On older browsers without ImageDecoder
- * support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
+ * Fetches the selected image, tests if it is animated, and returns a blob URL with the paused image if it is.
+ * This may be a small memory or storage leak, as the resulting blob URL will be valid until the page is refreshed/closed; avoid using this where practical.
+ * On older browsers without ImageDecoder support, GIF images are assumed to be animated and WebP images are assumed to not be animated.
  */
 const createPausedUrlIfAnimated = memoize(async sourceUrl => {
   const response = await fetch(sourceUrl, { headers: { Accept: 'image/webp,*/*' } });
@@ -169,6 +163,9 @@ const createPausedUrlIfAnimated = memoize(async sourceUrl => {
 const pauseGif = async function (gifElement) {
   if (gifElement.currentSrc.endsWith('.webp') && !(await isAnimated(gifElement.currentSrc))) return;
 
+  if (gifElement.hasAttribute(pausedAttribute)) return;
+  gifElement.toggleAttribute(pausedAttribute, true);
+
   const image = new Image();
   image.src = gifElement.currentSrc;
   image.onload = () => {
@@ -186,9 +183,11 @@ const pauseGif = async function (gifElement) {
   };
 };
 
+/** @type {(gifElements: HTMLImageElement[]) => void} */
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
     if (gifElement.closest(`${keyToCss('avatarImage', 'subAvatarImage')}, .block-editor-writing-flow`)) return;
+
     const pausedGifElements = [...gifElement.parentNode.querySelectorAll(`.${canvasClass}`)];
     if (pausedGifElements.length) {
       gifElement.after(...pausedGifElements);
@@ -197,18 +196,12 @@ const processGifs = function (gifElements) {
 
     gifElement.decoding = 'sync';
 
-    const posterElement = gifElement.parentElement.querySelector(keyToCss('poster'));
-    if (posterElement) {
-      gifElement.parentElement.setAttribute(pausedPosterAttribute, loadingMode);
-      addLabel(posterElement);
-      return;
-    }
-
     if (gifElement.complete && gifElement.currentSrc) {
       pauseGif(gifElement);
-    } else {
-      gifElement.onload = () => pauseGif(gifElement);
     }
+    gifElement.addEventListener('load', () => pauseGif(gifElement), {
+      signal: loadEventController.signal,
+    });
   });
 };
 
@@ -257,17 +250,10 @@ const processRows = function (rowsElements) {
 };
 
 const processHoverableElements = elements =>
-  elements.forEach(element => element.setAttribute(hoverContainerAttribute, ''));
-
-const onStorageChanged = async function (changes) {
-  const { 'accesskit.preferences.disable_gifs_loading_mode': modeChanges } = changes;
-  if (modeChanges?.oldValue === undefined) return;
-
-  loadingMode = modeChanges.newValue;
-};
+  elements.forEach(element => element.toggleAttribute(hoverContainerAttribute, true));
 
 export const main = async function () {
-  ({ disable_gifs_loading_mode: loadingMode } = await getPreferences('accesskit'));
+  loadEventController = new AbortController();
 
   const gifImage = `
     :is(
@@ -308,12 +294,10 @@ export const main = async function () {
     `:is(${postSelector}, ${keyToCss('blockEditorContainer')}) ${keyToCss('rows')}`,
     processRows,
   );
-
-  browser.storage.local.onChanged.addListener(onStorageChanged);
 };
 
 export const clean = async function () {
-  browser.storage.local.onChanged.removeListener(onStorageChanged);
+  loadEventController.abort();
 
   pageModifications.unregister(processGifs);
   pageModifications.unregister(processBackgroundGifs);
@@ -324,11 +308,11 @@ export const clean = async function () {
     wrapper.replaceWith(...wrapper.children),
   );
 
-  $(`.${canvasClass}`).remove();
-  $(`[${labelAttribute}]`).removeAttr(labelAttribute);
-  $(`[${labelSizeAttribute}]`).removeAttr(labelSizeAttribute);
-  $(`[${pausedPosterAttribute}]`).removeAttr(pausedPosterAttribute);
-  $(`[${hoverContainerAttribute}]`).removeAttr(hoverContainerAttribute);
+  removeAttribute(pausedAttribute);
+  removeElementsByClassName(canvasClass);
+  removeAttribute(labelAttribute);
+  removeAttribute(labelSizeAttribute);
+  removeAttribute(hoverContainerAttribute);
   [...document.querySelectorAll(`[style*="${pausedBackgroundImageVar}"]`)]
     .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
 };

@@ -62,10 +62,15 @@ const paint = postElements => filterPostElements(postElements, { excludeClass })
 });
 
 const strip = function () {
-  $(`.${excludeClass} article`)
-    .css('border-top', '')
-    .css('border-image-source', '')
-    .css('border-image-slice', '');
+  /** @type {HTMLElement[]} */
+  const articleElements = [...document.querySelectorAll(`.${excludeClass} article`)];
+
+  articleElements.forEach(element => {
+    element.style.removeProperty('border-top');
+    element.style.removeProperty('border-image-source');
+    element.style.removeProperty('border-image-slice');
+  });
+
   removeClassName(excludeClass);
 };
 

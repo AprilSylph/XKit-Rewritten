@@ -83,7 +83,6 @@ const quickTagsStorageKey = 'quick_tags.preferences.tagBundles';
 const blogHashes = new Map();
 const avatarUrls = new Map();
 
-const buttonSelector = `${postSelector} footer a, ${postSelector} footer button`;
 const reblogButtonSelector = `${postSelector} footer :is(
   a[href*="/reblog/"],
   button:has(
@@ -176,13 +175,17 @@ const resetPopupState = () => {
   suggestedTagsPanel.hidden = quickTagsIntegration || !showTagSuggestions;
 };
 
-const showPopupOnHover = async ({ currentTarget }) => {
-  if (!currentTarget.matches(reblogButtonSelector)) return;
+/** @param {MouseEvent} event document.body mouseover/pointercancel event object */
+const showPopupOnHover = async ({ target }) => {
+  if (!(target instanceof Element)) return;
 
-  const buttonDiv = currentTarget.closest(buttonDivSelector) ?? currentTarget.parentElement;
+  const reblogButton = target.closest(reblogButtonSelector);
+  if (reblogButton === null) return;
+
+  const buttonDiv = reblogButton.closest(buttonDivSelector) ?? reblogButton.parentElement;
   if (buttonDiv.matches(':has([aria-expanded="true"])')) return;
 
-  const thisPost = currentTarget.closest(postSelector);
+  const thisPost = reblogButton.closest(postSelector);
   const { blog, canReblog } = await timelineObject(thisPost);
   if (canReblog === false || blog?.isPasswordProtected) return;
 
@@ -382,20 +385,21 @@ const updateRememberedBlog = async ({ currentTarget: { value: selectedBlog } }) 
   browser.storage.local.set({ [rememberedBlogStorageKey]: rememberedBlogs });
 };
 
-/**
- * Chromium passes a full PointerEvent here; Firefox passes a MouseEvent.
- * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/contextmenu_event
- * @see https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/mozInputSource
- */
+/** @see https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/mozInputSource */
 const MOZ_SOURCE_TOUCH = 5;
 
-const preventLongPressMenu = ({ currentTarget, originalEvent: event }) => {
-  if (!currentTarget.matches(reblogButtonSelector)) return;
+/**
+ * @param {PointerEvent | MouseEvent} event document.body contextmenu event object. This is not a `PointerEvent` in Firefox ≤128.
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/contextmenu_event
+ */
+const preventLongPressMenu = (event) => {
+  if (!(event.target instanceof Element)) return;
+  if (event.target.closest(reblogButtonSelector) === null) return;
 
   const isTouchEvent = event.pointerType === 'touch';
-  const firefoxIsTouchEvent = event.mozInputSource === MOZ_SOURCE_TOUCH;
+  const isMozTouchEvent = event.mozInputSource === MOZ_SOURCE_TOUCH;
 
-  if (isTouchEvent || firefoxIsTouchEvent) {
+  if (isTouchEvent || isMozTouchEvent) {
     event.preventDefault();
   }
 };
@@ -454,9 +458,9 @@ export const main = async function () {
   onBlogSelectorChange();
   resetPopupState();
 
-  $(document.body).on('mouseenter', buttonSelector, showPopupOnHover);
-  $(document.body).on('pointercancel', buttonSelector, showPopupOnHover);
-  $(document.body).on('contextmenu', buttonSelector, preventLongPressMenu);
+  document.body.addEventListener('mouseover', showPopupOnHover);
+  document.body.addEventListener('pointercancel', showPopupOnHover);
+  document.body.addEventListener('contextmenu', preventLongPressMenu);
 
   if (quickTagsIntegration) {
     browser.storage.local.onChanged.addListener(updateQuickTags);
@@ -469,9 +473,9 @@ export const main = async function () {
 };
 
 export const clean = async function () {
-  $(document.body).off('mouseenter', buttonSelector, showPopupOnHover);
-  $(document.body).off('pointercancel', buttonSelector, showPopupOnHover);
-  $(document.body).off('contextmenu', buttonSelector, preventLongPressMenu);
+  document.body.removeEventListener('mouseover', showPopupOnHover);
+  document.body.removeEventListener('pointercancel', showPopupOnHover);
+  document.body.removeEventListener('contextmenu', preventLongPressMenu);
   popupElement.remove();
 
   blogSelector.removeEventListener('change', updateRememberedBlog);

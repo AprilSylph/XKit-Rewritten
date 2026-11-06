@@ -1,33 +1,94 @@
 # Feature modules
 
-Modules may export any of the following:
+Every feature must have a JavaScript module file to define what modifications it should apply to a given Tumblr webpage.
 
-## `main()`
-- Type: Async Function
-- Required: No
+Feature module files are expected to export any of the named constants outlined in this document, as necessary to achieve the feature's intended behaviour.
 
-The main function of the feature. Will be called whenever the user enables the feature, even if the tab(s) XKit is running in is/are not focused. Will also be called upon pageload if the feature is enabled.
+While none of these constants are technically required, a feature is not complete without exporting at least one of `main()`, `stylesheet`, or `styleElement`.
 
-## `clean()`
-- Type: Async Function
-- Required: No
+<br>
 
-The cleanup function of the feature. Called whenever the user disables the feature, also regardless of tab focus.
+## Methods
 
-## `onStorageChanged()`
-- Type: Async Function
-- Required: No
+### `main()`
 
-The preference-handling code of the feature. Added as a `browser.storage.local.onChanged` listener when the feature is enabled, and removed when the feature is disabled. If the module does not export this function, the feature will be automatically restarted when its preferences are changed.
+|                 |                                                                                               |
+|-----------------|-----------------------------------------------------------------------------------------------|
+| **Type**        | `() => Promise<void>`                                                                         |
+| **Mandatory**   | No                                                                                            |
+| **Description** | The main function of the feature. Everything this function does must be undone by `clean()`.  |
+| **Example**     | <pre lang="js">export const main = async () => addSidebarItem(sidebarOptions);</pre>          |
 
-## `stylesheet`
-- Type: Boolean
-- Required: No
+When a Tumblr tab is loaded with XKit Rewritten enabled, each enabled feature is evaluated and runs its `main()` function.
 
-Whether the feature has a static stylesheet. If true, there should be a `.css` file of matching name in the same directory level. The stylesheet is automatically added and removed during the feature's lifecycle.
+When XKit Rewritten is running in any open Tumblr tabs, and the user enables an XKit Rewritten feature:
+1. If the feature has not run in any of those tabs previously, the feature module is evaluated in those tabs.
+2. The feature's `main()` function is then run in those tabs, even if those tabs are not active or focused.
 
-## `styleElement`
-- Type: HTMLStyleElement
-- Required: No
+<br>
 
-An HTML `<style>` element containing computed and/or dynamic styles, as created by the `buildStyle` utility function. The element is automatically added to the document root and removed during the feature's lifecycle.
+### `clean()`
+
+|                 |                                                                                             |
+|-----------------|---------------------------------------------------------------------------------------------|
+| **Type**        | `() => Promise<void>`                                                                       |
+| **Mandatory**   | No                                                                                          |
+| **Description** | The cleanup function of the feature. This function must undo everything done by `main()`.   |
+| **Example**     | <pre lang="js">export const clean = async () => removeSidebarItem(sidebarOptions.id);</pre> |
+
+When a user disables an XKit Rewritten feature, the feature's `clean()` function is run in all Tumblr tabs where that feature's `main()` function has run, even if those tabs are not active or focused.
+
+<br>
+
+### `onStorageChanged()`
+
+|                 |                                                                                                                                       |
+|-----------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| **Type**        | <code>(changes: Record\<string, <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageChange">StorageChange</a>\>) => Promise\<void\></code>  |
+| **Mandatory**   | No                                                                                                                                    |
+| **Description** | The preference change-handling code of the feature. If not specified, the feature will be restarted when its preferences are changed. |
+| **Example**     | <pre lang="js">export const onStorageChanged = async (changes) => Object.keys(changes).some(key => key.startsWith('panorama')) && main();</pre> |
+
+When a feature is run (i.e., its `main()` function is called), and that feature exports this function, the exported function is added as a [`storage.StorageArea.onChanged`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea/onChanged) listener on [`browser.storage.local`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/local).
+
+When the same feature is disabled, this listener is removed.
+
+By default, whenever an enabled feature's preferences are changed, the feature is restarted (i.e., its `clean()` and `main()` functions are called sequentially). This is usually inefficient, and may cause undesirable results such as UI flickering. Providing `onStorageChanged()` replaces this behaviour, allowing the feature to handle preference changes without triggering a restart.
+
+This listener fires on _all_ changes to `browser.storage.local`, even if the changes are to a different feature's preferences or to storage values that are not preferences at all. This can be useful for reacting to changes in another feature's data (e.g.: Quick Reblog displaying new Quick Tags bundles as they are created), or applying changes made to the feature's own custom storage key across all open Tumblr tabs (e.g.: PostBlock hiding newly-hidden posts).
+
+<br>
+
+## Properties
+
+### `stylesheet`
+
+|                 |                                                                                                     |
+|-----------------|-----------------------------------------------------------------------------------------------------|
+| **Type**        | `boolean`                                                                                           |
+| **Mandatory**   | No                                                                                                  |
+| **Description** | Whether the feature has a static stylesheet, found at `./index.css` in the feature directory if so. |
+| **Example**     | <pre lang="js">export const stylesheet = true;</pre>                                                |
+
+When a feature is run (i.e., its `main()` function is called), and that feature exports this constant as `true`, its static stylesheet is also fetched and added to the document.
+
+When the same feature is disabled, its static stylesheet is also removed from the document.
+
+<br>
+
+### `styleElement`
+
+|                 |                                                                       |
+|-----------------|-----------------------------------------------------------------------|
+| **Type**        | `HTMLStyleElement`                                                    |
+| **Mandatory**   | No                                                                    |
+| **Description** | A `<style class="xkit">` element created by the `buildStyle` utility. |
+| **Example**     | <pre lang="js">export const styleElement = buildStyle();</pre>        |
+
+When a feature is run (i.e., its `main()` function is called), and that feature exports this constant, the exported `<style>` element is also added to the document root.
+
+When the same feature is disabled, this `<style>` element is also removed from the document.
+
+The benefit of using a `styleElement` over a static `stylesheet` is the ability to include CSS constructed at runtime, including (but not limited to) using the output of the [`keyToCss()`](../src/utils/css_map.js) utility to target Tumblr's own elements. This is necessary for both robustness and readability because [Tumblr uses compiled class names](https://github.com/tumblr/docs/blob/master/web-platform.md#getcssmap).
+
+This element is never cloned, nor does it ever expire within XKit Rewritten's running lifecycle. Therefore, it is possible to create and export an empty `<style>` element first, and then set its `textContent` property to a constructed CSS value later. This is a useful pattern when the CSS the feature wants to construct varies based on the user's preferences.

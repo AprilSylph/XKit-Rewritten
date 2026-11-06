@@ -5,6 +5,8 @@ import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
 import { userBlogs } from '../../utils/user.js';
 
+const MAX_POST_TAGS = 30;
+
 const getPostsFormId = 'xkit-tag-replacer-get-posts';
 
 const createBlogOption = ({ name, title, uuid }) => dom('option', { value: uuid, title }, null, [name]);
@@ -168,6 +170,7 @@ const showTagNotFound = ({ tag, name }) => showModal({
   buttons: [modalCompleteButton],
 });
 
+/** @type {(params: { uuid: string; oldTag: string; toAdd: string[], toRemove: string[] }) => Promise<void>} */
 const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const removeStatus = dom('span');
@@ -185,7 +188,7 @@ const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
   });
 
   const taggedPosts = [];
-  let resource = `/v2/blog/${uuid}/posts?${$.param({ tag: oldTag, limit: 50 })}`;
+  let resource = `/v2/blog/${uuid}/posts?${new URLSearchParams({ tag: oldTag, limit: 50 })}`;
 
   while (resource) {
     await Promise.all([
@@ -200,7 +203,18 @@ const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
     ]);
   }
 
-  const taggedPostIds = taggedPosts.map(({ id }) => id);
+  let tooManyTagsCount = 0;
+
+  const taggedPostIds = taggedPosts
+    .filter(({ tags }) => {
+      if (tags.length + toAdd.length > MAX_POST_TAGS) {
+        tooManyTagsCount++;
+        return false;
+      }
+      return true;
+    })
+    .map(({ id }) => id);
+
   let appendedCount = 0;
   let appendedFailCount = 0;
   let removedCount = 0;
@@ -246,7 +260,8 @@ const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
     title: 'Thank you, come again!',
     message: [
       toAdd.length ? `Added new tags to ${appendedCount} posts${appendedFailCount ? ` (failed: ${appendedFailCount})` : ''}.\n` : '',
-      toRemove.length ? `Removed old tags from ${removedCount} posts${removedFailCount ? ` (failed: ${removedFailCount})` : ''}.` : '',
+      toRemove.length ? `Removed old tags from ${removedCount} posts${removedFailCount ? ` (failed: ${removedFailCount})` : ''}.\n` : '',
+      tooManyTagsCount ? `Skipped ${tooManyTagsCount} posts with too many tags to edit.\n` : '',
     ],
     buttons: [
       modalCompleteButton,

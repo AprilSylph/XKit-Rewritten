@@ -21,7 +21,7 @@ export default [
    * - `typescript-eslint`
    */
   ...neostandard({
-    env: ['browser', 'jquery', 'webextensions'],
+    env: ['browser', 'webextensions'],
     globals: { name: 'off' },
     semi: true,
   }),

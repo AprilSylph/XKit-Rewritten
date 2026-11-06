@@ -1,14 +1,25 @@
 import { apiFetch } from './tumblr_helpers.js';
 
+// These paths have the same parameters as Tumblr's fetches for these resources,
+// allowing browser cache hits when combined with the correct request headers.
+// NOTICE: Please keep these strings up-to-date for fastest startup times!
+const userInfoResource = '/v2/user/info?fields%5Bblogs%5D=%3Favatar%2Cname%2C%3Ftitle%2Curl%2C%3Fblog_view_url%2C%3Fcan_message%2C%3Fdescription%2C%3Fis_adult%2C%3Fuuid%2C%3Fis_private_channel%2C%3Fposts%2C%3Fis_group_channel%2C%3Fprimary%2C%3Fadmin%2C%3Fdrafts%2C%3Ffollowers%2C%3Fqueue%2C%3Fhas_flagged_posts%2C%3Fmessages%2C%3Fask%2C%3Fcan_submit%2C%3Fmention_key%2C%3Ftimezone_offset%2C%3Fanalytics_url%2C%3Fis_premium_partner%2C%3Fis_blogless_advertiser%2C%3Fis_tumblrpay_onboarded%2C%3Ftheme%2C%3Ftumblrmart_orders';
+const communitiesResource = '/v2/communities?mine=1';
+
+// Using `Cache-Control: max-age=N` as a request header allows us to specify to Firefox what should count as
+// fresh in the cache for that request only, ignoring the response's cache-related headers (or lack thereof).
+// This doesn't work on Chromium, where the same header can only tighten the scope of what to consider fresh.
+const options = { cache: 'default', headers: { 'Cache-Control': 'max-age=60' } };
+
 const [
   fetchedUserInfo,
   fetchedCommunitiesInfo,
 ] = await Promise.all([
-  apiFetch('/v2/user/info').catch((error) => {
+  apiFetch(userInfoResource, options).catch((error) => {
     console.error(error);
     return { response: {} };
   }),
-  apiFetch('/v2/communities').catch((error) => {
+  apiFetch(communitiesResource, options).catch((error) => {
     console.error(error);
     return { response: [] };
   }),

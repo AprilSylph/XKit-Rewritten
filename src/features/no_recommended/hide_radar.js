@@ -1,3 +1,4 @@
+import { removeAttribute } from '../../utils/cleanup.js';
 import { buildStyle } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
@@ -9,7 +10,7 @@ export const styleElement = buildStyle(`[${hiddenAttribute}] { display: none; }`
 const checkForRadar = function (sidebarTitles) {
   sidebarTitles
     .filter(h1 => h1.textContent === translate('Radar'))
-    .forEach(h1 => h1.closest('aside > *').setAttribute(hiddenAttribute, ''));
+    .forEach(h1 => h1.closest('aside > *').toggleAttribute(hiddenAttribute, true));
 };
 
 export const main = async function () {
@@ -18,6 +19,5 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(checkForRadar);
-
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  removeAttribute(hiddenAttribute);
 };

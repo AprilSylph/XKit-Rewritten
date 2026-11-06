@@ -1,3 +1,4 @@
+import { removeChildrenByAttribute, removeElementsBySelector } from './cleanup.js';
 import { keyToCss } from './css_map.js';
 import { button } from './dom.js';
 import { inject } from './inject.js';
@@ -20,11 +21,12 @@ const meatballItems = {
 
 /**
  * Add a custom button to posts' meatball menus.
+ * @typedef {Awaited<ReturnType<typeof timelineObject>>} TimelineObject
  * @param {object} options Destructured
  * @param {string} options.id Identifier for this button (must be unique)
- * @param {string | (reactData: Awaited<timelineObject>) => string} options.label Button text to display. May be a function accepting the timelineObject data of the post element being actioned on.
+ * @param {string | (reactData: TimelineObject) => string} options.label Button text to display. May be a function accepting the timelineObject data of the post element being actioned on.
  * @param {(event: PointerEvent) => void} options.onclick Button click listener function
- * @param {(reactData: Awaited<timelineObject>) => boolean} [options.postFilter] Filter function, called with the timelineObject data of the post element being actioned on. Must return true for button to be added.
+ * @param {(reactData: TimelineObject) => boolean} [options.postFilter] Filter function, called with the timelineObject data of the post element being actioned on. Must return true for button to be added.
  */
 export const registerMeatballItem = function ({ id, label, onclick, postFilter }) {
   meatballItems.post[id] = { label, onclick, filter: postFilter };
@@ -33,16 +35,17 @@ export const registerMeatballItem = function ({ id, label, onclick, postFilter }
 
 export const unregisterMeatballItem = id => {
   delete meatballItems.post[id];
-  $(`[data-xkit-post-meatball-button="${id}"]`).remove();
+  removeElementsBySelector(`[data-xkit-post-meatball-button="${id}"]`);
 };
 
 /**
  * Add a custom button to blogs' meatball menus in blog cards and the blog view header.
+ * @typedef {Awaited<ReturnType<typeof blogData>>} BlogData
  * @param {object} options Destructured
  * @param {string} options.id Identifier for this button (must be unique)
- * @param {string | (reactData: Awaited<blogData>) => string} options.label Button text to display. May be a function accepting the blog data of the post element being actioned on.
+ * @param {string | (reactData: BlogData) => string} options.label Button text to display. May be a function accepting the blog data of the post element being actioned on.
  * @param {(event: PointerEvent) => void} options.onclick Button click listener function
- * @param {(reactData: Awaited<blogData>) => boolean} [options.blogFilter] Filter function, called with the blog data of the menu element being actioned on. Must return true for button to be added. Some blog data fields, such as "followed", are not available in blog cards.
+ * @param {(reactData: BlogData) => boolean} [options.blogFilter] Filter function, called with the blog data of the menu element being actioned on. Must return true for button to be added. Some blog data fields, such as "followed", are not available in blog cards.
  */
 export const registerBlogMeatballItem = function ({ id, label, onclick, blogFilter }) {
   meatballItems.blog[id] = { label, onclick, filter: blogFilter };
@@ -51,7 +54,7 @@ export const registerBlogMeatballItem = function ({ id, label, onclick, blogFilt
 
 export const unregisterBlogMeatballItem = id => {
   delete meatballItems.blog[id];
-  $(`[data-xkit-blog-meatball-button="${id}"]`).remove();
+  removeElementsBySelector(`[data-xkit-blog-meatball-button="${id}"]`);
 };
 
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
@@ -75,7 +78,7 @@ const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMe
 });
 
 const addTypedMeatballItems = async ({ meatballMenu, type, reactData, reactDataKey }) => {
-  $(meatballMenu).children(`[data-xkit-${type}-meatball-button]`).remove();
+  removeChildrenByAttribute(meatballMenu, `data-xkit-${type}-meatball-button`);
 
   Object.keys(meatballItems[type]).sort().forEach(id => {
     const menuIsAriakit = meatballMenu.matches(ariakitMenuSelector);

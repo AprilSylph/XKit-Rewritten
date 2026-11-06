@@ -1,4 +1,4 @@
-import { removeElementsByClassName } from '../../utils/cleanup.js';
+import { removeClassName, removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { getPostElements } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
@@ -101,14 +101,14 @@ const addPostTimestamps = async function () {
     timestampElement.textContent = constructTimeString(timestamp);
     timestampElement.title = relativeTimeString;
 
-    $(noteCountElement).after(timestampElement);
+    noteCountElement?.after(timestampElement);
 
     if (headerTimestamps) {
       const longTimestampElement = document.createElement('div');
       longTimestampElement.className = 'xkit-long-timestamp';
       longTimestampElement.textContent = `${isoFormat ? constructISOString(timestamp) : constructLongTimeString(timestamp)} ・ ${relativeTimeString}`;
 
-      $(postElement.querySelector('header')).after(longTimestampElement);
+      postElement.querySelector('header')?.after(longTimestampElement);
     }
   });
 };
@@ -116,7 +116,7 @@ const addPostTimestamps = async function () {
 const removePostTimestamps = function () {
   removeElementsByClassName('xkit-timestamp');
   removeElementsByClassName('xkit-long-timestamp');
-  $('.xkit-timestamps-done').removeClass('xkit-timestamps-done');
+  removeClassName('xkit-timestamps-done');
 };
 
 const addReblogTimestamps = async function () {
@@ -160,7 +160,7 @@ const addReblogTimestamps = async function () {
 
 const removeReblogTimestamps = function () {
   removeElementsByClassName('xkit-reblog-timestamp');
-  $('.xkit-reblog-timestamps-done').removeClass('xkit-reblog-timestamps-done');
+  removeClassName('xkit-reblog-timestamps-done');
 };
 
 const preferenceHandlers = {

@@ -1,3 +1,4 @@
+import { removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
@@ -93,5 +94,5 @@ export const clean = async function () {
     const textNode = document.createTextNode(span.textContent);
     span.parentNode.replaceChild(textNode, span);
   });
-  $(`.${iconClass}`).remove();
+  removeElementsByClassName(iconClass);
 };

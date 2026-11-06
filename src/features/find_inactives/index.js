@@ -1,7 +1,6 @@
-import { a, br, button, canvas, div, img, input, small, span, table, td, tr } from '../../utils/dom.js';
+import { a, br, button, canvas, div, img, input, small, span, svg, table, td, tr, use } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
 import { hideModal, modalCancelButton, showErrorModal, showModal } from '../../utils/modals.js';
-import { buildSvg } from '../../utils/remixicon.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
 import { constructRelativeTimeString } from '../../utils/text_format.js';
 import { apiFetch } from '../../utils/tumblr_helpers.js';
@@ -132,8 +131,10 @@ const showSelectBlogs = blogs => {
     blog.xValue = blog.bucket * dotGridSize + canvasBorder;
     blog.yValue = canvasInnerHeight - height * dotGridSize + canvasBorder;
 
-    const followingIcon = buildSvg('managed-icon__following');
-    followingIcon.style = `visibility: ${blog.isFollowingYou ? 'shown' : 'hidden'};`;
+    const followingIcon = svg(
+      { style: `visibility: ${blog.isFollowingYou ? 'shown' : 'hidden'};` },
+      [use({ href: '#managed-icon__following' })],
+    );
 
     const avatar = img({
       src: blog.avatar.at(-1)?.url,

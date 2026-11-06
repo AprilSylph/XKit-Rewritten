@@ -133,7 +133,7 @@ const migrateBlockedPosts = async ({ detail }) => {
           ],
           buttons: [
             modalCancelButton,
-            dom('button', { class: 'blue' }, { click: resolve }, ['Confirm']),
+            button({ class: 'blue', click: resolve }, ['Confirm']),
           ],
         });
       });

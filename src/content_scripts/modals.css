@@ -2,10 +2,18 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: none;
 
-  background-color: transparent;
-  color: rgb(var(--white-on-dark));
+  box-sizing: border-box;
+  width: 440px;
+  padding-block: var(--space-xxxl);
+  padding-inline: var(--space-xl);
+  border: 1px solid var(--modal-border);
+  border-radius: 12px;
+
+  background-color: var(--modal);
+  box-shadow: 0 var(--space-s) var(--space-xxxl) rgba(0, 0, 0, .2);
+  color: var(--content-fg);
+  outline-offset: -3px;
   text-align: center;
 }
 
@@ -14,32 +22,36 @@
 }
 
 #xkit-modal::backdrop {
-  background-color: rgba(var(--navy), 0.85);
-}
-
-#xkit-modal > * {
-  box-sizing: border-box;
-  max-width: 540px;
-  padding-left: 32px;
-  padding-right: 32px;
+  background-color: var(--overlay-tint-heavy);
 }
 
 #xkit-modal .title {
-  font-family: var(--font-family);
-  font-size: 1.625rem;
-  font-weight: bolder;
-  line-height: 1.3077;
+  flex-shrink: 0;
+  margin-bottom: var(--space-xs);
+
+  font-family: var(--font-family-modern);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.625rem;
+  text-wrap: balance;
 }
 
 #xkit-modal .message {
-  padding-top: 20px;
-  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  font-family: var(--font-family);
-  font-size: 1.125rem;
-  font-weight: 400;
-  line-height: 1.333;
-  white-space: pre-line;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: auto;
+  margin-bottom: var(--space-m);
+
+  color: var(--content-fg-secondary);
+  font-family: var(--font-family-modern);
+  font-size: 1rem;
+  font-weight: 350;
+  line-height: 1.5rem;
+  text-wrap: balance;
 }
 
 #xkit-modal .message small {
@@ -109,26 +121,45 @@
 #xkit-modal .buttons {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 1em;
-  margin-top: 15px;
+  column-gap: 8px;
+  row-gap: 12px;
+
+  flex-shrink: 0;
 }
 
 #xkit-modal .buttons :is(a, button, input) {
-  padding: 0.75ch 1.5ch;
-  border: none;
-  border-radius: 3px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  box-sizing: border-box;
+  width: fit-content;
+  padding-block: 10px;
+  padding-inline: var(--space-m);
+  border-radius: 9999px;
 
   appearance: none;
-  background-color: rgba(var(--white-on-dark), 0.65);
-  color: rgb(var(--navy));
-  cursor: pointer;
-  font-family: var(--font-family);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.5;
+  background-color: var(--content-tint);
+  color: var(--content-fg);
+  font-family: var(--font-family-modern);
+  font-size: .875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  outline-color: transparent;
+  outline-offset: 2px;
+  outline-style: solid;
+  outline-width: 2px;
   text-decoration: none;
+}
+#xkit-modal .buttons :is(a, button, input):hover {
+  background-color: var(--content-tint-strong);
+}
+#xkit-modal .buttons :is(a, button, input):active {
+  background-color: var(--content-tint-heavy);
+}
+#xkit-modal .buttons :is(a, button, input):focus-visible {
+  outline-color: var(--content-ui-focus);
 }
 
 #xkit-modal .buttons :disabled {
@@ -137,11 +168,44 @@
 }
 
 #xkit-modal .buttons :is(a, button, input).red {
-  background-color: rgb(var(--red));
+  background-color: var(--danger);
+  color: var(--color-fg-light);
+}
+#xkit-modal .buttons :is(a, button, input).red:hover {
+  background-color: var(--danger-hover);
+}
+#xkit-modal .buttons :is(a, button, input).red:active {
+  background-color: var(--danger-pressed);
+}
+#xkit-modal .buttons :is(a, button, input).red:focus-visible {
+  outline-color: var(--danger);
 }
 
 #xkit-modal .buttons :is(a, button, input).blue {
-  background-color: rgb(var(--blue));
+  background-color: var(--content-ui);
+  color: var(--content-ui-fg);
+}
+#xkit-modal .buttons :is(a, button, input).blue:hover {
+  background-color: var(--content-ui-hover);
+}
+#xkit-modal .buttons :is(a, button, input).blue:active {
+  background-color: var(--content-ui-pressed);
+}
+
+@media (max-width: 440px) {
+  #xkit-modal .buttons {
+    flex-direction: column-reverse;
+    width: 100%;
+  }
+
+  #xkit-modal .buttons :is(a, button, input) {
+    width: 100%;
+    padding-block: var(--space-s);
+    padding-inline: var(--space-l);
+
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
 }
 
 .xkit-modal-tag,

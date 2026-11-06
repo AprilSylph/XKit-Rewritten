@@ -192,6 +192,22 @@
   background-color: var(--content-ui-pressed);
 }
 
+@media (max-width: 440px) {
+  #xkit-modal .buttons {
+    flex-direction: column-reverse;
+    width: 100%;
+  }
+
+  #xkit-modal .buttons :is(a, button, input) {
+    width: 100%;
+    padding-block: var(--space-s);
+    padding-inline: var(--space-l);
+
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
 .xkit-modal-tag,
 .xkit-modal-blog {
   display: inline-block;

@@ -1,3 +1,4 @@
+import { removeAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { blogViewSelector, buildStyle } from '../../utils/interface.js';
 import { pageModifications } from '../../utils/mutations.js';
@@ -21,5 +22,5 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(hideSidebarSections);
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  removeAttribute(hiddenAttribute);
 };

@@ -1,11 +1,7 @@
 {
   "title": "Show Originals",
   "description": "Add an “Original Posts” tab to your timelines",
-  "icon": {
-    "class_name": "ri-focus-line",
-    "color": "white",
-    "background_color": "#598c75"
-  },
+  "icon": { "background_color": "#598c75" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#show-originals",
   "preferences": {
     "showOwnReblogs": {
@@ -16,6 +12,11 @@
     "showReblogsWithContributedContent": {
       "type": "checkbox",
       "label": "Always show reblogs with contributed content",
+      "default": false
+    },
+    "showReblogsWithTags": {
+      "type": "checkbox",
+      "label": "Always show reblogs with tags",
       "default": false
     },
     "showReblogsOfNotFollowing": {

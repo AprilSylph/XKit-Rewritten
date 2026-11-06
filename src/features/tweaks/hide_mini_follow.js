@@ -1,3 +1,4 @@
+import { removeAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle, postSelector } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
@@ -21,5 +22,5 @@ export const main = async () => {
 
 export const clean = async () => {
   pageModifications.unregister(processButtons);
-  $(`[${hiddenAttribute}]`).removeAttr(hiddenAttribute);
+  removeAttribute(hiddenAttribute);
 };

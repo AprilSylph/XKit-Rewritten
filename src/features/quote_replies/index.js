@@ -1,3 +1,4 @@
+import { removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { button } from '../../utils/dom.js';
 import { getIcon } from '../../utils/icons.js';
@@ -15,7 +16,7 @@ const buttonClass = 'xkit-quote-replies';
 const dropdownButtonClass = 'xkit-quote-replies-dropdown';
 
 // Remove outdated elements when loading module
-$(`.${buttonClass}`).remove();
+removeElementsByClassName(buttonClass);
 
 export const styleElement = buildStyle(`
 button.xkit-quote-replies {
@@ -228,7 +229,7 @@ export const main = async function () {
 
 export const clean = async function () {
   pageModifications.unregister(processNotifications);
-  $(`.${buttonClass}`).remove();
+  removeElementsByClassName(buttonClass);
 };
 
 export const onStorageChanged = async function (changes) {

@@ -1,10 +1,7 @@
 {
   "title": "Tweaks",
   "description": "Miscellaneous dashboard options",
-  "icon": {
-    "color": "white",
-    "background_color": "#ecc84b"
-  },
+  "icon": { "background_color": "#ecc84b" },
   "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#tweaks",
   "relatedTerms": [
     "Blacklist",

@@ -16,12 +16,14 @@
         "color": {
           "type": "string",
           "description": "Foreground colour for the feature icon.",
-          "default": "#000000"
+          "pattern": "^#[0-9a-f]{6}$",
+          "default": "#ffffff"
         },
         "background_color": {
           "type": "string",
           "description": "Background colour for the feature icon.",
-          "default": "#ffffff"
+          "pattern": "^#[0-9a-f]{6}$",
+          "default": "#000000"
         }
       },
       "minProperties": 1,

@@ -170,6 +170,7 @@ const showTagNotFound = ({ tag, name }) => showModal({
   buttons: [modalCompleteButton],
 });
 
+/** @type {(params: { uuid: string; oldTag: string; toAdd: string[], toRemove: string[] }) => Promise<void>} */
 const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
   const gatherStatus = dom('span', null, null, ['Gathering posts...']);
   const removeStatus = dom('span');
@@ -187,7 +188,7 @@ const replaceTag = async ({ uuid, oldTag, toAdd, toRemove }) => {
   });
 
   const taggedPosts = [];
-  let resource = `/v2/blog/${uuid}/posts?${$.param({ tag: oldTag, limit: 50 })}`;
+  let resource = `/v2/blog/${uuid}/posts?${new URLSearchParams({ tag: oldTag, limit: 50 })}`;
 
   while (resource) {
     await Promise.all([

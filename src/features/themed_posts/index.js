@@ -1,3 +1,4 @@
+import { removeAttribute } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { buildStyle, filterPostElements, blogViewSelector } from '../../utils/interface.js';
 import { onNewPosts } from '../../utils/mutations.js';
@@ -137,7 +138,7 @@ export const main = async function () {
 export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
-  $('[data-xkit-themed]').removeAttr('data-xkit-themed');
+  removeAttribute('data-xkit-themed');
 
   styleElement.textContent = '';
   blogs.clear();

@@ -223,10 +223,10 @@ const setLabelsBulk = async ({ uuid, name, tags, after, addedCategories }) => {
 
   if (tags.length) {
     for (const tag of tags) {
-      await collect(`/v2/blog/${uuid}/posts?${$.param({ tag, limit: 50, reblog_info: true, after })}`);
+      await collect(`/v2/blog/${uuid}/posts?${new URLSearchParams({ tag, limit: 50, reblog_info: true, after })}`);
     }
   } else {
-    await collect(`/v2/blog/${uuid}/posts?${$.param({ limit: 50, reblog_info: true, after })}`);
+    await collect(`/v2/blog/${uuid}/posts?${new URLSearchParams({ limit: 50, reblog_info: true, after })}`);
   }
   if (filteredPostsMap.size === 0) {
     showPostsNotFound({ name });

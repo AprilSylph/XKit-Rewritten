@@ -30,11 +30,6 @@ const copyLibrary = async ({ packageName, fileNames, includeHeader = false }) =>
     includeHeader: false,
   },
   {
-    packageName: 'jquery',
-    fileNames: ['dist/jquery.slim.min.js'],
-    includeHeader: false,
-  },
-  {
     packageName: 'modern-normalize',
     fileNames: ['modern-normalize.css'],
     includeHeader: false,

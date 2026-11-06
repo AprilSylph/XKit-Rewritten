@@ -1,51 +1,53 @@
 /**
- * This module is run in the page's "main" execution environment. It receives function call request events from the inject utility, loads and executes the requested functions, and sends back the results.
+ * This script is run in the page's "main" execution environment. It receives function call request events from the inject utility, loads and executes the requested functions, and sends back the results.
  */
 
-const moduleCache = {};
+'use strict';
 
-// Remove outdated event listeners when loading module
-window.removeXKitListener?.();
+{
+  const moduleCache = {};
 
-const controller = new AbortController();
-window.removeXKitListener = () => controller.abort();
+  // Remove outdated event listeners when loading module
+  window.removeXKitListener?.();
 
-document.documentElement.addEventListener('xkit-injection-request', async event => {
-  const { detail, target } = event;
-  const { id, path, args } = JSON.parse(detail);
+  const controller = new AbortController();
+  window.removeXKitListener = () => controller.abort();
 
-  try {
-    moduleCache[path] ??= await import(path);
-    const func = moduleCache[path].default;
+  document.documentElement.addEventListener('xkit-injection-request', async event => {
+    const { detail, target } = event;
+    const { id, path, args } = JSON.parse(detail);
 
-    if (target.isConnected === false) return;
+    try {
+      moduleCache[path] ??= await import(path);
+      const func = moduleCache[path].default;
 
-    const result = await func.apply(target, args);
+      if (target.isConnected === false) return;
 
-    if (result instanceof Element) {
-      result.dispatchEvent(
-        new CustomEvent('xkit-injection-element-response', { detail: JSON.stringify({ id }), bubbles: true }),
-      );
-    } else {
-      document.documentElement.dispatchEvent(
-        new CustomEvent('xkit-injection-response', { detail: JSON.stringify({ id, result }) }),
+      const result = await func.apply(target, args);
+
+      if (result instanceof Element) {
+        result.dispatchEvent(
+          new CustomEvent('xkit-injection-element-response', { detail: JSON.stringify({ id }), bubbles: true }),
+        );
+      } else {
+        document.documentElement.dispatchEvent(
+          new CustomEvent('xkit-injection-response', { detail: JSON.stringify({ id, result }) }),
+        );
+      }
+    } catch (exception) {
+      target.dispatchEvent(
+        new CustomEvent('xkit-injection-response', {
+          detail: JSON.stringify({
+            id,
+            exception: {
+              message: exception.message,
+              name: exception.name,
+              stack: exception.stack,
+              ...exception,
+            },
+          }),
+        }),
       );
     }
-  } catch (exception) {
-    target.dispatchEvent(
-      new CustomEvent('xkit-injection-response', {
-        detail: JSON.stringify({
-          id,
-          exception: {
-            message: exception.message,
-            name: exception.name,
-            stack: exception.stack,
-            ...exception,
-          },
-        }),
-      }),
-    );
-  }
-}, { signal: controller.signal });
-
-document.documentElement.dispatchEvent(new CustomEvent('xkit-injection-ready'));
+  }, { signal: controller.signal });
+}

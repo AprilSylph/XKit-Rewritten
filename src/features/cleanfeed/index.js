@@ -61,28 +61,33 @@ export const main = async function () {
   }
 
   ${mediaSelector} {
-    position: relative;
+    isolation: isolate;
   }
 
-  ${mediaSelector}::after {
+  ${mediaSelector}::before {
     position: absolute;
     top: 0;
+    right: 0;
+    bottom: 0;
     left: 0;
+    z-index: 1;
 
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    height: 100%;
-    width: 100%;
-    line-height: 1.5;
     overflow: hidden;
 
-    background-color: rgb(var(--white));
-    background-image: linear-gradient(rgba(var(--black), 0.07), rgba(var(--black), 0.07));
+    background-color: var(--content-panel);
+    background-image: linear-gradient(var(--content-tint-strong), var(--content-tint-strong));
+    color: var(--content-fg-secondary);
     content: "Hidden by CleanFeed";
-    color: rgba(var(--black), 0.65);
+    line-height: 1.5;
     object-fit: cover;
+    text-align: center;
+  }
+
+  ${mediaSelector}::after {
+    z-index: 1;
   }
   `;
 

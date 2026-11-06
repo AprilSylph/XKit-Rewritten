@@ -1,3 +1,4 @@
+import { removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { dom } from '../../utils/dom.js';
 import { buildStyle } from '../../utils/interface.js';
@@ -75,6 +76,7 @@ const processLabels = labels => labels.forEach(label => {
   span.classList.add(spanClass);
 });
 
+// Resolves after (at least) one browser repaint. A single requestAnimationFrame callback is fired just before the currently pending frame repaint; a second will be scheduled to affect the following frame.
 const waitForRender = () =>
   new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
@@ -92,5 +94,5 @@ export const clean = async function () {
     const textNode = document.createTextNode(span.textContent);
     span.parentNode.replaceChild(textNode, span);
   });
-  $(`.${iconClass}`).remove();
+  removeElementsByClassName(iconClass);
 };

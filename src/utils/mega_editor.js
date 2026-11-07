@@ -66,15 +66,25 @@ export const megaEdit = async function (postIds, options) {
 export const bulkCommunityLabel = async function (blogName, postIds, options) {
   formKey ??= await getFormKey();
 
-  const requestBody = {
-    form_key: formKey,
-    has_community_label: options.hasCommunityLabel,
-    categories: options.categories,
-    post_keys: postIds.map(id => ({ id })),
-  };
+  // Equivalent to php/qs/query-string/jquery.param-style bracket serialization of:
+  // {
+  //   form_key: formKey,
+  //   has_community_label: options.hasCommunityLabel,
+  //   categories: options.categories,
+  //   post_keys: postIds.map(id => ({ id })),
+  // };
+  const requestBodyEntries = [
+    ['form_key', formKey],
+    ['has_community_label', options.hasCommunityLabel],
+    ...options.categories.map(category => ['categories[]', category]),
+    ...postIds.map((id, i) => [`post_keys[${i}][id]`, id]),
+  ];
 
   return inject(
     '/main_world/post_request.js',
-    [`https://www.tumblr.com/svc/blog/${blogName}/bulk_community_label_posts`, $.param(requestBody)],
+    [
+      `https://www.tumblr.com/svc/blog/${blogName}/bulk_community_label_posts`,
+      (new URLSearchParams(requestBodyEntries)).toString(),
+    ],
   );
 };

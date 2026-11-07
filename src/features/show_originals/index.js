@@ -74,6 +74,9 @@ const addControls = async (timelineElement, location) => {
 };
 
 const getLocation = timelineElement => {
+  // This feature currently does not support "thumbnails" (grid) view in Tumblr Patio.
+  if (timelineElement.querySelector(`:scope > ${keyToCss('gridded')}`)) return undefined;
+
   const isBlog =
     anyBlogPostsTimelineFilter(timelineElement) && !timelineElement.matches(channelSelector);
 

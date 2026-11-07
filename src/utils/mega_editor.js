@@ -52,3 +52,39 @@ export const megaEdit = async function (postIds, options) {
     [`https://www.tumblr.com/${pathname}`, (new URLSearchParams(requestBody)).toString()],
   );
 };
+
+/**
+ * Note: for historical reasons, content labels are referred to as "community labels"
+ * in all API fields and API endpoint names.
+ * @param {string} blogName The name of the blog to edit posts on
+ * @param {string[]} postIds Array of post IDs to edit (must not exceed 100 items)
+ * @param {object} options Configuration object
+ * @param {boolean} options.hasCommunityLabel Whether the posts should have a content label
+ * @param {('drug_use' | 'violence' | 'sexual_themes')[]} options.categories Specific label categories to set
+ * @returns {Promise<Response>} Response from constructed request
+ */
+export const bulkCommunityLabel = async function (blogName, postIds, options) {
+  formKey ??= await getFormKey();
+
+  // Equivalent to php/qs/query-string/jquery.param-style bracket serialization of:
+  // {
+  //   form_key: formKey,
+  //   has_community_label: options.hasCommunityLabel,
+  //   categories: options.categories,
+  //   post_keys: postIds.map(id => ({ id })),
+  // };
+  const requestBodyEntries = [
+    ['form_key', formKey],
+    ['has_community_label', options.hasCommunityLabel],
+    ...options.categories.map(category => ['categories[]', category]),
+    ...postIds.map((id, i) => [`post_keys[${i}][id]`, id]),
+  ];
+
+  return inject(
+    '/main_world/post_request.js',
+    [
+      `https://www.tumblr.com/svc/blog/${blogName}/bulk_community_label_posts`,
+      (new URLSearchParams(requestBodyEntries)).toString(),
+    ],
+  );
+};

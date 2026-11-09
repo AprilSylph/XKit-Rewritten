@@ -165,34 +165,34 @@
 #xkit-modal .buttons :is(a, button, input):focus-visible {
   outline-color: var(--content-ui-focus);
 }
-
-#xkit-modal .buttons :disabled {
+#xkit-modal .buttons :is(a, button, input):disabled {
+  background-color: var(--content-tint);
+  color: var(--content-fg-secondary);
   cursor: not-allowed;
-  filter: grayscale(100%);
 }
 
-#xkit-modal .buttons :is(a, button, input).red {
+#xkit-modal .buttons :is(a, button, input).red:enabled {
   background-color: var(--danger);
   color: var(--color-fg-light);
 }
-#xkit-modal .buttons :is(a, button, input).red:hover {
+#xkit-modal .buttons :is(a, button, input).red:enabled:hover {
   background-color: var(--danger-hover);
 }
-#xkit-modal .buttons :is(a, button, input).red:active {
+#xkit-modal .buttons :is(a, button, input).red:enabled:active {
   background-color: var(--danger-pressed);
 }
-#xkit-modal .buttons :is(a, button, input).red:focus-visible {
+#xkit-modal .buttons :is(a, button, input).red:enabled:focus-visible {
   outline-color: var(--danger);
 }
 
-#xkit-modal .buttons :is(a, button, input).blue {
+#xkit-modal .buttons :is(a, button, input).blue:enabled {
   background-color: var(--content-ui);
   color: var(--content-ui-fg);
 }
-#xkit-modal .buttons :is(a, button, input).blue:hover {
+#xkit-modal .buttons :is(a, button, input).blue:enabled:hover {
   background-color: var(--content-ui-hover);
 }
-#xkit-modal .buttons :is(a, button, input).blue:active {
+#xkit-modal .buttons :is(a, button, input).blue:enabled:active {
   background-color: var(--content-ui-pressed);
 }
 

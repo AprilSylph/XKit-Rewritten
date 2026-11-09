@@ -4,7 +4,7 @@
   align-items: center;
 
   box-sizing: border-box;
-  width: 440px;
+  width: min(440px, 100vw);
   padding-block: var(--space-xxxl);
   padding-inline: var(--space-xl);
   border: 1px solid var(--modal-border);
@@ -19,6 +19,11 @@
 
 #xkit-modal[open] {
   display: flex;
+}
+
+#xkit-modal:has(form, table) {
+  min-width: min(440px, 100vw);
+  width: fit-content;
 }
 
 #xkit-modal::backdrop {
@@ -37,10 +42,6 @@
 }
 
 #xkit-modal .message {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
   box-sizing: border-box;
   max-width: 100%;
   overflow: auto;
@@ -52,10 +53,13 @@
   font-weight: 350;
   line-height: 1.5rem;
   text-wrap: balance;
+  white-space: pre-line;
 }
 
 #xkit-modal .message small {
-  font-size: 80%;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.125rem;
 }
 
 #xkit-modal .message :is(ol, ul) {
@@ -63,50 +67,45 @@
   box-sizing: border-box;
   width: max-content;
   max-width: 100%;
-  padding-left: 2ch;
-  margin: 1em auto 0;
+  padding-left: var(--space-l);
+  margin-block-start: var(--space-xs);
+  margin-block-end: 0;
+  margin-inline: auto;
 
-  text-align: left;
+  text-align: start;
 }
 
 #xkit-modal .message :is(form, table) {
-  box-sizing: border-box;
-  width: 476px;
-  border-radius: 8px;
+  min-width: max-content;
+  max-width: max-content;
+  margin: 0 auto;
 
-  background-color: rgb(var(--navy));
-  box-shadow: 0 0 1px rgba(var(--white-on-dark), 0.13);
-  font-size: 1rem;
-  line-height: 1.5;
+  color: var(--content-fg);
 }
 
 #xkit-modal .message form {
   display: flex;
   flex-direction: column;
-  gap: 1em;
-  padding: 1em;
+  align-items: flex-start;
+  row-gap: var(--space-m);
+  padding: var(--space-m);
 }
 
 #xkit-modal .message form label {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1ex;
-
-  text-align: left;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--space-xxs);
 }
 
-#xkit-modal .message form :is(input[type="text"], select) {
+#xkit-modal .message form :is(input, select) {
   box-sizing: border-box;
-  width: 220px;
-
-  font-size: 0.875rem;
+  width: 240px;
 }
 
 #xkit-modal .message table {
   border-collapse: separate;
-  border-spacing: 1ch;
+  border-spacing: var(--space-m) var(--space-xs);
   text-align: left;
 }
 
@@ -137,11 +136,13 @@
   width: fit-content;
   padding-block: 10px;
   padding-inline: var(--space-m);
+  border: none;
   border-radius: 9999px;
 
   appearance: none;
   background-color: var(--content-tint);
   color: var(--content-fg);
+  cursor: pointer;
   font-family: var(--font-family-modern);
   font-size: .875rem;
   font-weight: 500;
@@ -211,22 +212,21 @@
 .xkit-modal-tag,
 .xkit-modal-blog {
   display: inline-block;
-
-  font-size: 1rem;
-  line-height: 1.5;
 }
 
 .xkit-modal-tag {
-  padding: 0 0.5em;
+  padding-inline-start: var(--space-xs);
+  padding-inline-end: 10px;
   border-radius: 1em;
   margin: 0.25rem 0;
 
-  background-color: rgb(var(--deprecated-accent));
-  color: rgb(var(--navy));
+  background-color: var(--brand-blue);
+  color: var(--color-fg-light);
 }
 
 .xkit-modal-blog {
-  font-weight: 700;
+  color: var(--content-fg);
+  font-weight: 500;
 }
 
 .xkit-modal-tag::before { content: '#'; }

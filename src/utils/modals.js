@@ -1,5 +1,5 @@
 import { removeElementsById } from './cleanup.js';
-import { button, dialog, div, h1, span, style } from './dom.js';
+import { button, dialog, div, h1, span, strong, style } from './dom.js';
 
 // Remove any outdated modal when loading module
 removeElementsById('xkit-modal');
@@ -98,4 +98,4 @@ export const showContextInvalidatedModal = () =>
   });
 
 export const createTagSpan = tag => span({ class: 'xkit-modal-tag' }, [tag]);
-export const createBlogSpan = name => span({ class: 'xkit-modal-blog' }, [name]);
+export const createBlogSpan = name => strong({ class: 'xkit-modal-blog' }, [name]);

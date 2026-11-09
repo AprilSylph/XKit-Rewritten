@@ -62,6 +62,13 @@
   line-height: 1.125rem;
 }
 
+
+#xkit-modal .message strong {
+  display: inline-block;
+  color: var(--content-fg);
+  font-weight: 500;
+}
+
 #xkit-modal .message :is(ol, ul) {
   display: block;
   box-sizing: border-box;
@@ -209,12 +216,8 @@
   }
 }
 
-.xkit-modal-tag,
-.xkit-modal-blog {
-  display: inline-block;
-}
-
 .xkit-modal-tag {
+  display: inline-block;
   padding-inline-start: var(--space-xs);
   padding-inline-end: 10px;
   border-radius: 1em;
@@ -222,11 +225,6 @@
 
   background-color: var(--brand-blue);
   color: var(--color-fg-light);
-}
-
-.xkit-modal-blog {
-  color: var(--content-fg);
-  font-weight: 500;
 }
 
 .xkit-modal-tag::before { content: '#'; }

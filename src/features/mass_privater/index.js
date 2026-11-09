@@ -1,4 +1,4 @@
-import { dom } from '../../utils/dom.js';
+import { dom, strong } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
 import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal, createTagSpan, createBlogSpan, withModalOnError } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
@@ -93,7 +93,7 @@ const confirmInitialPrompt = async event => {
   const beforeMs = elements.before.valueAsNumber + timezoneOffsetMs;
 
   const beforeString = dateTimeFormat.format(new Date(beforeMs));
-  const beforeElement = dom('span', { style: 'white-space: nowrap; font-weight: bold;' }, null, [beforeString]);
+  const beforeElement = strong({}, [beforeString]);
 
   const before = beforeMs / 1000;
 

@@ -113,7 +113,7 @@
 }
 
 #xkit-modal .message table th {
-  font-weight: bold;
+  font-weight: 500;
 }
 
 #xkit-modal .message table td[title] {
@@ -225,3 +225,17 @@
 
 .xkit-modal-tag::before { content: '#'; }
 .xkit-modal-blog::before { content: '@'; }
+
+/* === Font override compatibility === */
+
+:root[style*="--font-family-modern"] #xkit-modal .title,
+:root[style*="--font-family-modern"] #xkit-modal .message small,
+:root[style*="--font-family-modern"] #xkit-modal .message strong,
+:root[style*="--font-family-modern"] #xkit-modal .message table th,
+:root[style*="--font-family-modern"] #xkit-modal .buttons :is(a, button, input) {
+  font-weight: bold;
+}
+
+:root[style*="--font-family-modern"] #xkit-modal .message {
+  font-weight: normal;
+}

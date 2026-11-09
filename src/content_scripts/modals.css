@@ -26,10 +26,6 @@
   width: fit-content;
 }
 
-#xkit-modal::backdrop {
-  background-color: var(--overlay-tint-heavy);
-}
-
 #xkit-modal .title {
   flex-shrink: 0;
   margin-bottom: var(--space-xs);

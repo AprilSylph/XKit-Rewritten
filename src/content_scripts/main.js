@@ -10,6 +10,9 @@
  */
 
 {
+  if (globalThis.xkitLoaded) throw new Error('XKit Rewritten main script was executed more than once.');
+  globalThis.xkitLoaded = true;
+
   const MAX_BOOT_ATTEMPTS = 3600; // 60 seconds on 60Hz displays; 10 seconds on 360Hz displays
 
   const enabledFeaturesKey = 'enabledScripts';

@@ -48,7 +48,7 @@
   font-size: 1rem;
   font-weight: 350;
   line-height: 1.5rem;
-  text-wrap: balance;
+  text-wrap: pretty;
   white-space: pre-line;
 }
 
@@ -71,8 +71,7 @@
   width: max-content;
   max-width: 100%;
   padding-left: var(--space-l);
-  margin-block-start: var(--space-xs);
-  margin-block-end: 0;
+  margin-block: var(--space-xs) 0;
   margin-inline: auto;
 
   text-align: start;

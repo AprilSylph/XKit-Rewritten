@@ -131,6 +131,23 @@
   opacity: 100%;
 }
 
+@supports selector(::-webkit-calendar-picker-indicator) {
+  #xkit-modal .message form ::-webkit-calendar-picker-indicator {
+    height: 16px;
+    width: 16px;
+
+    background-color: currentColor;
+    background-image: none;
+    content: "";
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='currentColor' fill-rule='evenodd' d='M11.333 1.333a.667.667 0 1 0-1.333 0V1.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-.167a.667.667 0 0 0-1.333 0V1.5a.5.5 0 0 1-.5.5h-.834a2 2 0 0 0-2 2v9.333a2 2 0 0 0 2 2h9.334a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-.834a.5.5 0 0 1-.5-.5zM12.833 6a.5.5 0 0 0 .5-.5V4a.667.667 0 0 0-.666-.667h-.834a.5.5 0 0 0-.5.5V4A.667.667 0 1 1 10 4v-.167a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5V4a.667.667 0 0 1-1.333 0v-.167a.5.5 0 0 0-.5-.5h-.834A.667.667 0 0 0 2.667 4v1.5a.5.5 0 0 0 .5.5zM2.667 7.833a.5.5 0 0 1 .5-.5h9.666a.5.5 0 0 1 .5.5v5.5a.667.667 0 0 1-.666.667H3.333a.667.667 0 0 1-.666-.667z' clip-rule='evenodd'%3E%3C/path%3E%3C/svg%3E");
+  }
+
+  #xkit-modal .message form ::-webkit-calendar-picker-indicator:focus-within {
+    background-color: var(--accent);
+    outline: none;
+  }
+}
+
 @supports selector(::picker-icon) {
   #xkit-modal .message form select {
     display: flex;

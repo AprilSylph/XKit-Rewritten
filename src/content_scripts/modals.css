@@ -13,7 +13,6 @@
   background-color: var(--modal);
   box-shadow: 0 var(--space-s) var(--space-xxxl) rgba(0, 0, 0, .2);
   color: var(--content-fg);
-  outline-offset: -3px;
   text-align: center;
 }
 

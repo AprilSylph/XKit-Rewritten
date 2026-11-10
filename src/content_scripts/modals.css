@@ -90,7 +90,8 @@
   flex-direction: column;
   align-items: flex-start;
   row-gap: var(--space-m);
-  padding: var(--space-m);
+  padding-block: var(--space-m);
+  padding-inline: var(--space-xxxs);
 }
 
 #xkit-modal .message form label {
@@ -98,11 +99,42 @@
   flex-direction: column;
   align-items: flex-start;
   row-gap: var(--space-xxs);
+
+  font-size: .875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
 }
 
 #xkit-modal .message form :is(input, select) {
   box-sizing: border-box;
-  width: 240px;
+  min-height: 40px;
+  width: 328px;
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-xs);
+  border-inline: var(--space-xs) solid var(--content-tint);
+  border-block: none;
+  border-radius: 8px;
+  margin: 0;
+
+  background-color: var(--content-tint);
+  background-clip: padding-box;
+  color: var(--content-fg);
+  font-size: 1rem;
+  font-weight: 350;
+  line-height: 1.5rem;
+}
+#xkit-modal .message form :is(input, select):focus-visible {
+  outline: 2px solid var(--accent);
+}
+
+#xkit-modal .message form ::placeholder {
+  color: var(--content-fg-secondary);
+  opacity: 100%;
+}
+
+#xkit-modal .message form option {
+  background-color: var(--modal);
+  color: var(--content-fg);
 }
 
 #xkit-modal .message table {
@@ -230,11 +262,13 @@
 :root[style*="--font-family-modern"] #xkit-modal .title,
 :root[style*="--font-family-modern"] #xkit-modal .message small,
 :root[style*="--font-family-modern"] #xkit-modal .message strong,
+:root[style*="--font-family-modern"] #xkit-modal .message form label,
 :root[style*="--font-family-modern"] #xkit-modal .message table th,
 :root[style*="--font-family-modern"] #xkit-modal .buttons :is(a, button, input) {
   font-weight: bold;
 }
 
-:root[style*="--font-family-modern"] #xkit-modal .message {
+:root[style*="--font-family-modern"] #xkit-modal .message,
+:root[style*="--font-family-modern"] #xkit-modal .message form :is(input, select) {
   font-weight: normal;
 }

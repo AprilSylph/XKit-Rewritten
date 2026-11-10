@@ -36,7 +36,7 @@ const showInitialPrompt = async () => {
       dom('input', { type: 'datetime-local', name: 'before', value: createNowString(), required: true }),
     ]),
     dom('label', null, null, [
-      dom('small', null, null, ['Posts with any of these tags (optional):']),
+      'Posts with any of these tags (optional):',
       dom('input', { type: 'text', name: 'tags', placeholder: 'Comma-separated', autocomplete: 'off' }),
     ]),
   ]);

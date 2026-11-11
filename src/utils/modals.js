@@ -67,7 +67,7 @@ export const showErrorModal = exception => {
         browser.runtime?.id === undefined && 'Please refresh this browser tab!',
       ]
         .filter(Boolean)
-        .join('\n\n'),
+        .join('\n'),
     ],
     buttons: [modalCompleteButton],
   });
@@ -93,7 +93,6 @@ export const showContextInvalidatedModal = () =>
     title: 'XKit Rewritten has become unloaded.',
     message: [
       'If this is unexpected, this is likely due to your browser automatically applying an XKit version update.',
-      '\n\n',
       'Outdated XKit modifications will be updated/removed after you refresh this Tumblr tab.',
     ],
     buttons: [

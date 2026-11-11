@@ -43,7 +43,6 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
           'This thread was originally created, or at some point was edited, using the ',
           dom('strong', null, null, ['legacy post editor']),
           ' or a previous XKit version.',
-          '\n\n',
           'On these threads, Trim Reblogs may work normally, have no effect, or require a repeat of the trim action to completely remove the desired trail items.',
         ],
         buttons: [
@@ -60,7 +59,6 @@ const onButtonClicked = async function ({ currentTarget: controlButton }) {
         title: '⚠️ This thread contains an ask!',
         message: [
           `Trimming an ask from a thread will result in it appearing broken on custom themes (i.e. ${blog?.name}.tumblr.com).`,
-          '\n\n',
           'To avoid issues with custom themes, leave the ask intact when trimming.',
         ],
         buttons: [

@@ -25,8 +25,33 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
     /** Prevents Tumblr's `trapFocusInsideGlass()` from stealing focus when opened from mobile drawer. */
     'data-skip-glass-focus-trap': '',
 
-    /** @type {(event: Event & { currentTarget: HTMLDialogElement }) => void} */
-    close: ({ currentTarget }) => currentTarget.remove(),
+    /** Do not allow closing any interstitial modals that cannot be dismissed with buttons. */
+    ...(buttons.length === 0 && { inert: '' }),
+
+    /**
+     * If this is an interstitial modal, try to prevent it from being closed. Only works once.
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/cancel_event
+     * @see https://github.com/mdn/content/issues/43943
+     * @type {(event: Event & { currentTarget: HTMLDialogElement }) => void}
+     */
+    cancel (event) {
+      if (event.cancelable && event.currentTarget.inert) {
+        event.preventDefault();
+      }
+    },
+
+    /**
+     * If this is an interstitial modal, re-open it whenever it's closed, until `hideModal()` is called.
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/close_event
+     * @type {(event: Event & { currentTarget: HTMLDialogElement }) => void}
+     */
+    close ({ currentTarget }) {
+      if (currentTarget.inert) {
+        currentTarget.showModal();
+      } else {
+        currentTarget.remove();
+      }
+    },
   }, [
     styleElement,
     h1({ class: 'title' }, [title]),
@@ -42,8 +67,12 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
  * Hide the current takeover prompt.
  */
 export function hideModal () {
-  [...document.querySelectorAll('dialog[open]#xkit-modal')]
-    .forEach(modalElement => modalElement.close());
+  [...document.querySelectorAll('dialog[open]#xkit-modal')].forEach(
+    /** @type {(modalElement: HTMLDialogElement) => void} */
+    modalElement => {
+      modalElement.inert = false;
+      modalElement.close();
+    });
 }
 
 export const modalCancelButton = button({ click: hideModal }, ['Cancel']);

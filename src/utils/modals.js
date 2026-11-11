@@ -45,24 +45,13 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
     ...(isInterstitial && { inert: '' }),
 
     /**
-     * If this is an interstitial modal, try to prevent it from being closed. Only works once.
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/cancel_event
-     * @see https://github.com/mdn/content/issues/43943
-     * @type {(event: Event & { currentTarget: HTMLDialogElement }) => void}
-     */
-    cancel (event) {
-      if (event.cancelable && event.currentTarget.inert) {
-        event.preventDefault();
-      }
-    },
-
-    /**
      * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/close_event
      * @type {(event: Event & { currentTarget: HTMLDialogElement }) => void}
      */
     close ({ currentTarget }) {
       if (currentTarget.inert) {
         // Re-open the interstitial modal and prevent teardown until `hideModal()` is called.
+        // Prevents interstitials from being permanently closed by mobile browser "back" actions.
         currentTarget.showModal();
       } else {
         document.documentElement.removeEventListener('keydown', escapeKeyCancel, listenerOptions);

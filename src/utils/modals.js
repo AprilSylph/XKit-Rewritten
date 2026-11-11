@@ -14,26 +14,25 @@ removeElementsById('xkit-modal');
 export const showModal = ({ title, message = [], buttons = [] }) => {
   hideModal();
 
-  const styleElement = style({}, ['body { overflow: hidden; }']);
-  const modalElement = dialog({
-    id: 'xkit-modal',
-    'data-skip-glass-focus-trap': '', // Prevents Tumblr's `trapFocusInsideGlass()` from stealing focus when opened from mobile drawer
-    close: ({ currentTarget }) => currentTarget.remove(),
-  }, [
-    styleElement,
-    ...(
-      title
-        ? [h1({ class: 'title' }, [title])]
-        : []
-    ),
-    div({ class: 'message' }, message),
-    div({ class: 'buttons' }, buttons),
-  ]);
-
   // Use the live --overlay-tint-heavy variable if possible; use the static computed value on Chrome 105-121.
   // https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/::backdrop#browser_compatibility
   const colorOverlayTintHeavy = getComputedStyle(document.documentElement).getPropertyValue('--overlay-tint-heavy');
-  styleElement.append(` #xkit-modal::backdrop { background-color: var(--overlay-tint-heavy, ${colorOverlayTintHeavy}) } `);
+  const styleElement = style({}, `#xkit-modal::backdrop { background-color: var(--overlay-tint-heavy, ${colorOverlayTintHeavy}) }`);
+
+  const modalElement = dialog({
+    id: 'xkit-modal',
+
+    /** Prevents Tumblr's `trapFocusInsideGlass()` from stealing focus when opened from mobile drawer. */
+    'data-skip-glass-focus-trap': '',
+
+    /** @type {(event: Event & { currentTarget: HTMLDialogElement }) => void} */
+    close: ({ currentTarget }) => currentTarget.remove(),
+  }, [
+    styleElement,
+    h1({ class: 'title' }, [title]),
+    div({ class: 'message' }, message),
+    div({ class: 'buttons' }, buttons),
+  ]);
 
   document.body.append(modalElement);
   modalElement.showModal();

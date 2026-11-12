@@ -25,6 +25,13 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
     /** Prevents Tumblr's `trapFocusInsideGlass()` from stealing focus when opened from mobile drawer. */
     'data-skip-glass-focus-trap': '',
 
+    /**
+     * Don't allow non-dismissible modals to be closed by means other than `modalElement.close()`.
+     * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby
+     * @todo Drop this in favour of a minimise/reopen system for non-dismissible modals.
+     */
+    ...(buttons.length === 0 && { closedby: 'none' }),
+
     /** @type {(event: Event & { currentTarget: HTMLDialogElement }) => void} */
     close: ({ currentTarget }) => currentTarget.remove(),
   }, [

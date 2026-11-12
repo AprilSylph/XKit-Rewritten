@@ -62,7 +62,7 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
 
   return postElements
     .filter(element => element.isConnected)
-    .map(element => element.closest(postSelector))
+    .map(element => element.closest(`${postSelector}, ${gridTimelineObjectSelector}`))
     .filter(postElement => {
       if (!postElement) return false;
 

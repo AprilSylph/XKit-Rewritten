@@ -58,36 +58,30 @@ export const getPopoverWrapper = element => {
  * @returns {HTMLDivElement[]} Matching post elements
  */
 export const filterPostElements = function (postElements, { excludeClass, timeline, noBlogView = false, includeFiltered = false } = {}) {
-  postElements = postElements
+  const timelineFilters = [timeline].flat().filter(Boolean);
+
+  return postElements
     .filter(element => element.isConnected)
-    .map(element => element.closest(postSelector))
-    .filter(Boolean);
+    .map(element => element.closest(`${postSelector}, ${gridTimelineObjectSelector}`))
+    .filter(postElement => {
+      if (!postElement) return false;
 
-  if (timeline) {
-    const timelineFilters = [timeline].flat().filter(Boolean);
-    postElements = postElements.filter(postElement => {
-      const timelineElement = postElement.closest(timelineSelector);
-      return (
-        timelineElement &&
-        timelineFilters.some(timelineFilter => timelineFilter(timelineElement))
-      );
+      if (timeline) {
+        const timelineElement = postElement.closest(timelineSelector);
+        if (!timelineElement) return false;
+        if (!timelineFilters.some(timelineFilter => timelineFilter(timelineElement))) return false;
+      }
+
+      if (noBlogView && postElement.matches(blogViewSelector)) return false;
+
+      if (!includeFiltered && postElement.querySelector('article footer') === null) return false;
+
+      if (excludeClass) {
+        if (postElement.classList.contains(excludeClass)) return false;
+        postElement.classList.add(excludeClass);
+      }
+      return true;
     });
-  }
-
-  if (noBlogView) {
-    postElements = postElements.filter(postElement => postElement.matches(blogViewSelector) === false);
-  }
-
-  if (!includeFiltered) {
-    postElements = postElements.filter(postElement => postElement.querySelector('article footer') !== null);
-  }
-
-  if (excludeClass) {
-    postElements = postElements.filter(({ classList }) => classList.contains(excludeClass) === false);
-    postElements.forEach(postElement => postElement.classList.add(excludeClass));
-  }
-
-  return postElements;
 };
 
 /**

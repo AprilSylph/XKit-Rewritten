@@ -32,6 +32,19 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
      */
     ...(buttons.length === 0 && { closedby: 'none' }),
 
+    /**
+     * Alternative method to prevent close, targeting older browser versions. May not be fully reliable.
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/cancel_event
+     * @see https://github.com/mdn/content/issues/43943
+     * @todo Drop this in favour of a minimise/reopen system for non-dismissible modals.
+     * @type {(event: Event & { currentTarget: HTMLDialogElement }) => void}
+     */
+    cancel (event) {
+      if (buttons.length === 0 && event.cancelable) {
+        event.preventDefault();
+      }
+    },
+
     /** @type {(event: Event & { currentTarget: HTMLDialogElement }) => void} */
     close: ({ currentTarget }) => currentTarget.remove(),
   }, [

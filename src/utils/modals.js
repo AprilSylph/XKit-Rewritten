@@ -4,16 +4,6 @@ import { button, dialog, div, h1, span, strong, style } from './dom.js';
 // Remove any outdated modal when loading module
 removeElementsById('xkit-modal');
 
-/** @type {(event: KeyboardEvent) => void} */
-const escapeKeyCancel = (event) => {
-  if (event.key === 'Escape') {
-    event.stopImmediatePropagation();
-    event.preventDefault();
-  }
-};
-
-const listenerOptions = { capture: true };
-
 /**
  * Show a takeover prompt to the user
  * @param {object} options Destructured
@@ -23,12 +13,6 @@ const listenerOptions = { capture: true };
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {
   hideModal();
-
-  const isInterstitial = buttons.length === 0;
-  if (isInterstitial) {
-    // Do not allow interstitial modals to be closed by an Escape keydown.
-    document.documentElement.addEventListener('keydown', escapeKeyCancel, listenerOptions);
-  }
 
   // Use the live --overlay-tint-heavy variable if possible; use the static computed value on Chrome 105-121.
   // https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/::backdrop#browser_compatibility
@@ -41,23 +25,8 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
     /** Prevents Tumblr's `trapFocusInsideGlass()` from stealing focus when opened from mobile drawer. */
     'data-skip-glass-focus-trap': '',
 
-    /** Mark interstitial dialogs as such. This gets removed when `hideModal()` is called. */
-    ...(isInterstitial && { inert: '' }),
-
-    /**
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/close_event
-     * @type {(event: Event & { currentTarget: HTMLDialogElement }) => void}
-     */
-    close ({ currentTarget }) {
-      if (currentTarget.inert) {
-        // Re-open the interstitial modal and prevent teardown until `hideModal()` is called.
-        // Prevents interstitials from being permanently closed by mobile browser "back" actions.
-        currentTarget.showModal();
-      } else {
-        document.documentElement.removeEventListener('keydown', escapeKeyCancel, listenerOptions);
-        currentTarget.remove();
-      }
-    },
+    /** @type {(event: Event & { currentTarget: HTMLDialogElement }) => void} */
+    close: ({ currentTarget }) => currentTarget.remove(),
   }, [
     styleElement,
     h1({ class: 'title' }, [title]),
@@ -73,10 +42,8 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
  * Hide the current takeover prompt.
  */
 export function hideModal () {
-  [...document.querySelectorAll('dialog[open]#xkit-modal')].forEach((/** @type {HTMLDialogElement} */ modalElement) => {
-    modalElement.inert = false;
-    modalElement.close();
-  });
+  [...document.querySelectorAll('dialog[open]#xkit-modal')]
+    .forEach(modalElement => modalElement.close());
 }
 
 export const modalCancelButton = button({ click: hideModal }, ['Cancel']);

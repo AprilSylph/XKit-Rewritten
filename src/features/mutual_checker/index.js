@@ -89,7 +89,7 @@ const addIcons = function (postElements) {
       ? await getIsFollowing(blogName, postElement)
       : false;
     const isMutual = followingBlog
-      ? await getIsFollowingYou(blogName)
+      ? await getIsFollowingYou(blogName, postElement)
       : false;
 
     if (isMutual) {
@@ -108,7 +108,7 @@ const addBlogCardIcons = blogCardLinks =>
     if (!blogName || userBlogNames.includes(blogName)) return;
 
     const followingBlog = await getIsFollowing(blogName, blogCardLink);
-    const isFollowingYou = await getIsFollowingYou(blogName);
+    const isFollowingYou = await getIsFollowingYou(blogName, blogCardLink);
     const isMutual = followingBlog && isFollowingYou;
 
     if (isFollowingYou) {
@@ -122,7 +122,7 @@ const getIsFollowing = async (blogName, element) => {
       await blogData(element),
       (await timelineObject(element))?.blog,
       (await timelineObject(element))?.authorBlog,
-    ].find((data) => blogName === data?.name);
+    ].find((data) => blogName === data?.name && data.followed !== undefined);
 
     following[blogName] = blog
       ? Promise.resolve(blog.followed)
@@ -133,11 +133,19 @@ const getIsFollowing = async (blogName, element) => {
   return following[blogName];
 };
 
-const getIsFollowingYou = (blogName) => {
+const getIsFollowingYou = async (blogName, element) => {
   if (followingYou[blogName] === undefined) {
-    followingYou[blogName] = apiFetch(`/v2/blog/${primaryBlogName}/followed_by`, { queryParams: { query: blogName } })
-      .then(({ response: { followedBy } }) => followedBy)
-      .catch(() => Promise.resolve(false));
+    const blog = [
+      await blogData(element),
+      (await timelineObject(element))?.blog,
+      (await timelineObject(element))?.authorBlog,
+    ].find((data) => blogName === data?.name && data.isFollowingYou !== undefined);
+
+    followingYou[blogName] = blog
+      ? Promise.resolve(blog.isFollowingYou)
+      : apiFetch(`/v2/blog/${primaryBlogName}/followed_by`, { queryParams: { query: blogName } })
+        .then(({ response: { followedBy } }) => followedBy)
+        .catch(() => Promise.resolve(false));
 
     followingYou[blogName].then(isFollowingYou => channel.postMessage({ blogName, isFollowingYou }));
   }

@@ -1,5 +1,5 @@
 import { removeElementsById } from './cleanup.js';
-import { button, dialog, div, h1, span, style } from './dom.js';
+import { button, dialog, div, h1, span, strong, style } from './dom.js';
 
 // Remove any outdated modal when loading module
 removeElementsById('xkit-modal');
@@ -14,11 +14,13 @@ removeElementsById('xkit-modal');
 export const showModal = ({ title, message = [], buttons = [] }) => {
   hideModal();
 
+  const styleElement = style({}, ['body { overflow: hidden; }']);
   const modalElement = dialog({
     id: 'xkit-modal',
     'data-skip-glass-focus-trap': '', // Prevents Tumblr's `trapFocusInsideGlass()` from stealing focus when opened from mobile drawer
+    close: ({ currentTarget }) => currentTarget.remove(),
   }, [
-    style({}, ['body { overflow: hidden; }']),
+    styleElement,
     ...(
       title
         ? [h1({ class: 'title' }, [title])]
@@ -28,6 +30,11 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
     div({ class: 'buttons' }, buttons),
   ]);
 
+  // Use the live --overlay-tint-heavy variable if possible; use the static computed value on Chrome 105-121.
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/::backdrop#browser_compatibility
+  const colorOverlayTintHeavy = getComputedStyle(document.documentElement).getPropertyValue('--overlay-tint-heavy');
+  styleElement.append(` #xkit-modal::backdrop { background-color: var(--overlay-tint-heavy, ${colorOverlayTintHeavy}) } `);
+
   document.body.append(modalElement);
   modalElement.showModal();
 };
@@ -36,10 +43,8 @@ export const showModal = ({ title, message = [], buttons = [] }) => {
  * Hide the current takeover prompt.
  */
 export function hideModal () {
-  [...document.querySelectorAll('dialog[open]#xkit-modal')].forEach(modalElement => {
-    modalElement.close();
-    modalElement.remove();
-  });
+  [...document.querySelectorAll('dialog[open]#xkit-modal')]
+    .forEach(modalElement => modalElement.close());
 }
 
 export const modalCancelButton = button({ click: hideModal }, ['Cancel']);
@@ -62,7 +67,7 @@ export const showErrorModal = exception => {
         browser.runtime?.id === undefined && 'Please refresh this browser tab!',
       ]
         .filter(Boolean)
-        .join('\n\n'),
+        .join('\n'),
     ],
     buttons: [modalCompleteButton],
   });
@@ -98,4 +103,4 @@ export const showContextInvalidatedModal = () =>
   });
 
 export const createTagSpan = tag => span({ class: 'xkit-modal-tag' }, [tag]);
-export const createBlogSpan = name => span({ class: 'xkit-modal-blog' }, [name]);
+export const createBlogSpan = name => strong({ class: 'xkit-modal-blog' }, [name]);

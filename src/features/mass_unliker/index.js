@@ -48,7 +48,7 @@ const unlikePosts = async function () {
     title: 'All done!',
     message: [
       `Unliked ${unlikedCount} posts.\n`,
-      `Failed to unlike ${failureCount} posts.\n\n`,
+      `Failed to unlike ${failureCount} posts.\n`,
       dom('small', null, null, ['You may still have some likes due to quirks with the Tumblr API.']),
     ],
     buttons: [

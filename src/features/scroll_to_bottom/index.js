@@ -1,11 +1,11 @@
-import { removeElementsById } from '../../utils/cleanup.js';
+import { removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToClasses, keyToCss } from '../../utils/css_map.js';
 import { buildStyle, displayBlockUnlessDisabledAttr } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { pageModifications } from '../../utils/mutations.js';
 
-const scrollToBottomButtonId = 'xkit-scroll-to-bottom-button';
-removeElementsById(scrollToBottomButtonId); // Clean up previous instance after addon reload
+const buttonClass = 'xkit-scroll-to-bottom-button';
+removeElementsByClassName(buttonClass); // Clean up previous instance after addon reload
 
 const activeClass = 'xkit-scroll-to-bottom-active';
 
@@ -15,29 +15,62 @@ ${keyToCss('notifications')} + div
 `;
 const knightRiderLoaderSelector = `:is(${loaderSelector}) > ${keyToCss('knightRiderLoader')}`;
 
+const modalScrollContainerSelector = `${keyToCss('drawerContent')} > ${keyToCss('scrollContainer')}`;
+
 let scrollToBottomButton;
-let active = false;
+let modalScrollToBottomButton;
+let activeElement = false;
 
 export const styleElement = buildStyle(`
+.${buttonClass} {
+  margin-top: 0.5ch;
+  transform: rotate(180deg);
+}
+.${buttonClass}.modal {
+  margin-top: 1ch;
+}
+#base-container:has(> #glass-container ${modalScrollContainerSelector}) .${buttonClass}.normal {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .${activeClass} svg use {
   --icon-color-primary: rgb(var(--yellow));
+}
+.${activeClass}.modal {
+  background-color: rgb(var(--black)) !important;
 }
 `);
 
 let timeoutID;
 
-const onLoadersAdded = () => {
-  if (active) {
+const getScrollElement = () =>
+  document.querySelector(modalScrollContainerSelector) ||
+  document.documentElement;
+
+const getObserveElement = () =>
+  document.querySelector(modalScrollContainerSelector)?.firstElementChild ||
+  document.documentElement;
+
+const onLoadersAdded = loaders => {
+  if (activeElement && loaders.some(loader => activeElement.contains(loader))) {
     clearTimeout(timeoutID);
   }
 };
 
 const scrollToBottom = () => {
   clearTimeout(timeoutID);
-  requestAnimationFrame(() => window.scrollTo({ top: document.documentElement.scrollHeight }));
+  requestAnimationFrame(() => activeElement.scrollTo({ top: activeElement.scrollHeight }));
+
+  const buttonConnected = scrollToBottomButton?.isConnected || modalScrollToBottomButton?.isConnected;
+
+  if (!buttonConnected || activeElement !== getScrollElement()) {
+    stopScrolling();
+    return;
+  }
 
   timeoutID = setTimeout(() => {
-    if (!document.querySelector(knightRiderLoaderSelector)) {
+    if (!activeElement.querySelector(knightRiderLoaderSelector)) {
       stopScrolling();
     }
   }, 500);
@@ -45,61 +78,74 @@ const scrollToBottom = () => {
 const observer = new ResizeObserver(scrollToBottom);
 
 const startScrolling = () => {
-  observer.observe(document.documentElement);
-  active = true;
-  scrollToBottomButton.classList.add(activeClass);
+  scrollToBottomButton?.classList.add(activeClass);
+  modalScrollToBottomButton?.classList.add(activeClass);
+
+  activeElement = getScrollElement();
+  observer.observe(getObserveElement());
   scrollToBottom();
 };
 
 const stopScrolling = () => {
   clearTimeout(timeoutID);
   observer.disconnect();
-  active = false;
+  activeElement = false;
   scrollToBottomButton?.classList.remove(activeClass);
+  modalScrollToBottomButton?.classList.remove(activeClass);
 };
 
-const onclick = () => active ? stopScrolling() : startScrolling();
+const onclick = () => activeElement ? stopScrolling() : startScrolling();
 const onKeyDown = ({ key }) => key === '.' && stopScrolling();
 
-const checkForButtonRemoved = () => {
-  const buttonWasRemoved = document.documentElement.contains(scrollToBottomButton) === false;
-  if (buttonWasRemoved) {
-    if (active) stopScrolling();
-    pageModifications.unregister(checkForButtonRemoved);
-  }
+const cloneButton = (target, mode) => {
+  const clonedButton = target.cloneNode(true);
+  keyToClasses('hidden').forEach(className => clonedButton.classList.remove(className));
+  clonedButton.removeAttribute('aria-label');
+  clonedButton.addEventListener('click', onclick);
+  clonedButton.classList.add(buttonClass, mode);
+  clonedButton.toggleAttribute(displayBlockUnlessDisabledAttr, true);
+
+  clonedButton.classList.toggle(activeClass, activeElement);
+  return clonedButton;
 };
 
 const addButtonToPage = async function ([scrollToTopButton]) {
-  if (!scrollToBottomButton) {
-    const hiddenClasses = keyToClasses('hidden');
-
-    scrollToBottomButton = scrollToTopButton.cloneNode(true);
-    hiddenClasses.forEach(className => scrollToBottomButton.classList.remove(className));
-    scrollToBottomButton.removeAttribute('aria-label');
-    scrollToBottomButton.style.marginTop = '0.5ch';
-    scrollToBottomButton.style.transform = 'rotate(180deg)';
-    scrollToBottomButton.addEventListener('click', onclick);
-    scrollToBottomButton.id = scrollToBottomButtonId;
-    scrollToBottomButton.toggleAttribute(displayBlockUnlessDisabledAttr, true);
-
-    scrollToBottomButton.classList.toggle(activeClass, active);
-  }
+  scrollToBottomButton ??= cloneButton(scrollToTopButton, 'normal');
 
   scrollToTopButton.after(scrollToBottomButton);
   scrollToTopButton.addEventListener('click', stopScrolling);
-  document.documentElement.addEventListener('keydown', onKeyDown);
-  pageModifications.register('*', checkForButtonRemoved);
+};
+
+const modalButtonColorObserver = new MutationObserver(([mutation]) => {
+  modalScrollToBottomButton.style = mutation.target.style.cssText;
+});
+
+const addModalButtonToPage = async function ([modalScrollToTopButton]) {
+  modalScrollToBottomButton ??= cloneButton(modalScrollToTopButton, 'modal');
+
+  modalScrollToTopButton.after(modalScrollToBottomButton);
+  modalScrollToTopButton.addEventListener('click', stopScrolling);
+
+  modalScrollToBottomButton.style = modalScrollToTopButton.style.cssText;
+  modalButtonColorObserver.observe(modalScrollToTopButton, { attributeFilter: ['style'] });
 };
 
 export const main = async function () {
   pageModifications.register(`button[aria-label="${translate('Scroll to top')}"]`, addButtonToPage);
+  pageModifications.register(`button[aria-label="${translate('Back to top')}"]`, addModalButtonToPage);
   pageModifications.register(knightRiderLoaderSelector, onLoadersAdded);
+  document.documentElement.addEventListener('keydown', onKeyDown);
 };
 
 export const clean = async function () {
   pageModifications.unregister(addButtonToPage);
-  pageModifications.unregister(checkForButtonRemoved);
+  pageModifications.unregister(addModalButtonToPage);
   pageModifications.unregister(onLoadersAdded);
+  document.documentElement.removeEventListener('keydown', onKeyDown);
+
   stopScrolling();
+
   scrollToBottomButton?.remove();
+  modalScrollToBottomButton?.remove();
+  modalButtonColorObserver.disconnect();
 };

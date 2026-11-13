@@ -71,7 +71,7 @@ export const pageModifications = Object.freeze({
  * Utilities to run specified code when new posts are added to the page.
  */
 export const onNewPosts = Object.freeze({
-  addListener: callback => pageModifications.register(`${postSelector}:not(.sortable-fallback) article`, callback),
+  addListener: callback => pageModifications.register(`${postSelector}:not(.sortable-fallback) article, ${keyToCss('postInGrid')}`, callback),
   removeListener: callback => pageModifications.unregister(callback),
 });
 

@@ -1,48 +1,71 @@
-#xkit-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 201;
+body:has(#xkit-modal[open]) {
+  overflow: hidden;
+}
 
-  display: flex;
+#xkit-modal {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: 100vh;
 
-  background-color: rgba(var(--navy), 0.85);
-  color: rgb(var(--white-on-dark));
+  box-sizing: border-box;
+  width: min(440px, 100vw);
+  padding-block: var(--space-xxxl);
+  padding-inline: var(--space-xl);
+  border: 1px solid var(--modal-border);
+  border-radius: 12px;
+
+  background-color: var(--modal);
+  box-shadow: 0 var(--space-s) var(--space-xxxl) rgba(0, 0, 0, .2);
+  color: var(--content-fg);
   text-align: center;
 }
 
-#xkit-modal > * {
-  box-sizing: border-box;
-  max-width: 540px;
-  padding-left: 32px;
-  padding-right: 32px;
+#xkit-modal[open] {
+  display: flex;
+}
+
+#xkit-modal:has(form, table) {
+  min-width: min(440px, 100vw);
+  width: fit-content;
 }
 
 #xkit-modal .title {
-  font-family: var(--font-family);
-  font-size: 1.625rem;
-  font-weight: bolder;
-  line-height: 1.3077;
+  flex-shrink: 0;
+  margin-bottom: var(--space-xs);
+
+  font-family: var(--font-family-modern);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.625rem;
+  text-wrap: balance;
 }
 
 #xkit-modal .message {
-  padding-top: 20px;
-  padding-bottom: 10px;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: auto;
+  margin-bottom: var(--space-m);
 
-  font-family: var(--font-family);
-  font-size: 1.125rem;
-  font-weight: 400;
-  line-height: 1.333;
+  color: var(--content-fg-secondary);
+  font-family: var(--font-family-modern);
+  font-size: 1rem;
+  font-weight: 350;
+  line-height: 1.5rem;
+  text-wrap: pretty;
   white-space: pre-line;
 }
 
 #xkit-modal .message small {
-  font-size: 80%;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.125rem;
+}
+
+
+#xkit-modal .message strong {
+  display: inline-block;
+  color: var(--content-fg);
+  font-weight: 500;
 }
 
 #xkit-modal .message :is(ol, ul) {
@@ -50,55 +73,118 @@
   box-sizing: border-box;
   width: max-content;
   max-width: 100%;
-  padding-left: 2ch;
-  margin: 1em auto 0;
+  padding-left: var(--space-l);
+  margin-block: var(--space-xs) 0;
+  margin-inline: auto;
 
-  text-align: left;
+  text-align: start;
 }
 
 #xkit-modal .message :is(form, table) {
-  box-sizing: border-box;
-  width: 476px;
-  border-radius: 8px;
+  min-width: max-content;
+  max-width: max-content;
+  margin: 0 auto;
 
-  background-color: rgb(var(--navy));
-  box-shadow: 0 0 1px rgba(var(--white-on-dark), 0.13);
-  font-size: 1rem;
-  line-height: 1.5;
+  color: var(--content-fg);
 }
 
 #xkit-modal .message form {
   display: flex;
   flex-direction: column;
-  gap: 1em;
-  padding: 1em;
+  align-items: flex-start;
+  row-gap: var(--space-m);
+  padding-block: var(--space-m);
+  padding-inline: var(--space-xxxs);
 }
 
 #xkit-modal .message form label {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1ex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--space-xxs);
 
-  text-align: left;
+  font-size: .875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
 }
 
-#xkit-modal .message form :is(input[type="text"], select) {
+#xkit-modal .message form :is(input, select) {
   box-sizing: border-box;
-  width: 220px;
+  min-height: 40px;
+  width: 328px;
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-xs);
+  border-inline: var(--space-xs) solid var(--content-tint);
+  border-block: none;
+  border-radius: 8px;
+  margin: 0;
 
-  font-size: 0.875rem;
+  background-color: var(--content-tint);
+  background-clip: padding-box;
+  color: var(--content-fg);
+  font-size: 1rem;
+  font-weight: 350;
+  line-height: 1.5rem;
+}
+#xkit-modal .message form :is(input, select):focus-visible {
+  outline: 2px solid var(--accent);
+}
+
+#xkit-modal .message form ::placeholder {
+  color: var(--content-fg-secondary);
+  opacity: 100%;
+}
+
+@supports selector(::-webkit-calendar-picker-indicator) {
+  #xkit-modal .message form ::-webkit-calendar-picker-indicator {
+    height: 16px;
+    width: 16px;
+
+    background-color: currentColor;
+    background-image: none;
+    content: "";
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='currentColor' fill-rule='evenodd' d='M11.333 1.333a.667.667 0 1 0-1.333 0V1.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-.167a.667.667 0 0 0-1.333 0V1.5a.5.5 0 0 1-.5.5h-.834a2 2 0 0 0-2 2v9.333a2 2 0 0 0 2 2h9.334a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-.834a.5.5 0 0 1-.5-.5zM12.833 6a.5.5 0 0 0 .5-.5V4a.667.667 0 0 0-.666-.667h-.834a.5.5 0 0 0-.5.5V4A.667.667 0 1 1 10 4v-.167a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5V4a.667.667 0 0 1-1.333 0v-.167a.5.5 0 0 0-.5-.5h-.834A.667.667 0 0 0 2.667 4v1.5a.5.5 0 0 0 .5.5zM2.667 7.833a.5.5 0 0 1 .5-.5h9.666a.5.5 0 0 1 .5.5v5.5a.667.667 0 0 1-.666.667H3.333a.667.667 0 0 1-.666-.667z' clip-rule='evenodd'%3E%3C/path%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='currentColor' fill-rule='evenodd' d='M11.333 1.333a.667.667 0 1 0-1.333 0V1.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-.167a.667.667 0 0 0-1.333 0V1.5a.5.5 0 0 1-.5.5h-.834a2 2 0 0 0-2 2v9.333a2 2 0 0 0 2 2h9.334a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-.834a.5.5 0 0 1-.5-.5zM12.833 6a.5.5 0 0 0 .5-.5V4a.667.667 0 0 0-.666-.667h-.834a.5.5 0 0 0-.5.5V4A.667.667 0 1 1 10 4v-.167a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5V4a.667.667 0 0 1-1.333 0v-.167a.5.5 0 0 0-.5-.5h-.834A.667.667 0 0 0 2.667 4v1.5a.5.5 0 0 0 .5.5zM2.667 7.833a.5.5 0 0 1 .5-.5h9.666a.5.5 0 0 1 .5.5v5.5a.667.667 0 0 1-.666.667H3.333a.667.667 0 0 1-.666-.667z' clip-rule='evenodd'%3E%3C/path%3E%3C/svg%3E");
+  }
+
+  #xkit-modal .message form ::-webkit-calendar-picker-indicator:focus-within {
+    background-color: var(--accent);
+    outline: none;
+  }
+}
+
+@supports selector(::picker-icon) {
+  #xkit-modal .message form select {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    appearance: base-select;
+  }
+
+  #xkit-modal .message form ::picker-icon {
+    height: 12px;
+    width: 12px;
+
+    background-color: currentColor;
+    content: "";
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='currentColor' fill-rule='evenodd' d='M2.293 4.293a1 1 0 0 1 1.414 0L6 6.586l2.293-2.293a1 1 0 0 1 1.414 1.414l-3 3a1 1 0 0 1-1.414 0l-3-3a1 1 0 0 1 0-1.414' clip-rule='evenodd'%3E%3C/path%3E%3C/svg%3E");
+  }
+}
+
+#xkit-modal .message form option {
+  background-color: var(--modal);
+  color: var(--content-fg);
 }
 
 #xkit-modal .message table {
   border-collapse: separate;
-  border-spacing: 1ch;
+  border-spacing: var(--space-m) var(--space-xs);
   text-align: left;
 }
 
 #xkit-modal .message table th {
-  font-weight: bold;
+  font-weight: 500;
 }
 
 #xkit-modal .message table td[title] {
@@ -108,61 +194,121 @@
 #xkit-modal .buttons {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 1em;
-  margin-top: 15px;
+  column-gap: 8px;
+  row-gap: 12px;
+
+  flex-shrink: 0;
 }
 
 #xkit-modal .buttons :is(a, button, input) {
-  padding: 0.75ch 1.5ch;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  box-sizing: border-box;
+  width: fit-content;
+  padding-block: 10px;
+  padding-inline: var(--space-m);
   border: none;
-  border-radius: 3px;
+  border-radius: 9999px;
 
   appearance: none;
-  background-color: rgba(var(--white-on-dark), 0.65);
-  color: rgb(var(--navy));
+  background-color: var(--content-tint);
+  color: var(--content-fg);
   cursor: pointer;
-  font-family: var(--font-family);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.5;
+  font-family: var(--font-family-modern);
+  font-size: .875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  outline-color: transparent;
+  outline-offset: 2px;
+  outline-style: solid;
+  outline-width: 2px;
   text-decoration: none;
 }
-
-#xkit-modal .buttons :disabled {
+#xkit-modal .buttons :is(a, button, input):hover {
+  background-color: var(--content-tint-strong);
+}
+#xkit-modal .buttons :is(a, button, input):active {
+  background-color: var(--content-tint-heavy);
+}
+#xkit-modal .buttons :is(a, button, input):focus-visible {
+  outline-color: var(--content-ui-focus);
+}
+#xkit-modal .buttons :is(a, button, input):disabled {
+  background-color: var(--content-tint);
+  color: var(--content-fg-secondary);
   cursor: not-allowed;
-  filter: grayscale(100%);
 }
 
-#xkit-modal .buttons :is(a, button, input).red {
-  background-color: rgb(var(--red));
+#xkit-modal .buttons :is(a, button, input).red:enabled {
+  background-color: var(--danger);
+  color: var(--color-fg-light);
+}
+#xkit-modal .buttons :is(a, button, input).red:enabled:hover {
+  background-color: var(--danger-hover);
+}
+#xkit-modal .buttons :is(a, button, input).red:enabled:active {
+  background-color: var(--danger-pressed);
+}
+#xkit-modal .buttons :is(a, button, input).red:enabled:focus-visible {
+  outline-color: var(--danger);
 }
 
-#xkit-modal .buttons :is(a, button, input).blue {
-  background-color: rgb(var(--blue));
+#xkit-modal .buttons :is(a, button, input).blue:enabled {
+  background-color: var(--content-ui);
+  color: var(--content-ui-fg);
+}
+#xkit-modal .buttons :is(a, button, input).blue:enabled:hover {
+  background-color: var(--content-ui-hover);
+}
+#xkit-modal .buttons :is(a, button, input).blue:enabled:active {
+  background-color: var(--content-ui-pressed);
 }
 
-.xkit-modal-tag,
-.xkit-modal-blog {
-  display: inline-block;
+@media (max-width: 440px) {
+  #xkit-modal .buttons {
+    flex-direction: column-reverse;
+    width: 100%;
+  }
 
-  font-size: 1rem;
-  line-height: 1.5;
+  #xkit-modal .buttons :is(a, button, input) {
+    width: 100%;
+    padding-block: var(--space-s);
+    padding-inline: var(--space-l);
+
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
 }
 
 .xkit-modal-tag {
-  padding: 0 0.5em;
+  display: inline-block;
+  padding-inline-start: var(--space-xs);
+  padding-inline-end: 10px;
   border-radius: 1em;
   margin: 0.25rem 0;
 
-  background-color: rgb(var(--deprecated-accent));
-  color: rgb(var(--navy));
-}
-
-.xkit-modal-blog {
-  font-weight: 700;
+  background-color: var(--brand-blue);
+  color: var(--color-fg-light);
 }
 
 .xkit-modal-tag::before { content: '#'; }
 .xkit-modal-blog::before { content: '@'; }
+
+/* === Font override compatibility === */
+
+:root[style*="--font-family-modern"] #xkit-modal .title,
+:root[style*="--font-family-modern"] #xkit-modal .message small,
+:root[style*="--font-family-modern"] #xkit-modal .message strong,
+:root[style*="--font-family-modern"] #xkit-modal .message form label,
+:root[style*="--font-family-modern"] #xkit-modal .message table th,
+:root[style*="--font-family-modern"] #xkit-modal .buttons :is(a, button, input) {
+  font-weight: bold;
+}
+
+:root[style*="--font-family-modern"] #xkit-modal .message,
+:root[style*="--font-family-modern"] #xkit-modal .message form :is(input, select) {
+  font-weight: normal;
+}

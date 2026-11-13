@@ -1,52 +1,49 @@
 import { removeElementsById } from './cleanup.js';
-import { dom } from './dom.js';
+import { button, dialog, div, h1, span, style } from './dom.js';
 
 // Remove any outdated modal when loading module
 removeElementsById('xkit-modal');
-
-let lastFocusedElement;
 
 /**
  * Show a takeover prompt to the user
  * @param {object} options Destructured
  * @param {string} [options.title] Prompt title
- * @param {(string|Node)[]} [options.message] Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
- * @param {(HTMLElement)[]} [options.buttons] Array of buttons to be displayed in the modal
+ * @param {(string | Node)[]} [options.message] Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
+ * @param {HTMLElement[]} [options.buttons] Array of buttons to be displayed in the modal
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {
-  const modalElement = dom('div', {
-    id: 'xkit-modal',
-    tabindex: '-1',
-    role: 'dialog',
-    'aria-modal': 'true',
+  hideModal();
 
-    // prevents Tumblr's trapFocusInsideGlass function from stealing focus when opened from mobile drawer
-    'data-skip-glass-focus-trap': '',
-  }, null, [
-    dom('style', null, null, ['body { overflow: hidden; }']),
-    title ? dom('h3', { class: 'title' }, null, [title]) : '',
-    dom('div', { class: 'message' }, null, message),
-    dom('div', { class: 'buttons' }, null, buttons),
+  const modalElement = dialog({
+    id: 'xkit-modal',
+    'data-skip-glass-focus-trap': '', // Prevents Tumblr's `trapFocusInsideGlass()` from stealing focus when opened from mobile drawer
+  }, [
+    style({}, ['body { overflow: hidden; }']),
+    ...(
+      title
+        ? [h1({ class: 'title' }, [title])]
+        : []
+    ),
+    div({ class: 'message' }, message),
+    div({ class: 'buttons' }, buttons),
   ]);
 
-  hideModal();
-  document.getElementById('base-container')?.appendChild(modalElement);
-
-  lastFocusedElement = document.activeElement;
-  modalElement.focus();
+  document.body.append(modalElement);
+  modalElement.showModal();
 };
 
 /**
  * Hide the current takeover prompt.
  */
-export const hideModal = () => {
-  removeElementsById('xkit-modal');
-  lastFocusedElement?.focus();
-  lastFocusedElement = null;
-};
+export function hideModal () {
+  [...document.querySelectorAll('dialog[open]#xkit-modal')].forEach(modalElement => {
+    modalElement.close();
+    modalElement.remove();
+  });
+}
 
-export const modalCancelButton = dom('button', null, { click: hideModal }, ['Cancel']);
-export const modalCompleteButton = dom('button', { class: 'blue' }, { click: hideModal }, ['OK']);
+export const modalCancelButton = button({ click: hideModal }, ['Cancel']);
+export const modalCompleteButton = button({ class: 'blue', click: hideModal }, ['OK']);
 
 /**
  * Show a takeover prompt to the user with details about a thrown exception.
@@ -95,10 +92,10 @@ export const showContextInvalidatedModal = () =>
       'Outdated XKit modifications will be updated/removed after you refresh this Tumblr tab.',
     ],
     buttons: [
-      dom('button', null, { click: hideModal }, ['Close']),
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh Now']),
+      button({ click: hideModal }, ['Close']),
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh Now']),
     ],
   });
 
-export const createTagSpan = tag => dom('span', { class: 'xkit-modal-tag' }, null, [tag]);
-export const createBlogSpan = name => dom('span', { class: 'xkit-modal-blog' }, null, [name]);
+export const createTagSpan = tag => span({ class: 'xkit-modal-tag' }, [tag]);
+export const createBlogSpan = name => span({ class: 'xkit-modal-blog' }, [name]);

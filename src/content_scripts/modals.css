@@ -1,3 +1,7 @@
+body:has(#xkit-modal[open]) {
+  overflow: hidden;
+}
+
 #xkit-modal {
   flex-direction: column;
   justify-content: center;

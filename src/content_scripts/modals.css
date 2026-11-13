@@ -29,6 +29,10 @@ body:has(#xkit-modal[open]) {
   width: fit-content;
 }
 
+#xkit-modal :is(.title, .message, .buttons):empty {
+  display: none;
+}
+
 #xkit-modal .title {
   flex-shrink: 0;
   margin-bottom: var(--space-xs);
@@ -44,7 +48,6 @@ body:has(#xkit-modal[open]) {
   box-sizing: border-box;
   max-width: 100%;
   overflow: auto;
-  margin-bottom: var(--space-m);
 
   color: var(--content-fg-secondary);
   font-family: var(--font-family-modern);
@@ -195,10 +198,11 @@ body:has(#xkit-modal[open]) {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  column-gap: 8px;
-  row-gap: 12px;
+  column-gap: var(--space-xs);
+  row-gap: var(--space-s);
 
   flex-shrink: 0;
+  margin-top: var(--space-m);
 }
 
 #xkit-modal .buttons :is(a, button, input) {

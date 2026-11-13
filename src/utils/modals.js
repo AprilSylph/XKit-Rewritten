@@ -11,7 +11,7 @@ removeElementsById('xkit-modal');
  * @param {(string | Node)[]} [options.message] Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
  * @param {HTMLElement[]} [options.buttons] Array of buttons to be displayed in the modal
  */
-export const showModal = ({ title, message = [], buttons = [] }) => {
+export const showModal = ({ title = '', message = [], buttons = [] }) => {
   hideModal();
 
   // Use the live --overlay-tint-heavy variable if possible; use the static computed value on Chrome 105-121.

@@ -1,4 +1,4 @@
-import { dom } from '../../utils/dom.js';
+import { dom, strong } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
 import { showModal, modalCancelButton, modalCompleteButton, hideModal, showErrorModal, createTagSpan, createBlogSpan, withModalOnError } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
@@ -36,7 +36,7 @@ const showInitialPrompt = async () => {
       dom('input', { type: 'datetime-local', name: 'before', value: createNowString(), required: true }),
     ]),
     dom('label', null, null, [
-      dom('small', null, null, ['Posts with any of these tags (optional):']),
+      'Posts with any of these tags (optional):',
       dom('input', { type: 'text', name: 'tags', placeholder: 'Comma-separated', autocomplete: 'off' }),
     ]),
   ]);
@@ -93,7 +93,7 @@ const confirmInitialPrompt = async event => {
   const beforeMs = elements.before.valueAsNumber + timezoneOffsetMs;
 
   const beforeString = dateTimeFormat.format(new Date(beforeMs));
-  const beforeElement = dom('span', { style: 'white-space: nowrap; font-weight: bold;' }, null, [beforeString]);
+  const beforeElement = strong({}, [beforeString]);
 
   const before = beforeMs / 1000;
 

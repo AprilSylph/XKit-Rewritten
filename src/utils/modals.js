@@ -1,52 +1,73 @@
 import { removeElementsById } from './cleanup.js';
-import { dom } from './dom.js';
+import { button, dialog, div, h1, span, strong, style } from './dom.js';
 
 // Remove any outdated modal when loading module
 removeElementsById('xkit-modal');
-
-let lastFocusedElement;
 
 /**
  * Show a takeover prompt to the user
  * @param {object} options Destructured
  * @param {string} [options.title] Prompt title
- * @param {(string|Node)[]} [options.message] Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
- * @param {(HTMLElement)[]} [options.buttons] Array of buttons to be displayed in the modal
+ * @param {(string | Node)[]} [options.message] Nodes to be displayed in the modal, to be used as prompts or non-submit inputs
+ * @param {HTMLElement[]} [options.buttons] Array of buttons to be displayed in the modal
  */
 export const showModal = ({ title, message = [], buttons = [] }) => {
-  const modalElement = dom('div', {
-    id: 'xkit-modal',
-    tabindex: '-1',
-    role: 'dialog',
-    'aria-modal': 'true',
+  hideModal();
 
-    // prevents Tumblr's trapFocusInsideGlass function from stealing focus when opened from mobile drawer
+  // Use the live --overlay-tint-heavy variable if possible; use the static computed value on Chrome 105-121.
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/::backdrop#browser_compatibility
+  const colorOverlayTintHeavy = getComputedStyle(document.documentElement).getPropertyValue('--overlay-tint-heavy');
+  const styleElement = style({}, `#xkit-modal::backdrop { background-color: var(--overlay-tint-heavy, ${colorOverlayTintHeavy}) }`);
+
+  const modalElement = dialog({
+    id: 'xkit-modal',
+
+    /** Prevents Tumblr's `trapFocusInsideGlass()` from stealing focus when opened from mobile drawer. */
     'data-skip-glass-focus-trap': '',
-  }, null, [
-    dom('style', null, null, ['body { overflow: hidden; }']),
-    title ? dom('h3', { class: 'title' }, null, [title]) : '',
-    dom('div', { class: 'message' }, null, message),
-    dom('div', { class: 'buttons' }, null, buttons),
+
+    /**
+     * Don't allow non-dismissible modals to be closed by means other than `modalElement.close()`.
+     * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby
+     * @todo Drop this in favour of a minimise/reopen system for non-dismissible modals.
+     */
+    ...(buttons.length === 0 && { closedby: 'none' }),
+
+    /**
+     * Alternative method to prevent close, targeting older browser versions. May not be fully reliable.
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/cancel_event
+     * @see https://github.com/mdn/content/issues/43943
+     * @todo Drop this in favour of a minimise/reopen system for non-dismissible modals.
+     * @type {(event: Event & { currentTarget: HTMLDialogElement }) => void}
+     */
+    cancel (event) {
+      if (buttons.length === 0 && event.cancelable) {
+        event.preventDefault();
+      }
+    },
+
+    /** @type {(event: Event & { currentTarget: HTMLDialogElement }) => void} */
+    close: ({ currentTarget }) => currentTarget.remove(),
+  }, [
+    styleElement,
+    h1({ class: 'title' }, [title]),
+    div({ class: 'message' }, message),
+    div({ class: 'buttons' }, buttons),
   ]);
 
-  hideModal();
-  document.getElementById('base-container')?.appendChild(modalElement);
-
-  lastFocusedElement = document.activeElement;
-  modalElement.focus();
+  document.body.append(modalElement);
+  modalElement.showModal();
 };
 
 /**
  * Hide the current takeover prompt.
  */
-export const hideModal = () => {
-  removeElementsById('xkit-modal');
-  lastFocusedElement?.focus();
-  lastFocusedElement = null;
-};
+export function hideModal () {
+  [...document.querySelectorAll('dialog[open]#xkit-modal')]
+    .forEach(modalElement => modalElement.close());
+}
 
-export const modalCancelButton = dom('button', null, { click: hideModal }, ['Cancel']);
-export const modalCompleteButton = dom('button', { class: 'blue' }, { click: hideModal }, ['OK']);
+export const modalCancelButton = button({ click: hideModal }, ['Cancel']);
+export const modalCompleteButton = button({ class: 'blue', click: hideModal }, ['OK']);
 
 /**
  * Show a takeover prompt to the user with details about a thrown exception.
@@ -65,7 +86,7 @@ export const showErrorModal = exception => {
         browser.runtime?.id === undefined && 'Please refresh this browser tab!',
       ]
         .filter(Boolean)
-        .join('\n\n'),
+        .join('\n'),
     ],
     buttons: [modalCompleteButton],
   });
@@ -95,10 +116,10 @@ export const showContextInvalidatedModal = () =>
       'Outdated XKit modifications will be updated/removed after you refresh this Tumblr tab.',
     ],
     buttons: [
-      dom('button', null, { click: hideModal }, ['Close']),
-      dom('button', { class: 'blue' }, { click: () => location.reload() }, ['Refresh Now']),
+      button({ click: hideModal }, ['Close']),
+      button({ class: 'blue', click: () => location.reload() }, ['Refresh Now']),
     ],
   });
 
-export const createTagSpan = tag => dom('span', { class: 'xkit-modal-tag' }, null, [tag]);
-export const createBlogSpan = name => dom('span', { class: 'xkit-modal-blog' }, null, [name]);
+export const createTagSpan = tag => span({ class: 'xkit-modal-tag' }, [tag]);
+export const createBlogSpan = name => strong({ class: 'xkit-modal-blog' }, [name]);

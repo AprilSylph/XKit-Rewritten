@@ -8,6 +8,9 @@ import { inject } from './inject.js';
 /** @typedef {Record<string, Json>} Dictionary */
 /** @typedef {Record<string, string>} QueryParams */
 
+const slowRequestWarningMs = 1500;
+const stillPendingWarningMs = 5000;
+
 /**
  * Perform a Tumblr API request, using the helper supplied by the Tumblr web platform API for third-party extensions.
  * Note: when accessed through the web platform, the Tumblr API occasionally differs slightly from the documentation.
@@ -16,7 +19,23 @@ import { inject } from './inject.js';
  * @see {@link https://github.com/tumblr/docs/blob/master/web-platform.md#apifetch}
  * @returns {Promise<Response | Error>} Resolves or rejects with result of `window.tumblr.apiFetch()`
  */
-export const apiFetch = async (resource, init = {}) => inject('/main_world/api_fetch.js', [resource, init]);
+export const apiFetch = async (resource, init = {}) => {
+  const result = inject('/main_world/api_fetch.js', [resource, init]);
+
+  const requestTime = Date.now();
+  const logWarning = succeeded =>
+    console.log(`XKit Rewritten: API fetch of ${resource} ${succeeded ? 'took' : 'failed after'} ${Date.now() - requestTime}ms!`);
+  const timeoutId = setTimeout(
+    () => console.log(`XKit Rewritten: API fetch of ${resource} is still pending after ${stillPendingWarningMs / 1000} seconds!`),
+    stillPendingWarningMs,
+  );
+  result
+    .then(() => clearTimeout(timeoutId))
+    .then(() => Date.now() - requestTime > slowRequestWarningMs && logWarning(true))
+    .catch(() => logWarning(false));
+
+  return result;
+};
 
 /**
  * Create an NPF edit request body.

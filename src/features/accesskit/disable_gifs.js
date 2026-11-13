@@ -13,6 +13,7 @@ const pausedBackgroundImageVar = '--xkit-paused-gif-background-image';
 const hoverContainerAttribute = 'data-paused-gif-hover-container';
 const labelAttribute = 'data-paused-gif-label';
 const labelSizeAttribute = 'data-paused-gif-label-size';
+const positionHoverFixAttribute = 'data-paused-gif-position-hover-fix';
 const containerClass = 'xkit-paused-gif-container';
 
 const hovered = `:is(:hover, [${hoverContainerAttribute}]:hover *)`;
@@ -80,6 +81,11 @@ ${keyToCss('background')}[${labelAttribute}="before"]::before {
 
 [style*="${pausedBackgroundImageVar}"]:not(${hovered}) {
   background-image: var(${pausedBackgroundImageVar}) !important;
+}
+
+[${positionHoverFixAttribute}] {
+  position: relative;
+  pointer-events: auto !important;
 }
 `);
 
@@ -179,6 +185,11 @@ const pauseGif = async function (gifElement) {
       canvasElement.getContext('2d').drawImage(image, 0, 0);
       gifElement.after(canvasElement);
       addLabel(gifElement);
+
+      gifElement.closest(keyToCss(
+        'imgLink', // trending tag: https://www.tumblr.com/explore/trending
+        'adContainer', // sidebar advertisement
+      ))?.setAttribute(positionHoverFixAttribute, '');
     }
   };
 };
@@ -230,6 +241,11 @@ const processBackgroundGifs = function (gifBackgroundElements) {
       sourceValue.replace(sourceUrlRegex, `url("${pausedUrl}")`),
     );
     addLabel(gifBackgroundElement, true);
+
+    gifBackgroundElement.closest(keyToCss(
+      'media', // old activity item: "liked your post", "reblogged your post", "mentioned you in a post"
+      'activityMedia', // new activity item: "replied to your post", "replied to you in a post"
+    ))?.setAttribute(positionHoverFixAttribute, '');
   });
 };
 
@@ -267,8 +283,9 @@ export const main = async function () {
         'typeaheadRow', // modal search dropdown entry
         'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
         'topPost', // activity page top post
+        'colorfulListItemWrapper', // trending tag: https://www.tumblr.com/explore/trending
         'takeoverBanner', // advertisement
-        'mrecContainer', // advertisement
+        'mrecContainer', // sidebar advertisement
       )}
     ) img:is([srcset*=".gif"], [src*=".gif"], [srcset*=".webp"], [src*=".webp"]):not(${keyToCss('poster')})
   `;
@@ -276,6 +293,8 @@ export const main = async function () {
 
   const gifBackgroundImage = `
     ${keyToCss(
+      'media', // old activity item: "liked your post", "reblogged your post", "mentioned you in a post"
+      'activityMedia', // new activity item: "replied to your post", "replied to you in a post"
       'communityHeaderImage', // search page tags section header: https://www.tumblr.com/search/gif?v=tag
       'bannerImage', // tagged page sidebar header: https://www.tumblr.com/tagged/gif
       'tagChicletWrapper', // "trending" / "your tags" timeline carousel entry: https://www.tumblr.com/dashboard/trending, https://www.tumblr.com/dashboard/hubs
@@ -287,6 +306,8 @@ export const main = async function () {
   const hoverableElement = [
     `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`, // recommended blog carousel entry
     `div:has(> a${keyToCss('cover')}):has(${keyToCss('communityCategoryImage')})`, // tumblr communities browse page entry: https://www.tumblr.com/communities/browse
+    `${keyToCss('gridTimelineObject')}`, // likes page or patio grid view post: https://www.tumblr.com/likes
+    `${keyToCss('fixedHeightTile')} ${keyToCss('contentWrapper')}`, // trending tag preview card, post-redesign: https://www.tumblr.com/explore/trending
   ].join(', ');
   pageModifications.register(hoverableElement, processHoverableElements);
 
@@ -313,6 +334,7 @@ export const clean = async function () {
   removeAttribute(labelAttribute);
   removeAttribute(labelSizeAttribute);
   removeAttribute(hoverContainerAttribute);
+  removeAttribute(positionHoverFixAttribute);
   [...document.querySelectorAll(`[style*="${pausedBackgroundImageVar}"]`)]
     .forEach(element => element.style.removeProperty(pausedBackgroundImageVar));
 };

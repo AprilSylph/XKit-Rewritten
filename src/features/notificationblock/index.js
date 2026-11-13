@@ -143,11 +143,11 @@ const onNoteButtonClicked = ({ postId, noteData }) => {
   const shouldBlockNotifications = !blockedReplyIDs[postId]?.includes(noteData.replyId);
 
   const title = shouldBlockNotifications
-    ? '[XKit] Block this reply\'s notifications?'
-    : '[XKit] Unblock this reply\'s notifications?';
+    ? 'Block this reply\'s notifications?'
+    : 'Unblock this reply\'s notifications?';
   const message = shouldBlockNotifications
-    ? ['Notifications for this reply will be hidden from your activity feed.']
-    : ['Notifications for this reply will appear in your activity feed again.'];
+    ? ['XKit will hide notifications for this reply from your activity feed.']
+    : ['XKit will stop hiding notifications for this reply from your activity feed.'];
 
   const textContent = shouldBlockNotifications
     ? 'Block notifications'
@@ -223,14 +223,14 @@ const onButtonClicked = async function ({ currentTarget }) {
   const shouldBlockNotifications = blockedPostTargetIDs.includes(rootId) === false;
 
   const title = shouldBlockNotifications
-    ? '[XKit] Block this post\'s notifications?'
-    : '[XKit] Unblock this post\'s notifications?';
+    ? 'Block this post\'s notifications?'
+    : 'Unblock this post\'s notifications?';
   const message = shouldBlockNotifications
     ? [
-        'Notifications for this post will be hidden from your activity feed.',
+        'XKit will hide notifications for this post from your activity feed.',
         ...(muted ? [] : muteNotificationsMessage),
       ]
-    : ['Notifications for this post will appear in your activity feed again.'];
+    : ['XKit will stop hiding notifications for this post from your activity feed.'];
 
   const textContent = shouldBlockNotifications
     ? 'Block notifications'

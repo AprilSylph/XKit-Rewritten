@@ -2,5 +2,12 @@
   "title": "Scroll to Bottom",
   "description": "Load ALL the posts!",
   "icon": { "color": "#e8d738" },
-  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#scroll-to-bottom"
+  "help": "https://github.com/AprilSylph/XKit-Rewritten/wiki/Features#scroll-to-bottom",
+  "preferences": {
+    "stopAtCaughtUp": {
+      "type": "checkbox",
+      "label": "Stop scrolling the Following feed when I reach the Changes/Trending/etc. carousel",
+      "default": true
+    }
+  }
 }

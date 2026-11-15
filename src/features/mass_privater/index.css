@@ -12,9 +12,6 @@
   gap: 1ch;
   align-items: center;
 }
-.mass-privater-failed-table > .time {
-  font-size: 0.875em;
-}
 .mass-privater-failed-table > .summary {
   overflow-x: hidden;
   white-space: nowrap;

@@ -64,6 +64,7 @@ export function element (tagName, properties = {}, children = []) {
 /** @type {E<HTMLButtonElement>}    */ export const button = (props = {}, children = []) => element('button', props, children);
 /** @type {E<HTMLCanvasElement>}    */ export const canvas = (props = {}, children = []) => element('canvas', props, children);
 /** @type {E<HTMLDataListElement>}  */ export const datalist = (props = {}, children = []) => element('datalist', props, children);
+/** @type {E<HTMLDialogElement>}    */ export const dialog = (props = {}, children = []) => element('dialog', props, children);
 /** @type {E<HTMLDivElement>}       */ export const div = (props = {}, children = []) => element('div', props, children);
 /** @type {E<HTMLFieldSetElement>}  */ export const fieldset = (props = {}, children = []) => element('fieldset', props, children);
 /** @type {E<HTMLElement>}          */ export const figcaption = (props = {}, children = []) => element('figcaption', props, children);

@@ -90,7 +90,7 @@ class NotificationBlockBlockedPostsElement extends CustomElement {
       const unblockButton = templateClone.querySelector('button');
 
       anchorElement.textContent = blockedPostID;
-      anchorElement.href = `https://www.tumblr.com/?xkit-notificationblock-open-post-id=${blockedPostID}`;
+      anchorElement.href = `https://www.tumblr.com/explore/trending?xkit-notificationblock-open-post-id=${blockedPostID}`;
       unblockButton.dataset.postId = blockedPostID;
       unblockButton.addEventListener('click', this.unblockPost);
 

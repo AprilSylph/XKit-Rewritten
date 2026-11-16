@@ -30,9 +30,9 @@ export const apiFetch = async (resource, init = {}) => {
     stillPendingWarningMs,
   );
   result
-    .then(() => clearTimeout(timeoutId))
     .then(() => Date.now() - requestTime > slowRequestWarningMs && logWarning(true))
-    .catch(() => logWarning(false));
+    .catch(() => logWarning(false))
+    .finally(() => clearTimeout(timeoutId));
 
   return result;
 };

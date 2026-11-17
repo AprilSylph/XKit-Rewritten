@@ -31,7 +31,10 @@ const retryTimeoutMs = 5000;
 export const apiFetchWithRetry = (resource, init = {}) =>
   inject('/main_world/api_fetch.js', [resource, init, { timeout: retryTimeoutMs }])
     .catch(async exception => {
-      if (exception.name === 'AbortError') {
+      if (typeof exception.status === 'number' && exception.status >= 400 && exception.status < 500) {
+        // Do not retry client error responses.
+        throw exception;
+      } else if (exception.name === 'AbortError') {
         console.log(`XKit Rewritten: API fetch of ${resource} was aborted, possibly for taking more than ${retryTimeoutMs}ms. Retrying...`);
       } else {
         console.log(exception);

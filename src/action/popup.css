@@ -23,6 +23,18 @@ html, body, main {
   max-width: 100%;
 }
 
+@media (min-device-width: 2000px) {
+  html, body, main {
+    width: 500px;
+  }
+}
+
+@media (min-device-width: 3000px) {
+  html, body, main {
+    width: 620px;
+  }
+}
+
 body {
   min-height: 100vh;
 

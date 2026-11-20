@@ -187,7 +187,6 @@ const pauseGif = async function (gifElement) {
       addLabel(gifElement);
 
       gifElement.closest(keyToCss(
-        'imgLink', // trending tag: https://www.tumblr.com/explore/trending
         'adContainer', // sidebar advertisement
       ))?.setAttribute(positionHoverFixAttribute, '');
     }
@@ -283,7 +282,6 @@ export const main = async function () {
         'typeaheadRow', // modal search dropdown entry
         'tagImage', // search page sidebar related tags, recommended tag carousel entry: https://www.tumblr.com/search/gif, https://www.tumblr.com/explore/recommended-for-you
         'topPost', // activity page top post
-        'colorfulListItemWrapper', // trending tag: https://www.tumblr.com/explore/trending
         'takeoverBanner', // advertisement
         'mrecContainer', // sidebar advertisement
       )}
@@ -307,7 +305,7 @@ export const main = async function () {
     `${keyToCss('listTimelineObject')} ${keyToCss('carouselWrapper')} ${keyToCss('postCard')}`, // recommended blog carousel entry
     `div:has(> a${keyToCss('cover')}):has(${keyToCss('communityCategoryImage')})`, // tumblr communities browse page entry: https://www.tumblr.com/communities/browse
     `${keyToCss('gridTimelineObject')}`, // likes page or patio grid view post: https://www.tumblr.com/likes
-    `${keyToCss('fixedHeightTile')} ${keyToCss('contentWrapper')}`, // trending tag preview card, post-redesign: https://www.tumblr.com/explore/trending
+    `${keyToCss('fixedHeightTile')} ${keyToCss('contentWrapper')}`, // trending tag preview card: https://www.tumblr.com/explore/trending
   ].join(', ');
   pageModifications.register(hoverableElement, processHoverableElements);
 

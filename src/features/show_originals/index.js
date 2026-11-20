@@ -26,6 +26,7 @@ const channelSelector = `${keyToCss('bar')} ~ *`;
 
 const storageKey = 'show_originals.savedModes';
 const includeFiltered = true;
+const includeGridThumbnails = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
@@ -105,7 +106,7 @@ const processTimelines = async () => {
 const processPosts = async function (postElements) {
   processTimelines();
 
-  filterPostElements(postElements, { includeFiltered })
+  filterPostElements(postElements, { includeFiltered, includeGridThumbnails })
     .forEach(async postElement => {
       const { rebloggedRootId, content, tags, blogName, community, postAuthor, rebloggedFromFollowing, trail } = await timelineObject(postElement);
       const myPost = await isMyPost(postElement);

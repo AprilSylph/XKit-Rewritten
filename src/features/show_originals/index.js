@@ -88,8 +88,8 @@ const getLocation = timelineElement => {
   return Object.keys(on).find(location => on[location]);
 };
 
-const processTimelines = async () => {
-  [...document.querySelectorAll(timelineSelector)].forEach(async timelineElement => {
+const processTimelines = timelineElements =>
+  [...new Set(timelineElements)].forEach(async timelineElement => {
     const location = getLocation(timelineElement);
 
     const currentControls = [...timelineElement.children]
@@ -100,10 +100,9 @@ const processTimelines = async () => {
       if (location) addControls(timelineElement, location);
     }
   });
-};
 
 const processPosts = async function (postElements) {
-  processTimelines();
+  processTimelines(postElements.map(postElement => postElement.closest(timelineSelector)));
 
   filterPostElements(postElements, { includeFiltered })
     .forEach(async postElement => {

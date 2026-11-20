@@ -119,7 +119,7 @@ const getIsFollowing = async (blogName, element) => {
       (await timelineObject(element))?.authorBlog,
     ].find((data) => blogName === data?.name && data.followed !== undefined);
 
-    following[blogName] = blog
+    following[blogName] ??= blog
       ? Promise.resolve(blog.followed)
       : apiFetch(`/v2/blog/${blogName}/info`)
         .then(({ response: { blog: { followed } } }) => followed)
@@ -128,15 +128,32 @@ const getIsFollowing = async (blogName, element) => {
   return following[blogName];
 };
 
+const waitForViewportIntersection = (element, rootMargin) =>
+  new Promise(resolve => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries.some(({ isIntersecting }) => isIntersecting)) {
+          resolve();
+          observer.disconnect();
+        }
+      },
+      { rootMargin },
+    );
+    observer.observe(element);
+  });
+
 const getIsFollowingYou = async (blogName, element) => {
   if (followingYou[blogName] === undefined) {
+    // Naturally throttle API requests (to an extent) by waiting for scroll
+    await waitForViewportIntersection(element, '100% 0px');
+
     const blog = [
       await blogData(element),
       (await timelineObject(element))?.blog,
       (await timelineObject(element))?.authorBlog,
     ].find((data) => blogName === data?.name && data.isFollowingYou !== undefined);
 
-    followingYou[blogName] = blog
+    followingYou[blogName] ??= blog
       ? Promise.resolve(blog.isFollowingYou)
       : apiFetch(`/v2/blog/${primaryBlogName}/followed_by`, { queryParams: { query: blogName } })
         .then(({ response: { followedBy } }) => followedBy)

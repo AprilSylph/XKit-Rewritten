@@ -89,7 +89,7 @@ const getLocation = timelineElement => {
 };
 
 const processTimelines = timelineElements =>
-  [...new Set(timelineElements)].forEach(async timelineElement => {
+  new Set(timelineElements).forEach(async timelineElement => {
     const location = getLocation(timelineElement);
 
     const currentControls = [...timelineElement.children]

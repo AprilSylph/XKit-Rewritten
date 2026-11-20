@@ -136,6 +136,20 @@
   });
 
   /**
+   * Shows an informative notification if the extension script was previously run on the page with a different version number (e.g. when the extension is updated in Firefox). Should do nothing in Chromium, which does not execute content scripts in existing tabs on extension load/reload.
+   */
+  const notifyIfUpdated = async () => {
+    const { inject } = await import(browser.runtime.getURL('/utils/inject.js'));
+    const currentVersion = browser.runtime.getManifest().version;
+    const runningVersion = await inject('/main_world/get_running_xkit_version.js', [currentVersion]);
+
+    if (runningVersion && runningVersion !== currentVersion) {
+      const { notify } = await import(browser.runtime.getURL('/utils/notifications.js'));
+      notify(`XKit Rewritten has been updated to v${currentVersion}!`);
+    }
+  };
+
+  /**
    * Shows an informative modal if the extension context is invalidated (e.g. after extension is autoupdated or manually disabled in Chromium). Should do nothing in Firefox, which stops running all extension context javascript immediately.
    */
   const warnOnExtensionContextInvalidated = async () => {
@@ -175,6 +189,7 @@
 
     runFeatures(installedFeatures.filter(name => enabledFeatures.includes(name)));
 
+    notifyIfUpdated();
     warnOnExtensionContextInvalidated();
   };
 

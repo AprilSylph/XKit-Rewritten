@@ -25,6 +25,11 @@ const followingYou = {};
 let showOnlyMutuals;
 let showOnlyMutualNotifications;
 
+const channel = new BroadcastChannel(`xkit-mutual-checker-${primaryBlogName}`);
+channel.addEventListener('message', ({ data: { blogName, isFollowingYou } }) => {
+  followingYou[blogName] = Promise.resolve(isFollowingYou);
+});
+
 const styleElement = buildStyle(`
   svg.xkit-mutual-icon {
     vertical-align: text-bottom;
@@ -141,6 +146,8 @@ const getIsFollowingYou = async (blogName, element) => {
       : apiFetch(`/v2/blog/${primaryBlogName}/followed_by`, { queryParams: { query: blogName } })
         .then(({ response: { followedBy } }) => followedBy)
         .catch(() => Promise.resolve(false));
+
+    followingYou[blogName].then(isFollowingYou => channel.postMessage({ blogName, isFollowingYou }));
   }
   return followingYou[blogName];
 };

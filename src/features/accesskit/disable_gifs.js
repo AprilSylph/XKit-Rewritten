@@ -51,6 +51,14 @@ export const styleElement = buildStyle(`
   top: 50%;
   transform: translateY(-50%);
 }
+[${labelSizeAttribute}="avatar"][${labelAttribute}="after"]::after,
+[${labelSizeAttribute}="avatar"][${labelAttribute}="before"]::before {
+  font-size: 0.5rem;
+}
+[${labelSizeAttribute}="subAvatar"][${labelAttribute}="after"]::after,
+[${labelSizeAttribute}="subAvatar"][${labelAttribute}="before"]::before {
+  font-size: 0.3rem;
+}
 
 .${canvasClass} {
   position: absolute;
@@ -98,6 +106,9 @@ const addLabel = (element, inside = false) => {
     target.clientWidth && target.clientWidth <= 150 && target.setAttribute(labelSizeAttribute, 'mini');
     target.clientHeight && target.clientHeight <= 50 && target.setAttribute(labelSizeAttribute, 'mini');
     target.clientHeight && target.clientHeight <= 30 && target.setAttribute(labelSizeAttribute, 'hr');
+
+    target.querySelector(keyToCss('avatarImage')) && target.setAttribute(labelSizeAttribute, 'avatar');
+    target.querySelector(keyToCss('subAvatarImage')) && target.setAttribute(labelSizeAttribute, 'subAvatar');
   }
 };
 
@@ -186,7 +197,7 @@ const pauseGif = async function (gifElement) {
 /** @type {(gifElements: HTMLImageElement[]) => void} */
 const processGifs = function (gifElements) {
   gifElements.forEach(gifElement => {
-    if (gifElement.closest(`${keyToCss('avatarImage', 'subAvatarImage')}, .block-editor-writing-flow`)) return;
+    if (gifElement.closest('.block-editor-writing-flow')) return;
 
     const pausedGifElements = [...gifElement.parentNode.querySelectorAll(`.${canvasClass}`)];
     if (pausedGifElements.length) {

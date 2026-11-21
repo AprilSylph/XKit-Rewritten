@@ -58,6 +58,11 @@ export const unregisterBlogMeatballItem = id => {
 };
 
 const addMeatballItems = meatballMenus => meatballMenus.forEach(async meatballMenu => {
+  const isNestedMenu = !!(
+    await getClosestRenderedElement(meatballMenu.parentElement, menuSelector)
+  );
+  if (isNestedMenu) return;
+
   const closestHeader = await getClosestRenderedElement(meatballMenu, 'header');
 
   if (closestHeader?.matches(postHeaderSelector)) {

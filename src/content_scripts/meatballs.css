@@ -113,3 +113,7 @@
   content: "";
   pointer-events: none;
 }
+
+[role="menu"][aria-orientation="vertical"]:has(svg > use[href="#managed-icon__ds-ui-chevron-left-24"]) > .xkit-menu-item {
+  display: none; /* Hide XKit-inserted menu items when there is a "Back" button in the menu */
+}

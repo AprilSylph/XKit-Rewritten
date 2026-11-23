@@ -66,7 +66,7 @@ export const styleElement = buildStyle(`
   display: none;
 }
 
-[${pausedAttribute}]:not(${parentHovered}) {
+[${labelAttribute}]:not(:has(> ${keyToCss('playButton')})) > [${pausedAttribute}]:not(${parentHovered}) {
   visibility: hidden;
 }
 .${canvasClass}${parentHovered},

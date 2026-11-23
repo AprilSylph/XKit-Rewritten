@@ -1,4 +1,4 @@
-import { button, form, input, label, small, span } from '../../utils/dom.js';
+import { button, form, input, label, small, span, strong } from '../../utils/dom.js';
 import { megaEdit } from '../../utils/mega_editor.js';
 import { createBlogSpan, hideModal, modalCancelButton, modalCompleteButton, showErrorModal, showModal } from '../../utils/modals.js';
 import { addSidebarItem, removeSidebarItem } from '../../utils/sidebar.js';
@@ -43,7 +43,7 @@ const confirmDeleteDrafts = event => {
   const beforeMs = elements.before.valueAsNumber + timezoneOffsetMs;
 
   const beforeString = dateTimeFormat.format(new Date(beforeMs));
-  const beforeElement = span({ style: 'white-space: nowrap; font-weight: bold;' }, [beforeString]);
+  const beforeElement = strong({}, [beforeString]);
 
   const before = beforeMs / 1000;
 

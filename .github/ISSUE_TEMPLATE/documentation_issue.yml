@@ -1,6 +1,6 @@
 name: Documentation issue
 description: Missing, incomplete, or unclear documentation
-labels: [documentation]
+type: Documentation
 body:
   - type: markdown
     attributes:

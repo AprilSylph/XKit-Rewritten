@@ -216,7 +216,7 @@ const processGifs = function (gifElements) {
 };
 
 const sourceUrlRegex = /url\(["'][^)]*?\.(?:gif|gifv|webp)["']\)/g;
-const processBackgroundGifs = function (gifBackgroundElements) {
+const processBackgroundGifs = gifBackgroundElements => requestAnimationFrame(() =>
   gifBackgroundElements.forEach(async gifBackgroundElement => {
     const sourceValue = getComputedStyle(gifBackgroundElement).backgroundImage;
 
@@ -245,8 +245,8 @@ const processBackgroundGifs = function (gifBackgroundElements) {
       'media', // old activity item: "liked your post", "reblogged your post", "mentioned you in a post"
       'activityMedia', // new activity item: "replied to your post", "replied to you in a post"
     ))?.setAttribute(positionHoverFixAttribute, '');
-  });
-};
+  }),
+);
 
 const processRows = function (rowsElements) {
   rowsElements.forEach(rowsElement => {

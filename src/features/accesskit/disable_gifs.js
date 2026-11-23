@@ -58,8 +58,6 @@ export const styleElement = buildStyle(`
   visibility: visible;
   top: 0;
   left: 0;
-
-  background-color: rgb(var(--white));
 }
 
 :has(> ${keyToCss('playButton')}) > .${canvasClass},
@@ -68,6 +66,9 @@ export const styleElement = buildStyle(`
   display: none;
 }
 
+[${pausedAttribute}]:not(${parentHovered}) {
+  visibility: hidden;
+}
 .${canvasClass}${parentHovered},
 [${labelAttribute}="after"]${hovered}::after,
 [${labelAttribute}="before"]${hovered}::before {

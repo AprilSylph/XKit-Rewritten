@@ -274,6 +274,38 @@
   display: none;
 }
 
+@media (min-width: 2000px) {
+  #quick-reblog {
+    zoom: 1.25;
+  }
+
+  #quick-reblog [role="tabpanel"] {
+    --maximum-buttons: 6;
+  }
+}
+
+@media (min-width: 3000px) {
+  #quick-reblog {
+    zoom: 1.5;
+  }
+
+  #quick-reblog [role="tabpanel"] {
+    --maximum-buttons: 8;
+  }
+}
+
+@media (min-width: 3800px) {
+  #quick-reblog [role="tabpanel"] {
+    --maximum-buttons: 10;
+  }
+}
+
+@media (min-width: 5000px) {
+  #quick-reblog [role="tabpanel"] {
+    --maximum-buttons: 12;
+  }
+}
+
 /* === AlreadyReblogged === */
 
 footer.published :is(a, button):has(svg use:is(

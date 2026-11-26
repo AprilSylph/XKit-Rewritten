@@ -1,7 +1,7 @@
 import { removeAttribute, removeClassName, removeElementsByClassName } from '../../utils/cleanup.js';
 import { keyToCss } from '../../utils/css_map.js';
 import { a, div } from '../../utils/dom.js';
-import { filterPostElements, getTimelineItemWrapper } from '../../utils/interface.js';
+import { filterPostElements, getTimelineItemWrapper, gridTimelineObjectSelector } from '../../utils/interface.js';
 import { translate } from '../../utils/language_data.js';
 import { onNewPosts } from '../../utils/mutations.js';
 import { getPreferences } from '../../utils/preferences.js';
@@ -19,6 +19,7 @@ import {
 import { userBlogs } from '../../utils/user.js';
 
 const hiddenAttribute = 'data-show-originals-hidden';
+const gridHiddenAttribute = 'data-show-originals-grid-hidden';
 const lengthenedClass = 'xkit-show-originals-lengthened';
 const controlsClass = 'xkit-show-originals-controls';
 
@@ -26,6 +27,7 @@ const channelSelector = `${keyToCss('bar')} ~ *`;
 
 const storageKey = 'show_originals.savedModes';
 const includeFiltered = true;
+const includeGridThumbnails = true;
 
 let showOwnReblogs;
 let showReblogsWithContributedContent;
@@ -104,7 +106,7 @@ const processTimelines = timelineElements =>
 const processPosts = async function (postElements) {
   processTimelines(postElements.map(postElement => postElement.closest(timelineSelector)));
 
-  filterPostElements(postElements, { includeFiltered })
+  filterPostElements(postElements, { includeFiltered, includeGridThumbnails })
     .forEach(async postElement => {
       const { rebloggedRootId, content, tags, blogName, community, postAuthor, rebloggedFromFollowing, trail } = await timelineObject(postElement);
       const myPost = await isMyPost(postElement);
@@ -117,7 +119,12 @@ const processPosts = async function (postElements) {
       const visibleBlogName = community ? postAuthor : blogName;
       if (whitelist.includes(visibleBlogName)) { return; }
 
-      getTimelineItemWrapper(postElement).toggleAttribute(hiddenAttribute, true);
+      getTimelineItemWrapper(postElement).toggleAttribute(
+        postElement.matches(gridTimelineObjectSelector)
+          ? gridHiddenAttribute
+          : hiddenAttribute,
+        true,
+      );
     });
 };
 
@@ -144,6 +151,7 @@ export const clean = async function () {
   onNewPosts.removeListener(processPosts);
 
   removeAttribute(hiddenAttribute);
+  removeAttribute(gridHiddenAttribute);
   removeClassName(lengthenedClass);
   removeElementsByClassName(controlsClass);
 };

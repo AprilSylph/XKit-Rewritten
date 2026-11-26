@@ -4,6 +4,15 @@
   height: 0;
 }
 
+[data-show-originals="on"] ~ div > [data-show-originals-grid-hidden] > div {
+  content: linear-gradient(transparent, transparent);
+  background: var(--chrome-panel);
+  pointer-events: none;
+}
+[data-show-originals="on"] ~ div > [data-show-originals-grid-hidden] > button {
+  display: none;
+}
+
 .xkit-show-originals-lengthened {
   min-height: 100vh;
 }

@@ -249,6 +249,10 @@ async function reblogPost ({ currentTarget }) {
   const { state } = currentTarget.dataset;
 
   const blog = blogSelector.value;
+  const content = commentInput.value
+    .split('\n\n')
+    .filter(Boolean)
+    .map(text => ({ text, type: 'text' }));
   const tags = [
     ...tagsInput.value.split(','),
     ...reblogTag ? [reblogTag] : [],
@@ -259,12 +263,12 @@ async function reblogPost ({ currentTarget }) {
   const requestPath = `/v2/blog/${blog}/posts`;
 
   const requestBody = {
-    content: commentInput.value ? [{ formatting: [], type: 'text', text: commentInput.value }] : [],
-    tags,
+    content,
     parent_post_id: postID,
     parent_tumblelog_uuid: parentTumblelogUUID,
     reblog_key: reblogKey,
     state,
+    tags,
   };
 
   try {

@@ -4,7 +4,8 @@
  * loads and executes the requested functions, and sends back the results.
  */
 
-const moduleCache = {};
+/** @type {Map<string, { default(): object | void | Promise<object | void> }>} */
+const moduleCache = new Map();
 const moduleLoaders = {
   '/main_world/api_fetch.js': () => import('./api_fetch.js'),
   '/main_world/closest_rendered_element.js': () => import('./closest_rendered_element.js'),
@@ -39,8 +40,8 @@ document.documentElement.addEventListener('xkit-injection-request', async event 
     const moduleLoader = moduleLoaders[pathname];
     if (!moduleLoader) throw new RangeError(`Unrecognised module path: ${pathname}`);
 
-    moduleCache[pathname] ??= await moduleLoader();
-    const func = moduleCache[pathname].default;
+    if (!moduleCache.has(pathname)) moduleCache.set(pathname, await moduleLoader());
+    const func = moduleCache.get(pathname).default;
 
     if (target.isConnected === false) return;
 

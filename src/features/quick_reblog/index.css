@@ -63,7 +63,7 @@
 
 #quick-reblog textarea {
   box-sizing: content-box;
-  min-height: calc(1.25rem * 2);
+  min-height: calc(1.25rem * 3);
   padding-block: 6px;
   resize: vertical;
 

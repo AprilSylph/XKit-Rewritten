@@ -250,7 +250,7 @@ async function reblogPost ({ currentTarget }) {
 
   const blog = blogSelector.value;
   const content = commentInput.value
-    .split('\n\n')
+    .split(/\n{2,}/)
     .filter(Boolean)
     .map(text => ({ text, type: 'text' }));
   const tags = [

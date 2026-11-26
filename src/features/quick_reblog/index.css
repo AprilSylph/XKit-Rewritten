@@ -6,6 +6,7 @@
 
   display: flex;
   flex-direction: column;
+  row-gap: 2px;
 
   box-sizing: border-box;
   max-width: 250px;
@@ -49,7 +50,6 @@
 
 #quick-reblog input {
   padding: 10px;
-  margin-bottom: 2px;
 }
 
 #quick-reblog select {
@@ -64,9 +64,8 @@
 
 #quick-reblog .select-container {
   display: flex;
-  gap: 2px;
+  column-gap: 2px;
   padding: 6px;
-  margin-bottom: 2px;
 
   background-color: inherit;
 }
@@ -84,6 +83,7 @@
   display: flex;
   flex-direction: row;
   column-gap: 2px;
+  margin-bottom: -2px;
 }
 
 #quick-reblog [role="tablist"] [role="tab"] {
@@ -137,7 +137,6 @@
     (var(--button-height) * var(--maximum-buttons)) -
     var(--vertical-margin)
   );
-  margin-bottom: var(--vertical-margin);
   overflow-y: auto;
   scroll-snap-type: y mandatory;
 
@@ -172,7 +171,7 @@
 #quick-reblog [role="tabpanel"] button {
   display: flex;
   justify-content: space-between;
-  gap: 4px;
+  column-gap: 4px;
   flex-shrink: 0;
   padding: var(--vertical-padding) 10px;
   margin-bottom: var(--vertical-margin);
@@ -223,15 +222,19 @@
 }
 
 #quick-reblog .action-buttons {
+  position: relative;
+
   display: flex;
   flex-direction: row;
-  position: relative;
+  column-gap: 2px;
+
   min-width: 200px;
 }
 
 #quick-reblog .action-buttons button {
   display: flex;
   justify-content: center;
+
   box-sizing: border-box;
   flex-basis: 0;
   flex-grow: 1;
@@ -248,10 +251,6 @@
 
 #quick-reblog .action-buttons:enabled button:active {
   background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
-}
-
-#quick-reblog .action-buttons button:not(:first-child) {
-  margin-left: 2px;
 }
 
 #quick-reblog .action-buttons:disabled::before {

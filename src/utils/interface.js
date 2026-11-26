@@ -8,8 +8,8 @@ export const trailItemSelector = `${postSelector} ${keyToCss('reblog')}`;
 export const blogViewSelector = '[style*="--blog-title-color"] *';
 export const notificationSelector = `:is(${keyToCss('notification')}[role="listitem"], ${keyToCss('activityItem')})`;
 
-const listTimelineObjectSelector = keyToCss('listTimelineObject');
-const gridTimelineObjectSelector = keyToCss('gridTimelineObject');
+export const listTimelineObjectSelector = keyToCss('listTimelineObject');
+export const gridTimelineObjectSelector = keyToCss('gridTimelineObject');
 
 /**
  * Get the outermost element containing an item in a timeline.

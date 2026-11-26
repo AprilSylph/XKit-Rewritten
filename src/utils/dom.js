@@ -81,6 +81,7 @@ export function element (tagName, properties = {}, children = []) {
 /** @type {E<HTMLElement>}          */ export const strong = (props = {}, children = []) => element('strong', props, children);
 /** @type {E<HTMLStyleElement>}     */ export const style = (props = {}, children = []) => element('style', props, children);
 /** @type {E<HTMLTableElement>}     */ export const table = (props = {}, children = []) => element('table', props, children);
+/** @type {E<HTMLTextAreaElement>}  */ export const textarea = (props = {}, children = []) => element('textarea', props, children);
 /** @type {E<HTMLTableCellElement>} */ export const td = (props = {}, children = []) => element('td', props, children);
 /** @type {E<HTMLTableCellElement>} */ export const th = (props = {}, children = []) => element('th', props, children);
 /** @type {E<HTMLTableRowElement>}  */ export const tr = (props = {}, children = []) => element('tr', props, children);

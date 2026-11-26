@@ -10,7 +10,7 @@
 export const inject = (path, args = [], target = document.documentElement) =>
   new Promise((resolve, reject) => {
     const requestId = String(Math.random());
-    const data = { path: browser.runtime.getURL(path), args, id: requestId };
+    const data = { url: browser.runtime.getURL(path), args, id: requestId };
 
     const responseHandler = ({ detail, type, target }) => {
       const { id, result, exception } = JSON.parse(detail);

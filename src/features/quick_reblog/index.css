@@ -39,8 +39,7 @@
   );
 }
 
-#quick-reblog select,
-#quick-reblog input {
+#quick-reblog :is(select, textarea, input) {
   border: none;
   border-radius: 0;
 
@@ -48,7 +47,7 @@
   background-color: inherit;
 }
 
-#quick-reblog input {
+#quick-reblog :is(textarea, input) {
   padding: 10px;
 }
 
@@ -60,6 +59,16 @@
   font-family: var(--font-family);
   font-weight: bold;
   text-overflow: ellipsis;
+}
+
+#quick-reblog textarea {
+  box-sizing: content-box;
+  min-height: calc(1.25rem * 2);
+  padding-block: 6px;
+  resize: vertical;
+
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 #quick-reblog .select-container {

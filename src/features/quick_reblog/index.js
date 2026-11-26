@@ -1,7 +1,7 @@
 import { removeElementsById } from '../../utils/cleanup.js';
 import { sha256 } from '../../utils/crypto.js';
 import { keyToCss } from '../../utils/css_map.js';
-import { div, select, input, fieldset, button, option, hr, span } from '../../utils/dom.js';
+import { div, select, input, fieldset, button, option, hr, span, textarea } from '../../utils/dom.js';
 import { postSelector, filterPostElements, postType, appendWithoutOverflow, buildStyle } from '../../utils/interface.js';
 import { showErrorModal } from '../../utils/modals.js';
 import { onNewPosts } from '../../utils/mutations.js';
@@ -23,7 +23,7 @@ const suggestedTagsPanelId = 'xkit-quick-reblog-suggested-tags-panel';
 const blogSelector = select({ change: onBlogSelectorChange });
 const blogAvatar = div({ class: 'avatar' });
 const blogSelectorContainer = div({ class: 'select-container' }, [blogAvatar, blogSelector]);
-const commentInput = input({ autocomplete: 'off', placeholder: 'Comment', keydown: onTextFieldKeyDown });
+const commentInput = textarea({ autocomplete: 'off', placeholder: 'Comment', keydown: onTextFieldKeyDown });
 const tagsTabList = div({ role: 'tablist' }, [
   button({
     'aria-controls': quickTagsPanelId,

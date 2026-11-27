@@ -12,7 +12,7 @@ const ariakitBottomSheetContainerSelector = `[style*="transform"] > ${keyToCss('
 const menuSelector = `${keyToCss('meatballMenu')}, ${ariakitMenuSelector}`;
 
 const postHeaderSelector = `${postSelector} :is(article > header, article > div > header)`;
-const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
+const blogHeaderSelector = `[style*="--blog-title-color"] > div > div > header, [style*="--blog-title-color"] > div > div > div > header, ${keyToCss('blogCardHeaderBar')}`;
 
 const meatballItems = {
   post: {},

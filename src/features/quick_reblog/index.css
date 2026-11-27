@@ -3,19 +3,23 @@
 
   position: absolute;
   z-index: 97;
-  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 2px;
+
+  box-sizing: border-box;
+  max-width: 250px;
   padding: 2px;
   border-radius: 3px;
   overflow: hidden;
+
+  background-color: rgb(var(--white));
+  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.5);
   color: rgb(var(--black));
   font-size: 0.875rem;
   font-weight: normal;
-  background-color: rgb(var(--white));
-  background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  max-width: 250px;
   line-height: 1;
 }
 
@@ -35,34 +39,43 @@
   );
 }
 
-#quick-reblog select,
-#quick-reblog input {
+#quick-reblog :is(select, textarea, input) {
   border: none;
   border-radius: 0;
+
   color: inherit;
   background-color: inherit;
 }
 
-#quick-reblog input {
+#quick-reblog :is(textarea, input) {
   padding: 10px;
-  margin-bottom: 2px;
 }
 
 #quick-reblog select {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
 
   font-family: var(--font-family);
   font-weight: bold;
+  text-overflow: ellipsis;
+}
+
+#quick-reblog textarea {
+  box-sizing: content-box;
+  min-height: calc(1.25rem * 3);
+  max-height: calc(1.25rem * 12);
+  padding-block: 6px;
+  resize: vertical;
+
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 #quick-reblog .select-container {
   display: flex;
-  gap: 2px;
+  column-gap: 2px;
   padding: 6px;
-  margin-bottom: 2px;
 
   background-color: inherit;
 }
@@ -80,6 +93,7 @@
   display: flex;
   flex-direction: row;
   column-gap: 2px;
+  margin-bottom: -2px;
 }
 
 #quick-reblog [role="tablist"] [role="tab"] {
@@ -133,7 +147,6 @@
     (var(--button-height) * var(--maximum-buttons)) -
     var(--vertical-margin)
   );
-  margin-bottom: var(--vertical-margin);
   overflow-y: auto;
   scroll-snap-type: y mandatory;
 
@@ -142,10 +155,11 @@
 }
 
 #quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *) {
-  background-color: rgb(var(--white));
   border: 4px solid rgb(var(--white));
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
+
+  background-color: rgb(var(--white));
 }
 
 #quick-reblog [role="tabpanel"]:not([role="tablist"][hidden] ~ *):focus-visible {
@@ -167,7 +181,7 @@
 #quick-reblog [role="tabpanel"] button {
   display: flex;
   justify-content: space-between;
-  gap: 4px;
+  column-gap: 4px;
   flex-shrink: 0;
   padding: var(--vertical-padding) 10px;
   margin-bottom: var(--vertical-margin);
@@ -218,15 +232,19 @@
 }
 
 #quick-reblog .action-buttons {
+  position: relative;
+
   display: flex;
   flex-direction: row;
-  position: relative;
+  column-gap: 2px;
+
   min-width: 200px;
 }
 
 #quick-reblog .action-buttons button {
   display: flex;
   justify-content: center;
+
   box-sizing: border-box;
   flex-basis: 0;
   flex-grow: 1;
@@ -245,25 +263,20 @@
   background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
 }
 
-#quick-reblog .action-buttons button:not(:first-child) {
-  margin-left: 2px;
-}
-
 #quick-reblog .action-buttons:disabled::before {
-  content: "Processing…";
-  font-weight: bold;
-  color: inherit;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  height: 100%;
-  width: 100%;
+
   background-color: rgb(var(--white));
   background-image: linear-gradient(rgba(var(--black), 0.13), rgba(var(--black), 0.13));
+  color: inherit;
+  content: "Processing…";
+  font-weight: bold;
 }
 
 #quick-reblog button[data-state="published"] { color: rgb(var(--blue)); }

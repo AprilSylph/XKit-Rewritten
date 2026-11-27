@@ -37,8 +37,7 @@ window.removeXKitListener = () => controller.abort();
 
 document.documentElement.addEventListener('xkit-injection-request', async event => {
   const { detail, target } = event;
-  const { id, url, args } = JSON.parse(detail);
-  const { pathname } = new URL(url);
+  const { id, pathname, args } = JSON.parse(detail);
 
   try {
     if (!moduleLoaders.has(pathname)) throw new RangeError(`Unrecognised module path: ${pathname}`);

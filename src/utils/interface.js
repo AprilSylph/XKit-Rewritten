@@ -182,14 +182,9 @@ const getClosestWithOverflow = element => {
   }
 };
 
-const isVerticallyOverflowingViewport = element => {
+const isVerticallyOverflowing = element => {
   const elementRect = element.getBoundingClientRect();
   return elementRect.bottom > document.documentElement.clientHeight || elementRect.top < 0;
-};
-
-const isVerticallyOverflowingPage = element => {
-  const elementRect = element.getBoundingClientRect();
-  return elementRect.bottom > document.documentElement.scrollHeight || elementRect.top < 0;
 };
 
 /**
@@ -206,6 +201,13 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
     target.append(element);
   }
 
+  if (isVerticallyOverflowing(element)) {
+    element.dataset.position = defaultPosition === 'below' ? 'above' : 'below';
+  }
+  if (isVerticallyOverflowing(element)) {
+    element.dataset.position = defaultPosition;
+  }
+
   const preventOverflowTarget = getClosestWithOverflow(target);
   const preventOverflowTargetRect = preventOverflowTarget.getBoundingClientRect();
   const elementRect = element.getBoundingClientRect();
@@ -214,22 +216,6 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
     element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.right - 15 - elementRect.right}px`);
   } else if (elementRect.left < preventOverflowTargetRect.left + 15) {
     element.style.setProperty('--horizontal-offset', `${preventOverflowTargetRect.left + 15 - elementRect.left}px`);
-  }
-
-  // If necessary, try both vertical positions to find one which does not overflow viewport
-  if (isVerticallyOverflowingViewport(element)) {
-    element.dataset.position = defaultPosition === 'below' ? 'above' : 'below';
-    if (isVerticallyOverflowingViewport(element)) {
-      element.dataset.position = defaultPosition;
-    }
-  }
-
-  // If necessary, try both vertical positions to find one which does not overflow page
-  if (isVerticallyOverflowingPage(element)) {
-    element.dataset.position = defaultPosition === 'below' ? 'above' : 'below';
-    if (isVerticallyOverflowingPage(element)) {
-      element.dataset.position = defaultPosition;
-    }
   }
 };
 

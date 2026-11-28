@@ -48,6 +48,7 @@ export const getPopoverWrapper = element => {
  * @property {TimelineFilter | TimelineFilter[]} [timeline] Filter results to matching timeline element children
  * @property {boolean} [noBlogView] Whether to exclude posts in the blog view modal
  * @property {boolean} [includeFiltered] Whether to include filtered posts
+ * @property {boolean} [includeGridThumbnails] Whether to include post thumbnails in "thumbnails" (grid) views
  */
 
 /**
@@ -57,12 +58,21 @@ export const getPopoverWrapper = element => {
  * @param {PostFilterOptions} [postFilterOptions] Post filter options
  * @returns {HTMLDivElement[]} Matching post elements
  */
-export const filterPostElements = function (postElements, { excludeClass, timeline, noBlogView = false, includeFiltered = false } = {}) {
+export const filterPostElements = function (
+  postElements,
+  {
+    excludeClass,
+    timeline,
+    noBlogView = false,
+    includeFiltered = false,
+    includeGridThumbnails = false,
+  } = {},
+) {
   const timelineFilters = [timeline].flat().filter(Boolean);
 
   return postElements
     .filter(element => element.isConnected)
-    .map(element => element.closest(postSelector))
+    .map(element => element.closest(`${postSelector}, ${gridTimelineObjectSelector}`))
     .filter(postElement => {
       if (!postElement) return false;
 
@@ -74,7 +84,11 @@ export const filterPostElements = function (postElements, { excludeClass, timeli
 
       if (noBlogView && postElement.matches(blogViewSelector)) return false;
 
-      if (!includeFiltered && postElement.querySelector('article footer') === null) return false;
+      const isGridThumbnail = postElement.matches(gridTimelineObjectSelector);
+      if (!includeGridThumbnails && isGridThumbnail) return false;
+
+      const isFiltered = !isGridThumbnail && postElement.querySelector('article footer') === null;
+      if (!includeFiltered && isFiltered) return false;
 
       if (excludeClass) {
         if (postElement.classList.contains(excludeClass)) return false;

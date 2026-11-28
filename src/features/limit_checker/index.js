@@ -26,7 +26,7 @@ const checkUserLimits = () => {
     message: ['Hold on while the data is fetched...'],
   });
 
-  return Promise.all([apiFetch('/v2/user/limits'), sleep(1000)]);
+  return Promise.all([apiFetch('/v2/user/limits'), sleep(500)]);
 };
 
 const showUserLimits = ([{ response: { user } }]) => showModal({

@@ -205,7 +205,7 @@ export const appendWithoutOverflow = (element, target, defaultPosition = 'below'
     element.dataset.position = defaultPosition === 'below' ? 'above' : 'below';
   }
   if (isVerticallyOverflowing(element)) {
-    element.dataset.position = defaultPosition;
+    element.dataset.position = 'below';
   }
 
   const preventOverflowTarget = getClosestWithOverflow(target);

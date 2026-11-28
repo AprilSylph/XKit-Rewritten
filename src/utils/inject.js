@@ -2,15 +2,15 @@
  * Run a function in the page's "main" execution environment and return its result.
  * This permits access to variables exposed by the Tumblr web platform that are normally inaccessible in the content script sandbox.
  * @see [src/main_world/index.js](../main_world/index.js) and named scripts in the same directory
- * @param {string} path Absolute path of script file to inject; will be fed to {@linkcode https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getURL|browser.runtime.getURL()}
+ * @param {string} pathname Absolute path of script file to inject; will be fed to {@linkcode https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getURL|browser.runtime.getURL()}
  * @param {Array} [args] Array of arguments to pass to the injected function
  * @param {Element} [target] Target element; will be accessible as the `this` value in the injected function
  * @returns {Promise} The transmitted result of the function call
  */
-export const inject = (path, args = [], target = document.documentElement) =>
+export const inject = (pathname, args = [], target = document.documentElement) =>
   new Promise((resolve, reject) => {
     const requestId = String(Math.random());
-    const data = { path: browser.runtime.getURL(path), args, id: requestId };
+    const data = { pathname, args, id: requestId };
 
     const responseHandler = ({ detail, type, target }) => {
       const { id, result, exception } = JSON.parse(detail);
